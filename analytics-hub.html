@@ -1,0 +1,1693 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BTV Connect - Analytics Hub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .analytics-dashboard {
+      padding-top: 80px;
+      padding-bottom: 20px;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    }
+
+    .analytics-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .analytics-header {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border: 1px solid #e2e8f0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .analytics-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #ff6b00, #1e5ba8);
+    }
+
+    .report-filters {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .filter-label {
+      font-weight: 600;
+      color: #1e293b;
+      font-size: 0.9rem;
+    }
+
+    .filter-select {
+      padding: 0.75rem;
+      border: 2px solid #e1e5e9;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      background: white;
+      transition: all 0.3s ease;
+    }
+
+    .filter-select:focus {
+      border-color: #1e5ba8;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(30, 91, 168, 0.1);
+    }
+
+    .report-tabs {
+      display: flex;
+      background: white;
+      border-radius: 12px;
+      padding: 0.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      overflow-x: auto;
+    }
+
+    .report-tab {
+      background: transparent;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 500;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .report-tab.active {
+      background: linear-gradient(135deg, #1e5ba8, #164a91);
+      color: white;
+      box-shadow: 0 4px 12px rgba(30, 91, 168, 0.3);
+    }
+
+    .report-tab:hover:not(.active) {
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+
+    .report-content {
+      display: none;
+    }
+
+    .report-content.active {
+      display: block;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .metric-card {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #ff6b00, #1e5ba8);
+    }
+
+    .metric-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      color: white;
+      margin-bottom: 1rem;
+    }
+
+    .metric-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 0.25rem;
+    }
+
+    .metric-label {
+      color: #64748b;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .metric-trend {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    .trend-up {
+      color: #10b981;
+    }
+
+    .trend-down {
+      color: #ef4444;
+    }
+
+    .trend-neutral {
+      color: #64748b;
+    }
+
+    .chart-container {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .chart-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .chart-canvas {
+      max-height: 400px;
+    }
+
+    .data-table {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
+      margin-bottom: 2rem;
+    }
+
+    .table-header {
+      background: linear-gradient(135deg, #1e5ba8, #164a91);
+      color: white;
+      padding: 1rem 1.5rem;
+    }
+
+    .table-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .table-content {
+      overflow-x: auto;
+    }
+
+    .analytics-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .analytics-table th,
+    .analytics-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .analytics-table th {
+      background: #f8fafc;
+      font-weight: 600;
+      color: #1e293b;
+      font-size: 0.875rem;
+    }
+
+    .analytics-table tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    .export-actions {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .export-btn {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .export-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+    }
+
+    .export-btn.pdf {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
+
+    .export-btn.excel {
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+
+    .alert-panel {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
+    }
+
+    .alert-item {
+      display: flex;
+      align-items: start;
+      gap: 1rem;
+      padding: 1rem;
+      background: #fef2f2;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border-left: 4px solid #ef4444;
+    }
+
+    .alert-item.warning {
+      background: #fef3c7;
+      border-left-color: #f59e0b;
+    }
+
+    .alert-item.info {
+      background: #eff6ff;
+      border-left-color: #3b82f6;
+    }
+
+    .alert-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #059669);
+      border-radius: 4px;
+      transition: width 0.8s ease;
+    }
+
+    @media (max-width: 768px) {
+      .analytics-container {
+        padding: 0 0.75rem;
+      }
+
+      .filter-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+
+      .metric-card {
+        padding: 1rem;
+      }
+
+      .metric-value {
+        font-size: 1.5rem;
+      }
+
+      .report-tabs {
+        overflow-x: auto;
+      }
+
+      .export-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <a href="hjo-dashboard.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Terug
+      </a>
+      <div style="flex: 1; text-align: center;">
+        <div class="breadcrumb">
+          <span class="breadcrumb-item">HJO Dashboard</span>
+          <i class="fas fa-chevron-right breadcrumb-separator"></i>
+          <span class="breadcrumb-item active">Analytics Hub</span>
+        </div>
+        <h1 class="header-title">
+          <i class="fas fa-chart-line"></i> Analytics Hub
+        </h1>
+      </div>
+      <button onclick="logout()" class="logout-btn" title="Uitloggen">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
+    </div>
+  </header>
+
+  <div class="analytics-dashboard">
+    <div class="analytics-container">
+      <!-- Analytics Header -->
+      <div class="analytics-header">
+        <h2 style="margin: 0 0 0.5rem 0; color: #1e293b; font-size: 1.75rem;">
+          <i class="fas fa-chart-bar" style="color: #1e5ba8; margin-right: 0.5rem;"></i>
+          Club Analytics & Rapportage Centrum
+        </h2>
+        <p style="margin: 0; color: #64748b; font-size: 1rem;">
+          Uitgebreide data-analyse en inzichten voor optimaal club management
+        </p>
+        <div style="margin-top: 1rem; font-size: 0.875rem; color: #64748b;">
+          <i class="fas fa-calendar"></i> Laatste update: <span id="lastUpdate"></span>
+        </div>
+      </div>
+
+      <!-- Report Filters -->
+      <div class="report-filters">
+        <div class="filter-grid">
+          <div class="filter-group">
+            <label class="filter-label">Periode:</label>
+            <select id="periodFilter" class="filter-select" onchange="updateReports()">
+              <option value="last-7-days">Laatste 7 dagen</option>
+              <option value="last-30-days" selected>Laatste 30 dagen</option>
+              <option value="last-3-months">Laatste 3 maanden</option>
+              <option value="current-season">Huidig seizoen</option>
+              <option value="all-time">Alle tijd</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Leeftijdsgroep:</label>
+            <select id="ageGroupFilter" class="filter-select" onchange="updateReports()">
+              <option value="all">Alle groepen</option>
+              <option value="O6">O6 (6 jaar)</option>
+              <option value="O7">O7 (7 jaar)</option>
+              <option value="O8">O8 (8 jaar)</option>
+              <option value="O9">O9 (9 jaar)</option>
+              <option value="O10">O10 (10 jaar)</option>
+              <option value="O11">O11 (11 jaar)</option>
+              <option value="O12">O12 (12 jaar)</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Team:</label>
+            <select id="teamFilter" class="filter-select" onchange="updateReports()">
+              <option value="all">Alle teams</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Rapport Type:</label>
+            <select id="reportTypeFilter" class="filter-select" onchange="updateReports()">
+              <option value="summary">Samenvatting</option>
+              <option value="detailed">Gedetailleerd</option>
+              <option value="comparative">Vergelijkend</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export Actions -->
+      <div class="export-actions">
+        <button class="export-btn pdf" onclick="exportToPDF()">
+          <i class="fas fa-file-pdf"></i> Export naar PDF
+        </button>
+        <button class="export-btn excel" onclick="exportToExcel()">
+          <i class="fas fa-file-excel"></i> Export naar Excel
+        </button>
+        <button class="export-btn" onclick="scheduleReport()">
+          <i class="fas fa-clock"></i> Plan Automatisch Rapport
+        </button>
+      </div>
+
+      <!-- Report Tabs -->
+      <div class="report-tabs">
+        <button class="report-tab active" onclick="showReportTab('overview')">
+          <i class="fas fa-chart-pie"></i> Overzicht
+        </button>
+        <button class="report-tab" onclick="showReportTab('attendance')">
+          <i class="fas fa-user-check"></i> Aanwezigheid
+        </button>
+        <button class="report-tab" onclick="showReportTab('behavior')">
+          <i class="fas fa-exclamation-triangle"></i> Gedrag
+        </button>
+        <button class="report-tab" onclick="showReportTab('performance')">
+          <i class="fas fa-trophy"></i> Prestaties
+        </button>
+        <button class="report-tab" onclick="showReportTab('financial')">
+          <i class="fas fa-euro-sign"></i> Financieel
+        </button>
+        <button class="report-tab" onclick="showReportTab('communication')">
+          <i class="fas fa-comments"></i> Communicatie
+        </button>
+      </div>
+
+      <!-- Overview Report -->
+      <div id="overview-report" class="report-content active">
+        <!-- Key Metrics -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="metric-value" id="totalPlayers">247</div>
+            <div class="metric-label">Totaal Spelers</div>
+            <div class="metric-trend trend-up">
+              <i class="fas fa-arrow-up"></i> +12 deze maand
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
+              <i class="fas fa-percentage"></i>
+            </div>
+            <div class="metric-value" id="avgAttendance">87.3%</div>
+            <div class="metric-label">Gem. Aanwezigheid</div>
+            <div class="metric-trend trend-up">
+              <i class="fas fa-arrow-up"></i> +2.1% vs vorige maand
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+              <i class="fas fa-clipboard-list"></i>
+            </div>
+            <div class="metric-value" id="activeIncidents">23</div>
+            <div class="metric-label">Actieve Incidenten</div>
+            <div class="metric-trend trend-down">
+              <i class="fas fa-arrow-down"></i> -5 deze week
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+              <i class="fas fa-trophy"></i>
+            </div>
+            <div class="metric-value" id="winRate">71%</div>
+            <div class="metric-label">Winst Percentage</div>
+            <div class="metric-trend trend-up">
+              <i class="fas fa-arrow-up"></i> +8% dit seizoen
+            </div>
+          </div>
+        </div>
+
+        <!-- Attendance Chart -->
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3 class="chart-title">Aanwezigheids Trend (Laatste 30 dagen)</h3>
+            <select onchange="updateAttendanceChart(this.value)" style="padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 6px;">
+              <option value="daily">Per dag</option>
+              <option value="weekly" selected>Per week</option>
+              <option value="monthly">Per maand</option>
+            </select>
+          </div>
+          <canvas id="attendanceChart" class="chart-canvas"></canvas>
+        </div>
+
+        <!-- Team Performance Chart -->
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3 class="chart-title">Team Prestaties Vergelijking</h3>
+          </div>
+          <canvas id="teamPerformanceChart" class="chart-canvas"></canvas>
+        </div>
+
+        <!-- Quick Alerts -->
+        <div class="alert-panel">
+          <h3 style="margin: 0 0 1rem 0; font-size: 1.125rem; font-weight: 600; color: #1e293b;">
+            <i class="fas fa-bell"></i> Actie Vereist
+          </h3>
+          <div id="alertsList">
+            <!-- Alerts will be loaded here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Attendance Report -->
+      <div id="attendance-report" class="report-content">
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+              <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="metric-value">92.1%</div>
+            <div class="metric-label">Training Aanwezigheid</div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 92.1%;"></div>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+              <i class="fas fa-trophy"></i>
+            </div>
+            <div class="metric-value">84.7%</div>
+            <div class="metric-label">Wedstrijd Aanwezigheid</div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 84.7%;"></div>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="metric-value">47</div>
+            <div class="metric-label">Te Laat Afmeldingen</div>
+            <div class="metric-trend trend-down">
+              <i class="fas fa-arrow-down"></i> -12 vs vorige maand
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">
+              <i class="fas fa-user-times"></i>
+            </div>
+            <div class="metric-value">18</div>
+            <div class="metric-label">No-Shows</div>
+            <div class="metric-trend trend-neutral">
+              <i class="fas fa-minus"></i> Gelijk aan vorige maand
+            </div>
+          </div>
+        </div>
+
+        <!-- Attendance by Team Chart -->
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3 class="chart-title">Aanwezigheid per Team</h3>
+          </div>
+          <canvas id="attendanceByTeamChart" class="chart-canvas"></canvas>
+        </div>
+
+        <!-- Attendance Table -->
+        <div class="data-table">
+          <div class="table-header">
+            <h3 class="table-title">Gedetailleerde Aanwezigheidsgegevens</h3>
+          </div>
+          <div class="table-content">
+            <table class="analytics-table">
+              <thead>
+                <tr>
+                  <th>Team</th>
+                  <th>Spelers</th>
+                  <th>Training %</th>
+                  <th>Wedstrijd %</th>
+                  <th>Trend</th>
+                  <th>Acties</th>
+                </tr>
+              </thead>
+              <tbody id="attendanceTableBody">
+                <!-- Table data will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Behavior Report -->
+      <div id="behavior-report" class="report-content">
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="metric-value">89</div>
+            <div class="metric-label">Actieve Gele Kaarten</div>
+            <div class="metric-trend trend-down">
+              <i class="fas fa-arrow-down"></i> -15 deze maand
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+              <i class="fas fa-comments"></i>
+            </div>
+            <div class="metric-value">12</div>
+            <div class="metric-label">Gesprekken Gepland</div>
+            <div class="metric-trend trend-up">
+              <i class="fas fa-arrow-up"></i> +3 deze week
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+              <i class="fas fa-thumbs-up"></i>
+            </div>
+            <div class="metric-value">94.2%</div>
+            <div class="metric-label">Positief Gedrag</div>
+            <div class="metric-trend trend-up">
+              <i class="fas fa-arrow-up"></i> +1.8% verbetering
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+              <i class="fas fa-medal"></i>
+            </div>
+            <div class="metric-value">156</div>
+            <div class="metric-label">Beloningen Uitgegeven</div>
+            <div class="metric-trend trend-up">
+              <i class="fas fa-arrow-up"></i> +28 deze maand
+            </div>
+          </div>
+        </div>
+
+        <!-- Behavior Incidents Chart -->
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3 class="chart-title">Gedragsincidenten Trend</h3>
+          </div>
+          <canvas id="behaviorChart" class="chart-canvas"></canvas>
+        </div>
+
+        <!-- Top Disciplinary Issues -->
+        <div class="data-table">
+          <div class="table-header">
+            <h3 class="table-title">Top Disciplinaire Kwesties</h3>
+          </div>
+          <div class="table-content">
+            <table class="analytics-table">
+              <thead>
+                <tr>
+                  <th>Speler</th>
+                  <th>Team</th>
+                  <th>Gele Kaarten</th>
+                  <th>Laatste Incident</th>
+                  <th>Status</th>
+                  <th>Actie</th>
+                </tr>
+              </thead>
+              <tbody id="disciplinaryTableBody">
+                <!-- Table data will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Performance Report -->
+      <div id="performance-report" class="report-content">
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+              <i class="fas fa-trophy"></i>
+            </div>
+            <div class="metric-value">68</div>
+            <div class="metric-label">Gewonnen Wedstrijden</div>
+            <div class="metric-trend trend-up">
+              <i class="fas fa-arrow-up"></i> +12 dit seizoen
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+              <i class="fas fa-handshake"></i>
+            </div>
+            <div class="metric-value">21</div>
+            <div class="metric-label">Gelijkspel</div>
+            <div class="metric-trend trend-neutral">
+              <i class="fas fa-minus"></i> Stabiel
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+              <i class="fas fa-times"></i>
+            </div>
+            <div class="metric-value">27</div>
+            <div class="metric-label">Verloren Wedstrijden</div>
+            <div class="metric-trend trend-down">
+              <i class="fas fa-arrow-down"></i> -8 vs vorig seizoen
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
+              <i class="fas fa-futbol"></i>
+            </div>
+            <div class="metric-value">2.4</div>
+            <div class="metric-label">Gem. Doelpunten</div>
+            <div class="metric-trend trend-up">
+              <i class="fas fa-arrow-up"></i> +0.3 verbetering
+            </div>
+          </div>
+        </div>
+
+        <!-- Win/Loss Chart -->
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3 class="chart-title">Seizoen Prestaties per Team</h3>
+          </div>
+          <canvas id="performanceChart" class="chart-canvas"></canvas>
+        </div>
+
+        <!-- League Table -->
+        <div class="data-table">
+          <div class="table-header">
+            <h3 class="table-title">Team Klassement</h3>
+          </div>
+          <div class="table-content">
+            <table class="analytics-table">
+              <thead>
+                <tr>
+                  <th>Positie</th>
+                  <th>Team</th>
+                  <th>Gespeeld</th>
+                  <th>W</th>
+                  <th>G</th>
+                  <th>V</th>
+                  <th>Punten</th>
+                  <th>Doelsaldo</th>
+                </tr>
+              </thead>
+              <tbody id="leagueTableBody">
+                <!-- Table data will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Financial Report -->
+      <div id="financial-report" class="report-content">
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+              <i class="fas fa-euro-sign"></i>
+            </div>
+            <div class="metric-value">€24,750</div>
+            <div class="metric-label">Totale Inkomsten</div>
+            <div class="metric-trend trend-up">
+              <i class="fas fa-arrow-up"></i> +€2,100 deze maand
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+              <i class="fas fa-credit-card"></i>
+            </div>
+            <div class="metric-value">€18,320</div>
+            <div class="metric-label">Uitgaven</div>
+            <div class="metric-trend trend-up">
+              <i class="fas fa-arrow-up"></i> +€980 deze maand
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="metric-value">€6,430</div>
+            <div class="metric-label">Nettowinst</div>
+            <div class="metric-trend trend-up">
+              <i class="fas fa-arrow-up"></i> +€1,120 deze maand
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="metric-value">€1,240</div>
+            <div class="metric-label">Openstaande Betalingen</div>
+            <div class="metric-trend trend-down">
+              <i class="fas fa-arrow-down"></i> -€340 deze week
+            </div>
+          </div>
+        </div>
+
+        <!-- Financial Chart -->
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3 class="chart-title">Financiële Trend (Laatste 12 maanden)</h3>
+          </div>
+          <canvas id="financialChart" class="chart-canvas"></canvas>
+        </div>
+      </div>
+
+      <!-- Communication Report -->
+      <div id="communication-report" class="report-content">
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div class="metric-value">1,247</div>
+            <div class="metric-label">Berichten Verzonden</div>
+            <div class="metric-trend trend-up">
+              <i class="fas fa-arrow-up"></i> +89 deze week
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+              <i class="fas fa-eye"></i>
+            </div>
+            <div class="metric-value">94.3%</div>
+            <div class="metric-label">Berichten Gelezen</div>
+            <div class="metric-trend trend-up">
+              <i class="fas fa-arrow-up"></i> +2.1% verbetering
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+              <i class="fas fa-reply"></i>
+            </div>
+            <div class="metric-value">67.8%</div>
+            <div class="metric-label">Respons Ratio</div>
+            <div class="metric-trend trend-up">
+              <i class="fas fa-arrow-up"></i> +5.2% deze maand
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="metric-value">2.4h</div>
+            <div class="metric-label">Gem. Responstijd</div>
+            <div class="metric-trend trend-down">
+              <i class="fas fa-arrow-down"></i> -0.8h verbetering
+            </div>
+          </div>
+        </div>
+
+        <!-- Communication Chart -->
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3 class="chart-title">Communicatie Activiteit</h3>
+          </div>
+          <canvas id="communicationChart" class="chart-canvas"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // Analytics Dashboard JavaScript
+    let attendanceChart, teamPerformanceChart, behaviorChart, performanceChart, financialChart, communicationChart, attendanceByTeamChart;
+
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeAnalyticsDashboard();
+    });
+
+    function initializeAnalyticsDashboard() {
+      updateLastUpdateTime();
+      populateTeamFilter();
+      loadAnalyticsData();
+      initializeCharts();
+      loadAlertsData();
+      updateReports();
+      
+      // Update data every 5 minutes
+      setInterval(() => {
+        updateReports();
+        updateLastUpdateTime();
+      }, 300000);
+    }
+
+    function updateLastUpdateTime() {
+      const now = new Date();
+      document.getElementById('lastUpdate').textContent = now.toLocaleString('nl-NL');
+    }
+
+    function populateTeamFilter() {
+      const teamFilter = document.getElementById('teamFilter');
+      const teams = ['O6-1', 'O6-2', 'O7-1', 'O8-1', 'O9-1', 'O10-1', 'O11-1', 'O12-1'];
+      
+      teams.forEach(team => {
+        const option = document.createElement('option');
+        option.value = team;
+        option.textContent = team;
+        teamFilter.appendChild(option);
+      });
+    }
+
+    function showReportTab(tabName) {
+      // Hide all report contents
+      document.querySelectorAll('.report-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      
+      // Remove active class from all tabs
+      document.querySelectorAll('.report-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Show selected content and activate tab
+      document.getElementById(tabName + '-report').classList.add('active');
+      event.target.classList.add('active');
+      
+      // Load specific data for the tab
+      loadTabSpecificData(tabName);
+    }
+
+    function loadTabSpecificData(tabName) {
+      switch(tabName) {
+        case 'attendance':
+          updateAttendanceData();
+          break;
+        case 'behavior':
+          updateBehaviorData();
+          break;
+        case 'performance':
+          updatePerformanceData();
+          break;
+        case 'financial':
+          updateFinancialData();
+          break;
+        case 'communication':
+          updateCommunicationData();
+          break;
+      }
+    }
+
+    function initializeCharts() {
+      initializeAttendanceChart();
+      initializeTeamPerformanceChart();
+      initializeBehaviorChart();
+      initializePerformanceChart();
+      initializeFinancialChart();
+      initializeCommunicationChart();
+      initializeAttendanceByTeamChart();
+    }
+
+    function initializeAttendanceChart() {
+      const ctx = document.getElementById('attendanceChart').getContext('2d');
+      attendanceChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+          datasets: [{
+            label: 'Trainingen',
+            data: [92, 89, 94, 87],
+            borderColor: '#1e5ba8',
+            backgroundColor: 'rgba(30, 91, 168, 0.1)',
+            tension: 0.4,
+            fill: true
+          }, {
+            label: 'Wedstrijden',
+            data: [88, 85, 91, 84],
+            borderColor: '#ff6b00',
+            backgroundColor: 'rgba(255, 107, 0, 0.1)',
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              ticks: {
+                callback: function(value) {
+                  return value + '%';
+                }
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              position: 'top'
+            }
+          }
+        }
+      });
+    }
+
+    function initializeTeamPerformanceChart() {
+      const ctx = document.getElementById('teamPerformanceChart').getContext('2d');
+      teamPerformanceChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: ['Aanwezigheid', 'Gedrag', 'Prestaties', 'Communicatie', 'Ontwikkeling'],
+          datasets: [{
+            label: 'O10-1',
+            data: [87, 92, 78, 85, 88],
+            borderColor: '#1e5ba8',
+            backgroundColor: 'rgba(30, 91, 168, 0.2)',
+          }, {
+            label: 'O11-1',
+            data: [91, 88, 82, 90, 85],
+            borderColor: '#ff6b00',
+            backgroundColor: 'rgba(255, 107, 0, 0.2)',
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            r: {
+              beginAtZero: true,
+              max: 100
+            }
+          }
+        }
+      });
+    }
+
+    function initializeBehaviorChart() {
+      const ctx = document.getElementById('behaviorChart').getContext('2d');
+      behaviorChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Gele Kaarten', 'Te Laat', 'No-Shows', 'Positief Gedrag', 'Beloningen'],
+          datasets: [{
+            label: 'Aantal',
+            data: [89, 47, 18, 234, 156],
+            backgroundColor: [
+              '#ef4444',
+              '#f59e0b',
+              '#6b7280',
+              '#10b981',
+              '#8b5cf6'
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+
+    function initializePerformanceChart() {
+      const ctx = document.getElementById('performanceChart').getContext('2d');
+      performanceChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Gewonnen', 'Gelijkspel', 'Verloren'],
+          datasets: [{
+            data: [68, 21, 27],
+            backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+    }
+
+    function initializeFinancialChart() {
+      const ctx = document.getElementById('financialChart').getContext('2d');
+      financialChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mrt', 'Apr', 'Mei', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'],
+          datasets: [{
+            label: 'Inkomsten',
+            data: [2100, 2300, 2150, 2400, 2350, 2500, 2200, 2450, 2600, 2300, 2550, 2750],
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            fill: true
+          }, {
+            label: 'Uitgaven',
+            data: [1800, 1950, 1750, 1900, 1850, 2000, 1700, 1950, 2100, 1800, 2050, 2320],
+            borderColor: '#ef4444',
+            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) {
+                  return '€' + value;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function initializeCommunicationChart() {
+      const ctx = document.getElementById('communicationChart').getContext('2d');
+      communicationChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Emails', 'App Berichten', 'SMS', 'Push Notificaties'],
+          datasets: [{
+            label: 'Verzonden',
+            data: [534, 445, 168, 312],
+            backgroundColor: '#3b82f6'
+          }, {
+            label: 'Gelezen',
+            data: [498, 421, 159, 287],
+            backgroundColor: '#10b981'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+
+    function initializeAttendanceByTeamChart() {
+      const ctx = document.getElementById('attendanceByTeamChart').getContext('2d');
+      attendanceByTeamChart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+          labels: ['O6-1', 'O7-1', 'O8-1', 'O9-1', 'O10-1', 'O11-1', 'O12-1'],
+          datasets: [{
+            label: 'Aanwezigheid %',
+            data: [94, 91, 88, 85, 87, 92, 89],
+            backgroundColor: [
+              '#10b981',
+              '#10b981',
+              '#f59e0b',
+              '#ef4444',
+              '#f59e0b',
+              '#10b981',
+              '#10b981'
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              beginAtZero: true,
+              max: 100,
+              ticks: {
+                callback: function(value) {
+                  return value + '%';
+                }
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        }
+      });
+    }
+
+    function updateReports() {
+      const period = document.getElementById('periodFilter').value;
+      const ageGroup = document.getElementById('ageGroupFilter').value;
+      const team = document.getElementById('teamFilter').value;
+      const reportType = document.getElementById('reportTypeFilter').value;
+
+      console.log('📊 Updating reports with filters:', { period, ageGroup, team, reportType });
+      
+      // Update charts and data based on filters
+      updateChartsWithFilters({ period, ageGroup, team, reportType });
+      updateTablesWithFilters({ period, ageGroup, team, reportType });
+    }
+
+    function updateChartsWithFilters(filters) {
+      // Update attendance chart data
+      if (attendanceChart) {
+        // Simulate different data based on filters
+        const newData = generateFilteredAttendanceData(filters);
+        attendanceChart.data.datasets[0].data = newData.training;
+        attendanceChart.data.datasets[1].data = newData.matches;
+        attendanceChart.update();
+      }
+    }
+
+    function generateFilteredAttendanceData(filters) {
+      // Simulate different data based on filters
+      const baseTraining = [92, 89, 94, 87];
+      const baseMatches = [88, 85, 91, 84];
+      
+      if (filters.team !== 'all') {
+        // Adjust data for specific team
+        return {
+          training: baseTraining.map(val => val + Math.random() * 10 - 5),
+          matches: baseMatches.map(val => val + Math.random() * 10 - 5)
+        };
+      }
+      
+      return { training: baseTraining, matches: baseMatches };
+    }
+
+    function updateTablesWithFilters(filters) {
+      updateAttendanceTable(filters);
+      updateDisciplinaryTable(filters);
+      updateLeagueTable(filters);
+    }
+
+    function updateAttendanceTable(filters) {
+      const tbody = document.getElementById('attendanceTableBody');
+      if (!tbody) return;
+
+      const teams = ['O6-1', 'O7-1', 'O8-1', 'O9-1', 'O10-1', 'O11-1', 'O12-1'];
+      
+      tbody.innerHTML = teams.map(team => {
+        const trainingPerc = Math.floor(Math.random() * 20) + 80;
+        const matchPerc = Math.floor(Math.random() * 20) + 75;
+        const trend = trainingPerc > 85 ? '📈' : trainingPerc < 80 ? '📉' : '➡️';
+        
+        return `
+          <tr>
+            <td><strong>${team}</strong></td>
+            <td>${Math.floor(Math.random() * 10) + 15}</td>
+            <td><span style="color: ${trainingPerc > 85 ? '#10b981' : trainingPerc < 80 ? '#ef4444' : '#f59e0b'}">${trainingPerc}%</span></td>
+            <td><span style="color: ${matchPerc > 85 ? '#10b981' : matchPerc < 80 ? '#ef4444' : '#f59e0b'}">${matchPerc}%</span></td>
+            <td>${trend}</td>
+            <td>
+              <button onclick="drillDownTeam('${team}')" style="background: #1e5ba8; color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem; cursor: pointer;">
+                Details
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function updateDisciplinaryTable(filters) {
+      const tbody = document.getElementById('disciplinaryTableBody');
+      if (!tbody) return;
+
+      const players = [
+        { name: 'Jesse de Jong', team: 'O10-1', cards: 3, lastIncident: '2 dagen geleden', status: 'Gesprek gepland' },
+        { name: 'Mila Jansen', team: 'O9-1', cards: 2, lastIncident: '1 week geleden', status: 'Monitoring' },
+        { name: 'Liam de Jong', team: 'O7-1', cards: 2, lastIncident: '3 dagen geleden', status: 'Waarschuwing' },
+        { name: 'Daan Visser', team: 'O8-1', cards: 3, lastIncident: '1 dag geleden', status: 'Actie vereist' }
+      ];
+
+      tbody.innerHTML = players.map(player => `
+        <tr>
+          <td><strong>${player.name}</strong></td>
+          <td>${player.team}</td>
+          <td><span style="background: #fef3c7; color: #92400e; padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.8rem;">${player.cards}</span></td>
+          <td>${player.lastIncident}</td>
+          <td>
+            <span style="background: ${player.cards >= 3 ? '#fef2f2' : '#fef3c7'}; color: ${player.cards >= 3 ? '#991b1b' : '#92400e'}; padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.8rem;">
+              ${player.status}
+            </span>
+          </td>
+          <td>
+            <button onclick="scheduleConversation('${player.name}')" style="background: #f59e0b; color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem; cursor: pointer;">
+              Plan Gesprek
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function updateLeagueTable(filters) {
+      const tbody = document.getElementById('leagueTableBody');
+      if (!tbody) return;
+
+      const teams = [
+        { name: 'O10-1', played: 16, won: 12, drawn: 2, lost: 2, points: 38, goalDiff: '+18' },
+        { name: 'O11-1', played: 15, won: 10, drawn: 3, lost: 2, points: 33, goalDiff: '+14' },
+        { name: 'O9-1', played: 14, won: 9, drawn: 2, lost: 3, points: 29, goalDiff: '+8' },
+        { name: 'O8-1', played: 16, won: 8, drawn: 4, lost: 4, points: 28, goalDiff: '+2' },
+        { name: 'O12-1', played: 15, won: 7, drawn: 3, lost: 5, points: 24, goalDiff: '-3' },
+        { name: 'O7-1', played: 14, won: 6, drawn: 2, lost: 6, points: 20, goalDiff: '-5' },
+        { name: 'O6-1', played: 12, won: 4, drawn: 3, lost: 5, points: 15, goalDiff: '-8' }
+      ];
+
+      tbody.innerHTML = teams.map((team, index) => `
+        <tr>
+          <td><strong>${index + 1}</strong></td>
+          <td><strong>${team.name}</strong></td>
+          <td>${team.played}</td>
+          <td>${team.won}</td>
+          <td>${team.drawn}</td>
+          <td>${team.lost}</td>
+          <td><strong>${team.points}</strong></td>
+          <td style="color: ${team.goalDiff.startsWith('+') ? '#10b981' : team.goalDiff.startsWith('-') ? '#ef4444' : '#64748b'}">${team.goalDiff}</td>
+        </tr>
+      `).join('');
+    }
+
+    function loadAlertsData() {
+      const alertsList = document.getElementById('alertsList');
+      const alerts = [
+        {
+          type: 'error',
+          icon: 'fas fa-exclamation-circle',
+          title: 'Lage Aanwezigheid O9-1',
+          message: 'Team O9-1 heeft slechts 72% aanwezigheid deze maand. Interventie vereist.',
+          action: 'Bekijk Details'
+        },
+        {
+          type: 'warning',
+          icon: 'fas fa-clock',
+          title: '12 Gesprekken Te Plannen',
+          message: 'Meerdere spelers hebben 3+ gele kaarten. Plan gesprekken met ouders.',
+          action: 'Plan Nu'
+        },
+        {
+          type: 'info',
+          icon: 'fas fa-chart-line',
+          title: 'Positieve Trend O11-1',
+          message: 'Team O11-1 toont 15% verbetering in gedrag deze maand.',
+          action: 'Bekijk Rapport'
+        }
+      ];
+
+      alertsList.innerHTML = alerts.map(alert => `
+        <div class="alert-item ${alert.type}">
+          <div class="alert-icon" style="background: ${alert.type === 'error' ? '#ef4444' : alert.type === 'warning' ? '#f59e0b' : '#3b82f6'};">
+            <i class="${alert.icon}"></i>
+          </div>
+          <div style="flex: 1;">
+            <div style="font-weight: 600; margin-bottom: 0.25rem;">${alert.title}</div>
+            <div style="font-size: 0.875rem; color: #64748b; margin-bottom: 0.5rem;">${alert.message}</div>
+            <button onclick="handleAlertAction('${alert.title}')" style="background: none; border: 1px solid currentColor; color: inherit; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.8rem; cursor: pointer;">
+              ${alert.action}
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function loadAnalyticsData() {
+      // Load from localStorage or generate demo data
+      updateOverviewMetrics();
+    }
+
+    function updateOverviewMetrics() {
+      // Get data from localStorage and update metrics
+      const players = JSON.parse(localStorage.getItem('registeredPlayers') || '[]');
+      const yellowCards = JSON.parse(localStorage.getItem('yellowCards') || '[]');
+      
+      document.getElementById('totalPlayers').textContent = players.length || 247;
+      
+      // Update other metrics with calculated or demo data
+      const avgAttendance = calculateAverageAttendance();
+      document.getElementById('avgAttendance').textContent = avgAttendance + '%';
+    }
+
+    function calculateAverageAttendance() {
+      // Calculate from actual absence data
+      const absences = JSON.parse(localStorage.getItem('absences') || '[]');
+      const totalEvents = 50; // Example total events
+      const totalAbsences = absences.length;
+      return Math.round(((totalEvents - totalAbsences) / totalEvents) * 100 * 10) / 10;
+    }
+
+    // Export Functions
+    function exportToPDF() {
+      showExportNotification('PDF rapport wordt gegenereerd...', 'info');
+      
+      setTimeout(() => {
+        showExportNotification('PDF rapport succesvol gedownload!', 'success');
+        
+        // Simulate PDF download
+        const link = document.createElement('a');
+        link.href = 'data:text/plain;charset=utf-8,BTV Analytics Report - Generated on ' + new Date().toLocaleDateString('nl-NL');
+        link.download = 'BTV_Analytics_Report_' + new Date().toISOString().split('T')[0] + '.txt';
+        link.click();
+      }, 2000);
+    }
+
+    function exportToExcel() {
+      showExportNotification('Excel bestand wordt voorbereid...', 'info');
+      
+      setTimeout(() => {
+        showExportNotification('Excel bestand succesvol gedownload!', 'success');
+        
+        // Simulate Excel download
+        const data = generateExcelData();
+        const csvContent = "data:text/csv;charset=utf-8," + data;
+        const link = document.createElement('a');
+        link.href = encodeURI(csvContent);
+        link.download = 'BTV_Analytics_Data_' + new Date().toISOString().split('T')[0] + '.csv';
+        link.click();
+      }, 1500);
+    }
+
+    function generateExcelData() {
+      return `Team,Spelers,Training %,Wedstrijd %,Gele Kaarten,Status
+O6-1,16,94,88,3,Goed
+O7-1,18,91,85,5,Goed
+O8-1,17,88,82,8,Matig
+O9-1,19,85,79,12,Aandacht
+O10-1,20,87,84,6,Goed
+O11-1,21,92,89,2,Uitstekend
+O12-1,18,89,86,4,Goed`;
+    }
+
+    function scheduleReport() {
+      showExportNotification('Automatisch rapport planning wordt geopend...', 'info');
+      
+      // Show modal for scheduling
+      const modal = document.createElement('div');
+      modal.className = 'modal active';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title">
+              <i class="fas fa-clock"></i> Automatisch Rapport Plannen
+            </h2>
+            <button class="modal-close" onclick="this.closest('.modal').remove()">&times;</button>
+          </div>
+          <div style="padding: 1rem;">
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Frequentie:</label>
+              <select style="width: 100%; padding: 0.75rem; border: 2px solid #e1e5e9; border-radius: 8px;">
+                <option value="daily">Dagelijks</option>
+                <option value="weekly" selected>Wekelijks</option>
+                <option value="monthly">Maandelijks</option>
+                <option value="quarterly">Kwartaal</option>
+              </select>
+            </div>
+            
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Email Ontvanger:</label>
+              <input type="email" value="hjo@buitenveldert.nl" style="width: 100%; padding: 0.75rem; border: 2px solid #e1e5e9; border-radius: 8px;">
+            </div>
+            
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+              <button onclick="this.closest('.modal').remove()" style="flex: 1; background: #6b7280; color: white; border: none; padding: 1rem; border-radius: 8px; font-weight: 500;">
+                Annuleren
+              </button>
+              <button onclick="saveScheduledReport()" style="flex: 1; background: #1e5ba8; color: white; border: none; padding: 1rem; border-radius: 8px; font-weight: 500;">
+                <i class="fas fa-save"></i> Opslaan
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+    }
+
+    function saveScheduledReport() {
+      showExportNotification('Automatisch rapport succesvol ingepland!', 'success');
+      document.querySelector('.modal').remove();
+    }
+
+    function showExportNotification(message, type) {
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        z-index: 11000;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        max-width: 300px;
+        animation: slideIn 0.3s ease;
+      `;
+
+      notification.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'times-circle' : 'info-circle'}"></i>
+          <span>${message}</span>
+        </div>
+      `;
+
+      document.body.appendChild(notification);
+
+      setTimeout(() => {
+        if (notification.parentElement) {
+          notification.remove();
+        }
+      }, 4000);
+    }
+
+    // Drill down functions
+    function drillDownTeam(teamName) {
+      showExportNotification(`Gedetailleerde analyse voor ${teamName} wordt geladen...`, 'info');
+      
+      setTimeout(() => {
+        window.open(`team-analysis.html?team=${teamName}`, '_blank');
+      }, 1000);
+    }
+
+    function scheduleConversation(playerName) {
+      showExportNotification(`Gesprek planning voor ${playerName} wordt geopend...`, 'info');
+    }
+
+    function handleAlertAction(alertTitle) {
+      showExportNotification(`Actie voor "${alertTitle}" wordt uitgevoerd...`, 'info');
+    }
+
+    // Update functions for different report types
+    function updateAttendanceData() {
+      // Specific updates for attendance tab
+      console.log('📊 Loading attendance specific data...');
+    }
+
+    function updateBehaviorData() {
+      // Specific updates for behavior tab
+      console.log('📊 Loading behavior specific data...');
+    }
+
+    function updatePerformanceData() {
+      // Specific updates for performance tab
+      console.log('📊 Loading performance specific data...');
+    }
+
+    function updateFinancialData() {
+      // Specific updates for financial tab
+      console.log('📊 Loading financial specific data...');
+    }
+
+    function updateCommunicationData() {
+      // Specific updates for communication tab
+      console.log('📊 Loading communication specific data...');
+    }
+
+    function updateAttendanceChart(period) {
+      if (!attendanceChart) return;
+      
+      let newLabels, newTrainingData, newMatchData;
+      
+      switch(period) {
+        case 'daily':
+          newLabels = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
+          newTrainingData = [0, 89, 0, 0, 91, 0, 0];
+          newMatchData = [0, 0, 0, 0, 0, 87, 0];
+          break;
+        case 'weekly':
+          newLabels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+          newTrainingData = [92, 89, 94, 87];
+          newMatchData = [88, 85, 91, 84];
+          break;
+        case 'monthly':
+          newLabels = ['Jan', 'Feb', 'Mrt', 'Apr', 'Mei', 'Jun'];
+          newTrainingData = [88, 91, 87, 93, 89, 92];
+          newMatchData = [85, 88, 82, 89, 86, 88];
+          break;
+      }
+      
+      attendanceChart.data.labels = newLabels;
+      attendanceChart.data.datasets[0].data = newTrainingData;
+      attendanceChart.data.datasets[1].data = newMatchData;
+      attendanceChart.update();
+    }
+  </script>
+</body>
+</html>

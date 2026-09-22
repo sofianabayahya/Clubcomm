@@ -1,0 +1,1030 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speeltijd Management - Trainer Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      background: #f2f7fc;
+      color: #003366;
+      padding-bottom: 80px;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1e5ba8, #164a91);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    .match-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    .playtime-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .player-playtime-card {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 1rem;
+      border-left: 4px solid #3b82f6;
+    }
+
+    .playtime-controls {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .time-btn {
+      padding: 0.25rem 0.5rem;
+      border: 1px solid #e5e7eb;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .time-btn.active {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .auto-scheduler {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary { background: #1e5ba8; color: white; }
+    .btn-success { background: #10b981; color: white; }
+    .btn-warning { background: #f59e0b; color: white; }
+
+    .trainer-bottom-menu {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 2px solid #e5e7eb;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+      z-index: 1000;
+      padding: 0.5rem 0;
+    }
+
+    .menu-items {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .menu-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #64748b;
+      padding: 0.5rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      min-width: 60px;
+    }
+
+    .menu-item:hover {
+      color: #1e5ba8;
+      background: #f0f9ff;
+      transform: translateY(-2px);
+    }
+
+    .menu-item.active {
+      color: #1e5ba8;
+      background: #f0f9ff;
+      font-weight: 600;
+    }
+
+    .menu-item i {
+      font-size: 1.2rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .menu-item span {
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1><i class="fas fa-stopwatch"></i> Speeltijd Management - O10-1</h1>
+    <p style="margin: 0.5rem 0 0 0; opacity: 0.9;">Beheer speeltijd voor wedstrijden</p>
+  </div>
+
+  <div class="container">
+    <!-- Auto Scheduler -->
+    <div class="auto-scheduler">
+      <h3 style="margin: 0 0 1rem 0;">🤖 Automatische Speeltijd Verdeling</h3>
+      <p style="margin: 0 0 1rem 0; opacity: 0.9;">
+        Laat het systeem automatisch een eerlijke speeltijd verdeling maken voor de aankomende wedstrijd
+      </p>
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <button class="btn" onclick="generateAutoSchedule()" style="background: rgba(255,255,255,0.2); color: white;">
+          <i class="fas fa-magic"></i> Automatische Indeling
+        </button>
+        <button class="btn" onclick="balancePlaytime()" style="background: rgba(255,255,255,0.2); color: white;">
+          <i class="fas fa-balance-scale"></i> Speeltijd Balanceren
+        </button>
+      </div>
+    </div>
+
+    <!-- Current Match -->
+    <div class="match-card">
+      <h3><i class="fas fa-calendar-check"></i> Aankomende Wedstrijd</h3>
+      <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+        <strong>O10-1 vs FC Amsterdam O10-2</strong><br>
+        <span style="color: #64748b;">Zaterdag 7 juni 2025, 14:00 - Sportpark De Toekomst, Veld 3</span>
+      </div>
+
+      <!-- Match Settings -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Wedstrijdduur:</label>
+          <select id="matchDuration" style="width: 100%; padding: 0.5rem; border: 1px solid #e5e7eb; border-radius: 6px;">
+            <option value="60">60 minuten (2x30)</option>
+            <option value="70">70 minuten (2x35)</option>
+            <option value="80">80 minuten (2x40)</option>
+          </select>
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Minimum speeltijd:</label>
+          <select id="minPlaytime" style="width: 100%; padding: 0.5rem; border: 1px solid #e5e7eb; border-radius: 6px;">
+            <option value="20">20 minuten</option>
+            <option value="25">25 minuten</option>
+            <option value="30">30 minuten</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Match Configuration -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Wedstrijd Type:</label>
+        <select id="matchType" onchange="updateMatchSettings()" style="width: 100%; padding: 0.5rem; border: 1px solid #e5e7eb; border-radius: 6px;">
+          <option value="6v6">6 tegen 6 (8 spelers)</option>
+          <option value="7v7">7 tegen 7 (10 spelers)</option>
+          <option value="8v8">8 tegen 8 (11 spelers)</option>
+          <option value="9v9">9 tegen 9 (13 spelers)</option>
+          <option value="11v11">11 tegen 11 (16 spelers)</option>
+        </select>
+      </div>
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Blok Systeem:</label>
+        <select id="blockSystem" onchange="updateMatchSettings()" style="width: 100%; padding: 0.5rem; border: 1px solid #e5e7eb; border-radius: 6px;">
+          <option value="4x12.5">4 blokken × 12,5 min</option>
+          <option value="3x15">3 blokken × 15 min</option>
+          <option value="2x22.5">2 blokken × 22,5 min</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Keeper Systeem:</label>
+        <select id="keeperSystem" onchange="updateMatchSettings()" style="width: 100%; padding: 0.5rem; border: 1px solid #e5e7eb; border-radius: 6px;">
+          <option value="fixed">Vaste keeper (hele wedstrijd)</option>
+          <option value="rotating">Roterende keepers</option>
+          <option value="everyone">Iedereen keept een keer</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Keeper Management Section -->
+    <div style="background: #f0f9ff; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; border-left: 4px solid #3b82f6;">
+      <h4 style="margin: 0 0 1rem 0; color: #1e40af;"><i class="fas fa-futbol"></i> Keeper Beheer</h4>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div>
+          <h5 style="margin-bottom: 0.75rem;">Keeper Statistieken Seizoen</h5>
+          <div id="keeperStats" style="background: white; padding: 1rem; border-radius: 8px; max-height: 200px; overflow-y: auto;">
+            <!-- Keeper stats worden hier geladen -->
+          </div>
+        </div>
+        
+        <div>
+          <h5 style="margin-bottom: 0.75rem;">Keeper Planning Deze Wedstrijd</h5>
+          <div id="keeperPlanning" style="background: white; padding: 1rem; border-radius: 8px;">
+            <!-- Keeper planning wordt hier geladen -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Block-based Match Planning -->
+    <div style="background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+      <h4><i class="fas fa-chess-board"></i> Blok Planning - Wedstrijd Schema</h4>
+      
+      <div style="margin-bottom: 1rem; padding: 1rem; background: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
+        <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 0.5rem;">
+          <strong>⚠️ Belangrijk: Wisselmomenten</strong>
+          <button onclick="showSubstitutionRules()" style="background: none; border: 1px solid #f59e0b; color: #92400e; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.8rem;">
+            Wissel Regels
+          </button>
+        </div>
+        <p style="margin: 0; font-size: 0.9rem; color: #92400e;">
+          Wissels gebeuren alleen tussen blokken. Tijdens een blok van 12,5 min wordt er NIET gewisseld om onrust te voorkomen.
+        </p>
+      </div>
+
+      <div id="blockPlanningGrid" style="background: #f8fafc; border-radius: 8px; padding: 1rem;">
+        <!-- Block planning grid wordt hier geladen -->
+      </div>
+    </div>
+
+    <!-- Traditional Player Management (Backup) -->
+    <div style="background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h4 style="margin: 0;"><i class="fas fa-users"></i> Handmatige Speeltijd Aanpassing</h4>
+        <button onclick="toggleAdvancedMode()" id="advancedModeBtn" style="background: #6b7280; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.8rem;">
+          Toon Handmatig
+        </button>
+      </div>
+      
+      <div id="traditionalPlaytime" style="display: none;">
+        <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1rem;">
+          Gebruik dit alleen voor handmatige aanpassingen. Het blok-systeem hierboven is de aanbevolen methode.
+        </p>
+        <div class="playtime-grid" id="playtimeGrid">
+          <!-- Traditionele speler grid wordt hier geladen -->
+        </div>
+      </div>
+    </div>
+
+      <!-- Actions -->
+      <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+        <button class="btn btn-primary" onclick="savePlaytimeSettings()">
+          <i class="fas fa-save"></i> Opslaan
+        </button>
+        <button class="btn btn-success" onclick="exportPlaytimeSheet()">
+          <i class="fas fa-download"></i> Exporteer Schema
+        </button>
+        <button class="btn btn-warning" onclick="resetPlaytime()">
+          <i class="fas fa-undo"></i> Reset
+        </button>
+      </div>
+    </div>
+
+    <!-- Speeltijd Statistieken -->
+    <div class="match-card">
+      <h3><i class="fas fa-chart-bar"></i> Speeltijd Statistieken Seizoen</h3>
+      <div id="seasonStats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+        <!-- Seizoen statistieken worden hier geladen -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Vast onderste menu -->
+  <div class="trainer-bottom-menu">
+    <div class="menu-items">
+      <a href="trainer-dashboard.html" class="menu-item">
+        <i class="fas fa-home"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="trainer-absentie.html" class="menu-item">
+        <i class="fas fa-clipboard-list"></i>
+        <span>Absentie</span>
+      </a>
+      <a href="trainer-berichten.html" class="menu-item">
+        <i class="fas fa-envelope"></i>
+        <span>Berichten</span>
+      </a>
+      <a href="trainer-beoordeling.html" class="menu-item">
+        <i class="fas fa-star"></i>
+        <span>Beoordeling</span>
+      </a>
+      <a href="trainer-speeltijd.html" class="menu-item active">
+        <i class="fas fa-stopwatch"></i>
+        <span>Speeltijd</span>
+      </a>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    const teamPlayers = [
+      'Jesse de Jong', 'Mees van Dijk', 'Rayan Bakker', 'Tom Jansen',
+      'Lisa van der Berg', 'Sem Vermeulen', 'Daan Peters', 'Nova Hendriks',
+      'Luca Smit', 'Amy de Wit', 'Finn van Loon', 'Zoë Visser'
+    ];
+
+    let playtimeSettings = {};
+
+    document.addEventListener('DOMContentLoaded', function() {
+      loadPlaytimeGrid();
+      loadSeasonStats();
+      loadSavedSettings();
+      loadKeeperStats();
+      loadBlockPlanning();
+      updateMatchSettings();
+    });
+
+    function loadPlaytimeGrid() {
+      const grid = document.getElementById('playtimeGrid');
+      grid.innerHTML = teamPlayers.map(player => {
+        const settings = playtimeSettings[player] || { firstHalf: 30, secondHalf: 30 };
+        
+        return `
+          <div class="player-playtime-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <strong>${player}</strong>
+              <span style="color: #64748b; font-size: 0.9rem;">
+                Totaal: ${settings.firstHalf + settings.secondHalf} min
+              </span>
+            </div>
+            
+            <div style="margin-bottom: 0.5rem;">
+              <label style="font-size: 0.8rem; color: #64748b;">1e Helft:</label>
+              <div class="playtime-controls">
+                ${[0, 15, 20, 25, 30].map(min => `
+                  <button class="time-btn ${settings.firstHalf === min ? 'active' : ''}" 
+                          onclick="setPlaytime('${player}', 'firstHalf', ${min})">
+                    ${min}min
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+            
+            <div>
+              <label style="font-size: 0.8rem; color: #64748b;">2e Helft:</label>
+              <div class="playtime-controls">
+                ${[0, 15, 20, 25, 30].map(min => `
+                  <button class="time-btn ${settings.secondHalf === min ? 'active' : ''}" 
+                          onclick="setPlaytime('${player}', 'secondHalf', ${min})">
+                    ${min}min
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function setPlaytime(player, half, minutes) {
+      if (!playtimeSettings[player]) {
+        playtimeSettings[player] = { firstHalf: 0, secondHalf: 0 };
+      }
+      
+      playtimeSettings[player][half] = minutes;
+      loadPlaytimeGrid();
+    }
+
+    function generateAutoSchedule() {
+      const matchDuration = parseInt(document.getElementById('matchDuration').value);
+      const minPlaytime = parseInt(document.getElementById('minPlaytime').value);
+      const halfDuration = matchDuration / 2;
+      
+      // Eenvoudige automatische verdeling - iedereen krijgt minimaal de minimum speeltijd
+      teamPlayers.forEach(player => {
+        const firstHalfTime = Math.min(minPlaytime / 2, halfDuration);
+        const secondHalfTime = Math.min(minPlaytime / 2, halfDuration);
+        
+        playtimeSettings[player] = {
+          firstHalf: firstHalfTime,
+          secondHalf: secondHalfTime
+        };
+      });
+      
+      loadPlaytimeGrid();
+      showNotification('🤖 Automatische speeltijd verdeling toegepast', 'success');
+    }
+
+    function balancePlaytime() {
+      // Balanceer speeltijd op basis van seizoen statistieken
+      const totalPlaytime = teamPlayers.reduce((sum, player) => {
+        const seasonStats = getPlayerSeasonStats(player);
+        return sum + seasonStats.totalMinutes;
+      }, 0);
+      
+      const averagePlaytime = totalPlaytime / teamPlayers.length;
+      
+      teamPlayers.forEach(player => {
+        const seasonStats = getPlayerSeasonStats(player);
+        const deficit = averagePlaytime - seasonStats.totalMinutes;
+        
+        // Geef spelers met minder speeltijd prioriteit
+        if (deficit > 0) {
+          playtimeSettings[player] = { firstHalf: 30, secondHalf: 30 };
+        } else {
+          playtimeSettings[player] = { firstHalf: 20, secondHalf: 20 };
+        }
+      });
+      
+      loadPlaytimeGrid();
+      showNotification('⚖️ Speeltijd gebalanceerd op basis van seizoen', 'success');
+    }
+
+    function getPlayerSeasonStats(player) {
+      // Simuleer seizoen statistieken
+      const baseMinutes = 400 + Math.floor(Math.random() * 200);
+      return {
+        totalMinutes: baseMinutes,
+        gamesPlayed: Math.floor(baseMinutes / 45),
+        averagePerGame: Math.round(baseMinutes / Math.floor(baseMinutes / 45))
+      };
+    }
+
+    function loadSeasonStats() {
+      const statsContainer = document.getElementById('seasonStats');
+      statsContainer.innerHTML = teamPlayers.map(player => {
+        const stats = getPlayerSeasonStats(player);
+        
+        return `
+          <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; text-align: center;">
+            <strong style="color: #1e293b;">${player}</strong>
+            <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #64748b;">
+              <div>${stats.totalMinutes} min totaal</div>
+              <div>${stats.gamesPlayed} wedstrijden</div>
+              <div>Ø ${stats.averagePerGame} min/wedstrijd</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function savePlaytimeSettings() {
+      localStorage.setItem('playtimeSettings', JSON.stringify(playtimeSettings));
+      showNotification('💾 Speeltijd instellingen opgeslagen', 'success');
+    }
+
+    function loadSavedSettings() {
+      const saved = localStorage.getItem('playtimeSettings');
+      if (saved) {
+        playtimeSettings = JSON.parse(saved);
+        loadPlaytimeGrid();
+      }
+    }
+
+    function exportPlaytimeSheet() {
+      showNotification('📊 Speeltijd schema geëxporteerd naar Excel', 'success');
+    }
+
+    function resetPlaytime() {
+      if (confirm('Weet je zeker dat je alle speeltijd instellingen wilt resetten?')) {
+        playtimeSettings = {};
+        loadPlaytimeGrid();
+        showNotification('🔄 Speeltijd instellingen gereset', 'info');
+      }
+    }
+
+    // ==================== KEEPER MANAGEMENT SYSTEM ====================
+    
+    let keeperData = JSON.parse(localStorage.getItem('keeperSeasonData') || '{}');
+    let currentMatchBlocks = [];
+    let blockSettings = {
+      blocks: 4,
+      duration: 12.5,
+      fieldPlayers: 5, // For 6v6 (6 field players + 1 keeper = 7 total on field)
+      totalPlayers: 8
+    };
+
+    function loadKeeperStats() {
+      const container = document.getElementById('keeperStats');
+      
+      // Initialize keeper data for all players if not exists
+      teamPlayers.forEach(player => {
+        if (!keeperData[player]) {
+          keeperData[player] = {
+            totalMinutes: 0,
+            matchesKept: 0,
+            lastKept: null,
+            preferredKeeper: false
+          };
+        }
+      });
+
+      const keeperStatsHtml = teamPlayers.map(player => {
+        const stats = keeperData[player];
+        const isPreferred = stats.preferredKeeper;
+        
+        return `
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; border-bottom: 1px solid #e5e7eb;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <button onclick="togglePreferredKeeper('${player}')" 
+                      style="background: ${isPreferred ? '#10b981' : '#e5e7eb'}; 
+                             color: ${isPreferred ? 'white' : '#64748b'};
+                             border: none; padding: 0.25rem; border-radius: 4px; cursor: pointer;">
+                <i class="fas fa-star"></i>
+              </button>
+              <strong style="font-size: 0.9rem;">${player}</strong>
+            </div>
+            <div style="text-align: right; font-size: 0.8rem;">
+              <div style="color: #1e5ba8; font-weight: 600;">${stats.totalMinutes} min</div>
+              <div style="color: #64748b;">${stats.matchesKept} wedstrijden</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = keeperStatsHtml;
+    }
+
+    function togglePreferredKeeper(player) {
+      keeperData[player].preferredKeeper = !keeperData[player].preferredKeeper;
+      localStorage.setItem('keeperSeasonData', JSON.stringify(keeperData));
+      loadKeeperStats();
+      loadKeeperPlanning();
+      loadBlockPlanning();
+    }
+
+    function loadKeeperPlanning() {
+      const container = document.getElementById('keeperPlanning');
+      const keeperSystem = document.getElementById('keeperSystem').value;
+      
+      let planningHtml = '';
+      
+      switch(keeperSystem) {
+        case 'fixed':
+          const suggestedKeeper = getSuggestedKeeper();
+          planningHtml = `
+            <div style="text-align: center; padding: 1rem;">
+              <div style="font-size: 1.1rem; margin-bottom: 0.5rem;">🥅 Aanbevolen Keeper</div>
+              <div style="font-size: 1.3rem; font-weight: bold; color: #1e5ba8; margin-bottom: 0.5rem;">
+                ${suggestedKeeper.name}
+              </div>
+              <div style="font-size: 0.8rem; color: #64748b;">
+                ${suggestedKeeper.reason}
+              </div>
+              <button onclick="assignKeeper('${suggestedKeeper.name}')" 
+                      style="background: #10b981; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; margin-top: 0.5rem; cursor: pointer;">
+                Bevestig Keeper
+              </button>
+            </div>
+          `;
+          break;
+          
+        case 'rotating':
+          const preferredKeepers = getPreferredKeepers();
+          planningHtml = `
+            <div style="text-align: center; padding: 1rem;">
+              <div style="font-size: 1.1rem; margin-bottom: 1rem;">🔄 Roterende Keepers</div>
+              ${preferredKeepers.map((keeper, index) => `
+                <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: ${index % 2 === 0 ? '#f0f9ff' : 'white'}; border-radius: 4px; margin-bottom: 0.25rem;">
+                  <span>${keeper.name}</span>
+                  <span style="color: #64748b; font-size: 0.8rem;">Blok ${index + 1}-${index + 2}</span>
+                </div>
+              `).join('')}
+            </div>
+          `;
+          break;
+          
+        case 'everyone':
+          planningHtml = `
+            <div style="text-align: center; padding: 1rem;">
+              <div style="font-size: 1.1rem; margin-bottom: 0.5rem;">👥 Iedereen Keept</div>
+              <div style="font-size: 0.9rem; color: #64748b; margin-bottom: 1rem;">
+                Elke speler keept minimaal 1 blok per seizoen
+              </div>
+              <button onclick="generateEveryoneKeepsRotation()" 
+                      style="background: #3b82f6; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">
+                Genereer Rotatie
+              </button>
+            </div>
+          `;
+          break;
+      }
+      
+      container.innerHTML = planningHtml;
+    }
+
+    function getSuggestedKeeper() {
+      // Find keeper who has kept the least or is marked as preferred
+      const preferredKeepers = teamPlayers.filter(player => keeperData[player].preferredKeeper);
+      
+      if (preferredKeepers.length > 0) {
+        // Among preferred keepers, find who kept least recently
+        const sortedPreferred = preferredKeepers.sort((a, b) => 
+          keeperData[a].totalMinutes - keeperData[b].totalMinutes
+        );
+        
+        return {
+          name: sortedPreferred[0],
+          reason: `Aangewezen keeper met minste speeltijd (${keeperData[sortedPreferred[0]].totalMinutes} min)`
+        };
+      }
+      
+      // No preferred keepers, find who has kept the least
+      const sortedByTime = teamPlayers.sort((a, b) => 
+        keeperData[a].totalMinutes - keeperData[b].totalMinutes
+      );
+      
+      return {
+        name: sortedByTime[0],
+        reason: `Minste keeper minuten dit seizoen (${keeperData[sortedByTime[0]].totalMinutes} min)`
+      };
+    }
+
+    function getPreferredKeepers() {
+      const preferred = teamPlayers.filter(player => keeperData[player].preferredKeeper);
+      if (preferred.length >= 2) {
+        return preferred.slice(0, 2).map(name => ({ name }));
+      }
+      
+      // If less than 2 preferred, fill with players with least keeper time
+      const sorted = teamPlayers.sort((a, b) => 
+        keeperData[a].totalMinutes - keeperData[b].totalMinutes
+      );
+      
+      return sorted.slice(0, 2).map(name => ({ name }));
+    }
+
+    // ==================== BLOCK PLANNING SYSTEM ====================
+
+    function updateMatchSettings() {
+      const matchType = document.getElementById('matchType').value;
+      const blockSystem = document.getElementById('blockSystem').value;
+      
+      // Update block settings based on match type
+      switch(matchType) {
+        case '6v6':
+          blockSettings.fieldPlayers = 5;
+          blockSettings.totalPlayers = 8;
+          break;
+        case '7v7':
+          blockSettings.fieldPlayers = 6;
+          blockSettings.totalPlayers = 10;
+          break;
+        case '8v8':
+          blockSettings.fieldPlayers = 7;
+          blockSettings.totalPlayers = 11;
+          break;
+        case '9v9':
+          blockSettings.fieldPlayers = 8;
+          blockSettings.totalPlayers = 13;
+          break;
+        case '11v11':
+          blockSettings.fieldPlayers = 10;
+          blockSettings.totalPlayers = 16;
+          break;
+      }
+      
+      // Update block system
+      switch(blockSystem) {
+        case '4x12.5':
+          blockSettings.blocks = 4;
+          blockSettings.duration = 12.5;
+          break;
+        case '3x15':
+          blockSettings.blocks = 3;
+          blockSettings.duration = 15;
+          break;
+        case '2x22.5':
+          blockSettings.blocks = 2;
+          blockSettings.duration = 22.5;
+          break;
+      }
+      
+      loadKeeperPlanning();
+      loadBlockPlanning();
+    }
+
+    function loadBlockPlanning() {
+      const container = document.getElementById('blockPlanningGrid');
+      
+      if (teamPlayers.length < blockSettings.fieldPlayers + 1) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 2rem; color: #ef4444;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+            <h4>Onvoldoende Spelers</h4>
+            <p>Je hebt minimaal ${blockSettings.fieldPlayers + 1} spelers nodig voor ${document.getElementById('matchType').value}</p>
+          </div>
+        `;
+        return;
+      }
+
+      const blockPlan = generateOptimalBlockPlan();
+      
+      let planningHtml = `
+        <div style="display: grid; grid-template-columns: 120px repeat(${blockSettings.blocks}, 1fr); gap: 0.5rem; margin-bottom: 1.5rem;">
+          <div style="font-weight: bold; padding: 0.75rem; background: #1e5ba8; color: white; border-radius: 6px; text-align: center;">
+            Speler
+          </div>
+      `;
+      
+      // Header with block numbers
+      for (let i = 1; i <= blockSettings.blocks; i++) {
+        planningHtml += `
+          <div style="font-weight: bold; padding: 0.75rem; background: #1e5ba8; color: white; border-radius: 6px; text-align: center;">
+            Blok ${i}<br><span style="font-size: 0.8rem; opacity: 0.9;">${blockSettings.duration} min</span>
+          </div>
+        `;
+      }
+      
+      // Player rows
+      teamPlayers.forEach((player, playerIndex) => {
+        planningHtml += `
+          <div style="padding: 0.75rem; background: #f8fafc; border-radius: 6px; font-weight: 500; display: flex; align-items: center;">
+            ${player}
+          </div>
+        `;
+        
+        for (let blockIndex = 0; blockIndex < blockSettings.blocks; blockIndex++) {
+          const status = blockPlan[player] ? blockPlan[player][blockIndex] : 'bench';
+          const bgColor = getStatusColor(status);
+          const statusText = getStatusText(status);
+          
+          planningHtml += `
+            <div onclick="togglePlayerStatus('${player}', ${blockIndex})" 
+                 style="padding: 0.75rem; background: ${bgColor}; border-radius: 6px; text-align: center; cursor: pointer; border: 2px solid transparent; transition: all 0.2s ease;">
+              ${statusText}
+            </div>
+          `;
+        }
+      });
+      
+      planningHtml += `</div>`;
+      
+      // Add legend and summary
+      planningHtml += `
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div style="background: white; padding: 1rem; border-radius: 8px;">
+            <h5 style="margin: 0 0 0.75rem 0;">Legenda</h5>
+            <div style="display: grid; grid-template-columns: auto 1fr; gap: 0.5rem; align-items: center;">
+              <div style="width: 20px; height: 20px; background: #10b981; border-radius: 4px;"></div>
+              <span style="font-size: 0.9rem;">Speelt (veld)</span>
+              
+              <div style="width: 20px; height: 20px; background: #3b82f6; border-radius: 4px;"></div>
+              <span style="font-size: 0.9rem;">Keeper</span>
+              
+              <div style="width: 20px; height: 20px; background: #f59e0b; border-radius: 4px;"></div>
+              <span style="font-size: 0.9rem;">Wissel (bank)</span>
+              
+              <div style="width: 20px; height: 20px; background: #ef4444; border-radius: 4px;"></div>
+              <span style="font-size: 0.9rem;">Rust</span>
+            </div>
+          </div>
+          
+          <div style="background: white; padding: 1rem; border-radius: 8px;">
+            <h5 style="margin: 0 0 0.75rem 0;">Speeltijd Samenvatting</h5>
+            <div id="playtimeSummary" style="font-size: 0.9rem;">
+              ${generatePlaytimeSummary(blockPlan)}
+            </div>
+          </div>
+        </div>
+      `;
+      
+      container.innerHTML = planningHtml;
+    }
+
+    function generateOptimalBlockPlan() {
+      const plan = {};
+      const keeperSystem = document.getElementById('keeperSystem').value;
+      
+      // Initialize all players
+      teamPlayers.forEach(player => {
+        plan[player] = new Array(blockSettings.blocks).fill('bench');
+      });
+      
+      // Assign keepers first
+      if (keeperSystem === 'fixed') {
+        const keeper = getSuggestedKeeper().name;
+        for (let i = 0; i < blockSettings.blocks; i++) {
+          plan[keeper][i] = 'keeper';
+        }
+      } else if (keeperSystem === 'rotating') {
+        const keepers = getPreferredKeepers();
+        const blocksPerKeeper = Math.ceil(blockSettings.blocks / keepers.length);
+        
+        keepers.forEach((keeper, index) => {
+          const startBlock = index * blocksPerKeeper;
+          const endBlock = Math.min(startBlock + blocksPerKeeper, blockSettings.blocks);
+          
+          for (let i = startBlock; i < endBlock; i++) {
+            plan[keeper.name][i] = 'keeper';
+          }
+        });
+      }
+      
+      // Assign field players using rotation system
+      const nonKeepers = teamPlayers.filter(player => {
+        return !plan[player].includes('keeper');
+      });
+      
+      for (let blockIndex = 0; blockIndex < blockSettings.blocks; blockIndex++) {
+        // Count how many players are already assigned (keepers)
+        const assignedCount = teamPlayers.filter(player => 
+          plan[player][blockIndex] !== 'bench'
+        ).length;
+        
+        const neededFieldPlayers = blockSettings.fieldPlayers;
+        const availablePlayers = nonKeepers.filter(player => 
+          plan[player][blockIndex] === 'bench'
+        );
+        
+        // Rotation logic: give priority to players who have played less
+        const playerMinutes = {};
+        availablePlayers.forEach(player => {
+          playerMinutes[player] = plan[player].filter(status => 
+            status === 'playing' || status === 'keeper'
+          ).length * blockSettings.duration;
+        });
+        
+        // Sort by least playing time, then by alphabetical order for consistency
+        const sortedAvailable = availablePlayers.sort((a, b) => {
+          const minutesDiff = playerMinutes[a] - playerMinutes[b];
+          if (minutesDiff !== 0) return minutesDiff;
+          return a.localeCompare(b);
+        });
+        
+        // Assign field players
+        for (let i = 0; i < Math.min(neededFieldPlayers, sortedAvailable.length); i++) {
+          plan[sortedAvailable[i]][blockIndex] = 'playing';
+        }
+      }
+      
+      return plan;
+    }
+
+    function getStatusColor(status) {
+      switch(status) {
+        case 'playing': return '#10b981';
+        case 'keeper': return '#3b82f6';
+        case 'bench': return '#f59e0b';
+        case 'rest': return '#ef4444';
+        default: return '#e5e7eb';
+      }
+    }
+
+    function getStatusText(status) {
+      switch(status) {
+        case 'playing': return '⚽';
+        case 'keeper': return '🥅';
+        case 'bench': return '🪑';
+        case 'rest': return '😴';
+        default: return '?';
+      }
+    }
+
+    function generatePlaytimeSummary(blockPlan) {
+      let summary = '';
+      
+      teamPlayers.forEach(player => {
+        const playingBlocks = blockPlan[player].filter(status => 
+          status === 'playing' || status === 'keeper'
+        ).length;
+        const minutes = playingBlocks * blockSettings.duration;
+        
+        summary += `
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+            <span>${player}:</span>
+            <span style="color: #1e5ba8; font-weight: 600;">${minutes} min</span>
+          </div>
+        `;
+      });
+      
+      return summary;
+    }
+
+    function showSubstitutionRules() {
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.7); z-index: 10000; display: flex;
+        align-items: center; justify-content: center; padding: 1rem;
+      `;
+
+      modal.innerHTML = `
+        <div style="background: white; border-radius: 16px; padding: 2rem; max-width: 600px; width: 100%;">
+          <h3 style="margin: 0 0 1rem 0; color: #1e5ba8;">📋 Wissel Regels & Richtlijnen</h3>
+          
+          <div style="background: #fef3c7; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #f59e0b;">
+            <h4 style="margin: 0 0 0.5rem 0; color: #92400e;">⚠️ Belangrijke Wisselmomenten</h4>
+            <ul style="margin: 0; padding-left: 1.5rem; color: #92400e;">
+              <li>Wissels gebeuren ALLEEN tussen blokken</li>
+              <li>Tijdens een blok van 12,5 min wordt NIET gewisseld</li>
+              <li>Dit voorkomt onrust en onderbrekingen</li>
+            </ul>
+          </div>
+
+          <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #3b82f6;">
+            <h4 style="margin: 0 0 0.5rem 0; color: #1e40af;">🔄 Automatische Rotatie</h4>
+            <ul style="margin: 0; padding-left: 1.5rem; color: #1e40af;">
+              <li>Elke wedstrijd schuift de opstelling door</li>
+              <li>Speler 8 wordt speler 1, speler 1 wordt speler 2, etc.</li>
+              <li>Zo krijgt iedereen gelijke kansen in verschillende posities</li>
+            </ul>
+          </div>
+
+          <div style="background: #f0fdf4; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #10b981;">
+            <h4 style="margin: 0 0 0.5rem 0; color: #166534;">⚽ Afwezigheid & Compensatie</h4>
+            <ul style="margin: 0; padding-left: 1.5rem; color: #166534;">
+              <li>Afwezige spelers missen speeltijd</li>
+              <li>Aanwezige spelers krijgen extra speeltijd</li>
+              <li>Compensatie wordt berekend over meerdere wedstrijden</li>
+              <li>Laatkomers kunnen instromen vanaf het volgende blok</li>
+            </ul>
+          </div>
+
+          <button onclick="this.closest('div').remove()" 
+                  style="width: 100%; background: #6b7280; color: white; border: none; padding: 0.75rem; border-radius: 8px; cursor: pointer;">
+            Begrepen
+          </button>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+    }
+
+    function toggleAdvancedMode() {
+      const container = document.getElementById('traditionalPlaytime');
+      const btn = document.getElementById('advancedModeBtn');
+      
+      if (container.style.display === 'none') {
+        container.style.display = 'block';
+        btn.textContent = 'Verberg Handmatig';
+        btn.style.background = '#ef4444';
+      } else {
+        container.style.display = 'none';
+        btn.textContent = 'Toon Handmatig';
+        btn.style.background = '#6b7280';
+      }
+    }
+
+    function assignKeeper(playerName) {
+      // Record keeper assignment for this match
+      const matchDate = new Date().toISOString().split('T')[0];
+      const totalMinutes = blockSettings.blocks * blockSettings.duration;
+      
+      keeperData[playerName].totalMinutes += totalMinutes;
+      keeperData[playerName].matchesKept += 1;
+      keeperData[playerName].lastKept = matchDate;
+      
+      localStorage.setItem('keeperSeasonData', JSON.stringify(keeperData));
+      loadKeeperStats();
+      
+      showNotification(`🥅 ${playerName} toegewezen als keeper voor hele wedstrijd (${totalMinutes} min)`, 'success');
+    }
+
+    // ==================== ENHANCED ABSENCE HANDLING ====================
+
+    function handlePlayerAbsence(playerName) {
+      const blockPlan = generateOptimalBlockPlan();
+      delete blockPlan[playerName]; // Remove absent player
+      
+      // Redistribute their playing time
+      loadBlockPlanning();
+      showNotification(`⚠️ ${playerName} afwezig - speeltijd herverdeeld`, 'warning');
+    }
+
+    function handleLateArrival(playerName, arrivalBlock) {
+      // Player can join from the specified block onwards
+      showNotification(`🏃‍♂️ ${playerName} komt te laat - kan instromen vanaf blok ${arrivalBlock + 1}`, 'info');
+      loadBlockPlanning();
+    }
+
+    function showNotification(message, type = 'info') {
+      if (typeof NotificationManager !== 'undefined') {
+        NotificationManager.show(message, type);
+      } else {
+        console.log(message);
+      }
+    }
+  </script>
+</body>
+</html>

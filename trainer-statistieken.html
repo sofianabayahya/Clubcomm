@@ -1,0 +1,656 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spelerontwikkeling - Trainer Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      background: #f2f7fc;
+      color: #003366;
+      padding-bottom: 80px;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1e5ba8, #164a91);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    .development-tabs {
+      display: flex;
+      background: white;
+      border-radius: 12px;
+      padding: 0.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      padding: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      color: #64748b;
+    }
+
+    .tab-btn.active {
+      background: #1e5ba8;
+      color: white;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .player-development-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .development-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+    }
+
+    .development-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .player-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .development-progress {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .skill-item {
+      text-align: center;
+      padding: 0.75rem;
+      background: #f8fafc;
+      border-radius: 8px;
+    }
+
+    .skill-score {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #1e5ba8;
+    }
+
+    .skill-label {
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-top: 0.25rem;
+    }
+
+    .progress-trend {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+    }
+
+    .trend-up { color: #22c55e; }
+    .trend-down { color: #ef4444; }
+    .trend-stable { color: #64748b; }
+
+    .team-overview {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      margin-bottom: 2rem;
+    }
+
+    .overview-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .overview-stat {
+      text-align: center;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+      border-radius: 12px;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #1e5ba8;
+    }
+
+    .performance-chart {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      margin-bottom: 2rem;
+    }
+
+    .chart-placeholder {
+      height: 300px;
+      background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      font-style: italic;
+    }
+
+    /* Mobile optimizations */
+    @media (max-width: 768px) {
+      .development-tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .tab-btn {
+        min-width: 120px;
+        white-space: nowrap;
+      }
+
+      .player-development-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .development-progress {
+        grid-template-columns: 1fr;
+      }
+
+      .overview-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .overview-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1><i class="fas fa-chart-line"></i> Spelerontwikkeling - O10-1</h1>
+    <p style="margin: 0.5rem 0 0 0; opacity: 0.9;">Volg de voetbaltechnische ontwikkeling van je spelers</p>
+  </div>
+
+  <div class="container">
+    <!-- Navigation Tabs -->
+    <div class="development-tabs">
+      <button class="tab-btn active" onclick="switchTab('individual')">
+        <i class="fas fa-user"></i> Individuele Ontwikkeling
+      </button>
+      <button class="tab-btn" onclick="switchTab('team')">
+        <i class="fas fa-users"></i> Team Overzicht
+      </button>
+      <button class="tab-btn" onclick="switchTab('reports')">
+        <i class="fas fa-file-chart"></i> Voortgangsrapporten
+      </button>
+    </div>
+
+    <!-- Individual Development Tab -->
+    <div class="tab-content active" id="individual">
+      <div class="player-development-grid" id="playerDevelopmentGrid">
+        <!-- Player development cards will be generated here -->
+      </div>
+    </div>
+
+    <!-- Team Overview Tab -->
+    <div class="tab-content" id="team">
+      <div class="team-overview">
+        <h3><i class="fas fa-trophy"></i> Team Ontwikkeling Overzicht</h3>
+        
+        <div class="overview-stats">
+          <div class="overview-stat">
+            <div class="stat-number">7.8</div>
+            <div>Gem. Techniek Score</div>
+          </div>
+          <div class="overview-stat">
+            <div class="stat-number">8.2</div>
+            <div>Gem. Teamwork</div>
+          </div>
+          <div class="overview-stat">
+            <div class="stat-number">7.5</div>
+            <div>Gem. Fysiek</div>
+          </div>
+          <div class="overview-stat">
+            <div class="stat-number">87%</div>
+            <div>Verbeterd t.o.v. vorig seizoen</div>
+          </div>
+        </div>
+
+        <div class="performance-chart">
+          <h4>Team Ontwikkeling Timeline</h4>
+          <div class="chart-placeholder">
+            📊 Team prestatie grafiek komt hier
+            <br><small>Toont ontwikkeling over het seizoen</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reports Tab -->
+    <div class="tab-content" id="reports">
+      <div class="team-overview">
+        <h3><i class="fas fa-file-alt"></i> Voortgangsrapporten Genereren</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+          <button onclick="generateIndividualReports()" style="background: #10b981; color: white; border: none; padding: 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 600;">
+            <i class="fas fa-user-chart"></i><br>
+            Individuele Rapporten
+          </button>
+          <button onclick="generateTeamReport()" style="background: #3b82f6; color: white; border: none; padding: 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 600;">
+            <i class="fas fa-users-chart"></i><br>
+            Team Rapport
+          </button>
+          <button onclick="generateParentReports()" style="background: #8b5cf6; color: white; border: none; padding: 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 600;">
+            <i class="fas fa-family"></i><br>
+            Ouder Rapporten
+          </button>
+          <button onclick="exportSeasonData()" style="background: #f59e0b; color: white; border: none; padding: 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 600;">
+            <i class="fas fa-download"></i><br>
+            Seizoen Export
+          </button>
+        </div>
+
+        <div style="background: #f8fafc; padding: 1.5rem; border-radius: 12px;">
+          <h4>📋 Rapport Instellingen</h4>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+            <div>
+              <label>Periode:</label>
+              <select style="width: 100%; padding: 0.5rem; border: 1px solid #e5e7eb; border-radius: 6px;">
+                <option>Huidige maand</option>
+                <option>Afgelopen 3 maanden</option>
+                <option>Heel seizoen</option>
+              </select>
+            </div>
+            <div>
+              <label>Rapporttype:</label>
+              <select style="width: 100%; padding: 0.5rem; border: 1px solid #e5e7eb; border-radius: 6px;">
+                <option>Volledige evaluatie</option>
+                <option>Enkel techniek</option>
+                <option>Enkel gedrag</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation Menu -->
+  <div class="trainer-bottom-menu">
+    <div class="menu-items">
+      <a href="trainer-dashboard.html" class="menu-item">
+        <i class="fas fa-home"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="trainer-absentie.html" class="menu-item">
+        <i class="fas fa-clipboard-list"></i>
+        <span>Absentie</span>
+      </a>
+      <a href="trainer-berichten.html" class="menu-item">
+        <i class="fas fa-envelope"></i>
+        <span>Berichten</span>
+      </a>
+      <a href="trainer-beoordeling.html" class="menu-item">
+        <i class="fas fa-star"></i>
+        <span>Beoordeling</span>
+      </a>
+      <a href="trainer-statistieken.html" class="menu-item active">
+        <i class="fas fa-chart-line"></i>
+        <span>Ontwikkeling</span>
+      </a>
+      <a href="trainer-speeltijd.html" class="menu-item">
+        <i class="fas fa-stopwatch"></i>
+        <span>Speeltijd</span>
+      </a>
+    </div>
+  </div>
+
+  <style>
+    /* Menu styling */
+    .trainer-bottom-menu {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 2px solid #e5e7eb;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+      z-index: 1000;
+      padding: 0.5rem 0;
+    }
+
+    .menu-items {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .menu-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #64748b;
+      padding: 0.5rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      min-width: 60px;
+    }
+
+    .menu-item:hover {
+      color: #1e5ba8;
+      background: #f0f9ff;
+      transform: translateY(-2px);
+    }
+
+    .menu-item.active {
+      color: #1e5ba8;
+      background: #f0f9ff;
+      font-weight: 600;
+    }
+
+    .menu-item i {
+      font-size: 1.2rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .menu-item span {
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+  </style>
+
+  <script src="script.js"></script>
+  <script>
+    // Sample player development data
+    const playerDevelopmentData = {
+      'Jesse de Jong': {
+        techniek: { current: 8.2, previous: 7.8, trend: 'up' },
+        tactiek: { current: 7.5, previous: 7.2, trend: 'up' },
+        fysiek: { current: 8.0, previous: 8.1, trend: 'down' },
+        mentaal: { current: 7.8, previous: 7.5, trend: 'up' },
+        teamwork: { current: 8.5, previous: 8.3, trend: 'up' },
+        overall: 8.0,
+        notes: 'Uitstekende vooruitgang in techniek. Blijft gemotiveerd.',
+        lastUpdated: '2024-01-15'
+      },
+      'Mees van Dijk': {
+        techniek: { current: 7.3, previous: 7.0, trend: 'up' },
+        tactiek: { current: 8.1, previous: 8.0, trend: 'stable' },
+        fysiek: { current: 7.8, previous: 7.6, trend: 'up' },
+        mentaal: { current: 7.2, previous: 6.9, trend: 'up' },
+        teamwork: { current: 8.0, previous: 7.8, trend: 'up' },
+        overall: 7.7,
+        notes: 'Goede teamspeler, werkt hard aan technische vaardigheden.',
+        lastUpdated: '2024-01-15'
+      }
+      // Add more players...
+    };
+
+    // Tab switching
+    function switchTab(tabName) {
+      // Remove active class from all tabs and content
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+      // Add active class to clicked tab
+      event.target.classList.add('active');
+      document.getElementById(tabName).classList.add('active');
+
+      // Load content based on tab
+      if (tabName === 'individual') {
+        loadPlayerDevelopmentCards();
+      }
+    }
+
+    // Load player development cards
+    function loadPlayerDevelopmentCards() {
+      const container = document.getElementById('playerDevelopmentGrid');
+      container.innerHTML = '';
+
+      Object.entries(playerDevelopmentData).forEach(([playerName, data]) => {
+        const card = createDevelopmentCard(playerName, data);
+        container.appendChild(card);
+      });
+    }
+
+    function createDevelopmentCard(playerName, data) {
+      const card = document.createElement('div');
+      card.className = 'development-card';
+
+      const getTrendIcon = (trend) => {
+        switch(trend) {
+          case 'up': return '<i class="fas fa-trending-up trend-up"></i>';
+          case 'down': return '<i class="fas fa-trending-down trend-down"></i>';
+          default: return '<i class="fas fa-minus trend-stable"></i>';
+        }
+      };
+
+      const getTrendText = (current, previous) => {
+        const diff = (current - previous).toFixed(1);
+        return diff > 0 ? `+${diff}` : diff;
+      };
+
+      card.innerHTML = `
+        <div class="player-header">
+          <h3 style="margin: 0; color: #1e5ba8;">${playerName}</h3>
+          <div style="text-align: right;">
+            <div style="font-size: 1.5rem; font-weight: bold; color: #1e5ba8;">${data.overall}</div>
+            <div style="font-size: 0.8rem; color: #64748b;">Gemiddeld</div>
+          </div>
+        </div>
+
+        <div class="development-progress">
+          <div class="skill-item">
+            <div class="skill-score">${data.techniek.current}</div>
+            <div class="skill-label">Techniek</div>
+            <div class="progress-trend">
+              ${getTrendIcon(data.techniek.trend)}
+              <span>${getTrendText(data.techniek.current, data.techniek.previous)}</span>
+            </div>
+          </div>
+          
+          <div class="skill-item">
+            <div class="skill-score">${data.tactiek.current}</div>
+            <div class="skill-label">Tactiek</div>
+            <div class="progress-trend">
+              ${getTrendIcon(data.tactiek.trend)}
+              <span>${getTrendText(data.tactiek.current, data.tactiek.previous)}</span>
+            </div>
+          </div>
+          
+          <div class="skill-item">
+            <div class="skill-score">${data.fysiek.current}</div>
+            <div class="skill-label">Fysiek</div>
+            <div class="progress-trend">
+              ${getTrendIcon(data.fysiek.trend)}
+              <span>${getTrendText(data.fysiek.current, data.fysiek.previous)}</span>
+            </div>
+          </div>
+          
+          <div class="skill-item">
+            <div class="skill-score">${data.teamwork.current}</div>
+            <div class="skill-label">Teamwork</div>
+            <div class="progress-trend">
+              ${getTrendIcon(data.teamwork.trend)}
+              <span>${getTrendText(data.teamwork.current, data.teamwork.previous)}</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+          <div style="font-size: 0.9rem; color: #374151; margin-bottom: 0.5rem;">
+            <strong>Trainer notities:</strong>
+          </div>
+          <div style="font-size: 0.8rem; color: #64748b; font-style: italic;">
+            ${data.notes}
+          </div>
+          <div style="font-size: 0.7rem; color: #9ca3af; margin-top: 0.5rem;">
+            Laatst bijgewerkt: ${new Date(data.lastUpdated).toLocaleDateString('nl-NL')}
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+          <button onclick="editPlayerDevelopment('${playerName}')" style="flex: 1; background: #3b82f6; color: white; border: none; padding: 0.75rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">
+            <i class="fas fa-edit"></i> Bewerken
+          </button>
+          <button onclick="viewDetailedProgress('${playerName}')" style="flex: 1; background: #10b981; color: white; border: none; padding: 0.75rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">
+            <i class="fas fa-chart-line"></i> Details
+          </button>
+        </div>
+      `;
+
+      return card;
+    }
+
+    // Report functions
+    function generateIndividualReports() {
+      NotificationManager.show('📊 Individuele rapporten worden gegenereerd...', 'info');
+      setTimeout(() => {
+        NotificationManager.show('✅ Individuele rapporten klaar voor download', 'success');
+      }, 2000);
+    }
+
+    function generateTeamReport() {
+      NotificationManager.show('📈 Team rapport wordt gegenereerd...', 'info');
+      setTimeout(() => {
+        NotificationManager.show('✅ Team rapport klaar voor download', 'success');
+      }, 2000);
+    }
+
+    function generateParentReports() {
+      NotificationManager.show('👨‍👩‍👧‍👦 Ouder rapporten worden verstuurd...', 'info');
+      setTimeout(() => {
+        NotificationManager.show('✅ Ouder rapporten verzonden via email', 'success');
+      }, 2000);
+    }
+
+    function exportSeasonData() {
+      NotificationManager.show('💾 Seizoensdata wordt geëxporteerd...', 'info');
+      setTimeout(() => {
+        NotificationManager.show('✅ Seizoensdata geëxporteerd naar Excel', 'success');
+      }, 2000);
+    }
+
+    function editPlayerDevelopment(playerName) {
+      // Open modal for editing player development
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.7); z-index: 10000; display: flex;
+        align-items: center; justify-content: center; padding: 1rem;
+      `;
+
+      modal.innerHTML = `
+        <div style="background: white; border-radius: 16px; padding: 2rem; max-width: 500px; width: 100%;">
+          <h3 style="margin: 0 0 1rem 0; color: #1e5ba8;">📈 ${playerName} - Ontwikkeling Bijwerken</h3>
+          
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+            <div>
+              <label>Techniek (1-10):</label>
+              <input type="number" min="1" max="10" step="0.1" value="${playerDevelopmentData[playerName].techniek.current}" 
+                     style="width: 100%; padding: 0.5rem; border: 1px solid #e5e7eb; border-radius: 6px;">
+            </div>
+            <div>
+              <label>Tactiek (1-10):</label>
+              <input type="number" min="1" max="10" step="0.1" value="${playerDevelopmentData[playerName].tactiek.current}"
+                     style="width: 100%; padding: 0.5rem; border: 1px solid #e5e7eb; border-radius: 6px;">
+            </div>
+            <div>
+              <label>Fysiek (1-10):</label>
+              <input type="number" min="1" max="10" step="0.1" value="${playerDevelopmentData[playerName].fysiek.current}"
+                     style="width: 100%; padding: 0.5rem; border: 1px solid #e5e7eb; border-radius: 6px;">
+            </div>
+            <div>
+              <label>Teamwork (1-10):</label>
+              <input type="number" min="1" max="10" step="0.1" value="${playerDevelopmentData[playerName].teamwork.current}"
+                     style="width: 100%; padding: 0.5rem; border: 1px solid #e5e7eb; border-radius: 6px;">
+            </div>
+          </div>
+
+          <div style="margin-bottom: 1.5rem;">
+            <label>Trainer notities:</label>
+            <textarea style="width: 100%; min-height: 80px; padding: 0.5rem; border: 1px solid #e5e7eb; border-radius: 6px;">${playerDevelopmentData[playerName].notes}</textarea>
+          </div>
+
+          <div style="display: flex; gap: 1rem;">
+            <button onclick="this.closest('div').remove()" 
+                    style="flex: 1; background: #6b7280; color: white; border: none; padding: 0.75rem; border-radius: 8px; cursor: pointer;">
+              Annuleren
+            </button>
+            <button onclick="saveDevelopmentUpdate('${playerName}'); this.closest('div').remove();" 
+                    style="flex: 1; background: #10b981; color: white; border: none; padding: 0.75rem; border-radius: 8px; cursor: pointer;">
+              Opslaan
+            </button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+    }
+
+    function saveDevelopmentUpdate(playerName) {
+      NotificationManager.show(`📊 Ontwikkeling bijgewerkt voor ${playerName}`, 'success');
+      loadPlayerDevelopmentCards(); // Refresh the display
+    }
+
+    function viewDetailedProgress(playerName) {
+      NotificationManager.show(`📈 Gedetailleerde voortgang van ${playerName} wordt geladen...`, 'info');
+    }
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      loadPlayerDevelopmentCards();
+    });
+  </script>
+</body>
+</html>

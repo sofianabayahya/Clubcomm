@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BTV Connect - Vervoer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <a href="ouderportaal.html" class="back-link">
+        <i class="fas fa-home"></i> Home
+      </a>
+      <div style="flex: 1; text-align: center;">
+        <h1 class="header-title">
+          <i class="fas fa-car"></i> Vervoer
+        </h1>
+      </div>
+      <div style="display: flex; gap: 0.5rem; align-items: center;">
+        <button onclick="window.location.href='profiel.html'" style="background: var(--soft-gray); color: var(--primary-blue); border: none; width: 44px; height: 44px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;" title="Profiel">
+          <i class="fas fa-user-circle" style="font-size: 1.2rem;"></i>
+        </button>
+        <button onclick="logout()" class="logout-btn" title="Uitloggen">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container" style="padding-bottom: 120px;">
+    <!-- Quick Status Overview -->
+    <div class="section">
+      <div style="background: linear-gradient(135deg, #f8fafc, #e2e8f0); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid #e2e8f0;">
+        <h3 style="margin: 0 0 1rem 0; color: #1e5ba8; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fas fa-tachometer-alt"></i> Vervoer Status
+        </h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; text-align: center;">
+          <div style="background: white; padding: 1rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="font-size: 1.5rem; font-weight: 700; color: #10b981;">2</div>
+            <div style="font-size: 0.85rem; color: #64748b;">Wedstrijden</div>
+          </div>
+          <div style="background: white; padding: 1rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="font-size: 1.5rem; font-weight: 700; color: #f59e0b;">1</div>
+            <div style="font-size: 0.85rem; color: #64748b;">Aangeboden</div>
+          </div>
+          <div style="background: white; padding: 1rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+            <div style="font-size: 1.5rem; font-weight: 700; color: #3b82f6;">2</div>
+            <div style="font-size: 0.85rem; color: #64748b;">Beschikbare plekken</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Current Matches -->
+    <div class="section">
+      <h3 style="color: #1e5ba8; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+        <i class="fas fa-calendar-alt"></i> Aankomende Wedstrijden
+      </h3>
+
+      <div id="upcomingMatches">
+        <!-- Wedstrijd 1 -->
+        <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #f59e0b; position: relative;">
+          <!-- Status badge -->
+          <div style="position: absolute; top: 1rem; right: 1rem; background: #f59e0b; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">
+            <i class="fas fa-clock"></i> Morgen
+          </div>
+          
+          <!-- Compact header -->
+          <div style="margin-bottom: 1rem; padding-right: 4rem;">
+            <h4 style="margin: 0; color: #1e293b; font-size: 1.1rem; font-weight: 700;">Zaterdag 7 juni - 14:00</h4>
+            <p style="margin: 0.25rem 0 0 0; color: #64748b; font-size: 0.9rem; font-weight: 500;">O10-1 vs FC Amsterdam</p>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
+              <i class="fas fa-map-marker-alt" style="color: #059669; font-size: 0.8rem;"></i>
+              <span style="font-size: 0.85rem; color: #64748b;">Sportpark De Toekomst</span>
+            </div>
+          </div>
+
+          <!-- Compact action buttons -->
+          <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+            <button onclick="offerForMatch('7 juni')" style="background: #10b981; color: white; border: none; padding: 0.6rem 1rem; border-radius: 8px; font-size: 0.85rem; cursor: pointer; font-weight: 600; flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+              <i class="fas fa-car"></i> Vervoer Aanbieden
+            </button>
+            <button onclick="scrollToAvailableTransport('7juni')" style="background: #3b82f6; color: white; border: none; padding: 0.6rem 1rem; border-radius: 8px; font-size: 0.85rem; cursor: pointer; font-weight: 600; flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+              <i class="fas fa-users"></i> Meerijden
+            </button>
+          </div>
+
+          <!-- Beschikbaar vervoer -->
+          <div id="transport-7juni" style="background: #f8fafc; padding: 1rem; border-radius: 8px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+              <h5 style="margin: 0; color: #1e5ba8; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-car"></i> Beschikbaar Vervoer
+              </h5>
+              <span style="background: #10b981; color: white; padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.7rem; font-weight: 600;">
+                <i class="fas fa-check"></i> 1 aanbieding
+              </span>
+            </div>
+            <div id="availableTransport-7juni">
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: white; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <div style="flex: 1;">
+                  <div style="font-weight: 600; color: #1e293b; font-size: 0.9rem;">Moeder van Jesse</div>
+                  <div style="font-size: 0.8rem; color: #64748b; margin-top: 0.25rem;">
+                    <i class="fas fa-users" style="width: 12px;"></i> 2 plekken vrij van 3 totaal
+                  </div>
+                  <div style="font-size: 0.8rem; color: #64748b;">
+                    <i class="fas fa-clock" style="width: 12px;"></i> Vertrek: 13:15 vanaf school
+                  </div>
+                </div>
+                <button onclick="requestSeat('7juni', 1)" style="background: #1e5ba8; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.8rem; cursor: pointer; font-weight: 600; min-width: 80px;">
+                  <i class="fas fa-plus"></i> Meerijden
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wedstrijd 2 -->
+        <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #22c55e; position: relative;">
+          <!-- Status badge -->
+          <div style="position: absolute; top: 1rem; right: 1rem; background: #22c55e; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">
+            <i class="fas fa-calendar"></i> Volgende week
+          </div>
+          
+          <!-- Compact header -->
+          <div style="margin-bottom: 1rem; padding-right: 6rem;">
+            <h4 style="margin: 0; color: #1e293b; font-size: 1.1rem; font-weight: 700;">Zaterdag 14 juni - 14:00</h4>
+            <p style="margin: 0.25rem 0 0 0; color: #64748b; font-size: 0.9rem; font-weight: 500;">O10-1 vs VV Hoofddorp</p>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
+              <i class="fas fa-map-marker-alt" style="color: #059669; font-size: 0.8rem;"></i>
+              <span style="font-size: 0.85rem; color: #64748b;">Sportpark Hoofddorp</span>
+            </div>
+          </div>
+
+          <!-- Compact action buttons -->
+          <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+            <button onclick="offerForMatch('14 juni')" style="background: #10b981; color: white; border: none; padding: 0.6rem 1rem; border-radius: 8px; font-size: 0.85rem; cursor: pointer; font-weight: 600; flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+              <i class="fas fa-car"></i> Vervoer Aanbieden
+            </button>
+            <button onclick="scrollToAvailableTransport('14juni')" style="background: #3b82f6; color: white; border: none; padding: 0.6rem 1rem; border-radius: 8px; font-size: 0.85rem; cursor: pointer; font-weight: 600; flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+              <i class="fas fa-users"></i> Meerijden
+            </button>
+          </div>
+
+          <div id="transport-14juni" style="background: #f8fafc; padding: 1rem; border-radius: 8px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+              <h5 style="margin: 0; color: #1e5ba8; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-car"></i> Beschikbaar Vervoer
+              </h5>
+              <span style="background: #f59e0b; color: white; padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.7rem; font-weight: 600;">
+                <i class="fas fa-exclamation"></i> 0 aanbiedingen
+              </span>
+            </div>
+            <div style="text-align: center; padding: 1rem; background: white; border-radius: 8px; border: 1px solid #e2e8f0;">
+              <i class="fas fa-car" style="font-size: 1.5rem; color: #cbd5e1; margin-bottom: 0.5rem;"></i>
+              <p style="margin: 0; color: #64748b; font-size: 0.85rem;">Nog geen vervoer beschikbaar</p>
+              <p style="margin: 0.5rem 0 0 0; color: #64748b; font-size: 0.8rem;">Wees de eerste om vervoer aan te bieden!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mijn Vervoer -->
+    <div class="section">
+      <h3 style="color: #1e5ba8; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+        <i class="fas fa-user-friends"></i> Mijn Vervoer Overzicht
+      </h3>
+
+      <div id="myTransportOffers" style="background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <div style="text-align: center; color: #64748b; padding: 2rem;">
+          <i class="fas fa-car" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+          <p>Je hebt nog geen vervoer aangeboden of gereserveerd.</p>
+          <button onclick="showOfferTransport()" style="background: #1e5ba8; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; margin-top: 1rem; cursor: pointer;">
+            Start met vervoer aanbieden
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONSISTENTE VASTE NAVIGATIE VOOR ALLE PAGINA'S -->
+  <nav class="menubalk" role="navigation" aria-label="Hoofdnavigatie">
+    <button type="button" class="nav-item" onclick="navigateToPage('ouderportaal.html')" aria-label="Dashboard pagina">
+      <i class="fas fa-home" aria-hidden="true"></i>
+      <span>Dashboard</span>
+    </button>
+    <button type="button" class="nav-item" onclick="navigateToPage('overzicht.html')" aria-label="Planning & Overzicht">
+      <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+      <span>Planning</span>
+    </button>
+    <button type="button" class="nav-item active" onclick="navigateToPage('vervoer.html')" aria-label="Vervoer pagina - huidige pagina" aria-current="page">
+      <i class="fas fa-car" aria-hidden="true"></i>
+      <span>Vervoer</span>
+    </button>
+    <button type="button" class="nav-item" onclick="navigateToPage('prikbord.html')" aria-label="Berichten pagina">
+      <i class="fas fa-comments" aria-hidden="true"></i>
+      <span>Berichten</span>
+    </button>
+    <button type="button" class="nav-item" onclick="navigateToPage('taken.html')" aria-label="Taken pagina">
+      <i class="fas fa-tasks" aria-hidden="true"></i>
+      <span>Taken</span>
+    </button>
+  </nav>
+
+  <script src="script.js"></script>
+  <script>
+    // Controleer bij het laden van de pagina of er al verzoeken zijn verzonden
+    document.addEventListener('DOMContentLoaded', function() {
+      // Controleer alle meerijden buttons
+      const meerijdenButtons = document.querySelectorAll('button[onclick*="requestSeat"]');
+
+      meerijdenButtons.forEach(button => {
+        const onclick = button.getAttribute('onclick');
+        const match = onclick.match(/requestSeat\('([^']+)',\s*(\d+)\)/);
+
+        if (match) {
+          const date = match[1];
+          const offerId = match[2];
+          const storageKey = `transport_request_${date}_${offerId}`;
+
+          if (localStorage.getItem(storageKey) === 'requested') {
+            // Button is al gebruikt, verander naar "verzonden" status
+            button.innerHTML = '<i class="fas fa-check"></i> Verzoek Verzonden';
+            button.style.background = '#10b981';
+            button.style.color = 'white';
+            button.style.border = '2px solid #10b981';
+            button.style.fontWeight = 'bold';
+            button.disabled = true;
+            button.style.cursor = 'not-allowed';
+            button.style.opacity = '0.8';
+          }
+        }
+      });
+    });
+  </script>
+  <script>
+    function showOfferTransport() {
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5); display: flex; align-items: center;
+        justify-content: center; z-index: 10000; backdrop-filter: blur(5px);
+      `;
+
+      modal.innerHTML = `
+        <div style="background: white; border-radius: 20px; padding: 2rem; max-width: 400px; width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+          <h3 style="color: #10b981; margin: 0 0 1.5rem 0; text-align: center;">
+            <i class="fas fa-car"></i> Vervoer Aanbieden
+          </h3>
+
+          <form onsubmit="submitTransportOffer(event)">
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Wedstrijd:</label>
+              <select id="matchSelect" required style="width: 100%; padding: 0.75rem; border: 2px solid #e1e5e9; border-radius: 10px;">
+                <option value="7 juni">Zaterdag 7 juni - O10-1 vs FC Amsterdam</option>
+                <option value="14 juni">Zaterdag 14 juni - O10-1 vs VV Hoofddorp</option>
+              </select>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Aantal extra plekken:</label>
+              <select id="seatsSelect" required style="width: 100%; padding: 0.75rem; border: 2px solid #e1e5e9; border-radius: 10px;">
+                <option value="1">1 plek</option>
+                <option value="2">2 plekken</option>
+                <option value="3">3 plekken</option>
+                <option value="4">4 plekken</option>
+              </select>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Vertreklocatie/tijd:</label>
+              <input type="text" id="departureInfo" placeholder="Bijv: 13:15 vanaf school" required style="width: 100%; padding: 0.75rem; border: 2px solid #e1e5e9; border-radius: 10px;">
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+              <button type="button" onclick="closeModal()" style="flex: 1; background: #f1f3f5; color: #64748b; border: none; padding: 0.75rem; border-radius: 10px; font-weight: 600; cursor: pointer;">
+                Annuleren
+              </button>
+              <button type="submit" style="flex: 1; background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 0.75rem; border-radius: 10px; font-weight: 600; cursor: pointer;">
+                Aanbieden
+              </button>
+            </div>
+          </form>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+      window.currentModal = modal;
+    }
+
+    function showSearchTransport() {
+      alert('Vervoer zoeken functionaliteit - bekijk beschikbaar vervoer bij de wedstrijden hierboven');
+    }
+
+    function offerForMatch(date) {
+      showOfferTransport();
+      setTimeout(() => {
+        document.getElementById('matchSelect').value = date;
+      }, 100);
+    }
+
+    function scrollToAvailableTransport(dateId) {
+      const section = document.getElementById(`transport-${dateId}`);
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Highlight beschikbaar vervoer sectie
+        section.style.background = '#dbeafe';
+        section.style.border = '2px solid #3b82f6';
+        setTimeout(() => {
+          section.style.background = '#f8fafc';
+          section.style.border = 'none';
+        }, 3000);
+        
+        // Toon vriendelijke melding
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+          position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+          background: #3b82f6; color: white; padding: 1rem 2rem; border-radius: 25px;
+          z-index: 1000; animation: slideUp 0.5s ease; text-align: center;
+        `;
+        notification.innerHTML = '<i class="fas fa-info-circle"></i> Bekijk hieronder het beschikbare vervoer';
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 3000);
+      }
+    }
+
+    function requestSeat(date, offerId) {
+      if (confirm('Wil je een plek reserveren bij dit vervoer?')) {
+        // Vind de button die aangeklikt is
+        const button = event.target;
+
+        // Verander de button naar "verzonden" status
+        button.innerHTML = '<i class="fas fa-check"></i> Verzoek Verzonden';
+        button.style.background = '#10b981';
+        button.style.color = 'white';
+        button.style.border = '2px solid #10b981';
+        button.style.fontWeight = 'bold';
+        button.disabled = true;
+        button.style.cursor = 'not-allowed';
+        button.style.opacity = '0.8';
+
+        // Sla de status op in localStorage
+        localStorage.setItem(`transport_request_${date}_${offerId}`, 'requested');
+
+        // Toon bevestiging
+        const confirmation = document.createElement('div');
+        confirmation.style.cssText = `
+          position: fixed;
+          bottom: 100px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: #10b981;
+          color: white;
+          padding: 1rem 2rem;
+          border-radius: 25px;
+          z-index: 1000;
+          animation: slideUp 0.5s ease;
+          box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        `;
+
+        confirmation.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-check-circle"></i>
+            <span>Vervoerverzoek verzonden! De chauffeur ontvangt een melding.</span>
+          </div>
+        `;
+
+        document.body.appendChild(confirmation);
+
+        setTimeout(() => {
+          if (confirmation.parentElement) {
+            confirmation.remove();
+          }
+        }, 4000);
+      }
+    }
+
+    function submitTransportOffer(event) {
+      event.preventDefault();
+      const match = document.getElementById('matchSelect').value;
+      const seats = document.getElementById('seatsSelect').value;
+      const departure = document.getElementById('departureInfo').value;
+
+      alert(`Vervoer aangeboden voor ${match}!\n${seats} plekken beschikbaar\nVertrek: ${departure}`);
+      closeModal();
+    }
+
+    function closeModal() {
+      if (window.currentModal) {
+        document.body.removeChild(window.currentModal);
+        window.currentModal = null;
+      }
+    }
+  </script>
+</body>
+</html>

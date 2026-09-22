@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trainer Dashboard - ClubComm</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Compacte trainer dashboard styling */
+    .trainer-header {
+      background: linear-gradient(135deg, #1e5ba8, #164a91);
+      border-radius: 20px;
+      color: white;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(30, 91, 168, 0.3);
+    }
+
+    .trainer-header h2 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.4rem;
+    }
+
+    .trainer-meta {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    /* Huidige training info */
+    .current-training {
+      background: linear-gradient(135deg, #10b981, #059669);
+      border-radius: 15px;
+      color: white;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .current-training h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.1rem;
+    }
+
+    .training-time {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    /* Compacte speler grid - mobile first */
+    .players-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Mobile-first grid */
+    @media (max-width: 768px) {
+      .players-grid {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+      }
+    }
+
+    .player-card {
+      background: white;
+      border-radius: 12px;
+      padding: 0.75rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      min-height: 140px;
+    }
+
+    /* Compact mobile card */
+    @media (max-width: 768px) {
+      .player-card {
+        padding: 0.5rem;
+        min-height: 120px;
+      }
+    }
+
+    .player-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      border-color: #1e5ba8;
+    }
+
+    .player-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #ff6b00, #1e5ba8);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .player-card:hover::before {
+      opacity: 1;
+    }
+
+    .player-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #f1f3f5;
+    }
+
+    .player-name {
+      font-weight: 600;
+      color: #1e293b;
+      font-size: 1rem;
+    }
+
+    .attendance-status {
+      padding: 0.25rem 0.5rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .status-present {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status-absent {
+      background: #fef2f2;
+      color: #991b1b;
+    }
+
+    .status-late {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-unknown {
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    /* Compacte actie knoppen - alleen essentie */
+    .player-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .action-btn {
+      background: white;
+      border: 1px solid #e1e5e9;
+      color: #64748b;
+      padding: 0.6rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+      min-height: 40px;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .btn-late {
+      border-color: #f59e0b;
+      color: #f59e0b;
+    }
+
+    .btn-late:hover,
+    .btn-late.active {
+      background: #f59e0b;
+      color: white;
+    }
+
+    .btn-noshow {
+      border-color: #ef4444;
+      color: #ef4444;
+    }
+
+    .btn-noshow:hover,
+    .btn-noshow.active {
+      background: #ef4444;
+      color: white;
+    }
+
+    /* Player info en quick stats */
+    .player-quick-stats {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-bottom: 0.75rem;
+    }
+
+    .quick-stat {
+      text-align: center;
+    }
+
+    .quick-stat-number {
+      font-weight: 600;
+      color: #1e293b;
+      display: block;
+    }
+
+    .quick-stat-label {
+      font-size: 0.7rem;
+    }
+
+    /* Expanded acties menu */
+    .expanded-actions {
+      display: none;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid #f1f3f5;
+    }
+
+    .expanded-actions.show {
+      display: grid;
+    }
+
+    .secondary-btn {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #475569;
+      padding: 0.4rem;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+    }
+
+    .secondary-btn:hover {
+      background: #e2e8f0;
+      color: #334155;
+    }
+
+    .expand-toggle {
+      background: none;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      font-size: 0.8rem;
+      padding: 0.25rem;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+    }
+
+    .expand-toggle:hover {
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+
+    /* Quick summary */
+    .training-summary {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    .summary-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .summary-stat {
+      padding: 0.75rem;
+      border-radius: 8px;
+      background: #f8fafc;
+    }
+
+    .summary-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1e5ba8;
+      display: block;
+    }
+
+    .summary-label {
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-top: 0.25rem;
+    }
+
+    /* Mobiele optimalisaties */
+    @media (max-width: 768px) {
+      .players-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+
+      .trainer-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .summary-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+      }
+
+      .player-actions {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.4rem;
+      }
+
+      .action-btn {
+        font-size: 0.7rem;
+        padding: 0.4rem;
+      }
+
+      .expanded-actions {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .players-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .player-card {
+        padding: 0.75rem;
+      }
+
+      .action-btn {
+        min-height: 32px;
+        font-size: 0.65rem;
+      }
+    }
+
+    /* Modal styling voor player details */
+    .player-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      backdrop-filter: blur(8px);
+      padding: 1rem;
+    }
+
+    .player-modal-content {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      max-width: 600px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    .modal-tabs {
+      display: flex;
+      border-bottom: 2px solid #f1f3f5;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-tab {
+      padding: 0.75rem 1rem;
+      border: none;
+      background: none;
+      color: #64748b;
+      font-weight: 500;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .modal-tab.active {
+      color: #1e5ba8;
+      border-bottom-color: #1e5ba8;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <a href="index.html" class="nav-back">
+        <i class="fas fa-arrow-left"></i> Terug
+      </a>
+      <div style="flex: 1; text-align: center;">
+        <div id="portalSwitcher" style="display: none; margin-bottom: 0.5rem;">
+          <div style="display: flex; justify-content: center; gap: 0.5rem;">
+            <button onclick="switchPortal('parent')" id="parentPortalBtn" style="background: var(--light-gray); color: var(--text-gray); border: none; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 500; cursor: pointer; font-size: 0.8rem;">
+              <i class="fas fa-home"></i> Ouder
+            </button>
+            <button onclick="switchPortal('trainer')" id="trainerPortalBtn" style="background: linear-gradient(135deg, #1e5ba8, #164a91); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 500; cursor: pointer; font-size: 0.8rem;">
+              <i class="fas fa-chalkboard-teacher"></i> Trainer
+            </button>
+            <button onclick="switchPortal('teamleider')" id="teamleiderPortalBtn" style="display: none; background: var(--light-gray); color: var(--text-gray); border: none; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 500; cursor: pointer; font-size: 0.8rem;">
+              <i class="fas fa-users"></i> Teamleider
+            </button>
+          </div>
+        </div>
+        <h1><i class="fas fa-chalkboard-teacher"></i> Trainer Dashboard</h1>
+      </div>
+      <div style="display: flex; gap: 0.5rem;">
+        <button onclick="window.location.href='trainer-instellingen.html'" 
+                style="background: var(--neutral-600); border: none; color: white; padding: 0.75rem; border-radius: 12px; cursor: pointer; font-size: 1rem; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; box-shadow: var(--shadow-sm);" 
+                title="Instellingen">
+          <i class="fas fa-cog"></i>
+        </button>
+        <button class="logout-btn" onclick="logout()" title="Uitloggen">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container" style="margin-top: 1rem;">
+    <!-- Trainer info -->
+    <div class="trainer-header">
+      <h2 id="trainerName">Marco van der Berg</h2>
+      <div class="trainer-meta">
+        <span><i class="fas fa-users"></i> <span id="assignedTeam">O10-1</span></span>
+        <span><i class="fas fa-whistle"></i> Hoofdtrainer</span>
+      </div>
+    </div>
+
+    <!-- Huidige training -->
+    <div class="current-training">
+      <h3><i class="fas fa-calendar-check"></i> <span id="currentTrainingTitle">Huidige Training</span></h3>
+      <div class="training-time" id="currentTrainingTime">Vrijdag 6 juni - 18:30</div>
+    </div>
+
+    <!-- Quick Actions Toolbar -->
+    <div class="quick-actions-toolbar" style="background: white; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.5rem; margin-bottom: 1rem;">
+        <button onclick="markAllPresent()" style="background: #10b981; color: white; border: none; padding: 0.5rem; border-radius: 8px; font-size: 0.8rem; cursor: pointer;">
+          <i class="fas fa-check-circle"></i> Allen Aanwezig
+        </button>
+        <button onclick="sendGroupMessage()" style="background: #3b82f6; color: white; border: none; padding: 0.5rem; border-radius: 8px; font-size: 0.8rem; cursor: pointer;">
+          <i class="fas fa-envelope"></i> Groepsbericht
+        </button>
+        <button onclick="exportAttendance()" style="background: #f59e0b; color: white; border: none; padding: 0.5rem; border-radius: 8px; font-size: 0.8rem; cursor: pointer;">
+          <i class="fas fa-download"></i> Export
+        </button>
+        <button onclick="trainingNotes()" style="background: #8b5cf6; color: white; border: none; padding: 0.5rem; border-radius: 8px; font-size: 0.8rem; cursor: pointer;">
+          <i class="fas fa-sticky-note"></i> Notities
+        </button>
+      </div>
+    </div>
+
+    <!-- Training samenvatting - compacter -->
+    <div class="training-summary" style="padding: 0.75rem; margin-bottom: 1rem;">
+      <div class="summary-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); gap: 0.5rem;">
+        <div class="summary-stat" style="text-align: center; padding: 0.5rem; background: #f0f9ff; border-radius: 8px;">
+          <span class="summary-number" id="totalPlayers" style="font-size: 1.1rem; color: #1e5ba8; font-weight: 700; display: block;">0</span>
+          <span class="summary-label" style="font-size: 0.7rem; color: #64748b;">Totaal</span>
+        </div>
+        <div class="summary-stat" style="text-align: center; padding: 0.5rem; background: #f0fdf4; border-radius: 8px;">
+          <span class="summary-number" id="expectedPlayers" style="font-size: 1.1rem; color: #059669; font-weight: 700; display: block;">0</span>
+          <span class="summary-label" style="font-size: 0.7rem; color: #64748b;">Verwacht</span>
+        </div>
+        <div class="summary-stat" style="text-align: center; padding: 0.5rem; background: #fff3e0; border-radius: 8px;">
+          <span class="summary-number" id="lateCount" style="font-size: 1.1rem; color: #f59e0b; font-weight: 700; display: block;">0</span>
+          <span class="summary-label" style="font-size: 0.7rem; color: #64748b;">Te Laat</span>
+        </div>
+        <div class="summary-stat" style="text-align: center; padding: 0.5rem; background: #fef2f2; border-radius: 8px;">
+          <span class="summary-number" id="noShowCount" style="font-size: 1.1rem; color: #ef4444; font-weight: 700; display: block;">0</span>
+          <span class="summary-label" style="font-size: 0.7rem; color: #64748b;">Kaarten</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spelers grid -->
+    <div class="players-grid" id="playersGrid">
+      <!-- Spelers worden hier geladen -->
+    </div>
+  </div>
+
+  <!-- Player detail modal -->
+  <div class="player-modal" id="playerModal">
+    <div class="player-modal-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3 style="margin: 0; color: #1e5ba8;" id="modalPlayerName">Speler Details</h3>
+        <button onclick="closePlayerModal()" style="background: none; border: none; font-size: 1.5rem; color: #64748b; cursor: pointer;">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="modal-tabs">
+        <button class="modal-tab active" onclick="switchTab('stats')">Statistieken</button>
+        <button class="modal-tab" onclick="switchTab('communication')">Communicatie</button>
+      </div>
+
+      <div class="tab-content active" id="statsTab">
+        <div id="playerStatsContent">
+          <!-- Player stats content -->
+        </div>
+      </div>
+
+      <div class="tab-content" id="communicationTab">
+        <div id="playerCommunicationContent">
+          <!-- Player communication content -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vast onderste menu -->
+  <div class="trainer-bottom-menu">
+    <div class="menu-items">
+      <a href="trainer-dashboard.html" class="menu-item active">
+        <i class="fas fa-home"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="trainer-absentie.html" class="menu-item">
+        <i class="fas fa-clipboard-list"></i>
+        <span>Absentie</span>
+      </a>
+      <a href="trainer-berichten.html" class="menu-item">
+        <i class="fas fa-envelope"></i>
+        <span>Berichten</span>
+      </a>
+      <a href="trainer-beoordeling.html" class="menu-item">
+        <i class="fas fa-star"></i>
+        <span>Beoordeling</span>
+      </a>
+      <a href="trainer-speeltijd.html" class="menu-item">
+        <i class="fas fa-stopwatch"></i>
+        <span>Speeltijd</span>
+      </a>
+    </div>
+  </div>
+
+  <style>
+    /* Trainer onderste menu styling */
+    .trainer-bottom-menu {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 2px solid #e5e7eb;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+      z-index: 1000;
+      padding: 0.5rem 0;
+    }
+
+    .menu-items {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .menu-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #64748b;
+      padding: 0.5rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      min-width: 60px;
+    }
+
+    .menu-item:hover {
+      color: #1e5ba8;
+      background: #f0f9ff;
+      transform: translateY(-2px);
+    }
+
+    .menu-item.active {
+      color: #1e5ba8;
+      background: #f0f9ff;
+      font-weight: 600;
+    }
+
+    .menu-item i {
+      font-size: 1.2rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .menu-item span {
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    /* Extra ruimte onderaan body voor menu */
+    body {
+      padding-bottom: 80px;
+    }
+
+    @media (max-width: 768px) {
+      .menu-item span {
+        font-size: 0.7rem;
+      }
+      
+      .menu-item i {
+        font-size: 1.1rem;
+      }
+      
+      .menu-items {
+        padding: 0 0.5rem;
+      }
+    }
+  </style>
+
+  <script src="script.js"></script>
+  <script>
+    let currentTeam = 'O10-1';
+    let currentTrainer = {
+      name: 'Marco van der Berg',
+      team: 'O10-1',
+      role: 'Hoofdtrainer'
+    };
+
+    // Sample player data
+    const teamPlayers = {
+      'O10-1': [
+        'Jesse de Jong',
+        'Mees van Dijk', 
+        'Rayan Bakker',
+        'Tom Jansen',
+        'Lisa van der Berg',
+        'Sem Vermeulen',
+        'Daan Peters',
+        'Nova Hendriks',
+        'Luca Smit',
+        'Amy de Wit',
+        'Finn van Loon',
+        'Zoë Visser'
+      ]
+    };
+
+    // Player statistics tracking
+    const playerStatistics = {};
+    let playerAttendance = {};
+
+    // Portal switching functionality
+    function switchPortal(portalType) {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+      if (!currentUser.portalAccess || !currentUser.portalAccess.includes(portalType)) {
+        alert('Je hebt geen toegang tot dit portal');
+        return;
+      }
+
+      localStorage.setItem('currentPortal', portalType);
+
+      switch(portalType) {
+        case 'parent':
+          window.location.href = 'ouderportaal.html';
+          break;
+        case 'teamleider':
+          window.location.href = 'teamleider-dashboard.html';
+          break;
+        case 'trainer':
+          window.location.reload();
+          break;
+        default:
+          console.log('Unknown portal type:', portalType);
+      }
+    }
+
+    function initializePortalSwitcher() {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+      const portalSwitcher = document.getElementById('portalSwitcher');
+
+      if (currentUser.dualPortalUser && currentUser.portalAccess && currentUser.portalAccess.length > 1) {
+        portalSwitcher.style.display = 'block';
+
+        if (currentUser.portalAccess.includes('teamleider')) {
+          document.getElementById('teamleiderPortalBtn').style.display = 'inline-block';
+        }
+
+        document.getElementById('trainerPortalBtn').style.background = 'linear-gradient(135deg, #1e5ba8, #164a91)';
+        document.getElementById('trainerPortalBtn').style.color = 'white';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      initializePortalSwitcher();
+      loadTrainerInfo();
+      detectCurrentTraining();
+      loadPlayersGrid();
+      updateSummaryStats();
+    });
+
+    function detectCurrentTraining() {
+      const now = new Date();
+      const dayOfWeek = now.getDay();
+      const currentHour = now.getHours();
+      const currentMinute = now.getMinutes();
+
+      // Training schema voor team O10-1
+      const trainingSchedule = [
+        { day: 3, time: '18:30', name: 'Woensdag Training', duration: 90 }, // Wednesday
+        { day: 5, time: '18:30', name: 'Vrijdag Training', duration: 90 },  // Friday
+        { day: 6, time: '14:00', name: 'Zaterdag Wedstrijd', duration: 120 }  // Saturday
+      ];
+
+      let currentTraining = null;
+      let trainingStatus = 'upcoming';
+
+      // Check vandaag
+      const todayTraining = trainingSchedule.find(t => t.day === dayOfWeek);
+      
+      if (todayTraining) {
+        const [trainingHour, trainingMin] = todayTraining.time.split(':').map(Number);
+        const trainingStartTime = trainingHour * 60 + trainingMin;
+        const currentTime = currentHour * 60 + currentMinute;
+        const trainingEndTime = trainingStartTime + todayTraining.duration;
+
+        if (currentTime >= trainingStartTime - 60 && currentTime <= trainingEndTime) {
+          // Training is binnen 1 uur of al bezig
+          currentTraining = todayTraining;
+          if (currentTime >= trainingStartTime) {
+            trainingStatus = 'active';
+          } else {
+            trainingStatus = 'starting_soon';
+          }
+        }
+      }
+
+      // Als geen training vandaag, zoek eerstvolgende
+      if (!currentTraining) {
+        for (let i = 1; i <= 7; i++) {
+          const checkDay = (dayOfWeek + i) % 7;
+          const nextTraining = trainingSchedule.find(t => t.day === checkDay);
+          if (nextTraining) {
+            currentTraining = nextTraining;
+            trainingStatus = 'upcoming';
+            break;
+          }
+        }
+      }
+
+      // Fallback
+      if (!currentTraining) {
+        currentTraining = trainingSchedule[0];
+      }
+
+      // Bereken correcte datum
+      const trainingDate = calculateTrainingDate(currentTraining, trainingStatus);
+      
+      // Update display met status indicator
+      const statusEmoji = {
+        'active': '🟢 BEZIG',
+        'starting_soon': '🟡 START BINNENKORT',
+        'upcoming': '📅'
+      };
+
+      const statusText = statusEmoji[trainingStatus] || '📅';
+      
+      document.getElementById('currentTrainingTitle').innerHTML = `
+        ${statusText} ${currentTraining.name}
+      `;
+
+      const dateStr = trainingDate.toLocaleDateString('nl-NL', { 
+        weekday: 'long', 
+        day: 'numeric', 
+        month: 'long' 
+      });
+
+      document.getElementById('currentTrainingTime').textContent = `${dateStr} - ${currentTraining.time}`;
+
+      // Store current training info globally voor attendance
+      window.currentTrainingInfo = {
+        ...currentTraining,
+        date: trainingDate,
+        status: trainingStatus,
+        isToday: trainingStatus === 'active' || trainingStatus === 'starting_soon'
+      };
+
+      return currentTraining;
+    }
+
+    function calculateTrainingDate(training, status) {
+      const now = new Date();
+      const dayDiff = training.day - now.getDay();
+      
+      let trainingDate = new Date(now);
+      
+      if (status === 'active' || status === 'starting_soon') {
+        // Training is vandaag
+        return trainingDate;
+      } else if (dayDiff > 0) {
+        // Training is later deze week
+        trainingDate.setDate(now.getDate() + dayDiff);
+      } else {
+        // Training is volgende week
+        trainingDate.setDate(now.getDate() + (7 + dayDiff));
+      }
+      
+      return trainingDate;
+    }
+
+    function loadPlayersGrid() {
+      const players = teamPlayers[currentTeam] || [];
+      const container = document.getElementById('playersGrid');
+
+      container.innerHTML = players.map(player => {
+        const stats = getPlayerStats(player);
+        const attendance = getPlayerAttendance(player);
+
+        return `
+          <div class="player-card" data-player="${player}">
+            <button class="expand-toggle" onclick="toggleExpandedActions('${player}')">
+              <i class="fas fa-ellipsis-v"></i>
+            </button>
+
+            <div class="player-header">
+              <div class="player-name">${player}</div>
+              <div class="attendance-status ${attendance.class}">${attendance.label}</div>
+            </div>
+
+            <div class="player-quick-stats">
+              <div class="quick-stat">
+                <span class="quick-stat-number">${stats.attendanceRate}%</span>
+                <span class="quick-stat-label">Aanwezig</span>
+              </div>
+              <div class="quick-stat">
+                <span class="quick-stat-number">${stats.late}</span>
+                <span class="quick-stat-label">Te laat</span>
+              </div>
+              <div class="quick-stat">
+                <span class="quick-stat-number">${stats.yellowCards}</span>
+                <span class="quick-stat-label">Gele kaarten</span>
+              </div>
+            </div>
+
+            <div class="player-actions">
+              <button class="action-btn btn-late ${attendance.status === 'late' ? 'active' : ''}" 
+                      onclick="setAttendance('${player}', 'late')">
+                <i class="fas fa-clock"></i> Te laat
+              </button>
+              <button class="action-btn btn-noshow ${attendance.status === 'noshow' ? 'active' : ''}" 
+                      onclick="setAttendance('${player}', 'noshow')">
+                🟨 Niet afgemeld
+              </button>
+            </div>
+
+            <div class="expanded-actions" id="expanded-${player.replace(/\s+/g, '')}">
+              <button class="secondary-btn" onclick="openPlayerModal('${player}', 'stats')">
+                <i class="fas fa-chart-bar"></i> Statistieken
+              </button>
+              <button class="secondary-btn" onclick="openPlayerModal('${player}', 'communication')">
+                <i class="fas fa-envelope"></i> Bericht
+              </button>
+              <button class="secondary-btn" onclick="window.location.href='trainer-beoordeling.html'">
+                <i class="fas fa-star"></i> Ga naar Beoordeling
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function getPlayerStats(playerName) {
+      if (!playerStatistics[playerName]) {
+        // Bereken totaal aantal activiteiten in seizoen van HJO planning
+        const seasonActivities = calculateSeasonActivities();
+        const late = Math.floor(Math.random() * 3);
+        const noShows = Math.floor(Math.random() * 2);
+        const totalMissed = late + noShows;
+        
+        playerStatistics[playerName] = {
+          totalActivities: seasonActivities,
+          late: late,
+          noShows: noShows,
+          yellowCards: noShows, // Gele kaart voor elke no-show
+          attended: seasonActivities - totalMissed
+        };
+      }
+
+      const stats = playerStatistics[playerName];
+      const attendanceRate = Math.round((stats.attended / stats.totalActivities) * 100);
+
+      return {
+        ...stats,
+        attendanceRate
+      };
+    }
+
+    function calculateSeasonActivities() {
+      // Bereken automatisch aantal trainingen + wedstrijden per seizoen
+      // 2 trainingen per week × 30 weken + 20 wedstrijden = 80 activiteiten
+      const weeksInSeason = 30;
+      const trainingsPerWeek = 2;
+      const matchesInSeason = 20;
+      
+      return (weeksInSeason * trainingsPerWeek) + matchesInSeason;
+    }
+
+    function getPlayerAttendance(playerName) {
+      const attendance = playerAttendance[playerName] || 'present';
+
+      const statusMap = {
+        present: { class: 'status-present', label: 'Verwacht' },
+        late: { class: 'status-late', label: 'Te laat' },
+        noshow: { class: 'status-absent', label: 'Niet afgemeld' }
+      };
+
+      return {
+        status: attendance,
+        ...statusMap[attendance]
+      };
+    }
+
+    function setAttendance(playerName, status) {
+      // Als speler op 'present' wordt gezet (door terug te klikken), reset naar default
+      if (playerAttendance[playerName] === status) {
+        delete playerAttendance[playerName]; // Reset naar default 'present'
+        status = 'present';
+      } else {
+        playerAttendance[playerName] = status;
+      }
+
+      // Update visual state
+      const card = document.querySelector(`[data-player="${playerName}"]`);
+      const buttons = card.querySelectorAll('.action-btn');
+
+      buttons.forEach(btn => btn.classList.remove('active'));
+      if (status !== 'present') {
+        card.querySelector(`.btn-${status}`).classList.add('active');
+      }
+
+      // Update attendance status display
+      const attendanceStatus = card.querySelector('.attendance-status');
+      const newStatus = getPlayerAttendance(playerName);
+      attendanceStatus.className = `attendance-status ${newStatus.class}`;
+      attendanceStatus.textContent = newStatus.label;
+
+      // Handle special cases
+      if (status === 'noshow') {
+        handleNoShow(playerName);
+      } else if (status === 'late') {
+        handleLateArrival(playerName);
+      }
+
+      updateSummaryStats();
+
+      // Save to localStorage
+      localStorage.setItem('playerAttendance', JSON.stringify(playerAttendance));
+
+      const statusText = status === 'present' ? 'verwacht' : newStatus.label.toLowerCase();
+      showNotification(`${playerName} gemarkeerd als ${statusText}`, 'info');
+    }
+
+    function handleNoShow(playerName) {
+      // Issue yellow card
+      const yellowCards = JSON.parse(localStorage.getItem('yellowCards') || '[]');
+      yellowCards.push({
+        id: Date.now(),
+        player: playerName,
+        datum: document.getElementById('currentTrainingTime').textContent,
+        reden: 'Niet afgemeld - niet gekomen',
+        timestamp: new Date().toISOString(),
+        type: 'No show',
+        team: currentTeam
+      });
+      localStorage.setItem('yellowCards', JSON.stringify(yellowCards));
+
+      showNotification(`🟨 Gele kaart uitgegeven aan ${playerName}`, 'warning');
+    }
+
+    function handleLateArrival(playerName) {
+      const lateArrivals = JSON.parse(localStorage.getItem('lateArrivals') || '[]');
+      lateArrivals.push({
+        player: playerName,
+        datum: document.getElementById('currentTrainingTime').textContent,
+        timestamp: new Date().toISOString(),
+        team: currentTeam
+      });
+      localStorage.setItem('lateArrivals', JSON.stringify(lateArrivals));
+    }
+
+    function updateSummaryStats() {
+      const players = teamPlayers[currentTeam] || [];
+      const totalPlayers = players.length;
+
+      let lateCount = 0;
+      let noShowCount = 0;
+      let expectedPlayers = totalPlayers;
+
+      players.forEach(player => {
+        const attendance = playerAttendance[player] || 'present';
+        if (attendance === 'late') lateCount++;
+        else if (attendance === 'noshow') {
+          noShowCount++;
+          expectedPlayers--; // Niet afgemelde spelers worden niet meer verwacht
+        }
+      });
+
+      document.getElementById('totalPlayers').textContent = totalPlayers;
+      document.getElementById('expectedPlayers').textContent = expectedPlayers;
+      document.getElementById('lateCount').textContent = lateCount;
+      document.getElementById('noShowCount').textContent = noShowCount;
+    }
+
+    function toggleExpandedActions(playerName) {
+      const cleanName = playerName.replace(/\s+/g, '');
+      const expandedActions = document.getElementById(`expanded-${cleanName}`);
+
+      // Close all other expanded actions
+      document.querySelectorAll('.expanded-actions').forEach(action => {
+        if (action.id !== `expanded-${cleanName}`) {
+          action.classList.remove('show');
+        }
+      });
+
+      expandedActions.classList.toggle('show');
+    }
+
+    function openPlayerModal(playerName, tab = 'stats') {
+      const modal = document.getElementById('playerModal');
+      document.getElementById('modalPlayerName').textContent = playerName;
+
+      // Switch to requested tab
+      switchTab(tab);
+
+      // Load content based on tab
+      loadModalContent(playerName, tab);
+
+      modal.style.display = 'flex';
+    }
+
+    function closePlayerModal() {
+      document.getElementById('playerModal').style.display = 'none';
+    }
+
+    function switchTab(tabName) {
+      // Update tab buttons
+      document.querySelectorAll('.modal-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
+
+      // Update tab content
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.getElementById(`${tabName}Tab`).classList.add('active');
+    }
+
+    function loadModalContent(playerName, tab) {
+      const stats = getPlayerStats(playerName);
+
+      if (tab === 'stats') {
+        document.getElementById('playerStatsContent').innerHTML = `
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+            <div style="text-align: center; padding: 1rem; background: #f0f9ff; border-radius: 12px;">
+              <div style="font-size: 2rem; font-weight: bold; color: #1e5ba8;">${stats.attendanceRate}%</div>
+              <div style="color: #64748b;">Aanwezigheid</div>
+            </div>
+            <div style="text-align: center; padding: 1rem; background: #f0fdf4; border-radius: 12px;">
+              <div style="font-size: 2rem; font-weight: bold; color: #22c55e;">${stats.attended}</div>
+              <div style="color: #64748b;">Aanwezig</div>
+            </div>
+            <div style="text-align: center; padding: 1rem; background: #fff3e0; border-radius: 12px;">
+              <div style="font-size: 2rem; font-weight: bold; color: #f59e0b;">${stats.late}</div>
+              <div style="color: #64748b;">Te laat</div>
+            </div>
+            <div style="text-align: center; padding: 1rem; background: #fef2f2; border-radius: 12px;">
+              <div style="font-size: 2rem; font-weight: bold; color: #ef4444;">${stats.yellowCards}</div>
+              <div style="color: #64748b;">Gele kaarten</div>
+            </div>
+          </div>
+          <div style="background: #f8faff; padding: 1.5rem; border-radius: 12px;">
+            <h4 style="margin: 0 0 1rem 0; color: #1e5ba8;">Trainer Notities</h4>
+            <textarea 
+              placeholder="Voeg notities toe over ${playerName}..." 
+              style="width: 100%; min-height: 100px; border: 1px solid #e1e5e9; border-radius: 8px; padding: 1rem; resize: vertical;"
+              onchange="savePlayerNote('${playerName}', this.value)"
+            >${getPlayerNote(playerName)}</textarea>
+          </div>
+          <div style="margin-top: 1rem; text-align: center;">
+            <button onclick="window.location.href='trainer-beoordeling.html'" 
+                    style="background: #8b5cf6; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+              <i class="fas fa-star"></i> Ga naar Uitgebreide Beoordeling
+            </button>
+          </div>
+        `;
+      } else if (tab === 'communication') {
+        loadPlayerCommunication(playerName);
+      }
+    }
+
+    function loadPlayerEvaluationSystem(playerName) {
+      const evaluations = getPlayerEvaluations(playerName);
+      
+      document.getElementById('playerEvaluationContent').innerHTML = `
+        <div style="margin-bottom: 2rem;">
+          <h4 style="margin: 0 0 1rem 0; color: #1e5ba8; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fas fa-star"></i> Speler Beoordeling - ${playerName}
+          </h4>
+          
+          <!-- Fase selector -->
+          <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Competitie Fase:</label>
+            <select id="evaluationPhase" onchange="switchEvaluationPhase('${playerName}')" style="padding: 0.5rem; border: 2px solid #e1e5e9; border-radius: 8px; width: 100%;">
+              <option value="voorbereiding">1. Voorbereiding (Aug-Sep)</option>
+              <option value="heenronde">2. Heenronde (Sep-Dec)</option>
+              <option value="winter">3. Winterstop & Training (Jan-Feb)</option>
+              <option value="terugronde">4. Terugronde (Mrt-Jun)</option>
+            </select>
+          </div>
+
+          <div id="evaluationForm">
+            ${generateEvaluationForm(playerName, 'voorbereiding', evaluations)}
+          </div>
+
+          <!-- Beoordeling geschiedenis -->
+          <div style="margin-top: 2rem; padding: 1rem; background: #f8fafc; border-radius: 12px;">
+            <h5 style="margin: 0 0 1rem 0; color: #64748b;">Voortgang Overzicht</h5>
+            <div id="evaluationProgress">
+              ${generateProgressOverview(playerName, evaluations)}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function generateEvaluationForm(playerName, phase, evaluations) {
+      const phaseData = evaluations[phase] || {};
+      const criteria = [
+        { key: 'technical', label: 'Technische Vaardigheden', icon: '⚽', description: 'Balbeheersing, passing, schieten' },
+        { key: 'tactical', label: 'Tactisch Inzicht', icon: '🧠', description: 'Positiespel, overzicht, besluitvorming' },
+        { key: 'physical', label: 'Fysieke Eigenschappen', icon: '💪', description: 'Snelheid, uithoudingsvermogen, kracht' },
+        { key: 'mental', label: 'Mentale Aspecten', icon: '🎯', description: 'Concentratie, motivatie, omgang met druk' },
+        { key: 'social', label: 'Sociale Vaardigheden', icon: '🤝', description: 'Teamwork, communicatie, sportiviteit' }
+      ];
+
+      return `
+        <div style="background: white; padding: 1.5rem; border-radius: 12px; border: 2px solid #e1e5e9;">
+          <h5 style="margin: 0 0 1.5rem 0; color: #1e5ba8;">Beoordeling voor ${getPhaseLabel(phase)}</h5>
+          
+          ${criteria.map(criterion => `
+            <div style="margin-bottom: 2rem; padding: 1rem; background: #f8fafc; border-radius: 8px;">
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <span style="font-size: 1.2rem;">${criterion.icon}</span>
+                <strong style="color: #1e293b;">${criterion.label}</strong>
+              </div>
+              <p style="margin: 0.5rem 0; color: #64748b; font-size: 0.9rem;">${criterion.description}</p>
+              
+              <!-- Cijfer input -->
+              <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <label style="min-width: 60px;">Cijfer:</label>
+                <select id="${criterion.key}_score_${phase}" onchange="updateEvaluation('${playerName}', '${phase}', '${criterion.key}', 'score', this.value)" style="padding: 0.5rem; border: 1px solid #e1e5e9; border-radius: 6px;">
+                  <option value="">-</option>
+                  <option value="1" ${phaseData[criterion.key]?.score == 1 ? 'selected' : ''}>1 - Zeer zwak</option>
+                  <option value="2" ${phaseData[criterion.key]?.score == 2 ? 'selected' : ''}>2 - Zwak</option>
+                  <option value="3" ${phaseData[criterion.key]?.score == 3 ? 'selected' : ''}>3 - Voldoende</option>
+                  <option value="4" ${phaseData[criterion.key]?.score == 4 ? 'selected' : ''}>4 - Goed</option>
+                  <option value="5" ${phaseData[criterion.key]?.score == 5 ? 'selected' : ''}>5 - Uitstekend</option>
+                </select>
+              </div>
+              
+              <!-- Notities -->
+              <div>
+                <label style="display: block; margin-bottom: 0.5rem;">Specifieke feedback:</label>
+                <textarea id="${criterion.key}_notes_${phase}" 
+                         placeholder="Beschrijf sterke punten en verbeterpunten..." 
+                         style="width: 100%; min-height: 80px; padding: 0.5rem; border: 1px solid #e1e5e9; border-radius: 6px; resize: vertical;"
+                         onchange="updateEvaluation('${playerName}', '${phase}', '${criterion.key}', 'notes', this.value)"
+                >${phaseData[criterion.key]?.notes || ''}</textarea>
+              </div>
+            </div>
+          `).join('')}
+          
+          <!-- Algemene beoordeling -->
+          <div style="margin-top: 2rem; padding: 1rem; background: #eff6ff; border-radius: 8px;">
+            <h6 style="margin: 0 0 1rem 0; color: #1e5ba8;">Algemene Feedback & Doelen</h6>
+            <textarea id="general_feedback_${phase}" 
+                     placeholder="Algemene feedback voor deze fase en doelen voor volgende periode..."
+                     style="width: 100%; min-height: 100px; padding: 0.5rem; border: 1px solid #e1e5e9; border-radius: 6px; resize: vertical;"
+                     onchange="updateEvaluation('${playerName}', '${phase}', 'general', 'feedback', this.value)"
+            >${phaseData.general?.feedback || ''}</textarea>
+          </div>
+          
+          <div style="margin-top: 1.5rem; text-align: center;">
+            <button onclick="saveEvaluationPhase('${playerName}', '${phase}')" 
+                    style="background: #1e5ba8; color: white; border: none; padding: 0.75rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer;">
+              <i class="fas fa-save"></i> Beoordeling Opslaan
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function generateProgressOverview(playerName, evaluations) {
+      const phases = ['voorbereiding', 'heenronde', 'winter', 'terugronde'];
+      const criteria = ['technical', 'tactical', 'physical', 'mental', 'social'];
+      
+      return `
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+          ${phases.map(phase => {
+            const phaseData = evaluations[phase];
+            const hasData = phaseData && Object.keys(phaseData).length > 0;
+            const avgScore = hasData ? calculateAverageScore(phaseData, criteria) : 0;
+            
+            return `
+              <div style="background: white; padding: 1rem; border-radius: 8px; text-align: center; border: 2px solid ${hasData ? '#22c55e' : '#e5e7eb'};">
+                <div style="font-weight: 600; color: #1e293b; margin-bottom: 0.5rem;">${getPhaseLabel(phase)}</div>
+                <div style="font-size: 1.5rem; font-weight: bold; color: ${hasData ? '#1e5ba8' : '#9ca3af'};">
+                  ${hasData ? avgScore.toFixed(1) : '-'}
+                </div>
+                <div style="font-size: 0.8rem; color: #64748b;">Gemiddeld</div>
+                ${hasData ? '<div style="margin-top: 0.5rem;"><i class="fas fa-check-circle" style="color: #22c55e;"></i></div>' : '<div style="margin-top: 0.5rem;"><i class="fas fa-clock" style="color: #9ca3af;"></i></div>'}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function getPhaseLabel(phase) {
+      const labels = {
+        'voorbereiding': 'Voorbereiding',
+        'heenronde': 'Heenronde', 
+        'winter': 'Winterstop',
+        'terugronde': 'Terugronde'
+      };
+      return labels[phase] || phase;
+    }
+
+    function calculateAverageScore(phaseData, criteria) {
+      let total = 0;
+      let count = 0;
+      
+      criteria.forEach(criterion => {
+        if (phaseData[criterion]?.score) {
+          total += parseInt(phaseData[criterion].score);
+          count++;
+        }
+      });
+      
+      return count > 0 ? total / count : 0;
+    }
+
+    function getPlayerEvaluations(playerName) {
+      const evaluations = JSON.parse(localStorage.getItem('playerEvaluations') || '{}');
+      return evaluations[playerName] || {};
+    }
+
+    function updateEvaluation(playerName, phase, criterion, field, value) {
+      const evaluations = getPlayerEvaluations(playerName);
+      
+      if (!evaluations[phase]) evaluations[phase] = {};
+      if (!evaluations[phase][criterion]) evaluations[phase][criterion] = {};
+      
+      evaluations[phase][criterion][field] = value;
+      evaluations[phase][criterion].lastUpdated = new Date().toISOString();
+      
+      // Save to localStorage
+      const allEvaluations = JSON.parse(localStorage.getItem('playerEvaluations') || '{}');
+      allEvaluations[playerName] = evaluations;
+      localStorage.setItem('playerEvaluations', JSON.stringify(allEvaluations));
+    }
+
+    function switchEvaluationPhase(playerName) {
+      const phase = document.getElementById('evaluationPhase').value;
+      const evaluations = getPlayerEvaluations(playerName);
+      
+      document.getElementById('evaluationForm').innerHTML = generateEvaluationForm(playerName, phase, evaluations);
+    }
+
+    function saveEvaluationPhase(playerName, phase) {
+      // Mark phase as completed
+      const evaluations = getPlayerEvaluations(playerName);
+      if (!evaluations[phase]) evaluations[phase] = {};
+      
+      evaluations[phase].completed = true;
+      evaluations[phase].completedDate = new Date().toISOString();
+      evaluations[phase].completedBy = currentTrainer.name;
+      
+      const allEvaluations = JSON.parse(localStorage.getItem('playerEvaluations') || '{}');
+      allEvaluations[playerName] = evaluations;
+      localStorage.setItem('playerEvaluations', JSON.stringify(allEvaluations));
+      
+      // Update progress overview
+      document.getElementById('evaluationProgress').innerHTML = generateProgressOverview(playerName, evaluations);
+      
+      NotificationManager.show(`Beoordeling voor ${getPhaseLabel(phase)} opgeslagen!`, 'success');
+    }
+
+    function loadPlayerCommunication(playerName) {
+      const messages = getPlayerMessages(playerName);
+      
+      document.getElementById('playerCommunicationContent').innerHTML = `
+        <div>
+          <h4 style="margin: 0 0 1rem 0; color: #1e5ba8;">
+            <i class="fas fa-envelope"></i> Communicatie met ouders van ${playerName}
+          </h4>
+          
+          <!-- Quick message templates -->
+          <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Snelle berichten:</label>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem;">
+              <button onclick="insertTemplate('positive')" style="background: #22c55e; color: white; border: none; padding: 0.5rem; border-radius: 6px; cursor: pointer;">
+                👍 Positieve feedback
+              </button>
+              <button onclick="insertTemplate('improvement')" style="background: #f59e0b; color: white; border: none; padding: 0.5rem; border-radius: 6px; cursor: pointer;">
+                📈 Verbeterpunten
+              </button>
+              <button onclick="insertTemplate('attendance')" style="background: #3b82f6; color: white; border: none; padding: 0.5rem; border-radius: 6px; cursor: pointer;">
+                📅 Aanwezigheid
+              </button>
+            </div>
+          </div>
+          
+          <!-- Message composition -->
+          <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Nieuw bericht:</label>
+            <textarea id="messageComposer" 
+                     placeholder="Typ je bericht aan de ouders van ${playerName}..."
+                     style="width: 100%; min-height: 120px; padding: 1rem; border: 1px solid #e1e5e9; border-radius: 6px; margin-bottom: 1rem; resize: vertical;">
+            </textarea>
+            <button onclick="sendPlayerMessage('${playerName}')" 
+                    style="background: #1e5ba8; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; font-weight: 600;">
+              <i class="fas fa-paper-plane"></i> Versturen
+            </button>
+          </div>
+          
+          <!-- Message history -->
+          <div style="background: white; padding: 1rem; border-radius: 8px;">
+            <h5 style="margin: 0 0 1rem 0; color: #64748b;">Berichtgeschiedenis</h5>
+            <div id="messageHistory">
+              ${generateMessageHistory(messages)}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function getPlayerMessages(playerName) {
+      const messages = JSON.parse(localStorage.getItem('playerMessages') || '{}');
+      return messages[playerName] || [];
+    }
+
+    function generateMessageHistory(messages) {
+      if (messages.length === 0) {
+        return '<p style="color: #64748b; text-align: center; padding: 2rem;">Nog geen berichten verstuurd</p>';
+      }
+      
+      return messages.map(msg => `
+        <div style="border-bottom: 1px solid #e5e7eb; padding: 1rem 0;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <span style="font-weight: 600; color: #1e293b;">${msg.subject || 'Trainer bericht'}</span>
+            <span style="color: #64748b; font-size: 0.9rem;">${new Date(msg.timestamp).toLocaleString()}</span>
+          </div>
+          <p style="margin: 0; color: #374151;">${msg.content}</p>
+        </div>
+      `).join('');
+    }
+
+    function insertTemplate(type) {
+      const templates = {
+        positive: `Hallo! Ik wil graag even delen dat ${getCurrentPlayer()} het erg goed doet tijdens de trainingen. Hij/zij toont goede inzet en maakt mooie vorderingen. Blijf zo doorgaan!`,
+        improvement: `Hallo! Ik wil graag een paar verbeterpunten bespreken voor ${getCurrentPlayer()}. Tijdens de trainingen zie ik mogelijkheden voor groei op het gebied van... Graag thuis ook aandacht besteden aan...`,
+        attendance: `Hallo! Ik wil graag de aanwezigheid van ${getCurrentPlayer()} bespreken. Regelmatige deelname aan trainingen is belangrijk voor de ontwikkeling. Kunnen we dit samen bespreken?`
+      };
+      
+      const composer = document.getElementById('messageComposer');
+      composer.value = templates[type] || '';
+    }
+
+    function sendPlayerMessage(playerName) {
+      const content = document.getElementById('messageComposer').value.trim();
+      if (!content) {
+        alert('Voer een bericht in');
+        return;
+      }
+      
+      const message = {
+        id: Date.now(),
+        playerName: playerName,
+        content: content,
+        timestamp: new Date().toISOString(),
+        sender: currentTrainer.name,
+        team: currentTeam,
+        read: false
+      };
+      
+      // Save to player messages
+      const playerMessages = getPlayerMessages(playerName);
+      playerMessages.unshift(message);
+      
+      const allMessages = JSON.parse(localStorage.getItem('playerMessages') || '{}');
+      allMessages[playerName] = playerMessages;
+      localStorage.setItem('playerMessages', JSON.stringify(allMessages));
+      
+      // Also save to parent notifications
+      const parentNotifications = JSON.parse(localStorage.getItem('parentNotifications') || '[]');
+      parentNotifications.unshift({
+        id: Date.now(),
+        type: 'trainer_message',
+        title: `📧 Bericht van trainer`,
+        message: content,
+        playerName: playerName,
+        team: currentTeam,
+        sender: currentTrainer.name,
+        timestamp: new Date().toISOString(),
+        read: false
+      });
+      localStorage.setItem('parentNotifications', JSON.stringify(parentNotifications));
+      
+      // Clear composer and update history
+      document.getElementById('messageComposer').value = '';
+      document.getElementById('messageHistory').innerHTML = generateMessageHistory(playerMessages);
+      
+      NotificationManager.show(`Bericht verstuurd naar ouders van ${playerName}`, 'success');
+    }
+
+    function getPlayerNote(playerName) {
+      const notes = JSON.parse(localStorage.getItem('playerNotes') || '{}');
+      return notes[playerName] || '';
+    }
+
+    function savePlayerNote(playerName, note) {
+      const notes = JSON.parse(localStorage.getItem('playerNotes') || '{}');
+      notes[playerName] = note;
+      localStorage.setItem('playerNotes', JSON.stringify(notes));
+    }
+
+    function loadTrainerInfo() {
+      const storedTrainer = JSON.parse(localStorage.getItem('currentTrainer') || 'null');
+      if (storedTrainer) {
+        currentTrainer = storedTrainer;
+        currentTeam = storedTrainer.team;
+      }
+
+      document.getElementById('trainerName').textContent = currentTrainer.name;
+      document.getElementById('assignedTeam').textContent = currentTrainer.team;
+    }
+
+    function showNotification(message, type = 'info') {
+      if (typeof NotificationManager !== 'undefined') {
+        NotificationManager.show(message, type);
+      } else {
+        console.log(message);
+      }
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('playerModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closePlayerModal();
+      }
+    });
+
+    // Load saved attendance on page load
+    const savedAttendance = localStorage.getItem('playerAttendance');
+    if (savedAttendance) {
+      playerAttendance = JSON.parse(savedAttendance);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BTV Connect - Profiel</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <a href="ouderportaal.html" class="back-link">
+        <i class="fas fa-home"></i> Home
+      </a>
+      <div style="flex: 1; text-align: center;">
+        <h1 class="header-title">
+          <i class="fas fa-user-circle"></i> Mijn Profiel
+        </h1>
+      </div>
+      <button onclick="logout()" class="logout-btn" title="Uitloggen">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Gebruiker Info Card -->
+    <div class="section">
+      <div style="background: linear-gradient(135deg, #1e5ba8, #164a91); color: white; padding: 2rem; border-radius: 20px; text-align: center; margin-bottom: 2rem; box-shadow: 0 8px 25px rgba(30, 91, 168, 0.3);">
+        <div style="width: 80px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+          <i class="fas fa-user"></i>
+        </div>
+        <h2 id="userName" style="margin: 0 0 0.5rem 0; font-size: 1.5rem;">Familie de Jong</h2>
+        <p id="userEmail" style="margin: 0 0 1rem 0; opacity: 0.9;">ouder@test.nl</p>
+        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+          <div style="background: rgba(255,255,255,0.15); padding: 0.5rem 1rem; border-radius: 12px;">
+            <div style="font-size: 0.8rem; opacity: 0.9;">Kind</div>
+            <div style="font-weight: 600;" id="playerName">Jesse de Jong</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.15); padding: 0.5rem 1rem; border-radius: 12px;">
+            <div style="font-size: 0.8rem; opacity: 0.9;">Team</div>
+            <div style="font-weight: 600;" id="teamName">O10-1</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Overzicht -->
+    <div class="section">
+      <h3 style="color: #1e5ba8; font-size: 1.2rem; font-weight: 600; margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">
+        <i class="fas fa-chart-line"></i> Status Overzicht
+      </h3>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+        <div style="background: linear-gradient(135deg, #10ac84, #00d2d3); color: white; padding: 1.5rem; border-radius: 15px; text-align: center;">
+          <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📈</div>
+          <div style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.25rem;" id="attendancePercentage">85%</div>
+          <div style="font-size: 0.9rem; opacity: 0.9;">Aanwezigheid</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #ff6b6b, #ee5a52); color: white; padding: 1.5rem; border-radius: 15px; text-align: center;">
+          <div style="font-size: 2.5rem; margin-bottom: 0.5rem;" id="yellowCardDisplay">🟨</div>
+          <div style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.25rem;" id="yellowCardCount">1</div>
+          <div style="font-size: 0.9rem; opacity: 0.9;">Gele Kaarten</div>
+        </div>
+      </div>
+
+      <!-- Status Details -->
+      <div style="background: white; border: 1px solid #e1e5e9; border-radius: 15px; padding: 1.5rem;">
+        <h4 style="margin: 0 0 1rem 0; color: #1e5ba8;">Laatste Activiteiten</h4>
+        <div id="recentActivity">
+          <!-- Wordt geladen via JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Instellingen -->
+    <div class="section">
+      <h3 style="color: #1e5ba8; font-size: 1.2rem; font-weight: 600; margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">
+        <i class="fas fa-cog"></i> Instellingen
+      </h3>
+
+      <div style="background: white; border: 1px solid #e1e5e9; border-radius: 15px; overflow: hidden;">
+        <!-- Notificaties -->
+        <div class="setting-item" onclick="toggleNotifications()" style="padding: 0.75rem; border-bottom: 1px solid #f1f3f5; cursor: pointer; display: flex; align-items: center; justify-content: space-between; min-height: 60px;">
+          <div style="display: flex; align-items: center; gap: 0.75rem; flex: 1;">
+            <div style="width: 32px; height: 32px; background: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0;">
+              <i class="fas fa-bell" style="font-size: 0.9rem;"></i>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-weight: 600; color: #1e293b; font-size: 0.9rem; line-height: 1.2;">Push Notificaties</div>
+              <div style="font-size: 0.75rem; color: #64748b; line-height: 1.2; margin-top: 0.1rem;">Ontvang meldingen voor belangrijke berichten</div>
+            </div>
+          </div>
+          <div class="toggle-switch-compact" id="notificationToggle">
+            <input type="checkbox" id="notifications" checked>
+            <label for="notifications"></label>
+          </div>
+        </div>
+
+        <!-- Training Herinneringen -->
+        <div class="setting-item" onclick="toggleReminders()" style="padding: 0.75rem; border-bottom: 1px solid #f1f3f5; cursor: pointer; display: flex; align-items: center; justify-content: space-between; min-height: 60px;">
+          <div style="display: flex; align-items: center; gap: 0.75rem; flex: 1;">
+            <div style="width: 32px; height: 32px; background: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0;">
+              <i class="fas fa-clock" style="font-size: 0.9rem;"></i>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-weight: 600; color: #1e293b; font-size: 0.9rem; line-height: 1.2;">Training Herinneringen</div>
+              <div style="font-size: 0.75rem; color: #64748b; line-height: 1.2; margin-top: 0.1rem;">24 uur voor training automatische herinnering</div>
+            </div>
+          </div>
+          <div class="toggle-switch-compact" id="reminderToggle">
+            <input type="checkbox" id="reminders">
+            <label for="reminders"></label>
+          </div>
+        </div>
+
+        <!-- Email Notificaties -->
+        <div class="setting-item" onclick="toggleEmailNotifications()" style="padding: 0.75rem; border-bottom: 1px solid #f1f3f5; cursor: pointer; display: flex; align-items: center; justify-content: space-between; min-height: 60px;">
+          <div style="display: flex; align-items: center; gap: 0.75rem; flex: 1;">
+            <div style="width: 32px; height: 32px; background: #8b5cf6; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0;">
+              <i class="fas fa-envelope" style="font-size: 0.9rem;"></i>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-weight: 600; color: #1e293b; font-size: 0.9rem; line-height: 1.2;">Email Notificaties</div>
+              <div style="font-size: 0.75rem; color: #64748b; line-height: 1.2; margin-top: 0.1rem;">Belangrijke berichten ook via email ontvangen</div>
+            </div>
+          </div>
+          <div class="toggle-switch-compact" id="emailToggle">
+            <input type="checkbox" id="emailNotifications" checked>
+            <label for="emailNotifications"></label>
+          </div>
+        </div>
+
+        <!-- Profiel Bewerken -->
+        <div class="setting-item" onclick="editProfile()" style="padding: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 0.75rem; min-height: 60px;">
+          <div style="width: 32px; height: 32px; background: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0;">
+            <i class="fas fa-edit" style="font-size: 0.9rem;"></i>
+          </div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-weight: 600; color: #1e293b; font-size: 0.9rem; line-height: 1.2;">Profiel Bewerken</div>
+            <div style="font-size: 0.75rem; color: #64748b; line-height: 1.2; margin-top: 0.1rem;">Contactgegevens en voorkeuren aanpassen</div>
+          </div>
+          <i class="fas fa-chevron-right" style="color: #94a3b8; font-size: 0.8rem;"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hulp & Support -->
+    <div class="section">
+      <h3 style="color: #1e5ba8; font-size: 1.2rem; font-weight: 600; margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">
+        <i class="fas fa-question-circle"></i> Hulp & Support
+      </h3>
+
+      <div style="display: grid; gap: 0.75rem;">
+        <button onclick="showHelp()" style="background: white; border: 1px solid #e1e5e9; padding: 0.75rem; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 0.75rem; text-align: left; transition: all 0.3s ease; min-height: 60px;">
+          <div style="width: 32px; height: 32px; background: #06b6d4; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0;">
+            <i class="fas fa-book" style="font-size: 0.9rem;"></i>
+          </div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-weight: 600; color: #1e293b; font-size: 0.9rem; line-height: 1.2;">Gebruikershandleiding</div>
+            <div style="font-size: 0.75rem; color: #64748b; line-height: 1.2; margin-top: 0.1rem;">Leer hoe je de app optimaal gebruikt</div>
+          </div>
+          <i class="fas fa-chevron-right" style="color: #94a3b8; font-size: 0.8rem;"></i>
+        </button>
+
+        <button onclick="contactSupport()" style="background: white; border: 1px solid #e1e5e9; padding: 0.75rem; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 0.75rem; text-align: left; transition: all 0.3s ease; min-height: 60px;">
+          <div style="width: 32px; height: 32px; background: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0;">
+            <i class="fas fa-headset" style="font-size: 0.9rem;"></i>
+          </div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-weight: 600; color: #1e293b; font-size: 0.9rem; line-height: 1.2;">Contact Support</div>
+            <div style="font-size: 0.75rem; color: #64748b; line-height: 1.2; margin-top: 0.1rem;">Hulp nodig? Neem contact op met ons team</div>
+          </div>
+          <i class="fas fa-chevron-right" style="color: #94a3b8; font-size: 0.8rem;"></i>
+        </button>
+
+        <button onclick="showAppInfo()" style="background: white; border: 1px solid #e1e5e9; padding: 0.75rem; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 0.75rem; text-align: left; transition: all 0.3s ease; min-height: 60px;">
+          <div style="width: 32px; height: 32px; background: #64748b; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0;">
+            <i class="fas fa-info-circle" style="font-size: 0.9rem;"></i>
+          </div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-weight: 600; color: #1e293b; font-size: 0.9rem; line-height: 1.2;">App Informatie</div>
+            <div style="font-size: 0.75rem; color: #64748b; line-height: 1.2; margin-top: 0.1rem;">Versie, privacy en voorwaarden</div>
+          </div>
+          <i class="fas fa-chevron-right" style="color: #94a3b8; font-size: 0.8rem;"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Extra Functionaliteit -->
+    <div class="section">
+      <h3 style="color: #1e5ba8; font-size: 1.2rem; font-weight: 600; margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">
+        <i class="fas fa-star"></i> Extra Functionaliteit
+      </h3>
+
+      <div style="display: grid; gap: 0.75rem;">
+        <button onclick="showSeasonOverview()" style="background: white; border: 1px solid #e1e5e9; padding: 0.75rem; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 0.75rem; text-align: left; transition: all 0.3s ease; min-height: 60px;">
+          <div style="width: 32px; height: 32px; background: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0;">
+            <i class="fas fa-chart-line" style="font-size: 0.9rem;"></i>
+          </div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-weight: 600; color: #1e293b; font-size: 0.9rem; line-height: 1.2;">Seizoen Overzicht</div>
+            <div style="font-size: 0.75rem; color: #64748b; line-height: 1.2; margin-top: 0.1rem;">Bekijk statistieken van het hele seizoen</div>
+          </div>
+          <i class="fas fa-chevron-right" style="color: #94a3b8; font-size: 0.8rem;"></i>
+        </button>
+
+        <button onclick="showTrainingHistory()" style="background: white; border: 1px solid #e1e5e9; padding: 0.75rem; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 0.75rem; text-align: left; transition: all 0.3s ease; min-height: 60px;">
+          <div style="width: 32px; height: 32px; background: #8b5cf6; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0;">
+            <i class="fas fa-history" style="font-size: 0.9rem;"></i>
+          </div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-weight: 600; color: #1e293b; font-size: 0.9rem; line-height: 1.2;">Training Geschiedenis</div>
+            <div style="font-size: 0.75rem; color: #64748b; line-height: 1.2; margin-top: 0.1rem;">Bekijk alle eerdere trainingen en prestaties</div>
+          </div>
+          <i class="fas fa-chevron-right" style="color: #94a3b8; font-size: 0.8rem;"></i>
+        </button>
+
+        <button onclick="exportData()" style="background: white; border: 1px solid #e1e5e9; padding: 0.75rem; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 0.75rem; text-align: left; transition: all 0.3s ease; min-height: 60px;">
+          <div style="width: 32px; height: 32px; background: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0;">
+            <i class="fas fa-download" style="font-size: 0.9rem;"></i>
+          </div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-weight: 600; color: #1e293b; font-size: 0.9rem; line-height: 1.2;">Data Exporteren</div>
+            <div style="font-size: 0.75rem; color: #64748b; line-height: 1.2; margin-top: 0.1rem;">Download je persoonlijke gegevens en statistieken</div>
+          </div>
+          <i class="fas fa-chevron-right" style="color: #94a3b8; font-size: 0.8rem;"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Uitloggen Sectie -->
+    <div class="section">
+      <button onclick="confirmLogout()" style="width: 100%; background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border: none; padding: 1rem 2rem; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 1rem;">
+        <i class="fas fa-sign-out-alt"></i>
+        Uitloggen
+      </button>
+    </div>
+  </div>
+
+  <!-- MODERNE MOBIELE NAVIGATIE -->
+  <nav class="menubalk" role="navigation" aria-label="Hoofdnavigatie">
+    <button type="button" class="nav-item" onclick="window.location.href='ouderportaal.html'" aria-label="Dashboard pagina">
+      <i class="fas fa-home" aria-hidden="true"></i>
+      <span>Dashboard</span>
+    </button>
+    <button type="button" class="nav-item" onclick="window.location.href='overzicht.html'" aria-label="Planning & Overzicht">
+      <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+      <span>Planning</span>
+    </button>
+    <button type="button" class="nav-item" onclick="window.location.href='vervoer.html'" aria-label="Vervoer pagina">
+      <i class="fas fa-car" aria-hidden="true"></i>
+      <span>Vervoer</span>
+    </button>
+    <button type="button" class="nav-item" onclick="window.location.href='prikbord.html'" aria-label="Prikbord pagina">
+      <i class="fas fa-comments" aria-hidden="true"></i>
+      <span>Berichten</span>
+    </button>
+    <button type="button" class="nav-item active" onclick="window.location.href='profiel.html'" aria-label="Profiel pagina - huidige pagina" aria-current="page">
+      <i class="fas fa-user-circle" aria-hidden="true"></i>
+      <span>Profiel</span>
+    </button>
+  </nav>
+
+  <script src="script.js"></script>
+
+  <style>
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 24px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-switch label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .toggle-switch label:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+
+    .toggle-switch input:checked + label {
+      background-color: #1e5ba8;
+    }
+
+    .toggle-switch input:checked + label:before {
+      transform: translateX(26px);
+    }
+
+    /* Compact toggle switches for mobile */
+    .toggle-switch-compact {
+      position: relative;
+      width: 42px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .toggle-switch-compact input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-switch-compact label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .toggle-switch-compact label:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      border-radius: 50%;
+      transition: 0.3s;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .toggle-switch-compact input:checked + label {
+      background-color: #1e5ba8;
+    }
+
+    .toggle-switch-compact input:checked + label:before {
+      transform: translateX(22px);
+    }
+
+    .setting-item:hover {
+      background-color: #f8fafc;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .section button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+
+      .section {
+        margin-bottom: 1.5rem;
+      }
+    }
+  </style>
+
+  <script>
+    // Laad gebruikersdata bij het openen van de pagina
+    document.addEventListener('DOMContentLoaded', function() {
+      loadUserProfile();
+      loadUserStats();
+      loadRecentActivity();
+      initializeSettings();
+    });
+
+    function loadUserProfile() {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+      const currentPlayer = localStorage.getItem('currentPlayerName') || 'Jesse de Jong';
+      const currentTeam = localStorage.getItem('currentTeam') || 'O10-1';
+
+      document.getElementById('userName').textContent = currentUser.name || 'Familie de Jong';
+      document.getElementById('userEmail').textContent = currentUser.email || 'ouder@test.nl';
+      document.getElementById('playerName').textContent = currentPlayer;
+      document.getElementById('teamName').textContent = currentTeam;
+    }
+
+    function loadUserStats() {
+      // Laad aanwezigheidspercentage
+      const absences = JSON.parse(localStorage.getItem('absences') || '[]');
+      const totalTrainings = 20; // Aantal trainingen dit seizoen
+      const attendancePercentage = Math.round(((totalTrainings - absences.length) / totalTrainings) * 100);
+
+      document.getElementById('attendancePercentage').textContent = attendancePercentage + '%';
+
+      // Laad gele kaarten
+      const yellowCards = JSON.parse(localStorage.getItem('yellowCards') || '[]');
+      const cardCount = yellowCards.length;
+
+      document.getElementById('yellowCardCount').textContent = cardCount;
+
+      // Update gele kaart display
+      const yellowCardDisplay = document.getElementById('yellowCardDisplay');
+      if (cardCount === 0) {
+        yellowCardDisplay.textContent = '✅';
+      } else if (cardCount >= 3) {
+        yellowCardDisplay.textContent = '🟥';
+      } else {
+        yellowCardDisplay.textContent = '🟨'.repeat(cardCount);
+      }
+    }
+
+    function loadRecentActivity() {
+      const absences = JSON.parse(localStorage.getItem('absences') || '[]');
+      const yellowCards = JSON.parse(localStorage.getItem('yellowCards') || '[]');
+
+      const activities = [
+        ...absences.map(a => ({
+          type: 'absence',
+          date: a.datum,
+          description: `Afgemeld voor ${a.datum}`,
+          icon: 'calendar-times',
+          color: '#ef4444'
+        })),
+        ...yellowCards.map(c => ({
+          type: 'yellowCard',
+          date: c.datum,
+          description: `Gele kaart ontvangen: ${c.reden}`,
+          icon: 'exclamation-triangle',
+          color: '#f59e0b'
+        }))
+      ].sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0)).slice(0, 5);
+
+      const container = document.getElementById('recentActivity');
+
+      if (activities.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; color: #64748b; padding: 2rem;">
+            <i class="fas fa-check-circle" style="font-size: 2rem; margin-bottom: 0.5rem; color: #10ac84;"></i>
+            <p>Geen recente activiteiten</p>
+            <p style="font-size: 0.85rem;">Geweldig! Alles loopt op rolletjes 🎉</p>
+          </div>
+        `;
+      } else {
+        container.innerHTML = activities.map(activity => `
+          <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid #f1f3f5;">
+            <div style="width: 32px; height: 32px; background: ${activity.color}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px;">
+              <i class="fas fa-${activity.icon}"></i>
+            </div>
+            <div style="flex: 1;">
+              <div style="font-weight: 500; color: #1e293b; font-size: 0.9rem;">${activity.description}</div>
+              <div style="font-size: 0.8rem; color: #64748b;">${activity.date}</div>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function initializeSettings() {
+      // Laad opgeslagen instellingen
+      const settings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+
+      // Push notificaties standaard AAN
+      document.getElementById('notifications').checked = settings.notifications !== false;
+      // Training herinneringen standaard UIT
+      document.getElementById('reminders').checked = settings.reminders === true;
+      // Email notificaties standaard AAN
+      document.getElementById('emailNotifications').checked = settings.emailNotifications !== false;
+    }
+
+    function toggleNotifications() {
+      const checkbox = document.getElementById('notifications');
+      checkbox.checked = !checkbox.checked;
+      saveSettings();
+
+      if (checkbox.checked) {
+        requestNotificationPermission();
+        NotificationManager.show('Push notificaties ingeschakeld', 'success');
+      } else {
+        NotificationManager.show('Push notificaties uitgeschakeld', 'info');
+      }
+    }
+
+    function toggleReminders() {
+      const checkbox = document.getElementById('reminders');
+      checkbox.checked = !checkbox.checked;
+      saveSettings();
+
+      NotificationManager.show(
+        checkbox.checked ? 'Training herinneringen ingeschakeld' : 'Training herinneringen uitgeschakeld',
+        checkbox.checked ? 'success' : 'info'
+      );
+    }
+
+    function toggleEmailNotifications() {
+      const checkbox = document.getElementById('emailNotifications');
+      checkbox.checked = !checkbox.checked;
+      saveSettings();
+
+      NotificationManager.show(
+        checkbox.checked ? 'Email notificaties ingeschakeld' : 'Email notificaties uitgeschakeld',
+        checkbox.checked ? 'success' : 'info'
+      );
+    }
+
+    function saveSettings() {
+      const settings = {
+        notifications: document.getElementById('notifications').checked,
+        reminders: document.getElementById('reminders').checked,
+        emailNotifications: document.getElementById('emailNotifications').checked
+      };
+
+      localStorage.setItem('userSettings', JSON.stringify(settings));
+    }
+
+    function requestNotificationPermission() {
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission().then(function(permission) {
+          if (permission === 'granted') {
+            new Notification('BTV Connect', {
+              body: 'Je ontvangt nu notificaties voor belangrijke berichten!',
+              icon: '/favicon.ico'
+            });
+          }
+        });
+      }
+    }
+
+    function editProfile() {
+      // Maak een modal voor profiel bewerken
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        backdrop-filter: blur(5px);
+      `;
+
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+      modal.innerHTML = `
+        <div style="
+          background: white;
+          border-radius: 20px;
+          padding: 2rem;
+          max-width: 400px;
+          width: 90%;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        ">
+          <div style="text-align: center; margin-bottom: 1.5rem;">
+            <h3 style="color: #1e5ba8; margin: 0 0 0.5rem 0;">
+              <i class="fas fa-edit"></i> Profiel Bewerken
+            </h3>
+            <p style="color: #64748b; margin: 0;">Pas je contactgegevens aan</p>
+          </div>
+
+          <div style="margin-bottom: 1rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Naam:</label>
+            <input type="text" id="editName" value="${currentUser.name || ''}" style="width: 100%; padding: 0.75rem; border: 2px solid #e1e5e9; border-radius: 10px; font-size: 1rem;">
+          </div>
+
+          <div style="margin-bottom: 1rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Email:</label>
+            <input type="email" id="editEmail" value="${currentUser.email || ''}" style="width: 100%; padding: 0.75rem; border: 2px solid #e1e5e9; border-radius: 10px; font-size: 1rem;">
+          </div>
+
+          <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Telefoonnummer:</label>
+            <input type="tel" id="editPhone" value="${currentUser.phone || ''}" placeholder="06-12345678" style="width: 100%; padding: 0.75rem; border: 2px solid #e1e5e9; border-radius: 10px; font-size: 1rem;">
+          </div>
+
+          <div style="display: flex; gap: 1rem;">
+            <button onclick="closeEditModal()" style="
+              flex: 1;
+              background: #f1f3f5;
+              color: #64748b;
+              border: none;
+              padding: 0.75rem;
+              border-radius: 10px;
+              font-weight: 600;
+              cursor: pointer;
+            ">Annuleren</button>
+            <button onclick="saveProfile()" style="
+              flex: 1;
+              background: linear-gradient(135deg, #1e5ba8, #164a91);
+              color: white;
+              border: none;
+              padding: 0.75rem;
+              border-radius: 10px;
+              font-weight: 600;
+              cursor: pointer;
+            ">Opslaan</button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+      window.currentEditModal = modal;
+
+      // Close modal when clicking outside
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          closeEditModal();
+        }
+      });
+
+      window.closeEditModal = function() {
+        if (window.currentEditModal) {
+          document.body.removeChild(window.currentEditModal);
+          window.currentEditModal = null;
+        }
+      };
+
+      window.saveProfile = function() {
+        const name = document.getElementById('editName').value;
+        const email = document.getElementById('editEmail').value;
+        const phone = document.getElementById('editPhone').value;
+
+        if (!name || !email) {
+          alert('Naam en email zijn verplicht');
+          return;
+        }
+
+        // Update user data
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        currentUser.name = name;
+        currentUser.email = email;
+        currentUser.phone = phone;
+
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+        // Update display
+        loadUserProfile();
+
+        closeEditModal();
+        NotificationManager.show('Profiel succesvol bijgewerkt', 'success');
+      };
+    }
+
+    function showHelp() {
+      // Toon hulp modal
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        backdrop-filter: blur(5px);
+      `;
+
+      modal.innerHTML = `
+        <div style="
+          background: white;
+          border-radius: 20px;
+          padding: 2rem;
+          max-width: 500px;
+          width: 90%;
+          max-height: 80vh;
+          overflow-y: auto;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        ">
+          <div style="text-align: center; margin-bottom: 2rem;">
+            <h3 style="color: #1e5ba8; margin: 0 0 0.5rem 0;">
+              <i class="fas fa-book"></i> Gebruikershandleiding
+            </h3>
+            <p style="color: #64748b; margin: 0;">Leer hoe je BTV Connect optimaal gebruikt</p>
+          </div>
+
+          <div style="text-align: left;">
+            <h4 style="color: #1e5ba8; margin: 1rem 0 0.5rem 0;">📱 Navigatie</h4>
+            <ul style="color: #64748b; line-height: 1.6;">
+              <li><strong>Home:</strong> Overzicht van activiteiten en snel afmelden</li>
+              <li><strong>Planning:</strong> Volledige trainings- en wedstrijdkalender</li>
+              <li><strong>Vervoer:</strong> Vervoer regelen en aanbieden</li>
+              <li><strong>Berichten:</strong> Communicatie met trainers en club</li>
+            </ul>
+
+            <h4 style="color: #1e5ba8; margin: 1rem 0 0.5rem 0;">🚫 Afmelden</h4>
+            <ul style="color: #64748b; line-height: 1.6;">
+              <li>Meld minimaal 3 uur van tevoren af</li>
+              <li>Te laat afmelden resulteert in een gele kaart</li>
+              <li>Bij 3 gele kaarten volgt een gesprek</li>
+            </ul>
+
+            <h4 style="color: #1e5ba8; margin: 1rem 0 0.5rem 0;">💬 Berichten</h4>
+            <ul style="color: #64748b; line-height: 1.6;">
+              <li>Persoonlijke berichten van trainers</li>
+              <li>Club berichten voor alle ouders</li>
+              <li>Belangrijke berichten krijgen een rode markering</li>
+            </ul>
+
+            <h4 style="color: #1e5ba8; margin: 1rem 0 0.5rem 0;">🚗 Vervoer</h4>
+            <ul style="color: #64748b; line-height: 1.6;">
+              <li>Bied vervoer aan naar andere ouders</li>
+              <li>Zoek meerijders voor wedstrijden</li>
+              <li>Deel kosten en help het milieu</li>
+            </ul>
+          </div>
+
+          <div style="text-align: center; margin-top: 2rem;">
+            <button onclick="closeHelpModal()" style="
+              background: linear-gradient(135deg, #1e5ba8, #164a91);
+              color: white;
+              border: none;
+              padding: 1rem 2rem;
+              border-radius: 12px;
+              font-weight: 600;
+              cursor: pointer;
+            ">Begrepen</button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+      window.currentHelpModal = modal;
+
+      window.closeHelpModal = function() {
+        if (window.currentHelpModal) {
+          document.body.removeChild(window.currentHelpModal);
+          window.currentHelpModal = null;
+        }
+      };
+
+      // Close modal when clicking outside
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          closeHelpModal();
+        }
+      });
+    }
+
+    function contactSupport() {
+      // Open email client of toon contact informatie
+      const email = 'support@btvconnect.nl';
+      const subject = 'Hulp nodig met BTV Connect';
+      const body = 'Hallo support team,\n\nIk heb hulp nodig met...\n\nMijn gegevens:\n- Naam: ' + 
+                   (JSON.parse(localStorage.getItem('currentUser') || '{}').name || '') + 
+                   '\n- Team: ' + (localStorage.getItem('currentTeam') || '') + '\n\n';
+
+      // Probeer email client te openen
+      const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+      try {
+        window.location.href = mailtoLink;
+      } catch (error) {
+        // Fallback: toon contact informatie
+        alert(`Contact Support:\n\nEmail: ${email}\nTelefoon: 020-123-4567\n\nOf stuur een bericht via de app berichten functie.`);
+      }
+    }
+
+    function showAppInfo() {
+      // Toon app informatie modal
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        backdrop-filter: blur(5px);
+      `;
+
+      modal.innerHTML = `
+        <div style="
+          background: white;
+          border-radius: 20px;
+          padding: 2rem;
+          max-width: 400px;
+          width: 90%;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+          text-align: center;
+        ">
+          <div style="margin-bottom: 2rem;">
+            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #1e5ba8, #164a91); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
+              <i class="fas fa-futbol"></i>
+            </div>
+            <h3 style="color: #1e5ba8; margin: 0 0 0.5rem 0;">BTV Connect</h3>
+            <p style="color: #64748b; margin: 0;">Versie 2.1.0</p>
+          </div>
+
+          <div style="text-align: left; margin: 1.5rem 0;">
+            <div style="margin-bottom: 1rem;">
+              <strong style="color: #1e293b;">Ontwikkeld voor:</strong><br>
+              <span style="color: #64748b;">BTV Buitenveldert</span>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+              <strong style="color: #1e293b;">Laatste update:</strong><br>
+              <span style="color: #64748b;">December 2024</span>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+              <strong style="color: #1e293b;">Support:</strong><br>
+              <span style="color: #64748b;">support@btvconnect.nl</span>
+            </div>
+          </div>
+
+          <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; margin: 1.5rem 0; text-align: left;">
+            <h4 style="margin: 0 0 0.5rem 0; color: #1e5ba8; font-size: 0.9rem;">Nieuwe features in deze versie:</h4>
+            <ul style="color: #64748b; font-size: 0.85rem; margin: 0; padding-left: 1.2rem;">
+              <li>Verbeterde berichtenfunctie</li>
+              <li>Snellere laadtijden</li>
+              <li>Bug fixes en stabiliteitsverbeteringen</li>
+            </ul>
+          </div>
+
+          <div style="font-size: 0.8rem; color: #94a3b8; margin: 1rem 0;">
+            © 2024 BTV Connect. Alle rechten voorbehouden.<br>
+            <a href="#" onclick="showPrivacy()" style="color: #1e5ba8;">Privacybeleid</a> | 
+            <a href="#" onclick="showTerms()" style="color: #1e5ba8;">Gebruiksvoorwaarden</a>
+          </div>
+
+          <button onclick="closeAppInfoModal()" style="
+            background: linear-gradient(135deg, #1e5ba8, #164a91);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+          ">Sluiten</button>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+      window.currentAppInfoModal = modal;
+
+      window.closeAppInfoModal = function() {
+        if (window.currentAppInfoModal) {
+          document.body.removeChild(window.currentAppInfoModal);
+          window.currentAppInfoModal = null;
+        }
+      };
+
+      window.showPrivacy = function() {
+        alert('Privacybeleid:\n\nBTV Connect respecteert je privacy. Alle gegevens worden veilig opgeslagen en alleen gebruikt voor clubdoeleinden. We delen geen persoonlijke informatie met derden.');
+      };
+
+      window.showTerms = function() {
+        alert('Gebruiksvoorwaarden:\n\nDoor BTV Connect te gebruiken ga je akkoord met de clubregels en gedragscode. Misbruik van de app kan leiden tot uitsluiting.');
+      };
+
+      // Close modal when clicking outside
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          closeAppInfoModal();
+        }
+      });
+    }
+
+    function confirmLogout() {
+      if (confirm('Weet je zeker dat je wilt uitloggen?')) {
+        logout();
+      }
+    }
+
+    function showSeasonOverview() {
+      // Toon seizoen overzicht modal
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        backdrop-filter: blur(5px);
+      `;
+
+      modal.innerHTML = `
+        <div style="
+          background: white;
+          border-radius: 20px;
+          padding: 2rem;
+          max-width: 500px;
+          width: 90%;
+          max-height: 80vh;
+          overflow-y: auto;
+          box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        ">
+          <div style="text-align: center; margin-bottom: 2rem;">
+            <h3 style="color: #1e5ba8; margin: 0 0 0.5rem 0;">
+              <i class="fas fa-chart-line"></i> Seizoen Overzicht
+            </h3>
+            <p style="color: #64748b; margin: 0;">Jouw prestaties dit seizoen</p>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+            <div style="background: #f0fdf4; padding: 1rem; border-radius: 12px; text-align: center;">
+              <div style="font-size: 1.8rem; font-weight: 700; color: #16a34a;">85%</div>
+              <div style="font-size: 0.8rem; color: #15803d;">Aanwezigheid</div>
+            </div>
+            <div style="background: #fff7ed; padding: 1rem; border-radius: 12px; text-align: center;">
+              <div style="font-size: 1.8rem; font-weight: 700; color: #ea580c;">12</div>
+              <div style="font-size: 0.8rem; color: #c2410c;">Wedstrijden</div>
+            </div>
+            <div style="background: #eff6ff; padding: 1rem; border-radius: 12px; text-align: center;">
+              <div style="font-size: 1.8rem; font-weight: 700; color: #2563eb;">24</div>
+              <div style="font-size: 0.8rem; color: #1d4ed8;">Trainingen</div>
+            </div>
+            <div style="background: #fef2f2; padding: 1rem; border-radius: 12px; text-align: center;">
+              <div style="font-size: 1.8rem; font-weight: 700; color: #dc2626;">1</div>
+              <div style="font-size: 0.8rem; color: #b91c1c;">Gele Kaarten</div>
+            </div>
+          </div>
+
+          <div style="text-align: center;">
+            <button onclick="closeSeasonModal()" style="
+              background: linear-gradient(135deg, #1e5ba8, #164a91);
+              color: white;
+              border: none;
+              padding: 1rem 2rem;
+              border-radius: 12px;
+              font-weight: 600;
+              cursor: pointer;
+            ">Sluiten</button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+      window.currentSeasonModal = modal;
+
+      window.closeSeasonModal = function() {
+        if (window.currentSeasonModal) {
+          document.body.removeChild(window.currentSeasonModal);
+          window.currentSeasonModal = null;
+        }
+      };
+
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          closeSeasonModal();
+        }
+      });
+    }
+
+    function showTrainingHistory() {
+      alert('Training Geschiedenis:\n\nHier kun je binnenkort al je trainingen en prestaties van het hele seizoen bekijken, inclusief feedback van trainers en persoonlijke ontwikkeling.');
+    }
+
+    function exportData() {
+      const userData = {
+        profiel: JSON.parse(localStorage.getItem('currentUser') || '{}'),
+        afmeldingen: JSON.parse(localStorage.getItem('absences') || '[]'),
+        geleKaarten: JSON.parse(localStorage.getItem('yellowCards') || '[]'),
+        instellingen: JSON.parse(localStorage.getItem('userSettings') || '{}')
+      };
+
+      const dataStr = JSON.stringify(userData, null, 2);
+      const dataBlob = new Blob([dataStr], {type: 'application/json'});
+      
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(dataBlob);
+      link.download = 'btv-connect-data.json';
+      link.click();
+
+      NotificationManager.show('Je gegevens zijn gedownload als JSON bestand', 'success');
+    }
+  </script>
+</body>
+</html>
