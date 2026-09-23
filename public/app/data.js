@@ -76,7 +76,7 @@
     let uid = 1; const id = (p) => `${p}${uid++}`;
 
     const S = {
-      v: 2, gen: today,
+      v: 3, gen: today,
       club: {
         id: 'scb', naam: 'SC Buitenveldert', regio: 'Noord',
         seizoen: { start: '2026-08-19', eind: '2027-06-05' },
@@ -304,7 +304,8 @@
     const ouders = (teamId) => [...new Set(S.players.filter((p) => p.teamId === teamId).flatMap((p) => p.ouders))];
     const allen = S.people.map((p) => p.id);
     msg({ van: peter.id, soort: 'nieuws', bereik: 'Hele club', onderwerp: 'Welkom in seizoen 2026/2027', tekst: 'Beste leden en ouders,\n\nWelkom in het nieuwe seizoen! Vanaf dit seizoen gebruiken we ClubComm voor afmelden, planning en berichten. Zet de app op je beginscherm en zet meldingen aan, dan mis je niets.\n\nSportieve groet,\nPeter Visser, HJO', tijd: new Date(now - 26 * 864e5).toISOString(), ontvangers: allen, gelezen: allen.filter((_, k) => k % 5 !== 0 && k % 7 !== 0) });
-    msg({ van: linda.id, soort: 'nieuws', bereik: 'O10-1', onderwerp: 'Teamfoto zaterdag', tekst: 'Zaterdag maken we voor de wedstrijd de teamfoto. Graag allemaal in het thuistenue en op tijd!', tijd: new Date(now - 2 * 864e5).toISOString(), ontvangers: ouders('O10-1'), gelezen: ouders('O10-1').slice(0, 8) });
+    msg({ van: peter.id, soort: 'nieuws', bereik: 'Hele club', onderwerp: 'Zo werkt afmelden en de kaarten', tekst: 'Beste ouders,\n\nVanaf dit seizoen meldt u uw kind af in ClubComm, bij de training of wedstrijd zelf. Tik bij "Wat betekenen de kaarten?" voor de stappen: herinneren, waarschuwen, bellen of appen en een gesprek. De eerste keer krijgt u altijd een vriendelijke herinnering.\n\nVragen? Stuur mij een persoonlijk bericht.\nPeter Visser, HJO', tijd: new Date(now - 2 * 864e5).toISOString(), ontvangers: allen, gelezen: allen.filter((_, k) => k % 3 === 1), vastTot: new Date(now + 12 * 864e5).toISOString() });
+    msg({ van: linda.id, soort: 'nieuws', bereik: 'O10-1', vastTot: new Date(now + 5 * 864e5).toISOString(), onderwerp: 'Teamfoto zaterdag', tekst: 'Zaterdag maken we voor de wedstrijd de teamfoto. Graag allemaal in het thuistenue en op tijd!', tijd: new Date(now - 2 * 864e5).toISOString(), ontvangers: ouders('O10-1'), gelezen: ouders('O10-1').slice(0, 8) });
     msg({ van: mark.id, soort: 'persoonlijk', bereik: 'Sanne de Vries', onderwerp: 'Jesse en de tweede training', tekst: `Hoi Sanne, ik zie dat Jesse de laatste weken op ${DAG[T('O10-1').rooster[1].dag]} vaak niet kan. Is dat een vaste andere sport? Dan kunnen we even kijken wat handig is. Groet, Mark`, tijd: new Date(now - 3 * 3600e3).toISOString(), ontvangers: [sanne.id], urgent: false });
     msg({ van: peter.id, soort: 'nieuws', bereik: 'Hele club', onderwerp: 'Nog 3 weken tot de herfstvakantie', tekst: 'In de herfstvakantie (10 t/m 18 oktober) wordt er niet getraind. Wedstrijden gaan wel door volgens het programma.', tijd: new Date(now + 7 * 864e5).toISOString(), gepland: new Date(now + 7 * 864e5).toISOString(), ontvangers: allen });
     msg({ van: sanne.id, soort: 'persoonlijk', bereik: 'Mark Jansen', onderwerp: 'Re: training', tekst: 'Hoi Mark, Jesse heeft op die dag zwemles. Ik laat het weten zodra dat verandert!', tijd: new Date(now - 30 * 864e5).toISOString(), ontvangers: [mark.id], gelezen: [mark.id] });

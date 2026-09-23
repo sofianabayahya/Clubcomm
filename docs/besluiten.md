@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 23 september 2026 (Besluit 14 t/m 18 toegevoegd)
+Laatst bijgewerkt: 23 september 2026 (Besluit 14 t/m 19 toegevoegd)
 
 ---
 
@@ -491,6 +491,16 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
 ### Vuistregel voor nieuwe ideeën
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
+
+---
+
+## Besluit 19 — Clubberichten, urgent en vastzetten
+
+- **Clubberichten herkenbaar:** berichten van de HJO of clubbeheerder krijgen het club-icoon en het label **"Club"**. Ze vallen op zonder dat ze urgent zijn.
+- **Urgent alleen voor tijdgevoelige zaken** (vandaag of morgen, bijv. afgelasting): rood label, bovenaan, pushmelding met geluid en op Home tot het gelezen is. Afgelasten is altijd urgent. Niet alle HJO-berichten worden urgent (anders verliest "urgent" zijn waarde).
+- **Vastzetten:** HJO, teamleider én trainer kunnen een bericht **1 of 2 weken** vastzetten (bij versturen of later, bij het eigen bericht). Het staat dan met een speldje bovenaan Berichten, ook als het gelezen is, en zakt daarna vanzelf weg. De afzender kan het eerder losmaken.
+- Een vastgezet bericht staat op **Home** van de ouder tot het gelezen is.
+- **Maximaal 2 vastgezette berichten per bereik** (per team, en voor de hele club); bij een derde wordt het oudste losgemaakt.
 
 ---
 

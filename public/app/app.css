@@ -375,3 +375,10 @@ body.sheet-open { overflow: hidden; }
 /* Agenda-abonnement */
 .linkvak { display: flex; align-items: center; gap: 8px; background: var(--vlak); border: 1px solid var(--lijn); border-radius: 10px; padding: 6px 6px 6px 12px; }
 .linkvak code { flex: 1; min-width: 0; font-size: 12px; overflow-wrap: anywhere; color: var(--zacht); }
+
+/* Club-afzender en vastgezette berichten */
+.avatar.club { background: var(--blauw); color: #fff; }
+.avatar.club .ic { width: 18px; height: 18px; }
+.lijst.vast { box-shadow: inset 0 0 0 1px var(--blauw), var(--schaduw); }
+.sectie-kop h3 .ic { width: 13px; height: 13px; vertical-align: -1px; }
+.chip .ic.klein { width: 12px; height: 12px; }
