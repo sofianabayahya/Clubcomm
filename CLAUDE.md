@@ -12,7 +12,7 @@ Gemigreerd uit Replit op 2026-09-22. Taal van de UI: Nederlands.
 - Pagina-overzicht en rollen: zie `APP_BLUEPRINT.md`.
 
 ## Bekende problemen
-- Logo ontbreekt: plaats `buitenveldert-logo_1749246007134.png` in `public/attached_assets/` (index.html en qr-registratie.html verbergen het plaatje tot dan).
+- Logo: `public/assets/clubcomm-logo.jpg` (volledig), `clubcomm-icon.png` (icoon, login/QR) en `favicon.png` (alle pagina's). Het logo-blauw is lichter dan de app-kleur `#1e5ba8`.
 - Demo-trainers gebruiken nog fictieve `@btv.nl`-adressen (trainers-beheren, trainer-instellingen).
 
 ## Fase 2 (afgerond 2026-09-23)
