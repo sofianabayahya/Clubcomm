@@ -362,6 +362,40 @@ Niet elke trainer gaat mee naar wedstrijden. Per wedstrijd is er daarom een **we
 
 ---
 
+## Besluit 10 — Aanwezigheidsnorm en zones
+
+### Iedereen komt, tenzij afgemeld
+- Geldt voor **alle teams** (breedte én selectie), bij **trainingen én wedstrijden**.
+- Ouders hoeven nooit actief aan te melden. Norm: je kind speelt bij een club; kan het niet, dan meld je af. (Aanmelden zou vrijblijvendheid uitstralen.)
+- Het verschil tussen breedte en selectie zit in de **drempels**, niet in de werkwijze.
+
+### Teamtype
+- De HJO geeft elk team een **teamtype**: *breedte* of *selectie*.
+- Per teamtype gelden eigen zones en drempels (instelbaar per club, Besluit 6).
+
+### Zones (voorbeeldwaarden, club stelt in)
+
+| Zone | Breedte | Selectie |
+|---|---|---|
+| 🟢 Groen | ≥ 80% | ≥ 90% |
+| 🟠 Oranje (let op) | 75–80% | 85–90% |
+| 🔴 Rood | < 75% | < 85% |
+
+De oranje zone geeft een seintje vóórdat het rood wordt, zodat een gesprek preventief kan zijn.
+
+### Speler of team?
+Het systeem vergelijkt de **speler met zijn eigen team**:
+- **Eén speler in rood, team groen** → individueel signaal aan **teamleider en trainer** (HJO ziet het ook). Mogelijk gevolg: gesprek met de ouders.
+- **Teamgemiddelde in oranje/rood** → signaal aan de **HJO**: waarschijnlijk iets in het team (trainingstijd, trainer, onvrede).
+- Signalen tonen ook **patronen**, bijv. *"Jesse: 70% (team: 88%) — vooral afwezig op vrijdag."*
+- Het systeem signaleert; een mens beslist.
+
+### Blessure (voorstel, nog te bevestigen)
+- Afmeldingen met reden **Blessure tellen niet mee** voor de zone (anders komt een kind met een gebroken arm automatisch in rood). Ze blijven wel zichtbaar in de geschiedenis.
+- **Ziek telt wel mee** (af en toe ziek is geen probleem; structureel ziek wil je zien).
+
+---
+
 ## Later / ideeën
 
 - **Beloningen** (punten, contributie terugverdienen) als optionele module die de HJO per club of team aanzet.
@@ -374,4 +408,4 @@ Niet elke trainer gaat mee naar wedstrijden. Per wedstrijd is er daarom een **we
 
 - HJO-portaal (rondleiding), inclusief rollen koppelen aan accounts.
 - **Huisstijl:** één set icoontjes in één stijl; kleur alleen met betekenis (groen = goed, oranje = aandacht, rood = probleem); verder rustig met het logo-blauw als hoofdkleur (lichter dan de huidige `#1e5ba8`).
-- **Wedstrijden bevestigen:** geldt bij wedstrijden ook "iedereen komt, tenzij afgemeld" (zoals bij trainingen), of moeten ouders actief bevestigen?
+- **Blessure en zones:** bevestigen dat blessure niet meetelt voor de aanwezigheidszone (Besluit 10).
