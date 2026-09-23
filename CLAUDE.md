@@ -26,6 +26,8 @@ Gemigreerd uit Replit op 2026-09-22. Taal van de UI: Nederlands.
 - Volledig: `npm install && npm start` (poort 5000, vereist Node.js).
 
 ## Richting V2
+**Besluiten (bouwlijst) staan in `docs/besluiten.md`** — lees die eerst; bij tegenstrijdigheid gaat dat document voor.
+
 Specificaties staan in `~/Desktop/Platform Clubcomm/` (Parent Portal V2, HJO Dashboard V2, Registratie/Auth/Rollen brief).
 Kernprincipes:
 - Eén account per persoon, rollen zijn toewijzingen; meerdere rollen per account met rolwisselaar.
