@@ -17,6 +17,7 @@ Laatst bijgewerkt: 23 september 2026 (Besluit 14 t/m 22 toegevoegd)
 6. **Tweetalig voorbereid.** Alle teksten staan vanaf het begin in een taalbestand (zie Besluit 3).
 7. **Er is altijd een vervanger.** Bij een amateurvereniging ontbreekt soms een teamleider of trainer, of traint een trainer alleen en gaat hij niet mee naar wedstrijden. Elke taak heeft daarom een vaste volgorde van wie het overneemt, en rollen kunnen tijdelijk (bijv. per wedstrijd) aan iemand worden toegewezen.
 8. **Iedereen ziet alleen wat van hem is.** Ouders zien alleen gegevens van hun eigen kind (aanwezigheid, kaarten, beoordelingen) — nooit van andere kinderen. Trainers en teamleiders zien hun eigen team. De HJO ziet alles. Dit wordt server-side afgedwongen.
+9. **Elke taak heeft een eigenaar: één duidelijke lijn.** De club bepaalt welke rol welke taak heeft (Besluit 25). Een taak die aan een rol hangt, moet ook aan een persoon zijn toegewezen, zodat hij wordt opgepakt. ClubComm laat zien waar een taak geen eigenaar heeft. Ook de communicatie volgt die lijn: een signaal gaat naar wie de taak heeft, niet naar iedereen.
 
 ---
 
