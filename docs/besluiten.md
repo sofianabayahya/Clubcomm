@@ -640,6 +640,8 @@ Net als bij spelers: ClubComm registreert en signaleert, de HJO beslist.
 
 ---
 
+- **Aanvulling (23 september 2026): "ik kan niet" is bewust niet zichtbaar op Home.** Een opvallende knop nodigt uit tot makkelijk afmelden. De trainer vindt het ingeklapt onder de training (Aanwezigheid → kies de training → "Kun je zelf echt niet?"), met de uitleg dat het wordt vastgelegd en, binnen een dag voor de training, als te laat telt. Een reden is verplicht. Op Home staat alleen de status als de trainer al is afgemeld (vervanger gevonden of niet).
+- **Bellen bij de drempel (stap 3):** de rij heeft drie knoppen met tekst: **Bel [ouder]**, **WhatsApp**, en **Contact vastleggen** (gebeld of geappt + afspraak). Pas na het vastleggen verdwijnt de stap.
 ## Besluit 19 — Clubberichten, urgent en vastzetten
 
 - **Clubberichten herkenbaar:** berichten van de HJO of clubbeheerder krijgen het club-icoon en het label **"Club"**. Ze vallen op zonder dat ze urgent zijn.

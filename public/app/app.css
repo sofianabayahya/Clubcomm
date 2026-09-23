@@ -398,3 +398,7 @@ body.sheet-open { overflow: hidden; }
 .tabel.zicht td small { display: block; color: var(--zacht); font-size: 12px; }
 .tabel.zicht input { width: 20px; height: 20px; accent-color: var(--blauw); }
 .knoppen-rij { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.stap-knoppen { display: flex; flex-wrap: wrap; gap: 6px; }
+.stap-knoppen .knop { display: inline-flex; align-items: center; gap: 4px; text-decoration: none; }
+details.uitklap.stil { background: none; border: 0; box-shadow: none; padding: 4px 0; }
+details.uitklap.stil summary { font-size: 13px; color: var(--zacht); }

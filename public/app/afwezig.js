@@ -40,11 +40,12 @@
       rechts: `<button class="knop klein" data-act="neemOver" data-id="${a.id}">Ik neem over</button><button class="knop klein licht rood-tekst" data-act="trainingAfgelasten" data-id="${a.id}">Afgelasten</button>` });
   });
   // Blok onder de trainingskaart van de trainer
-  CC.kanNietBlok = (S, a) => {
+  // Niet op Home (zou uitnodigen tot makkelijk afmelden); alleen ingeklapt bij de training zelf. Op Home alleen de status.
+  CC.kanNietBlok = (S, a, alleenStatus) => {
     if (!a || a.soort !== 'training' || a.afgelast) return '';
     const me = CC.me(); const t = M.team(S, a.teamId);
     if (t.trainerId !== me.id) return '';
-    if (!a.trainerAfwezig) return `<button class="linkknop" data-act="kanNiet" data-id="${a.id}">${icon('user-cog', 'klein')} Ik kan zelf niet bij deze training</button>`;
+    if (!a.trainerAfwezig) return alleenStatus ? '' : `<details class="uitklap stil"><summary>Kun je zelf echt niet?</summary><p class="zacht klein">Het team rekent op je. Meld je alleen af als het niet anders kan: dit wordt vastgelegd${CC.trainerAfmeldSoort && CC.trainerAfmeldSoort(S, a) === 'telaat' ? ', en omdat de training binnen een dag begint, telt het als <b>te laat afgemeld</b>' : ''}.</p><button class="linkknop" data-act="kanNiet" data-id="${a.id}">Afmelden als trainer</button></details>`;
     const v = a.vervangerId && M.persoon(S, a.vervangerId);
     return `<div class="info ${v ? 'groen' : 'oranje'}">${icon(v ? 'circle-check' : 'hourglass')}<span>Je bent afgemeld als trainer. ${v ? `<b>${esc(v.naam)}</b> neemt de training over.` : 'Teamleider en HJO zijn gevraagd; nog geen vervanger.'} <button class="linkknop" data-act="kanToch" data-id="${a.id}">Ik kan toch</button>${v ? '' : ` · <button class="linkknop rood-tekst" data-act="trainingAfgelasten" data-id="${a.id}">Afgelasten</button>`}</span></div>`;
   };
@@ -55,7 +56,8 @@
         <fieldset class="redenen"><legend>Wat wil je doen?</legend>
           <label class="reden"><input type="radio" name="k" value="vervanger" checked>${icon('user-cog')}<span>Vervanger zoeken</span></label>
           <label class="reden"><input type="radio" name="k" value="afgelast">${icon('ban')}<span>Training afgelasten</span></label></fieldset>
-        <label for="kn-r">Reden (mag leeg)</label><input id="kn-r" name="r" placeholder="Bijv. werk, ziek">
+        <label for="kn-r">Reden</label><input id="kn-r" name="r" required placeholder="Bijv. werk, ziek">
+        ${CC.trainerAfmeldSoort && CC.trainerAfmeldSoort(S, a) === 'telaat' ? `<div class="info oranje">${icon('clock')}<span>De training begint binnen een dag. Dit telt als <b>te laat afgemeld</b>.</span></div>` : ''}
         <button class="knop vol">Doorgeven</button>
         <p class="zacht klein">Vervanger zoeken: de teamleider en de ${esc(S.club.labels.hjo)} krijgen direct een melding, en ouders kunnen zich aanmelden via Taken. Lukt het niet, dan kun je later alsnog afgelasten; ouders krijgen dan een pushmelding.</p></form>`);
   });

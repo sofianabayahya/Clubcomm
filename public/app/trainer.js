@@ -96,8 +96,10 @@
   // Opschalingsstap als rij; bij "bellen" direct bel- en WhatsApp-knop naar de ouder
   CC.stapRij = (S, s) => {
     const pl = M.speler(S, s.spelerId); const o = pl && M.persoon(S, pl.ouders[0]);
-    const knoppen = s.soort === 'bellen' && o && CC.mag('bellen', null, pl.teamId) ? `<a class="icoonknop blauw" href="tel:${o.tel}" aria-label="Bel ${esc(o.naam)}">${icon('phone')}</a><a class="icoonknop groen" href="https://wa.me/31${o.tel.slice(1)}" target="_blank" rel="noopener" aria-label="WhatsApp ${esc(o.naam)}">${icon('message-circle')}</a><button class="knop klein" data-act="snelGebeld" data-id="${s.spelerId}">Gebeld ✓</button>` : '';
-    return h.rij({ ic: s.soort === 'bellen' ? 'phone' : 'users', titel: esc(s.tekst), sub: esc(s.sub), kleur: 'rood', act: 'open', attrs: `data-view="speler" data-id="${s.spelerId}"`, rechts: knoppen, chevron: !knoppen });
+    // Bellen: 1) bel of app de ouder, 2) leg vast wat je afsprak (dan verdwijnt de stap)
+    const knoppen = s.soort === 'bellen' && o && CC.mag('bellen', null, pl.teamId) ? `<div class="stap-knoppen"><a class="knop klein licht" href="tel:${o.tel}">${icon('phone')}Bel ${esc(o.naam.split(' ')[0])}</a><a class="knop klein licht" href="https://wa.me/31${o.tel.slice(1)}" target="_blank" rel="noopener">${icon('message-circle')}WhatsApp</a><button class="knop klein" data-act="gesprekVastleggen" data-id="${s.spelerId}">${icon('check')}Contact vastleggen</button></div>` : '';
+    const rij = h.rij({ ic: s.soort === 'bellen' ? 'phone' : 'users', titel: esc(s.tekst), sub: esc(s.sub), kleur: 'rood', act: 'open', attrs: `data-view="speler" data-id="${s.spelerId}"` });
+    return knoppen ? `<div class="signaal">${rij}<div class="signaal-voet">${knoppen}</div></div>` : rij;
   };
   CC.signaalRijAfdoen = (S, s) => {
     const rij = signaalRij(S, s);
@@ -158,7 +160,7 @@
             <div class="verwacht"><b>${sp.length - af.length}</b><span>van ${sp.length} verwacht</span></div>
             ${af.length ? `<div class="lijst compact">${af.map((x) => h.rij({ ic: h.reden(x.st.afm ? x.st.afm.reden : 'Blessure'), titel: esc(M.naam(S, x.pl)), sub: x.st.code === 'langdurig' ? `Langdurig afwezig (${esc(x.st.lang.reden.toLowerCase())})` : `${esc(x.st.afm.reden)}${x.st.afm.opm ? ' · ' + esc(x.st.afm.opm) : ''}` })).join('')}</div>` : '<p class="zacht">Iedereen komt.</p>'}
             ${vandaag ? (S.pres[vandaag.id] ? `<button class="knop licht vol" data-act="open" data-view="opnemen" data-id="${vandaag.id}">${icon('circle-check')}Aanwezigheid opgeslagen · aanpassen</button>` : `<button class="knop groot vol" data-act="open" data-view="opnemen" data-id="${vandaag.id}">${icon('clipboard-check')}Aanwezigheid opnemen</button>`) : ''}
-            ${CC.kanNietBlok ? CC.kanNietBlok(S, volgendeT) : ''}
+            ${CC.kanNietBlok ? CC.kanNietBlok(S, volgendeT, true) : ''}
           </article>
           ${acties.length ? `${h.sectie('Actie nodig')}<div class="lijst">${acties.join('')}</div>` : ''}`;
       },
@@ -172,7 +174,7 @@
         const a = acts.find((x) => x.id === kies) || standaard;
         return `${h.seg('aanwModus', [['opnemen', 'Opnemen'], ['overzicht', 'Overzicht']], 'opnemen')}
           <div class="weekstrook" role="tablist">${acts.map((x) => { const d = D.parse(x.datum); return `<button role="tab" aria-selected="${x.id === a.id}" class="${x.id === a.id ? 'aan' : ''} ${x.afgelast ? 'afg' : ''} ${x.datum === D.vandaag() ? 'vandaag' : ''} ${S.pres[x.id] ? 'gedaan' : ''}" data-act="seg" data-key="aanwAct" data-val="${x.id}"><small>${D.DAG_KORT[d.getDay()]}</small><b>${d.getDate()}</b><small>${x.soort === 'training' ? 'T' : 'W'}</small></button>`; }).join('')}</div>
-          ${a ? `<div class="kaart-kop los">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${h.actSub(S, a)}</small></div></div>${CC.opnemenHtml(S, a)}` : ''}
+          ${a ? `<div class="kaart-kop los">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${h.actSub(S, a)}</small></div></div>${CC.opnemenHtml(S, a)}${CC.kanNietBlok && D.start(a) > new Date() ? CC.kanNietBlok(S, a) : ''}` : ''}
           ${CC.mag('planning') ? `<button class="knop licht vol" data-act="planningAanpassen">${icon('calendar-plus')}Planning aanpassen of oefenwedstrijd toevoegen</button>` : ''}`;
       },
       berichten: (S) => CC.berichtenScherm(S, { nieuw: true }),
