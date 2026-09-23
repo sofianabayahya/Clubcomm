@@ -417,28 +417,28 @@
       const t = M.team(S, tid);
       const ts = M.teamStats(S, tid, per);
       const tz = M.zone(S, ts.pct, tid);
-      if (voorHjo && tz !== 'groen') res.push({ soort: 'team', niveau: tz, teamId: tid, tekst: `${t.naam}: teamgemiddelde ${ts.pct}% (${t.type})`, sub: 'Waarschijnlijk iets in het team: tijd, trainer of sfeer?' });
+      if (voorHjo && tz !== 'groen') res.push({ soort: 'team', niveau: tz, teamId: tid, tekst: `${t.naam}: teamgemiddelde ${ts.pct}% (${t.type})`, sub: 'Waarschijnlijk iets in het team: tijd, trainer of sfeer?', ernst: 100 - (ts.pct || 0) });
       ts.spelers.forEach(({ pl, st }) => {
         const z = M.zone(S, st.pct, tid);
         const naam = M.naam(S, pl);
         const lang = S.lang.find((l) => l.spelerId === pl.id && l.tot >= vandaag());
-        if (lang) res.push({ soort: 'lang', niveau: 'info', teamId: tid, spelerId: pl.id, tekst: `${naam}: langdurig afwezig (${lang.reden.toLowerCase()})`, sub: `Tot ongeveer ${CC.date.kort(lang.tot)}${lang.opm ? ' · ' + lang.opm : ''}` });
+        if (lang) res.push({ soort: 'lang', niveau: 'info', teamId: tid, spelerId: pl.id, tekst: `${naam}: langdurig afwezig (${lang.reden.toLowerCase()})`, sub: `Tot ongeveer ${CC.date.kort(lang.tot)}${lang.opm ? ' · ' + lang.opm : ''}`, ernst: 0, sleutelExtra: lang.id });
         if (z === 'rood' && tz !== 'rood' && !lang) {
           const top = Object.entries(st.redenen).sort((a, b) => b[1] - a[1])[0];
-          res.push({ soort: 'speler', niveau: 'rood', teamId: tid, spelerId: pl.id, tekst: `${naam}: ${st.pct}% (team: ${ts.pct}%)`, sub: top ? `${st.afwezig}× afwezig, waarvan ${top[1]}× ${top[0].toLowerCase()}` : '' });
+          res.push({ soort: 'speler', niveau: 'rood', teamId: tid, spelerId: pl.id, tekst: `${naam}: ${st.pct}% (team: ${ts.pct}%)`, sub: top ? `${st.afwezig}× afwezig, waarvan ${top[1]}× ${top[0].toLowerCase()}` : '', ernst: st.afwezig });
         } else if (z === 'oranje' && tz === 'groen' && !lang) {
-          res.push({ soort: 'speler', niveau: 'oranje', teamId: tid, spelerId: pl.id, tekst: `${naam}: ${st.pct}% (team: ${ts.pct}%)`, sub: 'Let op: nog geen rood, een gesprek kan nu preventief zijn.' });
+          res.push({ soort: 'speler', niveau: 'oranje', teamId: tid, spelerId: pl.id, tekst: `${naam}: ${st.pct}% (team: ${ts.pct}%)`, sub: 'Let op: nog geen rood, een gesprek kan nu preventief zijn.', ernst: st.afwezig });
         }
         // patroon: afwezig op vaste dag
         const afw = st.lijst.filter((x) => !['aanwezig', 'telaat', 'langdurig'].includes(x.st.code));
         if (afw.length >= 3) {
           const per = {}; afw.forEach((x) => { const d = parse(x.act.datum).getDay(); per[d] = (per[d] || 0) + 1; });
           const [dag, n] = Object.entries(per).sort((a, b) => b[1] - a[1])[0];
-          if (n >= 3 && n / afw.length >= 0.6) res.push({ soort: 'patroon', niveau: 'oranje', teamId: tid, spelerId: pl.id, tekst: `${naam}: vooral afwezig op ${DAG[dag]}`, sub: `${n} van de ${afw.length} keer afwezig op ${DAG[dag]}` });
+          if (n >= 3 && n / afw.length >= 0.6) res.push({ soort: 'patroon', niveau: 'oranje', teamId: tid, spelerId: pl.id, tekst: `${naam}: vooral afwezig op ${DAG[dag]}`, sub: `${n} van de ${afw.length} keer afwezig op ${DAG[dag]}`, ernst: n, sleutelExtra: 'dag' + dag });
         }
         // patroon: reeks korte ziek/blessuremeldingen
         const kort = S.afm.filter((f) => f.spelerId === pl.id && ['Ziek', 'Blessure'].includes(f.reden) && new Date(f.tijd) > new Date(Date.now() - 28 * 864e5));
-        if (kort.length >= 3 && !lang) res.push({ soort: 'patroon', niveau: 'oranje', teamId: tid, spelerId: pl.id, tekst: `${naam}: ${kort.length}× ziek/blessure in 4 weken`, sub: `Waarvan ${kort.filter((f) => f.reden === 'Blessure').length}× blessure. Eerst vragen hoe het gaat?` });
+        if (kort.length >= 3 && !lang) res.push({ soort: 'patroon', niveau: 'oranje', teamId: tid, spelerId: pl.id, tekst: `${naam}: ${kort.length}× ziek/blessure in 4 weken`, sub: `Waarvan ${kort.filter((f) => f.reden === 'Blessure').length}× blessure. Eerst vragen hoe het gaat?`, ernst: kort.length, sleutelExtra: 'kort' });
         // kaartendrempel
         const k = M.kaarten(S, pl);
         // Opschaling (Besluit 15): herinneren → waarschuwen (kaart) → bellen/appen → persoonlijk gesprek HJO → clubbesluit
@@ -446,8 +446,19 @@
         if (stap) res.push({ ...stap, teamId: tid, spelerId: pl.id, tekst: `${naam}: ${stap.tekst}` });
       });
     });
-    return res;
+    // Signalen ter informatie kunnen afgedaan worden ("Gezien, geen actie nodig"); ze komen terug als het erger wordt.
+    // Opschalingssignalen (bellen, gesprek HJO, clubbesluit) verdwijnen alleen door de actie zelf (Besluit 15).
+    const afgedaan = S.signaalAfgedaan || [];
+    const rang = { info: 0, oranje: 1, rood: 2 };
+    res.forEach((s) => { s.sleutel = [s.soort, s.teamId, s.spelerId || '', s.sleutelExtra || ''].join('|'); s.afdoenbaar = !M.STAPPEN.includes(s.soort); });
+    return res.filter((s) => {
+      if (!s.afdoenbaar) return true;
+      const a = afgedaan.filter((x) => x.sleutel === s.sleutel).pop();
+      return !a || (s.ernst || 0) > (a.ernst || 0) || (rang[s.niveau] || 0) > (rang[a.niveau] || 0);
+    });
   };
+  M.STAPPEN = ['bellen', 'gesprekHjo', 'clubbesluit'];
+  M.afgedaanRecent = (S, teamIds, dagen = 14) => (S.signaalAfgedaan || []).filter((x) => teamIds.includes(x.teamId) && Date.now() - new Date(x.tijd) < dagen * 864e5);
 
   // Opschalingsstap na de drempel. Contact = gebeld/geappt; gesprek = persoonlijk gesprek met de HJO.
   M.stap = (S, pl, k) => {

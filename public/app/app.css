@@ -386,3 +386,6 @@ body.sheet-open { overflow: hidden; }
 .rij.vraag { flex-wrap: wrap; }
 .rij.vraag .rij-tekst { flex: 1 1 calc(100% - 40px); }
 .rij.vraag .rij-r { width: 100%; justify-content: flex-start; padding-left: 32px; }
+/* Signaal met knop "Gezien" */
+.signaal + .signaal, .lijst > .rij + .signaal, .lijst > .signaal + .rij { border-top: 1px solid var(--lijn); }
+.signaal-voet { display: flex; align-items: center; gap: 8px; padding: 0 14px 10px 46px; background: var(--vlak); }

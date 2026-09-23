@@ -116,9 +116,16 @@
   // Opschalingsstap als rij; bij "bellen" direct bel- en WhatsApp-knop naar de ouder
   CC.stapRij = (S, s) => {
     const pl = M.speler(S, s.spelerId); const o = pl && M.persoon(S, pl.ouders[0]);
-    const knoppen = s.soort === 'bellen' && o ? `<a class="icoonknop blauw" href="tel:${o.tel}" aria-label="Bel ${esc(o.naam)}">${icon('phone')}</a><a class="icoonknop groen" href="https://wa.me/31${o.tel.slice(1)}" target="_blank" rel="noopener" aria-label="WhatsApp ${esc(o.naam)}">${icon('message-circle')}</a>` : '';
+    const knoppen = s.soort === 'bellen' && o ? `<a class="icoonknop blauw" href="tel:${o.tel}" aria-label="Bel ${esc(o.naam)}">${icon('phone')}</a><a class="icoonknop groen" href="https://wa.me/31${o.tel.slice(1)}" target="_blank" rel="noopener" aria-label="WhatsApp ${esc(o.naam)}">${icon('message-circle')}</a><button class="knop klein" data-act="snelGebeld" data-id="${s.spelerId}">Gebeld ✓</button>` : '';
     return h.rij({ ic: s.soort === 'bellen' ? 'phone' : 'users', titel: esc(s.tekst), sub: esc(s.sub), kleur: 'rood', act: 'open', attrs: `data-view="speler" data-id="${s.spelerId}"`, rechts: knoppen, chevron: !knoppen });
   };
+  CC.signaalRijAfdoen = (S, s) => {
+    const rij = signaalRij(S, s);
+    if (!s.afdoenbaar) return rij;
+    const knop = `<button class="knop klein licht" data-act="signaalAfdoen" data-sleutel="${esc(s.sleutel)}">${icon('check')}Gezien</button>`;
+    return `<div class="signaal">${rij}<div class="signaal-voet">${knop}<small class="zacht">geen actie nodig</small></div></div>`;
+  };
+  CC.on('snelGebeld', (el) => { const S = CC.S(); S.gesprekken.push({ id: 'g' + Date.now(), spelerId: el.dataset.id, soort: 'gebeld', datum: D.vandaag(), door: CC.me().id, notitie: 'Gebeld (notitie kan nog worden aangevuld)', afspraak: '' }); CC.save(); CC.render(); CC.toast('Vastgelegd als gebeld. Aanvullen kan bij de speler.'); });
   const signaalRij = (S, s) => h.rij({ ic: ['bellen'].includes(s.soort) ? 'phone' : ['gesprekHjo', 'clubbesluit'].includes(s.soort) ? 'users' : s.soort === 'gesprek' ? 'message-circle' : s.soort === 'lang' ? 'hospital' : s.soort === 'patroon' ? 'repeat' : 'triangle-alert', titel: esc(s.tekst), sub: esc(s.sub || ''), kleur: s.niveau === 'info' ? '' : s.niveau, act: s.spelerId ? 'open' : '', attrs: s.spelerId ? `data-view="speler" data-id="${s.spelerId}"` : '' });
   CC.signaalRij = signaalRij;
   // Home toont alleen voorgestelde gesprekken los; overige signalen in één regel (weinig scrollen)
@@ -129,7 +136,24 @@
     const namen = [...new Set(rest.map((s) => s.tekst.split(':')[0].split(' ')[0]))];
     return [...gesprek.map((s) => CC.stapRij(S, s)), rest.length ? h.rij({ ic: 'triangle-alert', titel: `${namen.length} ${namen.length === 1 ? 'speler vraagt' : 'spelers vragen'} aandacht`, sub: namen.join(', '), kleur: 'oranje', act: 'open', attrs: `data-view="teamSignalen" data-team="${tid}"` }) : ''].filter(Boolean);
   };
-  CC.views.teamSignalen = (S, p) => ({ titel: 'Signalen', html: `<p class="zacht klein">ClubComm signaleert; jij en de ${M.team(S, p.team).teamleiderId ? 'teamleider' : 'trainer'} beslissen of een gesprek nodig is.</p><div class="lijst">${M.signalen(S, [p.team], false).map((s) => signaalRij(S, s)).join('') || h.leeg('Geen signalen')}</div>` });
+  CC.views.teamSignalen = (S, p) => {
+    const sig = M.signalen(S, [p.team], false);
+    const af = M.afgedaanRecent(S, [p.team]);
+    return { titel: 'Signalen', html: `<p class="zacht klein">ClubComm signaleert; jij en de ${M.team(S, p.team).teamleiderId ? 'teamleider' : 'trainer'} beslissen. Is er niets aan de hand? Tik op <b>Gezien</b>. Het signaal komt terug als het erger wordt.</p>
+      <div class="lijst">${sig.map((s) => (s.afdoenbaar ? CC.signaalRijAfdoen(S, s) : CC.stapRij(S, s))).join('') || h.leeg('Geen signalen')}</div>
+      ${af.length ? `<details class="uitklap"><summary>${icon('check')}Afgedaan (${af.length})</summary><div class="lijst compact">${af.map((x) => h.rij({ ic: 'check', titel: esc(x.tekst), sub: `${esc((M.persoon(S, x.door) || { naam: '' }).naam)} · ${D.tijdstip(x.tijd)}${x.notitie ? ' · ' + esc(x.notitie) : ''}` })).join('')}</div></details>` : ''}` };
+  };
+  CC.on('signaalAfdoen', (el) => {
+    const S = CC.S(); const sleutel = el.dataset.sleutel;
+    CC.sheet('Gezien, geen actie nodig', `<form data-submit="signaalAfdoenOk" data-sleutel="${esc(sleutel)}" class="codeform"><label for="sa-n">Korte notitie (mag leeg)</label><input id="sa-n" name="n" placeholder="Bijv. zwemles op vrijdag, besproken met ouder">
+      <button class="knop vol">${icon('check')}Afdoen</button><p class="zacht klein">Het signaal verdwijnt. Wordt het erger (nieuwe afwezigheid of van oranje naar rood), dan komt het terug. De ${esc(S.club.labels.hjo)} ziet dat het is afgedaan.</p></form>`);
+  });
+  CC.on('signaalAfdoenOk', (f) => {
+    const S = CC.S(); const alle = [...new Set(S.teams.map((t) => t.id))];
+    const s = M.signalen(S, alle, true).find((x) => x.sleutel === f.dataset.sleutel) || M.signalen(S, alle, false).find((x) => x.sleutel === f.dataset.sleutel);
+    if (s) (S.signaalAfgedaan || (S.signaalAfgedaan = [])).push({ sleutel: s.sleutel, teamId: s.teamId, spelerId: s.spelerId, soort: s.soort, niveau: s.niveau, ernst: s.ernst || 0, tekst: s.tekst, notitie: f.n.value, door: CC.me().id, tijd: new Date().toISOString() });
+    CC.save(); CC.closeSheet(); CC.render(); CC.toast('Afgedaan');
+  });
 
   CC.rollen.trainer = {
     context(S) { const t = M.team(S, CC.teamId()); return { titel: t.naam, sub: `Trainer · ${S.club.naam}` }; },

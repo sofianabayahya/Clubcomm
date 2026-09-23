@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 23 september 2026 (Besluit 14 t/m 21 toegevoegd)
+Laatst bijgewerkt: 23 september 2026 (Besluit 14 t/m 22 toegevoegd)
 
 ---
 
@@ -499,6 +499,17 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
 ### Vuistregel voor nieuwe ideeën
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
+
+---
+
+## Besluit 22 — Signalen afdoen
+
+- **Signalen ter informatie** (patroon, oranje/rode zone, reeks ziek/blessure, langdurig afwezig, team in zone) kan de trainer, teamleider of HJO afdoen met **"Gezien, geen actie nodig"**, met een optionele notitie.
+  - Het signaal verdwijnt, maar **komt terug als het erger wordt**: meer afwezigheid of een zwaardere zone (oranje → rood).
+  - De **HJO ziet** wat er is afgedaan, door wie en met welke notitie ("Aandacht nodig" → afgedane signalen), zodat niets stilletjes verdwijnt.
+- **Signalen voor de opschaling** (bel of app, gesprek HJO, clubbesluit; Besluit 15) kun je **niet** afdoen; ze verdwijnen alleen door de actie zelf.
+  - Snelknop **"Gebeld ✓"** naast de bel- en WhatsApp-knop legt het contact met één tik vast; de notitie kan later worden aangevuld.
+- Langdurig afwezig verdwijnt ook vanzelf als de periode voorbij is.
 
 ---
 
