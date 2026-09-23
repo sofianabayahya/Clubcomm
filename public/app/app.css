@@ -402,3 +402,4 @@ body.sheet-open { overflow: hidden; }
 .stap-knoppen .knop { display: inline-flex; align-items: center; gap: 4px; text-decoration: none; }
 details.uitklap.stil { background: none; border: 0; box-shadow: none; padding: 4px 0; }
 details.uitklap.stil summary { font-size: 13px; color: var(--zacht); }
+.compliment.waardering { display: flex; margin: 14px 4px 4px; font-size: 14px; } .info.mijlpaal { margin-top: 14px; }

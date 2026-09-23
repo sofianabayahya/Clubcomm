@@ -503,6 +503,18 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 29 — Waardering voor trainers en teamleiders
+*Besloten 23 september 2026.*
+
+- **Aanwezig zijn belonen in plaats van afmelden makkelijk maken.** Waardering werkt beter dan controle, zeker bij vrijwilligers.
+- **Op Home van trainer en teamleider staat altijd één vriendelijke regel**, die per dag wisselt, bijvoorbeeld:
+  - trainer: "Je gaf dit seizoen al 11 trainingen. Fantastisch!" · "Je team was deze fase 91% aanwezig" · "Je nam al 15× de aanwezigheid op" · "Alle 12 spelers beoordeeld";
+  - teamleider: "Je regelde al 5 wedstrijden: vervoer, taken, alles" · "Dankzij jou zijn er al 10 taken ingevuld" · "Je hielp 3 nieuwe gezinnen op weg".
+- **Mijlpalen** bij 10, 25, 50, 100 (en 200) trainingen of wedstrijden: een felicitatie op Home ("10 trainingen gegeven dit seizoen! De club is je dankbaar"), weg te tikken met "Dank je!".
+- **Coördinator en HJO** (Inzicht → Mijlpalen): wie een mijlpaal haalde, met een knop **Bedank** (persoonlijk bericht, tekst al klaar).
+- **Alleen positief, nooit vergelijken:** geen ranglijst, geen "trainer van de maand". De telling van afmeldingen blijft in het profiel en bij de HJO (Besluit 21), niet in deze regel.
+- ClubComm telt alleen wat er al gebeurt; geen extra werk. Dit is iets anders dan de module Beloningen (punten voor ouders, later).
+
 ## Besluit 28 — Wie helpt er mee? (taken en rijden)
 *Besloten 23 september 2026.*
 

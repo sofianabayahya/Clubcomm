@@ -16,6 +16,7 @@ Gemigreerd uit Replit op 2026-09-22. Taal van de UI: Nederlands.
   - `hjohome.js`: Home van HJO/coördinator met Te doen en Ter informatie, spelerzaken eerst via de coördinator, afgedane signalen akkoord/oppakken (Besluit 26).
   - `autoberichten.js`: vaste berichten bij de jaarplanning (vakanties, fases, beoordeling, seizoen), klaarzetten of automatisch (Besluit 26).
   - `meehelpen.js`: wie helpt er mee (taken en rijden): ouder eigen bijdrage, teamleider per gezin, coördinator/HJO per team met signaal "scheef" (Besluit 28).
+  - `waardering.js`: waardering voor trainer en teamleider (regel op Home, mijlpalen), coördinator/HJO kunnen bedanken (Besluit 29).
   - `agenda.js`: agenda-abonnement (iCalendar-link; `CC.icsTekst` maakt de echte .ics-inhoud voor versie 2).
   - Icoontjes: één set (Lucide) in `vendor/icons.js`. Kleuren als tokens in `app.css`, met donkere modus.
 - Pilot = onderbouw (O6–O12); de demo heeft alleen onderbouwteams.
