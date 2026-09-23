@@ -3,13 +3,16 @@
 Communicatie- en managementplatform voor jeugdvoetbal (pilotclub: SC Buitenveldert).
 Gemigreerd uit Replit op 2026-09-22. Taal van de UI: Nederlands.
 
-## Huidige staat (prototype)
-- 23 statische HTML-pagina's in `public/`, met gedeelde `script.js`, `style.css`, `api-client.js`.
-- Alleen `public/` wordt door `server.js` geserveerd; code en config in de root zijn niet openbaar.
-- `server.js` (Express) heeft alleen mock-endpoints: `/api/health`, `/api/auth/login`, `/api/auth/register`, `/api/attendance/absence`.
-- Geen database: alle data staat in `localStorage` en is hardcoded demo-data.
-- Login in `index.html`/`script.js` is fake: rol wordt afgeleid uit het e-mailadres.
-- Pagina-overzicht en rollen: zie `APP_BLUEPRINT.md`.
+## Huidige staat (prototype versie 2, sinds 2026-09-23)
+- `public/index.html` + `public/app/`: één app voor de telefoon (vanilla JS, geen build), volgens `docs/besluiten.md`.
+  - `data.js`: demodata (20 teams, O10-1 uitgewerkt) + rekenregels (aanwezigheid, kaarten per blok, zones, signalen, speeltijd).
+  - `core.js`: inloggen (link/code, demo), kop, 5 knoppen onderaan, profiel/rolwisselaar, berichten, afmelden, uitnodigen (QR via `vendor/qrcode.js`).
+  - `ouder.js`, `trainer.js`, `teamleider.js`, `hjo.js` (ook clubbeheerder): schermen per rol.
+  - Icoontjes: één set (Lucide) in `vendor/icons.js`. Kleuren als tokens in `app.css`, met donkere modus.
+- Demo-accounts: Sanne (ouder), Mark (trainer + ouder), Linda (teamleider + ouder), Peter (HJO + clubbeheerder). Data in localStorage, wordt elke dag opnieuw gemaakt.
+- Oude Replit-pagina's staan in `public/oud/` (alleen ter referentie).
+- `server.js` (Express) serveert alleen `public/`; mock-endpoints `/api/*` worden niet gebruikt.
+- Pagina-overzicht en rollen van het oude prototype: `APP_BLUEPRINT.md` (verouderd; `docs/besluiten.md` gaat voor).
 
 ## Bekende problemen
 - Logo: `public/assets/clubcomm-logo.jpg` (volledig), `clubcomm-icon.png` (icoon, login/QR) en `favicon.png` (alle pagina's). Het logo-blauw is lichter dan de app-kleur `#1e5ba8`.
