@@ -371,3 +371,7 @@ body.sheet-open { overflow: hidden; }
 .matrij .rij-tekst { flex: 1 1 150px; min-width: 150px; }
 .matrij .keuze { margin-left: auto; }
 .matrij .rij-tekst b { overflow-wrap: anywhere; }
+
+/* Agenda-abonnement */
+.linkvak { display: flex; align-items: center; gap: 8px; background: var(--vlak); border: 1px solid var(--lijn); border-radius: 10px; padding: 6px 6px 6px 12px; }
+.linkvak code { flex: 1; min-width: 0; font-size: 12px; overflow-wrap: anywhere; color: var(--zacht); }

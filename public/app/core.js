@@ -265,6 +265,7 @@
         ${h.rij({ ic: 'user-plus', titel: 'Kind toevoegen', sub: 'Scan de QR-code van het andere team', act: 'demoMelding', attrs: 'data-tekst="Scan de QR-code of open de uitnodiging van het team van je andere kind."' })}
         ${h.rij({ ic: 'users', titel: 'Tweede ouder uitnodigen', sub: 'Ieder een eigen account, jullie zien elkaars e-mail niet', act: 'tweedeOuder' })}` : ''}
       <h3 class="klein-kop">Instellingen</h3>
+      ${CC.agendaRij ? CC.agendaRij() : ''}
       ${h.rij({ ic: 'bell', titel: 'Meldingen', sub: 'Push aan · mail als reserve', act: 'meldingen' })}
       ${h.rij({ ic: 'globe', titel: 'Taal', sub: 'Nederlands (Engels komt in versie 2)', act: 'taalEN' })}
       ${h.rij({ ic: 'lock', titel: 'Privacy en toestemming', act: 'privacy' })}

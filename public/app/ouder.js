@@ -53,7 +53,8 @@
         const st = M.stats(S, pl, M.periode(S, 'seizoen'));
         const telSoort = (s) => st.lijst.filter((x) => x.act.soort === s).length;
         const hist = S.afm.filter((f) => f.spelerId === pl.id).map((f) => ({ f, a: M.act(S, f.actId) })).filter((x) => x.a && x.a.datum < D.vandaag()).sort((x, y) => y.a.datum.localeCompare(x.a.datum));
-        return `${Object.entries(groepen).map(([w, as]) => `${h.sectie(w === dezeWeek ? 'Deze week' : w === D.addDays(dezeWeek, 7) ? 'Volgende week' : `Week van ${D.kort(w)}`)}<div class="lijst">${as.map((a) => h.rij({ ic: h.datumBlok(a), titel: h.actTitel(S, a), sub: h.actSub(S, a), rechts: h.chip(M.status(S, pl, a)), act: 'open', attrs: `data-view="activiteit" data-id="${a.id}"` })).join('')}</div>`).join('')}
+        const agenda = CC.agendaRij && !CC.me().agendaAbonnement ? `<div class="lijst">${CC.agendaRij()}</div>` : '';
+        return `${agenda}${Object.entries(groepen).map(([w, as]) => `${h.sectie(w === dezeWeek ? 'Deze week' : w === D.addDays(dezeWeek, 7) ? 'Volgende week' : `Week van ${D.kort(w)}`)}<div class="lijst">${as.map((a) => h.rij({ ic: h.datumBlok(a), titel: h.actTitel(S, a), sub: h.actSub(S, a), rechts: h.chip(M.status(S, pl, a)), act: 'open', attrs: `data-view="activiteit" data-id="${a.id}"` })).join('')}</div>`).join('')}
           ${!ver ? `<button class="knop licht vol" data-act="seg" data-key="verder" data-val="1">${icon('calendar-days')}Verder vooruit kijken</button>` : ''}
           <details class="uitklap"><summary>${icon('chart-column')}Seizoensoverzicht</summary>
             <div class="cijfers"><div class="cijfer ${M.zone(S, st.pct, pl.teamId)}"><b>${st.pct == null ? '–' : st.pct + '%'}</b><small>aanwezig</small></div><div class="cijfer"><b>${telSoort('training')}</b><small>trainingen</small></div><div class="cijfer"><b>${telSoort('wedstrijd')}</b><small>wedstrijden</small></div></div></details>

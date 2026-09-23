@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 23 september 2026 (Besluit 14 t/m 17 toegevoegd)
+Laatst bijgewerkt: 23 september 2026 (Besluit 14 t/m 18 toegevoegd)
 
 ---
 
@@ -494,6 +494,19 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 18 — Agenda-abonnement
+
+- Ouders (en trainers en teamleiders voor hun team) kunnen **alle trainingen en wedstrijden in hun eigen agenda** zetten: Google Agenda, iPhone/Mac en Outlook.
+- Werkt met de **open standaard iCalendar** (een abonnementslink). Geen abonnement of add-on nodig; het is een klein onderdeel van de server in versie 2.
+- **Eén keer abonneren**, daarna loopt het het hele seizoen. Wijzigingen (verplaatst, afgelast) komen vanzelf in de agenda.
+- De agenda ververst zelf (meestal binnen een uur, bij Google soms langer). Spoed blijft daarom via **pushmelding**.
+- **Alleen lezen:** afmelden gaat altijd via ClubComm; in elke afspraak staat de link "Kan je kind niet? Meld af in ClubComm".
+- Keuze: trainingen en/of wedstrijden. Bij meerdere kinderen staan alle teams erin.
+- **Privacy:** persoonlijke, geheime link per persoon; in de agenda staat alleen bijv. "Training O10-1", geen gegevens van andere kinderen. Link te vernieuwen in het profiel (oude werkt dan niet meer).
+- Te vinden in het profiel en (tot er geabonneerd is) bovenaan de Planning van de ouder.
+
+---
+
 ## Besluit 17 — Module Materiaal
 
 - **Checklist per team bij de start van het seizoen**, in te vullen door de trainer (± 1 minuut).
@@ -586,7 +599,7 @@ Verandert er een besluit, pas dan de tekst aan in `maak-handleidingen.js` en maa
 - **Beloningen** (punten, contributie terugverdienen) als optionele module die de HJO per club of team aanzet.
 - **Planning uit voetbal.nl** koppelen.
 - **Import uit Sportlink** (zie Besluit 2).
-- **Uit de vergelijking met Teamy** (`docs/concurrent-teamy.md`): agenda-abonnement (trainingen en wedstrijden in de eigen agenda), eerlijk clubrooster voor vrijwilligerstaken, meelezer (bijv. opa/oma die brengt), rollen en tags voor vrijwilligers.
+- **Uit de vergelijking met Teamy** (`docs/concurrent-teamy.md`): eerlijk clubrooster voor vrijwilligerstaken, meelezer (bijv. opa/oma die brengt), rollen en tags voor vrijwilligers.
 - **Club inrichten bij de start (onboarding):** bij de verkoop samen met een bestuurslid de taakverdeling instellen: welke taak ligt bij welke rol (HJO, coördinator, clubbeheerder, secretaris…). De tabel "Wie doet wat" wordt dan per club instelbaar.
 - **Handleiding bij de verkoop:** per rol (bestaat al in `docs/handleidingen/`) en voor de clubbeheerder.
 - **Online hulp met AI:** een assistent die de app volledig kent en stap voor stap uitlegt, bijvoorbeeld "hoe zet ik de taken van X uit?" of "hoe zet ik deze module uit?". Scheelt telefoontjes.
