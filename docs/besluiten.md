@@ -315,6 +315,53 @@ Niet elke trainer gaat mee naar wedstrijden. Per wedstrijd is er daarom een **we
 
 ---
 
+## Besluit 9 — Teamleiderportaal
+
+**Rol:** de regelaar rond wedstrijden (genoeg spelers, vervoer, taken, begeleiding) en de beheerder van het team (wie hoort erbij, welke ouders, wie is nog niet aangemeld).
+
+### Navigatie
+**Home · Wedstrijd · Regelen · Berichten · Team**
+
+### Home — één overzicht, elke regel klikbaar
+- Eerstvolgende wedstrijd: datum, tegenstander, thuis/uit, verzameltijd.
+- Vier regels, elk klikbaar naar de juiste plek:
+  - **Spelers** — 10 van 12 (wie komt / afgemeld)
+  - **Vervoer** — aantal kinderen zonder vervoer
+  - **Taken** — 3 van 5 bezet
+  - **Begeleider** — wie is wedstrijdbegeleider
+- **Actie nodig** (bijv. "2 aanmeldingen goedkeuren") — alleen als er iets is.
+- Geen snelknoppen (die verwezen naar dezelfde plekken als de balk onderaan → dubbel).
+- Kleur alleen bij een probleem (oranje als er iets ontbreekt).
+
+### Wedstrijd
+- Wedstrijdinfo: verzameltijd, adres, tenue (teamleider vult aan).
+- Wie komt / wie is afgemeld (met reden).
+- Wedstrijdbegeleider (Besluit 7).
+- **Speeltijd** (module) — één gedeelde pagina met de trainer.
+- Na afloop: uitslag.
+
+### Regelen (Vervoer + Taken samen)
+- Per wedstrijd: wie rijdt, welke kinderen nog geen plek hebben, welke taken open staan.
+- Overzicht wie vaak en wie nooit helpt.
+- **Herinneringen gaan automatisch** (oproep voor open taken, melding bij kinderen zonder vervoer), volgens de clubinstellingen (Besluit 6). Geen herinneringsknop nodig.
+
+### Berichten
+- Zoals bij de trainer: inbox bovenaan, "+ Nieuw bericht" met sjablonen.
+
+### Team
+- Spelers met hun ouders.
+- **Aanmeldingen goedkeuren** (Besluit 2).
+- **Ouders uitnodigen**: Delen / QR tonen / QR printen.
+- Overzicht wie nog niet is aangemeld (tweede ouder, ontbrekende spelers).
+- **Van team wisselen** is een clubbeslissing → blijft bij de HJO.
+
+### WhatsApp — ClubComm is de bron, WhatsApp de megafoon
+- **Delen-knop** bij wedstrijdinfo, uitnodigingen en open taken: maakt een net bericht met link om in de teamgroep te plakken.
+- **"WhatsApp ouder"** bij een speler: opent direct een chat met die ouder (alleen teamleider en trainer zien telefoonnummers).
+- **Niet:** automatisch in WhatsApp-groepen posten (WhatsApp staat dat voor groepen niet toe; zakelijke koppeling kost geld en compliceert privacy).
+
+---
+
 ## Later / ideeën
 
 - **Beloningen** (punten, contributie terugverdienen) als optionele module die de HJO per club of team aanzet.
@@ -325,5 +372,6 @@ Niet elke trainer gaat mee naar wedstrijden. Per wedstrijd is er daarom een **we
 
 ## Nog te bespreken
 
-- Teamleiderportaal en HJO-portaal (rondleiding per pagina).
-- App-kleuren afstemmen op het logo-blauw (lichter dan de huidige `#1e5ba8`).
+- HJO-portaal (rondleiding), inclusief rollen koppelen aan accounts.
+- **Huisstijl:** één set icoontjes in één stijl; kleur alleen met betekenis (groen = goed, oranje = aandacht, rood = probleem); verder rustig met het logo-blauw als hoofdkleur (lichter dan de huidige `#1e5ba8`).
+- **Wedstrijden bevestigen:** geldt bij wedstrijden ook "iedereen komt, tenzij afgemeld" (zoals bij trainingen), of moeten ouders actief bevestigen?
