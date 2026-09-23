@@ -2,10 +2,13 @@
 (function () {
   const CC = window.CC; const D = CC.date, M = CC.m, h = CC.h, icon = CC.icon, esc = CC.esc;
 
-  const openTaken = (S, teamId) => S.taken.filter((t) => { const a = M.act(S, t.actId); return a && a.teamId === teamId && a.datum >= D.vandaag() && a.datum <= D.addDays(D.vandaag(), 21) && !t.personId; });
+  // Open taken voor Home: alleen de komende dagen (instelbaar), en niet als je al hebt gezegd dat je niet kunt
+  const homeDagen = (S) => S.club.inst.homeDagen || 7;
+  const openTaken = (S, teamId) => { const me = CC.me(); return S.taken.filter((t) => { const a = M.act(S, t.actId); return a && a.teamId === teamId && a.datum >= D.vandaag() && a.datum <= D.addDays(D.vandaag(), homeDagen(S)) && !t.personId && !(t.kanNiet || []).includes(me.id); }); };
   const geenVervoer = (S, pl) => {
     if (!S.club.modules.vervoer) return null;
     const a = M.komend(S, pl.teamId, 6).find((x) => x.soort === 'wedstrijd' && !x.thuis && !x.afgelast);
+    if (a && a.datum > D.addDays(D.vandaag(), homeDagen(S))) return null; // pas een week van tevoren op Home
     if (!a || M.status(S, pl, a).code !== 'verwacht') return null;
     const v = S.vervoer[a.id]; return v && v.plek[pl.id] ? null : a;
   };
@@ -90,12 +93,15 @@
         return `<div class="info">${icon('info')}<span>Staat een taak 2 dagen van tevoren nog open, dan krijgt iedereen automatisch een oproep. Je hebt dit seizoen <b>${mijn}×</b> geholpen. Dank je wel!</span></div>
           ${acts.map((a) => `${h.sectie(`${D.relatief(a.datum)} · ${h.actTitel(S, a)}`)}<div class="lijst">${S.taken.filter((t) => t.actId === a.id).map((t) => {
             const p = t.personId && M.persoon(S, t.personId);
-            return h.rij({ ic: t.soort === CC.VERVANGER ? 'user-cog' : t.soort === 'Coach' ? 'clipboard-check' : t.soort === 'Spelbegeleider' ? 'flag' : t.soort === 'Fotograaf' ? 'eye' : t.soort === 'Wastas' ? 'shirt' : 'hand-helping', titel: esc(t.soort), sub: p ? (p.id === me.id ? 'Jij doet dit. Top!' : esc(p.naam)) : 'Nog niemand', kleur: p ? '' : 'oranje',
-              rechts: !p ? `<button class="knop klein" data-act="ikDoeHet" data-id="${t.id}">Ik doe het</button>` : p.id === me.id ? `<button class="knop klein licht" data-act="taakAf" data-id="${t.id}">Afmelden</button>` : icon('circle-check', 'groen') });
+            return h.rij({ ic: t.soort === CC.VERVANGER ? 'user-cog' : t.soort === 'Coach' ? 'clipboard-check' : t.soort === 'Spelbegeleider' ? 'flag' : t.soort === 'Fotograaf' ? 'eye' : t.soort === 'Wastas' ? 'shirt' : 'hand-helping', titel: esc(t.soort), sub: p ? (p.id === me.id ? 'Jij doet dit. Top!' : esc(p.naam)) : (t.kanNiet || []).includes(me.id) ? 'Nog niemand · jij kunt deze keer niet' : 'Nog niemand', kleur: p ? '' : 'oranje',
+              rechts: !p ? ((t.kanNiet || []).includes(me.id) ? `<button class="linkknop klein" data-act="taakKanToch" data-id="${t.id}">Toch wel?</button>` : `<span class="knoppen-rij"><button class="knop klein" data-act="ikDoeHet" data-id="${t.id}">Ik doe het</button><button class="knop klein licht" data-act="taakKanNiet" data-id="${t.id}">Kan niet</button></span>`) : p.id === me.id ? `<button class="knop klein licht" data-act="taakAf" data-id="${t.id}">Afmelden</button>` : icon('circle-check', 'groen') });
           }).join('')}</div>`).join('') || h.leeg('Geen taken de komende weken', 'list-checks')}`;
       },
     },
   };
+
+  CC.on('taakKanNiet', (el) => { const S = CC.S(); const t = S.taken.find((x) => x.id === el.dataset.id); (t.kanNiet || (t.kanNiet = [])).push(CC.me().id); CC.save(); CC.render(); CC.toast('Genoteerd. De taak blijft open voor andere ouders.'); });
+  CC.on('taakKanToch', (el) => { const S = CC.S(); const t = S.taken.find((x) => x.id === el.dataset.id); t.kanNiet = (t.kanNiet || []).filter((x) => x !== CC.me().id); CC.save(); CC.render(); });
 
   // Overzicht voor de ouder: aanwezigheid en kaarten per fase of seizoen (dezelfde cijfers als de HJO ziet)
   CC.views.kindOverzicht = (S, p) => {

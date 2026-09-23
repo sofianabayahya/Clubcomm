@@ -397,3 +397,4 @@ body.sheet-open { overflow: hidden; }
 .tabel.zicht tr.groep th { background: var(--vlak2); color: var(--tekst, inherit); font-size: 12px; padding: 6px 10px; }
 .tabel.zicht td small { display: block; color: var(--zacht); font-size: 12px; }
 .tabel.zicht input { width: 20px; height: 20px; accent-color: var(--blauw); }
+.knoppen-rij { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }

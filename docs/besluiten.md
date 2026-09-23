@@ -503,6 +503,15 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 27 — Wanneer verdwijnt een actie?
+*Besloten 23 september 2026.*
+
+- **Een actie verdwijnt pas als hij gedaan is, of als hij niet meer kan of hoeft.** Echte acties kun je niet wegklikken (anders valt iets tussen wal en schip). Alleen regels ter informatie hebben "Gezien" (Besluit 26).
+- **Vervoer** ("nog geen vervoer voor …") verdwijnt als het kind een plek heeft (meerijden of zelf brengen), is afgemeld, de wedstrijd is afgelast of voorbij is (anderhalf uur na de aftrap). Op Home staat het pas **7 dagen van tevoren**; verder vooruit alleen op het tabblad Vervoer.
+- **Taken** staan op Home voor de komende **7 dagen**; verder vooruit op het tabblad Taken. Een taak verdwijnt als iemand hem oppakt of de datum voorbij is.
+- **"Kan niet"** bij een open taak: de taak verdwijnt alleen bij jou en blijft open voor de andere ouders en de teamleider ("Toch wel?" zet hem terug).
+- De 7 dagen stelt de clubbeheerder in bij Regels (naast "automatische oproepen").
+
 ## Besluit 26 — Home van HJO en coördinator: te doen en ter informatie
 *Besloten 23 september 2026. Vult Besluit 11 aan.*
 
