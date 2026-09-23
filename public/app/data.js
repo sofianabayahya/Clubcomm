@@ -464,6 +464,10 @@
     return { soort: 'bellen', niveau: 'rood', stap: 3, tekst: 'bel of app de ouders', sub: `Drempel bereikt: ${k.geel} punten geel, ${k.oranje} oranje deze fase. Trainer of ${hjo} neemt contact op.` };
   };
 
+  // Vervoer: aangeboden plekken zijn voor ándere kinderen; het eigen kind van de chauffeur telt niet mee
+  M.meerijders = (S, v, chauffeurId) => Object.entries(v.plek).filter(([, d]) => d === chauffeurId).map(([s]) => M.speler(S, s)).filter(Boolean);
+  M.vrijePlekken = (S, v, x) => x.plekken - M.meerijders(S, v, x.personId).filter((pl) => !pl.ouders.includes(x.personId)).length;
+
   // ontvangers en ongelezen
   M.zichtbaar = (S, m, pid) => m.ontvangers.includes(pid) && (!m.gepland || new Date(m.gepland) <= new Date());
   M.ongelezen = (S, pid, soort) => S.msgs.filter((m) => M.zichtbaar(S, m, pid) && !m.gelezen.includes(pid) && (!soort || m.soort === soort) && m.van !== pid).length;

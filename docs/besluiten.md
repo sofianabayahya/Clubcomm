@@ -132,6 +132,7 @@ Een Sportlink-export bevat: voornaam, achternaam, geboortedatum, **bondsnummer**
 
 ### Vervoer
 - Hangt aan een **uitwedstrijd**: vervoer aanbieden (aantal plekken) of een plek vragen.
+- De chauffeur vult in hoeveel **andere** kinderen hij kan meenemen (zonder zichzelf en het eigen kind). Het eigen kind staat erbij als "(eigen kind)" maar kost geen plek.
 - Teamleider ziet in één oogopslag welke kinderen nog geen vervoer hebben.
 - Melding op Home alleen als voor jouw kind nog niets geregeld is.
 

@@ -82,7 +82,7 @@
             const v = vervoerInfo(S, a); const t = takenInfo(S, a);
             return `${h.sectie(`${D.relatief(a.datum)} · ${h.actTitel(S, a)}`)}<div class="kaartje">
               ${S.club.modules.vervoer ? (v.nodig ? `<h4>${icon('car')}Vervoer · ${v.plekken} plekken aangeboden</h4>
-                ${v.v.aanbod.map((x) => { const p = M.persoon(S, x.personId); const mee = Object.entries(v.v.plek).filter(([, d]) => d === x.personId).map(([s]) => M.speler(S, s).voornaam); return `<p class="klein">${esc(p.naam)}: ${mee.map(esc).join(', ') || '–'} <span class="zacht">(${x.plekken - mee.length} vrij)</span></p>`; }).join('') || '<p class="zacht klein">Nog niemand rijdt.</p>'}
+                ${v.v.aanbod.map((x) => { const p = M.persoon(S, x.personId); const mee = M.meerijders(S, v.v, x.personId).map((m) => m.voornaam + (m.ouders.includes(x.personId) ? ' (eigen kind)' : '')); return `<p class="klein">${esc(p.naam)}: ${mee.map(esc).join(', ') || '–'} <span class="zacht">(${M.vrijePlekken(S, v.v, x)} van ${x.plekken} vrij)</span></p>`; }).join('') || '<p class="zacht klein">Nog niemand rijdt.</p>'}
                 ${v.zonder.length ? `<p class="klein oranje-tekst"><b>Zonder vervoer:</b> ${v.zonder.map((pl) => `<button class="chipknop" data-act="indelen" data-a="${a.id}" data-s="${pl.id}">${esc(pl.voornaam)} ${icon('plus')}</button>`).join(' ')}</p>` : '<p class="klein groen-tekst">Iedereen heeft een plek.</p>'}` : `<p class="zacht klein">${icon('car')} Thuiswedstrijd: geen vervoer nodig.</p>`) : ''}
               ${S.club.modules.taken ? `<h4>${icon('list-checks')}Taken · ${t.bezet} van ${t.t.length} bezet</h4>
                 ${t.t.map((x) => `<p class="klein">${esc(x.soort)}: ${x.personId ? esc(M.persoon(S, x.personId).naam) : '<b class="oranje-tekst">open</b>'}</p>`).join('')}
@@ -116,7 +116,7 @@
   CC.on('deelTaken', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.a); const open = S.taken.filter((x) => x.actId === a.id && !x.personId).map((x) => x.soort); CC.deel(open.length ? `Voor ${D.lang(a.datum)} (${a.tegen}) zoeken we nog: ${open.join(', ')}. Kun jij? Tik op "Ik doe het" in ClubComm: ${location.origin}${location.pathname}` : 'Alle taken zijn bezet, dank jullie wel!', 'Taken'); });
   CC.on('indelen', (el) => {
     const S = CC.S(); const v = S.vervoer[el.dataset.a]; const pl = M.speler(S, el.dataset.s);
-    const vrij = v ? v.aanbod.filter((x) => x.plekken > Object.values(v.plek).filter((p) => p === x.personId).length) : [];
+    const vrij = v ? v.aanbod.filter((x) => M.vrijePlekken(S, v, x) > 0) : [];
     if (!vrij.length) return CC.toast('Geen vrije plekken. De oproep voor vervoer gaat automatisch uit.', 'fout');
     CC.sheet(`${pl.voornaam} indelen`, `<div class="lijst">${vrij.map((x) => h.rij({ ic: h.avatar(M.persoon(S, x.personId).naam), titel: esc(M.persoon(S, x.personId).naam), act: 'indelenOk', attrs: `data-a="${el.dataset.a}" data-s="${pl.id}" data-p="${x.personId}"` })).join('')}</div>`);
   });

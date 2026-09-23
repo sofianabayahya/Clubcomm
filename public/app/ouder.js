@@ -74,12 +74,12 @@
           const mijnAanbod = v.aanbod.find((x) => x.personId === me.id);
           const komt = M.status(S, pl, a).code === 'verwacht';
           const bij = v.plek[pl.id] && M.persoon(S, v.plek[pl.id]);
-          const vrij = (x) => x.plekken - Object.values(v.plek).filter((p) => p === x.personId).length;
+          const vrij = (x) => M.vrijePlekken(S, v, x);
           return `<article class="kaartje">
             <div class="kaart-kop">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>Verzamelen ${a.verzamel} · ${esc(a.adres)}</small></div></div>
             ${!komt ? `<p class="zacht">${esc(pl.voornaam)} is afgemeld voor deze wedstrijd.</p>` : bij ? `<div class="info groen">${icon('circle-check')}<span>${esc(pl.voornaam)} rijdt mee met <b>${esc(bij.naam)}</b>.</span></div>` : `<div class="info oranje">${icon('car')}<span>${esc(pl.voornaam)} heeft nog geen vervoer.</span></div>`}
             <h4>Wie rijdt er?</h4>
-            ${v.aanbod.map((x) => { const p = M.persoon(S, x.personId); return h.rij({ ic: h.avatar(p.naam), titel: esc(p.naam), sub: `${vrij(x)} van ${x.plekken} plekken vrij`, rechts: komt && !bij && vrij(x) > 0 && x.personId !== me.id ? `<button class="knop klein" data-act="meerijden" data-a="${a.id}" data-p="${x.personId}">Meerijden</button>` : '' }); }).join('') || '<p class="zacht klein">Nog niemand.</p>'}
+            ${v.aanbod.map((x) => { const p = M.persoon(S, x.personId); return h.rij({ ic: h.avatar(p.naam), titel: esc(p.naam), sub: `${vrij(x)} van ${x.plekken} ${x.plekken === 1 ? 'plek' : 'plekken'} vrij · ${M.meerijders(S, v, x.personId).map((m) => esc(m.voornaam) + (m.ouders.includes(x.personId) ? ' (eigen kind)' : '')).join(', ') || 'nog niemand'}`, rechts: komt && !bij && vrij(x) > 0 && x.personId !== me.id ? `<button class="knop klein" data-act="meerijden" data-a="${a.id}" data-p="${x.personId}">Meerijden</button>` : '' }); }).join('') || '<p class="zacht klein">Nog niemand.</p>'}
             <div class="knoppen">${mijnAanbod ? `<button class="knop licht" data-act="aanbodStop" data-a="${a.id}">${icon('x')}Ik rijd toch niet</button>` : `<button class="knop" data-act="ikRijd" data-a="${a.id}">${icon('car')}Ik rijd</button>`}${bij ? `<button class="knop licht" data-act="afmeldenRit" data-a="${a.id}">Plek opgeven</button>` : ''}</div>
           </article>`;
         }).join('');
@@ -143,7 +143,7 @@
   CC.on('zetKind', (el) => { CC.sessie().kindId = el.dataset.id; try { localStorage.setItem('clubcomm-sessie-v1', JSON.stringify(CC.sessie())); } catch (e) { /* */ } CC.closeSheet(); CC.render(); });
 
   // Vervoer
-  CC.on('ikRijd', (el) => CC.sheet('Ik rijd', `<form data-submit="ikRijdOk" data-a="${el.dataset.a}" class="codeform"><label for="pl">Hoeveel kinderen kun je meenemen (naast je eigen kind)?</label><div class="stepper"><button type="button" data-act="stap" data-d="-1" aria-label="Minder">−</button><input id="pl" name="n" type="number" min="1" max="6" value="3"><button type="button" data-act="stap" data-d="1" aria-label="Meer">+</button></div><button class="knop vol">Aanbieden</button></form>`));
+  CC.on('ikRijd', (el) => CC.sheet('Ik rijd', `<form data-submit="ikRijdOk" data-a="${el.dataset.a}" class="codeform"><label for="pl">Hoeveel andere kinderen kun je meenemen?</label><p class="zacht klein">Tel jezelf en je eigen kind(eren) niet mee; die rijden sowieso met jou.</p><div class="stepper"><button type="button" data-act="stap" data-d="-1" aria-label="Minder">−</button><input id="pl" name="n" type="number" min="1" max="6" value="3"><button type="button" data-act="stap" data-d="1" aria-label="Meer">+</button></div><button class="knop vol">Aanbieden</button></form>`));
   CC.on('stap', (el) => { const i = el.parentElement.querySelector('input'); i.value = Math.max(1, Math.min(6, Number(i.value) + Number(el.dataset.d))); });
   CC.on('ikRijdOk', (f) => {
     const S = CC.S(); const v = S.vervoer[f.dataset.a]; const me = CC.me(); const pl = CC.kind();
