@@ -58,6 +58,8 @@
   });
   CC.on('kanNietOk', (f) => {
     const S = CC.S(); const a = M.act(S, f.dataset.id); const me = CC.me(); const t = M.team(S, a.teamId);
+    // Besluit 21: afmelding van de trainer telt mee (op tijd of te laat)
+    if (CC.trainerRegistreer && t.trainerId === me.id) CC.trainerRegistreer(S, a, me.id, CC.trainerAfmeldSoort(S, a), { reden: f.r.value, afgelast: f.k.value === 'afgelast' });
     if (f.k.value === 'afgelast') return afgelasten(S, a, f.r.value || 'trainer afwezig');
     a.trainerAfwezig = { door: me.id, reden: f.r.value, tijd: new Date().toISOString() }; a.vervangerId = null;
     S.taken.push({ id: 't' + Date.now(), actId: a.id, soort: CC.VERVANGER, personId: null });
@@ -65,7 +67,7 @@
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Doorgegeven; teamleider en HJO zijn gevraagd');
   });
   const neemOver = (S, a, p) => {
-    a.vervangerId = p.id;
+    a.vervangerId = p.id; (S.trainerLog || []).filter((x) => x.actId === a.id).forEach((x) => { x.vervanger = true; });
     const taak = S.taken.find((x) => x.actId === a.id && x.soort === CC.VERVANGER); if (taak) taak.personId = p.id;
     melding(S, [a.trainerAfwezig && a.trainerAfwezig.door, M.team(S, a.teamId).teamleiderId], `${p.naam} neemt de training over`, `De training van ${a.teamId} op ${D.lang(a.datum)} om ${a.tijd} wordt gegeven door ${p.naam}.`);
   };
@@ -76,6 +78,7 @@
   CC.on('kanToch', (el) => {
     const S = CC.S(); const a = M.act(S, el.dataset.id); const v = a.vervangerId;
     a.trainerAfwezig = null; a.vervangerId = null; S.taken = S.taken.filter((x) => !(x.actId === a.id && x.soort === CC.VERVANGER));
+    if (S.trainerLog) S.trainerLog = S.trainerLog.filter((x) => !(x.actId === a.id && x.soort !== 'niet'));
     if (v) melding(S, [v], 'Trainer kan toch', `De trainer geeft de training van ${a.teamId} op ${D.lang(a.datum)} toch zelf. Bedankt voor je hulp!`);
     CC.save(); CC.render(); CC.toast('Fijn! Je staat weer als trainer genoteerd');
   });
@@ -87,7 +90,7 @@
     S.wijzigingen.push({ id: 'w' + Date.now(), teamId: a.teamId, door: me.id, tekst: `Training ${D.kort(a.datum)} afgelast (${reden})`, tijd: new Date().toISOString() });
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Afgelast; ouders krijgen een pushmelding');
   };
-  CC.on('trainingAfgelasten', (el) => { const S = CC.S(); afgelasten(S, M.act(S, el.dataset.id), 'geen trainer beschikbaar'); });
+  CC.on('trainingAfgelasten', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.id); (S.trainerLog || []).filter((x) => x.actId === a.id).forEach((x) => { x.afgelast = true; }); afgelasten(S, a, 'geen trainer beschikbaar'); });
 
   // Demo: bij O9-1 kan de trainer overmorgen niet en is er nog geen vervanger (zichtbaar voor de HJO)
   const orig = CC.generate;

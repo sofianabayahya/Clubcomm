@@ -101,6 +101,7 @@
           ${h.sectie('Ouders uitnodigen')}${CC.uitnodigBlok(tid)}
           ${h.sectie(`Spelers (${sp.length})`, `<button class="linkknop" data-act="open" data-view="overzichtTeam" data-team="${tid}">Aanwezigheid</button>`)}
           <div class="lijst">${sp.map((pl) => { const o = pl.ouders.map((x) => M.persoon(S, x)); return h.rij({ ic: h.avatar(pl.voornaam), titel: esc(M.naam(S, pl)), sub: o.map((p) => esc(p.naam)).join(' · '), rechts: `<a class="icoonknop groen" href="https://wa.me/31${o[0].tel.slice(1)}" target="_blank" rel="noopener" aria-label="WhatsApp ouder van ${esc(pl.voornaam)}" data-stop="1">${icon('message-circle')}</a>`, act: 'open', attrs: `data-view="speler" data-id="${pl.id}"` }); }).join('')}</div>
+          ${CC.recenteTrainingen ? CC.recenteTrainingen(S, tid) : ''}
           <details class="uitklap"><summary>${icon('user-plus')}Nog niet aangemeld</summary><p class="klein">${eenOuder.length} spelers hebben één ouder gekoppeld. De tweede ouder kan zich via de uitnodiging aanmelden of door de eerste ouder worden uitgenodigd.</p><p class="zacht klein">Van team wisselen is een clubbeslissing en loopt via de ${esc(S.club.labels.hjo)}.</p></details>`;
       },
     },

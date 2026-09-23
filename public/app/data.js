@@ -76,7 +76,7 @@
     let uid = 1; const id = (p) => `${p}${uid++}`;
 
     const S = {
-      v: 4, gen: today,
+      v: 5, gen: today,
       club: {
         id: 'scb', naam: 'SC Buitenveldert', regio: 'Noord',
         seizoen: { start: '2026-08-19', eind: '2027-06-05' },

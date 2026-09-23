@@ -17,7 +17,7 @@
     del(k) { try { localStorage.removeItem(k); } catch (e) { /* */ } },
   };
   let S = store.get(KEY, null);
-  if (!S || S.gen !== D.vandaag() || S.v !== 4) { S = CC.generate(); store.set(KEY, S); }
+  if (!S || S.gen !== D.vandaag() || S.v !== 5) { S = CC.generate(); store.set(KEY, S); }
   CC.S = () => S;
   CC.save = () => store.set(KEY, S);
   CC.reset = () => { S = CC.generate(); store.set(KEY, S); };
@@ -266,6 +266,7 @@
         ${h.rij({ ic: 'users', titel: 'Tweede ouder uitnodigen', sub: 'Ieder een eigen account, jullie zien elkaars e-mail niet', act: 'tweedeOuder' })}` : ''}
       <h3 class="klein-kop">Instellingen</h3>
       ${CC.agendaRij ? CC.agendaRij() : ''}
+      ${CC.trainerEigenRij ? CC.trainerEigenRij() : ''}
       ${h.rij({ ic: 'bell', titel: 'Meldingen', sub: 'Push aan · mail als reserve', act: 'meldingen' })}
       ${h.rij({ ic: 'globe', titel: 'Taal', sub: 'Nederlands (Engels komt in versie 2)', act: 'taalEN' })}
       ${h.rij({ ic: 'lock', titel: 'Privacy en toestemming', act: 'privacy' })}

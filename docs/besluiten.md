@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 23 september 2026 (Besluit 14 t/m 20 toegevoegd)
+Laatst bijgewerkt: 23 september 2026 (Besluit 14 t/m 21 toegevoegd)
 
 ---
 
@@ -491,6 +491,24 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
 ### Vuistregel voor nieuwe ideeën
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
+
+---
+
+## Besluit 21 — Afwezigheid van trainers signaleren
+
+Net als bij spelers: ClubComm registreert en signaleert, de HJO beslist.
+
+| Gebeurtenis | Wie registreert | Punten |
+|---|---|---|
+| Op tijd afgemeld via "Ik kan zelf niet" (standaard ≥ 24 uur van tevoren) | app | 0 (telt wel mee in het aantal) |
+| Te laat afgemeld (< 24 uur) | app | 1 |
+| Niet gekomen zonder bericht | **teamleider** (of HJO), bij "Trainingen afgelopen week" in Team | 2 (het zwaarst) |
+
+- **Signaal alleen naar de HJO** ("Aandacht nodig"): bij **3 punten per fase** of **5 afmeldingen per seizoen**. Clubbeheerder stelt de grenzen en de "op tijd"-termijn in.
+- De HJO ziet de geschiedenis (met reden, vervanger gevonden of afgelast) en **legt contact vast** (gesprek, gebeld, geappt + afspraak). Daarna verdwijnt het signaal, tenzij er opnieuw iets gebeurt.
+- Toon: trainers zijn vrijwilligers. Het gesprek begint met een vraag ("Lukt het nog? Kunnen we helpen, bijv. met een assistent?").
+- **De trainer ziet zijn eigen telling** in zijn profiel (geen verrassingen). Ouders en andere trainers zien niets.
+- De teamleider ziet per training van de afgelopen week of de aanwezigheid is opgenomen; "geen aanwezigheid" is vaak het eerste teken dat de trainer er niet was.
 
 ---
 
