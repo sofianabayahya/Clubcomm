@@ -305,6 +305,8 @@ Niet elke trainer gaat mee naar wedstrijden. Per wedstrijd is er daarom een **we
 
 ---
 
+- **Aanvulling (23 september 2026): spelers filteren en sorteren** (tabblad Spelers bij trainer, Team bij teamleider). Filters: alle · komt / afgemeld voor de volgende activiteit · oranje/rood · kaarten · langdurig · niet beoordeeld (alleen voor wie beoordelingen mag zien). Sorteren: op naam, aanwezigheid laagste of hoogste eerst, meeste kaarten eerst. Het aantal staat erbij ("3 van 12").
+
 ## Besluit 8 — Vaste app-structuur en namen (alle rollen)
 
 ### Elke pagina, in elke rol, dezelfde structuur

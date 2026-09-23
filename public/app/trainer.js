@@ -90,6 +90,21 @@
   CC.on('bevestigSchema', (el) => { const S = CC.S(); const sch = S.speeltijd.schema[el.dataset.id]; const kb = S.speeltijd.keeper || (S.speeltijd.keeper = {}); if (sch.keepers[0]) kb[sch.keepers[0]] = (kb[sch.keepers[0]] || 0) + 1; sch.blokken.forEach((b) => b.forEach((id) => { S.speeltijd.min[id] = (S.speeltijd.min[id] || 0) + sch.blokMin; })); sch.bevestigd = true; CC.save(); CC.render(); CC.toast('Speeltijd bijgewerkt'); });
 
   // Beoordelen: zie beoordeling.js (Besluit 23)
+
+  // Spelers filteren en sorteren (trainer en teamleider)
+  CC.spelerFilter = (S, tid) => {
+    const per = M.periode(S, 'blok'); const f = h.segVal('spF', 'alle'); const so = h.segVal('spSort', 'naam');
+    const volg = M.komend(S, tid, 8).find((a) => !a.afgelast);
+    const rijen = M.spelers(S, tid).map((pl) => { const st = M.stats(S, pl, per); const k = M.kaarten(S, pl); return { pl, st, k, z: M.zone(S, st.pct, tid), vs: volg ? M.status(S, pl, volg) : null, b: CC.beoordLaatste ? CC.beoordLaatste(S, pl.id) : null }; });
+    const filters = [['alle', 'Alle'], volg && ['komt', `Komt ${D.kort(volg.datum)}`], volg && ['af', `Afgemeld ${D.kort(volg.datum)}`], ['aandacht', 'Oranje/rood'], ['kaarten', 'Kaarten'], ['lang', 'Langdurig'], CC.mag('beoordelingZien') && ['nietbeo', 'Niet beoordeeld']].filter(Boolean);
+    const pas = { alle: () => true, komt: (x) => x.vs && x.vs.code === 'verwacht', af: (x) => x.vs && ['afgemeld', 'langdurig'].includes(x.vs.code), aandacht: (x) => ['oranje', 'rood'].includes(x.z), kaarten: (x) => x.k.geel || x.k.oranje, lang: (x) => x.vs && x.vs.code === 'langdurig' || S.lang.some((l) => l.spelerId === x.pl.id && l.tot >= D.vandaag()), nietbeo: (x) => !x.b }[f] || (() => true);
+    const sorteer = { naam: (a, b) => M.naam(S, a.pl).localeCompare(M.naam(S, b.pl)), laag: (a, b) => (a.st.pct ?? 101) - (b.st.pct ?? 101), hoog: (a, b) => (b.st.pct ?? -1) - (a.st.pct ?? -1), kaarten: (a, b) => (b.k.geel + b.k.oranje) - (a.k.geel + a.k.oranje) }[so];
+    const lijst = rijen.filter(pas).sort(sorteer);
+    const bar = `<div class="chips scroll">${filters.map(([k, l]) => `<button class="chipknop ${k === f ? 'aan' : ''}" data-act="seg" data-key="spF" data-val="${k}">${esc(l)}</button>`).join('')}</div>
+      <label class="sorteer">${icon('sliders-horizontal')}<select data-change="spSort" aria-label="Sorteren">${[['naam', 'Op naam'], ['laag', 'Aanwezigheid: laagste eerst'], ['hoog', 'Aanwezigheid: hoogste eerst'], ['kaarten', 'Meeste kaarten eerst']].map(([k, l]) => `<option value="${k}" ${k === so ? 'selected' : ''}>${l}</option>`).join('')}</select><small class="zacht">${lijst.length} van ${rijen.length}</small></label>`;
+    return { bar, lijst, volg };
+  };
+  CC.on('spSort', (el) => { CC.ui.seg.spSort = el.value; CC.render(); });
   CC.on('kiesBeoSp', (el) => { CC.ui.seg.beoSp = el.value; CC.render(); });
 
   // ---------- Trainer ----------
@@ -182,7 +197,7 @@
         const tid = CC.teamId(); const per = M.periode(S, 'blok');
         return `<div class="knoppen">${CC.mag('beoordelen') ? `<button class="knop" data-act="open" data-view="beoordelen">${icon('star')}Beoordelen</button>` : ''}<button class="knop licht" data-act="uitnodigSheet">${icon('user-plus')}Ouders uitnodigen</button></div>
           ${CC.materiaalStatus ? `<div class="lijst">${CC.materiaalStatus(S, tid)}</div>` : ''}
-          <div class="lijst">${M.spelers(S, tid).map((pl) => { const st = M.stats(S, pl, per); const b = CC.beoordLaatste(S, pl.id); return h.rij({ ic: h.avatar(pl.voornaam), titel: esc(M.naam(S, pl)), sub: `${st.pct == null ? '–' : st.pct + '%'} aanwezig · ${b ? `beoordeeld (${b.m.naam.toLowerCase()})` : 'nog niet beoordeeld'}`, rechts: h.stip(M.zone(S, st.pct, tid)), act: 'open', attrs: `data-view="speler" data-id="${pl.id}"` }); }).join('')}</div>`;
+          ${(() => { const F = CC.spelerFilter(S, tid); return `${F.bar}<div class="lijst">${F.lijst.map(({ pl, st, k, z, vs, b }) => h.rij({ ic: h.avatar(pl.voornaam), titel: esc(M.naam(S, pl)), sub: `${st.pct == null ? '–' : st.pct + '%'} aanwezig${k.geel || k.oranje ? ` · ${h.kaartjes(k)}` : ''}${vs && vs.code !== 'verwacht' ? ` · ${h.chip(vs)}` : ''} · ${b ? `beoordeeld (${b.m.naam.toLowerCase()})` : 'nog niet beoordeeld'}`, rechts: h.stip(z), act: 'open', attrs: `data-view="speler" data-id="${pl.id}"` })).join('') || h.leeg('Geen spelers met dit filter')}</div>`; })()}`;
       },
       speeltijd: (S) => CC.speeltijdHtml(S, CC.teamId()),
     },
