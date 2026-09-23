@@ -15,6 +15,8 @@ Laatst bijgewerkt: 23 september 2026
 4. **ClubComm detecteert, communiceert en documenteert. Mensen beslissen.** Geen automatische straffen.
 5. **Zo min mogelijk gegevens.** We vragen alleen wat we echt nodig hebben (AVG, gegevens van kinderen).
 6. **Tweetalig voorbereid.** Alle teksten staan vanaf het begin in een taalbestand (zie Besluit 3).
+7. **Er is altijd een vervanger.** Bij een amateurvereniging ontbreekt soms een teamleider of trainer, of traint een trainer alleen en gaat hij niet mee naar wedstrijden. Elke taak heeft daarom een vaste volgorde van wie het overneemt, en rollen kunnen tijdelijk (bijv. per wedstrijd) aan iemand worden toegewezen.
+8. **Iedereen ziet alleen wat van hem is.** Ouders zien alleen gegevens van hun eigen kind (aanwezigheid, kaarten, beoordelingen) — nooit van andere kinderen. Trainers en teamleiders zien hun eigen team. De HJO ziet alles. Dit wordt server-side afgedwongen.
 
 ---
 
@@ -219,6 +221,82 @@ ClubComm moet later aan meerdere clubs aangeboden kunnen worden; elke club heeft
 
 ---
 
+## Besluit 7 — Trainerportaal
+
+### Navigatie
+- Onderaan: **Home · Aanwezigheid · Berichten · Spelers · Speeltijd** (Speeltijd alleen als de module aan staat).
+- Instellingen zitten in het **profiel rechtsboven**.
+
+### Home
+1. **Teamnaam + eerstvolgende training** (dag, tijd, veld).
+2. **Verwacht: 10 van 12**, met daaronder **wie zich heeft afgemeld + reden**.
+3. Knop **Aanwezigheid opnemen** — alleen zichtbaar op de dag van de training.
+4. **Actie nodig** (bijv. nieuwe berichten) — alleen als er iets is.
+
+Niet op Home: snelknoppen, aantallen te laat, uitgedeelde kaarten.
+
+### Aanwezigheid
+Bovenaan een **weekstrook** met de trainingen/wedstrijden van deze en volgende week; tik op een dag.
+
+**A. Aanwezigheid opnemen (per activiteit)**
+- Lijst van alle spelers, standaard **aanwezig**.
+- **Tik op een naam** om te wisselen: ✓ aanwezig → ⏰ te laat → ✗ afwezig.
+- Afgemelde spelers staan al grijs met reden; komt een afgemeld kind toch, dan tikt de trainer het aan als aanwezig.
+- Eén knop **Opslaan** → systeem verwerkt waarschuwingen, kaarten en percentages (Besluit 5).
+- Past op één telefoonscherm; corrigeren kan tot 48 uur na de activiteit.
+- Bij **wedstrijden** neemt de **wedstrijdbegeleider** de aanwezigheid op (zie Speeltijd), niet per se de trainer.
+
+**B. Overzicht per speler**
+- Per speler één regel: naam · aanwezigheid % · aantal te laat · kaarten, met kleurbolletje (groen/oranje/rood).
+- Gesorteerd van laagste naar hoogste aanwezigheid.
+- Periode: dit blok / heel seizoen.
+- Tik op een speler → geschiedenis met datums, redenen en kaarten.
+
+### Berichten
+- **Inbox bovenaan**, ongelezen eerst.
+- Eén knop **+ Nieuw bericht** → kies: groep · individueel · trainingswijziging · herinnering (met ingevuld sjabloon).
+- Een **trainingswijziging** past ook echt de **planning** aan en stuurt ouders een pushmelding.
+
+### Planning wijzigen
+- De **trainer mag de planning wijzigen** en **oefenwedstrijden inplannen**.
+- **HJO en teamleider** krijgen daarvan een **niet-urgente melding** in hun berichtenbox, zodat ze op de hoogte zijn.
+
+### Spelers (beoordeling + ontwikkeling samengevoegd)
+- Per speler: aanwezigheid, beoordelingen en notities van de trainer.
+- Beoordelen in **seizoensfasen**; per speler óf **per vaardigheid voor het hele team** (sneller en eerlijker).
+- **Zichtbaarheid:** ouders zien alleen de beoordeling van hun eigen kind; de HJO ziet alles.
+- **Niveau hangt af van de leeftijdscategorie** (club kan de indeling aanpassen). Indeling volgens de KNVB:
+
+| Categorie | Teams | Speelvorm | Beoordeling (voorstel) |
+|---|---|---|---|
+| Mini's | O6–O7 | — | eenvoudig: plezier, balgevoel (of geen beoordeling) |
+| Onderbouw | O8–O10 | 6 tegen 6 | basistechniek (passen, aannemen, dribbelen, schieten) + inzet; 3 smileys |
+| Onderbouw | O11–O12 | 8 tegen 8 | + positie kiezen, overzicht, samenwerken; schaal 1–5 |
+| Middenbouw | vanaf O13 | 11 tegen 11 | alle categorieën (techniek, tactiek, fysiek, mentaal, sociaal); uitgebreider |
+
+- De inhoud per niveau baseren we op de **KNVB-leerlijnen** (uitzoeken bij de bouw).
+- Onderbouw: mogelijk **2 beoordelingsmomenten per seizoen** in plaats van 4.
+
+### Speeltijd (module)
+- Doel: **eerlijke speeltijd** bij wedstrijden.
+- **Voor de wedstrijd:** app weet wie er komt (afmeldingen) en maakt automatisch een **wisselschema per blok**, inclusief roulerende keepers; spelers met minder speeltijd dit seizoen krijgen voorrang. De speelvorm (6 tegen 6, 8 tegen 8) volgt uit de leeftijdscategorie.
+- **Tijdens de wedstrijd:** grote knop "Volgend blok" → wie erin, wie eruit.
+- **Na de wedstrijd:** bevestigen wat er echt gebeurde → seizoenstotalen bijgewerkt.
+- **Eén gedeelde pagina** voor trainer en teamleider (nu bestaat hij dubbel).
+
+### Wedstrijdbegeleider (tijdelijke rol per wedstrijd)
+Niet elke trainer gaat mee naar wedstrijden. Per wedstrijd is er daarom een **wedstrijdbegeleider**, die aanwezigheid en speeltijd voor die wedstrijd doet:
+
+> **Teamleider → Trainer → ouder die zich via Taken als "Coach" heeft aangemeld**
+
+- De ouder met de taak "Coach" krijgt **alleen voor die wedstrijd** toegang tot aanwezigheid en speeltijd; daarna vervalt die toegang automatisch.
+- Is er twee dagen voor de wedstrijd nog niemand, dan gaat de automatische oproep uit (Besluit 4, Taken).
+
+### Rollen koppelen
+- Veel ouders zijn ook trainer of teamleider. De **HJO koppelt rollen** aan een bestaand account (ouder + trainer), met rolwisselaar in de app. (Uitwerken bij het HJO-portaal.)
+
+---
+
 ## Later / ideeën
 
 - **Beloningen** (punten, contributie terugverdienen) als optionele module die de HJO per club of team aanzet.
@@ -229,5 +307,5 @@ ClubComm moet later aan meerdere clubs aangeboden kunnen worden; elke club heeft
 
 ## Nog te bespreken
 
-- Trainerportaal, Teamleiderportaal en HJO-portaal (rondleiding per pagina).
+- Teamleiderportaal en HJO-portaal (rondleiding per pagina).
 - App-kleuren afstemmen op het logo-blauw (lichter dan de huidige `#1e5ba8`).
