@@ -389,3 +389,8 @@ body.sheet-open { overflow: hidden; }
 /* Signaal met knop "Gezien" */
 .signaal + .signaal, .lijst > .rij + .signaal, .lijst > .signaal + .rij { border-top: 1px solid var(--lijn); }
 .signaal-voet { display: flex; align-items: center; gap: 8px; padding: 0 14px 10px 46px; background: var(--vlak); }
+/* Wie ziet wat (Besluit 24) */
+.tabelvak { overflow-x: auto; }
+.tabel.zicht td:not(:first-child), .tabel.zicht th:not(:first-child) { text-align: center; width: 64px; }
+.tabel.zicht td small { display: block; color: var(--zacht); font-size: 12px; }
+.tabel.zicht input { width: 20px; height: 20px; accent-color: var(--blauw); }

@@ -145,7 +145,7 @@
     else {
       const sp = M.spelers(S, a.teamId).map((pl) => ({ pl, st: M.status(S, pl, a) }));
       const af = sp.filter((x) => !['verwacht', 'aanwezig', 'telaat'].includes(x.st.code));
-      meer = `${h.sectie(`Verwacht: ${sp.length - af.length} van ${sp.length}`)}<div class="lijst compact">${af.map((x) => h.rij({ ic: h.avatar(x.pl.voornaam), titel: esc(M.naam(S, x.pl)), rechts: h.chip(x.st), sub: x.st.afm && x.st.afm.opm ? esc(x.st.afm.opm) : '' })).join('') || '<p class="zacht klein">Iedereen komt.</p>'}</div>
+      meer = `${h.sectie(`Verwacht: ${sp.length - af.length} van ${sp.length}`)}<div class="lijst compact">${af.map((x) => h.rij({ ic: h.avatar(x.pl.voornaam), titel: esc(M.naam(S, x.pl)), rechts: h.chip(x.st), sub: x.st.afm && x.st.afm.opm && CC.zicht('toelichting') ? esc(x.st.afm.opm) : '' })).join('') || '<p class="zacht klein">Iedereen komt.</p>'}</div>
         ${rol === 'trainer' && CC.kanNietBlok ? CC.kanNietBlok(S, a) : ''}
         ${['trainer', 'teamleider'].includes(rol) && a.soort === 'training' && !a.afgelast ? `<button class="knop licht vol" data-act="wijzigDeze" data-id="${a.id}">${icon('pencil')}Deze training aanpassen</button>` : ''}`;
     }

@@ -24,7 +24,10 @@
     acts.forEach((a) => { S.afm.push({ id: 'f' + Date.now() + a.id, spelerId: pl.id, actId: a.id, reden: f.reden.value, opm: f.opm.value, tijd: nu, door: CC.me().id, periode: { van, tot } }); const v = S.vervoer[a.id]; if (v) delete v.plek[pl.id]; });
     const laat = acts.filter((a) => new Date() > M.deadline(S, a)).length;
     const t = M.team(S, pl.teamId);
-    melding(S, [t.trainerId, t.teamleiderId], `${pl.voornaam} afwezig ${D.kort(van)} – ${D.kort(tot)}`, `${M.naam(S, pl)} is afgemeld van ${D.lang(van)} tot en met ${D.lang(tot)} (${f.reden.value.toLowerCase()}): ${acts.length} ${acts.length === 1 ? 'activiteit' : 'activiteiten'}.${f.opm.value ? ' ' + f.opm.value : ''}`);
+    const basis = `${M.naam(S, pl)} is afgemeld van ${D.lang(van)} tot en met ${D.lang(tot)} (${f.reden.value.toLowerCase()}): ${acts.length} ${acts.length === 1 ? 'activiteit' : 'activiteiten'}.`;
+    const v = CC.metToelichting([t.trainerId, t.teamleiderId], (id) => (id === t.teamleiderId ? 'teamleider' : 'trainer'));
+    if (v.met.length) melding(S, v.met, `${pl.voornaam} afwezig ${D.kort(van)} – ${D.kort(tot)}`, basis + (f.opm.value ? ' ' + f.opm.value : ''));
+    if (v.zonder.length) melding(S, v.zonder, `${pl.voornaam} afwezig ${D.kort(van)} – ${D.kort(tot)}`, basis);
     CC.save(); CC.closeSheet(); CC.render();
     CC.toast(`${acts.length} ${acts.length === 1 ? 'activiteit' : 'activiteiten'} afgemeld${laat ? ` (${laat} na de afmeldtermijn)` : ''}`);
   });

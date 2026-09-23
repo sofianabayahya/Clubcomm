@@ -502,6 +502,25 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 24 — Wie ziet wat (per rol)
+*Besloten 23 september 2026.*
+
+- **Iedereen ziet wat hij nodig heeft voor zijn taak, niet meer.** In de onderbouw is de teamleider meestal een ouder van een teamgenoot. Ziekte en blessures zijn gezondheidsgegevens (AVG: alleen wie het nodig heeft).
+- Standaard:
+
+| Wat | Teamleider | Trainer | HJO |
+|---|---|---|---|
+| Aanwezig, afgemeld, te laat + soort reden | ✅ | ✅ | ✅ |
+| Kaarten en signalen, langdurig afwezig melden | ✅ | ✅ | ✅ |
+| Toelichting die de ouder bij het afmelden typt | ❌ | ✅ | ✅ |
+| Beoordelingen | ❌ | ✅ (vast) | ✅ |
+| Gespreksnotities en afspraken | ❌ | ✅ | ✅ |
+| Contact vastleggen | ❌ | ✅ (vast) | ✅ |
+
+- **De clubbeheerder kan dit per club aanpassen** (Rollen → Wie ziet wat). Wat de trainer voor zijn taak nodig heeft (beoordelen, bellen) staat vast aan. De HJO ziet alles; ouders zien altijd alleen hun eigen kind.
+- Ook meldingen volgen dit: wie de toelichting niet mag zien, krijgt de melding zonder toelichting.
+- In versie 2 dwingt de server dit af (Supabase RLS), niet alleen het scherm.
+
 ## Besluit 23 — Beoordelingsmomenten en ontwikkelgesprekken
 *Besloten 23 september 2026.*
 

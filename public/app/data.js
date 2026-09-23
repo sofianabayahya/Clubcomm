@@ -422,7 +422,7 @@
         const z = M.zone(S, st.pct, tid);
         const naam = M.naam(S, pl);
         const lang = S.lang.find((l) => l.spelerId === pl.id && l.tot >= vandaag());
-        if (lang) res.push({ soort: 'lang', niveau: 'info', teamId: tid, spelerId: pl.id, tekst: `${naam}: langdurig afwezig (${lang.reden.toLowerCase()})`, sub: `Tot ongeveer ${CC.date.kort(lang.tot)}${lang.opm ? ' · ' + lang.opm : ''}`, ernst: 0, sleutelExtra: lang.id });
+        if (lang) res.push({ soort: 'lang', niveau: 'info', teamId: tid, spelerId: pl.id, tekst: `${naam}: langdurig afwezig (${lang.reden.toLowerCase()})`, sub: `Tot ongeveer ${CC.date.kort(lang.tot)}${lang.opm && (!CC.zicht || CC.zicht('toelichting')) ? ' · ' + lang.opm : ''}`, ernst: 0, sleutelExtra: lang.id });
         if (z === 'rood' && tz !== 'rood' && !lang) {
           const top = Object.entries(st.redenen).sort((a, b) => b[1] - a[1])[0];
           res.push({ soort: 'speler', niveau: 'rood', teamId: tid, spelerId: pl.id, tekst: `${naam}: ${st.pct}% (team: ${ts.pct}%)`, sub: top ? `${st.afwezig}× afwezig, waarvan ${top[1]}× ${top[0].toLowerCase()}` : '', ernst: st.afwezig });

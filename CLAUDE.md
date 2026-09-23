@@ -12,6 +12,7 @@ Gemigreerd uit Replit op 2026-09-22. Taal van de UI: Nederlands.
   - `afwezig.js`: periode afmelden (ouder) en "trainer kan niet" (vervanger of afgelasten).
   - `trainerafw.js`: afwezigheid van trainers signaleren (punten per fase, signaal naar HJO).
   - `beoordeling.js`: twee beoordelingsmomenten (winter, einde seizoen) met ontwikkelgesprekken, tijdsloten en agenda (Besluit 23).
+  - `zicht.js`: wie ziet wat per rol (teamleider/trainer), in te stellen door de clubbeheerder (Besluit 24).
   - `agenda.js`: agenda-abonnement (iCalendar-link; `CC.icsTekst` maakt de echte .ics-inhoud voor versie 2).
   - Icoontjes: één set (Lucide) in `vendor/icons.js`. Kleuren als tokens in `app.css`, met donkere modus.
 - Pilot = onderbouw (O6–O12); de demo heeft alleen onderbouwteams.
