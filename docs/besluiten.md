@@ -586,6 +586,7 @@ Verandert er een besluit, pas dan de tekst aan in `maak-handleidingen.js` en maa
 - **Beloningen** (punten, contributie terugverdienen) als optionele module die de HJO per club of team aanzet.
 - **Planning uit voetbal.nl** koppelen.
 - **Import uit Sportlink** (zie Besluit 2).
+- **Uit de vergelijking met Teamy** (`docs/concurrent-teamy.md`): agenda-abonnement (trainingen en wedstrijden in de eigen agenda), eerlijk clubrooster voor vrijwilligerstaken, meelezer (bijv. opa/oma die brengt), rollen en tags voor vrijwilligers.
 - **Club inrichten bij de start (onboarding):** bij de verkoop samen met een bestuurslid de taakverdeling instellen: welke taak ligt bij welke rol (HJO, coördinator, clubbeheerder, secretaris…). De tabel "Wie doet wat" wordt dan per club instelbaar.
 - **Handleiding bij de verkoop:** per rol (bestaat al in `docs/handleidingen/`) en voor de clubbeheerder.
 - **Online hulp met AI:** een assistent die de app volledig kent en stap voor stap uitlegt, bijvoorbeeld "hoe zet ik de taken van X uit?" of "hoe zet ik deze module uit?". Scheelt telefoontjes.
