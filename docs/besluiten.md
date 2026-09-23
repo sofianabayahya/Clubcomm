@@ -523,5 +523,7 @@ Verandert er een besluit, pas dan de tekst aan in `maak-handleidingen.js` en maa
 
 ## Nog te bespreken
 
+- **Analyse clubproblemen** (`docs/analyse-clubproblemen.md`): voorstellen voor wat ontbreekt (o.a. afmelden namens ouder, bereikbaarheid per ouder, VCP/gedragscode, "mijn kind twijfelt"). Nog niet besloten.
+
 - **Presentatie** voor bestuur/trainersavond en eventueel een rollenbeschrijving.
 - **Huisstijl:** één set icoontjes in één stijl; kleur alleen met betekenis (groen = goed, oranje = aandacht, rood = probleem); verder rustig met het logo-blauw als hoofdkleur (lichter dan de huidige `#1e5ba8`).
