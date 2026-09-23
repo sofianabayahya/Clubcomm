@@ -31,10 +31,10 @@
   CC.rol = () => { const me = CC.me(); return me && me.rollen[sessie.rolIdx || 0]; };
   CC.teamId = () => { const r = CC.rol(); return r && r.teamId; };
   CC.kind = () => {
-    const me = CC.me(); const kids = S.players.filter((p) => p.ouders.includes(me.id));
+    const me = CC.me(); const kids = S.players.filter((p) => p.teamId && p.ouders.includes(me.id));
     return kids.find((k) => k.id === sessie.kindId) || kids[0];
   };
-  CC.kinderen = () => { const me = CC.me(); return S.players.filter((p) => p.ouders.includes(me.id)); };
+  CC.kinderen = () => { const me = CC.me(); return S.players.filter((p) => p.teamId && p.ouders.includes(me.id)); };
   CC.rolNaam = (r) => ({ ouder: 'Ouder', trainer: 'Trainer', teamleider: 'Teamleider', hjo: S.club.labels.hjo, beheerder: 'Clubbeheerder', coordinator: S.club.labels.coordinator }[r.rol]);
   CC.login = (pid) => { const me = M.persoon(S, pid); sessie = { pid, rolIdx: 0, kindId: null }; store.set(SESSIE, sessie); ui.tab = 'home'; ui.view = null; ui.stack = []; CC.toast(`Welkom, ${me.naam.split(' ')[0]}!`); CC.render(); };
   CC.logout = () => { sessie = null; store.del(SESSIE); ui.login = { stap: 'mail', email: '' }; CC.closeSheet(); CC.render(); };
@@ -203,8 +203,9 @@
       <p class="zacht klein">Geen wachtwoord nodig. Je blijft ingelogd op dit apparaat.</p>
       <div class="demo">
         <h3>Demo: kies een account</h3>
-        ${demo.map(([pid, rol, sub]) => { const p = M.persoon(S, pid); return h.rij({ ic: h.avatar(p.naam), titel: `${esc(p.naam)} <span class="label">${esc(rol)}</span>`, sub: esc(sub), act: 'demoLogin', attrs: `data-pid="${pid}"` }); }).join('')}
+        ${demo.filter(([pid]) => M.persoon(S, pid)).map(([pid, rol, sub]) => { const p = M.persoon(S, pid); return h.rij({ ic: h.avatar(p.naam), titel: `${esc(p.naam)} <span class="label">${esc(rol)}</span>`, sub: esc(sub), act: 'demoLogin', attrs: `data-pid="${pid}"` }); }).join('')}
         ${h.rij({ ic: 'qr-code', titel: 'Nieuwe ouder: open de team-uitnodiging', sub: 'Zo meldt een ouder zich aan via de QR-code of link van O10-1', act: 'openUitnodiging', attrs: 'data-team="O10-1"' })}
+        ${demo.some(([pid]) => !M.persoon(S, pid)) ? h.rij({ ic: 'refresh-cw', titel: 'Demo opnieuw beginnen', sub: 'Een demo-account is verwijderd; zet alles terug', act: 'resetDemo', chevron: false }) : ''}
         <p class="zacht klein">De demo begint elke dag opnieuw, zodat "vandaag" klopt. Wat je verandert, blijft tot morgen bewaard op dit apparaat.</p>
       </div>
     </div>`;
@@ -268,16 +269,76 @@
       ${h.rij({ ic: 'globe', titel: 'Taal', sub: 'Nederlands (Engels komt in versie 2)', act: 'taalEN' })}
       ${h.rij({ ic: 'lock', titel: 'Privacy en toestemming', act: 'privacy' })}
       ${h.rij({ ic: 'smartphone', titel: 'App op je beginscherm zetten', act: 'beginscherm' })}
+      ${kids.length ? `<h3 class="klein-kop">Uitschrijven</h3>${h.rij({ ic: 'user-cog', titel: 'Kind uitschrijven', sub: 'Stopt je kind of gaat het naar een andere club?', act: 'uitschrijfSheet' })}` : ''}
       <h3 class="klein-kop">Uitloggen</h3>
       ${h.rij({ ic: 'log-out', titel: 'Uitloggen', act: 'logout', chevron: false })}
       ${h.rij({ ic: 'log-out', titel: 'Uitloggen op alle apparaten', sub: 'Telefoon kwijt? Hiermee sluit je overal af.', act: 'logoutAlles', chevron: false })}
       <div class="demo-blok"><h3 class="klein-kop">Demo</h3>
+        ${h.rij({ ic: 'trash-2', titel: 'Mijn account verwijderen', sub: 'Al je gegevens worden gewist', act: 'verwijderSheet', kleur: 'rood' })}
         ${h.rij({ ic: 'users', titel: 'Ander demo-account kiezen', act: 'logout', chevron: false })}
         ${h.rij({ ic: 'refresh-cw', titel: 'Demo opnieuw beginnen', sub: 'Zet alle demodata terug', act: 'resetDemo', chevron: false })}
         <p class="zacht klein"><a href="oud/index.html">Oude Replit-pagina's bekijken</a></p>
       </div>`);
   });
   CC.on('wisselRol', (el) => CC.wisselRol(Number(el.dataset.idx)));
+
+  // ---------- Uitschrijven en account verwijderen (Besluit 14) ----------
+  const hjoIds = () => S.people.filter((p) => p.rollen.some((r) => r.rol === 'hjo')).map((p) => p.id);
+  const meldStaf = (teamId, onderwerp, tekst) => {
+    const t = M.team(S, teamId); const ontv = [...new Set([t.trainerId, t.teamleiderId, ...hjoIds()].filter(Boolean))];
+    S.msgs.push({ id: 'b' + Date.now() + Math.random(), van: 'systeem', soort: 'melding', bereik: teamId, onderwerp, tekst, tijd: new Date().toISOString(), ontvangers: ontv, gelezen: [], antw: [], urgent: false, gepland: null });
+  };
+  // Kind uit het team halen. De aanwezigheid blijft alleen als anonieme telling in de teamcijfers bewaard.
+  const schrijfUit = (pl, reden) => {
+    const team = pl.teamId;
+    meldStaf(team, `${pl.voornaam} is uitgeschreven`, `${pl.voornaam} ${pl.achternaam} is uitgeschreven uit ${team}. Reden: ${reden}. Je hoeft niets te doen; ${pl.voornaam} staat niet meer in de teamlijst.`);
+    S.afm = S.afm.filter((f) => !(f.spelerId === pl.id && (M.act(S, f.actId) || {}).datum >= D.vandaag()));
+    Object.values(S.vervoer).forEach((v) => { delete v.plek[pl.id]; });
+    pl.teamId = null; pl.uitgeschreven = { datum: D.vandaag(), reden }; pl.voornaam = 'Oud-lid'; pl.achternaam = ''; pl.ouders = [];
+  };
+  CC.on('uitschrijfSheet', () => {
+    const kids = CC.kinderen();
+    CC.sheet('Kind uitschrijven', `<form data-submit="uitschrijvenOk" class="codeform">
+      <label for="us-k">Welk kind?</label><select id="us-k" name="k">${kids.map((k) => `<option value="${k.id}">${esc(M.naam(S, k))} (${esc(k.teamId)})</option>`).join('')}</select>
+      <label for="us-r">Reden</label><select id="us-r" name="r"><option>Stopt met voetbal</option><option>Naar een andere club</option><option>Verhuisd</option><option>Anders</option></select>
+      <div class="info oranje">${icon('info')}<span>Hiermee verdwijnt je kind uit het team en uit ClubComm. De trainer, teamleider en ${esc(S.club.labels.hjo)} krijgen een melding. <b>Let op:</b> het lidmaatschap en de contributie zeg je apart op bij de ledenadministratie van de club.</span></div>
+      <button class="knop rood vol">Uitschrijven</button></form>`);
+  });
+  CC.on('uitschrijvenOk', (f) => {
+    const pl = M.speler(S, f.k.value); const naam = pl.voornaam;
+    CC.sheet('Weet je het zeker?', `<p><b>${esc(naam)}</b> wordt uitgeschreven. Dit kun je niet ongedaan maken; opnieuw aanmelden kan wel via de uitnodiging van het team.</p>
+      <div class="knoppen kolom"><button class="knop rood" data-act="uitschrijvenDef" data-id="${pl.id}" data-r="${esc(f.r.value)}">Ja, schrijf ${esc(naam)} uit</button><button class="knop licht" data-act="sluit">Annuleren</button></div>`);
+  });
+  CC.on('uitschrijvenDef', (el) => {
+    const pl = M.speler(S, el.dataset.id); const naam = pl.voornaam;
+    schrijfUit(pl, el.dataset.r); sessie.kindId = null; store.set(SESSIE, sessie);
+    CC.save(); CC.closeSheet(); ui.tab = 'home'; ui.view = null; CC.render(); CC.toast(`${naam} is uitgeschreven`);
+  });
+  CC.on('verwijderSheet', () => {
+    const me = CC.me(); const kids = CC.kinderen();
+    const alleen = kids.filter((k) => k.ouders.length === 1);
+    const staf = me.rollen.filter((r) => ['trainer', 'teamleider'].includes(r.rol));
+    CC.sheet('Account verwijderen', `<p>We wissen je naam, e-mailadres, telefoonnummer en al je koppelingen. Je kunt daarna niet meer inloggen.</p>
+      ${alleen.length ? `<div class="info oranje">${icon('info')}<span>${alleen.map((k) => esc(k.voornaam)).join(' en ')} ${alleen.length > 1 ? 'hebben' : 'heeft'} geen andere ouder in ClubComm en ${alleen.length > 1 ? 'worden' : 'wordt'} dus ook uitgeschreven.</span></div>` : ''}
+      ${kids.some((k) => k.ouders.length > 1) ? `<p class="klein">${kids.filter((k) => k.ouders.length > 1).map((k) => esc(k.voornaam)).join(' en ')} blijft gekoppeld aan de andere ouder.</p>` : ''}
+      ${staf.length ? `<div class="info oranje">${icon('user-cog')}<span>Je bent ook ${staf.map((r) => `${r.rol} van ${esc(r.teamId)}`).join(' en ')}. De ${esc(S.club.labels.hjo)} krijgt een melding om een vervanger te zoeken.</span></div>` : ''}
+      <p class="zacht klein">Aanwezigheid blijft alleen als anonieme telling in de teamcijfers bewaard. Het lidmaatschap zeg je apart op bij de ledenadministratie.</p>
+      <div class="knoppen kolom"><button class="knop rood" data-act="verwijderDef">Ja, verwijder mijn account</button><button class="knop licht" data-act="sluit">Annuleren</button></div>`);
+  });
+  CC.on('verwijderDef', () => {
+    const me = CC.me();
+    CC.kinderen().forEach((k) => { if (k.ouders.length === 1) schrijfUit(k, 'Ouder heeft account verwijderd'); else k.ouders = k.ouders.filter((o) => o !== me.id); });
+    S.players.forEach((p) => { p.ouders = p.ouders.filter((o) => o !== me.id); });
+    S.teams.forEach((t) => {
+      ['trainerId', 'teamleiderId'].forEach((v) => { if (t[v] === me.id) { t[v] = null; meldStaf(t.id, `${t.naam} heeft geen ${v === 'trainerId' ? 'trainer' : 'teamleider'} meer`, `${me.naam} heeft het account verwijderd. Zoek een vervanger via Teams.`); } });
+    });
+    Object.values(S.vervoer).forEach((v) => { v.aanbod = v.aanbod.filter((x) => x.personId !== me.id); Object.keys(v.plek).forEach((k) => { if (v.plek[k] === me.id) delete v.plek[k]; }); });
+    S.taken.forEach((t) => { if (t.personId === me.id) t.personId = null; });
+    S.acts.forEach((a) => { if (a.begeleiderId === me.id) a.begeleiderId = null; });
+    S.msgs.forEach((m) => { m.ontvangers = m.ontvangers.filter((x) => x !== me.id); m.gelezen = m.gelezen.filter((x) => x !== me.id); });
+    S.people = S.people.filter((p) => p.id !== me.id);
+    CC.save(); CC.logout(); CC.toast('Je account is verwijderd. Tot ziens!');
+  });
   CC.on('logout', () => CC.logout());
   CC.on('logoutAlles', () => { CC.toast('Je bent op alle apparaten uitgelogd'); setTimeout(CC.logout, 600); });
   CC.on('resetDemo', () => { CC.reset(); CC.closeSheet(); CC.logout(); CC.toast('Demo staat weer aan het begin'); });
@@ -290,7 +351,7 @@
   CC.on('tweedeOuderStuur', () => { CC.closeSheet(); CC.toast('Uitnodiging verstuurd'); });
 
   // ---------- Berichten (voor alle rollen) ----------
-  const vanNaam = (m) => (m.van === 'systeem' ? 'ClubComm' : (M.persoon(S, m.van) || { naam: 'Onbekend' }).naam);
+  const vanNaam = (m) => (m.van === 'systeem' ? 'ClubComm' : (M.persoon(S, m.van) || { naam: 'Verwijderd account' }).naam);
   CC.berichtenScherm = (S, opties = {}) => {
     const me = CC.me();
     const mijn = S.msgs.filter((m) => M.zichtbaar(S, m, me.id) && m.van !== me.id);

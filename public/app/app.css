@@ -1,8 +1,8 @@
-/* ClubComm prototype — huisstijl: logo-blauw als hoofdkleur, kleur alleen met betekenis (groen/oranje/rood). */
+/* ClubComm prototype — huisstijl: altijd licht (wit), logo-blauw als hoofdkleur, kleur alleen met betekenis (groen/oranje/rood). */
 :root {
   --blauw: #0d88f9; --blauw-d: #0a6fcc; --blauw-l: #e7f2fe;
   --inkt: #0b2545; --zacht: #5b6b7f; --lijn: #e3e9f1;
-  --grond: #f3f6fa; --vlak: #ffffff; --vlak2: #f7f9fc;
+  --grond: #f5f7fa; --vlak: #ffffff; --vlak2: #f7f9fc;
   --groen: #16a34a; --groen-l: #e7f6ec; --oranje: #d97706; --oranje-l: #fdf1e1; --rood: #dc2626; --rood-l: #fdeaea;
   --geel: #facc15; --kaart-oranje: #f97316;
   --r: 14px; --r-s: 10px; --schaduw: 0 1px 2px rgba(11, 37, 69, .06), 0 2px 8px rgba(11, 37, 69, .05);
@@ -10,19 +10,6 @@
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   color-scheme: light;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --blauw: #3aa0ff; --blauw-d: #6cb8ff; --blauw-l: #11263d; --inkt: #e6eef8; --zacht: #97a6b8; --lijn: #243246;
-    --grond: #0b1320; --vlak: #131d2c; --vlak2: #182435; --groen: #34c26b; --groen-l: #0f2a1b; --oranje: #f0a13a; --oranje-l: #2e2211; --rood: #f26363; --rood-l: #321516;
-    --schaduw: none; color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --blauw: #3aa0ff; --blauw-d: #6cb8ff; --blauw-l: #11263d; --inkt: #e6eef8; --zacht: #97a6b8; --lijn: #243246;
-  --grond: #0b1320; --vlak: #131d2c; --vlak2: #182435; --groen: #34c26b; --groen-l: #0f2a1b; --oranje: #f0a13a; --oranje-l: #2e2211; --rood: #f26363; --rood-l: #321516;
-  --schaduw: none; color-scheme: dark;
-}
-
 * { box-sizing: border-box; }
 html, body { margin: 0; }
 body { font-family: var(--font); font-size: 15px; line-height: 1.4; color: var(--inkt); background: var(--grond); -webkit-font-smoothing: antialiased; }

@@ -34,7 +34,7 @@
         if (A.lang.length) rijen.push(h.rij({ ic: 'hospital', titel: `${A.lang.length} speler${A.lang.length > 1 ? 's' : ''} langdurig afwezig`, sub: A.lang.map((s) => esc(s.tekst.split(':')[0])).join(', '), act: 'open', attrs: 'data-view="signalen" data-soort="lang"' }));
         if (A.patroon.length) rijen.push(h.rij({ ic: 'repeat', titel: `${A.patroon.length} opvallende patronen`, sub: 'Bijv. steeds op dezelfde dag afwezig', act: 'open', attrs: 'data-view="signalen" data-soort="patroon"' }));
         if (A.wijz.length) rijen.push(h.rij({ ic: 'calendar-days', titel: `${A.wijz.length} planningswijziging${A.wijz.length > 1 ? 'en' : ''} door trainers`, sub: 'Ter informatie', act: 'tab', attrs: 'data-tab="planning"' }));
-        return `<div class="clubregel"><span><b>${S.teams.length}</b> teams</span><span><b>${S.players.length}</b> spelers</span><span><b>${tot ? Math.round((100 * aan) / tot) : '–'}%</b> aanwezig</span></div>
+        return `<div class="clubregel"><span><b>${S.teams.length}</b> teams</span><span><b>${S.players.filter((p) => p.teamId).length}</b> spelers</span><span><b>${tot ? Math.round((100 * aan) / tot) : '–'}%</b> aanwezig</span></div>
           <div class="twee-knoppen"><button class="tegel groot" data-act="berichtAanClub">${icon('megaphone')}<span>Bericht aan club</span></button><button class="tegel groot rood" data-act="afgelasten">${icon('ban')}<span>Afgelasten</span></button></div>
           ${h.sectie('Aandacht nodig')}${rijen.length ? `<div class="lijst">${rijen.join('')}</div>` : h.leeg('Niets bijzonders 👍')}`;
       },
@@ -44,10 +44,10 @@
         const per = M.periode(S, 'blok');
         if (modus === 'spelers') {
           const q = (h.segVal('zoekSp', '') || '').toLowerCase();
-          const res = S.players.filter((p) => !q || M.naam(S, p).toLowerCase().includes(q) || p.teamId.toLowerCase().includes(q)).slice(0, 40);
+          const res = S.players.filter((p) => p.teamId).filter((p) => !q || M.naam(S, p).toLowerCase().includes(q) || p.teamId.toLowerCase().includes(q)).slice(0, 40);
           return `${seg}<div class="zoek">${icon('search')}<input type="search" placeholder="Zoek speler of team" value="${esc(q)}" data-input="zoekSp" aria-label="Zoek speler"></div>
             <button class="knop licht vol" data-act="spelerToevoegen">${icon('user-plus')}Speler handmatig toevoegen</button>
-            <div class="lijst" id="zoekres">${res.map((pl) => h.rij({ ic: h.avatar(pl.voornaam), titel: esc(M.naam(S, pl)), sub: esc(pl.teamId), act: 'spelerActies', attrs: `data-id="${pl.id}"` })).join('')}</div><p class="zacht klein">${S.players.length} spelers in de club${res.length === 40 ? ', eerste 40 getoond' : ''}.</p>`;
+            <div class="lijst" id="zoekres">${res.map((pl) => h.rij({ ic: h.avatar(pl.voornaam), titel: esc(M.naam(S, pl)), sub: esc(pl.teamId), act: 'spelerActies', attrs: `data-id="${pl.id}"` })).join('')}</div><p class="zacht klein">${S.players.filter((p) => p.teamId).length} spelers in de club${res.length === 40 ? ', eerste 40 getoond' : ''}.</p>`;
         }
         if (modus === 'mensen') {
           const q = (h.segVal('zoekMens', '') || '').toLowerCase();

@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 23 september 2026
+Laatst bijgewerkt: 23 september 2026 (Besluit 14 toegevoegd)
 
 ---
 
@@ -483,6 +483,21 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
 ---
 
+## Besluit 14 — Uitschrijven en account verwijderen
+
+Een ouder regelt dit **zelf** in het profiel, zonder tussenkomst van de club.
+
+- **Kind uitschrijven** (stopt, andere club, verhuisd): kind verdwijnt uit het team en uit ClubComm. Trainer, teamleider en HJO krijgen een melding.
+- **Account verwijderen:** naam, e-mail, telefoon en koppelingen worden gewist; daarna kan de ouder niet meer inloggen.
+  - Kinderen zonder andere ouder in ClubComm worden daarbij ook uitgeschreven; heeft een kind nog een andere ouder, dan blijft het gekoppeld aan die ouder.
+  - Is de ouder ook trainer of teamleider, dan krijgt de HJO een melding om een vervanger te zoeken.
+- Altijd met een **bevestigingsstap** ("Weet je het zeker?") en uitleg wat er gebeurt.
+- Aanwezigheid blijft alleen als **anonieme telling** in de teamcijfers bewaard (geen naam).
+- Het **lidmaatschap en de contributie** zegt de ouder apart op bij de ledenadministratie (Sportlink); de app zegt dat erbij.
+- Nog uitwerken in versie 2: bewaartermijn van gegevens van oud-leden (AVG).
+
+---
+
 ## Wie doet wat (overzicht)
 
 | Taak | Wie | Vervanger |
@@ -518,12 +533,13 @@ Verandert er een besluit, pas dan de tekst aan in `maak-handleidingen.js` en maa
 - **Beloningen** (punten, contributie terugverdienen) als optionele module die de HJO per club of team aanzet.
 - **Planning uit voetbal.nl** koppelen.
 - **Import uit Sportlink** (zie Besluit 2).
+- **Evaluatieformulier aan het einde van het seizoen** (ouders, trainers, teamleiders), zodat we per seizoen een rapport kunnen maken van wat beter kan.
 
 ---
 
 ## Nog te bespreken
 
-- **Analyse clubproblemen** (`docs/analyse-clubproblemen.md`): voorstellen voor wat ontbreekt (o.a. afmelden namens ouder, bereikbaarheid per ouder, VCP/gedragscode, "mijn kind twijfelt"). Nog niet besloten.
+- **Analyse clubproblemen** (`docs/analyse-clubproblemen.md`): voorstellen voor wat ontbreekt (o.a. afmelden namens ouder, bereikbaarheid per ouder, VCP/gedragscode, "mijn kind twijfelt"). Nog niet besloten. Adoptie door ouders ziet de gebruiker niet als risico (mail + push, uitleg, coulante start).
 
 - **Presentatie** voor bestuur/trainersavond en eventueel een rollenbeschrijving.
-- **Huisstijl:** één set icoontjes in één stijl; kleur alleen met betekenis (groen = goed, oranje = aandacht, rood = probleem); verder rustig met het logo-blauw als hoofdkleur (lichter dan de huidige `#1e5ba8`).
+- **Huisstijl:** één set icoontjes in één stijl (Lucide, in het prototype); kleur alleen met betekenis (groen = goed, oranje = aandacht, rood = probleem); verder rustig met het logo-blauw `#0D88F9` als hoofdkleur. **Besloten:** de app is altijd licht (witte achtergrond), ook als de telefoon op donkere modus staat.

@@ -28,7 +28,7 @@
         const lang = S.lang.find((l) => l.spelerId === pl.id && l.tot >= D.vandaag());
         const acties = [];
         const pers = S.msgs.filter((m) => M.zichtbaar(S, m, me.id) && m.soort === 'persoonlijk' && !m.gelezen.includes(me.id));
-        pers.forEach((m) => acties.push(h.rij({ ic: 'message-circle', titel: m.van === 'systeem' ? 'Bericht van ClubComm' : `Bericht van ${esc(M.persoon(S, m.van).naam.split(' ')[0])}`, sub: esc(m.onderwerp), act: 'open', attrs: `data-view="bericht" data-id="${m.id}"`, kleur: 'blauw' })));
+        pers.forEach((m) => acties.push(h.rij({ ic: 'message-circle', titel: m.van === 'systeem' ? 'Bericht van ClubComm' : `Bericht van ${esc((M.persoon(S, m.van) || { naam: 'onbekend' }).naam.split(' ')[0])}`, sub: esc(m.onderwerp), act: 'open', attrs: `data-view="bericht" data-id="${m.id}"`, kleur: 'blauw' })));
         S.acts.filter((a) => a.begeleiderId === me.id && a.teamId === pl.teamId && a.datum >= D.vandaag() && !a.afgelast).slice(0, 1).forEach((a) => acties.push(h.rij({ ic: 'clipboard-check', titel: `Jij begeleidt ${D.relatief(a.datum).toLowerCase()}`, sub: `Aanwezigheid${S.club.modules.speeltijd ? ' en speeltijd' : ''} voor deze wedstrijd`, act: 'open', attrs: `data-view="begeleiden" data-id="${a.id}"`, kleur: 'blauw' })));
         const gv = geenVervoer(S, pl); if (gv) acties.push(h.rij({ ic: 'car', titel: `Nog geen vervoer voor ${esc(pl.voornaam)}`, sub: `${D.relatief(gv.datum)} uit bij ${esc(gv.tegen)}`, act: 'tab', attrs: 'data-tab="vervoer"', kleur: 'oranje' }));
         const ot = S.club.modules.taken ? openTaken(S, pl.teamId) : [];
