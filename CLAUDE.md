@@ -4,19 +4,25 @@ Communicatie- en managementplatform voor jeugdvoetbal (pilotclub: SC Buitenvelde
 Gemigreerd uit Replit op 2026-09-22. Taal van de UI: Nederlands.
 
 ## Huidige staat (prototype)
-- 23 statische HTML-pagina's in de root, gedeelde `script.js`, `style.css`, `api-client.js`.
+- 23 statische HTML-pagina's in `public/`, met gedeelde `script.js`, `style.css`, `api-client.js`.
+- Alleen `public/` wordt door `server.js` geserveerd; code en config in de root zijn niet openbaar.
 - `server.js` (Express) heeft alleen mock-endpoints: `/api/health`, `/api/auth/login`, `/api/auth/register`, `/api/attendance/absence`.
 - Geen database: alle data staat in `localStorage` en is hardcoded demo-data.
 - Login in `index.html`/`script.js` is fake: rol wordt afgeleid uit het e-mailadres.
 - Pagina-overzicht en rollen: zie `APP_BLUEPRINT.md`.
 
 ## Bekende problemen
-- JS-fouten: `ouderportaal.html` (syntax `}`), `overzicht.html` (`twoWeekPlanningData` dubbel gedeclareerd), `hjo-dashboard.html` (invalid token), `analytics-hub.html` (script error).
-- `express.static('.')` serveert de hele projectmap, inclusief `server.js`.
-- Naamgeving wisselt tussen "BTV Connect" en "ClubComm"; doel is ClubComm.
+- Logo ontbreekt: plaats `buitenveldert-logo_1749246007134.png` in `public/attached_assets/` (index.html en qr-registratie.html verbergen het plaatje tot dan).
+- Demo-trainers gebruiken nog fictieve `@btv.nl`-adressen (trainers-beheren, trainer-instellingen).
+
+## Fase 2 (afgerond 2026-09-23)
+- JS-fouten opgelost in ouderportaal, overzicht, hjo-dashboard en analytics-hub (Chart.js v4: `horizontalBar` → `bar` + `indexAxis: 'y'`).
+- Frontend verplaatst naar `public/`; onbekende bestanden geven 404 i.p.v. index.html.
+- Naam overal ClubComm; club heet SC Buitenveldert.
+- CDN-versies vastgezet: Chart.js `@4`; qrcodejs via cdnjs (cdn.rawgit.com bestaat niet meer).
 
 ## Lokaal draaien
-- Statisch: `python3 -m http.server 5050` (werkt zonder Node).
+- Statisch: `cd public && python3 -m http.server 5050` (werkt zonder Node).
 - Volledig: `npm install && npm start` (poort 5000, vereist Node.js).
 
 ## Richting V2

@@ -9,13 +9,15 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('.'));
+// Alleen de map public/ is openbaar; server.js, package.json, .env e.d. blijven afgeschermd
+const PUBLIC_DIR = path.join(__dirname, 'public');
+app.use(express.static(PUBLIC_DIR));
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'OK', 
-    message: 'BTV Connect Backend is running',
+    message: 'ClubComm Backend is running',
     timestamp: new Date().toISOString()
   });
 });
@@ -90,13 +92,17 @@ app.post('/api/attendance/absence', (req, res) => {
 });
 
 // Catch-all for client-side routing
+// Bestanden met een extensie (.png, .js, ...) die niet in public/ staan krijgen een echte 404
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  if (path.extname(req.path)) {
+    return res.status(404).send('Niet gevonden');
+  }
+  res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
 });
 
 // Start server
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 BTV Connect server running on port ${PORT}`);
+  console.log(`🚀 ClubComm server running on port ${PORT}`);
   console.log(`📍 Access at: http://localhost:${PORT}`);
   console.log(`🔐 Test accounts:`);
   console.log(`   • ouder@test.nl / test`);

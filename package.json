@@ -2,7 +2,7 @@
 {
   "name": "clubcomm-backend",
   "version": "1.0.0",
-  "description": "BTV Connect ClubComm Backend API",
+  "description": "ClubComm Backend API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -10,7 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": ["clubcomm", "football", "youth", "management"],
-  "author": "BTV Buitenveldert",
+  "author": "SC Buitenveldert",
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",

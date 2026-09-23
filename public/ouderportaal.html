@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BTV Connect - Ouderportaal</title>
+  <title>ClubComm - Ouderportaal</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -37,7 +37,7 @@
       <div id="nextActivityText" style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.25rem;">
         Vrijdag 6 juni - 18:30
       </div>
-      <div style="font-size: 0.9rem; opacity: 0.85; background: rgba(255,255,255,0.15); padding: 0.25rem 0.75rem; border-radius: 12px; display: inline-block;">Training O10-1</div>
+      <div id="nextActivityInfo" style="font-size: 0.9rem; opacity: 0.85; background: rgba(255,255,255,0.15); padding: 0.25rem 0.75rem; border-radius: 12px; display: inline-block;">Training O10-1</div>
     </div>
   </div>
 
@@ -639,7 +639,7 @@
 
         document.getElementById('nextActivityText').textContent = `${capitalizedDate} - ${nextActivity.time}`;
 
-        const activityInfo = document.querySelector('#nextActivity .opacity-85');
+        const activityInfo = document.getElementById('nextActivityInfo');
         if (nextActivity.type === 'Training') {
           activityInfo.textContent = `Training O10-1`;
         } else {
@@ -684,7 +684,7 @@
               ${(mostImportant.message || mostImportant.content || '').substring(0, 80)}...
             </div>
             <div style="margin-top: 0.5rem; font-size: 0.75rem; color: #92400e; opacity: 0.8;">
-              Van: ${mostImportant.sender || mostImportant.author || 'BTV'}
+              Van: ${mostImportant.sender || mostImportant.author || 'ClubComm'}
             </div>
           `;
         }
@@ -755,9 +755,14 @@
       }
     }
 
+    // Pagina opstarten zodra de HTML geladen is
+    document.addEventListener('DOMContentLoaded', function() {
+      checkImportantMessages();
+      checkYellowCardStatus();
+
       // Initialiseer slimme dashboard
       initializeDashboard();
-    }
+    });
 
     function initializeDashboard() {
       updateNextActivity();

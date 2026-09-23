@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BTV Connect - Planning & Overzicht</title>
+  <title>ClubComm - Planning & Overzicht</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -2013,7 +2013,7 @@ function refreshPlanning() {
       {
         type: 'wedstrijd',
         time: '10:00',
-        location: 'Sportpark BTV',
+        location: 'Sportpark Buitenveldert',
         title: 'Wedstrijd O10-1'
       }
     ]
@@ -2097,7 +2097,7 @@ function refreshPlanning() {
            {
         type: 'wedstrijd',
         time: '10:00',
-        location: 'Sportpark BTV',
+        location: 'Sportpark Buitenveldert',
         title: 'Wedstrijd O10-1'
       }
     ]
@@ -2939,205 +2939,8 @@ function refreshPlanning() {
       `;
       document.head.appendChild(style);
     });
-// Voorbeeld data voor de 2-weekse planning (te vervangen met echte data)
-    const twoWeekPlanningData = [
-  {
-    id: '1',
-    date: '2024-01-29',
-    dayShort: 'MA',
-    dayNum: '29',
-    month: 'jan',
-    activities: [
-      {
-        type: 'training',
-        time: '18:30',
-        location: 'Veld 1',
-        title: 'Training O10-1'
-      }
-    ]
-  },
-  {
-    id: '2',
-    date: '2024-01-30',
-    dayShort: 'DI',
-    dayNum: '30',
-    month: 'jan',
-    activities: []
-  },
-  {
-    id: '3',
-    date: '2024-01-31',
-    dayShort: 'WO',
-    dayNum: '31',
-    month: 'jan',
-    activities: [
-      {
-        type: 'training',
-        time: '18:30',
-        location: 'Veld 1',
-        title: 'Training O10-1'
-      }
-    ]
-  },
-  {
-    id: '4',
-    date: '2024-02-01',
-    dayShort: 'DO',
-    dayNum: '1',
-    month: 'feb',
-    activities: []
-  },
-  {
-    id: '5',
-    date: '2024-02-02',
-    dayShort: 'VR',
-    dayNum: '2',
-    month: 'feb',
-    activities: [
-      {
-        type: 'training',
-        time: '18:30',
-        location: 'Veld 1',
-        title: 'Training O10-1'
-      }
-    ]
-  },
-  {
-    id: '6',
-    date: '2024-02-03',
-    dayShort: 'ZA',
-    dayNum: '3',
-    month: 'feb',
-    activities: [
-      {
-        type: 'wedstrijd',
-        time: '10:00',
-        location: 'Sportpark BTV',
-        title: 'Wedstrijd O10-1'
-      }
-    ]
-  },
-  {
-    id: '7',
-    date: '2024-02-04',
-    dayShort: 'ZO',
-    dayNum: '4',
-    month: 'feb',
-    activities: []
-  },
-  {
-    id: '8',
-    date: '2024-02-05',
-    dayShort: 'MA',
-    dayNum: '5',
-    month: 'feb',
-    activities: [
-           {
-        type: 'training',
-        time: '18:30',
-        location: 'Veld 1',
-        title: 'Training O10-1'
-      }
-    ]
-  },
-    {
-    id: '9',
-    date: '2024-02-06',
-    dayShort: 'DI',
-    dayNum: '6',
-    month: 'feb',
-    activities: []
-  },
-  {
-    id: '10',
-    date: '2024-02-07',
-    dayShort: 'WO',
-    dayNum: '7',
-    month: 'feb',
-    activities: [
-           {
-        type: 'training',
-        time: '18:30',
-        location: 'Veld 1',
-        title: 'Training O10-1'
-      }
-    ]
-  },
-  {
-    id: '11',
-    date: '2024-02-08',
-    dayShort: 'DO',
-    dayNum: '8',
-    month: 'feb',
-    activities: []
-  },
-  {
-    id: '12',
-    date: '2024-02-09',
-    dayShort: 'VR',
-    dayNum: '9',
-    month: 'feb',
-    activities: [
-           {
-        type: 'training',
-        time: '18:30',
-        location: 'Veld 1',
-        title: 'Training O10-1'
-      }
-    ]
-  },
-  {
-    id: '13',
-    date: '2024-02-10',
-    dayShort: 'ZA',
-    dayNum: '10',
-    month: 'feb',
-    activities: [
-           {
-        type: 'wedstrijd',
-        time: '10:00',
-        location: 'Sportpark BTV',
-        title: 'Wedstrijd O10-1'
-      }
-    ]
-  },
-  {
-    id: '14',
-    date: '2024-02-11',
-    dayShort: 'ZO',
-    dayNum: '11',
-    month: 'feb',
-    activities: []
-  }
-];
 
-    function getHoursUntilTraining(datum) {
-      // Dummy implementatie (vervang met echte implementatie)
-      return 5; // Simuleert dat het nog 5 uur duurt
-    }
-
-    function issueYellowCard(datum, reden) {
-      const yellowCards = JSON.parse(localStorage.getItem('yellowCards') || '[]');
-        yellowCards.push({
-        datum: datum,
-        reden: reden,
-        timestamp: new Date().toISOString(),
-        player: getCurrentPlayer(),
-        team: getCurrentTeam()
-      });
-      localStorage.setItem('yellowCards', JSON.stringify(yellowCards));
-    }
-
-    function getCurrentPlayer() {
-        // Dummy implementatie (vervang met echte implementatie)
-        return "Speler Naam";
-    }
-
-    function getCurrentTeam() {
-        // Dummy implementatie (vervang met echte implementatie)
-        return "O10-1";
-    }
-function updatePlanningView() {
+    function updatePlanningView() {
       if (currentView === 'week') {
         generateWeekView();
       } else if (currentView === 'month') {

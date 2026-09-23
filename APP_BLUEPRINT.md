@@ -1,7 +1,7 @@
-# BTV Connect - Application Blueprint
+# ClubComm - Application Blueprint
 
 ## Overview
-BTV Connect is a role-based club communication platform for BTV Buitenveldert football club. It handles member management, training schedules, absence reporting, team communication, and administrative functions. The application has 23 pages serving 5 different user roles.
+ClubComm is a role-based club communication platform for SC Buitenveldert football club. It handles member management, training schedules, absence reporting, team communication, and administrative functions. The application has 23 pages serving 5 different user roles.
 
 ---
 

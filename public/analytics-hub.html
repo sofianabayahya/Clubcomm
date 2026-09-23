@@ -4,11 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BTV Connect - Analytics Hub</title>
+  <title>ClubComm - Analytics Hub</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
   <style>
     .analytics-dashboard {
       padding-top: 80px;
@@ -1253,7 +1253,7 @@
     function initializeAttendanceByTeamChart() {
       const ctx = document.getElementById('attendanceByTeamChart').getContext('2d');
       attendanceByTeamChart = new Chart(ctx, {
-        type: 'horizontalBar',
+        type: 'bar',
         data: {
           labels: ['O6-1', 'O7-1', 'O8-1', 'O9-1', 'O10-1', 'O11-1', 'O12-1'],
           datasets: [{
@@ -1271,6 +1271,7 @@
           }]
         },
         options: {
+          indexAxis: 'y', // liggende staven
           responsive: true,
           maintainAspectRatio: false,
           scales: {
@@ -1502,8 +1503,8 @@
         
         // Simulate PDF download
         const link = document.createElement('a');
-        link.href = 'data:text/plain;charset=utf-8,BTV Analytics Report - Generated on ' + new Date().toLocaleDateString('nl-NL');
-        link.download = 'BTV_Analytics_Report_' + new Date().toISOString().split('T')[0] + '.txt';
+        link.href = 'data:text/plain;charset=utf-8,ClubComm Analytics Report - Generated on ' + new Date().toLocaleDateString('nl-NL');
+        link.download = 'ClubComm_Analytics_Report_' + new Date().toISOString().split('T')[0] + '.txt';
         link.click();
       }, 2000);
     }
@@ -1519,7 +1520,7 @@
         const csvContent = "data:text/csv;charset=utf-8," + data;
         const link = document.createElement('a');
         link.href = encodeURI(csvContent);
-        link.download = 'BTV_Analytics_Data_' + new Date().toISOString().split('T')[0] + '.csv';
+        link.download = 'ClubComm_Analytics_Data_' + new Date().toISOString().split('T')[0] + '.csv';
         link.click();
       }, 1500);
     }

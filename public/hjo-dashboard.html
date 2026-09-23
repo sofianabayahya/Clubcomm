@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BTV Connect - HJO Dashboard</title>
+  <title>ClubComm - HJO Dashboard</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -2822,7 +2822,135 @@
 
             <!-- Event vervangt gewone training? -->
             ${type === 'bijeenkomst' || type === 'activiteit' ? `
+              <div style="background: #eff6ff; padding: 1rem; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                  <input type="checkbox" name="replacesTraining" onchange="toggleTrainingReplacement(this)">
+                  <span style="font-weight: 500;">Vervangt gewone training</span>
+                </label>
+                <div id="trainingReplacementOptions" style="display: none; margin-top: 0.75rem;">
+                  <label style="display: block; margin-bottom: 0.25rem; font-size: 0.9rem;">Welke training dag:</label>
+                  <select name="replacedTrainingDay" style="width: 100%; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 4px;">
+                    <option value="woensdag">Woensdag training</option>
+                    <option value="vrijdag">Vrijdag training</option>
+                    <option value="zaterdag">Zaterdag wedstrijd</option>
+                  </select>
+                  <div style="font-size: 0.8rem; color: #1e40af; margin-top: 0.25rem;">
+                    ⚠️ Ouders krijgen bericht dat gewone training niet doorgaat
+                  </div>
+                </div>
+              </div>
+            ` : ''}
 
+            <div>
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Team</label>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                  <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Leeftijdsgroep</label>
+                  <select name="ageGroup" id="ageGroupSelect" onchange="updateTeamNumbers()" required style="width: 100%; padding: 0.75rem; border: 2px solid #e1e5e9; border-radius: 8px;">
+                    <option value="">Kies leeftijd...</option>
+                    <option value="O6">O6 (6 jaar)</option>
+                    <option value="O7">O7 (7 jaar)</option>
+                    <option value="O8">O8 (8 jaar)</option>
+                    <option value="O9">O9 (9 jaar)</option>
+                    <option value="O10">O10 (10 jaar)</option>
+                    <option value="O11">O11 (11 jaar)</option>
+                    <option value="O12">O12 (12 jaar)</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Team Nummer</label>
+                  <select name="teamNumber" id="teamNumberSelect" required style="width: 100%; padding: 0.75rem; border: 2px solid #e1e5e9; border-radius: 8px;" disabled>
+                    <option value="">Eerst leeftijd kiezen</option>
+                  </select>
+                </div>
+              </div>
+              <input type="hidden" name="team" id="fullTeamName">
+            </div>
+
+            ${type === 'wedstrijd' || type === 'toernooi' ? `
+              <div>
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Tegenstander/Locatie</label>
+                <input type="text" name="opponent" placeholder="Bijv. VVA Spartaan of Sportpark De Toekomst" style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px;">
+              </div>
+              <div>
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Thuis/Uit</label>
+                <select name="venue" style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px;">
+                  <option value="thuis">Thuiswedstrijd</option>
+                  <option value="uit">Uitwedstrijd</option>
+                </select>
+              </div>
+            ` : ''}
+
+            <div>
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Opmerkingen</label>
+              <textarea name="notes" placeholder="Extra informatie..." style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px; min-height: 80px; resize: vertical;"></textarea>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+              <button type="submit" style="flex: 1; background: ${eventInfo.color}; color: white; border: none; padding: 1rem; border-radius: 8px; font-weight: 500; cursor: pointer;">
+                <i class="${eventInfo.icon}"></i> ${eventInfo.name} Plannen
+              </button>
+              <button type="button" onclick="hjo.closeModal()" style="background: #6b7280; color: white; border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 500; cursor: pointer;">
+                Annuleren
+              </button>
+            </div>
+          </form>
+        `
+      );
+
+      // Add form submission handler
+      setTimeout(() => {
+        const form = document.getElementById('newEventForm');
+        if (form) {
+          form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const eventData = {
+              id: Date.now(),
+              type: type,
+              date: formData.get('date'),
+              time: formData.get('time'),
+              team: formData.get('team'),
+              opponent: formData.get('opponent') || '',
+              venue: formData.get('venue') || '',
+              notes: formData.get('notes') || '',
+              
+              // Herinnering configuratie
+              urgencyLevel: formData.get('urgencyLevel') || 'none',
+              requiresRegistration: formData.get('requiresRegistration') === 'on',
+              registrationDeadline: formData.get('registrationDeadline') || null,
+              replacesTraining: formData.get('replacesTraining') === 'on',
+              replacedTrainingDay: formData.get('replacedTrainingDay') || null,
+              
+              created: new Date().toISOString(),
+              createdBy: 'HJO'
+            };
+
+            // Save event
+            const events = JSON.parse(localStorage.getItem('hjoEvents') || '[]');
+            events.push(eventData);
+            localStorage.setItem('hjoEvents', JSON.stringify(events));
+
+            // Schedule automatic reminders
+            if (eventData.urgencyLevel !== 'none') {
+              scheduleEventReminders(eventData);
+            }
+
+            // Handle training replacement
+            if (eventData.replacesTraining) {
+              handleTrainingReplacement(eventData);
+            }
+
+            // Show success message
+            hjo.closeModal();
+            hjo.showSuccess(`${eventInfo.name} succesvol gepland voor ${eventData.team} op ${eventData.date} om ${eventData.time}`);
+
+            // Sync to all relevant dashboards
+            syncEventToAllDashboards(eventData);
+          });
+        }
+      }, 100);
+    }
 
     // Herinnering Management Functies
     function updateReminderSchedule(urgencyLevel) {
@@ -3127,137 +3255,6 @@
       processScheduledReminders();
     });
 
-
-              <div style="background: #eff6ff; padding: 1rem; border-radius: 8px; border-left: 4px solid #3b82f6;">
-                <label style="display: flex; align-items: center; gap: 0.5rem;">
-                  <input type="checkbox" name="replacesTraining" onchange="toggleTrainingReplacement(this)">
-                  <span style="font-weight: 500;">Vervangt gewone training</span>
-                </label>
-                <div id="trainingReplacementOptions" style="display: none; margin-top: 0.75rem;">
-                  <label style="display: block; margin-bottom: 0.25rem; font-size: 0.9rem;">Welke training dag:</label>
-                  <select name="replacedTrainingDay" style="width: 100%; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 4px;">
-                    <option value="woensdag">Woensdag training</option>
-                    <option value="vrijdag">Vrijdag training</option>
-                    <option value="zaterdag">Zaterdag wedstrijd</option>
-                  </select>
-                  <div style="font-size: 0.8rem; color: #1e40af; margin-top: 0.25rem;">
-                    ⚠️ Ouders krijgen bericht dat gewone training niet doorgaat
-                  </div>
-                </div>
-              </div>
-            ` : ''}
-
-            <div>
-              <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Team</label>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                <div>
-                  <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Leeftijdsgroep</label>
-                  <select name="ageGroup" id="ageGroupSelect" onchange="updateTeamNumbers()" required style="width: 100%; padding: 0.75rem; border: 2px solid #e1e5e9; border-radius: 8px;">
-                    <option value="">Kies leeftijd...</option>
-                    <option value="O6">O6 (6 jaar)</option>
-                    <option value="O7">O7 (7 jaar)</option>
-                    <option value="O8">O8 (8 jaar)</option>
-                    <option value="O9">O9 (9 jaar)</option>
-                    <option value="O10">O10 (10 jaar)</option>
-                    <option value="O11">O11 (11 jaar)</option>
-                    <option value="O12">O12 (12 jaar)</option>
-                  </select>
-                </div>
-                <div>
-                  <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Team Nummer</label>
-                  <select name="teamNumber" id="teamNumberSelect" required style="width: 100%; padding: 0.75rem; border: 2px solid #e1e5e9; border-radius: 8px;" disabled>
-                    <option value="">Eerst leeftijd kiezen</option>
-                  </select>
-                </div>
-              </div>
-              <input type="hidden" name="team" id="fullTeamName">
-            </div>
-
-            ${type === 'wedstrijd' || type === 'toernooi' ? `
-              <div>
-                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Tegenstander/Locatie</label>
-                <input type="text" name="opponent" placeholder="Bijv. VVA Spartaan of Sportpark De Toekomst" style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px;">
-              </div>
-              <div>
-                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Thuis/Uit</label>
-                <select name="venue" style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px;">
-                  <option value="thuis">Thuiswedstrijd</option>
-                  <option value="uit">Uitwedstrijd</option>
-                </select>
-              </div>
-            ` : ''}
-
-            <div>
-              <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Opmerkingen</label>
-              <textarea name="notes" placeholder="Extra informatie..." style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px; min-height: 80px; resize: vertical;"></textarea>
-            </div>
-
-            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-              <button type="submit" style="flex: 1; background: ${eventInfo.color}; color: white; border: none; padding: 1rem; border-radius: 8px; font-weight: 500; cursor: pointer;">
-                <i class="${eventInfo.icon}"></i> ${eventInfo.name} Plannen
-              </button>
-              <button type="button" onclick="hjo.closeModal()" style="background: #6b7280; color: white; border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 500; cursor: pointer;">
-                Annuleren
-              </button>
-            </div>
-          </form>
-        `
-      );
-
-      // Add form submission handler
-      setTimeout(() => {
-        const form = document.getElementById('newEventForm');
-        if (form) {
-          form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(form);
-            const eventData = {
-              id: Date.now(),
-              type: type,
-              date: formData.get('date'),
-              time: formData.get('time'),
-              team: formData.get('team'),
-              opponent: formData.get('opponent') || '',
-              venue: formData.get('venue') || '',
-              notes: formData.get('notes') || '',
-              
-              // Herinnering configuratie
-              urgencyLevel: formData.get('urgencyLevel') || 'none',
-              requiresRegistration: formData.get('requiresRegistration') === 'on',
-              registrationDeadline: formData.get('registrationDeadline') || null,
-              replacesTraining: formData.get('replacesTraining') === 'on',
-              replacedTrainingDay: formData.get('replacedTrainingDay') || null,
-              
-              created: new Date().toISOString(),
-              createdBy: 'HJO'
-            };
-
-            // Save event
-            const events = JSON.parse(localStorage.getItem('hjoEvents') || '[]');
-            events.push(eventData);
-            localStorage.setItem('hjoEvents', JSON.stringify(events));
-
-            // Schedule automatic reminders
-            if (eventData.urgencyLevel !== 'none') {
-              scheduleEventReminders(eventData);
-            }
-
-            // Handle training replacement
-            if (eventData.replacesTraining) {
-              handleTrainingReplacement(eventData);
-            }
-
-            // Show success message
-            hjo.closeModal();
-            hjo.showSuccess(`${eventInfo.name} succesvol gepland voor ${eventData.team} op ${eventData.date} om ${eventData.time}`);
-
-            // Sync to all relevant dashboards
-            syncEventToAllDashboards(eventData);
-          });
-        }
-      }, 100);
-    }
-
     function showCancellations() {
       const events = JSON.parse(localStorage.getItem('hjoEvents') || '[]');
       const upcomingEvents = events.filter(event => {
@@ -3362,6 +3359,12 @@
       syncEventToParentPortal(eventData);
 
       console.log(`🔄 Event gesynchroniseerd naar alle dashboards: ${eventData.type} voor ${eventData.team}`);
+    }
+
+    function syncEventToParentPortal(eventData) {
+      const parentEvents = JSON.parse(localStorage.getItem('parentEvents') || '[]');
+      parentEvents.push({ ...eventData, id: Date.now(), source: 'hjo' });
+      localStorage.setItem('parentEvents', JSON.stringify(parentEvents));
     }
 
     function openAnalytics() {
@@ -4421,11 +4424,11 @@
     function sendWelcomeEmailWithCredentials(email, password) {
       console.log('📧 Welkomstmail met logingegevens verzonden naar:', {
         to: email,
-        subject: 'BTV Connect - Account Geactiveerd! 🎉',
+        subject: 'ClubComm - Account Geactiveerd! 🎉',
         body: `
 Beste ouder,
 
-Geweldig nieuws! Uw account voor BTV Connect is goedgekeurd en geactiveerd.
+Geweldig nieuws! Uw account voor ClubComm is goedgekeurd en geactiveerd.
 
 🔐 Uw logingegevens:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -4450,7 +4453,7 @@ Wachtwoord: ${password}
 • Vervoer organiseren met andere ouders
 • Taken aanmelden voor het team
 
-Welkom bij BTV Buitenveldert! 🟡🔵
+Welkom bij SC Buitenveldert! 🟡🔵
 
 Met sportieve groet,
 Het HJO Team
@@ -4468,11 +4471,11 @@ Bij vragen kunt u contact opnemen via info@buitenveldert.nl
     function sendRejectionEmail(email, reason) {
       console.log('📧 Afwijzingsmail verzonden naar:', {
         to: email,
-        subject: 'BTV Connect - Registratie Update',
+        subject: 'ClubComm - Registratie Update',
         body: `
 Beste ouder,
 
-Bedankt voor uw interesse in BTV Connect.
+Bedankt voor uw interesse in ClubComm.
 
 Helaas kunnen we uw registratie op dit moment niet goedkeuren.
 ${reason ? `\nReden: ${reason}` : ''}

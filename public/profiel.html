@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BTV Connect - Profiel</title>
+  <title>ClubComm - Profiel</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -532,7 +532,7 @@
       if ('Notification' in window && Notification.permission === 'default') {
         Notification.requestPermission().then(function(permission) {
           if (permission === 'granted') {
-            new Notification('BTV Connect', {
+            new Notification('ClubComm', {
               body: 'Je ontvangt nu notificaties voor belangrijke berichten!',
               icon: '/favicon.ico'
             });
@@ -691,7 +691,7 @@
             <h3 style="color: #1e5ba8; margin: 0 0 0.5rem 0;">
               <i class="fas fa-book"></i> Gebruikershandleiding
             </h3>
-            <p style="color: #64748b; margin: 0;">Leer hoe je BTV Connect optimaal gebruikt</p>
+            <p style="color: #64748b; margin: 0;">Leer hoe je ClubComm optimaal gebruikt</p>
           </div>
 
           <div style="text-align: left;">
@@ -759,8 +759,8 @@
 
     function contactSupport() {
       // Open email client of toon contact informatie
-      const email = 'support@btvconnect.nl';
-      const subject = 'Hulp nodig met BTV Connect';
+      const email = 'support@clubcomm.nl';
+      const subject = 'Hulp nodig met ClubComm';
       const body = 'Hallo support team,\n\nIk heb hulp nodig met...\n\nMijn gegevens:\n- Naam: ' + 
                    (JSON.parse(localStorage.getItem('currentUser') || '{}').name || '') + 
                    '\n- Team: ' + (localStorage.getItem('currentTeam') || '') + '\n\n';
@@ -807,14 +807,14 @@
             <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #1e5ba8, #164a91); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
               <i class="fas fa-futbol"></i>
             </div>
-            <h3 style="color: #1e5ba8; margin: 0 0 0.5rem 0;">BTV Connect</h3>
+            <h3 style="color: #1e5ba8; margin: 0 0 0.5rem 0;">ClubComm</h3>
             <p style="color: #64748b; margin: 0;">Versie 2.1.0</p>
           </div>
 
           <div style="text-align: left; margin: 1.5rem 0;">
             <div style="margin-bottom: 1rem;">
               <strong style="color: #1e293b;">Ontwikkeld voor:</strong><br>
-              <span style="color: #64748b;">BTV Buitenveldert</span>
+              <span style="color: #64748b;">SC Buitenveldert</span>
             </div>
 
             <div style="margin-bottom: 1rem;">
@@ -824,7 +824,7 @@
 
             <div style="margin-bottom: 1rem;">
               <strong style="color: #1e293b;">Support:</strong><br>
-              <span style="color: #64748b;">support@btvconnect.nl</span>
+              <span style="color: #64748b;">support@clubcomm.nl</span>
             </div>
           </div>
 
@@ -838,7 +838,7 @@
           </div>
 
           <div style="font-size: 0.8rem; color: #94a3b8; margin: 1rem 0;">
-            © 2024 BTV Connect. Alle rechten voorbehouden.<br>
+            © 2024 ClubComm. Alle rechten voorbehouden.<br>
             <a href="#" onclick="showPrivacy()" style="color: #1e5ba8;">Privacybeleid</a> | 
             <a href="#" onclick="showTerms()" style="color: #1e5ba8;">Gebruiksvoorwaarden</a>
           </div>
@@ -866,11 +866,11 @@
       };
 
       window.showPrivacy = function() {
-        alert('Privacybeleid:\n\nBTV Connect respecteert je privacy. Alle gegevens worden veilig opgeslagen en alleen gebruikt voor clubdoeleinden. We delen geen persoonlijke informatie met derden.');
+        alert('Privacybeleid:\n\nClubComm respecteert je privacy. Alle gegevens worden veilig opgeslagen en alleen gebruikt voor clubdoeleinden. We delen geen persoonlijke informatie met derden.');
       };
 
       window.showTerms = function() {
-        alert('Gebruiksvoorwaarden:\n\nDoor BTV Connect te gebruiken ga je akkoord met de clubregels en gedragscode. Misbruik van de app kan leiden tot uitsluiting.');
+        alert('Gebruiksvoorwaarden:\n\nDoor ClubComm te gebruiken ga je akkoord met de clubregels en gedragscode. Misbruik van de app kan leiden tot uitsluiting.');
       };
 
       // Close modal when clicking outside
@@ -989,7 +989,7 @@
       
       const link = document.createElement('a');
       link.href = URL.createObjectURL(dataBlob);
-      link.download = 'btv-connect-data.json';
+      link.download = 'clubcomm-data.json';
       link.click();
 
       NotificationManager.show('Je gegevens zijn gedownload als JSON bestand', 'success');

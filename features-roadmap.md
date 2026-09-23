@@ -1,5 +1,5 @@
 
-# BTV Connect - Feature Roadmap
+# ClubComm - Feature Roadmap
 
 ## 🚀 Innovatieve Features voor de Toekomst
 
