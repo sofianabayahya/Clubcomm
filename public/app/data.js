@@ -59,10 +59,10 @@
   ];
 
   CC.VAKANTIES_NOORD = [
-    { id: 'herfst', naam: 'Herfstvakantie', van: '2026-10-10', tot: '2026-10-18', trainen: false },
+    { id: 'herfst', naam: 'Herfstvakantie', van: '2026-10-11', tot: '2026-10-18', trainen: false },
     { id: 'kerst', naam: 'Kerstvakantie', van: '2026-12-19', tot: '2027-01-03', trainen: false },
-    { id: 'voorjaar', naam: 'Voorjaarsvakantie', van: '2027-02-20', tot: '2027-02-28', trainen: true },
-    { id: 'mei', naam: 'Meivakantie', van: '2027-05-01', tot: '2027-05-09', trainen: false },
+    { id: 'voorjaar', naam: 'Voorjaarsvakantie', van: '2027-02-21', tot: '2027-02-28', trainen: false },
+    { id: 'mei', naam: 'Meivakantie', van: '2027-04-26', tot: '2027-05-09', trainen: false },
     { id: 'zomer', naam: 'Zomervakantie', van: '2027-07-10', tot: '2027-08-22', trainen: false },
   ];
 
@@ -79,10 +79,11 @@
       v: 1, gen: today,
       club: {
         id: 'scb', naam: 'SC Buitenveldert', regio: 'Noord',
-        seizoen: { start: '2026-08-24', eind: '2027-06-27' },
+        seizoen: { start: '2026-08-19', eind: '2027-06-05' },
         vakanties: CC.VAKANTIES_NOORD.map((v) => ({ ...v })),
-        stops: [{ id: 'winter', naam: 'Winterstop competitie', van: '2027-01-04', tot: '2027-01-17', trainen: true }],
-        blokGrenzen: ['herfst', 'kerst'],
+        stops: [{ id: 'goedevrijdag', naam: 'Goede Vrijdag (club dicht)', van: '2027-03-26', tot: '2027-03-26', trainen: false }],
+        // Fases volgen de competitie-indeling (jaarplanning onderbouw 2026/27). De kaartenteller begint per fase opnieuw.
+        fasen: [{ nr: 1, van: '2026-08-19' }, { nr: 2, van: '2026-10-31' }, { nr: 3, van: '2027-01-20' }, { nr: 4, van: '2027-04-02' }],
         inst: { deadlineTraining: 3, deadlineWedstrijd: 24, geel: 3, oranje: 5, zones: { breedte: { groen: 80, oranje: 75 }, selectie: { groen: 90, oranje: 85 } }, oproepDagen: 2, waarschuwing: CC.WAARSCHUWING },
         modules: { vervoer: true, taken: true, speeltijd: true, beoordeling: true, beloningen: false },
         labels: { hjo: 'HJO', coordinator: 'Coördinator' }, coordinatorAan: false,
@@ -123,7 +124,7 @@
     });
     const T = (n) => S.teams.find((t) => t.id === n);
     T('O10-1').trainerId = mark.id; T('O10-1').teamleiderId = linda.id;
-    T('O10-1').rooster.forEach((r) => { r.tijd = '17:30'; r.eind = '18:45'; });
+    T('O10-1').rooster.forEach((r) => { r.tijd = '17:00'; r.eind = '18:00'; r.veld = 'Veld 2'; });
 
     // Staf voor overige teams (sommige ontbreken bewust)
     S.teams.forEach((t) => {
@@ -169,7 +170,7 @@
           if (vak && !vak.trainen) return;
           S.acts.push({ id: id('a'), teamId: t.id, soort: 'training', datum: d, tijd: r.tijd, eind: r.eind, veld: r.veld, afgelast: d === afgelastDag });
         });
-        if (dow === 6 && !(vak && vak.id !== 'voorjaar' && vak.id !== 'winter') && !(vak && vak.id === 'winter')) {
+        if (dow === 6 && !vak) {
           const a = ageMin(t.cat);
           const uur = a <= 10 ? 8 + (ti % 3) : a <= 13 ? 10 + (ti % 3) : 12 + (ti % 3);
           const tijd = `${pad(uur)}:${ti % 2 ? '30' : '00'}`;
@@ -206,7 +207,7 @@
       const p0 = basis[a.teamId] || 0.07;
       const rec = {};
       spelers.forEach((pl, k) => {
-        const f = p0 * (k % 7 === 3 ? 2.4 : k % 3 === 0 ? 1.1 : 0.75);
+        const f = p0 * (k % 7 === 3 ? 1.8 : k % 3 === 0 ? 1.0 : 0.7);
         const r = R();
         if (r < f) {
           const r2 = R();
@@ -351,14 +352,10 @@
     return { code: 'verwacht' };
   };
 
-  // blokken
+  // fases (competitie-indeling van de club; kaarten en zones tellen per fase)
   M.blokken = (S) => {
-    const grenzen = S.club.blokGrenzen.map((g) => S.club.vakanties.find((v) => v.id === g)).filter(Boolean).sort((a, b) => a.van.localeCompare(b.van));
-    const res = []; let van = S.club.seizoen.start;
-    grenzen.forEach((g, k) => { res.push({ nr: k + 1, naam: k === 0 ? 'Blok 1 · seizoensstart' : `Blok ${k + 1}`, van, tot: addDays(g.van, -1) }); van = addDays(g.tot, 1); });
-    res.push({ nr: res.length + 1, naam: `Blok ${res.length + 1}`, van, tot: S.club.seizoen.eind });
-    res.forEach((b, k) => { if (k > 0) b.naam = `Blok ${k + 1} · na ${grenzen[k - 1].naam.toLowerCase()}`; });
-    return res;
+    const f = [...S.club.fasen].sort((a, b) => a.van.localeCompare(b.van));
+    return f.map((x, k) => ({ nr: k + 1, naam: `Fase ${k + 1}`, van: x.van, tot: k < f.length - 1 ? addDays(f[k + 1].van, -1) : S.club.seizoen.eind }));
   };
   M.blok = (S, datum) => M.blokken(S).find((b) => datum >= b.van && datum <= b.tot) || M.blokken(S)[0];
   M.periode = (S, soort) => soort === 'seizoen' ? { van: S.club.seizoen.start, tot: vandaag() } : { van: M.blok(S, vandaag()).van, tot: vandaag() };
@@ -443,11 +440,27 @@
         if (kort.length >= 3 && !lang) res.push({ soort: 'patroon', niveau: 'oranje', teamId: tid, spelerId: pl.id, tekst: `${naam}: ${kort.length}× ziek/blessure in 4 weken`, sub: `Waarvan ${kort.filter((f) => f.reden === 'Blessure').length}× blessure. Eerst vragen hoe het gaat?` });
         // kaartendrempel
         const k = M.kaarten(S, pl);
-        const gesprek = S.gesprekken.find((g) => g.spelerId === pl.id && g.datum >= M.blok(S, vandaag()).van);
-        if (k.drempel && !gesprek) res.push({ soort: 'gesprek', niveau: 'rood', teamId: tid, spelerId: pl.id, tekst: `${naam}: gesprek voorstellen?`, sub: `Drempel bereikt: ${k.geel} punten geel, ${k.oranje} oranje dit blok` });
+        // Opschaling (Besluit 15): herinneren → waarschuwen (kaart) → bellen/appen → persoonlijk gesprek HJO → clubbesluit
+        const stap = M.stap(S, pl, k);
+        if (stap) res.push({ ...stap, teamId: tid, spelerId: pl.id, tekst: `${naam}: ${stap.tekst}` });
       });
     });
     return res;
+  };
+
+  // Opschalingsstap na de drempel. Contact = gebeld/geappt; gesprek = persoonlijk gesprek met de HJO.
+  M.stap = (S, pl, k) => {
+    k = k || M.kaarten(S, pl);
+    if (!k.drempel) return null;
+    const fase = M.blok(S, vandaag());
+    const vast = S.gesprekken.filter((g) => g.spelerId === pl.id && g.datum >= fase.van).sort((a, b) => a.datum.localeCompare(b.datum));
+    const contact = vast.filter((g) => g.soort !== 'gesprek').pop();
+    const gesprek = vast.filter((g) => g.soort === 'gesprek').pop();
+    const naDatum = (d) => k.ev.filter((e) => !e.waarschuwing && e.act.datum > d);
+    const hjo = S.club.labels.hjo;
+    if (gesprek) return naDatum(gesprek.datum).length ? { soort: 'clubbesluit', niveau: 'rood', stap: 5, tekst: 'opnieuw na het gesprek', sub: `Tweede gele kaart na het gesprek. Volgens het clubbeleid kan de club afscheid nemen; dat beslist de ${hjo} met het bestuur.` } : null;
+    if (contact) return naDatum(contact.datum).length ? { soort: 'gesprekHjo', niveau: 'rood', stap: 4, tekst: `persoonlijk gesprek met de ${hjo}`, sub: `Na het telefonisch contact (${CC.date.kort(contact.datum)}) opnieuw: ${naDatum(contact.datum).map((e) => e.wat.toLowerCase()).join(', ')}.` } : null;
+    return { soort: 'bellen', niveau: 'rood', stap: 3, tekst: 'bel of app de ouders', sub: `Drempel bereikt: ${k.geel} punten geel, ${k.oranje} oranje deze fase. Trainer of ${hjo} neemt contact op.` };
   };
 
   // ontvangers en ongelezen
@@ -460,15 +473,17 @@
     const t = M.team(S, act.teamId); const c = CC.categorie(t.cat);
     const beschikbaar = M.spelers(S, act.teamId).filter((pl) => ['verwacht', 'aanwezig', 'telaat'].includes(M.status(S, pl, act).code));
     const min = {}; beschikbaar.forEach((p) => { min[p.id] = S.speeltijd.min[p.id] || 0; });
+    // Clubbeleid: geen vaste keeper → elke week een andere speler de hele wedstrijd op doel.
+    const kb = S.speeltijd.keeper || (S.speeltijd.keeper = {});
+    const keeper = [...beschikbaar].sort((x, y) => (kb[x.id] || 0) - (kb[y.id] || 0) || min[x.id] - min[y.id] || x.voornaam.localeCompare(y.voornaam))[0];
+    const veld = beschikbaar.filter((p) => p !== keeper);
     const blokken = []; const keepers = [];
     for (let b = 0; b < c.blokken; b++) {
-      const volgorde = [...beschikbaar].sort((x, y) => min[x.id] - min[y.id] || x.voornaam.localeCompare(y.voornaam));
-      const inBlok = volgorde.slice(0, Math.min(c.opVeld, volgorde.length));
-      const kandidaat = inBlok.filter((p) => !keepers.includes(p.id));
-      const keeper = (kandidaat[b % Math.max(1, kandidaat.length)] || inBlok[0]);
-      keepers.push(keeper && keeper.id);
+      const volgorde = [...veld].sort((x, y) => min[x.id] - min[y.id] || x.voornaam.localeCompare(y.voornaam));
+      const inBlok = volgorde.slice(0, Math.min(c.opVeld - 1, volgorde.length));
       inBlok.forEach((p) => { min[p.id] += c.blokMin; });
-      blokken.push(inBlok.map((p) => p.id));
+      keepers.push(keeper && keeper.id);
+      blokken.push([keeper, ...inBlok].filter(Boolean).map((p) => p.id));
     }
     return { blokken, keepers, huidig: 0, bevestigd: false, blokMin: c.blokMin, vorm: c.vorm };
   };

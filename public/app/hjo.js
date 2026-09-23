@@ -11,7 +11,7 @@
     const zonderStaf = S.teams.filter((t) => !t.trainerId || !t.teamleiderId);
     const laat = S.aanm.filter((x) => x.status === 'open' && Date.now() - new Date(x.tijd) > 48 * 3600e3);
     const wijz = S.wijzigingen.filter((w) => Date.now() - new Date(w.tijd) < 7 * 864e5);
-    return { sig, teams: groep('team'), spelers: sig.filter((s) => s.soort === 'speler' && s.niveau === 'rood'), gesprek: groep('gesprek'), patroon: groep('patroon'), lang: groep('lang'), zonderStaf, laat, wijz };
+    return { sig, teams: groep('team'), spelers: sig.filter((s) => s.soort === 'speler' && s.niveau === 'rood'), bellen: groep('bellen'), gesprek: [...groep('clubbesluit'), ...groep('gesprekHjo')], patroon: groep('patroon'), lang: groep('lang'), zonderStaf, laat, wijz };
   };
 
   CC.rollen.hjo = {
@@ -27,7 +27,8 @@
         const rijen = [];
         if (A.teams.length) { const rood = A.teams.filter((s) => s.niveau === 'rood').length; rijen.push(h.rij({ ic: 'shield', titel: `${A.teams.length} teams in de ${rood ? 'rode' : 'oranje'}${rood && rood < A.teams.length ? ' of oranje' : ''} zone`, sub: A.teams.sort((a) => (a.niveau === 'rood' ? -1 : 1)).map((s) => esc(s.tekst.split(':')[0]) + ' ' + s.tekst.match(/\d+%/)[0]).join(', '), kleur: rood ? 'rood' : 'oranje', act: 'tab', attrs: 'data-tab="inzicht"' })); }
         if (A.spelers.length) rijen.push(h.rij({ ic: 'triangle-alert', titel: `${A.spelers.length} spelers in de rode zone`, sub: A.spelers.slice(0, 3).map((s) => esc(s.tekst.split(':')[0])).join(', ') + (A.spelers.length > 3 ? '…' : ''), kleur: 'rood', act: 'open', attrs: 'data-view="signalen" data-soort="speler"' }));
-        if (A.gesprek.length) rijen.push(h.rij({ ic: 'message-circle', titel: `${A.gesprek.length} ${A.gesprek.length === 1 ? 'gesprek' : 'gesprekken'} voorgesteld`, sub: 'Kaartendrempel bereikt', kleur: 'oranje', act: 'open', attrs: 'data-view="signalen" data-soort="gesprek"' }));
+        A.gesprek.forEach((s) => rijen.unshift(CC.stapRij(S, s)));
+        if (A.bellen.length) rijen.push(h.rij({ ic: 'phone', titel: `${A.bellen.length} ${A.bellen.length === 1 ? 'ouder' : 'ouders'} bellen of appen`, sub: `Drempel bereikt; trainer of ${esc(S.club.labels.hjo)} neemt contact op`, kleur: 'oranje', act: 'open', attrs: 'data-view="signalen" data-soort="bellen"' }));
         if (A.zonderStaf.length === 1) { const t = A.zonderStaf[0]; rijen.push(h.rij({ ic: 'user-cog', titel: `${t.naam} zonder ${!t.trainerId && !t.teamleiderId ? 'trainer en teamleider' : !t.trainerId ? 'trainer' : 'teamleider'}`, sub: 'Staf toewijzen', kleur: 'oranje', act: 'open', attrs: `data-view="team" data-team="${t.id}"` })); }
         else if (A.zonderStaf.length) rijen.push(h.rij({ ic: 'user-cog', titel: `${A.zonderStaf.length} teams zonder complete staf`, sub: A.zonderStaf.map((t) => `${t.naam} (${!t.trainerId && !t.teamleiderId ? 'trainer + teamleider' : !t.trainerId ? 'trainer' : 'teamleider'})`).join(', '), kleur: 'oranje', act: 'open', attrs: 'data-view="zonderStaf"' }));
         if (A.laat.length) rijen.push(h.rij({ ic: 'hourglass', titel: `${A.laat.length} aanmelding${A.laat.length > 1 ? 'en' : ''} langer dan 48 uur open`, sub: A.laat.map((x) => `${esc(x.kindVoor)} (${esc(x.teamId)})`).join(', '), kleur: 'oranje', act: 'open', attrs: 'data-view="aanmeldingenHjo"' }));
@@ -81,7 +82,7 @@
         const kleuren = { Ziek: '#8B5CF6', Blessure: '#EF4444', 'School/huiswerk': '#0EA5E9', Vakantie: '#14B8A6', Familie: '#F59E0B', 'Andere sport': '#EC4899', Overig: '#94A3B8', 'Niet afgemeld': '#111827' };
         const kleur = (r) => kleuren[r] || '#64748B';
         const berichten = S.teams.map((t) => { const ms = S.msgs.filter((m) => m.soort === 'nieuws' && m.ontvangers.length && (!m.gepland || new Date(m.gepland) <= new Date()) && (m.bereik === t.id || m.bereik === 'Hele club')); const o = new Set(M.oudersVan(S, t.id)); let tot = 0, gel = 0; ms.forEach((m) => { m.ontvangers.forEach((p) => { if (o.has(p)) { tot++; if (m.gelezen.includes(p)) gel++; } }); }); return { t, pct: tot ? Math.round((100 * gel) / tot) : null }; });
-        return `${h.seg('inzPer', [['blok', 'Dit blok'], ['seizoen', 'Heel seizoen']], 'blok')}
+        return `${h.seg('inzPer', [['blok', 'Deze fase'], ['seizoen', 'Heel seizoen']], 'blok')}
           ${h.sectie('1. Waar gaat het goed of mis?')}
           <div class="staven">${rij.map(({ t, s }) => { const z = M.zone(S, s.pct, t.id); return `<button class="staaf" data-act="open" data-view="team" data-team="${t.id}"><span>${esc(t.naam)}</span><i class="${z}" style="--w:${s.pct || 0}%"></i><b>${s.pct ?? '–'}%</b></button>`; }).join('')}</div>
           <p class="zacht klein">Laagste bovenaan. Groen/oranje/rood volgens de zones per teamtype (breedte ${S.club.inst.zones.breedte.groen}/${S.club.inst.zones.breedte.oranje}, selectie ${S.club.inst.zones.selectie.groen}/${S.club.inst.zones.selectie.oranje}).</p>
@@ -91,7 +92,7 @@
           <p class="zacht klein">Aantal keer afwezig per reden, voor de 10 teams met de laagste aanwezigheid. Zo zie je of 80% komt door blessures of door andere sporten.</p>
           ${h.sectie('3. Hoe ontwikkelt het zich?')}
           <div class="lijst compact">${rij.slice(0, 8).map(({ t, s }) => { const d = (s.pct ?? 0) - t.vorig; return h.rij({ ic: h.stip(M.zone(S, s.pct, t.id)), titel: esc(t.naam), sub: `Vorig seizoen ${t.vorig}% → nu ${s.pct ?? '–'}%`, rechts: `<b class="${d < -3 ? 'rood-tekst' : d > 3 ? 'groen-tekst' : 'zacht'}">${d > 0 ? '▲' : d < 0 ? '▼' : '='} ${Math.abs(d)}</b>` }); }).join('')}</div>
-          <p class="zacht klein">Na elk blok komt er een punt bij, zodat je de trend per blok ziet.</p>
+          <p class="zacht klein">Na elke fase komt er een punt bij, zodat je de trend per fase ziet.</p>
           ${h.sectie('Gelezen berichten per team')}
           <div class="staven">${berichten.sort((a, b) => (a.pct ?? 101) - (b.pct ?? 101)).slice(0, 6).map(({ t, pct }) => `<div class="staaf"><span>${esc(t.naam)}</span><i class="${pct >= 75 ? 'groen' : pct >= 50 ? 'oranje' : 'rood'}" style="--w:${pct || 0}%"></i><b>${pct ?? '–'}%</b></div>`).join('')}</div>
           <button class="knop vol" data-act="exportPdf">${icon('file-down')}Exporteren naar PDF</button>`;
@@ -218,8 +219,8 @@
   CC.on('afwijkingOk', (f) => { const S = CC.S(); const t = M.team(S, f.dataset.team); if (f.dt.value === '') delete t.afwijking.deadlineTraining; else t.afwijking.deadlineTraining = Number(f.dt.value); CC.save(); CC.render(); CC.toast('Opgeslagen'); });
 
   CC.views.signalen = (S, p) => {
-    const A = aandacht(S); const lijst = { speler: A.spelers, gesprek: A.gesprek, lang: A.lang, patroon: A.patroon }[p.soort] || [];
-    const titel = { speler: 'Spelers in de rode zone', gesprek: 'Voorgestelde gesprekken', lang: 'Langdurig afwezig', patroon: 'Opvallende patronen' }[p.soort];
+    const A = aandacht(S); const lijst = { speler: A.spelers, gesprek: A.gesprek, bellen: A.bellen, lang: A.lang, patroon: A.patroon }[p.soort] || [];
+    const titel = { speler: 'Spelers in de rode zone', gesprek: 'Gesprekken', bellen: 'Bellen of appen', lang: 'Langdurig afwezig', patroon: 'Opvallende patronen' }[p.soort];
     return { titel, html: `<p class="zacht klein">ClubComm signaleert; de teamleider of trainer beslist over een gesprek. Jij kunt meekijken en helpen.</p><div class="lijst">${lijst.map((s) => h.rij({ ic: h.stip(s.niveau === 'info' ? 'grijs' : s.niveau), titel: esc(s.tekst), sub: `${esc(s.teamId)} · ${esc(s.sub || '')}`, act: 'open', attrs: `data-view="speler" data-id="${s.spelerId}"` })).join('') || h.leeg('Niets')}</div>` };
   };
   CC.views.zonderStaf = (S) => ({ titel: 'Teams zonder complete staf', html: `<div class="lijst">${S.teams.filter((t) => !t.trainerId || !t.teamleiderId).map((t) => h.rij({ ic: 'user-cog', titel: esc(t.naam), sub: `Ontbreekt: ${!t.trainerId && !t.teamleiderId ? 'trainer en teamleider' : !t.trainerId ? 'trainer' : 'teamleider'}`, act: 'open', attrs: `data-view="team" data-team="${t.id}"` })).join('') || h.leeg('Alle teams zijn compleet')}</div><p class="zacht klein">Zonder teamleider neemt de trainer het over (goedkeuren, regelen). Zonder beide komt het bij jou (Ontwerpprincipe 7).</p>` });
@@ -252,15 +253,14 @@
           <div class="lijst">${c.vakanties.map((v) => `<label class="rij schakel"><span class="rij-tekst"><b>${esc(v.naam)}</b><small>${D.kort(v.van)} – ${D.kort(v.tot)}</small></span><span class="klein zacht">${v.trainen ? 'wel trainen' : 'geen training'}</span><input type="checkbox" ${v.trainen ? 'checked' : ''} data-change="vakTrainen" data-id="${v.id}"><i></i></label>`).join('')}</div>
           ${h.sectie('Eigen stops')}<div class="lijst">${c.stops.map((v) => h.rij({ ic: 'calendar-x', titel: esc(v.naam), sub: `${D.kort(v.van)} – ${D.kort(v.tot)} · ${v.trainen ? 'wel trainen, geen wedstrijden' : 'geen training'}` })).join('')}</div>
           <button class="knop licht vol" data-act="stopToevoegen">${icon('plus')}Stop toevoegen (bijv. clubtoernooi)</button>
-          ${h.sectie('Blokken voor kaarten')}<p class="zacht klein">Na elk blok begint de kaartenteller opnieuw (Besluit 5). Kies bij welke vakanties een nieuw blok begint.</p>
-          <div class="lijst">${c.vakanties.filter((v) => v.id !== 'zomer').map((v) => `<label class="rij schakel"><span class="rij-tekst"><b>Nieuw blok na ${esc(v.naam.toLowerCase())}</b></span><input type="checkbox" ${c.blokGrenzen.includes(v.id) ? 'checked' : ''} data-change="blokGrens" data-id="${v.id}"><i></i></label>`).join('')}</div>
-          <p class="klein">${blokken.map((b) => `<b>${esc(b.naam)}</b>: ${D.kort(b.van)} – ${D.kort(b.tot)}`).join('<br>')}</p>`;
+          ${h.sectie('Fases')}<p class="zacht klein">Het seizoen is verdeeld in fases, zoals de competitie. Bij elke nieuwe fase begint de kaartenteller opnieuw (Besluit 15).</p>
+          <div class="lijst">${blokken.map((b, k) => `<div class="rij"><span class="rij-tekst"><b>${esc(b.naam)}</b><small>tot ${D.kort(b.tot)} · ${Math.round((D.dagen(b.van, b.tot) + 1) / 7)} weken</small></span><input type="date" class="kort" value="${b.van}" data-change="faseDatum" data-k="${k}" aria-label="Start ${esc(b.naam)}" ${k === 0 ? 'disabled' : ''}></div>`).join('')}</div>`;
       },
       regels(S) {
         const i = S.club.inst;
         return `<form data-submit="regelsOk" class="codeform">
           ${h.sectie('Afmelden')}<div class="kaartje"><div class="twee"><div><label for="r-dt">Training: uur van tevoren</label><input id="r-dt" name="dt" type="number" min="0" max="48" value="${i.deadlineTraining}"></div><div><label for="r-dw">Wedstrijd: uur van tevoren</label><input id="r-dw" name="dw" type="number" min="0" max="96" value="${i.deadlineWedstrijd}"></div></div></div>
-          ${h.sectie('Kaarten')}<div class="kaartje"><div class="twee"><div><label for="r-g">Gesprek voorstellen bij … punten geel</label><input id="r-g" name="g" type="number" min="1" max="10" value="${i.geel}"></div><div><label for="r-o">… of … keer oranje</label><input id="r-o" name="o" type="number" min="1" max="15" value="${i.oranje}"></div></div><p class="zacht klein">Eerste keer per blok: alleen een vriendelijke herinnering.</p></div>
+          ${h.sectie('Kaarten')}<div class="kaartje"><div class="twee"><div><label for="r-g">Bellen/appen bij … punten geel</label><input id="r-g" name="g" type="number" min="1" max="10" value="${i.geel}"></div><div><label for="r-o">… of … keer oranje</label><input id="r-o" name="o" type="number" min="1" max="15" value="${i.oranje}"></div></div><p class="zacht klein">Eerste keer per fase: alleen een vriendelijke herinnering. Opschaling: herinneren → kaart → bellen/appen (trainer of ${esc(S.club.labels.hjo)}) → persoonlijk gesprek ${esc(S.club.labels.hjo)}.</p></div>
           ${h.sectie('Zones aanwezigheid')}<div class="kaartje"><p class="klein"><b>Breedte</b></p><div class="twee"><div><label for="r-bg">Groen vanaf %</label><input id="r-bg" name="bg" type="number" value="${i.zones.breedte.groen}"></div><div><label for="r-bo">Oranje vanaf %</label><input id="r-bo" name="bo" type="number" value="${i.zones.breedte.oranje}"></div></div>
             <p class="klein"><b>Selectie</b></p><div class="twee"><div><label for="r-sg">Groen vanaf %</label><input id="r-sg" name="sg" type="number" value="${i.zones.selectie.groen}"></div><div><label for="r-so">Oranje vanaf %</label><input id="r-so" name="so" type="number" value="${i.zones.selectie.oranje}"></div></div></div>
           ${h.sectie('Automatische oproepen')}<div class="kaartje"><label for="r-op">Oproep voor open taken en vervoer: … dagen van tevoren</label><input id="r-op" name="op" type="number" min="1" max="7" value="${i.oproepDagen}"></div>
@@ -284,7 +284,7 @@
   };
   CC.on('seizoenOk', (f) => { const S = CC.S(); S.club.seizoen = { start: f.s.value, eind: f.e.value }; S.club.regio = f.r.value; S.club.ingericht.seizoen = true; CC.save(); CC.render(); CC.toast(f.r.value !== 'Noord' ? 'Opgeslagen. In versie 2 worden de vakanties van deze regio opgehaald.' : 'Opgeslagen'); });
   CC.on('vakTrainen', (el) => { const S = CC.S(); S.club.vakanties.find((v) => v.id === el.dataset.id).trainen = el.checked; S.club.ingericht.vakanties = true; CC.save(); CC.render(); });
-  CC.on('blokGrens', (el) => { const S = CC.S(); const g = S.club.blokGrenzen; if (el.checked) g.push(el.dataset.id); else g.splice(g.indexOf(el.dataset.id), 1); CC.save(); CC.render(); });
+  CC.on('faseDatum', (el) => { const S = CC.S(); const f = [...S.club.fasen].sort((a, b) => a.van.localeCompare(b.van)); f[Number(el.dataset.k)].van = el.value; S.club.fasen = f; CC.save(); CC.render(); CC.toast('Fase aangepast'); });
   CC.on('stopToevoegen', () => CC.sheet('Stop toevoegen', `<form data-submit="stopOk" class="codeform"><label for="so-n">Naam</label><input id="so-n" name="n" required placeholder="Bijv. Clubtoernooi"><div class="twee"><div><label for="so-v">Van</label><input id="so-v" name="v" type="date" required></div><div><label for="so-t">Tot</label><input id="so-t" name="t" type="date" required></div></div><label class="vink"><input type="checkbox" name="tr"> Wel trainen</label><button class="knop">Toevoegen</button></form>`));
   CC.on('stopOk', (f) => { const S = CC.S(); S.club.stops.push({ id: 's' + Date.now(), naam: f.n.value, van: f.v.value, tot: f.t.value, trainen: f.tr.checked }); CC.save(); CC.closeSheet(); CC.render(); });
   CC.on('regelsOk', (f) => {

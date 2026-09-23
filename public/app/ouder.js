@@ -33,13 +33,13 @@
         const gv = geenVervoer(S, pl); if (gv) acties.push(h.rij({ ic: 'car', titel: `Nog geen vervoer voor ${esc(pl.voornaam)}`, sub: `${D.relatief(gv.datum)} uit bij ${esc(gv.tegen)}`, act: 'tab', attrs: 'data-tab="vervoer"', kleur: 'oranje' }));
         const ot = S.club.modules.taken ? openTaken(S, pl.teamId) : [];
         if (ot.length) { const a = M.act(S, ot[0].actId); acties.push(h.rij({ ic: 'hand-helping', titel: `${ot.length} ${ot.length === 1 ? 'taak' : 'taken'} nog open`, sub: `${esc(ot[0].soort)} · ${D.relatief(a.datum)}. Help je mee?`, act: 'tab', attrs: 'data-tab="taken"' })); }
-        const statusregel = st.pct == null ? 'Nog geen activiteiten dit blok' : `Aanwezig ${st.pct}%${st.telaat ? ` · ${st.telaat}× te laat` : ''}`;
+        const statusregel = st.pct == null ? 'Nog geen activiteiten deze fase' : `Aanwezig ${st.pct}%${st.telaat ? ` · ${st.telaat}× te laat` : ''}`;
         const compliment = z === 'groen' && !k.geel && !k.oranje && !st.telaat ? `<span class="compliment">${icon('star')}Betrouwbare speler!</span>` : '';
         return `
           ${lang ? `<div class="info">${icon('hospital')}<span><b>${esc(pl.voornaam)} is langdurig afwezig</b> tot ongeveer ${D.kort(lang.tot)}. Je hoeft niet per training af te melden.</span></div>` : ''}
           ${h.sectie('Komt eraan')}
           <div class="acts">${komend.map((a) => CC.actKaart(S, a, pl)).join('') || h.leeg('Geen activiteiten gepland', 'calendar')}</div>
-          <button class="status ${z}" data-act="uitlegKaarten"><span>${h.stip(z)}${statusregel} <small>dit blok</small></span><span>${h.kaartjes(k)}${compliment}${icon('circle-help', 'zacht')}</span></button>
+          <button class="status ${z}" data-act="uitlegKaarten"><span>${h.stip(z)}${statusregel} <small>deze fase</small></span><span>${h.kaartjes(k)}${compliment}${icon('circle-help', 'zacht')}</span></button>
           ${acties.length ? `${h.sectie('Actie nodig')}<div class="lijst">${acties.join('')}</div>` : ''}`;
       },
       planning(S) {

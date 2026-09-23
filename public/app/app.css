@@ -250,6 +250,7 @@ button.staaf:hover { background: var(--vlak2); }
 /* Formulieren */
 .codeform { display: flex; flex-direction: column; gap: 6px; }
 label { font-size: 13px; font-weight: 600; color: var(--zacht); }
+input.kort:not(#x) { width: auto; max-width: 160px; min-height: 36px; font-size: 14px; }
 input:not([type=checkbox]):not([type=radio]):not([type=file]), select, textarea { width: 100%; min-height: 44px; border: 1px solid var(--lijn); border-radius: 10px; padding: 8px 12px; background: var(--vlak); font-size: 16px; }
 textarea { min-height: 90px; resize: vertical; }
 select.kies { font-weight: 600; }

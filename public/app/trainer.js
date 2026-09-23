@@ -67,7 +67,7 @@
     let body;
     if (!sch) {
       const n = M.spelers(S, teamId).filter((pl) => M.status(S, pl, a).code === 'verwacht').length;
-      body = `<div class="kaartje"><p><b>${n} spelers</b> komen · ${c.vorm} · ${c.blokken} blokken van ${c.blokMin} minuten.</p><p class="zacht klein">De app verdeelt de speeltijd eerlijk. Spelers met minder minuten dit seizoen krijgen voorrang, en de keepers rouleren.</p><button class="knop vol" data-act="maakSchema" data-id="${a.id}">${icon('sparkles')}Maak wisselschema</button></div>`;
+      body = `<div class="kaartje"><p><b>${n} spelers</b> komen · ${c.vorm} · ${c.blokken} blokken van ${c.blokMin} minuten.</p><p class="zacht klein">De app verdeelt de speeltijd eerlijk: spelers met minder minuten dit seizoen krijgen voorrang. De keeper staat de hele wedstrijd op doel en wisselt per week (clubbeleid).</p><button class="knop vol" data-act="maakSchema" data-id="${a.id}">${icon('sparkles')}Maak wisselschema</button></div>`;
     } else if (!sch.bevestigd) {
       const cur = sch.huidig;
       const inNu = sch.blokken[cur] || []; const vorig = cur > 0 ? sch.blokken[cur - 1] : [];
@@ -87,7 +87,7 @@
   CC.on('maakSchema', (el) => { const S = CC.S(); S.speeltijd.schema[el.dataset.id] = M.maakSchema(S, M.act(S, el.dataset.id)); CC.save(); CC.render(); });
   CC.on('nieuwSchema', (el) => { const S = CC.S(); delete S.speeltijd.schema[el.dataset.id]; CC.save(); CC.render(); });
   CC.on('volgendBlok', (el) => { const S = CC.S(); S.speeltijd.schema[el.dataset.id].huidig++; CC.save(); CC.render(); });
-  CC.on('bevestigSchema', (el) => { const S = CC.S(); const sch = S.speeltijd.schema[el.dataset.id]; sch.blokken.forEach((b) => b.forEach((id) => { S.speeltijd.min[id] = (S.speeltijd.min[id] || 0) + sch.blokMin; })); sch.bevestigd = true; CC.save(); CC.render(); CC.toast('Speeltijd bijgewerkt'); });
+  CC.on('bevestigSchema', (el) => { const S = CC.S(); const sch = S.speeltijd.schema[el.dataset.id]; const kb = S.speeltijd.keeper || (S.speeltijd.keeper = {}); if (sch.keepers[0]) kb[sch.keepers[0]] = (kb[sch.keepers[0]] || 0) + 1; sch.blokken.forEach((b) => b.forEach((id) => { S.speeltijd.min[id] = (S.speeltijd.min[id] || 0) + sch.blokMin; })); sch.bevestigd = true; CC.save(); CC.render(); CC.toast('Speeltijd bijgewerkt'); });
 
   // ---------- Beoordelen (per speler of per vaardigheid) ----------
   CC.views.beoordelen = (S, p) => {
@@ -113,14 +113,21 @@
   CC.on('zetScore', (el) => { const S = CC.S(); const b = S.beoord[el.dataset.id] || (S.beoord[el.dataset.id] = { fase: 'Fase 1 (sep–okt)', scores: {} }); b.scores[el.dataset.v] = Number(el.dataset.s); CC.save(); CC.render(); });
 
   // ---------- Trainer ----------
-  const signaalRij = (S, s) => h.rij({ ic: s.soort === 'gesprek' ? 'message-circle' : s.soort === 'lang' ? 'hospital' : s.soort === 'patroon' ? 'repeat' : 'triangle-alert', titel: esc(s.tekst), sub: esc(s.sub || ''), kleur: s.niveau === 'info' ? '' : s.niveau, act: s.spelerId ? 'open' : '', attrs: s.spelerId ? `data-view="speler" data-id="${s.spelerId}"` : '' });
+  // Opschalingsstap als rij; bij "bellen" direct bel- en WhatsApp-knop naar de ouder
+  CC.stapRij = (S, s) => {
+    const pl = M.speler(S, s.spelerId); const o = pl && M.persoon(S, pl.ouders[0]);
+    const knoppen = s.soort === 'bellen' && o ? `<a class="icoonknop blauw" href="tel:${o.tel}" aria-label="Bel ${esc(o.naam)}">${icon('phone')}</a><a class="icoonknop groen" href="https://wa.me/31${o.tel.slice(1)}" target="_blank" rel="noopener" aria-label="WhatsApp ${esc(o.naam)}">${icon('message-circle')}</a>` : '';
+    return h.rij({ ic: s.soort === 'bellen' ? 'phone' : 'users', titel: esc(s.tekst), sub: esc(s.sub), kleur: 'rood', act: 'open', attrs: `data-view="speler" data-id="${s.spelerId}"`, rechts: knoppen, chevron: !knoppen });
+  };
+  const signaalRij = (S, s) => h.rij({ ic: ['bellen'].includes(s.soort) ? 'phone' : ['gesprekHjo', 'clubbesluit'].includes(s.soort) ? 'users' : s.soort === 'gesprek' ? 'message-circle' : s.soort === 'lang' ? 'hospital' : s.soort === 'patroon' ? 'repeat' : 'triangle-alert', titel: esc(s.tekst), sub: esc(s.sub || ''), kleur: s.niveau === 'info' ? '' : s.niveau, act: s.spelerId ? 'open' : '', attrs: s.spelerId ? `data-view="speler" data-id="${s.spelerId}"` : '' });
   CC.signaalRij = signaalRij;
   // Home toont alleen voorgestelde gesprekken los; overige signalen in één regel (weinig scrollen)
   CC.signaalRegels = (S, tid, zonderLang) => {
     const sig = M.signalen(S, [tid], false).filter((s) => !(zonderLang && s.soort === 'lang'));
-    const gesprek = sig.filter((s) => s.soort === 'gesprek'); const rest = sig.filter((s) => s.soort !== 'gesprek');
+    const stappen = ['bellen', 'gesprekHjo', 'clubbesluit'];
+    const gesprek = sig.filter((s) => stappen.includes(s.soort)); const rest = sig.filter((s) => !stappen.includes(s.soort));
     const namen = [...new Set(rest.map((s) => s.tekst.split(':')[0].split(' ')[0]))];
-    return [...gesprek.map((s) => signaalRij(S, s)), rest.length ? h.rij({ ic: 'triangle-alert', titel: `${namen.length} ${namen.length === 1 ? 'speler vraagt' : 'spelers vragen'} aandacht`, sub: namen.join(', '), kleur: 'oranje', act: 'open', attrs: `data-view="teamSignalen" data-team="${tid}"` }) : ''].filter(Boolean);
+    return [...gesprek.map((s) => CC.stapRij(S, s)), rest.length ? h.rij({ ic: 'triangle-alert', titel: `${namen.length} ${namen.length === 1 ? 'speler vraagt' : 'spelers vragen'} aandacht`, sub: namen.join(', '), kleur: 'oranje', act: 'open', attrs: `data-view="teamSignalen" data-team="${tid}"` }) : ''].filter(Boolean);
   };
   CC.views.teamSignalen = (S, p) => ({ titel: 'Signalen', html: `<p class="zacht klein">ClubComm signaleert; jij en de ${M.team(S, p.team).teamleiderId ? 'teamleider' : 'trainer'} beslissen of een gesprek nodig is.</p><div class="lijst">${M.signalen(S, [p.team], false).map((s) => signaalRij(S, s)).join('') || h.leeg('Geen signalen')}</div>` });
 
@@ -177,7 +184,7 @@
     const per = M.periode(S, h.segVal('ovPer', 'blok'));
     const rijen = M.spelers(S, tid).map((pl) => ({ pl, st: M.stats(S, pl, per), k: M.kaarten(S, pl) })).sort((a, b) => (a.st.pct ?? 101) - (b.st.pct ?? 101));
     const ts = M.teamStats(S, tid, per);
-    return `${h.seg('ovPer', [['blok', 'Dit blok'], ['seizoen', 'Heel seizoen']], 'blok')}
+    return `${h.seg('ovPer', [['blok', 'Deze fase'], ['seizoen', 'Heel seizoen']], 'blok')}
       <p class="zacht klein">Team: <b>${ts.pct ?? '–'}%</b> aanwezig · ${M.team(S, tid).type} · laagste bovenaan</p>
       <div class="lijst">${rijen.map(({ pl, st, k }) => h.rij({ ic: h.stip(M.zone(S, st.pct, tid)), titel: esc(M.naam(S, pl)), sub: `${st.pct == null ? '–' : st.pct + '%'} aanwezig${st.telaat ? ` · ${st.telaat}× te laat` : ''}${st.lang ? ' · langdurig' : ''}`, rechts: h.kaartjes(k), act: 'open', attrs: `data-view="speler" data-id="${pl.id}"` })).join('')}</div>`;
   };

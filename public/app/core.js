@@ -301,7 +301,7 @@
     CC.sheet('Kind uitschrijven', `<form data-submit="uitschrijvenOk" class="codeform">
       <label for="us-k">Welk kind?</label><select id="us-k" name="k">${kids.map((k) => `<option value="${k.id}">${esc(M.naam(S, k))} (${esc(k.teamId)})</option>`).join('')}</select>
       <label for="us-r">Reden</label><select id="us-r" name="r"><option>Stopt met voetbal</option><option>Naar een andere club</option><option>Verhuisd</option><option>Anders</option></select>
-      <div class="info oranje">${icon('info')}<span>Hiermee verdwijnt je kind uit het team en uit ClubComm. De trainer, teamleider en ${esc(S.club.labels.hjo)} krijgen een melding. <b>Let op:</b> het lidmaatschap en de contributie zeg je apart op bij de ledenadministratie van de club.</span></div>
+      <div class="info oranje">${icon('info')}<span>Hiermee verdwijnt je kind uit het team en uit ClubComm. De trainer, teamleider en ${esc(S.club.labels.hjo)} krijgen een melding. <b>Let op:</b> het lidmaatschap zeg je apart op bij de ledenadministratie (vóór 31 mei, per mail). De contributie loopt tot het einde van het seizoen.</span></div>
       <button class="knop rood vol">Uitschrijven</button></form>`);
   });
   CC.on('uitschrijvenOk', (f) => {
@@ -526,8 +526,15 @@
     <div class="uitleg"><span class="kaart oranje">1</span><span><b>Oranje: te laat gekomen</b><small>De trainer zet je kind op "te laat".</small></span></div>
     <div class="uitleg"><span class="kaart geel">1</span><span><b>Geel: te laat afgemeld</b><small>Afgemeld na de afmeldtermijn (training ${i.deadlineTraining} uur, wedstrijd ${i.deadlineWedstrijd} uur van tevoren).</small></span></div>
     <div class="uitleg"><span class="kaart geel">2</span><span><b>Geel (2 punten): niet afgemeld én niet gekomen</b><small>Dit is voor het team het lastigst.</small></span></div>
-    <p><b>Eerste keer per blok</b> krijg je alleen een vriendelijke herinnering, geen kaart. Na een vakantieblok begint de teller opnieuw.</p>
-    <p>Bij ${i.geel} punten geel of ${i.oranje} keer oranje stelt de teamleider misschien een gesprek voor: <i>"Kunnen we je ergens mee helpen?"</i> Dat beslist altijd een mens.</p>`); });
+    <h3 class="klein-kop">Zo gaat het stap voor stap (per fase)</h3>
+    <ol class="stappen">
+      <li><b>Herinneren:</b> de eerste keer krijg je een vriendelijke herinnering, zonder kaart.</li>
+      <li><b>Waarschuwen:</b> daarna volgt een kaart, met uitleg.</li>
+      <li><b>Bellen of appen:</b> bij ${i.geel} punten geel of ${i.oranje}× oranje neemt de trainer of de ${esc(S.club.labels.hjo)} contact met je op: <i>"Kunnen we je ergens mee helpen?"</i></li>
+      <li><b>Persoonlijk gesprek</b> met de ${esc(S.club.labels.hjo)} als het daarna opnieuw gebeurt.</li>
+      <li>Gebeurt het na dat gesprek nog eens, dan volgt een tweede gele kaart en kan de club besluiten afscheid te nemen. Dat beslissen altijd mensen, nooit de app.</li>
+    </ol>
+    <p class="zacht klein">Het seizoen heeft 4 fases (volgens de competitie). Bij een nieuwe fase begint de teller opnieuw; de geschiedenis blijft zichtbaar.</p>`); });
 
   // ---------- Speler-detail (trainer, teamleider, HJO) ----------
   CC.views.speler = (S, p) => {
@@ -541,21 +548,30 @@
     const gespr = S.gesprekken.filter((g) => g.spelerId === pl.id);
     return {
       titel: M.naam(S, pl),
-      html: `${h.seg('spPer', [['blok', 'Dit blok'], ['seizoen', 'Heel seizoen']], 'blok')}
+      html: `${h.seg('spPer', [['blok', 'Deze fase'], ['seizoen', 'Heel seizoen']], 'blok')}
       <div class="cijfers"><div class="cijfer ${z}"><b>${st.pct == null ? '–' : st.pct + '%'}</b><small>aanwezig</small></div><div class="cijfer"><b>${st.telaat}×</b><small>te laat</small></div><div class="cijfer"><b>${k.geel}/${k.oranje}</b><small>geel / oranje</small></div></div>
       ${lang ? `<div class="info">${icon('hospital')}<span><b>Langdurig afwezig</b> (${esc(lang.reden.toLowerCase())}) tot ongeveer ${D.kort(lang.tot)}. ${esc(lang.opm || '')}</span></div>` : ''}
       ${Object.keys(st.redenen).length ? `${h.sectie('Redenen van afwezigheid')}<div class="balkjes">${Object.entries(st.redenen).sort((a, b) => b[1] - a[1]).map(([r, n]) => `<div class="balkje"><span>${esc(r)}</span><i style="--w:${(100 * n) / st.afwezig}%"></i><b>${n}</b></div>`).join('')}</div>` : ''}
       ${h.sectie('Geschiedenis')}<div class="lijst compact">${st.lijst.slice().reverse().map(({ act, st: s }) => h.rij({ ic: h.datumBlok(act), titel: h.actTitel(S, act), sub: s.afm && s.afm.opm ? esc(s.afm.opm) : '', rechts: h.chip(s) + (s.laat ? '<span class="chip geel mini">te laat afgemeld</span>' : '') })).join('') || h.leeg('Nog geen activiteiten')}</div>
-      ${k.ev.length ? `${h.sectie('Kaarten en waarschuwingen dit blok')}<div class="lijst compact">${k.ev.map((e) => h.rij({ ic: e.waarschuwing ? 'mail' : `<span class="kaart ${e.soort}">${e.punten}</span>`, titel: e.waarschuwing ? `Vriendelijke herinnering · ${e.wat.toLowerCase()}` : e.wat, sub: D.kort(e.act.datum) })).join('')}</div>` : ''}
+      ${k.ev.length ? `${h.sectie('Kaarten en waarschuwingen deze fase')}<div class="lijst compact">${k.ev.map((e) => h.rij({ ic: e.waarschuwing ? 'mail' : `<span class="kaart ${e.soort}">${e.punten}</span>`, titel: e.waarschuwing ? `Vriendelijke herinnering · ${e.wat.toLowerCase()}` : e.wat, sub: D.kort(e.act.datum) })).join('')}</div>` : ''}
       ${rol !== 'ouder' ? `${h.sectie('Ouders')}<div class="lijst">${ouders.map((o) => h.rij({ ic: h.avatar(o.naam), titel: esc(o.naam), sub: esc(o.email), rechts: `<a class="icoonknop groen" href="https://wa.me/31${o.tel.slice(1)}" target="_blank" rel="noopener" aria-label="WhatsApp ${esc(o.naam)}">${icon('message-circle')}</a>` })).join('')}</div>` : ''}
       ${rol !== 'ouder' && b ? `${h.sectie(`Beoordeling · ${esc(b.fase)}`)}<div class="scores">${Object.entries(b.scores).map(([v, s]) => `<span>${esc(v)} ${CC.scoreTekst(t, s)}</span>`).join('')}</div>` : ''}
-      ${rol !== 'ouder' ? `${h.sectie('Gesprekken')}${gespr.map((g) => h.rij({ ic: 'message-circle', titel: `${D.kort(g.datum)} · ${esc(M.persoon(S, g.door).naam)}`, sub: esc(g.notitie) })).join('') || '<p class="zacht klein">Nog geen gesprekken vastgelegd.</p>'}
-        <div class="knoppen"><button class="knop licht" data-act="gesprekVastleggen" data-id="${pl.id}">${icon('pencil')}Gesprek vastleggen</button><button class="knop licht" data-act="langdurigSheet" data-id="${pl.id}">${icon('hospital')}Langdurig afwezig</button></div>` : ''}`,
+      ${rol !== 'ouder' ? `${h.sectie('Gesprekken')}${gespr.map((g) => h.rij({ ic: g.soort === 'gesprek' ? 'users' : g.soort === 'geappt' ? 'message-circle' : 'phone', titel: `${D.kort(g.datum)} · ${g.soort === 'gesprek' ? 'Persoonlijk gesprek' : g.soort === 'geappt' ? 'Geappt' : 'Gebeld'} · ${esc((M.persoon(S, g.door) || { naam: '' }).naam)}`, sub: esc(g.notitie) + (g.afspraak ? `<br><b>Afspraak:</b> ${esc(g.afspraak)}` : '') })).join('') || '<p class="zacht klein">Nog geen gesprekken vastgelegd.</p>'}
+        <div class="knoppen"><button class="knop licht" data-act="gesprekVastleggen" data-id="${pl.id}">${icon('phone')}Contact vastleggen</button><button class="knop licht" data-act="langdurigSheet" data-id="${pl.id}">${icon('hospital')}Langdurig afwezig</button></div>` : ''}`,
     };
   };
   CC.scoreTekst = (t, s) => { const c = CC.categorie(t.cat); if (c.schaal === 'smiley' || c.schaal === 'mini') return ['', '<span class="smiley">😐</span>', '<span class="smiley">🙂</span>', '<span class="smiley">😃</span>'][s] || '–'; return `<b>${s}</b>/5`; };
-  CC.on('gesprekVastleggen', (el) => CC.sheet('Gesprek vastleggen', `<form data-submit="gesprekOpslaan" data-id="${el.dataset.id}" class="codeform"><label for="g-d">Datum</label><input id="g-d" name="d" type="date" value="${D.vandaag()}"><label for="g-n">Korte notitie</label><textarea id="g-n" name="n" rows="3" required placeholder="Bijv. zwemles op vrijdag; afgesproken dat Jesse vanaf november weer komt."></textarea><button class="knop">Opslaan</button><p class="zacht klein">Alleen trainer, teamleider en ${esc(S.club.labels.hjo)} zien dit.</p></form>`));
-  CC.on('gesprekOpslaan', (f) => { S.gesprekken.push({ id: 'g' + Date.now(), spelerId: f.dataset.id, datum: f.d.value, door: CC.me().id, notitie: f.n.value }); CC.save(); CC.closeSheet(); CC.render(); CC.toast('Gesprek vastgelegd'); });
+  CC.on('gesprekVastleggen', (el) => {
+    const pl = M.speler(S, el.dataset.id); const stap = M.stap(S, pl); const hjo = CC.rol().rol === 'hjo';
+    const std = stap && stap.soort === 'gesprekHjo' ? 'gesprek' : 'gebeld';
+    CC.sheet('Contact vastleggen', `<form data-submit="gesprekOpslaan" data-id="${pl.id}" class="codeform">
+      <label for="g-s">Soort contact</label><select id="g-s" name="s"><option value="gebeld" ${std === 'gebeld' ? 'selected' : ''}>Gebeld</option><option value="geappt">Geappt</option><option value="gesprek" ${std === 'gesprek' ? 'selected' : ''}>Persoonlijk gesprek${hjo ? '' : ` (${esc(S.club.labels.hjo)})`}</option></select>
+      <label for="g-d">Datum</label><input id="g-d" name="d" type="date" value="${D.vandaag()}">
+      <label for="g-n">Wat speelt er?</label><textarea id="g-n" name="n" rows="3" required placeholder="Bijv. zwemles op vrijdag; oma ziek."></textarea>
+      <label for="g-a">Afspraak (mag leeg)</label><input id="g-a" name="a" placeholder="Bijv. altijd via de app afmelden, ook als het laat wordt">
+      <button class="knop">Opslaan</button><p class="zacht klein">Alleen trainer, teamleider en ${esc(S.club.labels.hjo)} zien dit. Gebeurt het daarna opnieuw, dan stelt de app de volgende stap voor.</p></form>`);
+  });
+  CC.on('gesprekOpslaan', (f) => { S.gesprekken.push({ id: 'g' + Date.now(), spelerId: f.dataset.id, soort: f.s.value, datum: f.d.value, door: CC.me().id, notitie: f.n.value, afspraak: f.a.value }); CC.save(); CC.closeSheet(); CC.render(); CC.toast('Vastgelegd'); });
 
   // Langdurig afwezig melden (Besluit 10) — ouder of teamleider
   CC.on('langdurigSheet', (el) => {
