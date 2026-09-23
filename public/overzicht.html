@@ -772,8 +772,7 @@
       if (absences.length === 0 && yellowCards.length === 0) {
         container.innerHTML = `
           <div style="background: white; border-radius: 12px; padding: 2rem; text-align: center; color: #64748b; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-            <i class="fas fa-calendar-check" style="font-size: 2rem<previous_generation>
-; margin-bottom: 1rem; opacity: 0.5;"></i>
+            <i class="fas fa-calendar-check" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
             <p>Geen afmeldingen gevonden. Goed bezig!</p>
           </div>
         `;
@@ -850,6 +849,10 @@
           ` : ''}
         </div>
       `;
+    }
+
+    function showConfirmation(message) {
+      NotificationManager.show(message, 'success');
     }
 
     function showAllHistory() {

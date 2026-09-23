@@ -497,7 +497,7 @@
 
         // Skipt weekends waarin geen wedstrijd is (bijv. winter-/kerststop)
         const isWinterBreak = matchDate.getMonth() === 11 && matchDate.getDate() > 23; // Na 23 december
-        const isNewYearBreak = matchDate.getMonth() === 0 && match      .getDate() < 6; // Voor 6 januari
+        const isNewYearBreak = matchDate.getMonth() === 0 && matchDate.getDate() < 6; // Voor 6 januari
 
         if (!isWinterBreak && !isNewYearBreak) {
           matches.push({
