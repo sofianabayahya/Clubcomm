@@ -123,6 +123,12 @@ Een Sportlink-export bevat: voornaam, achternaam, geboortedatum, **bondsnummer**
 - **Intrekken** kan zolang de afmelddeadline niet voorbij is (kind is toch beter).
 - De afmelddeadline is **instelbaar** (zie Besluit 6), niet vast in de code.
 
+### Aanwezigheid en kaarten (overzicht voor de ouder)
+- Eén scherm, bereikbaar via de **statusregel op Home** en via **Planning**; keuze **deze fase / heel seizoen**.
+- Toont: aanwezigheid %, trainingen en wedstrijden die geweest zijn, en per soort: **te laat gekomen** (oranje), **te laat afgemeld** (geel, 1 punt), **niet afgemeld en niet gekomen** (geel, 2 punten), met hoeveel daarvan alleen een herinnering waren.
+- Plus de stand deze fase, de **volgende stap** in de opschaling (Besluit 15) en de **afmeldgeschiedenis** met reden.
+- Dezelfde cijfers als de HJO ziet (transparant, geen verrassingen).
+
 ### Planning
 - **Komende 2 weken als lijst** + knop "Verder vooruit". **Geen maandkalender** (onleesbaar op de telefoon).
 - Per activiteit: dag, tijd, veld; bij wedstrijden ook verzameltijd, thuis/uit, tegenstander, adres (link naar kaart) en eventueel tenue. Afmeldingen zijn direct zichtbaar.
@@ -133,6 +139,7 @@ Een Sportlink-export bevat: voornaam, achternaam, geboortedatum, **bondsnummer**
 ### Vervoer
 - Hangt aan een **uitwedstrijd**: vervoer aanbieden (aantal plekken) of een plek vragen.
 - De chauffeur vult in hoeveel **andere** kinderen hij kan meenemen (zonder zichzelf en het eigen kind). Het eigen kind staat erbij als "(eigen kind)" maar kost geen plek.
+- Wie meerijdt kiest: **alleen het kind (1 plek)** of **kind + ouder (2 plekken)**; de app toont alleen wat nog past.
 - Teamleider ziet in één oogopslag welke kinderen nog geen vervoer hebben.
 - Melding op Home alleen als voor jouw kind nog niets geregeld is.
 

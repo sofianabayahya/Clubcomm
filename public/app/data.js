@@ -76,7 +76,7 @@
     let uid = 1; const id = (p) => `${p}${uid++}`;
 
     const S = {
-      v: 5, gen: today,
+      v: 6, gen: today,
       club: {
         id: 'scb', naam: 'SC Buitenveldert', regio: 'Noord',
         seizoen: { start: '2026-08-19', eind: '2027-06-05' },
@@ -267,7 +267,7 @@
       afmMaken(pO('Sem'), w1, 'Familie', 72);
       w1.begeleiderId = linda.id;
       const ouder = (n) => pO(n).ouders[0];
-      S.vervoer[w1.id] = { aanbod: [{ personId: linda.id, plekken: 3 }, { personId: ouder('Lucas'), plekken: 2 }], plek: {} };
+      S.vervoer[w1.id] = { aanbod: [{ personId: linda.id, plekken: 3 }, { personId: ouder('Lucas'), plekken: 3 }], plek: {} };
       S.vervoer[w1.id].plek[pO('Noah').id] = linda.id; S.vervoer[w1.id].plek[pO('Levi').id] = linda.id; S.vervoer[w1.id].plek[pO('Mees').id] = linda.id;
       S.vervoer[w1.id].plek[pO('Lucas').id] = ouder('Lucas'); S.vervoer[w1.id].plek[pO('Adam').id] = ouder('Lucas');
       S.taken.push({ id: id('t'), actId: w1.id, soort: 'Spelbegeleider', personId: null });
@@ -466,7 +466,8 @@
 
   // Vervoer: aangeboden plekken zijn voor ándere kinderen; het eigen kind van de chauffeur telt niet mee
   M.meerijders = (S, v, chauffeurId) => Object.entries(v.plek).filter(([, d]) => d === chauffeurId).map(([s]) => M.speler(S, s)).filter(Boolean);
-  M.vrijePlekken = (S, v, x) => x.plekken - M.meerijders(S, v, x.personId).filter((pl) => !pl.ouders.includes(x.personId)).length;
+  M.vrijePlekken = (S, v, x) => { const mee = M.meerijders(S, v, x.personId).filter((pl) => !pl.ouders.includes(x.personId)); return x.plekken - mee.length - mee.filter((pl) => (v.ouderMee || {})[pl.id]).length; };
+  M.meerijderNaam = (S, v, pl, chauffeurId) => pl.voornaam + (pl.ouders.includes(chauffeurId) ? ' (eigen kind)' : (v.ouderMee || {})[pl.id] ? ' + ouder' : '');
 
   // ontvangers en ongelezen
   M.zichtbaar = (S, m, pid) => m.ontvangers.includes(pid) && (!m.gepland || new Date(m.gepland) <= new Date());

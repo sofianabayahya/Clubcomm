@@ -42,7 +42,7 @@
           ${lang ? `<div class="info">${icon('hospital')}<span><b>${esc(pl.voornaam)} is langdurig afwezig</b> tot ongeveer ${D.kort(lang.tot)}. Je hoeft niet per training af te melden.</span></div>` : ''}
           ${h.sectie('Komt eraan')}
           <div class="acts">${komend.map((a) => CC.actKaart(S, a, pl)).join('') || h.leeg('Geen activiteiten gepland', 'calendar')}</div>
-          <button class="status ${z}" data-act="uitlegKaarten"><span>${h.stip(z)}${statusregel} <small>deze fase</small></span><span>${h.kaartjes(k)}${compliment}${icon('circle-help', 'zacht')}</span></button>
+          <button class="status ${z}" data-act="open" data-view="kindOverzicht" data-id="${pl.id}"><span>${h.stip(z)}${statusregel} <small>deze fase</small></span><span>${h.kaartjes(k)}${compliment}${icon('circle-help', 'zacht')}</span></button>
           ${acties.length ? `${h.sectie('Actie nodig')}<div class="lijst">${acties.join('')}</div>` : ''}`;
       },
       planning(S) {
@@ -54,15 +54,10 @@
         const dezeWeek = week({ datum: D.vandaag() });
         const groepen = {}; acts.forEach((a) => { (groepen[week(a)] = groepen[week(a)] || []).push(a); });
         const st = M.stats(S, pl, M.periode(S, 'seizoen'));
-        const telSoort = (s) => st.lijst.filter((x) => x.act.soort === s).length;
-        const hist = S.afm.filter((f) => f.spelerId === pl.id).map((f) => ({ f, a: M.act(S, f.actId) })).filter((x) => x.a && x.a.datum < D.vandaag()).sort((x, y) => y.a.datum.localeCompare(x.a.datum));
         const agenda = CC.agendaRij && !CC.me().agendaAbonnement ? `<div class="lijst">${CC.agendaRij()}</div>` : '';
         return `${agenda}${Object.entries(groepen).map(([w, as]) => `${h.sectie(w === dezeWeek ? 'Deze week' : w === D.addDays(dezeWeek, 7) ? 'Volgende week' : `Week van ${D.kort(w)}`)}<div class="lijst">${as.map((a) => h.rij({ ic: h.datumBlok(a), titel: h.actTitel(S, a), sub: h.actSub(S, a), rechts: h.chip(M.status(S, pl, a)), act: 'open', attrs: `data-view="activiteit" data-id="${a.id}"` })).join('')}</div>`).join('')}
           ${!ver ? `<button class="knop licht vol" data-act="seg" data-key="verder" data-val="1">${icon('calendar-days')}Verder vooruit kijken</button>` : ''}
-          <details class="uitklap"><summary>${icon('chart-column')}Seizoensoverzicht</summary>
-            <div class="cijfers"><div class="cijfer ${M.zone(S, st.pct, pl.teamId)}"><b>${st.pct == null ? '–' : st.pct + '%'}</b><small>aanwezig</small></div><div class="cijfer"><b>${telSoort('training')}</b><small>trainingen geweest</small></div><div class="cijfer"><b>${telSoort('wedstrijd')}</b><small>wedstrijden geweest</small></div></div>
-            <p class="zacht klein">Vanaf de seizoensstart tot vandaag: ${st.aanwezig} van de ${st.totaal} keer aanwezig (te laat telt als aanwezig). Alleen activiteiten die al geweest zijn en waarbij de trainer de aanwezigheid heeft opgenomen; afgelaste trainingen tellen niet mee.</p></details>
-          <details class="uitklap"><summary>${icon('clock')}Afmeldgeschiedenis</summary><div class="lijst compact">${hist.map(({ f, a }) => h.rij({ ic: h.reden(f.reden), titel: `${D.kort(a.datum)} · ${h.actTitel(S, a)}`, sub: `Reden: ${esc(f.reden)}${f.opm ? ' · ' + esc(f.opm) : ''}`, rechts: M.teLaatAfgemeld(S, f, a) ? '<span class="chip geel mini">te laat afgemeld</span>' : '<span class="chip groen mini">op tijd afgemeld</span>' })).join('') || '<p class="zacht klein">Nog geen afmeldingen.</p>'}</div></details>
+          <div class="lijst">${h.rij({ ic: 'chart-column', titel: 'Aanwezigheid en kaarten', sub: `Deze fase ${M.stats(S, pl, M.periode(S, 'blok')).pct ?? '–'}% · seizoen ${st.pct ?? '–'}% · afmeldgeschiedenis`, act: 'open', attrs: `data-view="kindOverzicht" data-id="${pl.id}"` })}</div>
           <button class="knop licht vol" data-act="periodeSheet" data-id="${pl.id}">${icon('plane')}Afwezig voor een periode (bijv. vakantie)</button>
           <button class="knop licht vol" data-act="langdurigSheet" data-id="${pl.id}">${icon('hospital')}Langer geblesseerd of ziek? Meld het één keer</button>`;
       },
@@ -78,9 +73,9 @@
           const vrij = (x) => M.vrijePlekken(S, v, x);
           return `<article class="kaartje">
             <div class="kaart-kop">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>Verzamelen ${a.verzamel} · ${esc(a.adres)}</small></div></div>
-            ${!komt ? `<p class="zacht">${esc(pl.voornaam)} is afgemeld voor deze wedstrijd.</p>` : bij ? `<div class="info groen">${icon('circle-check')}<span>${esc(pl.voornaam)} rijdt mee met <b>${esc(bij.naam)}</b>.</span></div>` : `<div class="info oranje">${icon('car')}<span>${esc(pl.voornaam)} heeft nog geen vervoer.</span></div>`}
+            ${!komt ? `<p class="zacht">${esc(pl.voornaam)} is afgemeld voor deze wedstrijd.</p>` : bij ? `<div class="info groen">${icon('circle-check')}<span>${esc(pl.voornaam)}${(v.ouderMee || {})[pl.id] ? ' en jij rijden' : ' rijdt'} mee met <b>${esc(bij.naam)}</b>.</span></div>` : `<div class="info oranje">${icon('car')}<span>${esc(pl.voornaam)} heeft nog geen vervoer.</span></div>`}
             <h4>Wie rijdt er?</h4>
-            ${v.aanbod.map((x) => { const p = M.persoon(S, x.personId); return h.rij({ ic: h.avatar(p.naam), titel: esc(p.naam), sub: `${vrij(x)} van ${x.plekken} ${x.plekken === 1 ? 'plek' : 'plekken'} vrij · ${M.meerijders(S, v, x.personId).map((m) => esc(m.voornaam) + (m.ouders.includes(x.personId) ? ' (eigen kind)' : '')).join(', ') || 'nog niemand'}`, rechts: komt && !bij && vrij(x) > 0 && x.personId !== me.id ? `<button class="knop klein" data-act="meerijden" data-a="${a.id}" data-p="${x.personId}">Meerijden</button>` : '' }); }).join('') || '<p class="zacht klein">Nog niemand.</p>'}
+            ${v.aanbod.map((x) => { const p = M.persoon(S, x.personId); return h.rij({ ic: h.avatar(p.naam), titel: esc(p.naam), sub: `${vrij(x)} van ${x.plekken} ${x.plekken === 1 ? 'plek' : 'plekken'} vrij · ${M.meerijders(S, v, x.personId).map((m) => esc(M.meerijderNaam(S, v, m, x.personId))).join(', ') || 'nog niemand'}`, rechts: komt && !bij && vrij(x) > 0 && x.personId !== me.id ? `<button class="knop klein" data-act="meerijden" data-a="${a.id}" data-p="${x.personId}">Meerijden</button>` : '' }); }).join('') || '<p class="zacht klein">Nog niemand.</p>'}
             <div class="knoppen">${mijnAanbod ? `<button class="knop licht" data-act="aanbodStop" data-a="${a.id}">${icon('x')}Ik rijd toch niet</button>` : `<button class="knop" data-act="ikRijd" data-a="${a.id}">${icon('car')}Ik rijd</button>`}${bij ? `<button class="knop licht" data-act="afmeldenRit" data-a="${a.id}">Plek opgeven</button>` : ''}</div>
           </article>`;
         }).join('');
@@ -98,6 +93,30 @@
           }).join('')}</div>`).join('') || h.leeg('Geen taken de komende weken', 'list-checks')}`;
       },
     },
+  };
+
+  // Overzicht voor de ouder: aanwezigheid en kaarten per fase of seizoen (dezelfde cijfers als de HJO ziet)
+  CC.views.kindOverzicht = (S, p) => {
+    const pl = M.speler(S, p.id); const soort = h.segVal('kindPer', 'blok'); const per = M.periode(S, soort);
+    const st = M.stats(S, pl, per); const z = M.zone(S, st.pct, pl.teamId);
+    const fases = soort === 'blok' ? [M.blok(S, D.vandaag())] : M.blokken(S).filter((b) => b.van <= D.vandaag());
+    const ev = fases.flatMap((b) => M.kaarten(S, pl, b).ev);
+    const tel = (f) => ev.filter(f).length;
+    const k = M.kaarten(S, pl); const stap = M.stap(S, pl, k);
+    const telSoort = (s) => st.lijst.filter((x) => x.act.soort === s).length;
+    const hist = S.afm.filter((f) => f.spelerId === pl.id).map((f) => ({ f, a: M.act(S, f.actId) })).filter((x) => x.a && x.a.datum < D.vandaag() && x.a.datum >= per.van).sort((x, y) => y.a.datum.localeCompare(x.a.datum));
+    const regel = (kaart, titel, f, uitleg) => { const n = tel(f); const her = tel((e) => f(e) && e.waarschuwing); return h.rij({ ic: kaart, titel, sub: `${uitleg}${her ? ` · waarvan ${her}× alleen een herinnering` : ''}`, rechts: `<b>${n}×</b>` }); };
+    return { titel: 'Aanwezigheid en kaarten', html: `${h.seg('kindPer', [['blok', `Deze fase (${M.blok(S, D.vandaag()).naam.toLowerCase()})`], ['seizoen', 'Heel seizoen']], 'blok')}
+      <div class="cijfers"><div class="cijfer ${z}"><b>${st.pct == null ? '–' : st.pct + '%'}</b><small>aanwezig</small></div><div class="cijfer"><b>${telSoort('training')}</b><small>trainingen geweest</small></div><div class="cijfer"><b>${telSoort('wedstrijd')}</b><small>wedstrijden geweest</small></div></div>
+      <p class="zacht klein">${st.aanwezig} van de ${st.totaal} keer aanwezig (te laat telt als aanwezig). Alleen activiteiten die al geweest zijn en waarbij de aanwezigheid is opgenomen; afgelaste trainingen tellen niet mee.</p>
+      ${h.sectie('Kaarten')}<div class="lijst compact">
+        ${regel('<span class="kaart oranje">1</span>', 'Te laat gekomen', (e) => e.soort === 'oranje', 'Oranje kaart')}
+        ${regel('<span class="kaart geel">1</span>', 'Te laat afgemeld', (e) => e.soort === 'geel' && e.punten === 1, 'Gele kaart, 1 punt')}
+        ${regel('<span class="kaart geel">2</span>', 'Niet afgemeld en niet gekomen', (e) => e.soort === 'geel' && e.punten === 2, 'Gele kaart, 2 punten')}
+      </div>
+      <p class="zacht klein">De eerste keer per fase (per kleur) is alleen een vriendelijke herinnering, zonder punten. Stand deze fase: ${k.geel} ${k.geel === 1 ? 'punt' : 'punten'} geel, ${k.oranje}× oranje.${stap ? ` <b>Volgende stap: ${stap.soort === 'bellen' ? 'de trainer of HJO neemt contact met je op' : stap.soort === 'gesprekHjo' ? 'een persoonlijk gesprek met de HJO' : 'de club bespreekt het vervolg'}.</b>` : ''}</p>
+      <button class="linkknop" data-act="uitlegKaarten">Wat betekenen de kaarten?</button>
+      ${h.sectie('Afmeldgeschiedenis')}<div class="lijst compact">${hist.map(({ f, a }) => h.rij({ ic: h.reden(f.reden), titel: `${D.kort(a.datum)} · ${h.actTitel(S, a)}`, sub: `Reden: ${esc(f.reden)}${f.opm ? ' · ' + esc(f.opm) : ''}`, rechts: M.teLaatAfgemeld(S, f, a) ? '<span class="chip geel mini">te laat afgemeld</span>' : '<span class="chip groen mini">op tijd afgemeld</span>' })).join('') || '<p class="zacht klein">Geen afmeldingen in deze periode.</p>'}</div>` };
   };
 
   // Activiteitkaart met afmeldknop (Home)
@@ -152,8 +171,19 @@
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Dank je wel! De teamleider ziet dat je rijdt.');
   });
   CC.on('aanbodStop', (el) => { const S = CC.S(); const v = S.vervoer[el.dataset.a]; const me = CC.me(); v.aanbod = v.aanbod.filter((x) => x.personId !== me.id); Object.keys(v.plek).forEach((k) => { if (v.plek[k] === me.id) delete v.plek[k]; }); CC.save(); CC.render(); CC.toast('Aanbod ingetrokken; de meerijders krijgen bericht'); });
-  CC.on('meerijden', (el) => { const S = CC.S(); S.vervoer[el.dataset.a].plek[CC.kind().id] = el.dataset.p; CC.save(); CC.render(); CC.toast('Geregeld! De chauffeur krijgt een melding.'); });
-  CC.on('afmeldenRit', (el) => { const S = CC.S(); delete S.vervoer[el.dataset.a].plek[CC.kind().id]; CC.save(); CC.render(); });
+  CC.on('meerijden', (el) => {
+    const S = CC.S(); const v = S.vervoer[el.dataset.a]; const x = v.aanbod.find((y) => y.personId === el.dataset.p); const pl = CC.kind(); const chauffeur = M.persoon(S, x.personId);
+    const vrij = M.vrijePlekken(S, v, x);
+    CC.sheet(`Meerijden met ${chauffeur.naam.split(' ')[0]}`, `<p class="zacht">${vrij} ${vrij === 1 ? 'plek' : 'plekken'} vrij.</p><div class="knoppen kolom">
+      <button class="knop" data-act="meerijdenOk" data-a="${el.dataset.a}" data-p="${x.personId}" data-o="0">Alleen ${esc(pl.voornaam)} (1 plek)</button>
+      ${vrij >= 2 ? `<button class="knop licht" data-act="meerijdenOk" data-a="${el.dataset.a}" data-p="${x.personId}" data-o="1">${esc(pl.voornaam)} en ik (2 plekken)</button>` : '<p class="zacht klein">Voor kind + ouder is er niet genoeg plek.</p>'}</div>`);
+  });
+  CC.on('meerijdenOk', (el) => {
+    const S = CC.S(); const v = S.vervoer[el.dataset.a]; const pl = CC.kind();
+    v.plek[pl.id] = el.dataset.p; v.ouderMee = v.ouderMee || {}; if (el.dataset.o === '1') v.ouderMee[pl.id] = true; else delete v.ouderMee[pl.id];
+    CC.save(); CC.closeSheet(); CC.render(); CC.toast('Geregeld! De chauffeur krijgt een melding.');
+  });
+  CC.on('afmeldenRit', (el) => { const S = CC.S(); const v = S.vervoer[el.dataset.a]; delete v.plek[CC.kind().id]; if (v.ouderMee) delete v.ouderMee[CC.kind().id]; CC.save(); CC.render(); });
 
   // Taken
   CC.on('ikDoeHet', (el) => {

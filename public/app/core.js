@@ -17,7 +17,7 @@
     del(k) { try { localStorage.removeItem(k); } catch (e) { /* */ } },
   };
   let S = store.get(KEY, null);
-  if (!S || S.gen !== D.vandaag() || S.v !== 5) { S = CC.generate(); store.set(KEY, S); }
+  if (!S || S.gen !== D.vandaag() || S.v !== 6) { S = CC.generate(); store.set(KEY, S); }
   CC.S = () => S;
   CC.save = () => store.set(KEY, S);
   CC.reset = () => { S = CC.generate(); store.set(KEY, S); };
