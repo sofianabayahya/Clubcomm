@@ -305,6 +305,7 @@ Niet elke trainer gaat mee naar wedstrijden. Per wedstrijd is er daarom een **we
 - **Achter het profiel** zit alles wat je zelden nodig hebt: gegevens, kinderen, meldingen, taal, rolwisselaar, privacy en **uitloggen**.
 - **Uitloggen staat alleen in het profiel**, niet op elke pagina (ouders blijven ingelogd; voorkomt per ongeluk uitloggen).
 - Geen "Terug"-links naar de inlogpagina.
+- **Rode bolletjes met aantal** op de knop Berichten en op andere knoppen waar iets nieuws is (bijv. "2 aanmeldingen" bij Team). Pushmelding op de telefoon en het aantal ook op het **app-icoon** op het beginscherm. Geldt voor alle rollen.
 
 ### Namen
 - De woorden **"dashboard" en "portaal" komen niet in de app** (dat zijn bouwerswoorden). De gebruiker opent gewoon "ClubComm".
@@ -402,6 +403,109 @@ Het systeem vergelijkt de **speler met zijn eigen team**:
 
 ---
 
+## Besluit 11 — HJO-portaal
+
+**Rol:** de HJO **bewaakt en stuurt**, maar voert niet uit. Teamleiders en trainers doen het dagelijkse werk; de HJO ziet signalen, grijpt in waar nodig en maakt clubbrede keuzes.
+
+### Navigatie
+**Home · Teams · Planning · Inzicht · Berichten**
+
+### Home — "wat vraagt vandaag mijn aandacht?"
+- Club in één regel: aantal teams · aantal spelers · clubbrede aanwezigheid.
+- **Aandacht nodig** (vervangt "Recente meldingen"): de signalen uit de andere rollen, elk klikbaar:
+  - teams in oranje/rode zone (Besluit 10)
+  - spelers in rode zone
+  - voorgestelde gesprekken (kaartendrempel, Besluit 5)
+  - teams zonder teamleider of trainer
+  - aanmeldingen die langer dan 48 uur openstaan (Besluit 2)
+  - planningswijzigingen door trainers (niet-urgent, Besluit 7)
+  - meldingen langdurig afwezig (Besluit 10)
+- Niets aan de hand → *"Niets bijzonders 👍"*.
+- **Twee snelle acties** (clubbreed en tijdgevoelig): **Bericht aan club** en **Afgelasten** (vorst, veld afgekeurd: één tik → alle betrokken teams krijgen direct een pushmelding).
+
+### Teams
+- Lijst van alle teams met stipjes: aanwezigheid (zone), staf compleet, openstaande aanmeldingen.
+- **Tik op een team** → alles van dat team op één plek: staf toewijzen (trainer, teamleider — uit bestaande ouders of extern), spelers, rooster, statistieken, teamtype (breedte/selectie), afwijkende instellingen.
+- **Alle spelers:** zoeken in de hele club, speler naar ander team verplaatsen, speler handmatig toevoegen.
+- **Rollen koppelen** (bijv. ouder + trainer op één account) vanaf de persoon.
+- Vervangt de losse knoppen uit het prototype (teams beheren, spelersdatabase, ouderrollen, teamschema's).
+
+### Inzicht (was "Analytics Hub")
+Drie vragen, van club → team → speler:
+1. **Waar gaat het goed of mis?** Teams per zone, slechtste bovenaan.
+2. **Waarom?** Verdeling van afmeldredenen per team.
+3. **Hoe ontwikkelt het zich?** Trend per blok.
+- Tik op team → spelers; tik op speler → volledige geschiedenis.
+- **Export naar PDF** (onderbouwing bij teamindeling, gesprek met ouders, bestuur).
+- Extra: **percentage gelezen berichten** per team.
+- Weg: financiën, winstpercentages en andere grafieken die niet bij het doel passen.
+
+### Berichten
+- Zoals bij de andere rollen; daarnaast **clubbrede berichten** en **geplande berichten** (Besluit 4).
+
+---
+
+## Besluit 12 — Rollen en clubbeheerder
+
+### Rollen
+**Ouder · Trainer · Teamleider · Coördinator (optioneel) · HJO · Clubbeheerder**
+
+- **Vaste rollen met een bereik**, geen zelf te verzinnen rollen (houdt de app eenvoudig).
+- **Coördinator:** zelfde rechten als de HJO, maar alleen voor een **groep teams** (bijv. O8–O12). Optioneel; de clubbeheerder bepaalt of de club deze rol gebruikt.
+- **Naam van de rol aanpasbaar per club:** de ene club zegt "coördinator", de andere "HJO". De rechten blijven gelijk, alleen het label verschilt.
+- Eén account kan meerdere rollen hebben (rolwisselaar in het profiel).
+
+### Clubbeheerder vs HJO
+
+| | Clubbeheerder | HJO |
+|---|---|---|
+| Soort werk | systeem inrichten (± 1× per seizoen) | jeugd sturen (wekelijks) |
+| Wat | rollen in gebruik, modules aan/uit, clubstandaarden (deadlines, drempels, blokken), seizoen en vakanties, logo, Sportlink-import | teams, staf, signalen, planning, clubberichten |
+| Wie | vaak bestuurslid/secretaris | technisch jeugdcoördinator |
+
+- Bij een kleine club is dit **dezelfde persoon** (één account, twee rollen).
+- Bij aanbieden aan meerdere clubs is de clubbeheerder het aanspreekpunt van de club.
+
+---
+
+## Besluit 13 — Planning: weekrooster in plaats van losse trainingen
+
+Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
+
+1. **Clubbeheerder (1× per seizoen):** seizoensstart en -einde. **Schoolvakanties worden automatisch opgehaald** (open data van de Rijksoverheid, per regio; Amsterdam = regio Noord). Per vakantie kiest de club: wel of niet trainen. Ook eigen stops (bijv. winterstop) toe te voegen.
+2. **HJO (1× per seizoen): veldindeling / weekrooster per team.**
+   - **In bulk** in de app: teams selecteren → dagen kiezen (bijv. wo + vr) → per team tijd en veld.
+   - Of via een **Excel-importsjabloon** als de veldindeling al klaarligt.
+3. **Systeem** maakt alle trainingen van het seizoen aan (vakanties en stops overgeslagen).
+4. **Trainers/teamleiders** doen alleen **uitzonderingen**: verplaatsen, extra training, oefenwedstrijd → niet-urgente melding aan HJO (Besluit 7).
+5. **Wedstrijden:** later automatisch via Sportlink/voetbal.nl; in de pilot voert de teamleider ze in.
+6. **Clubbrede afgelasting** door de HJO met één knop (Besluit 11).
+
+---
+
+## Wie doet wat (overzicht)
+
+| Taak | Wie | Vervanger |
+|---|---|---|
+| Afmelden (met reden) | Ouder | — |
+| Langdurig afwezig melden | Ouder | Teamleider |
+| Aanwezigheid opnemen — training | Trainer | Teamleider |
+| Aanwezigheid opnemen — wedstrijd | Wedstrijdbegeleider | Teamleider → trainer → ouder-coach |
+| Ouders uitnodigen | Teamleider, trainer, HJO | — |
+| Aanmeldingen goedkeuren | Teamleider | Trainer → HJO (na 48 uur) |
+| Vervoer en taken | Teamleider (met automatische oproepen) | Trainer |
+| Speeltijd (module) | Wedstrijdbegeleider | — |
+| Beoordelingen | Trainer | — |
+| Uitzonderingen in planning | Trainer / teamleider | HJO |
+| Weekrooster en veldindeling | HJO | Coördinator |
+| Staf en teams indelen, van team wisselen | HJO | Coördinator |
+| Signaal speler opvolgen (gesprek) | Teamleider / trainer | HJO |
+| Signaal team opvolgen | HJO | Coördinator |
+| Clubberichten, afgelasten | HJO | Coördinator |
+| Clubinstellingen, modules, seizoen, rollen | Clubbeheerder | HJO |
+
+---
+
 ## Later / ideeën
 
 - **Beloningen** (punten, contributie terugverdienen) als optionele module die de HJO per club of team aanzet.
@@ -412,5 +516,5 @@ Het systeem vergelijkt de **speler met zijn eigen team**:
 
 ## Nog te bespreken
 
-- HJO-portaal (rondleiding), inclusief rollen koppelen aan accounts.
+- **Handleidingen per rol** (PowerPoint) en eventueel presentatie voor bestuur/trainersavond.
 - **Huisstijl:** één set icoontjes in één stijl; kleur alleen met betekenis (groen = goed, oranje = aandacht, rood = probleem); verder rustig met het logo-blauw als hoofdkleur (lichter dan de huidige `#1e5ba8`).
