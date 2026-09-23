@@ -727,6 +727,13 @@ Verandert er een besluit, pas dan de tekst aan in `maak-handleidingen.js` en maa
 - **Online hulp met AI:** een assistent die de app volledig kent en stap voor stap uitlegt, bijvoorbeeld "hoe zet ik de taken van X uit?" of "hoe zet ik deze module uit?". Scheelt telefoontjes.
 - **Evaluatieformulier aan het einde van het seizoen** (ouders, trainers, teamleiders), zodat we per seizoen een rapport kunnen maken van wat beter kan.
 - **Checklist rollen en taken bij de club:** per rol aankruisen "hebben wij", "wie doet het" en "in de pilot ja/nee" (o.a. vertrouwenscontactpersoon, ledenadministratie, wedstrijdsecretaris, VOG-controle, technisch jeugdcoördinator, kantine, vrijwilligers). Voor nu blijven de rollen: ouder, trainer, teamleider, coördinator, HJO, clubbeheerder.
+- **Meer taken voor de takenlijst (Besluit 25)**, later stap voor stap uitbouwen. Alleen toevoegen wat de app ook echt ondersteunt:
+  - *Nu vast bij trainer/teamleider, later instelbaar:* aanwezigheid opnemen · aanmeldingen van het eigen team goedkeuren · berichten aan het team sturen · wedstrijdinfo invullen (verzameltijd, tenue, adres)
+  - *Seizoensstart en -einde:* teamindeling en doorstroom naar volgend seizoen · trainers en teamleiders werven · teamgegevens bijwerken · ouderavond/kennismaking
+  - *Wedstrijden:* wedstrijdformulier en uitslag doorgeven · oefenwedstrijd of toernooi regelen · vervoer en taken bewaken
+  - *Veiligheid en welzijn:* VOG-controle van trainers en teamleiders (signaal "trainer zonder VOG"; niet in de pilot) · doorverwijzen naar de vertrouwenscontactpersoon · blessure of ongeval vastleggen
+  - *Trainers ondersteunen:* nieuwe trainers inwerken · trainingen bezoeken en feedback geven · trainersoverleg · trainingsstof of jaarplan delen
+  - *Communicatie:* clubbrede agenda bijhouden (toernooien, clubdagen, stops)
 
 ---
 
