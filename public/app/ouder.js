@@ -90,7 +90,7 @@
         const pl = CC.kind(); const me = CC.me();
         const acts = M.acts(S, pl.teamId, D.vandaag(), D.addDays(D.vandaag(), 28)).filter((a) => S.taken.some((t) => t.actId === a.id));
         const mijn = S.taken.filter((t) => t.personId === me.id).length;
-        return `<div class="info">${icon('info')}<span>Staat een taak 2 dagen van tevoren nog open, dan krijgt iedereen automatisch een oproep. Je hebt dit seizoen <b>${mijn}×</b> geholpen. Dank je wel!</span></div>
+        return `${CC.mijnHulp ? CC.mijnHulp(S, pl) : `<div class="info">${icon('info')}<span>Je hebt dit seizoen <b>${mijn}×</b> geholpen. Dank je wel!</span></div>`}
           ${acts.map((a) => `${h.sectie(`${D.relatief(a.datum)} · ${h.actTitel(S, a)}`)}<div class="lijst">${S.taken.filter((t) => t.actId === a.id).map((t) => {
             const p = t.personId && M.persoon(S, t.personId);
             return h.rij({ ic: t.soort === CC.VERVANGER ? 'user-cog' : t.soort === 'Coach' ? 'clipboard-check' : t.soort === 'Spelbegeleider' ? 'flag' : t.soort === 'Fotograaf' ? 'eye' : t.soort === 'Wastas' ? 'shirt' : 'hand-helping', titel: esc(t.soort), sub: p ? (p.id === me.id ? 'Jij doet dit. Top!' : esc(p.naam)) : (t.kanNiet || []).includes(me.id) ? 'Nog niemand · jij kunt deze keer niet' : 'Nog niemand', kleur: p ? '' : 'oranje',

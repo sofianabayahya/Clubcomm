@@ -88,9 +88,7 @@
                 ${t.t.map((x) => `<p class="klein">${esc(x.soort)}: ${x.personId ? esc(M.persoon(S, x.personId).naam) : '<b class="oranje-tekst">open</b>'}</p>`).join('')}
                 <div class="knoppen"><button class="knop klein licht" data-act="taakToevoegen" data-a="${a.id}">${icon('plus')}Taak</button><button class="knop klein licht" data-act="deelTaken" data-a="${a.id}">${icon('share-2')}Oproep delen</button></div>` : ''}</div>`;
           }).join('') || h.leeg('Geen wedstrijden gepland')}
-          ${S.club.modules.taken ? `<details class="uitklap"><summary>${icon('hand-helping')}Wie helpt er mee?</summary>
-            <div class="lijst compact">${rang.filter(([, n]) => n > 0).map(([p, n]) => h.rij({ ic: h.avatar(M.persoon(S, p).naam), titel: esc(M.persoon(S, p).naam), rechts: `<b>${n}×</b>` })).join('')}</div>
-            ${nooit.length ? `<p class="klein"><b>Nog nooit geholpen (${nooit.length}):</b> ${nooit.map(([p]) => esc(M.persoon(S, p).naam.split(' ')[0])).join(', ')}</p><p class="zacht klein">Tip: vraag deze ouders persoonlijk. Een directe vraag werkt beter dan een groepsoproep.</p>` : ''}</details>` : ''}`;
+          ${S.club.modules.taken ? (CC.hulpTeamleider ? CC.hulpTeamleider(S, tid) : '') : ''}`;
       },
       berichten: (S) => CC.berichtenScherm(S, { nieuw: true }),
       team(S) {

@@ -503,6 +503,16 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 28 — Wie helpt er mee? (taken en rijden)
+*Besloten 23 september 2026.*
+
+- **Meehelpen = taken én rijden.** Rijden bij uitwedstrijden telt mee; het is vaak de grootste hulp.
+- **Nooit een ranglijst voor ouders.** Vergelijken ontmoedigt vrijwilligers.
+- **Ouder** (tabblad Taken): alleen de eigen bijdrage, positief ("Dit seizoen: 2× gereden, 2× spelbegeleider. Dank je wel!"), plus één regel voor het hele team ("Samen hebben de ouders van O10-1 al 16× geholpen"). Ouders zien nooit wie niet helpt.
+- **Teamleider** (Regelen → Wie helpt er mee?): per gezin (de ouders van een kind samen) wat ze deden, hoe vaak "kan niet", en wie nog niet heeft geholpen, met de tip om die ouders persoonlijk te vragen. Alleen de teamleider ziet dit; hij verdeelt de taken.
+- **Coördinator en HJO** (Inzicht → Meehelpen per team): per team, niet per ouder: hoeveel gezinnen helpen, hoe vaak er geholpen is en welk deel van de taken is ingevuld. **Signaal "scheef"** als 3 gezinnen 70% of meer van het werk doen (bij 5 of meer keer helpen): risico op overbelasting.
+- Later mogelijk: verplichte vrijwilligerstaken per gezin en de module Beloningen (zie Later / ideeën).
+
 ## Besluit 27 — Wanneer verdwijnt een actie?
 *Besloten 23 september 2026.*
 
