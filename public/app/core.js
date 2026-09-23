@@ -17,7 +17,7 @@
     del(k) { try { localStorage.removeItem(k); } catch (e) { /* */ } },
   };
   let S = store.get(KEY, null);
-  if (!S || S.gen !== D.vandaag() || S.v !== 6) { S = CC.generate(); store.set(KEY, S); }
+  if (!S || S.gen !== D.vandaag() || S.v !== 7) { S = CC.generate(); store.set(KEY, S); }
   CC.S = () => S;
   CC.save = () => store.set(KEY, S);
   CC.reset = () => { S = CC.generate(); store.set(KEY, S); };
@@ -566,7 +566,7 @@
     const lang = S.lang.find((l) => l.spelerId === pl.id && l.tot >= D.vandaag());
     const rol = CC.rol().rol;
     const ouders = pl.ouders.map((o) => M.persoon(S, o));
-    const b = S.beoord[pl.id];
+    const b = CC.beoordLaatste && CC.beoordLaatste(S, pl.id);
     const gespr = S.gesprekken.filter((g) => g.spelerId === pl.id);
     return {
       titel: M.naam(S, pl),
@@ -577,7 +577,7 @@
       ${h.sectie('Geschiedenis')}<div class="lijst compact">${st.lijst.slice().reverse().map(({ act, st: s }) => h.rij({ ic: h.datumBlok(act), titel: h.actTitel(S, act), sub: s.afm && s.afm.opm ? esc(s.afm.opm) : '', rechts: h.chip(s) + (s.laat ? '<span class="chip geel mini">te laat afgemeld</span>' : '') })).join('') || h.leeg('Nog geen activiteiten')}</div>
       ${k.ev.length ? `${h.sectie('Kaarten en waarschuwingen deze fase')}<div class="lijst compact">${k.ev.map((e) => h.rij({ ic: e.waarschuwing ? 'mail' : `<span class="kaart ${e.soort}">${e.punten}</span>`, titel: e.waarschuwing ? `Vriendelijke herinnering · ${e.wat.toLowerCase()}` : e.wat, sub: D.kort(e.act.datum) })).join('')}</div>` : ''}
       ${rol !== 'ouder' ? `${h.sectie('Ouders')}<div class="lijst">${ouders.map((o) => h.rij({ ic: h.avatar(o.naam), titel: esc(o.naam), sub: esc(o.email), rechts: `<a class="icoonknop groen" href="https://wa.me/31${o.tel.slice(1)}" target="_blank" rel="noopener" aria-label="WhatsApp ${esc(o.naam)}">${icon('message-circle')}</a>` })).join('')}</div>` : ''}
-      ${rol !== 'ouder' && b ? `${h.sectie(`Beoordeling · ${esc(b.fase)}`)}<div class="scores">${Object.entries(b.scores).map(([v, s]) => `<span>${esc(v)} ${CC.scoreTekst(t, s)}</span>`).join('')}</div>` : ''}
+      ${rol !== 'ouder' && b ? `${h.sectie(`Beoordeling · ${esc(b.m.naam.toLowerCase())}`)}<div class="scores">${Object.entries(b.x.scores).map(([v, s]) => `<span>${esc(v)} ${CC.scoreTekst(t, s)}</span>`).join('')}</div>` : ''}
       ${rol !== 'ouder' ? `${h.sectie('Gesprekken')}${gespr.map((g) => h.rij({ ic: g.soort === 'gesprek' ? 'users' : g.soort === 'geappt' ? 'message-circle' : 'phone', titel: `${D.kort(g.datum)} · ${g.soort === 'gesprek' ? 'Persoonlijk gesprek' : g.soort === 'geappt' ? 'Geappt' : 'Gebeld'} · ${esc((M.persoon(S, g.door) || { naam: '' }).naam)}`, sub: esc(g.notitie) + (g.afspraak ? `<br><b>Afspraak:</b> ${esc(g.afspraak)}` : '') })).join('') || '<p class="zacht klein">Nog geen gesprekken vastgelegd.</p>'}
         <div class="knoppen"><button class="knop licht" data-act="gesprekVastleggen" data-id="${pl.id}">${icon('phone')}Contact vastleggen</button><button class="knop licht" data-act="langdurigSheet" data-id="${pl.id}">${icon('hospital')}Langdurig afwezig</button></div>` : ''}`,
     };

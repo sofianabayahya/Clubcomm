@@ -36,6 +36,7 @@
         const gv = geenVervoer(S, pl); if (gv) acties.push(h.rij({ ic: 'car', titel: `Nog geen vervoer voor ${esc(pl.voornaam)}`, sub: `${D.relatief(gv.datum)} uit bij ${esc(gv.tegen)}`, act: 'tab', attrs: 'data-tab="vervoer"', kleur: 'oranje' }));
         const ot = S.club.modules.taken ? openTaken(S, pl.teamId) : [];
         if (ot.length) { const a = M.act(S, ot[0].actId); acties.push(h.rij({ ic: 'hand-helping', titel: `${ot.length} ${ot.length === 1 ? 'taak' : 'taken'} nog open`, sub: `${esc(ot[0].soort)} · ${D.relatief(a.datum)}. Help je mee?`, act: 'tab', attrs: 'data-tab="taken"' })); }
+        if (CC.ouderGesprekRijen) acties.push(...CC.ouderGesprekRijen(S, pl));
         const statusregel = st.pct == null ? 'Nog geen activiteiten deze fase' : `Aanwezig ${st.pct}%${st.telaat ? ` · ${st.telaat}× te laat` : ''}`;
         const compliment = z === 'groen' && !k.geel && !k.oranje && !st.telaat ? `<span class="compliment">${icon('star')}Betrouwbare speler!</span>` : '';
         return `
@@ -58,6 +59,7 @@
         return `${agenda}${Object.entries(groepen).map(([w, as]) => `${h.sectie(w === dezeWeek ? 'Deze week' : w === D.addDays(dezeWeek, 7) ? 'Volgende week' : `Week van ${D.kort(w)}`)}<div class="lijst">${as.map((a) => h.rij({ ic: h.datumBlok(a), titel: h.actTitel(S, a), sub: h.actSub(S, a), rechts: h.chip(M.status(S, pl, a)), act: 'open', attrs: `data-view="activiteit" data-id="${a.id}"` })).join('')}</div>`).join('')}
           ${!ver ? `<button class="knop licht vol" data-act="seg" data-key="verder" data-val="1">${icon('calendar-days')}Verder vooruit kijken</button>` : ''}
           <div class="lijst">${h.rij({ ic: 'chart-column', titel: 'Aanwezigheid en kaarten', sub: `Deze fase ${M.stats(S, pl, M.periode(S, 'blok')).pct ?? '–'}% · seizoen ${st.pct ?? '–'}% · afmeldgeschiedenis`, act: 'open', attrs: `data-view="kindOverzicht" data-id="${pl.id}"` })}</div>
+          ${CC.ouderGesprekRijen ? `<div class="lijst">${h.rij({ ic: 'star', titel: 'Ontwikkelgesprek en beoordeling', sub: `Twee keer per seizoen, met ${esc(pl.voornaam)} erbij`, act: 'open', attrs: `data-view="${(S.ontwGesprek || []).some((g) => g.teamId === pl.teamId) ? 'gesprekKiezen' : 'beoordelingKind'}" data-id="${pl.id}"` })}</div>` : ''}
           <button class="knop licht vol" data-act="periodeSheet" data-id="${pl.id}">${icon('plane')}Afwezig voor een periode (bijv. vakantie)</button>
           <button class="knop licht vol" data-act="langdurigSheet" data-id="${pl.id}">${icon('hospital')}Langer geblesseerd of ziek? Meld het één keer</button>`;
       },
@@ -115,7 +117,7 @@
         ${regel('<span class="kaart geel">2</span>', 'Niet afgemeld en niet gekomen', (e) => e.soort === 'geel' && e.punten === 2, 'Gele kaart, 2 punten')}
       </div>
       <p class="zacht klein">De eerste keer per fase (per kleur) is alleen een vriendelijke herinnering, zonder punten. Stand deze fase: ${k.geel} ${k.geel === 1 ? 'punt' : 'punten'} geel, ${k.oranje}× oranje.${stap ? ` <b>Volgende stap: ${stap.soort === 'bellen' ? 'de trainer of HJO neemt contact met je op' : stap.soort === 'gesprekHjo' ? 'een persoonlijk gesprek met de HJO' : 'de club bespreekt het vervolg'}.</b>` : ''}</p>
-      <button class="linkknop" data-act="uitlegKaarten">Wat betekenen de kaarten?</button>
+      <button class="linkknop" data-act="uitlegKaarten">Wat betekenen de kaarten?</button> · <button class="linkknop" data-act="open" data-view="beoordelingKind" data-id="${pl.id}">Beoordelingen</button>
       ${h.sectie('Afmeldgeschiedenis')}<div class="lijst compact">${hist.map(({ f, a }) => h.rij({ ic: h.reden(f.reden), titel: `${D.kort(a.datum)} · ${h.actTitel(S, a)}`, sub: `Reden: ${esc(f.reden)}${f.opm ? ' · ' + esc(f.opm) : ''}`, rechts: M.teLaatAfgemeld(S, f, a) ? '<span class="chip geel mini">te laat afgemeld</span>' : '<span class="chip groen mini">op tijd afgemeld</span>' })).join('') || '<p class="zacht klein">Geen afmeldingen in deze periode.</p>'}</div>` };
   };
 

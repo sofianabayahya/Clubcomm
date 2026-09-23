@@ -33,6 +33,12 @@
         `SUMMARY:${esc2((a.afgelast ? 'AFGELAST: ' : '') + titel(S, a))}`, `LOCATION:${esc2(plaats(a))}`, `DESCRIPTION:${esc2(omschr)}`,
         a.afgelast ? 'STATUS:CANCELLED' : 'STATUS:CONFIRMED', 'END:VEVENT');
     });
+    (CC.gesprekkenVoor ? CC.gesprekkenVoor(S, p) : []).forEach((g) => {
+      const pl = M.speler(S, g.spelerId);
+      regels.push('BEGIN:VEVENT', `UID:${g.id}@clubcomm.nl`, `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').slice(0, 15)}Z`,
+        `DTSTART;TZID=Europe/Amsterdam:${st(g.datum, g.tijd)}`, `DTEND;TZID=Europe/Amsterdam:${st(g.datum, g.eind)}`,
+        `SUMMARY:${esc2(`Ontwikkelgesprek ${pl.voornaam} (${g.teamId})`)}`, `LOCATION:${esc2(`Sportpark Buitenveldert, ${g.plek}`)}`, `DESCRIPTION:${esc2('Gesprek met de trainer; ouder en kind zijn er samen bij.')}`, 'STATUS:CONFIRMED', 'END:VEVENT');
+    });
     regels.push('END:VCALENDAR');
     return regels.join('\r\n');
   };

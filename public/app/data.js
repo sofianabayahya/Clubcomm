@@ -76,7 +76,7 @@
     let uid = 1; const id = (p) => `${p}${uid++}`;
 
     const S = {
-      v: 6, gen: today,
+      v: 7, gen: today,
       club: {
         id: 'scb', naam: 'SC Buitenveldert', regio: 'Noord',
         seizoen: { start: '2026-08-19', eind: '2027-06-05' },
@@ -291,7 +291,7 @@
 
     // Beoordelingen (fase 1 deels ingevuld)
     const vaardig = CC.categorie('O10').vaardig;
-    o10.slice(0, 7).forEach((pl, k) => { S.beoord[pl.id] = { fase: 'Fase 1 (sep–okt)', scores: Object.fromEntries(vaardig.map((v, j) => [v, 1 + ((k + j) % 3)])) }; });
+    o10.slice(0, 7).forEach((pl, k) => { S.beoord[pl.id] = { m1: { scores: Object.fromEntries(vaardig.map((v, j) => [v, 1 + ((k + j) % 3)])), goed: '', werken: '' } }; });
     S.notities[pO('Jesse').id] = [{ tekst: 'Sterk aan de bal, durft meer te vragen. Mist vaak de tweede training.', tijd: new Date(now - 6 * 864e5).toISOString(), door: mark.id }];
 
     // ---------- Aanmeldingen ----------

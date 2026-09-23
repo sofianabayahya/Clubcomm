@@ -282,7 +282,7 @@ Bovenaan een **weekstrook** met de trainingen/wedstrijden van deze en volgende w
 | Middenbouw | vanaf O13 | 11 tegen 11 | alle categorieën (techniek, tactiek, fysiek, mentaal, sociaal); uitgebreider |
 
 - De inhoud per niveau baseren we op de **KNVB-leerlijnen** (uitzoeken bij de bouw).
-- Onderbouw: mogelijk **2 beoordelingsmomenten per seizoen** in plaats van 4.
+- Onderbouw: **2 beoordelingsmomenten per seizoen** met een ontwikkelgesprek (zie Besluit 23).
 
 ### Speeltijd (module)
 - Doel: **eerlijke speeltijd** bij wedstrijden.
@@ -501,6 +501,19 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 23 — Beoordelingsmomenten en ontwikkelgesprekken
+*Besloten 23 september 2026.*
+
+- **Twee momenten per seizoen:** *Winter* (eind fase 2, vóór de kerstvakantie) en *Einde seizoen* (eind fase 4). Elk moment heeft een periode van 3 weken waarin de trainer beoordeelt. De trainer mag eerder beginnen.
+- **De trainer beoordeelt** per vaardigheid of per speler, op de schaal van de KNVB-leeftijdscategorie (smileys in de onderbouw). Per speler schrijft hij twee korte gesprekpunten op: *wat gaat goed* en *waar werken we aan*.
+- Bij het tweede moment ziet de trainer de score van de winter ernaast (▲ beter, ▼ lager, = gelijk), zodat de groei zichtbaar is.
+- **Ontwikkelgesprek:** de trainer voert het gesprek. **Ouder en kind zijn er altijd samen bij.** De trainer zet tijden klaar (datum, begintijd, minuten per gesprek, plek) en de ouders krijgen een bericht. Ouders kiezen zelf een tijd; de trainer kan ook zelf een speler aan een tijd koppelen.
+- Het gesprek staat in de planning van de ouder en komt **automatisch in de eigen agenda** (agenda-abonnement, Besluit 18), bij de ouder en bij de trainer.
+- **De ouder ziet de beoordeling een dag na het gesprek.** Zo hoort het kind het eerst in het gesprek en niet via een scherm. Is er geen gesprek, dan kan de trainer de beoordeling handmatig delen.
+- **Toon:** een beoordeling is een momentopname, voor de speler zelf. Er worden geen cijfers vergeleken met andere kinderen, er is geen gemiddelde en geen ranglijst. Ouders zien alleen hun eigen kind.
+- **Herinnering:** tijdens de periode ziet de trainer op Home "Beoordelingen winter: x van y" en "Plan de ontwikkelgesprekken". De HJO ziet per team hoeveel spelers al beoordeeld zijn (Inzicht).
+- De datums volgen uit de jaarplanning; de clubbeheerder kan ze aanpassen (in de demo nog vast).
 
 ## Besluit 22 — Signalen afdoen
 

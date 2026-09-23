@@ -97,6 +97,7 @@
           ${h.sectie('3. Hoe ontwikkelt het zich?')}
           <div class="lijst compact">${rij.slice(0, 8).map(({ t, s }) => { const d = (s.pct ?? 0) - t.vorig; return h.rij({ ic: h.stip(M.zone(S, s.pct, t.id)), titel: esc(t.naam), sub: `Vorig seizoen ${t.vorig}% → nu ${s.pct ?? '–'}%`, rechts: `<b class="${d < -3 ? 'rood-tekst' : d > 3 ? 'groen-tekst' : 'zacht'}">${d > 0 ? '▲' : d < 0 ? '▼' : '='} ${Math.abs(d)}</b>` }); }).join('')}</div>
           <p class="zacht klein">Na elke fase komt er een punt bij, zodat je de trend per fase ziet.</p>
+          ${CC.beoordInzicht && S.club.modules.beoordeling ? CC.beoordInzicht(S) : ''}
           ${h.sectie('Gelezen berichten per team')}
           <div class="staven">${berichten.sort((a, b) => (a.pct ?? 101) - (b.pct ?? 101)).slice(0, 6).map(({ t, pct }) => `<div class="staaf"><span>${esc(t.naam)}</span><i class="${pct >= 75 ? 'groen' : pct >= 50 ? 'oranje' : 'rood'}" style="--w:${pct || 0}%"></i><b>${pct ?? '–'}%</b></div>`).join('')}</div>
           <button class="knop vol" data-act="exportPdf">${icon('file-down')}Exporteren naar PDF</button>`;

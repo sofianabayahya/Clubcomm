@@ -89,28 +89,8 @@
   CC.on('volgendBlok', (el) => { const S = CC.S(); S.speeltijd.schema[el.dataset.id].huidig++; CC.save(); CC.render(); });
   CC.on('bevestigSchema', (el) => { const S = CC.S(); const sch = S.speeltijd.schema[el.dataset.id]; const kb = S.speeltijd.keeper || (S.speeltijd.keeper = {}); if (sch.keepers[0]) kb[sch.keepers[0]] = (kb[sch.keepers[0]] || 0) + 1; sch.blokken.forEach((b) => b.forEach((id) => { S.speeltijd.min[id] = (S.speeltijd.min[id] || 0) + sch.blokMin; })); sch.bevestigd = true; CC.save(); CC.render(); CC.toast('Speeltijd bijgewerkt'); });
 
-  // ---------- Beoordelen (per speler of per vaardigheid) ----------
-  CC.views.beoordelen = (S, p) => {
-    const tid = CC.teamId(); const t = M.team(S, tid); const c = CC.categorie(t.cat);
-    const modus = h.segVal('beoModus', 'vaardig');
-    const fase = 'Fase 1 (sep–okt)';
-    const opties = c.schaal === '1-5' ? [1, 2, 3, 4, 5] : [1, 2, 3];
-    const knoppen = (plId, v) => { const cur = S.beoord[plId] && S.beoord[plId].scores[v]; return `<span class="score">${opties.map((o) => `<button class="${cur === o ? 'aan' : ''}" data-act="zetScore" data-id="${plId}" data-v="${esc(v)}" data-s="${o}" aria-label="${o}">${CC.scoreTekst(t, o)}</button>`).join('')}</span>`; };
-    let body;
-    if (modus === 'vaardig') {
-      const v = h.segVal('beoV', c.vaardig[0]);
-      body = `<div class="chips">${c.vaardig.map((x) => `<button class="chipknop ${x === v ? 'aan' : ''}" data-act="seg" data-key="beoV" data-val="${esc(x)}">${esc(x)}</button>`).join('')}</div>
-        <div class="lijst">${M.spelers(S, tid).map((pl) => `<div class="rij"><span class="rij-tekst"><b>${esc(pl.voornaam)}</b></span>${knoppen(pl.id, v)}</div>`).join('')}</div>`;
-    } else {
-      const sp = M.spelers(S, tid); const id = h.segVal('beoSp', sp[0].id);
-      body = `<select class="kies" data-change="kiesBeoSp" aria-label="Speler">${sp.map((pl) => `<option value="${pl.id}" ${pl.id === id ? 'selected' : ''}>${esc(M.naam(S, pl))}</option>`).join('')}</select>
-        <div class="lijst">${c.vaardig.map((v) => `<div class="rij"><span class="rij-tekst"><b>${esc(v)}</b></span>${knoppen(id, v)}</div>`).join('')}</div>`;
-    }
-    return { titel: 'Beoordelen', html: `<div class="info">${icon('info')}<span>${esc(t.naam)}: ${esc(c.naam.toLowerCase())}, ${esc(c.vorm)}. Schaal: ${c.schaal === '1-5' ? '1 tot 5' : 'drie smileys'}. ${esc(fase)}. Ouders zien alleen de beoordeling van hun eigen kind.</span></div>
-      ${h.seg('beoModus', [['vaardig', 'Per vaardigheid'], ['speler', 'Per speler']], 'vaardig')}${body}` };
-  };
+  // Beoordelen: zie beoordeling.js (Besluit 23)
   CC.on('kiesBeoSp', (el) => { CC.ui.seg.beoSp = el.value; CC.render(); });
-  CC.on('zetScore', (el) => { const S = CC.S(); const b = S.beoord[el.dataset.id] || (S.beoord[el.dataset.id] = { fase: 'Fase 1 (sep–okt)', scores: {} }); b.scores[el.dataset.v] = Number(el.dataset.s); CC.save(); CC.render(); });
 
   // ---------- Trainer ----------
   // Opschalingsstap als rij; bij "bellen" direct bel- en WhatsApp-knop naar de ouder
@@ -171,6 +151,7 @@
         if (!t.teamleiderId) { const open = S.aanm.filter((x) => x.teamId === tid && x.status === 'open').length; if (open) acties.push(h.rij({ ic: 'user-check', titel: `${open} aanmelding${open > 1 ? 'en' : ''} goedkeuren`, sub: 'Dit team heeft geen teamleider, dus jij keurt goed', act: 'open', attrs: 'data-view="aanmeldingen"', kleur: 'oranje' })); }
         acties.push(...CC.signaalRegels(S, tid, true));
         const mat = CC.materiaalRij && CC.materiaalRij(S, tid); if (mat) acties.push(mat);
+        if (CC.beoordRijTrainer) acties.push(...CC.beoordRijTrainer(S, tid));
         return `<article class="kaartje hoofd">
             <small>${D.relatief(volgendeT.datum)}${volgendeT.soort !== 'training' ? '' : ''}</small><h2>${h.actTitel(S, volgendeT)}</h2><p class="zacht">${h.actSub(S, volgendeT)}</p>
             <div class="verwacht"><b>${sp.length - af.length}</b><span>van ${sp.length} verwacht</span></div>
@@ -198,7 +179,7 @@
         const tid = CC.teamId(); const per = M.periode(S, 'blok');
         return `<div class="knoppen"><button class="knop" data-act="open" data-view="beoordelen">${icon('star')}Beoordelen</button><button class="knop licht" data-act="uitnodigSheet">${icon('user-plus')}Ouders uitnodigen</button></div>
           ${CC.materiaalStatus ? `<div class="lijst">${CC.materiaalStatus(S, tid)}</div>` : ''}
-          <div class="lijst">${M.spelers(S, tid).map((pl) => { const st = M.stats(S, pl, per); const b = S.beoord[pl.id]; return h.rij({ ic: h.avatar(pl.voornaam), titel: esc(M.naam(S, pl)), sub: `${st.pct == null ? '–' : st.pct + '%'} aanwezig · ${b ? `beoordeeld (${Object.keys(b.scores).length})` : 'nog niet beoordeeld'}`, rechts: h.stip(M.zone(S, st.pct, tid)), act: 'open', attrs: `data-view="speler" data-id="${pl.id}"` }); }).join('')}</div>`;
+          <div class="lijst">${M.spelers(S, tid).map((pl) => { const st = M.stats(S, pl, per); const b = CC.beoordLaatste(S, pl.id); return h.rij({ ic: h.avatar(pl.voornaam), titel: esc(M.naam(S, pl)), sub: `${st.pct == null ? '–' : st.pct + '%'} aanwezig · ${b ? `beoordeeld (${b.m.naam.toLowerCase()})` : 'nog niet beoordeeld'}`, rechts: h.stip(M.zone(S, st.pct, tid)), act: 'open', attrs: `data-view="speler" data-id="${pl.id}"` }); }).join('')}</div>`;
       },
       speeltijd: (S) => CC.speeltijdHtml(S, CC.teamId()),
     },
