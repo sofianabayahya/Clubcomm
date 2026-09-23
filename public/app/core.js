@@ -17,7 +17,7 @@
     del(k) { try { localStorage.removeItem(k); } catch (e) { /* */ } },
   };
   let S = store.get(KEY, null);
-  if (!S || S.gen !== D.vandaag() || S.v !== 3) { S = CC.generate(); store.set(KEY, S); }
+  if (!S || S.gen !== D.vandaag() || S.v !== 4) { S = CC.generate(); store.set(KEY, S); }
   CC.S = () => S;
   CC.save = () => store.set(KEY, S);
   CC.reset = () => { S = CC.generate(); store.set(KEY, S); };
@@ -530,7 +530,7 @@
       ${CC.REDENEN.map(([r, ic], i) => `<label class="reden"><input type="radio" name="reden" value="${r}" ${i === 0 ? 'required' : ''}>${icon(ic)}<span>${r}</span></label>`).join('')}</fieldset>
       <label for="af-opm">Opmerking (mag leeg)</label><input id="af-opm" name="opm" placeholder="Bijv. terug na de vakantie">
       <button class="knop vol">Afmelden</button></form>
-      <p class="zacht klein">De trainer en teamleider zien je afmelding direct.</p>`);
+      <p class="zacht klein">De trainer en teamleider zien je afmelding direct. Langer weg? <button class="linkknop" data-act="periodeSheet" data-id="${pl.id}">Meld een hele periode af</button></p>`);
   });
   CC.on('bevestigAfmelden', (f) => {
     const a = M.act(S, f.dataset.act2); const pl = M.speler(S, f.dataset.speler);

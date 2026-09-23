@@ -28,6 +28,7 @@
         const acties = [];
         const open = openAanm(S, tid); if (open.length) acties.push(h.rij({ ic: 'user-check', titel: `${open.length} aanmelding${open.length > 1 ? 'en' : ''} goedkeuren`, sub: 'Ouders wachten op toegang', act: 'tab', attrs: 'data-tab="team"', kleur: 'oranje' }));
         const n = M.ongelezen(S, me.id); if (n) acties.push(h.rij({ ic: 'message-circle', titel: `${n} ${n === 1 ? 'nieuw bericht' : 'nieuwe berichten'}`, act: 'tab', attrs: 'data-tab="berichten"', kleur: 'blauw' }));
+        if (CC.vervangerRijen) acties.unshift(...CC.mijnVervangingen(S), ...CC.vervangerRijen(S, [tid]));
         acties.push(...CC.signaalRegels(S, tid, false));
         if (!a) return h.leeg('Geen wedstrijden gepland') + (acties.length ? `${h.sectie('Actie nodig')}<div class="lijst">${acties.join('')}</div>` : '');
         const sp = M.spelers(S, tid); const komt = sp.filter((pl) => M.status(S, pl, a).code === 'verwacht').length;

@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 23 september 2026 (Besluit 14 t/m 19 toegevoegd)
+Laatst bijgewerkt: 23 september 2026 (Besluit 14 t/m 20 toegevoegd)
 
 ---
 
@@ -491,6 +491,26 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
 ### Vuistregel voor nieuwe ideeën
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
+
+---
+
+## Besluit 20 — Periode afmelden en "trainer kan niet"
+
+### Een periode afmelden (ouder)
+- In Planning (en vanuit het afmeldscherm): **"Afwezig voor een periode"** met van, tot en met, reden (standaard Vakantie) en opmerking.
+- Alle trainingen en wedstrijden in die periode worden in één keer afgemeld; intrekken kan per activiteit. Trainer en teamleider krijgen één melding.
+- Telt als gewone afmelding (voor kortere afwezigheid). Voor langdurige blessure of ziekte blijft **Langdurig afwezig** (Besluit 10).
+
+### Trainer kan zelf niet
+- Bij zijn training tikt de trainer **"Ik kan zelf niet"** en kiest: **vervanger zoeken** of **training afgelasten**.
+- Vervanger zoeken: **teamleider en HJO** krijgen direct een melding met **"Ik neem over"** of **"Afgelasten"**; ouders kunnen zich melden via Taken ("Vervangende trainer").
+- Wie overneemt, krijgt de training op Home en kan de aanwezigheid opnemen (een ouder tijdelijk, alleen voor die training).
+- Afgelasten: ouders krijgen een urgente pushmelding; teamleider en HJO een melding.
+- De trainer kan altijd nog "Ik kan toch" kiezen.
+- Principe 7 ("er is altijd een vervanger") geldt zo ook voor de trainer zelf.
+
+### Bewust niet
+- **Ochtendbericht voor de trainer** en **weekoverzicht voor ouders**: te veel berichten, en de inhoud kan tot het laatste moment veranderen (zeker bij breedteteams waar spelers niet afmelden of te laat komen). De actuele stand staat in de app.
 
 ---
 

@@ -24,7 +24,7 @@
         const tot = stats.reduce((s, x) => s + x.spelers.reduce((a, y) => a + y.st.totaal, 0), 0);
         const aan = stats.reduce((s, x) => s + x.spelers.reduce((a, y) => a + y.st.aanwezig, 0), 0);
         const A = aandacht(S);
-        const rijen = [];
+        const rijen = CC.vervangerRijen ? [...CC.mijnVervangingen(S), ...CC.vervangerRijen(S, S.teams.map((t) => t.id))] : [];
         if (A.teams.length) { const rood = A.teams.filter((s) => s.niveau === 'rood').length; rijen.push(h.rij({ ic: 'shield', titel: `${A.teams.length} teams in de ${rood ? 'rode' : 'oranje'}${rood && rood < A.teams.length ? ' of oranje' : ''} zone`, sub: A.teams.sort((a) => (a.niveau === 'rood' ? -1 : 1)).map((s) => esc(s.tekst.split(':')[0]) + ' ' + s.tekst.match(/\d+%/)[0]).join(', '), kleur: rood ? 'rood' : 'oranje', act: 'tab', attrs: 'data-tab="inzicht"' })); }
         if (A.spelers.length) rijen.push(h.rij({ ic: 'triangle-alert', titel: `${A.spelers.length} spelers in de rode zone`, sub: A.spelers.slice(0, 3).map((s) => esc(s.tekst.split(':')[0])).join(', ') + (A.spelers.length > 3 ? '…' : ''), kleur: 'rood', act: 'open', attrs: 'data-view="signalen" data-soort="speler"' }));
         A.gesprek.forEach((s) => rijen.unshift(CC.stapRij(S, s)));

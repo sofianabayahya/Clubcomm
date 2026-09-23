@@ -382,3 +382,7 @@ body.sheet-open { overflow: hidden; }
 .lijst.vast { box-shadow: inset 0 0 0 1px var(--blauw), var(--schaduw); }
 .sectie-kop h3 .ic { width: 13px; height: 13px; vertical-align: -1px; }
 .chip .ic.klein { width: 12px; height: 12px; }
+/* Rij met actieknoppen eronder (bijv. vervanger gevraagd) */
+.rij.vraag { flex-wrap: wrap; }
+.rij.vraag .rij-tekst { flex: 1 1 calc(100% - 40px); }
+.rij.vraag .rij-r { width: 100%; justify-content: flex-start; padding-left: 32px; }
