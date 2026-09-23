@@ -539,6 +539,7 @@ Verandert er een besluit, pas dan de tekst aan in `maak-handleidingen.js` en maa
 
 ## Nog te bespreken
 
+- **Gespreksladder en consequenties** (`docs/verdieping-consequenties.md`): voorstel om Besluit 5 en 10 aan te scherpen (trainer → teamleider → HJO, afspraak + evaluatiedatum, 5 blokken, zones pas na 6 activiteiten, O13+ speler als gesprekspartner). Wacht op akkoord.
 - **Analyse clubproblemen** (`docs/analyse-clubproblemen.md`): voorstellen voor wat ontbreekt (o.a. afmelden namens ouder, bereikbaarheid per ouder, VCP/gedragscode, "mijn kind twijfelt"). Nog niet besloten. Adoptie door ouders ziet de gebruiker niet als risico (mail + push, uitleg, coulante start).
 
 - **Presentatie** voor bestuur/trainersavond en eventueel een rollenbeschrijving.
