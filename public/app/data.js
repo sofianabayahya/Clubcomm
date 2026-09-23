@@ -51,11 +51,11 @@
   const OUDERNAMEN = ['Sanne', 'Mark', 'Linda', 'Peter', 'Anouk', 'Jeroen', 'Marieke', 'Rob', 'Fatima', 'Kees', 'Esther', 'Bas', 'Nadia', 'Tom', 'Iris', 'Hasan', 'Eva', 'Michiel', 'Samira', 'Joost', 'Lisa', 'Dennis', 'Petra', 'Ahmed', 'Karin', 'Wouter', 'Mirjam', 'Rik', 'Laura', 'Erik'];
   const TEGENSTANDERS = ['SV Nieuwe Meer', 'FC Amstelland', 'VV Zuidas', 'AVV Bosbaan', 'SC Oeverpad', 'RKV Amstelhoek', 'FC Slotervaart-Oost', 'VV De Kwakel-Noord', 'SV Diemen-Zuid', 'AFC Rivierenbuurt'];
 
+  // Pilot = onderbouw (Besluit 16): mini's t/m O12
   const TEAMS = [
-    ['O7-1', 'breedte', 1], ['O8-1', 'breedte', 2], ['O8-2', 'breedte', 2], ['O9-1', 'breedte', 2], ['O9-2', 'breedte', 2],
-    ['O10-1', 'breedte', 2], ['O10-2', 'breedte', 2], ['O11-1', 'selectie', 2], ['O11-2', 'breedte', 2], ['O12-1', 'selectie', 2],
-    ['O12-2', 'breedte', 2], ['O13-1', 'selectie', 3], ['O13-2', 'breedte', 2], ['O14-1', 'selectie', 3], ['O15-1', 'selectie', 3],
-    ['O16-1', 'breedte', 2], ['O17-1', 'selectie', 3], ['O19-1', 'breedte', 2], ['MO13-1', 'breedte', 2], ['MO15-1', 'breedte', 2],
+    ['O6-1', 'breedte', 1], ['O7-1', 'breedte', 1], ['O7-2', 'breedte', 1], ['O8-1', 'breedte', 2], ['O8-2', 'breedte', 2],
+    ['O9-1', 'breedte', 2], ['O9-2', 'breedte', 2], ['O10-1', 'breedte', 2], ['O10-2', 'breedte', 2], ['O11-1', 'selectie', 2],
+    ['O11-2', 'breedte', 2], ['O11-3', 'breedte', 2], ['O12-1', 'selectie', 2], ['O12-2', 'breedte', 2], ['O12-3', 'breedte', 2], ['O12-4', 'breedte', 2],
   ];
 
   CC.VAKANTIES_NOORD = [
@@ -76,7 +76,7 @@
     let uid = 1; const id = (p) => `${p}${uid++}`;
 
     const S = {
-      v: 1, gen: today,
+      v: 2, gen: today,
       club: {
         id: 'scb', naam: 'SC Buitenveldert', regio: 'Noord',
         seizoen: { start: '2026-08-19', eind: '2027-06-05' },
@@ -112,12 +112,12 @@
       const cat = naam.replace(/-\d+$/, '');
       let dagenT;
       if (naam === 'O10-1') dagenT = [dowToday === 6 ? 5 : dowToday, t2 === 6 ? 4 : t2];
-      else dagenT = [[1, 3], [2, 4], [1, 4], [3, 5]][i % 4].slice(0, per >= 2 ? 2 : 1);
-      if (per === 3) dagenT = [1, 3, 5];
-      const u = 16 + (i % 5);
+      else dagenT = per >= 2 ? [3, 5] : [3]; // onderbouw traint woensdag en vrijdag (jaarplanning)
+      const u = 16 + (i % 2), m = i % 4 < 2 ? '00' : '30';
+      const velden = ['Veld 1', 'Veld 2', 'Veld 4A', 'Veld 4B'];
       const team = {
         id: naam, naam, cat, type,
-        rooster: dagenT.map((d, k) => ({ dag: d, tijd: `${pad(u + (k % 2))}:${i % 2 ? '30' : '00'}`, eind: `${pad(u + 1 + (k % 2))}:${i % 2 ? '45' : '15'}`, veld: `Veld ${1 + ((i + k) % 4)}` })),
+        rooster: dagenT.map((d) => ({ dag: d, tijd: `${pad(u)}:${m}`, eind: `${pad(u + 1)}:${m}`, veld: velden[i % 4] })),
         afwijking: {}, vorig: 78 + Math.floor(R() * 16), trainerId: null, teamleiderId: null,
       };
       S.teams.push(team);
@@ -129,8 +129,8 @@
     // Staf voor overige teams (sommige ontbreken bewust)
     S.teams.forEach((t) => {
       if (t.id === 'O10-1') return;
-      if (t.id !== 'MO15-1') { const p = person(`${pick(OUDERNAMEN)} ${pick(ACHTERNAMEN)}`); p.rollen.push({ rol: 'trainer', teamId: t.id }); t.trainerId = p.id; }
-      if (!['O9-2', 'O16-1', 'MO15-1'].includes(t.id)) { const p = person(`${pick(OUDERNAMEN)} ${pick(ACHTERNAMEN)}`); p.rollen.push({ rol: 'teamleider', teamId: t.id }); t.teamleiderId = p.id; }
+      if (t.id !== 'O12-4') { const p = person(`${pick(OUDERNAMEN)} ${pick(ACHTERNAMEN)}`); p.rollen.push({ rol: 'trainer', teamId: t.id }); t.trainerId = p.id; }
+      if (!['O9-2', 'O11-3', 'O12-4'].includes(t.id)) { const p = person(`${pick(OUDERNAMEN)} ${pick(ACHTERNAMEN)}`); p.rollen.push({ rol: 'teamleider', teamId: t.id }); t.teamleiderId = p.id; }
     });
 
     // Spelers en ouders
@@ -148,7 +148,7 @@
     addPlayer('Mila', 'de Vries', 'O8-2', sanne);
     S.teams.forEach((t) => {
       if (t.id === 'O10-1') return;
-      const n = t.cat === 'O7' ? 8 : parseInt(t.cat.replace(/\D/g, ''), 10) <= 10 ? 10 : parseInt(t.cat.replace(/\D/g, ''), 10) <= 12 ? 12 : 15;
+      const n = parseInt(t.cat.replace(/\D/g, ''), 10) <= 7 ? 8 : parseInt(t.cat.replace(/\D/g, ''), 10) <= 10 ? 10 : parseInt(t.cat.replace(/\D/g, ''), 10) <= 12 ? 12 : 15;
       const namen = t.id.startsWith('MO') ? MEIDEN : VOORNAMEN;
       for (let k = t.id === 'O8-2' ? 1 : 0; k < n; k++) addPlayer(pick(namen), pick(ACHTERNAMEN), t.id);
     });
@@ -196,7 +196,7 @@
     });
 
     // ---------- Aanwezigheid (verleden) ----------
-    const basis = { 'O13-2': 0.2, 'O15-1': 0.16, 'O17-1': 0.12, 'O19-1': 0.24 };
+    const basis = { 'O12-3': 0.22, 'O11-1': 0.15, 'O9-1': 0.2 };
     const redenGewicht = ['Ziek', 'Ziek', 'Blessure', 'School/huiswerk', 'School/huiswerk', 'Vakantie', 'Familie', 'Familie', 'Andere sport', 'Overig'];
     const afmMaken = (pl, a, reden, uurVoor) => {
       const t = new Date(start(a).getTime() - uurVoor * 3600e3);
@@ -310,7 +310,7 @@
     msg({ van: sanne.id, soort: 'persoonlijk', bereik: 'Mark Jansen', onderwerp: 'Re: training', tekst: 'Hoi Mark, Jesse heeft op die dag zwemles. Ik laat het weten zodra dat verandert!', tijd: new Date(now - 30 * 864e5).toISOString(), ontvangers: [mark.id], gelezen: [mark.id] });
     msg({ van: 'systeem', soort: 'melding', bereik: 'Linda Bakker', onderwerp: 'Planning gewijzigd door de trainer', tekst: `Mark Jansen heeft een oefenwedstrijd toegevoegd voor O10-1. Ter informatie, je hoeft niets te doen.`, tijd: new Date(now - 4 * 864e5).toISOString(), ontvangers: [linda.id, peter.id] });
     S.wijzigingen.push({ id: id('w'), teamId: 'O10-1', door: mark.id, tekst: 'Oefenwedstrijd toegevoegd', tijd: new Date(now - 4 * 864e5).toISOString() });
-    S.wijzigingen.push({ id: id('w'), teamId: 'O13-1', door: T('O13-1').trainerId, tekst: 'Training verplaatst naar veld 4', tijd: new Date(now - 1 * 864e5).toISOString() });
+    S.wijzigingen.push({ id: id('w'), teamId: 'O12-1', door: T('O12-1').trainerId, tekst: 'Training verplaatst naar veld 4', tijd: new Date(now - 1 * 864e5).toISOString() });
 
     return S;
   };

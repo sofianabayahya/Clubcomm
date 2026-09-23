@@ -8,7 +8,9 @@ Gemigreerd uit Replit op 2026-09-22. Taal van de UI: Nederlands.
   - `data.js`: demodata (20 teams, O10-1 uitgewerkt) + rekenregels (aanwezigheid, kaarten per blok, zones, signalen, speeltijd).
   - `core.js`: inloggen (link/code, demo), kop, 5 knoppen onderaan, profiel/rolwisselaar, berichten, afmelden, uitnodigen (QR via `vendor/qrcode.js`).
   - `ouder.js`, `trainer.js`, `teamleider.js`, `hjo.js` (ook clubbeheerder): schermen per rol.
+  - `materiaal.js`: module Materiaal (checklist per team, mail naar secretaris).
   - Icoontjes: één set (Lucide) in `vendor/icons.js`. Kleuren als tokens in `app.css`, met donkere modus.
+- Pilot = onderbouw (O6–O12); de demo heeft alleen onderbouwteams.
 - Demo-accounts: Sanne (ouder), Mark (trainer + ouder), Linda (teamleider + ouder), Peter (HJO + clubbeheerder). Data in localStorage, wordt elke dag opnieuw gemaakt.
 - Oude Replit-pagina's staan in `public/oud/` (alleen ter referentie).
 - `server.js` (Express) serveert alleen `public/`; mock-endpoints `/api/*` worden niet gebruikt.

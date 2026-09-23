@@ -359,3 +359,15 @@ body.sheet-open { overflow: hidden; }
   body.print-qr .sheet { position: static; transform: none; max-height: none; background: #fff; }
   body.print-qr .printvel .qr { max-width: 12cm; }
 }
+
+/* Materiaal-checklist */
+.matrij { flex-wrap: wrap; }
+.keuze { display: flex; gap: 6px; }
+.keuze button { display: inline-flex; align-items: center; gap: 4px; min-height: 36px; padding: 0 10px; border-radius: 10px; border: 1px solid var(--lijn); background: var(--vlak); font-size: 13px; font-weight: 600; color: var(--zacht); }
+.keuze button .ic { width: 16px; height: 16px; }
+.keuze button.aan.ok { background: var(--groen-l); border-color: var(--groen); color: var(--groen); }
+.keuze button.aan.mist { background: var(--oranje-l); border-color: var(--oranje); color: var(--oranje); }
+.knop:disabled { opacity: .5; cursor: not-allowed; }
+.matrij .rij-tekst { flex: 1 1 150px; min-width: 150px; }
+.matrij .keuze { margin-left: auto; }
+.matrij .rij-tekst b { overflow-wrap: anywhere; }

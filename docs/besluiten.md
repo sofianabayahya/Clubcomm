@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 23 september 2026 (Besluit 14 en 15 toegevoegd)
+Laatst bijgewerkt: 23 september 2026 (Besluit 14 t/m 17 toegevoegd)
 
 ---
 
@@ -482,6 +482,31 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
 ---
 
+## Besluit 16 — Pilot: de onderbouw
+
+- De pilot draait voor de **onderbouw: mini's (O6–O7) tot en met O12**. Daar spelen ouders de grootste rol en zijn ze nieuw bij de club; zij moeten begeleid worden.
+- Punten die alleen voor O13 en ouder gelden (speler zelf bij het gesprek, dalingssignaal O13+) zijn geparkeerd tot na de pilot.
+- Later kan ClubComm uitgroeien tot een **volledige clubapp** (middenbouw, bovenbouw, senioren).
+- De demo in het prototype bevat alleen onderbouwteams.
+
+### Vuistregel voor nieuwe ideeën
+Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
+
+---
+
+## Besluit 17 — Module Materiaal
+
+- **Checklist per team bij de start van het seizoen**, in te vullen door de trainer (± 1 minuut).
+- Per item: **In orde** of **Niet ontvangen**, met een knop "Alles in orde" om snel te beginnen, plus een opmerking.
+- De app rekent mee: ballen en hesjes = **1 per speler** van het team; ballen maat 3 (mini's) of maat 4 (O8–O12).
+- Standaardlijst: ballen, 40 hoedjes, hesjes (2 kleuren), minidoeltjes (t/m O10), ballentas, ballenpomp, EHBO-tas, keepershandschoenen (vanaf O8), trainingspak trainer. De **clubbeheerder** past de lijst aan.
+- **Niet ontvangen** → automatisch een **mail naar de secretaris** (adres instelbaar; die persoon heeft geen account nodig) en een melding bij de HJO ("Aandacht nodig").
+- De HJO (of secretaris) vinkt **"Geleverd"** aan; de trainer krijgt dan bericht.
+- Het is geen voorraadsysteem: geen uitleenregistratie en geen kleding bestellen.
+- Nog open: alleen bij de start van het seizoen, of ook per fase?
+
+---
+
 ## Besluit 15 — Fases en opschaling
 
 Gebaseerd op de jaarplanning onderbouw 2026/27 van SC Buitenveldert en de verdieping in `docs/verdieping-consequenties.md`.
@@ -561,6 +586,9 @@ Verandert er een besluit, pas dan de tekst aan in `maak-handleidingen.js` en maa
 - **Beloningen** (punten, contributie terugverdienen) als optionele module die de HJO per club of team aanzet.
 - **Planning uit voetbal.nl** koppelen.
 - **Import uit Sportlink** (zie Besluit 2).
+- **Club inrichten bij de start (onboarding):** bij de verkoop samen met een bestuurslid de taakverdeling instellen: welke taak ligt bij welke rol (HJO, coördinator, clubbeheerder, secretaris…). De tabel "Wie doet wat" wordt dan per club instelbaar.
+- **Handleiding bij de verkoop:** per rol (bestaat al in `docs/handleidingen/`) en voor de clubbeheerder.
+- **Online hulp met AI:** een assistent die de app volledig kent en stap voor stap uitlegt, bijvoorbeeld "hoe zet ik de taken van X uit?" of "hoe zet ik deze module uit?". Scheelt telefoontjes.
 - **Evaluatieformulier aan het einde van het seizoen** (ouders, trainers, teamleiders), zodat we per seizoen een rapport kunnen maken van wat beter kan.
 
 ---

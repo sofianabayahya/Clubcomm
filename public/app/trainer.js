@@ -146,6 +146,7 @@
         const n = M.ongelezen(S, me.id); if (n) acties.push(h.rij({ ic: 'message-circle', titel: `${n} ${n === 1 ? 'nieuw bericht' : 'nieuwe berichten'}`, act: 'tab', attrs: 'data-tab="berichten"', kleur: 'blauw' }));
         if (!t.teamleiderId) { const open = S.aanm.filter((x) => x.teamId === tid && x.status === 'open').length; if (open) acties.push(h.rij({ ic: 'user-check', titel: `${open} aanmelding${open > 1 ? 'en' : ''} goedkeuren`, sub: 'Dit team heeft geen teamleider, dus jij keurt goed', act: 'open', attrs: 'data-view="aanmeldingen"', kleur: 'oranje' })); }
         acties.push(...CC.signaalRegels(S, tid, true));
+        const mat = CC.materiaalRij && CC.materiaalRij(S, tid); if (mat) acties.push(mat);
         return `<article class="kaartje hoofd">
             <small>${D.relatief(volgendeT.datum)}${volgendeT.soort !== 'training' ? '' : ''}</small><h2>${h.actTitel(S, volgendeT)}</h2><p class="zacht">${h.actSub(S, volgendeT)}</p>
             <div class="verwacht"><b>${sp.length - af.length}</b><span>van ${sp.length} verwacht</span></div>
@@ -171,6 +172,7 @@
       spelers(S) {
         const tid = CC.teamId(); const per = M.periode(S, 'blok');
         return `<div class="knoppen"><button class="knop" data-act="open" data-view="beoordelen">${icon('star')}Beoordelen</button><button class="knop licht" data-act="uitnodigSheet">${icon('user-plus')}Ouders uitnodigen</button></div>
+          ${CC.materiaalStatus ? `<div class="lijst">${CC.materiaalStatus(S, tid)}</div>` : ''}
           <div class="lijst">${M.spelers(S, tid).map((pl) => { const st = M.stats(S, pl, per); const b = S.beoord[pl.id]; return h.rij({ ic: h.avatar(pl.voornaam), titel: esc(M.naam(S, pl)), sub: `${st.pct == null ? '–' : st.pct + '%'} aanwezig · ${b ? `beoordeeld (${Object.keys(b.scores).length})` : 'nog niet beoordeeld'}`, rechts: h.stip(M.zone(S, st.pct, tid)), act: 'open', attrs: `data-view="speler" data-id="${pl.id}"` }); }).join('')}</div>`;
       },
       speeltijd: (S) => CC.speeltijdHtml(S, CC.teamId()),

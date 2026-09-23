@@ -34,6 +34,7 @@
         if (A.laat.length) rijen.push(h.rij({ ic: 'hourglass', titel: `${A.laat.length} aanmelding${A.laat.length > 1 ? 'en' : ''} langer dan 48 uur open`, sub: A.laat.map((x) => `${esc(x.kindVoor)} (${esc(x.teamId)})`).join(', '), kleur: 'oranje', act: 'open', attrs: 'data-view="aanmeldingenHjo"' }));
         if (A.lang.length) rijen.push(h.rij({ ic: 'hospital', titel: `${A.lang.length} speler${A.lang.length > 1 ? 's' : ''} langdurig afwezig`, sub: A.lang.map((s) => esc(s.tekst.split(':')[0])).join(', '), act: 'open', attrs: 'data-view="signalen" data-soort="lang"' }));
         if (A.patroon.length) rijen.push(h.rij({ ic: 'repeat', titel: `${A.patroon.length} opvallende patronen`, sub: 'Bijv. steeds op dezelfde dag afwezig', act: 'open', attrs: 'data-view="signalen" data-soort="patroon"' }));
+        const mat = CC.materiaalAandacht && CC.materiaalAandacht(S); if (mat) rijen.push(mat);
         if (A.wijz.length) rijen.push(h.rij({ ic: 'calendar-days', titel: `${A.wijz.length} planningswijziging${A.wijz.length > 1 ? 'en' : ''} door trainers`, sub: 'Ter informatie', act: 'tab', attrs: 'data-tab="planning"' }));
         return `<div class="clubregel"><span><b>${S.teams.length}</b> teams</span><span><b>${S.players.filter((p) => p.teamId).length}</b> spelers</span><span><b>${tot ? Math.round((100 * aan) / tot) : '–'}%</b> aanwezig</span></div>
           <div class="twee-knoppen"><button class="tegel groot" data-act="berichtAanClub">${icon('megaphone')}<span>Bericht aan club</span></button><button class="tegel groot rood" data-act="afgelasten">${icon('ban')}<span>Afgelasten</span></button></div>
@@ -203,6 +204,7 @@
         ${h.sectie('Staf')}<div class="kaartje"><label class="klein-kop">Trainer</label>${kies('trainerId', t.trainerId)}<label class="klein-kop">Teamleider</label>${kies('teamleiderId', t.teamleiderId)}<p class="zacht klein">Kies uit bestaande ouders of staf. Iemand van buiten? Voeg de persoon toe via Teams → Mensen.</p></div>
         ${h.sectie('Teamtype en regels')}<div class="kaartje"><div class="seg">${['breedte', 'selectie'].map((x) => `<button class="${t.type === x ? 'aan' : ''}" data-act="zetType" data-team="${t.id}" data-val="${x}">${x[0].toUpperCase() + x.slice(1)}</button>`).join('')}</div>
           <form data-submit="afwijkingOk" data-team="${t.id}" class="codeform"><label for="af-d">Afmelden training tot … uur van tevoren</label><input id="af-d" name="dt" type="number" min="0" max="48" value="${afw.deadlineTraining ?? ''}" placeholder="Clubstandaard: ${S.club.inst.deadlineTraining}"><button class="knop licht klein">Afwijking opslaan</button><p class="zacht klein">Leeg = clubstandaard. Zo kan een selectieteam strenger zijn dan een breedteteam.</p></form></div>
+        ${CC.materiaalStatus && S.club.modules.materiaal ? `<div class="lijst">${CC.materiaalStatus(S, t.id)}</div>` : ''}
         ${h.sectie('Rooster')}<p class="klein">${t.rooster.map((r) => `${D.DAG[r.dag]} ${r.tijd}–${r.eind}, ${esc(r.veld)}`).join('<br>') || 'Nog geen rooster'} <button class="linkknop" data-act="roosterTeam" data-team="${t.id}">Wijzigen</button></p>
         ${h.sectie('Spelers')}${CC.overzichtHtml(S, t.id)}
         ${h.sectie('Ouders uitnodigen')}${CC.uitnodigBlok(t.id)}`,
@@ -278,7 +280,8 @@
         const m = S.club.modules;
         const rij = (k, titel, sub, uit) => `<label class="rij schakel ${uit ? 'uit' : ''}"><span class="rij-tekst"><b>${titel}</b><small>${sub}</small></span><input type="checkbox" ${m[k] ? 'checked' : ''} ${uit ? 'disabled' : ''} data-change="module" data-k="${k}"><i></i></label>`;
         return `<p class="zacht">Zet onderdelen aan of uit voor de hele club. Knoppen van uitgezette modules verdwijnen uit de app.</p><div class="lijst">
-          ${rij('vervoer', 'Vervoer', 'Rijden en meerijden bij uitwedstrijden')}${rij('taken', 'Taken', 'Spelbegeleider, coach, bardienst, wastas')}${rij('speeltijd', 'Speeltijd', 'Eerlijk wisselschema bij wedstrijden')}${rij('beoordeling', 'Beoordelingen', 'Volgens KNVB-leeftijdscategorie')}${rij('beloningen', 'Beloningen', 'Later: punten voor meehelpen', true)}</div>`;
+          ${rij('vervoer', 'Vervoer', 'Rijden en meerijden bij uitwedstrijden')}${rij('taken', 'Taken', 'Spelbegeleider, coach, bardienst, wastas')}${rij('speeltijd', 'Speeltijd', 'Eerlijk wisselschema bij wedstrijden')}${rij('beoordeling', 'Beoordelingen', 'Volgens KNVB-leeftijdscategorie')}${rij('materiaal', 'Materiaal', 'Checklist per team bij de start van het seizoen')}${rij('beloningen', 'Beloningen', 'Later: punten voor meehelpen', true)}</div>
+          ${m.materiaal ? h.rij({ ic: 'sliders-horizontal', titel: 'Materiaal instellen', sub: 'Checklist en wie de meldingen krijgt', act: 'open', attrs: 'data-view="materiaalInst"' }) : ''}`;
       },
     },
   };
