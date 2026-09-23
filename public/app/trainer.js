@@ -96,12 +96,12 @@
   // Opschalingsstap als rij; bij "bellen" direct bel- en WhatsApp-knop naar de ouder
   CC.stapRij = (S, s) => {
     const pl = M.speler(S, s.spelerId); const o = pl && M.persoon(S, pl.ouders[0]);
-    const knoppen = s.soort === 'bellen' && o ? `<a class="icoonknop blauw" href="tel:${o.tel}" aria-label="Bel ${esc(o.naam)}">${icon('phone')}</a><a class="icoonknop groen" href="https://wa.me/31${o.tel.slice(1)}" target="_blank" rel="noopener" aria-label="WhatsApp ${esc(o.naam)}">${icon('message-circle')}</a><button class="knop klein" data-act="snelGebeld" data-id="${s.spelerId}">Gebeld ✓</button>` : '';
+    const knoppen = s.soort === 'bellen' && o && CC.mag('bellen', null, pl.teamId) ? `<a class="icoonknop blauw" href="tel:${o.tel}" aria-label="Bel ${esc(o.naam)}">${icon('phone')}</a><a class="icoonknop groen" href="https://wa.me/31${o.tel.slice(1)}" target="_blank" rel="noopener" aria-label="WhatsApp ${esc(o.naam)}">${icon('message-circle')}</a><button class="knop klein" data-act="snelGebeld" data-id="${s.spelerId}">Gebeld ✓</button>` : '';
     return h.rij({ ic: s.soort === 'bellen' ? 'phone' : 'users', titel: esc(s.tekst), sub: esc(s.sub), kleur: 'rood', act: 'open', attrs: `data-view="speler" data-id="${s.spelerId}"`, rechts: knoppen, chevron: !knoppen });
   };
   CC.signaalRijAfdoen = (S, s) => {
     const rij = signaalRij(S, s);
-    if (!s.afdoenbaar) return rij;
+    if (!s.afdoenbaar || !CC.mag('afdoen')) return rij;
     const knop = `<button class="knop klein licht" data-act="signaalAfdoen" data-sleutel="${esc(s.sleutel)}">${icon('check')}Gezien</button>`;
     return `<div class="signaal">${rij}<div class="signaal-voet">${knop}<small class="zacht">geen actie nodig</small></div></div>`;
   };
@@ -112,7 +112,8 @@
   CC.signaalRegels = (S, tid, zonderLang) => {
     const sig = M.signalen(S, [tid], false).filter((s) => !(zonderLang && s.soort === 'lang'));
     const stappen = ['bellen', 'gesprekHjo', 'clubbesluit'];
-    const gesprek = sig.filter((s) => stappen.includes(s.soort)); const rest = sig.filter((s) => !stappen.includes(s.soort));
+    const magStap = (s) => stappen.includes(s.soort) && CC.mag({ bellen: 'bellen', gesprekHjo: 'gesprek', clubbesluit: 'clubbesluit' }[s.soort], null, tid);
+    const gesprek = sig.filter(magStap); const rest = sig.filter((s) => !magStap(s));
     const namen = [...new Set(rest.map((s) => s.tekst.split(':')[0].split(' ')[0]))];
     return [...gesprek.map((s) => CC.stapRij(S, s)), rest.length ? h.rij({ ic: 'triangle-alert', titel: `${namen.length} ${namen.length === 1 ? 'speler vraagt' : 'spelers vragen'} aandacht`, sub: namen.join(', '), kleur: 'oranje', act: 'open', attrs: `data-view="teamSignalen" data-team="${tid}"` }) : ''].filter(Boolean);
   };
@@ -150,7 +151,7 @@
         const n = M.ongelezen(S, me.id); if (n) acties.push(h.rij({ ic: 'message-circle', titel: `${n} ${n === 1 ? 'nieuw bericht' : 'nieuwe berichten'}`, act: 'tab', attrs: 'data-tab="berichten"', kleur: 'blauw' }));
         if (!t.teamleiderId) { const open = S.aanm.filter((x) => x.teamId === tid && x.status === 'open').length; if (open) acties.push(h.rij({ ic: 'user-check', titel: `${open} aanmelding${open > 1 ? 'en' : ''} goedkeuren`, sub: 'Dit team heeft geen teamleider, dus jij keurt goed', act: 'open', attrs: 'data-view="aanmeldingen"', kleur: 'oranje' })); }
         acties.push(...CC.signaalRegels(S, tid, true));
-        const mat = CC.materiaalRij && CC.materiaalRij(S, tid); if (mat) acties.push(mat);
+        const mat = CC.materiaalRij && CC.mag('materiaal') && CC.materiaalRij(S, tid); if (mat) acties.push(mat);
         if (CC.beoordRijTrainer) acties.push(...CC.beoordRijTrainer(S, tid));
         return `<article class="kaartje hoofd">
             <small>${D.relatief(volgendeT.datum)}${volgendeT.soort !== 'training' ? '' : ''}</small><h2>${h.actTitel(S, volgendeT)}</h2><p class="zacht">${h.actSub(S, volgendeT)}</p>
@@ -172,12 +173,12 @@
         return `${h.seg('aanwModus', [['opnemen', 'Opnemen'], ['overzicht', 'Overzicht']], 'opnemen')}
           <div class="weekstrook" role="tablist">${acts.map((x) => { const d = D.parse(x.datum); return `<button role="tab" aria-selected="${x.id === a.id}" class="${x.id === a.id ? 'aan' : ''} ${x.afgelast ? 'afg' : ''} ${x.datum === D.vandaag() ? 'vandaag' : ''} ${S.pres[x.id] ? 'gedaan' : ''}" data-act="seg" data-key="aanwAct" data-val="${x.id}"><small>${D.DAG_KORT[d.getDay()]}</small><b>${d.getDate()}</b><small>${x.soort === 'training' ? 'T' : 'W'}</small></button>`; }).join('')}</div>
           ${a ? `<div class="kaart-kop los">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${h.actSub(S, a)}</small></div></div>${CC.opnemenHtml(S, a)}` : ''}
-          <button class="knop licht vol" data-act="planningAanpassen">${icon('calendar-plus')}Planning aanpassen of oefenwedstrijd toevoegen</button>`;
+          ${CC.mag('planning') ? `<button class="knop licht vol" data-act="planningAanpassen">${icon('calendar-plus')}Planning aanpassen of oefenwedstrijd toevoegen</button>` : ''}`;
       },
       berichten: (S) => CC.berichtenScherm(S, { nieuw: true }),
       spelers(S) {
         const tid = CC.teamId(); const per = M.periode(S, 'blok');
-        return `<div class="knoppen"><button class="knop" data-act="open" data-view="beoordelen">${icon('star')}Beoordelen</button><button class="knop licht" data-act="uitnodigSheet">${icon('user-plus')}Ouders uitnodigen</button></div>
+        return `<div class="knoppen">${CC.mag('beoordelen') ? `<button class="knop" data-act="open" data-view="beoordelen">${icon('star')}Beoordelen</button>` : ''}<button class="knop licht" data-act="uitnodigSheet">${icon('user-plus')}Ouders uitnodigen</button></div>
           ${CC.materiaalStatus ? `<div class="lijst">${CC.materiaalStatus(S, tid)}</div>` : ''}
           <div class="lijst">${M.spelers(S, tid).map((pl) => { const st = M.stats(S, pl, per); const b = CC.beoordLaatste(S, pl.id); return h.rij({ ic: h.avatar(pl.voornaam), titel: esc(M.naam(S, pl)), sub: `${st.pct == null ? '–' : st.pct + '%'} aanwezig · ${b ? `beoordeeld (${b.m.naam.toLowerCase()})` : 'nog niet beoordeeld'}`, rechts: h.stip(M.zone(S, st.pct, tid)), act: 'open', attrs: `data-view="speler" data-id="${pl.id}"` }); }).join('')}</div>`;
       },

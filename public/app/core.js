@@ -17,7 +17,7 @@
     del(k) { try { localStorage.removeItem(k); } catch (e) { /* */ } },
   };
   let S = store.get(KEY, null);
-  if (!S || S.gen !== D.vandaag() || S.v !== 7) { S = CC.generate(); store.set(KEY, S); }
+  if (!S || S.gen !== D.vandaag() || S.v !== 8) { S = CC.generate(); store.set(KEY, S); }
   CC.S = () => S;
   CC.save = () => store.set(KEY, S);
   CC.reset = () => { S = CC.generate(); store.set(KEY, S); };
@@ -190,7 +190,7 @@
         <button class="linkknop" data-act="loginTerug">Ander e-mailadres</button>
       </div>`;
     }
-    const demo = [[S.demo.sanne, 'Ouder', 'moeder van Jesse (O10-1) en Mila (O8-2)'], [S.demo.mark, 'Trainer + ouder', 'trainer O10-1, vader van Daan'], [S.demo.linda, 'Teamleider + ouder', 'teamleider O10-1, moeder van Noah'], [S.demo.peter, `${S.club.labels.hjo} + clubbeheerder`, 'hoofd jeugdopleiding']];
+    const demo = [[S.demo.sanne, 'Ouder', 'moeder van Jesse (O10-1) en Mila (O8-2)'], [S.demo.mark, 'Trainer + ouder', 'trainer O10-1, vader van Daan'], [S.demo.linda, 'Teamleider + ouder', 'teamleider O10-1, moeder van Noah'], [S.demo.peter, `${S.club.labels.hjo} + clubbeheerder`, 'hoofd jeugdopleiding'], ...(S.demo.esther ? [[S.demo.esther, S.club.labels.coordinator, 'coördinator O10–O12']] : [])];
     return `<div class="login">${taal}
       <img src="assets/clubcomm-icon.png" class="login-logo" alt="ClubComm">
       <h1>ClubComm</h1>
@@ -257,7 +257,7 @@
   CC.on('profiel', () => {
     const me = CC.me(); const rol = CC.rol();
     const kids = CC.kinderen();
-    const rollen = me.rollen.map((r, i) => `<button class="rolkeuze ${i === (sessie.rolIdx || 0) ? 'aan' : ''}" data-act="wisselRol" data-idx="${i}">${icon({ ouder: 'heart', trainer: 'clipboard-check', teamleider: 'hand-helping', hjo: 'shield', beheerder: 'building-2' }[r.rol])}<span><b>${esc(CC.rolNaam(r))}</b><small>${r.teamId ? esc(r.teamId) : r.rol === 'ouder' ? kids.map((k) => esc(k.voornaam)).join(', ') : esc(S.club.naam)}</small></span>${i === (sessie.rolIdx || 0) ? icon('check') : ''}</button>`).join('');
+    const rollen = me.rollen.map((r, i) => `<button class="rolkeuze ${i === (sessie.rolIdx || 0) ? 'aan' : ''}" data-act="wisselRol" data-idx="${i}">${icon({ ouder: 'heart', trainer: 'clipboard-check', teamleider: 'hand-helping', hjo: 'shield', beheerder: 'building-2', coordinator: 'users' }[r.rol])}<span><b>${esc(CC.rolNaam(r))}</b><small>${r.teamId ? esc(r.teamId) : r.groep ? esc(r.groep) : r.rol === 'ouder' ? kids.map((k) => esc(k.voornaam)).join(', ') : esc(S.club.naam)}</small></span>${i === (sessie.rolIdx || 0) ? icon('check') : ''}</button>`).join('');
     CC.sheet('Profiel', `
       <div class="profiel-kop">${h.avatar(me.naam, 'groot')}<div><b>${esc(me.naam)}</b><small>${esc(me.email)} · ${esc(me.tel)}</small></div></div>
       ${me.rollen.length > 1 ? `<h3 class="klein-kop">Wissel van rol</h3><div class="rollen">${rollen}</div>` : ''}
@@ -418,7 +418,7 @@
   // Nieuw bericht (trainer, teamleider, HJO) — Besluit 7 en 11
   CC.on('nieuwBericht', () => {
     const rol = CC.rol().rol;
-    const soorten = rol === 'hjo'
+    const soorten = ['hjo', 'coordinator'].includes(rol)
       ? [['club', 'megaphone', 'Bericht aan club', 'Aan alle ouders en staf'], ['teams', 'users', 'Aan teams', 'Kies één of meer teams'], ['persoon', 'user', 'Persoonlijk', 'Aan één ouder of stafslid'], ['gepland', 'clock', 'Gepland bericht', 'Schrijf nu, verstuur later']]
       : [['groep', 'users', 'Groepsbericht', 'Aan alle ouders van het team'], ['persoon', 'user', 'Persoonlijk', 'Aan één ouder'], ['wijziging', 'calendar-x', 'Trainingswijziging', 'Past ook de planning aan'], ['herinnering', 'bell', 'Herinnering', 'Met ingevuld sjabloon']];
     CC.sheet('Nieuw bericht', `<div class="lijst">${soorten.map(([v, ic, t, s]) => h.rij({ ic, titel: t, sub: s, act: 'berichtSoort', attrs: `data-soort="${v}"` })).join('')}</div>`);
@@ -579,15 +579,15 @@
       ${rol !== 'ouder' ? `${h.sectie('Ouders')}<div class="lijst">${ouders.map((o) => h.rij({ ic: h.avatar(o.naam), titel: esc(o.naam), sub: esc(o.email), rechts: `<a class="icoonknop groen" href="https://wa.me/31${o.tel.slice(1)}" target="_blank" rel="noopener" aria-label="WhatsApp ${esc(o.naam)}">${icon('message-circle')}</a>` })).join('')}</div>` : ''}
       ${CC.zicht('beoordeling') && b ? `${h.sectie(`Beoordeling · ${esc(b.m.naam.toLowerCase())}`)}<div class="scores">${Object.entries(b.x.scores).map(([v, s]) => `<span>${esc(v)} ${CC.scoreTekst(t, s)}</span>`).join('')}</div>` : ''}
       ${rol !== 'ouder' ? `${CC.zicht('gesprekken') ? `${h.sectie('Gesprekken')}${gespr.map((g) => h.rij({ ic: g.soort === 'gesprek' ? 'users' : g.soort === 'geappt' ? 'message-circle' : 'phone', titel: `${D.kort(g.datum)} · ${g.soort === 'gesprek' ? 'Persoonlijk gesprek' : g.soort === 'geappt' ? 'Geappt' : 'Gebeld'} · ${esc((M.persoon(S, g.door) || { naam: '' }).naam)}`, sub: esc(g.notitie) + (g.afspraak ? `<br><b>Afspraak:</b> ${esc(g.afspraak)}` : '') })).join('') || '<p class="zacht klein">Nog geen gesprekken vastgelegd.</p>'}` : ''}
-        <div class="knoppen">${CC.zicht('contact') ? `<button class="knop licht" data-act="gesprekVastleggen" data-id="${pl.id}">${icon('phone')}Contact vastleggen</button>` : ''}<button class="knop licht" data-act="langdurigSheet" data-id="${pl.id}">${icon('hospital')}Langdurig afwezig</button></div>` : ''}`,
+        <div class="knoppen">${CC.zicht('contact') ? `<button class="knop licht" data-act="gesprekVastleggen" data-id="${pl.id}">${icon('phone')}Contact vastleggen</button>` : ''}${CC.mag('langdurig') ? `<button class="knop licht" data-act="langdurigSheet" data-id="${pl.id}">${icon('hospital')}Langdurig afwezig</button>` : ''}</div>` : ''}`,
     };
   };
   CC.scoreTekst = (t, s) => { const c = CC.categorie(t.cat); if (c.schaal === 'smiley' || c.schaal === 'mini') return ['', '<span class="smiley">😐</span>', '<span class="smiley">🙂</span>', '<span class="smiley">😃</span>'][s] || '–'; return `<b>${s}</b>/5`; };
   CC.on('gesprekVastleggen', (el) => {
-    const pl = M.speler(S, el.dataset.id); const stap = M.stap(S, pl); const hjo = CC.rol().rol === 'hjo';
+    const pl = M.speler(S, el.dataset.id); const stap = M.stap(S, pl); const hjo = CC.mag ? CC.mag('gesprek') : CC.rol().rol === 'hjo';
     const std = stap && stap.soort === 'gesprekHjo' ? 'gesprek' : 'gebeld';
     CC.sheet('Contact vastleggen', `<form data-submit="gesprekOpslaan" data-id="${pl.id}" class="codeform">
-      <label for="g-s">Soort contact</label><select id="g-s" name="s"><option value="gebeld" ${std === 'gebeld' ? 'selected' : ''}>Gebeld</option><option value="geappt">Geappt</option><option value="gesprek" ${std === 'gesprek' ? 'selected' : ''}>Persoonlijk gesprek${hjo ? '' : ` (${esc(S.club.labels.hjo)})`}</option></select>
+      <label for="g-s">Soort contact</label><select id="g-s" name="s"><option value="gebeld" ${std === 'gebeld' ? 'selected' : ''}>Gebeld</option><option value="geappt">Geappt</option><option value="gesprek" ${std === 'gesprek' ? 'selected' : ''}>Persoonlijk gesprek${hjo ? '' : ` (${esc(CC.wie ? CC.wie('gesprek', pl.teamId) : S.club.labels.hjo)})`}</option></select>
       <label for="g-d">Datum</label><input id="g-d" name="d" type="date" value="${D.vandaag()}">
       <label for="g-n">Wat speelt er?</label><textarea id="g-n" name="n" rows="3" required placeholder="Bijv. zwemles op vrijdag; oma ziek."></textarea>
       <label for="g-a">Afspraak (mag leeg)</label><input id="g-a" name="a" placeholder="Bijv. altijd via de app afmelden, ook als het laat wordt">

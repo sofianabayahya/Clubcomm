@@ -12,11 +12,11 @@ Gemigreerd uit Replit op 2026-09-22. Taal van de UI: Nederlands.
   - `afwezig.js`: periode afmelden (ouder) en "trainer kan niet" (vervanger of afgelasten).
   - `trainerafw.js`: afwezigheid van trainers signaleren (punten per fase, signaal naar HJO).
   - `beoordeling.js`: twee beoordelingsmomenten (winter, einde seizoen) met ontwikkelgesprekken, tijdsloten en agenda (Besluit 23).
-  - `zicht.js`: wie ziet wat per rol (teamleider/trainer), in te stellen door de clubbeheerder (Besluit 24).
+  - `taken.js`: taken per rol (trainer, teamleider, coördinator, HJO), aan te vinken door de clubbeheerder; rol coördinator met groep teams (Besluit 25).
   - `agenda.js`: agenda-abonnement (iCalendar-link; `CC.icsTekst` maakt de echte .ics-inhoud voor versie 2).
   - Icoontjes: één set (Lucide) in `vendor/icons.js`. Kleuren als tokens in `app.css`, met donkere modus.
 - Pilot = onderbouw (O6–O12); de demo heeft alleen onderbouwteams.
-- Demo-accounts: Sanne (ouder), Mark (trainer + ouder), Linda (teamleider + ouder), Peter (HJO + clubbeheerder). Data in localStorage, wordt elke dag opnieuw gemaakt.
+- Demo-accounts: Sanne (ouder), Mark (trainer + ouder), Linda (teamleider + ouder), Peter (HJO + clubbeheerder), Esther (coördinator O10–O12). Data in localStorage, wordt elke dag opnieuw gemaakt.
 - Oude Replit-pagina's staan in `public/oud/` (alleen ter referentie).
 - `server.js` (Express) serveert alleen `public/`; mock-endpoints `/api/*` worden niet gebruikt.
 - Pagina-overzicht en rollen van het oude prototype: `APP_BLUEPRINT.md` (verouderd; `docs/besluiten.md` gaat voor).

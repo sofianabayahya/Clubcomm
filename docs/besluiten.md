@@ -458,7 +458,7 @@ Drie vragen, van club → team → speler:
 **Ouder · Trainer · Teamleider · Coördinator (optioneel) · HJO · Clubbeheerder**
 
 - **Vaste rollen met een bereik**, geen zelf te verzinnen rollen (houdt de app eenvoudig).
-- **Coördinator:** zelfde rechten als de HJO, maar alleen voor een **groep teams** (bijv. O8–O12). Optioneel; de clubbeheerder bepaalt of de club deze rol gebruikt.
+- **Coördinator:** laag tussen trainer en HJO voor een **groep teams** (bijv. O10–O12). Optioneel; de clubbeheerder bepaalt of de club deze rol gebruikt. Welke taken hij heeft, bepaalt de club (Besluit 25).
 - **Naam van de rol aanpasbaar per club:** de ene club zegt "coördinator", de andere "HJO". De rechten blijven gelijk, alleen het label verschilt.
 - Eén account kan meerdere rollen hebben (rolwisselaar in het profiel).
 
@@ -502,7 +502,28 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 25 — Taken per rol (de club bepaalt)
+*Besloten 23 september 2026. Vervangt Besluit 24 (wie ziet wat) en vult Besluit 12 aan.*
+
+- **Rollen zijn vaste bouwstenen met een bereik:** trainer en teamleider (één team), **coördinator** (een groep teams, bijv. O10–O12), HJO (hele club), clubbeheerder (inrichten). Ouders zien altijd alleen hun eigen kind.
+- **Taken hangen niet vast aan een rol.** Bij de ene club voert de HJO de gesprekken, bij de andere doet de coördinator dat en denkt de HJO vooral over beleid. **Het bestuur van de club bepaalt welke rol welke taak heeft**; de clubbeheerder vinkt dat aan in *Rollen → Taken per rol* en kan het **altijd aanpassen**.
+- Werkwijze bij een nieuwe club (verkoop): samen de lijst doorlopen. "Wat mag de trainer? Wat de teamleider? Wat de coördinator? Wat de HJO?" en aanvinken.
+- De takenlijst (per taak één vinkje per rol):
+  - *Planning en team:* planning aanpassen · bericht aan de hele club en afgelasten · teams zonder staf oplossen · aanmeldingen die langer dan 48 uur blijven liggen
+  - *Spelers opvolgen:* signalen afdoen · langdurig afwezig melden · bellen/appen bij de drempel (stap 3) · persoonlijk gesprek met ouders (stap 4) · clubbesluit voorbereiden met het bestuur (stap 5)
+  - *Ontwikkeling:* beoordelen · ontwikkelgesprekken plannen en voeren
+  - *Trainers:* registreren dat de trainer niet kwam · trainers begeleiden en opvolgen
+  - *Materiaal:* materiaal controleren
+  - *Wat zie je:* toelichting bij afmelden · beoordelingen · gespreksnotities
+  - *Altijd (niet uit te zetten):* aanwezigheid, afmeldingen, kaarten en signalen van de eigen teams zien
+- **Signalen en teksten volgen de taakverdeling.** Een voorgesteld gesprek komt bij wie die taak heeft; in de uitleg aan ouders staat wie contact opneemt ("de trainer of coördinator").
+- **Er valt nooit iets tussen wal en schip:** heeft een team geen coördinator (of gebruikt de club geen coördinatoren), dan gaan de taken van de coördinator vanzelf naar de HJO. Heeft een taak geen enkele rol, dan waarschuwt het scherm.
+- **Pilot:** de pilotclub (SC Buitenveldert) levert haar eigen basis aan; dat wordt de beginstand. Tot die tijd staat er een voorstel in (terug te zetten met "Terug naar het voorstel").
+- In versie 2 dwingt de server de rechten af (Supabase RLS).
+
 ## Besluit 24 — Wie ziet wat (per rol)
+*Opgenomen in Besluit 25 ("Wat zie je" in de takenlijst).*
+
 *Besloten 23 september 2026.*
 
 - **Iedereen ziet wat hij nodig heeft voor zijn taak, niet meer.** In de onderbouw is de teamleider meestal een ouder van een teamgenoot. Ziekte en blessures zijn gezondheidsgegevens (AVG: alleen wie het nodig heeft).

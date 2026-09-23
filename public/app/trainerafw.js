@@ -34,7 +34,7 @@
     const delen = [t.niet && `${t.niet}× niet gekomen`, t.telaat && `${t.telaat}× te laat afgemeld`, t.afmeldingen && `${t.afmeldingen}× afgemeld dit seizoen`, t.afgelast && `${t.afgelast} ${t.afgelast === 1 ? 'training' : 'trainingen'} afgelast`].filter(Boolean);
     return { p, team, t, tekst: `${p.naam} (trainer ${team}): gesprek?`, sub: delen.join(' · ') + (contact ? ' · opnieuw na eerder contact' : '') };
   }).filter(Boolean);
-  CC.trainerAandacht = (S) => CC.trainerSignalen(S).map((s) => h.rij({ ic: 'user-cog', titel: esc(s.tekst), sub: esc(s.sub), kleur: 'oranje', act: 'open', attrs: `data-view="trainerDetail" data-id="${s.p.id}"` }));
+  CC.trainerAandacht = (S) => CC.trainerSignalen(S).filter((s) => s.p.rollen.some((r) => r.rol === 'trainer' && S.teams.some((t) => t.id === r.teamId) && CC.mag('trainersVolgen', null, r.teamId))).map((s) => h.rij({ ic: 'user-cog', titel: esc(s.tekst), sub: esc(s.sub), kleur: 'oranje', act: 'open', attrs: `data-view="trainerDetail" data-id="${s.p.id}"` }));
 
   CC.views.trainerDetail = (S, p) => {
     const tr = M.persoon(S, p.id); const t = CC.trainerTelling(S, tr.id); const i = inst(S);
@@ -62,7 +62,7 @@
     return `${h.sectie('Trainingen afgelopen week')}<div class="lijst compact">${acts.reverse().map((a) => {
       const reg = log(S).find((x) => x.actId === a.id);
       const status = reg ? `<span class="chip ${reg.soort === 'niet' ? 'rood' : 'grijs'} mini">${reg.soort === 'niet' ? 'Trainer niet gekomen' : a.vervangerId ? 'Vervanger' : 'Trainer afgemeld'}</span>` : S.pres[a.id] ? '<span class="chip groen mini">Aanwezigheid opgenomen</span>' : '<span class="chip oranje mini">Geen aanwezigheid</span>';
-      const knop = !reg && t.trainerId && !a.vervangerId ? `<button class="linkknop klein rood-tekst" data-act="trainerNiet" data-id="${a.id}">Trainer niet gekomen?</button>` : '';
+      const knop = !reg && t.trainerId && !a.vervangerId && CC.mag('trainerNiet') ? `<button class="linkknop klein rood-tekst" data-act="trainerNiet" data-id="${a.id}">Trainer niet gekomen?</button>` : '';
       return h.rij({ ic: h.datumBlok(a), titel: `Training ${a.tijd}`, sub: `${status} ${knop}` });
     }).join('')}</div>`;
   };

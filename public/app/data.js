@@ -76,7 +76,7 @@
     let uid = 1; const id = (p) => `${p}${uid++}`;
 
     const S = {
-      v: 7, gen: today,
+      v: 8, gen: today,
       club: {
         id: 'scb', naam: 'SC Buitenveldert', regio: 'Noord',
         seizoen: { start: '2026-08-19', eind: '2027-06-05' },
@@ -470,9 +470,9 @@
     const gesprek = vast.filter((g) => g.soort === 'gesprek').pop();
     const naDatum = (d) => k.ev.filter((e) => !e.waarschuwing && e.act.datum > d);
     const hjo = S.club.labels.hjo;
-    if (gesprek) return naDatum(gesprek.datum).length ? { soort: 'clubbesluit', niveau: 'rood', stap: 5, tekst: 'opnieuw na het gesprek', sub: `Tweede gele kaart na het gesprek. Volgens het clubbeleid kan de club afscheid nemen; dat beslist de ${hjo} met het bestuur.` } : null;
-    if (contact) return naDatum(contact.datum).length ? { soort: 'gesprekHjo', niveau: 'rood', stap: 4, tekst: `persoonlijk gesprek met de ${hjo}`, sub: `Na het telefonisch contact (${CC.date.kort(contact.datum)}) opnieuw: ${naDatum(contact.datum).map((e) => e.wat.toLowerCase()).join(', ')}.` } : null;
-    return { soort: 'bellen', niveau: 'rood', stap: 3, tekst: 'bel of app de ouders', sub: `Drempel bereikt: ${k.geel} punten geel, ${k.oranje} oranje deze fase. Trainer of ${hjo} neemt contact op.` };
+    if (gesprek) return naDatum(gesprek.datum).length ? { soort: 'clubbesluit', niveau: 'rood', stap: 5, tekst: 'opnieuw na het gesprek', sub: `Tweede gele kaart na het gesprek. Volgens het clubbeleid kan de club afscheid nemen; dat beslist de ${CC.wie ? CC.wie('clubbesluit', pl.teamId) : hjo} met het bestuur.` } : null;
+    if (contact) return naDatum(contact.datum).length ? { soort: 'gesprekHjo', niveau: 'rood', stap: 4, tekst: `persoonlijk gesprek met de ${CC.wie ? CC.wie('gesprek', pl.teamId) : hjo}`, sub: `Na het telefonisch contact (${CC.date.kort(contact.datum)}) opnieuw: ${naDatum(contact.datum).map((e) => e.wat.toLowerCase()).join(', ')}.` } : null;
+    return { soort: 'bellen', niveau: 'rood', stap: 3, tekst: 'bel of app de ouders', sub: `Drempel bereikt: ${k.geel} punten geel, ${k.oranje} oranje deze fase. ${CC.wie ? CC.wie('bellen', pl.teamId).replace(/^./, (c) => c.toUpperCase()) : 'Trainer of ' + hjo} neemt contact op.` };
   };
 
   // Vervoer: aangeboden plekken zijn voor ándere kinderen; het eigen kind van de chauffeur telt niet mee

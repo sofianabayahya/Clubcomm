@@ -64,7 +64,7 @@
     const vg = voortgang(S, tid, mid);
     return { titel: 'Beoordelen', html: `${h.seg('beoMoment', ms.map((x) => [x.id, x.naam]), CC.actiefMoment(S).id)}
       <div class="info">${icon('info')}<span><b>${esc(m.naam)}:</b> ${D.kort(m.van)} – ${D.kort(m.tot)}${m.status === 'komt' ? ' (nog niet begonnen; je mag al starten)' : m.status === 'voorbij' ? ' (voorbij)' : ''}. ${vg.klaar} van ${vg.totaal} spelers beoordeeld. ${esc(c.naam)}, ${esc(c.vorm)}, schaal ${c.schaal === '1-5' ? '1 tot 5' : 'drie smileys'}. De ouder ziet het een dag na het ontwikkelgesprek.</span></div>
-      <div class="lijst">${h.rij({ ic: 'calendar-plus', titel: 'Ontwikkelgesprekken', sub: slots(S, tid, mid).length ? `${slots(S, tid, mid).filter((g) => g.spelerId).length} van ${slots(S, tid, mid).length} tijden gekozen` : 'Nog niet gepland: zet tijden klaar, ouders kiezen zelf', act: 'open', attrs: `data-view="gesprekken" data-m="${mid}"` })}</div>
+      ${CC.mag('ontwgesprek') ? '' : '<!--'}<div class="lijst">${h.rij({ ic: 'calendar-plus', titel: 'Ontwikkelgesprekken', sub: slots(S, tid, mid).length ? `${slots(S, tid, mid).filter((g) => g.spelerId).length} van ${slots(S, tid, mid).length} tijden gekozen` : 'Nog niet gepland: zet tijden klaar, ouders kiezen zelf', act: 'open', attrs: `data-view="gesprekken" data-m="${mid}"` })}</div>${CC.mag('ontwgesprek') ? '' : '-->'}
       ${h.seg('beoModus', [['vaardig', 'Per vaardigheid'], ['speler', 'Per speler + gesprekpunten']], 'vaardig')}${body}` };
   };
   CC.on('zetScore', (el) => { const S = CC.S(); b(S, el.dataset.id, el.dataset.m || CC.actiefMoment(S).id).scores[el.dataset.v] = Number(el.dataset.s); CC.save(); CC.render(); });
@@ -126,8 +126,8 @@
   CC.beoordRijTrainer = (S, tid) => {
     const m = CC.momenten(S).find((x) => x.status === 'open'); if (!m || !S.club.modules.beoordeling) return '';
     const vg = voortgang(S, tid, m.id); const sl = slots(S, tid, m.id);
-    return [vg.klaar < vg.totaal ? h.rij({ ic: 'star', titel: `Beoordelingen ${m.naam.toLowerCase()}: ${vg.klaar} van ${vg.totaal}`, sub: `Graag klaar vóór ${D.kort(m.tot)}`, act: 'open', attrs: 'data-view="beoordelen"', kleur: 'oranje' }) : '',
-      !sl.length ? h.rij({ ic: 'calendar-plus', titel: 'Plan de ontwikkelgesprekken', sub: 'Zet tijden klaar; ouders kiezen zelf', act: 'open', attrs: `data-view="gesprekken" data-m="${m.id}"`, kleur: 'oranje' }) : ''].filter(Boolean);
+    return [vg.klaar < vg.totaal && CC.mag('beoordelen') ? h.rij({ ic: 'star', titel: `Beoordelingen ${m.naam.toLowerCase()}: ${vg.klaar} van ${vg.totaal}`, sub: `Graag klaar vóór ${D.kort(m.tot)}`, act: 'open', attrs: 'data-view="beoordelen"', kleur: 'oranje' }) : '',
+      !sl.length && CC.mag('ontwgesprek') ? h.rij({ ic: 'calendar-plus', titel: 'Plan de ontwikkelgesprekken', sub: 'Zet tijden klaar; ouders kiezen zelf', act: 'open', attrs: `data-view="gesprekken" data-m="${m.id}"`, kleur: 'oranje' }) : ''].filter(Boolean);
   };
   // HJO: voortgang per team
   CC.beoordInzicht = (S) => {

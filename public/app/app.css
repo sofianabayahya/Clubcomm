@@ -391,6 +391,9 @@ body.sheet-open { overflow: hidden; }
 .signaal-voet { display: flex; align-items: center; gap: 8px; padding: 0 14px 10px 46px; background: var(--vlak); }
 /* Wie ziet wat (Besluit 24) */
 .tabelvak { overflow-x: auto; }
-.tabel.zicht td:not(:first-child), .tabel.zicht th:not(:first-child) { text-align: center; width: 64px; }
+.tabel.zicht td:not(:first-child), .tabel.zicht th:not(:first-child) { text-align: center; width: 46px; padding-left: 2px; padding-right: 2px; }
+.tabel.zicht th:not(:first-child) { font-size: 11px; hyphens: auto; overflow-wrap: anywhere; }
+.tabel.zicht td:first-child { padding-right: 4px; }
+.tabel.zicht tr.groep th { background: var(--vlak2); color: var(--tekst, inherit); font-size: 12px; padding: 6px 10px; }
 .tabel.zicht td small { display: block; color: var(--zacht); font-size: 12px; }
 .tabel.zicht input { width: 20px; height: 20px; accent-color: var(--blauw); }
