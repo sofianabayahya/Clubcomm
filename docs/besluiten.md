@@ -390,9 +390,15 @@ Het systeem vergelijkt de **speler met zijn eigen team**:
 - Signalen tonen ook **patronen**, bijv. *"Jesse: 70% (team: 88%) — vooral afwezig op vrijdag."*
 - Het systeem signaleert; een mens beslist.
 
-### Blessure (voorstel, nog te bevestigen)
-- Afmeldingen met reden **Blessure tellen niet mee** voor de zone (anders komt een kind met een gebroken arm automatisch in rood). Ze blijven wel zichtbaar in de geschiedenis.
-- **Ziek telt wel mee** (af en toe ziek is geen probleem; structureel ziek wil je zien).
+### Ziekte en blessure — alles telt mee, alles valt op
+- **Alle afwezigheid telt mee** in het percentage, ook ziek en blessure. Anders verdwijnt het uit beeld en wordt het een uitweg.
+- **Het signaal noemt de reden**, bijv. *"Jesse: 4× afwezig in 3 weken, waarvan 3× blessure."* Zo weet de teamleider/trainer of eerst een vraag past ("hoe gaat het?") of een gesprek over aanwezigheid.
+- **Langdurige blessure of ziekte wordt gemeld** als *"langdurig afwezig"* met verwachte terugkeerdatum (door de ouder, of door de teamleider na een gesprek):
+  - melding gaat naar **trainer, teamleider en HJO** (zo ontstaat het gesprek);
+  - in die periode hoeft de ouder niet per training af te melden en komen er **geen kaarten**;
+  - het blijft zichtbaar: *"Aanwezigheid 70%, waarvan 6 weken langdurig geblesseerd."*
+- **Patronen vallen op:** een reeks korte ziek-/blessuremeldingen (bijv. steeds op vrijdag, of vlak voor uitwedstrijden) geeft een signaal aan de teamleider. Een mens beslist over een eventueel gesprek.
+- Doel: het systeem houdt de **communicatielijn** tussen trainer, teamleider en HJO open en maakt overzichtelijk wat er speelt.
 
 ---
 
@@ -408,4 +414,3 @@ Het systeem vergelijkt de **speler met zijn eigen team**:
 
 - HJO-portaal (rondleiding), inclusief rollen koppelen aan accounts.
 - **Huisstijl:** één set icoontjes in één stijl; kleur alleen met betekenis (groen = goed, oranje = aandacht, rood = probleem); verder rustig met het logo-blauw als hoofdkleur (lichter dan de huidige `#1e5ba8`).
-- **Blessure en zones:** bevestigen dat blessure niet meetelt voor de aanwezigheidszone (Besluit 10).
