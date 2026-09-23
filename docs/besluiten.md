@@ -297,6 +297,24 @@ Niet elke trainer gaat mee naar wedstrijden. Per wedstrijd is er daarom een **we
 
 ---
 
+## Besluit 8 — Vaste app-structuur en namen (alle rollen)
+
+### Elke pagina, in elke rol, dezelfde structuur
+- **Bovenaan:** waar ben ik (bijv. *"Jesse · O10-1"* voor een ouder, *"O10-1"* voor een trainer) + **profielknop [👤] rechtsboven**, op elke pagina.
+- **Onderaan:** altijd **5 knoppen**; de eerste is altijd **Home**. De andere vier hangen af van de rol.
+- **Achter het profiel** zit alles wat je zelden nodig hebt: gegevens, kinderen, meldingen, taal, rolwisselaar, privacy en **uitloggen**.
+- **Uitloggen staat alleen in het profiel**, niet op elke pagina (ouders blijven ingelogd; voorkomt per ongeluk uitloggen).
+- Geen "Terug"-links naar de inlogpagina.
+
+### Namen
+- De woorden **"dashboard" en "portaal" komen niet in de app** (dat zijn bouwerswoorden). De gebruiker opent gewoon "ClubComm".
+- Eerste knop onderaan: **Home** (bekend, werkt in NL en EN).
+- Paginatitels zeggen **waar het over gaat** (kind/team), niet "Ouder Dashboard".
+- Rollen heten: **Ouder · Trainer · Teamleider · HJO**. Wisselen via de rolwisselaar in het profiel; de huidige rol/team staat altijd bovenaan.
+- In onze eigen documenten gebruiken we "ouderportaal", "trainerportaal" enz. wel als werknamen.
+
+---
+
 ## Later / ideeën
 
 - **Beloningen** (punten, contributie terugverdienen) als optionele module die de HJO per club of team aanzet.
