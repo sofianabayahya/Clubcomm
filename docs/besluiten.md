@@ -503,6 +503,22 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 26 — Home van HJO en coördinator: te doen en ter informatie
+*Besloten 23 september 2026. Vult Besluit 11 aan.*
+
+- **Home heeft twee delen:**
+  - **Te doen:** alleen wat volgens de takenlijst (Besluit 25) bij jou ligt, bijvoorbeeld vervanger regelen, bericht klaar, persoonlijk gesprek, teams zonder staf, aanmeldingen die blijven liggen, trainers opvolgen, en zaken die blijven liggen.
+  - **Ter informatie:** om op de hoogte te zijn; je hoeft er niets mee. Elke regel heeft een knop **Gezien**: de regel verdwijnt tot er iets verandert. "Toon ook wat je al gezien hebt" haalt ze terug.
+- **Spelerzaken lopen eerst via de coördinator.** Trainer en teamleider pakken het als eerste op; de coördinator kijkt of dat gebeurt. Heeft een team geen coördinator, dan doet de HJO dat.
+- **De HJO ziet spelerzaken van teams met een coördinator pas:**
+  - als ze **blijven liggen**: rood of opschaling, langer dan 14 dagen open zonder vastgelegd contact (dan bij *Te doen*, met de naam van de coördinator);
+  - of als het **ernstig** is: aanwezigheid onder 50% (bij *Ter informatie*).
+  - Beide getallen stelt de clubbeheerder in (Regels).
+- Rode spelers staan **per team** ("O11-1 (4), O12-3 (4)"), zodat je ziet of het één team is of de hele club. In de lijst staat per speler of het is opgepakt of hoeveel dagen het open staat.
+- **Afgedane signalen** ("geen actie nodig" door trainer of teamleider): per signaal **Akkoord**, of **Toch oppakken**: terug naar de trainer met een vraag, of zelf oppakken. Het signaal staat dan weer open.
+- **Teams → Staf** (was "Mensen"): iedereen met een rol, met bellen, WhatsApp en mail met één tik, filters per rol en "zonder team". Tik op een naam om rollen te koppelen.
+- **Vaste berichten bij de jaarplanning** (Planning → Vaste berichten): vóór elke vakantie, bij een nieuwe fase, bij de beoordelingsmomenten, bij de start en het einde van het seizoen. De datums komen uit de jaarplanning. Standaard zet ClubComm het bericht **klaar** bij *Te doen*; de HJO kijkt het na en verstuurt het met één tik, of slaat het over. Per bericht kan ook "automatisch". Het gaat om zo'n 8–10 berichten per seizoen (geen ochtendbericht of weekoverzicht).
+
 ## Besluit 25 — Taken per rol (de club bepaalt)
 *Besloten 23 september 2026. Vervangt Besluit 24 (wie ziet wat) en vult Besluit 12 aan.*
 

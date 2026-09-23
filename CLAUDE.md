@@ -13,6 +13,8 @@ Gemigreerd uit Replit op 2026-09-22. Taal van de UI: Nederlands.
   - `trainerafw.js`: afwezigheid van trainers signaleren (punten per fase, signaal naar HJO).
   - `beoordeling.js`: twee beoordelingsmomenten (winter, einde seizoen) met ontwikkelgesprekken, tijdsloten en agenda (Besluit 23).
   - `taken.js`: taken per rol (trainer, teamleider, coördinator, HJO), aan te vinken door de clubbeheerder; rol coördinator met groep teams (Besluit 25).
+  - `hjohome.js`: Home van HJO/coördinator met Te doen en Ter informatie, spelerzaken eerst via de coördinator, afgedane signalen akkoord/oppakken (Besluit 26).
+  - `autoberichten.js`: vaste berichten bij de jaarplanning (vakanties, fases, beoordeling, seizoen), klaarzetten of automatisch (Besluit 26).
   - `agenda.js`: agenda-abonnement (iCalendar-link; `CC.icsTekst` maakt de echte .ics-inhoud voor versie 2).
   - Icoontjes: één set (Lucide) in `vendor/icons.js`. Kleuren als tokens in `app.css`, met donkere modus.
 - Pilot = onderbouw (O6–O12); de demo heeft alleen onderbouwteams.

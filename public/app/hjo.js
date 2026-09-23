@@ -50,7 +50,7 @@
       },
       teams(S) {
         const modus = h.segVal('hjoTeams', 'teams');
-        const seg = h.seg('hjoTeams', [['teams', 'Teams'], ['spelers', 'Alle spelers'], ['mensen', 'Mensen']], 'teams');
+        const seg = h.seg('hjoTeams', [['teams', 'Teams'], ['spelers', 'Alle spelers'], ['mensen', 'Staf']], 'teams');
         const per = M.periode(S, 'blok');
         if (modus === 'spelers') {
           const q = (h.segVal('zoekSp', '') || '').toLowerCase();
@@ -60,11 +60,18 @@
             <div class="lijst" id="zoekres">${res.map((pl) => h.rij({ ic: h.avatar(pl.voornaam), titel: esc(M.naam(S, pl)), sub: esc(pl.teamId), act: 'spelerActies', attrs: `data-id="${pl.id}"` })).join('')}</div><p class="zacht klein">${S.players.filter((p) => p.teamId).length} spelers in de club${res.length === 40 ? ', eerste 40 getoond' : ''}.</p>`;
         }
         if (modus === 'mensen') {
-          const q = (h.segVal('zoekMens', '') || '').toLowerCase();
-          const res = S.people.filter((p) => !q || p.naam.toLowerCase().includes(q)).filter((p) => q || p.rollen.some((r) => r.rol !== 'ouder')).slice(0, 40);
-          return `${seg}<div class="zoek">${icon('search')}<input type="search" placeholder="Zoek persoon" value="${esc(q)}" data-input="zoekMens" aria-label="Zoek persoon"></div>
-            <p class="zacht klein">${q ? '' : 'Staf en bestuur. Zoek om ook ouders te vinden. '}Tik op iemand om rollen te koppelen, bijv. ouder én trainer.</p>
-            <div class="lijst">${res.map((p) => h.rij({ ic: h.avatar(p.naam), titel: esc(p.naam), sub: p.rollen.map((r) => `${CC.rolNaam(r)}${r.teamId ? ' ' + r.teamId : ''}`).join(' · '), act: 'rollenPersoon', attrs: `data-id="${p.id}"` })).join('')}</div>`;
+          const q = (h.segVal('zoekMens', '') || '').toLowerCase(); const f = h.segVal('stafRol', 'alle');
+          const filters = [['alle', 'Alle staf'], ['trainer', 'Trainers'], ['teamleider', 'Teamleiders'], ...(S.club.coordinatorAan ? [['coordinator', S.club.labels.coordinator + 'en']] : []), ['hjo', S.club.labels.hjo], ['geen', 'Zonder team']];
+          const staf = (p) => p.rollen.some((r) => r.rol !== 'ouder');
+          const res = S.people.filter((p) => (q ? p.naam.toLowerCase().includes(q) : staf(p)))
+            .filter((p) => q || f === 'alle' || (f === 'geen' ? p.rollen.some((r) => ['trainer', 'teamleider'].includes(r.rol) && !r.teamId) || (staf(p) && !p.rollen.some((r) => r.teamId || r.groep || ['hjo', 'beheerder'].includes(r.rol))) : p.rollen.some((r) => r.rol === f)))
+            .filter((p) => !CC.coordinatorVoor || CC.rol().rol !== 'coordinator' || q || p.rollen.some((r) => !r.teamId || S.teams.some((t) => t.id === r.teamId)))
+            .sort((a, b) => a.naam.localeCompare(b.naam)).slice(0, 60);
+          const contact = (p) => `${p.tel ? `<a class="icoonknop blauw" href="tel:${esc(p.tel)}" aria-label="Bel ${esc(p.naam)}">${icon('phone')}</a><a class="icoonknop groen" href="https://wa.me/31${esc(p.tel.slice(1))}" target="_blank" rel="noopener" aria-label="WhatsApp ${esc(p.naam)}">${icon('message-circle')}</a>` : ''}<a class="icoonknop" href="mailto:${esc(p.email)}" aria-label="Mail ${esc(p.naam)}">${icon('mail')}</a>`;
+          return `${seg}<div class="zoek">${icon('search')}<input type="search" placeholder="Zoek persoon (ook ouders)" value="${esc(q)}" data-input="zoekMens" aria-label="Zoek persoon"></div>
+            ${q ? '' : `<div class="chips">${filters.map(([k, l]) => `<button class="chipknop ${k === f ? 'aan' : ''}" data-act="seg" data-key="stafRol" data-val="${k}">${esc(l)}</button>`).join('')}</div>`}
+            <p class="zacht klein">Iedereen met een rol in de club: bellen, appen of mailen met één tik. Tik op een naam om rollen te koppelen of te wijzigen (bijv. een ouder ook trainer maken).</p>
+            <div class="lijst">${res.map((p) => h.rij({ ic: h.avatar(p.naam), titel: esc(p.naam), sub: p.rollen.filter((r) => r.rol !== 'ouder' || !staf(p)).map((r) => `${esc(CC.rolNaam(r))}${r.teamId ? ' ' + esc(r.teamId) : r.groep ? ' ' + esc(r.groep) : ''}`).join(' · ') || 'Ouder', rechts: contact(p), act: 'rollenPersoon', attrs: `data-id="${p.id}"` })).join('') || h.leeg('Niemand gevonden')}</div>`;
         }
         return `${seg}<div class="lijst">${S.teams.map((t) => {
           const ts = M.teamStats(S, t.id, per); const z = M.zone(S, ts.pct, t.id);
