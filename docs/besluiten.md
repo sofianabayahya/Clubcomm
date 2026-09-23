@@ -503,7 +503,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Niet ontvangen** → automatisch een **mail naar de secretaris** (adres instelbaar; die persoon heeft geen account nodig) en een melding bij de HJO ("Aandacht nodig").
 - De HJO (of secretaris) vinkt **"Geleverd"** aan; de trainer krijgt dan bericht.
 - Het is geen voorraadsysteem: geen uitleenregistratie en geen kleding bestellen.
-- Nog open: alleen bij de start van het seizoen, of ook per fase?
+- **Wordt herzien (nog open, zie "Nog te bespreken"):** het doel is *verantwoordelijkheid*: de trainer tekent bij de start van het seizoen voor wat hij ontvangt en levert het aan het einde weer in. Alleen bij de start van het seizoen, niet per fase.
 
 ---
 
@@ -595,6 +595,12 @@ Verandert er een besluit, pas dan de tekst aan in `maak-handleidingen.js` en maa
 
 ## Nog te bespreken
 
+- **Materiaal: uitgeven en inleveren** (herziening van Besluit 17). Richting:
+  - Trainer **tekent digitaal** bij de start van het seizoen voor het ontvangen materiaal (aantallen per item) en **levert het in** aan het einde; bij een trainerswissel volgt een overdracht.
+  - Standaard alleen de **basis**: ballen, hoedjes, ballenzak, trainingspak. De rest kan erbij.
+  - Verschilt per club, dus **instelbaar door de clubbeheerder**: welke spullen, hoeveel (clubbeleid, bijv. aantal ballen per team), per teamgroep (nu onderbouw, later bovenbouw).
+  - **Wie is verantwoordelijk, verschilt per soort en per club:** trainingsmateriaal hoort bij de trainer; tenues kunnen in bruikleen zijn (bijv. selectieteams) en vallen dan vaak onder de teamleider; bij andere clubs kopen spelers hun eigen tenue. De clubbeheerder moet per soort materiaal kunnen kiezen wie tekent.
+  - Nog uitzoeken: wie geeft uit en neemt terug (secretaris of materiaalbeheerder), trainingspak terug of niet, wie tekent bij een team zonder trainer, en of de trainer zelf extra spullen mag toevoegen.
 - **Consequenties, nog open** (`docs/verdieping-consequenties.md`): speler O13+ bij gesprek; zones pas na 6 activiteiten; gemiste wedstrijd 3 punten; gerichte herinnering vooraf + sociale norm; compliment bij verbetering; dalingssignaal O13+; minder speeltijd bij te laat/gemiste training (jaarplanning vraag 3).
 - **Jaarplanning importeren:** de jaarplanning (trainingen, wedstrijden, oefenwedstrijden "zelf organiseren", teamuitje, zaalvoetbal, vrije dagen) kan het startpunt zijn voor de planning in ClubComm.
 - **Analyse clubproblemen** (`docs/analyse-clubproblemen.md`): voorstellen voor wat ontbreekt (o.a. afmelden namens ouder, bereikbaarheid per ouder, VCP/gedragscode, "mijn kind twijfelt"). Nog niet besloten. Adoptie door ouders ziet de gebruiker niet als risico (mail + push, uitleg, coulante start).
