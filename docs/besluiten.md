@@ -506,6 +506,13 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
 ---
 
+## Handleidingen
+
+Eén A4-pagina per rol (Ouder, Trainer, Teamleider, HJO) in `docs/handleidingen/`. Ze volgen de besluiten hierboven.
+Verandert er een besluit, pas dan de tekst aan in `maak-handleidingen.js` en maak ze opnieuw (instructie bovenin het script).
+
+---
+
 ## Later / ideeën
 
 - **Beloningen** (punten, contributie terugverdienen) als optionele module die de HJO per club of team aanzet.
@@ -516,5 +523,5 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
 ## Nog te bespreken
 
-- **Handleidingen per rol** (PowerPoint) en eventueel presentatie voor bestuur/trainersavond.
+- **Presentatie** voor bestuur/trainersavond en eventueel een rollenbeschrijving.
 - **Huisstijl:** één set icoontjes in één stijl; kleur alleen met betekenis (groen = goed, oranje = aandacht, rood = probleem); verder rustig met het logo-blauw als hoofdkleur (lichter dan de huidige `#1e5ba8`).
