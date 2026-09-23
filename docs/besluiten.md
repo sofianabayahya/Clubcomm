@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 23 september 2026 (Besluit 14 toegevoegd)
+Laatst bijgewerkt: 23 september 2026 (Besluit 14 en 15 toegevoegd)
 
 ---
 
@@ -193,15 +193,14 @@ Het systeem legt feiten vast. Een **gevolg** (zoals een gesprek) besluit altijd 
 | Niet afgemeld én niet gekomen | trainer "afwezig" + geen afmelding | 🟨 geel | 2 |
 
 ### Kansen geven
-- Het seizoen is verdeeld in **blokken** (bijv. seizoensstart, na herfststop, na winterstop — club stelt in).
-- **Eerste keer per blok:** geen kaart, maar een **vriendelijke waarschuwing** (automatisch, push + mail).
+- Het seizoen is verdeeld in **4 fases**, gelijk aan de competitie-indeling in de jaarplanning (zie Besluit 15).
+- **Eerste keer per fase:** geen kaart, maar een **vriendelijke herinnering** (automatisch, push + mail).
 - Vanaf de tweede keer: kaart, met melding en uitleg aan de ouder ("Wat betekent dit?").
-- Bij een nieuw blok gaat de **teller terug naar nul**; de geschiedenis blijft zichtbaar.
+- Bij een nieuwe fase gaat de **teller terug naar nul**; de geschiedenis blijft zichtbaar.
 
 ### Escalatie
-- Drempel bereikt (standaard **3 punten geel** of **5 oranje**) → signaal aan **teamleider en HJO**: *"Gesprek voorstellen?"*
-- Teamleider/HJO beslist; het gesprek wordt vastgelegd (wie, wanneer, korte notitie).
-- Toon: *"Kunnen we je ergens mee helpen?"*
+- Vervangen door de **opschaling in Besluit 15** (herinneren → waarschuwen → bellen/appen → gesprek HJO → clubbesluit).
+- Toon blijft: *"Kunnen we je ergens mee helpen?"*
 
 ### Tekst eerste waarschuwing (concept, club kan aanpassen)
 > Beste ouder van [kind],
@@ -483,6 +482,35 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
 ---
 
+## Besluit 15 — Fases en opschaling
+
+Gebaseerd op de jaarplanning onderbouw 2026/27 van SC Buitenveldert en de verdieping in `docs/verdieping-consequenties.md`.
+
+### Fases
+- Het seizoen volgt de **4 competitiefases**: fase 1 vanaf wo 19 aug 2026, fase 2 vanaf za 31 okt, fase 3 vanaf wo 20 jan 2027, fase 4 vanaf vr 2 apr (laatste training 4 jun, laatste wedstrijd 5 jun 2027).
+- Kaarten en de aanwezigheidszones tellen **per fase**; bij een nieuwe fase begint de teller opnieuw.
+- De clubbeheerder stelt de startdatum per fase in (vervangt de "blokken" uit Besluit 5).
+- Jaarplanning 2026/27 in de app: seizoen 19 aug – 5 jun; geen training in herfst-, kerst-, voorjaars- en meivakantie; Goede Vrijdag (26 mrt 2027) club dicht; onderbouw traint woensdag en vrijdag.
+
+### Opschaling
+| Stap | Wie | Wanneer | Wat |
+|---|---|---|---|
+| 1. Herinneren | app | eerste keer per fase | vriendelijke herinnering, geen kaart |
+| 2. Waarschuwen | app | daarna | gele (of oranje) kaart met uitleg |
+| 3. Bellen of appen | **trainer of HJO** | drempel: 3 punten geel of 5× oranje | kort persoonlijk contact, vastleggen (gebeld/geappt, afspraak) |
+| 4. Persoonlijk gesprek | **HJO** | opnieuw na het contact | gesprek met ouders, afspraak vastleggen |
+| 5. Clubbesluit | **HJO + bestuur** | opnieuw na het gesprek | tweede gele kaart; club kan afscheid nemen (huidig clubbeleid) |
+
+- De app **stelt de volgende stap voor**, maar neemt nooit zelf een besluit.
+- Bij het signaal "bel of app de ouders" staan een bel- en een WhatsApp-knop.
+- De stappen staan vooraf uitgelegd in de app (bij de kaarten), zodat ouders weten wat er gebeurt.
+- Langdurig afwezig (gemeld): geen opschaling. Ernstige zaken (veiligheid, gedrag, thuissituatie): direct HJO + vertrouwenscontactpersoon, nooit via kaarten.
+
+### Speeltijd (uit de jaarplanning)
+- Geen vaste keeper: **elke week een andere speler de hele wedstrijd op doel**; het wisselschema kiest de speler die het minst keeper is geweest.
+
+---
+
 ## Besluit 14 — Uitschrijven en account verwijderen
 
 Een ouder regelt dit **zelf** in het profiel, zonder tussenkomst van de club.
@@ -493,7 +521,7 @@ Een ouder regelt dit **zelf** in het profiel, zonder tussenkomst van de club.
   - Is de ouder ook trainer of teamleider, dan krijgt de HJO een melding om een vervanger te zoeken.
 - Altijd met een **bevestigingsstap** ("Weet je het zeker?") en uitleg wat er gebeurt.
 - Aanwezigheid blijft alleen als **anonieme telling** in de teamcijfers bewaard (geen naam).
-- Het **lidmaatschap en de contributie** zegt de ouder apart op bij de ledenadministratie (Sportlink); de app zegt dat erbij.
+- Het **lidmaatschap** zegt de ouder apart op bij de ledenadministratie, **vóór 31 mei** per mail; de contributie loopt tot het einde van het seizoen (jaarplanning). De app zegt dat erbij.
 - Nog uitwerken in versie 2: bewaartermijn van gegevens van oud-leden (AVG).
 
 ---
@@ -539,7 +567,8 @@ Verandert er een besluit, pas dan de tekst aan in `maak-handleidingen.js` en maa
 
 ## Nog te bespreken
 
-- **Gespreksladder en consequenties** (`docs/verdieping-consequenties.md`): voorstel om Besluit 5 en 10 aan te scherpen (trainer → teamleider → HJO, afspraak + evaluatiedatum, 5 blokken, zones pas na 6 activiteiten, O13+ speler als gesprekspartner). Wacht op akkoord.
+- **Consequenties, nog open** (`docs/verdieping-consequenties.md`): speler O13+ bij gesprek; zones pas na 6 activiteiten; gemiste wedstrijd 3 punten; gerichte herinnering vooraf + sociale norm; compliment bij verbetering; dalingssignaal O13+; minder speeltijd bij te laat/gemiste training (jaarplanning vraag 3).
+- **Jaarplanning importeren:** de jaarplanning (trainingen, wedstrijden, oefenwedstrijden "zelf organiseren", teamuitje, zaalvoetbal, vrije dagen) kan het startpunt zijn voor de planning in ClubComm.
 - **Analyse clubproblemen** (`docs/analyse-clubproblemen.md`): voorstellen voor wat ontbreekt (o.a. afmelden namens ouder, bereikbaarheid per ouder, VCP/gedragscode, "mijn kind twijfelt"). Nog niet besloten. Adoptie door ouders ziet de gebruiker niet als risico (mail + push, uitleg, coulante start).
 
 - **Presentatie** voor bestuur/trainersavond en eventueel een rollenbeschrijving.

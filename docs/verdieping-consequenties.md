@@ -1,6 +1,6 @@
 # Van kaart naar gesprek — verdieping consequenties (23 september 2026)
 
-Voorstel, **nog geen besluit**. Leesbare versie met bronnen: https://claude.ai/artifact/P6y6WK7L9HD3HCBJSf1zsB (privé).
+**Update:** de opschaling en de 4 fases zijn besloten (Besluit 15 in `docs/besluiten.md`); de gespreksladder hieronder is het oorspronkelijke voorstel. Rest: voorstel, nog geen besluit. Leesbare versie met bronnen: https://claude.ai/artifact/P6y6WK7L9HD3HCBJSf1zsB (privé).
 Aanleiding: de gebruiker wil onderbouwen wanneer een gesprek volgt en wie het voert (trainer, teamleider, HJO).
 Uitgangspunt blijft: niet afmelden en niet komen is serieus; de gele kaart mag serieus klinken; mensen beslissen.
 
@@ -14,7 +14,7 @@ Uitgangspunt blijft: niet afmelden en niet komen is serieus; de gele kaart mag s
 7. **Herstellen i.p.v. straffen** (herstelgericht werken): feiten → gevolg voor team → wat speelt er → afspraak + evaluatiedatum.
 
 ## Wat schuurt nu
-- Blokken ongelijk: 7, 9 en **25** weken → voorstel 5 blokken (nieuw blok na elke vakantie).
+- ~~Blokken ongelijk (25 weken)~~: onjuist; de club werkt met 4 competitiefases van 9–12 weken. Overgenomen in Besluit 15.
 - Zones vanaf 1 activiteit geven vals alarm → pas vanaf 6 activiteiten in het blok.
 - Kaarten én zones roepen "gesprek?" bij teamleider én HJO → één ladder met eigenaar per trede.
 - Gesprek zonder afronding → afspraak + evaluatiedatum; compliment of volgende trede.
@@ -23,7 +23,10 @@ Uitgangspunt blijft: niet afmelden en niet komen is serieus; de gele kaart mag s
 - Teamleider is vaak zelf ouder in het team → belangenregel.
 - Daling bij O13+ onzichtbaar zolang groen → signaal bij ≥ 15 procentpunt daling t.o.v. vorig blok.
 
-## Gespreksladder (voorstel)
+## Besloten opschaling (Besluit 15)
+Herinneren (app) → waarschuwen/kaart (app) → bellen of appen (trainer of HJO) → persoonlijk gesprek (HJO) → clubbesluit (HJO + bestuur; club kan afscheid nemen).
+
+## Gespreksladder (oorspronkelijk voorstel, vervangen)
 | Trede | Wie | Aanleiding | Met wie | Vorm |
 |---|---|---|---|---|
 | 0 | Systeem | altijd | ouders | regels bij aanmelden, eerste keer herinnering met sociale norm, kaartmelding, gerichte herinnering vooraf, compliment |
