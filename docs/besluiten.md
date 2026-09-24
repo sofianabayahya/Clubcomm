@@ -115,7 +115,7 @@ Een Sportlink-export bevat: voornaam, achternaam, geboortedatum, **bondsnummer**
 ### Home — alles in één scherm, zonder scrollen
 1. **Komende 3 activiteiten**, elk met een eigen knop **Afmelden** (afmelden gebeurt altijd direct bij de activiteit, geen aparte datumkeuze).
 2. **Statusregel:** aanwezigheid in % en kaarten, op één regel. Positieve bevestiging blijft ("Betrouwbare speler!").
-3. **Actie nodig** — verschijnt alleen als er iets te doen is (ongelezen persoonlijk bericht, een ander kind zoekt een plek voor de uitwedstrijd, open taak).
+3. **Actie nodig** — verschijnt alleen als er iets te doen is (ongelezen persoonlijk bericht, een ander kind zoekt vervoer voor de uitwedstrijd, open taak).
 
 ### Afmelden
 - Tik op Afmelden bij de activiteit → kies een **reden** → klaar.
@@ -139,9 +139,8 @@ Een Sportlink-export bevat: voornaam, achternaam, geboortedatum, **bondsnummer**
 
 ### Vervoer
 *Herzien in Besluit 31: iedereen brengt zijn eigen kind, tenzij de ouder om een plek vraagt.*
-- Hangt aan een **uitwedstrijd**. De ouder kan een **plek vragen**; andere ouders reageren met **"Ik neem mee"**.
-- Teamleider ziet welke kinderen een plek zoeken en kan ze indelen bij een ouder.
-- Melding op Home alleen als een ander kind een plek zoekt (en jouw kind ook gaat).
+- Hangt aan een **uitwedstrijd**. De ouder kan **vervoer vragen**; andere ouders reageren met **"Kan met mij mee"** en spreken daarna samen af.
+- Melding op Home alleen als een ander kind vervoer zoekt (en jouw kind ook gaat). De teamleider heeft hier geen taak in.
 
 ### Berichten
 - **Pushmeldingen** (webapp op het beginscherm), met **mail als reserve**. Zonder meldingen worden berichten niet gelezen.
@@ -337,7 +336,6 @@ Niet elke trainer gaat mee naar wedstrijden. Per wedstrijd is er daarom een **we
 - Eerstvolgende wedstrijd: datum, tegenstander, thuis/uit, verzameltijd.
 - Vier regels, elk klikbaar naar de juiste plek:
   - **Spelers** — 10 van 12 (wie komt / afgemeld)
-  - **Vervoer** — aantal kinderen zonder vervoer
   - **Taken** — 3 van 5 bezet
   - **Begeleider** — wie is wedstrijdbegeleider
 - **Actie nodig** (bijv. "2 aanmeldingen goedkeuren") — alleen als er iets is.
@@ -351,10 +349,10 @@ Niet elke trainer gaat mee naar wedstrijden. Per wedstrijd is er daarom een **we
 - **Speeltijd** (module) — één gedeelde pagina met de trainer.
 - Na afloop: uitslag.
 
-### Regelen (Vervoer + Taken samen)
-- Per wedstrijd: wie rijdt, welke kinderen nog geen plek hebben, welke taken open staan.
+### Regelen (taken)
+- Per wedstrijd: welke taken open staan. Vervoer regelen ouders onderling (Besluit 31).
 - Overzicht wie vaak en wie nooit helpt.
-- **Herinneringen gaan automatisch** (oproep voor open taken, melding bij kinderen zonder vervoer), volgens de clubinstellingen (Besluit 6). Geen herinneringsknop nodig.
+- **Herinneringen gaan automatisch** (oproep voor open taken), volgens de clubinstellingen (Besluit 6). Geen herinneringsknop nodig.
 
 ### Berichten
 - Zoals bij de trainer: inbox bovenaan, "+ Nieuw bericht" met sjablonen.
@@ -511,12 +509,11 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 *Besloten 24 september 2026. Herziet het onderdeel Vervoer van de ouder-app.*
 
 - **Uitgangspunt:** elke ouder is verantwoordelijk voor het vervoer van het eigen kind. De app gaat ervan uit dat het geregeld is; niemand hoeft iets te doen.
-- **Lukt het een keer niet?** De ouder tikt bij de uitwedstrijd op **"Ik zoek een plek voor …"**. Andere ouders zien dat bij Vervoer en, vanaf 7 dagen van tevoren, op Home ("Daan zoekt een plek. Kun jij iemand meenemen?").
-- **Aanbieden alleen als antwoord op een vraag:** een andere ouder tikt op **"Ik neem mee"**. Geen losse knop "Ik rijd" meer met aantallen plekken; dat was extra werk voor iedereen.
-- **Teamleider** ziet bij Regelen en op Home alleen de echte vragen ("2 kinderen zoeken een plek"), en kan een kind indelen bij een ouder (bijv. na een belletje).
-- Afmelden voor de wedstrijd haalt de vraag automatisch weg.
-- Rijden telt mee bij "Wie helpt er mee?" (Besluit 28).
-- Later eventueel: een **rijschema** per team als teaminstelling (zie Later / ideeën).
+- **Lukt het een keer niet?** De ouder tikt bij de uitwedstrijd op **"Ik zoek vervoer voor …"**. De andere ouders van het team zien dat bij Vervoer en, vanaf 7 dagen van tevoren, op Home ("Daan zoekt vervoer").
+- Een andere ouder reageert met **"Kan met mij mee"**. Vervoer aanbieden zonder vraag bestaat niet (niet nodig).
+- **Daarna lossen de ouders het onderling op:** waar ophalen, hoe laat, terug. De app regelt dat bewust niet; menselijk contact blijft belangrijk.
+- **De teamleider heeft geen taak in vervoer** en ziet het niet op Home of bij Regelen.
+- Afmelden voor de wedstrijd haalt de vraag automatisch weg. Rijden telt mee bij "Wie helpt er mee?" (Besluit 28).
 
 ## Besluit 30 — Volgorde en rust op elk scherm
 *Besloten 24 september 2026.*
@@ -546,7 +543,7 @@ Toegepast (24 sep 2026):
 - **Aanwezig zijn belonen in plaats van afmelden makkelijk maken.** Waardering werkt beter dan controle, zeker bij vrijwilligers.
 - **Op Home van trainer en teamleider staat altijd één vriendelijke regel**, die per dag wisselt, bijvoorbeeld:
   - trainer: "Je gaf dit seizoen al 11 trainingen. Fantastisch!" · "Je team was deze fase 91% aanwezig" · "Je nam al 15× de aanwezigheid op" · "Alle 12 spelers beoordeeld";
-  - teamleider: "Je regelde al 5 wedstrijden: vervoer, taken, alles" · "Dankzij jou zijn er al 10 taken ingevuld" · "Je hielp 3 nieuwe gezinnen op weg".
+  - teamleider: "Je regelde al 5 wedstrijden: taken, begeleiding, alles" · "Dankzij jou zijn er al 10 taken ingevuld" · "Je hielp 3 nieuwe gezinnen op weg".
 - **Mijlpalen** bij 10, 25, 50, 100 (en 200) trainingen of wedstrijden: een felicitatie op Home ("10 trainingen gegeven dit seizoen! De club is je dankbaar"), weg te tikken met "Dank je!".
 - **Coördinator en HJO** (Inzicht → Mijlpalen): wie een mijlpaal haalde, met een knop **Bedank** (persoonlijk bericht, tekst al klaar).
 - **Alleen positief, nooit vergelijken:** geen ranglijst, geen "trainer van de maand". De telling van afmeldingen blijft in het profiel en bij de HJO (Besluit 21), niet in deze regel.
@@ -566,7 +563,7 @@ Toegepast (24 sep 2026):
 *Besloten 23 september 2026.*
 
 - **Een actie verdwijnt pas als hij gedaan is, of als hij niet meer kan of hoeft.** Echte acties kun je niet wegklikken (anders valt iets tussen wal en schip). Alleen regels ter informatie hebben "Gezien" (Besluit 26).
-- **Vervoer** ("… zoekt een plek", Besluit 31) verdwijnt als het kind een plek heeft, is afgemeld, de wedstrijd is afgelast of voorbij is (anderhalf uur na de aftrap). Op Home staat het pas **7 dagen van tevoren**; verder vooruit alleen op het tabblad Vervoer.
+- **Vervoer** ("… zoekt vervoer", Besluit 31) verdwijnt als het kind een plek heeft, is afgemeld, de wedstrijd is afgelast of voorbij is (anderhalf uur na de aftrap). Op Home staat het pas **7 dagen van tevoren**; verder vooruit alleen op het tabblad Vervoer.
 - **Taken** staan op Home voor de komende **7 dagen**; verder vooruit op het tabblad Taken. Een taak verdwijnt als iemand hem oppakt of de datum voorbij is.
 - **"Kan niet"** bij een open taak: de taak verdwijnt alleen bij jou en blijft open voor de andere ouders en de teamleider ("Toch wel?" zet hem terug).
 - De 7 dagen stelt de clubbeheerder in bij Regels (naast "automatische oproepen").
@@ -803,7 +800,6 @@ Verandert er een besluit, pas dan de tekst aan in `maak-handleidingen.js` en maa
 
 ## Later / ideeën
 
-- **Rijschema** (vervoer): teamleider deelt per uitwedstrijd een paar rijders in, op toerbeurt. Eventueel als teaminstelling naast Besluit 31.
 - **Beloningen** (punten, contributie terugverdienen) als optionele module die de HJO per club of team aanzet.
 - **Planning uit voetbal.nl** koppelen.
 - **Import uit Sportlink** (zie Besluit 2).

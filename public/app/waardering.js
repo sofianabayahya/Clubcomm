@@ -44,7 +44,7 @@
   CC.waarderingTeamleider = (S, p) => {
     const t = CC.teamleiderTeller(S, p);
     return blok(S, p, t.wedstrijden, (m) => `${m} wedstrijden geregeld!`, [
-      t.wedstrijden && `Je regelde dit seizoen al ${t.wedstrijden} ${t.wedstrijden === 1 ? 'wedstrijd' : 'wedstrijden'}: vervoer, taken, alles. Dank je wel!`,
+      t.wedstrijden && `Je regelde dit seizoen al ${t.wedstrijden} ${t.wedstrijden === 1 ? 'wedstrijd' : 'wedstrijden'}: taken, begeleiding, alles. Dank je wel!`,
       t.taken && `Dankzij jou zijn er al ${t.taken} taken ingevuld.`,
       t.goed && `Je hielp ${t.goed} nieuwe ${t.goed === 1 ? 'gezin' : 'gezinnen'} op weg in ClubComm.`,
     ]);
