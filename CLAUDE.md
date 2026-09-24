@@ -1,6 +1,6 @@
 # ClubComm (voorheen BTV Connect)
 
-Communicatie- en managementplatform voor jeugdvoetbal (pilotclub: SC Buitenveldert).
+Communicatie- en managementplatform voor jeugdvoetbal (pilotclub: DCG (was SC Buitenveldert)).
 Gemigreerd uit Replit op 2026-09-22. Taal van de UI: Nederlands.
 
 ## Huidige staat (prototype versie 2, sinds 2026-09-23)

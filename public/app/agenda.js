@@ -18,7 +18,8 @@
     return S.acts.filter((a) => teamsVan(S, p).includes(a.teamId) && a.datum >= D.vandaag() && (a.soort === 'training' ? keuze.training : keuze.wedstrijd)).slice(0, n || 500);
   };
   const titel = (S, a) => (a.soort === 'training' ? `Training ${a.teamId}` : a.soort === 'oefen' ? `Oefenwedstrijd ${a.teamId}` : `${a.teamId} ${a.thuis ? 'thuis' : 'uit'} tegen ${a.tegen}`);
-  const plaats = (a) => (a.soort === 'training' || a.thuis ? `Sportpark Buitenveldert${a.veld ? ', ' + a.veld : ''}` : a.adres || '');
+  const sportpark = () => { const c = CC.S().club; return c.sportpark || (c.naam ? `Sportpark ${c.naam}` : 'Sportpark'); };
+  const plaats = (a) => (a.soort === 'training' || a.thuis ? `${a.adres && a.thuis ? a.adres : sportpark()}${a.veld ? ', ' + a.veld : ''}` : a.adres || '');
   const beginTijd = (a) => (a.soort === 'training' ? a.tijd : a.verzamel || a.tijd);
 
   // Echte iCalendar-tekst (RFC 5545), zoals de server in versie 2 hem levert
@@ -37,7 +38,7 @@
       const pl = M.speler(S, g.spelerId);
       regels.push('BEGIN:VEVENT', `UID:${g.id}@clubcomm.nl`, `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').slice(0, 15)}Z`,
         `DTSTART;TZID=Europe/Amsterdam:${st(g.datum, g.tijd)}`, `DTEND;TZID=Europe/Amsterdam:${st(g.datum, g.eind)}`,
-        `SUMMARY:${esc2(`Ontwikkelgesprek ${pl.voornaam} (${g.teamId})`)}`, `LOCATION:${esc2(`Sportpark Buitenveldert, ${g.plek}`)}`, `DESCRIPTION:${esc2('Gesprek met de trainer; ouder en kind zijn er samen bij.')}`, 'STATUS:CONFIRMED', 'END:VEVENT');
+        `SUMMARY:${esc2(`Ontwikkelgesprek ${pl.voornaam} (${g.teamId})`)}`, `LOCATION:${esc2(`${sportpark()}, ${g.plek}`)}`, `DESCRIPTION:${esc2('Gesprek met de trainer; ouder en kind zijn er samen bij.')}`, 'STATUS:CONFIRMED', 'END:VEVENT');
     });
     regels.push('END:VCALENDAR');
     return regels.join('\r\n');

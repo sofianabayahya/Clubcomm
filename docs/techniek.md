@@ -2,7 +2,7 @@
 
 ## Onderdelen
 - **App**: `public/` (dezelfde schermen als de demo). Online via Vercel: https://clubcomm-nine.vercel.app (project `clubcomm`, map `public`).
-- **Database en inloggen**: Supabase-project `ClubComm` (regio Frankfurt, EU). Club-id `scb`.
+- **Database en inloggen**: Supabase-project `ClubComm` (regio Frankfurt, EU). Club-id `dcg` (club DCG).
 - **Demo**: blijft bestaan. Met `?demo` achter het adres, of via de artifact-link, draait de app met voorbeelddata op het eigen apparaat.
 
 ## Hoe de gegevens zijn opgeslagen

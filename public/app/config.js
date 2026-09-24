@@ -4,5 +4,5 @@
 window.CC_CONFIG = {
   url: 'https://pkvacwbdgumkffxnxnqk.supabase.co',
   key: 'sb_publishable_mi7Z6cjaG7k4kh2e3JbCfg_tTwmQIiE',
-  club: 'scb',
+  club: 'dcg',
 };
