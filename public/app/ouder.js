@@ -59,12 +59,14 @@
         const groepen = {}; acts.forEach((a) => { (groepen[week(a)] = groepen[week(a)] || []).push(a); });
         const st = M.stats(S, pl, M.periode(S, 'seizoen'));
         const agenda = CC.agendaRij && !CC.me().agendaAbonnement ? `<div class="lijst">${CC.agendaRij()}</div>` : '';
-        return `${agenda}${Object.entries(groepen).map(([w, as]) => `${h.sectie(w === dezeWeek ? `Deze week${wk(w)}` : w === D.addDays(dezeWeek, 7) ? `Volgende week${wk(w)}` : `Week ${D.weeknr(w)}<span class="wk"> · ${periode(w)}</span>`)}<div class="lijst">${as.map((a) => h.rij({ ic: h.datumBlok(a), titel: h.actTitel(S, a), sub: h.actSub(S, a), rechts: h.chip(M.status(S, pl, a)), act: 'open', attrs: `data-view="activiteit" data-id="${a.id}"` })).join('')}</div>`).join('')}
-          ${!ver ? `<button class="knop licht vol" data-act="seg" data-key="verder" data-val="1">${icon('calendar-days')}Verder vooruit kijken</button>` : ''}
-          <div class="lijst">${h.rij({ ic: 'chart-column', titel: 'Aanwezigheid en kaarten', sub: `Deze fase ${M.stats(S, pl, M.periode(S, 'blok')).pct ?? '–'}% · seizoen ${st.pct ?? '–'}% · afmeldgeschiedenis`, act: 'open', attrs: `data-view="kindOverzicht" data-id="${pl.id}"` })}</div>
-          ${CC.ouderGesprekRijen ? `<div class="lijst">${h.rij({ ic: 'star', titel: 'Ontwikkelgesprek en beoordeling', sub: `Twee keer per seizoen, met ${esc(pl.voornaam)} erbij`, act: 'open', attrs: `data-view="${(S.ontwGesprek || []).some((g) => g.teamId === pl.teamId) ? 'gesprekKiezen' : 'beoordelingKind'}" data-id="${pl.id}"` })}</div>` : ''}
-          <button class="knop licht vol" data-act="periodeSheet" data-id="${pl.id}">${icon('plane')}Afwezig voor een periode (bijv. vakantie)</button>
-          <button class="knop licht vol" data-act="langdurigSheet" data-id="${pl.id}">${icon('hospital')}Langer geblesseerd of ziek? Meld het één keer</button>`;
+        // Verder vooruit kijken hoort bij de weken: als laatste regel in het laatste weekblok
+        const verder = !ver ? h.rij({ ic: 'calendar-days', titel: 'Verder vooruit kijken', sub: 'Toon de komende 6 weken', act: 'seg', attrs: 'data-key="verder" data-val="1"', chevron: false }) : '';
+        const weken = Object.entries(groepen);
+        const blokken = weken.map(([w, as], i) => `${h.sectie(w === dezeWeek ? `Deze week${wk(w)}` : w === D.addDays(dezeWeek, 7) ? `Volgende week${wk(w)}` : `Week ${D.weeknr(w)}<span class="wk"> · ${periode(w)}</span>`)}<div class="lijst">${as.map((a) => h.rij({ ic: h.datumBlok(a), titel: h.actTitel(S, a), sub: h.actSub(S, a), rechts: h.chip(M.status(S, pl, a)), act: 'open', attrs: `data-view="activiteit" data-id="${a.id}"` })).join('')}${i === weken.length - 1 ? verder : ''}</div>`).join('') || `${h.leeg('Geen activiteiten gepland', 'calendar')}${verder ? `<div class="lijst">${verder}</div>` : ''}`;
+        const gesprek = CC.ouderGesprekRijen ? h.rij({ ic: 'star', titel: 'Ontwikkelgesprek en beoordeling', sub: `Twee keer per seizoen, met ${esc(pl.voornaam)} erbij`, act: 'open', attrs: `data-view="${(S.ontwGesprek || []).some((g) => g.teamId === pl.teamId) ? 'gesprekKiezen' : 'beoordelingKind'}" data-id="${pl.id}"` }) : '';
+        return `${agenda}${blokken}
+          ${h.sectie(`Over ${esc(pl.voornaam)}`)}<div class="lijst">${h.rij({ ic: 'chart-column', titel: 'Aanwezigheid en kaarten', sub: `Deze fase ${M.stats(S, pl, M.periode(S, 'blok')).pct ?? '–'}% · seizoen ${st.pct ?? '–'}% · afmeldgeschiedenis`, act: 'open', attrs: `data-view="kindOverzicht" data-id="${pl.id}"` })}${gesprek}</div>
+          ${h.sectie('Langer afwezig')}<div class="lijst">${h.rij({ ic: 'plane', titel: 'Afwezig voor een periode', sub: 'Bijvoorbeeld vakantie', act: 'periodeSheet', attrs: `data-id="${pl.id}"` })}${h.rij({ ic: 'hospital', titel: 'Langer geblesseerd of ziek', sub: 'Meld het één keer, niet per training', act: 'langdurigSheet', attrs: `data-id="${pl.id}"` })}</div>`;
       },
       vervoer(S) {
         const pl = CC.kind(); const me = CC.me();
