@@ -76,9 +76,10 @@
     });
     // Vervoer: per aanbieder en per plek een eigen rij, zodat ouders elkaars wijzigingen niet overschrijven
     Object.entries(S.vervoer || {}).forEach(([aid, v]) => {
-      const team = I.teamVanAct(aid); const { aanbod, plek, ouderMee, ...rest } = v;
+      const team = I.teamVanAct(aid); const { aanbod, plek, ouderMee, vraag, ...rest } = v;
       zet('vervoer', aid, 'team', { team, act: aid }, rest);
       (aanbod || []).forEach((x) => zet('vervoerAanbod', `${aid}|${x.personId}`, 'team', { team, act: aid, persoon: x.personId }, x));
+      Object.entries(vraag || {}).forEach(([sid, x]) => zet('vervoerVraag', `${aid}|${sid}`, 'team', { team, act: aid, speler: sid }, x));
       Object.entries(plek || {}).forEach(([sid, ch]) => zet('vervoerPlek', `${aid}|${sid}`, 'team', { team, act: aid, speler: sid }, { chauffeur: ch, ouderMee: !!(ouderMee || {})[sid] }));
     });
     return uit;
@@ -95,9 +96,10 @@
     const contact = {}; lijst('contact').forEach((r) => { contact[r.id] = r.data; });
     S.people = lijst('people').map((r) => ({ email: '', tel: '', ...r.data, ...(contact[r.id] || {}) }));
     lijst('pres').forEach((r) => { const [aid, sid] = r.id.split('|'); const p = S.pres[aid] || (S.pres[aid] = { s: {} }); if (sid === '_') Object.assign(p, r.data, { s: p.s }); else p.s[sid] = r.data.v; });
-    lijst('vervoer').forEach((r) => { S.vervoer[r.id] = { aanbod: [], plek: {}, ...r.data }; });
-    const vv = (aid) => S.vervoer[aid] || (S.vervoer[aid] = { aanbod: [], plek: {} });
+    lijst('vervoer').forEach((r) => { S.vervoer[r.id] = { aanbod: [], plek: {}, vraag: {}, ...r.data }; });
+    const vv = (aid) => S.vervoer[aid] || (S.vervoer[aid] = { aanbod: [], plek: {}, vraag: {} });
     lijst('vervoerAanbod').forEach((r) => vv(r.id.split('|')[0]).aanbod.push(r.data));
+    lijst('vervoerVraag').forEach((r) => { const [aid, sid] = r.id.split('|'); vv(aid).vraag[sid] = r.data; });
     lijst('vervoerPlek').forEach((r) => { const [aid, sid] = r.id.split('|'); const v = vv(aid); v.plek[sid] = r.data.chauffeur; if (r.data.ouderMee) (v.ouderMee || (v.ouderMee = {}))[sid] = true; });
     // Volgorde zoals de app verwacht
     S.acts.sort((a, b) => (a.datum + (a.tijd || '')).localeCompare(b.datum + (b.tijd || '')));

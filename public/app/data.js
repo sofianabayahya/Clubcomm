@@ -272,6 +272,8 @@
       S.vervoer[w1.id] = { aanbod: [{ personId: linda.id, plekken: 3 }, { personId: ouder('Lucas'), plekken: 3 }], plek: {} };
       S.vervoer[w1.id].plek[pO('Noah').id] = linda.id; S.vervoer[w1.id].plek[pO('Levi').id] = linda.id; S.vervoer[w1.id].plek[pO('Mees').id] = linda.id;
       S.vervoer[w1.id].plek[pO('Lucas').id] = ouder('Lucas'); S.vervoer[w1.id].plek[pO('Adam').id] = ouder('Lucas');
+      // Twee ouders kunnen zelf niet rijden en vragen om een plek
+      S.vervoer[w1.id].vraag = { [pO('Daan').id]: { door: ouder('Daan'), tijd: new Date().toISOString() }, [pO('Sven').id]: { door: ouder('Sven'), tijd: new Date().toISOString() } };
       S.taken.push({ id: id('t'), actId: w1.id, soort: 'Spelbegeleider', personId: null });
       S.taken.push({ id: id('t'), actId: w1.id, soort: 'Wastas', personId: pO('Omar').ouders[0] });
       S.taken.push({ id: id('t'), actId: w1.id, soort: 'Fotograaf', personId: null });
@@ -480,6 +482,13 @@
   // Vervoer: aangeboden plekken zijn voor ándere kinderen; het eigen kind van de chauffeur telt niet mee
   M.meerijders = (S, v, chauffeurId) => Object.entries(v.plek).filter(([, d]) => d === chauffeurId).map(([s]) => M.speler(S, s)).filter(Boolean);
   M.vrijePlekken = (S, v, x) => { const mee = M.meerijders(S, v, x.personId).filter((pl) => !pl.ouders.includes(x.personId)); return x.plekken - mee.length - mee.filter((pl) => (v.ouderMee || {})[pl.id]).length; };
+  // Besluit 31: iedereen brengt zijn eigen kind, tenzij de ouder om een plek vraagt
+  M.plekZoekers = (S, a) => { const v = S.vervoer[a.id]; if (!v || !v.vraag) return []; return Object.keys(v.vraag).map((id) => M.speler(S, id)).filter((pl) => pl && pl.teamId === a.teamId && !v.plek[pl.id] && M.status(S, pl, a).code === 'verwacht'); };
+  M.neemMee = (S, a, pl, chauffeurId) => {
+    const v = S.vervoer[a.id] || (S.vervoer[a.id] = { aanbod: [], plek: {}, vraag: {} }); v.plek[pl.id] = chauffeurId;
+    const n = M.meerijders(S, v, chauffeurId).filter((x) => !x.ouders.includes(chauffeurId)).length; const x = v.aanbod.find((y) => y.personId === chauffeurId);
+    if (x) x.plekken = Math.max(x.plekken, n); else v.aanbod.push({ personId: chauffeurId, plekken: n });
+  };
   M.meerijderNaam = (S, v, pl, chauffeurId) => pl.voornaam + (pl.ouders.includes(chauffeurId) ? ' (eigen kind)' : (v.ouderMee || {})[pl.id] ? ' + ouder' : '');
 
   // ontvangers en ongelezen

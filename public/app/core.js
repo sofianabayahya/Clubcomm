@@ -298,7 +298,7 @@
     const team = pl.teamId;
     meldStaf(team, `${pl.voornaam} is uitgeschreven`, `${pl.voornaam} ${pl.achternaam} is uitgeschreven uit ${team}. Reden: ${reden}. Je hoeft niets te doen; ${pl.voornaam} staat niet meer in de teamlijst.`);
     S.afm = S.afm.filter((f) => !(f.spelerId === pl.id && (M.act(S, f.actId) || {}).datum >= D.vandaag()));
-    Object.values(S.vervoer).forEach((v) => { delete v.plek[pl.id]; });
+    Object.values(S.vervoer).forEach((v) => { delete v.plek[pl.id]; if (v.vraag) delete v.vraag[pl.id]; });
     pl.teamId = null; pl.uitgeschreven = { datum: D.vandaag(), reden }; pl.voornaam = 'Oud-lid'; pl.achternaam = ''; pl.ouders = [];
   };
   CC.on('uitschrijfSheet', () => {
@@ -561,7 +561,7 @@
   CC.on('bevestigAfmelden', (f) => {
     const a = M.act(S, f.dataset.act2); const pl = M.speler(S, f.dataset.speler);
     S.afm.push({ id: 'f' + Date.now(), spelerId: pl.id, actId: a.id, reden: f.reden.value, opm: f.opm.value, tijd: new Date().toISOString(), door: CC.me().id });
-    const v = S.vervoer[a.id]; if (v) delete v.plek[pl.id];
+    const v = S.vervoer[a.id]; if (v) { delete v.plek[pl.id]; if (v.vraag) delete v.vraag[pl.id]; }
     CC.save(); CC.closeSheet(); CC.render(); CC.toast(`${pl.voornaam} is afgemeld`);
   });
   CC.on('intrekken', (el) => {

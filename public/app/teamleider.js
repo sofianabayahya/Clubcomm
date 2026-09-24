@@ -7,7 +7,7 @@
     if (a.thuis || a.soort === 'oefen') return { nodig: false };
     const v = S.vervoer[a.id] || { aanbod: [], plek: {} };
     const komen = M.spelers(S, a.teamId).filter((pl) => M.status(S, pl, a).code === 'verwacht');
-    const zonder = komen.filter((pl) => !v.plek[pl.id]);
+    const zonder = M.plekZoekers(S, a); // Besluit 31: alleen wie om een plek vraagt
     const plekken = v.aanbod.reduce((s, x) => s + x.plekken, 0);
     return { nodig: true, v, komen, zonder, plekken };
   };
@@ -38,7 +38,7 @@
           <small>${D.relatief(a.datum)} · verzamelen ${a.verzamel}</small><h2>${h.actTitel(S, a)}</h2><p class="zacht">Aftrap ${a.tijd}${a.thuis ? ` · ${esc(a.veld)}` : ` · ${esc(a.adres)}`}</p>
           <div class="lijst">
             ${h.rij({ ic: 'users', titel: 'Spelers', sub: `${komt} van ${sp.length} komen`, rechts: komt < minimum + 1 ? '<span class="chip oranje mini">krap</span>' : '', kleur: komt < minimum + 1 ? 'oranje' : '', act: 'tab', attrs: 'data-tab="wedstrijd"' })}
-            ${S.club.modules.vervoer ? h.rij({ ic: 'car', titel: 'Vervoer', sub: !v.nodig ? 'Thuiswedstrijd, niet nodig' : v.zonder.length ? `${v.zonder.length} ${v.zonder.length === 1 ? 'kind' : 'kinderen'} zonder vervoer` : 'Iedereen heeft een plek', kleur: v.nodig && v.zonder.length ? 'oranje' : '', act: 'tab', attrs: 'data-tab="regelen"' }) : ''}
+            ${S.club.modules.vervoer ? h.rij({ ic: 'car', titel: 'Vervoer', sub: !v.nodig ? 'Thuiswedstrijd, niet nodig' : v.zonder.length ? `${v.zonder.length} ${v.zonder.length === 1 ? 'kind zoekt' : 'kinderen zoeken'} een plek` : 'Niemand zoekt een plek', kleur: v.nodig && v.zonder.length ? 'oranje' : '', act: 'tab', attrs: 'data-tab="regelen"' }) : ''}
             ${S.club.modules.taken ? h.rij({ ic: 'list-checks', titel: 'Taken', sub: t.t.length ? `${t.bezet} van ${t.t.length} bezet` : 'Geen taken', kleur: t.t.length - t.bezet ? 'oranje' : '', act: 'tab', attrs: 'data-tab="regelen"' }) : ''}
             ${h.rij({ ic: 'clipboard-check', titel: 'Begeleider', sub: beg ? esc(beg.naam) : 'Nog niemand', kleur: beg ? '' : 'oranje', act: 'tab', attrs: 'data-tab="wedstrijd"' })}
           </div>
@@ -77,13 +77,13 @@
         S.taken.forEach((x) => { const a = M.act(S, x.actId); if (a && a.teamId === tid && x.personId && hulp[x.personId] != null && a.datum < D.vandaag()) hulp[x.personId]++; });
         const rang = Object.entries(hulp).sort((a, b) => b[1] - a[1]);
         const nooit = rang.filter(([, n]) => n === 0);
-        return `<div class="info">${icon('bell')}<span>Herinneringen gaan <b>automatisch</b>: ${S.club.inst.oproepDagen} dagen van tevoren krijgen ouders een oproep voor open taken en een melding als hun kind nog geen vervoer heeft.</span></div>
+        return `<div class="info">${icon('bell')}<span>Herinneringen gaan <b>automatisch</b>: ${S.club.inst.oproepDagen} dagen van tevoren krijgen ouders een oproep voor open taken. Vervoer regelen ouders zelf; zoekt een kind een plek, dan zien de andere ouders dat op hun Home.</span></div>
           ${wed.map((a) => {
             const v = vervoerInfo(S, a); const t = takenInfo(S, a);
             return `${h.sectie(`${D.relatief(a.datum)} · ${h.actTitel(S, a)}`)}<div class="kaartje">
-              ${S.club.modules.vervoer ? (v.nodig ? `<h4>${icon('car')}Vervoer · ${v.plekken} plekken aangeboden</h4>
-                ${v.v.aanbod.map((x) => { const p = M.persoon(S, x.personId); const mee = M.meerijders(S, v.v, x.personId).map((m) => M.meerijderNaam(S, v.v, m, x.personId)); return `<p class="klein">${esc(p.naam)}: ${mee.map(esc).join(', ') || '–'} <span class="zacht">(${M.vrijePlekken(S, v.v, x)} van ${x.plekken} vrij)</span></p>`; }).join('') || '<p class="zacht klein">Nog niemand rijdt.</p>'}
-                ${v.zonder.length ? `<p class="klein oranje-tekst"><b>Zonder vervoer:</b> ${v.zonder.map((pl) => `<button class="chipknop" data-act="indelen" data-a="${a.id}" data-s="${pl.id}">${esc(pl.voornaam)} ${icon('plus')}</button>`).join(' ')}</p>` : '<p class="klein groen-tekst">Iedereen heeft een plek.</p>'}` : `<p class="zacht klein">${icon('car')} Thuiswedstrijd: geen vervoer nodig.</p>`) : ''}
+              ${S.club.modules.vervoer ? (v.nodig ? `<h4>${icon('car')}Vervoer</h4>
+                ${v.v.aanbod.map((x) => { const p = M.persoon(S, x.personId); const mee = M.meerijders(S, v.v, x.personId).map((m) => M.meerijderNaam(S, v.v, m, x.personId)); return mee.length ? `<p class="klein">${esc(p.naam)} neemt mee: ${mee.map(esc).join(', ')}</p>` : ''; }).join('')}
+                ${v.zonder.length ? `<p class="klein oranje-tekst"><b>Zoekt een plek:</b> ${v.zonder.map((pl) => `<button class="chipknop" data-act="indelen" data-a="${a.id}" data-s="${pl.id}">${esc(pl.voornaam)} ${icon('plus')}</button>`).join(' ')}</p>` : '<p class="klein zacht">Niemand zoekt een plek; ouders brengen hun kind zelf.</p>'}` : `<p class="zacht klein">${icon('car')} Thuiswedstrijd: geen vervoer nodig.</p>`) : ''}
               ${S.club.modules.taken ? `<h4>${icon('list-checks')}Taken · ${t.bezet} van ${t.t.length} bezet</h4>
                 ${t.t.map((x) => `<p class="klein">${esc(x.soort)}: ${x.personId ? esc(M.persoon(S, x.personId).naam) : '<b class="oranje-tekst">open</b>'}</p>`).join('')}
                 <div class="knoppen"><button class="knop klein licht" data-act="taakToevoegen" data-a="${a.id}">${icon('plus')}Taak</button><button class="knop klein licht" data-act="deelTaken" data-a="${a.id}">${icon('share-2')}Oproep delen</button></div>` : ''}</div>`;
@@ -112,13 +112,15 @@
   CC.on('zetBegeleider', (el) => { const S = CC.S(); M.act(S, el.dataset.id).begeleiderId = el.value || null; CC.save(); CC.render(); CC.toast(el.value ? 'Begeleider ingesteld' : 'Begeleider verwijderd'); });
   CC.on('deelWedstrijd', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.id); CC.deel(`${a.teamId} ${D.lang(a.datum)}: ${a.thuis ? 'thuis' : 'uit'} tegen ${a.tegen}. Verzamelen ${a.verzamel}, aftrap ${a.tijd}. ${a.thuis ? '' : `Adres: ${a.adres}. `}Tenue: ${a.tenue}. Kan je kind niet? Meld af in ClubComm: ${location.origin}${location.pathname}`, 'Wedstrijdinfo'); });
   CC.on('deelTaken', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.a); const open = S.taken.filter((x) => x.actId === a.id && !x.personId).map((x) => x.soort); CC.deel(open.length ? `Voor ${D.lang(a.datum)} (${a.tegen}) zoeken we nog: ${open.join(', ')}. Kun jij? Tik op "Ik doe het" in ClubComm: ${location.origin}${location.pathname}` : 'Alle taken zijn bezet, dank jullie wel!', 'Taken'); });
+  // Teamleider deelt een kind dat een plek zoekt in bij een ouder (bijv. na een belletje)
   CC.on('indelen', (el) => {
-    const S = CC.S(); const v = S.vervoer[el.dataset.a]; const pl = M.speler(S, el.dataset.s);
-    const vrij = v ? v.aanbod.filter((x) => M.vrijePlekken(S, v, x) > 0) : [];
-    if (!vrij.length) return CC.toast('Geen vrije plekken. De oproep voor vervoer gaat automatisch uit.', 'fout');
-    CC.sheet(`${pl.voornaam} indelen`, `<div class="lijst">${vrij.map((x) => h.rij({ ic: h.avatar(M.persoon(S, x.personId).naam), titel: esc(M.persoon(S, x.personId).naam), act: 'indelenOk', attrs: `data-a="${el.dataset.a}" data-s="${pl.id}" data-p="${x.personId}"` })).join('')}</div>`);
+    const S = CC.S(); const a = M.act(S, el.dataset.a); const v = S.vervoer[a.id] || { aanbod: [], plek: {} }; const pl = M.speler(S, el.dataset.s);
+    const rijders = v.aanbod.map((x) => x.personId);
+    const ouders = M.spelers(S, a.teamId).filter((x) => x.id !== pl.id && M.status(S, x, a).code === 'verwacht').flatMap((x) => x.ouders).filter((o) => !pl.ouders.includes(o));
+    const wie = [...new Set([...rijders, ...ouders])].map((id) => M.persoon(S, id)).filter(Boolean);
+    CC.sheet(`Plek voor ${pl.voornaam}`, `<p class="zacht klein">Wie neemt ${esc(pl.voornaam)} mee? Wie al rijdt, staat bovenaan.</p><div class="lijst">${wie.map((p) => h.rij({ ic: h.avatar(p.naam), titel: esc(p.naam), sub: rijders.includes(p.id) ? `Rijdt al · neemt mee: ${M.meerijders(S, v, p.id).filter((x) => !x.ouders.includes(p.id)).map((x) => esc(x.voornaam)).join(', ') || 'nog niemand'}` : '', act: 'indelenOk', attrs: `data-a="${a.id}" data-s="${pl.id}" data-p="${p.id}"` })).join('')}</div>`);
   });
-  CC.on('indelenOk', (el) => { const S = CC.S(); S.vervoer[el.dataset.a].plek[el.dataset.s] = el.dataset.p; CC.save(); CC.closeSheet(); CC.render(); CC.toast('Ingedeeld; ouders krijgen een melding'); });
+  CC.on('indelenOk', (el) => { const S = CC.S(); M.neemMee(S, M.act(S, el.dataset.a), M.speler(S, el.dataset.s), el.dataset.p); CC.save(); CC.closeSheet(); CC.render(); CC.toast('Ingedeeld; beide ouders krijgen een melding'); });
   CC.on('taakToevoegen', (el) => CC.sheet('Taak toevoegen', `<div class="lijst">${CC.TAAKSOORTEN.map((s) => h.rij({ ic: 'plus', titel: s, act: 'taakToevoegenOk', attrs: `data-a="${el.dataset.a}" data-s="${s}"` })).join('')}</div>`));
   CC.on('taakToevoegenOk', (el) => { const S = CC.S(); S.taken.push({ id: 't' + Date.now(), actId: el.dataset.a, soort: el.dataset.s, personId: null }); CC.save(); CC.closeSheet(); CC.render(); });
   CC.on('wedstrijdToevoegen', () => CC.sheet('Wedstrijd toevoegen', `<form data-submit="wedstrijdToevoegenOk" class="codeform"><label for="nw-t">Tegenstander</label><input id="nw-t" name="tegen" required placeholder="Bijv. FC Amstelland O10-2"><div class="twee"><div><label for="nw-d">Datum</label><input id="nw-d" name="datum" type="date" required value="${D.addDays(D.vandaag(), 10)}"></div><div><label for="nw-a">Aftrap</label><input id="nw-a" name="tijd" type="time" required value="09:00"></div></div><label class="vink"><input type="checkbox" name="thuis" checked> Thuiswedstrijd</label><button class="knop">Toevoegen</button><p class="zacht klein">In de pilot voer je wedstrijden zelf in. Later komen ze automatisch uit Sportlink of voetbal.nl.</p></form>`));

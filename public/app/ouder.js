@@ -5,19 +5,21 @@
   // Open taken voor Home: alleen de komende dagen (instelbaar), en niet als je al hebt gezegd dat je niet kunt
   const homeDagen = (S) => S.club.inst.homeDagen || 7;
   const openTaken = (S, teamId) => { const me = CC.me(); return S.taken.filter((t) => { const a = M.act(S, t.actId); return a && a.teamId === teamId && a.datum >= D.vandaag() && a.datum <= D.addDays(D.vandaag(), homeDagen(S)) && !t.personId && !(t.kanNiet || []).includes(me.id); }); };
-  const geenVervoer = (S, pl) => {
+  // Vervoer (Besluit 31): ouders brengen hun eigen kind. Op Home alleen als een ander kind een plek zoekt en jouw kind ook gaat.
+  const zoektPlek = (S, pl) => {
     if (!S.club.modules.vervoer) return null;
+    const me = CC.me();
     const a = M.komend(S, pl.teamId, 6).find((x) => x.soort === 'wedstrijd' && !x.thuis && !x.afgelast);
-    if (a && a.datum > D.addDays(D.vandaag(), homeDagen(S))) return null; // pas een week van tevoren op Home
-    if (!a || M.status(S, pl, a).code !== 'verwacht') return null;
-    const v = S.vervoer[a.id]; return v && v.plek[pl.id] ? null : a;
+    if (!a || a.datum > D.addDays(D.vandaag(), homeDagen(S)) || M.status(S, pl, a).code !== 'verwacht') return null;
+    const wie = M.plekZoekers(S, a).filter((x) => !x.ouders.includes(me.id));
+    return wie.length ? { a, wie } : null;
   };
 
   CC.rollen.ouder = {
     context(S) { const k = CC.kind(); const kids = CC.kinderen(); return k ? { titel: `${k.voornaam} · ${k.teamId}`, sub: S.club.naam, act: kids.length > 1 ? 'kiesKind' : null } : { titel: 'ClubComm', sub: S.club.naam }; },
     tabs(S) {
       const me = CC.me(); const k = CC.kind();
-      return [['home', 'Home', 'house'], ['planning', 'Planning', 'calendar-days'], S.club.modules.vervoer && ['vervoer', 'Vervoer', 'car', k && geenVervoer(S, k) ? 1 : 0],
+      return [['home', 'Home', 'house'], ['planning', 'Planning', 'calendar-days'], S.club.modules.vervoer && ['vervoer', 'Vervoer', 'car', k && zoektPlek(S, k) ? zoektPlek(S, k).wie.length : 0],
         ['berichten', 'Berichten', 'message-circle', M.ongelezen(S, me.id)], S.club.modules.taken && ['taken', 'Taken', 'list-checks', k ? openTaken(S, k.teamId).length : 0]];
     },
     schermen: {
@@ -36,7 +38,7 @@
         pers.forEach((m) => acties.push(h.rij({ ic: 'message-circle', titel: m.van === 'systeem' ? 'Bericht van ClubComm' : `Bericht van ${esc((M.persoon(S, m.van) || { naam: 'onbekend' }).naam.split(' ')[0])}`, sub: esc(m.onderwerp), act: 'open', attrs: `data-view="bericht" data-id="${m.id}"`, kleur: 'blauw' })));
         S.acts.filter((a) => a.vervangerId === me.id && a.datum >= D.vandaag() && !a.afgelast).slice(0, 1).forEach((a) => acties.push(h.rij({ ic: 'user-cog', titel: `Jij geeft de training ${D.relatief(a.datum).toLowerCase()} ${a.tijd}`, sub: `${esc(a.teamId)} · ${esc(a.veld || '')} · aanwezigheid opnemen`, act: 'open', attrs: `data-view="begeleiden" data-id="${a.id}"`, kleur: 'blauw' })));
         S.acts.filter((a) => a.begeleiderId === me.id && a.teamId === pl.teamId && a.datum >= D.vandaag() && !a.afgelast).slice(0, 1).forEach((a) => acties.push(h.rij({ ic: 'clipboard-check', titel: `Jij begeleidt ${D.relatief(a.datum).toLowerCase()}`, sub: `Aanwezigheid${S.club.modules.speeltijd ? ' en speeltijd' : ''} voor deze wedstrijd`, act: 'open', attrs: `data-view="begeleiden" data-id="${a.id}"`, kleur: 'blauw' })));
-        const gv = geenVervoer(S, pl); if (gv) acties.push(h.rij({ ic: 'car', titel: `Nog geen vervoer voor ${esc(pl.voornaam)}`, sub: `${D.relatief(gv.datum)} uit bij ${esc(gv.tegen)}`, act: 'tab', attrs: 'data-tab="vervoer"', kleur: 'oranje' }));
+        const zp = zoektPlek(S, pl); if (zp) acties.push(h.rij({ ic: 'car', titel: zp.wie.length === 1 ? `${esc(zp.wie[0].voornaam)} zoekt een plek` : `${zp.wie.length} kinderen zoeken een plek`, sub: `${D.relatief(zp.a.datum)} uit bij ${esc(zp.a.tegen)}. Kun jij iemand meenemen?`, act: 'tab', attrs: 'data-tab="vervoer"' }));
         const ot = S.club.modules.taken ? openTaken(S, pl.teamId) : [];
         if (ot.length) { const a = M.act(S, ot[0].actId); acties.push(h.rij({ ic: 'hand-helping', titel: `${ot.length} ${ot.length === 1 ? 'taak' : 'taken'} nog open`, sub: `${esc(ot[0].soort)} · ${D.relatief(a.datum)}. Help je mee?`, act: 'tab', attrs: 'data-tab="taken"' })); }
         if (CC.ouderGesprekRijen) acties.push(...CC.ouderGesprekRijen(S, pl));
@@ -72,20 +74,27 @@
         const pl = CC.kind(); const me = CC.me();
         const uit = M.komend(S, pl.teamId, 12).filter((a) => a.soort === 'wedstrijd' && !a.thuis && !a.afgelast).slice(0, 3);
         if (!uit.length) return h.leeg('Geen uitwedstrijden de komende tijd. Bij thuiswedstrijden is geen vervoer nodig.', 'car');
-        return uit.map((a) => {
-          const v = S.vervoer[a.id] || (S.vervoer[a.id] = { aanbod: [], plek: {} });
-          const mijnAanbod = v.aanbod.find((x) => x.personId === me.id);
+        return `<p class="zacht klein">Je brengt ${esc(pl.voornaam)} zelf naar uitwedstrijden. Lukt het een keer niet? Vraag dan om een plek; de andere ouders en de teamleider zien je vraag.</p>
+          ${uit.map((a) => {
+          const v = S.vervoer[a.id] || (S.vervoer[a.id] = { aanbod: [], plek: {}, vraag: {} }); const vraag = v.vraag || {};
           const komt = M.status(S, pl, a).code === 'verwacht';
-          const bij = v.plek[pl.id] && M.persoon(S, v.plek[pl.id]);
-          const vrij = (x) => M.vrijePlekken(S, v, x);
+          const bij = v.plek[pl.id] && v.plek[pl.id] !== me.id && M.persoon(S, v.plek[pl.id]);
+          const zoekers = M.plekZoekers(S, a).filter((x) => !x.ouders.includes(me.id));
+          const mijnMee = M.meerijders(S, v, me.id).filter((x) => !x.ouders.includes(me.id));
+          const eigen = !komt ? `<p class="zacht klein">${esc(pl.voornaam)} is afgemeld voor deze wedstrijd.</p>`
+            : bij ? `<div class="info groen">${icon('circle-check')}<span>${esc(pl.voornaam)} rijdt mee met <b>${esc(bij.naam)}</b>.</span></div><button class="knop licht klein" data-act="afmeldenRit" data-a="${a.id}">Toch niet nodig</button>`
+            : vraag[pl.id] ? `<div class="info oranje">${icon('car')}<span>Je zoekt een plek voor ${esc(pl.voornaam)}. De andere ouders zien je vraag.</span></div><button class="knop licht klein" data-act="plekZoekenStop" data-a="${a.id}">Toch niet nodig</button>`
+            : `<button class="knop licht vol" data-act="plekZoeken" data-a="${a.id}">${icon('car')}Ik zoek een plek voor ${esc(pl.voornaam)}</button>`;
+          const lijst = [
+            ...mijnMee.map((x) => h.rij({ ic: h.avatar(x.voornaam), titel: `${esc(x.voornaam)} rijdt met jou mee`, sub: 'Dank je wel!', rechts: `<button class="linkknop klein" data-act="neemMeeStop" data-a="${a.id}" data-s="${x.id}">Toch niet</button>` })),
+            ...zoekers.map((x) => h.rij({ ic: h.avatar(x.voornaam), titel: `${esc(x.voornaam)} zoekt een plek`, sub: esc((M.persoon(S, (vraag[x.id] || {}).door) || { naam: '' }).naam), rechts: `<button class="knop klein" data-act="ikNeemMee" data-a="${a.id}" data-s="${x.id}">Ik neem mee</button>` })),
+          ];
           return `<article class="kaartje">
             <div class="kaart-kop">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>Verzamelen ${a.verzamel} · ${esc(a.adres)}</small></div></div>
-            ${!komt ? `<p class="zacht">${esc(pl.voornaam)} is afgemeld voor deze wedstrijd.</p>` : bij ? `<div class="info groen">${icon('circle-check')}<span>${esc(pl.voornaam)}${(v.ouderMee || {})[pl.id] ? ' en jij rijden' : ' rijdt'} mee met <b>${esc(bij.naam)}</b>.</span></div>` : `<div class="info oranje">${icon('car')}<span>${esc(pl.voornaam)} heeft nog geen vervoer.</span></div>`}
-            <h4>Wie rijdt er?</h4>
-            ${v.aanbod.map((x) => { const p = M.persoon(S, x.personId); return h.rij({ ic: h.avatar(p.naam), titel: esc(p.naam), sub: `${vrij(x)} van ${x.plekken} ${x.plekken === 1 ? 'plek' : 'plekken'} vrij · ${M.meerijders(S, v, x.personId).map((m) => esc(M.meerijderNaam(S, v, m, x.personId))).join(', ') || 'nog niemand'}`, rechts: komt && !bij && vrij(x) > 0 && x.personId !== me.id ? `<button class="knop klein" data-act="meerijden" data-a="${a.id}" data-p="${x.personId}">Meerijden</button>` : '' }); }).join('') || '<p class="zacht klein">Nog niemand.</p>'}
-            <div class="knoppen">${mijnAanbod ? `<button class="knop licht" data-act="aanbodStop" data-a="${a.id}">${icon('x')}Ik rijd toch niet</button>` : `<button class="knop" data-act="ikRijd" data-a="${a.id}">${icon('car')}Ik rijd</button>`}${bij ? `<button class="knop licht" data-act="afmeldenRit" data-a="${a.id}">Plek opgeven</button>` : ''}</div>
+            ${eigen}
+            ${lijst.length ? `<div class="lijst compact">${lijst.join('')}</div>` : ''}
           </article>`;
-        }).join('');
+        }).join('')}`;
       },
       berichten: (S) => CC.berichtenScherm(S, { ouder: true }),
       taken(S) {
@@ -179,27 +188,11 @@
   CC.on('zetKind', (el) => { CC.sessie().kindId = el.dataset.id; try { localStorage.setItem('clubcomm-sessie-v1', JSON.stringify(CC.sessie())); } catch (e) { /* */ } CC.closeSheet(); CC.render(); });
 
   // Vervoer
-  CC.on('ikRijd', (el) => CC.sheet('Ik rijd', `<form data-submit="ikRijdOk" data-a="${el.dataset.a}" class="codeform"><label for="pl">Hoeveel andere kinderen kun je meenemen?</label><p class="zacht klein">Tel jezelf en je eigen kind(eren) niet mee; die rijden sowieso met jou.</p><div class="stepper"><button type="button" data-act="stap" data-d="-1" aria-label="Minder">−</button><input id="pl" name="n" type="number" min="1" max="6" value="3"><button type="button" data-act="stap" data-d="1" aria-label="Meer">+</button></div><button class="knop vol">Aanbieden</button></form>`));
-  CC.on('stap', (el) => { const i = el.parentElement.querySelector('input'); i.value = Math.max(1, Math.min(6, Number(i.value) + Number(el.dataset.d))); });
-  CC.on('ikRijdOk', (f) => {
-    const S = CC.S(); const v = S.vervoer[f.dataset.a]; const me = CC.me(); const pl = CC.kind();
-    v.aanbod.push({ personId: me.id, plekken: Number(f.n.value) }); v.plek[pl.id] = me.id;
-    CC.save(); CC.closeSheet(); CC.render(); CC.toast('Dank je wel! De teamleider ziet dat je rijdt.');
-  });
-  CC.on('aanbodStop', (el) => { const S = CC.S(); const v = S.vervoer[el.dataset.a]; const me = CC.me(); v.aanbod = v.aanbod.filter((x) => x.personId !== me.id); Object.keys(v.plek).forEach((k) => { if (v.plek[k] === me.id) delete v.plek[k]; }); CC.save(); CC.render(); CC.toast('Aanbod ingetrokken; de meerijders krijgen bericht'); });
-  CC.on('meerijden', (el) => {
-    const S = CC.S(); const v = S.vervoer[el.dataset.a]; const x = v.aanbod.find((y) => y.personId === el.dataset.p); const pl = CC.kind(); const chauffeur = M.persoon(S, x.personId);
-    const vrij = M.vrijePlekken(S, v, x);
-    CC.sheet(`Meerijden met ${chauffeur.naam.split(' ')[0]}`, `<p class="zacht">${vrij} ${vrij === 1 ? 'plek' : 'plekken'} vrij.</p><div class="knoppen kolom">
-      <button class="knop" data-act="meerijdenOk" data-a="${el.dataset.a}" data-p="${x.personId}" data-o="0">Alleen ${esc(pl.voornaam)} (1 plek)</button>
-      ${vrij >= 2 ? `<button class="knop licht" data-act="meerijdenOk" data-a="${el.dataset.a}" data-p="${x.personId}" data-o="1">${esc(pl.voornaam)} en ik (2 plekken)</button>` : '<p class="zacht klein">Voor kind + ouder is er niet genoeg plek.</p>'}</div>`);
-  });
-  CC.on('meerijdenOk', (el) => {
-    const S = CC.S(); const v = S.vervoer[el.dataset.a]; const pl = CC.kind();
-    v.plek[pl.id] = el.dataset.p; v.ouderMee = v.ouderMee || {}; if (el.dataset.o === '1') v.ouderMee[pl.id] = true; else delete v.ouderMee[pl.id];
-    CC.save(); CC.closeSheet(); CC.render(); CC.toast('Geregeld! De chauffeur krijgt een melding.');
-  });
-  CC.on('afmeldenRit', (el) => { const S = CC.S(); const v = S.vervoer[el.dataset.a]; delete v.plek[CC.kind().id]; if (v.ouderMee) delete v.ouderMee[CC.kind().id]; CC.save(); CC.render(); });
+  CC.on('afmeldenRit', (el) => { const S = CC.S(); const v = S.vervoer[el.dataset.a]; const id = CC.kind().id; delete v.plek[id]; if (v.ouderMee) delete v.ouderMee[id]; if (v.vraag) delete v.vraag[id]; CC.save(); CC.render(); CC.toast('Genoteerd; de chauffeur krijgt bericht'); });
+  CC.on('plekZoeken', (el) => { const S = CC.S(); const v = S.vervoer[el.dataset.a]; (v.vraag || (v.vraag = {}))[CC.kind().id] = { door: CC.me().id, tijd: new Date().toISOString() }; CC.save(); CC.render(); CC.toast('Je vraag staat uit. Andere ouders en de teamleider zien hem.'); });
+  CC.on('plekZoekenStop', (el) => { const S = CC.S(); const v = S.vervoer[el.dataset.a]; if (v.vraag) delete v.vraag[CC.kind().id]; CC.save(); CC.render(); });
+  CC.on('ikNeemMee', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.a); const pl = M.speler(S, el.dataset.s); M.neemMee(S, a, pl, CC.me().id); CC.save(); CC.render(); CC.toast(`Top! De ouder van ${pl.voornaam} krijgt een melding.`); });
+  CC.on('neemMeeStop', (el) => { const S = CC.S(); const v = S.vervoer[el.dataset.a]; delete v.plek[el.dataset.s]; CC.save(); CC.render(); CC.toast('Genoteerd; de vraag staat weer open'); });
 
   // Taken
   CC.on('ikDoeHet', (el) => {
