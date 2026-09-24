@@ -190,6 +190,8 @@
     const S = CC.generate(); const ik = CC.me(); const peter = S.people.find((p) => p.id === S.demo.peter);
     // De voorbeeld-HJO wordt jij; voorbeeldadressen kunnen geen mail ontvangen (.invalid)
     let json = JSON.stringify(S).split(`"${peter.id}"`).join(`"${ik.id}"`);
+    // Voorbeeldadres van het sportpark vervangen door dat van de eigen club
+    const club0 = CC.S().club; if (club0.sportpark) json = json.split('Sportpark Buitenveldert, De Boelelaan 50, Amsterdam').join(club0.sportpark);
     const T = JSON.parse(json); T.people.forEach((p) => { if (p.id !== ik.id) p.email = p.email.replace(/@.*$/, '@demo.invalid'); });
     T.club = CC.S().club;
     const rijen = [...CC.naarRijen(T, club).values()].filter((r) => r.soort !== 'club');
