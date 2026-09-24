@@ -8,7 +8,7 @@
 
   const sb = window.supabase.createClient(cfg.url, cfg.key, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
   CC.sb = sb;
-  const club = cfg.club;
+  let club = cfg.club; // na inloggen: de club uit de koppeling
   const L = { stap: 'laden', email: '', fout: '', snap: new Map(), geweigerd: new Map(), bezig: false, opnieuw: false, timer: null, geladen: 0, pid: null, uitleg: '' };
   const WACHT = 'clubcomm-aanmelding-v1';
   const store = { get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* */ } }, del(k) { try { localStorage.removeItem(k); } catch (e) { /* */ } } };
@@ -110,7 +110,7 @@
       <div class="info">${icon('info')}<span>Heb je een uitnodiging van de teamleider (QR-code of link)? Open die, dan kun je je aanmelden. Gebruik je bij de club een ander e-mailadres? Log dan uit en log in met dat adres.</span></div>
       <button class="knop" data-act="liveOpnieuw">Opnieuw proberen</button><button class="linkknop" data-act="liveUit">Uitloggen</button>`);
     if (hash.startsWith('uitnodiging-') && L.stap === 'mail') return uitnodiging(hash.slice(12));
-    if (L.stap === 'code') return scherm(`<h1>Check je mail</h1><p class="zacht">We hebben een mail gestuurd naar <b>${esc(L.email)}</b>. Tik op de link in de mail, of typ de code over.</p>${foutRegel()}
+    if (L.stap === 'code') return scherm(`<h1>Check je mail</h1><p class="zacht">We hebben een mail gestuurd naar <b>${esc(L.email)}</b>. Tik op de knop in de mail (open hem op dit apparaat), of typ de code over als die in de mail staat.</p>${foutRegel()}
       <form data-submit="liveCode" class="codeform"><label for="lc">Code uit de mail</label><input id="lc" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required placeholder="123456"><button class="knop">Inloggen</button></form>
       <p class="zacht klein">Geen mail? Kijk ook in je spam. <button class="linkknop" data-act="liveNogmaals">Stuur opnieuw</button> · <button class="linkknop" data-act="liveTerug">Ander e-mailadres</button></p>`);
     return scherm(`<h1>ClubComm</h1><p class="zacht">${esc(L.clubNaam || 'Jeugdvoetbal')}</p>${foutRegel()}
@@ -133,7 +133,7 @@
   const stuurCode = async (email) => {
     L.fout = ''; L.email = email;
     const { error } = await sb.auth.signInWithOtp({ email, options: { shouldCreateUser: true, emailRedirectTo: location.origin + location.pathname } });
-    if (error) { L.fout = /rate|seconds/i.test(error.message) ? 'Even wachten: je kunt over een minuut opnieuw een code aanvragen.' : `Versturen lukte niet: ${error.message}`; }
+    if (error) { L.fout = /rate|seconds|limit/i.test(error.message) ? 'Er is net al een inlogmail verstuurd. Gebruik de knop in die mail, of probeer het over een paar minuten opnieuw.' : `Versturen lukte niet: ${error.message}`; }
     else L.stap = 'code';
     CC.render();
   };
@@ -177,11 +177,11 @@
       if (!e2) CC.toast(`Aanmelding voor ${wacht.voor} verstuurd naar de teamleider`);
     }
     if (!kop || !kop.length) { L.stap = 'onbekend'; CC.render(); return; }
-    L.pid = kop[0].persoon_id;
+    L.pid = kop[0].persoon_id; club = kop[0].club_id || club;
     try { await laden(); } catch (e) { L.stap = 'mail'; L.fout = `Laden lukte niet: ${e.message}`; L.pid = null; CC.render(); return; }
     if (!CC.me()) { CC.zetSessie(L.pid); }
     CC.zetSessie(L.pid);
-    if (!CC.me()) { L.stap = 'onbekend'; L.pid = null; CC.render(); return; }
+    if (!CC.me()) { L.stap = 'mail'; L.fout = 'Je account is gekoppeld, maar je gegevens konden niet worden geladen. Ververs de pagina.'; L.pid = null; CC.render(); return; }
     L.stap = 'klaar'; CC.render();
   };
 

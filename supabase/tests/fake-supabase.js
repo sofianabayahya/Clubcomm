@@ -7,9 +7,9 @@
   if (!Object.keys(db.rows).length) {
     const club = JSON.parse(sessionStorage.getItem('fake-club') || '{}');
     const zet = (r) => { db.rows[`${r.club_id}|${r.soort}|${r.id}`] = r; };
-    zet({ club_id: 'scb', soort: 'club', id: 'club', scope: 'club', data: club });
-    zet({ club_id: 'scb', soort: 'people', id: 'p-beheer', scope: 'persoon', persoon_id: 'p-beheer', data: { id: 'p-beheer', naam: 'Sofian Abayahya', rollen: [{ rol: 'hjo' }, { rol: 'beheerder' }] } });
-    zet({ club_id: 'scb', soort: 'contact', id: 'p-beheer', scope: 'contact', persoon_id: 'p-beheer', data: { email: 'admin@test.nl', tel: '' } });
+    zet({ club_id: 'dcg', soort: 'club', id: 'club', scope: 'club', data: club });
+    zet({ club_id: 'dcg', soort: 'people', id: 'p-beheer', scope: 'persoon', persoon_id: 'p-beheer', data: { id: 'p-beheer', naam: 'Sofian Abayahya', rollen: [{ rol: 'hjo' }, { rol: 'beheerder' }] } });
+    zet({ club_id: 'dcg', soort: 'contact', id: 'p-beheer', scope: 'contact', persoon_id: 'p-beheer', data: { email: 'admin@test.nl', tel: '' } });
     bewaar();
   }
   const luisteraars = [];
@@ -45,12 +45,12 @@
     if (naam === 'koppel_mij') {
       if (!db.user) return antw([]);
       if (!db.lid[db.user.id]) { const c = Object.values(db.rows).find((r) => r.soort === 'contact' && (r.data.email || '').toLowerCase() === db.user.email.toLowerCase() && !Object.values(db.lid).includes(r.persoon_id)); if (c) { db.lid[db.user.id] = c.persoon_id; bewaar(); } }
-      return antw(db.lid[db.user.id] ? [{ club_id: 'scb', persoon_id: db.lid[db.user.id] }] : []);
+      return antw(db.lid[db.user.id] ? [{ club_id: 'dcg', persoon_id: db.lid[db.user.id] }] : []);
     }
-    if (naam === 'uitnodiging_info') { const t = db.rows[`scb|teams|${a.p_team}`]; const c = db.rows['scb|club|club']; return antw({ club: c && c.data.naam, team: t && t.data.naam }); }
-    if (naam === 'aanmelden') { const id = 'm' + Date.now(); db.rows[`scb|aanm|${id}`] = { club_id: 'scb', soort: 'aanm', id, scope: 'aanm', team_id: a.p_team, data: { id, teamId: a.p_team, email: db.user.email, ouderNaam: a.p_ouder, kindVoor: a.p_voor, kindAchter: a.p_achter, tijd: new Date().toISOString(), status: 'open' } }; bewaar(); return antw(id); }
-    if (naam === 'bericht_bij') { const r = db.rows[`scb|msgs|${a.p_id}`]; if (r) { if (a.p_gelezen && !r.data.gelezen.includes(ik())) r.data.gelezen.push(ik()); r.data.antw.push(...(a.p_antw || [])); bewaar(); } return antw(null); }
-    if (naam === 'club_vullen') { a.p_rijen.forEach((r) => { if (r.soort === 'club' || (['people', 'contact'].includes(r.soort) && r.id === ik())) return; db.rows[`scb|${r.soort}|${r.id}`] = { ...r, club_id: 'scb' }; }); bewaar(); return antw(a.p_rijen.length); }
+    if (naam === 'uitnodiging_info') { const t = db.rows[`dcg|teams|${a.p_team}`]; const c = db.rows['dcg|club|club']; return antw({ club: c && c.data.naam, team: t && t.data.naam }); }
+    if (naam === 'aanmelden') { const id = 'm' + Date.now(); db.rows[`dcg|aanm|${id}`] = { club_id: 'dcg', soort: 'aanm', id, scope: 'aanm', team_id: a.p_team, data: { id, teamId: a.p_team, email: db.user.email, ouderNaam: a.p_ouder, kindVoor: a.p_voor, kindAchter: a.p_achter, tijd: new Date().toISOString(), status: 'open' } }; bewaar(); return antw(id); }
+    if (naam === 'bericht_bij') { const r = db.rows[`dcg|msgs|${a.p_id}`]; if (r) { if (a.p_gelezen && !r.data.gelezen.includes(ik())) r.data.gelezen.push(ik()); r.data.antw.push(...(a.p_antw || [])); bewaar(); } return antw(null); }
+    if (naam === 'club_vullen') { a.p_rijen.forEach((r) => { if (r.soort === 'club' || (['people', 'contact'].includes(r.soort) && r.id === ik())) return; db.rows[`dcg|${r.soort}|${r.id}`] = { ...r, club_id: 'dcg' }; }); bewaar(); return antw(a.p_rijen.length); }
     if (naam === 'club_leegmaken') { let n = 0; Object.entries(db.rows).forEach(([k, r]) => { if (r.soort !== 'club' && !(['people', 'contact'].includes(r.soort) && r.id === ik())) { delete db.rows[k]; n++; } }); bewaar(); return antw(n); }
     return antw(null, { message: 'onbekende rpc ' + naam });
   };
