@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 23 september 2026 (Besluit 14 t/m 22 toegevoegd)
+Laatst bijgewerkt: 24 september 2026 (Besluit 30 toegevoegd)
 
 ---
 
@@ -508,6 +508,28 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 30 — Volgorde en rust op elk scherm
+*Besloten 24 september 2026.*
+
+Uitgangspunt: **informeren, en clean**. Dat vertalen we naar zes vuistregels voor elk scherm en elke rol:
+
+1. **Volgorde:** eerst wat jij nu moet doen, dan wat er speelt, dan de rest.
+2. **Wat bij elkaar hoort, staat in één blok met één kop.** Geen losse blokjes die over hetzelfde gaan.
+3. **Elke actie heeft één vaste plek.** Niets dubbel; op Home alleen als er iets te doen is.
+4. **Kleur alleen voor aandacht** (oranje, rood). Gewone regels hebben geen gekleurde streep.
+5. **Uitleg één keer en klein**, niet bij elk item.
+6. **Tabbladen en filters staan altijd bovenaan**, bij elke rol op dezelfde plek.
+
+Toegepast (24 sep 2026):
+- **Ouder, Home:** eerst "Actie nodig" (alleen als er iets is), dan **Programma · week 39** (de eerstvolgende activiteiten in één blok), dan de aanwezigheid. Vastgezette clubuitleg staat niet meer op Home maar bij Berichten; urgente berichten wel (aanpassing van Besluit 19).
+- **Weeknummers:** een voetbalweek loopt van maandag tot en met zondag. Planning: "Deze week · week 39", "Volgende week · week 40", "Week 41 · 5–11 okt". Het nummer volgt automatisch uit de datum.
+- **Ouder, Planning:** "Verder vooruit kijken" is de laatste regel van het laatste weekblok; "Over Jesse" (aanwezigheid, ontwikkelgesprek) en "Langer afwezig" (periode, langer geblesseerd) zijn elk één blok. Het label "Komt" staat er alleen als het afwijkt (bijv. "Afgemeld").
+- **Ouder, Berichten:** tabbladen Persoonlijk/Nieuws bovenaan; vastgezette berichten onder het tabblad waar ze bij horen.
+- **Ouder, Taken:** korte koppen ("za 26 sep · uit"), geen oranje streep bij open taken, uitleg over de automatische oproep één keer onderaan.
+- **Trainer, Spelers:** Materiaal onderaan onder "Team" (op Home alleen zolang er iets te doen is).
+- **HJO, Home:** de knoppen "Bericht aan club" en "Afgelasten" weg (staan bij Berichten en Planning); "Te doen" direct onder de cijfers; bij "Ter informatie" de uitleg over "Gezien" één keer.
+- Nog open: horen de tabbladen Wedstrijd en Regelen van de teamleider samen?
+
 ## Besluit 29 — Waardering voor trainers en teamleiders
 *Besloten 23 september 2026.*
 
@@ -664,7 +686,7 @@ Net als bij spelers: ClubComm registreert en signaleert, de HJO beslist.
 - **Clubberichten herkenbaar:** berichten van de HJO of clubbeheerder krijgen het club-icoon en het label **"Club"**. Ze vallen op zonder dat ze urgent zijn.
 - **Urgent alleen voor tijdgevoelige zaken** (vandaag of morgen, bijv. afgelasting): rood label, bovenaan, pushmelding met geluid en op Home tot het gelezen is. Afgelasten is altijd urgent. Niet alle HJO-berichten worden urgent (anders verliest "urgent" zijn waarde).
 - **Vastzetten:** HJO, teamleider én trainer kunnen een bericht **1 of 2 weken** vastzetten (bij versturen of later, bij het eigen bericht). Het staat dan met een speldje bovenaan Berichten, ook als het gelezen is, en zakt daarna vanzelf weg. De afzender kan het eerder losmaken.
-- Een vastgezet bericht staat op **Home** van de ouder tot het gelezen is.
+- Een vastgezet bericht staat bovenaan bij **Berichten** (sinds Besluit 30 niet meer op Home; urgente berichten wel).
 - **Maximaal 2 vastgezette berichten per bereik** (per team, en voor de hele club); bij een derde wordt het oudste losgemaakt.
 
 ---

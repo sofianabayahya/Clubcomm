@@ -22,7 +22,7 @@
   const gezien = (S) => { const me = CC.me(); const g = S.gezienInfo || (S.gezienInfo = {}); return g[me.id] || (g[me.id] = {}); };
   const infoRij = (S, key, hash, rij, verborgen) => {
     if (gezien(S)[key] === hash) { verborgen.n++; if (h.segVal('toonGezien', '0') !== '1') return ''; }
-    return `<div class="signaal">${rij}<div class="signaal-voet"><button class="knop klein licht" data-act="infoGezien" data-key="${esc(key)}" data-hash="${esc(hash)}">${icon('check')}Gezien</button><small class="zacht">komt terug als er iets verandert</small></div></div>`;
+    return `<div class="signaal">${rij}<div class="signaal-voet"><button class="knop klein licht" data-act="infoGezien" data-key="${esc(key)}" data-hash="${esc(hash)}">${icon('check')}Gezien</button></div></div>`;
   };
   CC.on('infoGezien', (el) => { const S = CC.S(); gezien(S)[el.dataset.key] = el.dataset.hash; CC.save(); CC.render(); });
 
@@ -86,9 +86,8 @@
 
     const infoHtml = info.filter(Boolean);
     return `<div class="clubregel"><span><b>${S.teams.length}</b> teams</span><span><b>${S.players.filter((p) => p.teamId && S.teams.some((t) => t.id === p.teamId)).length}</b> spelers</span><span><b>${tot ? Math.round((100 * aan) / tot) : '–'}%</b> aanwezig</span></div>
-      ${CC.mag('clubbericht') ? `<div class="twee-knoppen"><button class="tegel groot" data-act="berichtAanClub">${icon('megaphone')}<span>Bericht aan club</span></button><button class="tegel groot rood" data-act="afgelasten">${icon('ban')}<span>Afgelasten</span></button></div>` : ''}
       ${h.sectie(`Te doen${doen.length ? ` (${doen.length})` : ''}`)}${doen.length ? `<div class="lijst">${doen.join('')}</div>` : h.leeg('Niets te doen 👍', 'circle-check')}
-      ${h.sectie('Ter informatie')}<p class="zacht klein">Om op de hoogte te zijn; je hoeft er niets mee.${rol === 'hjo' && S.club.coordinatorAan ? ` Spelerzaken van teams met een ${esc(L.coordinator.toLowerCase())} zie je pas als ze ${i.liggenDagen} dagen blijven liggen of als het ernstig is (onder ${i.ernstig}%).` : ''}</p>
+      ${h.sectie('Ter informatie')}<p class="zacht klein">Om op de hoogte te zijn; je hoeft er niets mee. Tik op Gezien: het komt pas terug als er iets verandert.${rol === 'hjo' && S.club.coordinatorAan ? ` Spelerzaken van teams met een ${esc(L.coordinator.toLowerCase())} zie je pas als ze ${i.liggenDagen} dagen blijven liggen of als het ernstig is (onder ${i.ernstig}%).` : ''}</p>
       ${infoHtml.length ? `<div class="lijst">${infoHtml.join('')}</div>` : '<p class="zacht klein">Niets nieuws.</p>'}
       ${verborgen.n ? `<button class="linkknop" data-act="seg" data-key="toonGezien" data-val="${h.segVal('toonGezien', '0') === '1' ? '0' : '1'}">${h.segVal('toonGezien', '0') === '1' ? 'Verberg wat je al gezien hebt' : `Toon ook wat je al gezien hebt (${verborgen.n})`}</button>` : ''}`;
   };

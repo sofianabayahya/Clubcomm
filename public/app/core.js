@@ -376,7 +376,10 @@
       const pers = [...mijn.filter((m) => m.soort === 'persoonlijk'), ...S.msgs.filter((m) => m.van === me.id && m.soort === 'persoonlijk')], nws = mijn.filter((m) => m.soort !== 'persoonlijk');
       const n = (ms) => ms.filter((m) => m.van !== me.id && !m.gelezen.includes(me.id)).length;
       const vraag = tab === 'persoonlijk' && CC.kinderen().length ? `<button class="knop licht vol" data-act="vraagStaf">${icon('message-circle')}Vraag aan trainer of teamleider</button>` : '';
-      return `${vastBlok}${h.seg('berichten', [['persoonlijk', 'Persoonlijk', n(pers)], ['nieuws', 'Nieuws', n(nws)]], 'persoonlijk')}${vraag}${lijst(zonderVast(tab === 'persoonlijk' ? pers : nws))}`;
+      // Tabbladen altijd bovenaan; vastgezette berichten onder het tabblad waar ze bij horen
+      const hier = tab === 'persoonlijk' ? pers : nws; const vastHier = vast.filter((m) => hier.includes(m));
+      const vastBlokHier = vastHier.length ? `${h.sectie(`${icon('pin', 'klein')} Vastgezet`)}<div class="lijst vast">${vastHier.map((m) => bericht(m, me)).join('')}</div>` : '';
+      return `${h.seg('berichten', [['persoonlijk', 'Persoonlijk', n(pers)], ['nieuws', 'Nieuws', n(nws)]], 'persoonlijk')}${vraag}${vastBlokHier}${lijst(zonderVast(hier))}`;
     }
     const tab = h.segVal('berichtenStaf', 'inbox');
     const verstuurd = S.msgs.filter((m) => m.van === me.id).sort((a, b) => b.tijd.localeCompare(a.tijd));

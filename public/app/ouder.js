@@ -30,8 +30,8 @@
         const z = M.zone(S, st.pct, pl.teamId);
         const lang = S.lang.find((l) => l.spelerId === pl.id && l.tot >= D.vandaag());
         const acties = [];
-        // Urgent en vastgezet (ongelezen) ook op Home (Besluit 19)
-        S.msgs.filter((m) => M.zichtbaar(S, m, me.id) && m.soort !== 'persoonlijk' && !m.gelezen.includes(me.id) && (m.urgent || CC.isVast(m))).forEach((m) => acties.push(h.rij({ ic: m.urgent ? 'triangle-alert' : 'pin', titel: esc(m.onderwerp), sub: `${m.urgent ? 'Urgent · ' : ''}${esc(CC.isClub(m) ? 'Club' : m.bereik || '')}`, act: 'open', attrs: `data-view="bericht" data-id="${m.id}"`, kleur: m.urgent ? 'rood' : 'blauw' })));
+        // Urgent (ongelezen) ook op Home; vastgezette uitleg staat bij Berichten (Besluit 19, aangepast in Besluit 30)
+        S.msgs.filter((m) => M.zichtbaar(S, m, me.id) && m.soort !== 'persoonlijk' && !m.gelezen.includes(me.id) && m.urgent).forEach((m) => acties.push(h.rij({ ic: m.urgent ? 'triangle-alert' : 'pin', titel: esc(m.onderwerp), sub: `${m.urgent ? 'Urgent · ' : ''}${esc(CC.isClub(m) ? 'Club' : m.bereik || '')}`, act: 'open', attrs: `data-view="bericht" data-id="${m.id}"`, kleur: m.urgent ? 'rood' : 'blauw' })));
         const pers = S.msgs.filter((m) => M.zichtbaar(S, m, me.id) && m.soort === 'persoonlijk' && !m.gelezen.includes(me.id));
         pers.forEach((m) => acties.push(h.rij({ ic: 'message-circle', titel: m.van === 'systeem' ? 'Bericht van ClubComm' : `Bericht van ${esc((M.persoon(S, m.van) || { naam: 'onbekend' }).naam.split(' ')[0])}`, sub: esc(m.onderwerp), act: 'open', attrs: `data-view="bericht" data-id="${m.id}"`, kleur: 'blauw' })));
         S.acts.filter((a) => a.vervangerId === me.id && a.datum >= D.vandaag() && !a.afgelast).slice(0, 1).forEach((a) => acties.push(h.rij({ ic: 'user-cog', titel: `Jij geeft de training ${D.relatief(a.datum).toLowerCase()} ${a.tijd}`, sub: `${esc(a.teamId)} · ${esc(a.veld || '')} · aanwezigheid opnemen`, act: 'open', attrs: `data-view="begeleiden" data-id="${a.id}"`, kleur: 'blauw' })));
@@ -44,10 +44,10 @@
         const compliment = z === 'groen' && !k.geel && !k.oranje && !st.telaat ? `<span class="compliment">${icon('star')}Betrouwbare speler!</span>` : '';
         return `
           ${lang ? `<div class="info">${icon('hospital')}<span><b>${esc(pl.voornaam)} is langdurig afwezig</b> tot ongeveer ${D.kort(lang.tot)}. Je hoeft niet per training af te melden.</span></div>` : ''}
+          ${acties.length ? `${h.sectie('Actie nodig')}<div class="lijst">${acties.join('')}</div>` : ''}
           ${h.sectie(`Programma${weekLabel(komend)}`)}
           <div class="acts">${komend.map((a) => CC.actKaart(S, a, pl)).join('') || h.leeg('Geen activiteiten gepland', 'calendar')}</div>
-          <button class="status ${z}" data-act="open" data-view="kindOverzicht" data-id="${pl.id}"><span>${h.stip(z)}${statusregel} <small>deze fase</small></span><span>${h.kaartjes(k)}${compliment}${icon('circle-help', 'zacht')}</span></button>
-          ${acties.length ? `${h.sectie('Actie nodig')}<div class="lijst">${acties.join('')}</div>` : ''}`;
+          <button class="status ${z}" data-act="open" data-view="kindOverzicht" data-id="${pl.id}"><span>${h.stip(z)}${statusregel} <small>deze fase</small></span><span>${h.kaartjes(k)}${compliment}${icon('circle-help', 'zacht')}</span></button>`;
       },
       planning(S) {
         const pl = CC.kind(); if (!pl) return '';
@@ -62,7 +62,7 @@
         // Verder vooruit kijken hoort bij de weken: als laatste regel in het laatste weekblok
         const verder = !ver ? h.rij({ ic: 'calendar-days', titel: 'Verder vooruit kijken', sub: 'Toon de komende 6 weken', act: 'seg', attrs: 'data-key="verder" data-val="1"', chevron: false }) : '';
         const weken = Object.entries(groepen);
-        const blokken = weken.map(([w, as], i) => `${h.sectie(w === dezeWeek ? `Deze week${wk(w)}` : w === D.addDays(dezeWeek, 7) ? `Volgende week${wk(w)}` : `Week ${D.weeknr(w)}<span class="wk"> · ${periode(w)}</span>`)}<div class="lijst">${as.map((a) => h.rij({ ic: h.datumBlok(a), titel: h.actTitel(S, a), sub: h.actSub(S, a), rechts: h.chip(M.status(S, pl, a)), act: 'open', attrs: `data-view="activiteit" data-id="${a.id}"` })).join('')}${i === weken.length - 1 ? verder : ''}</div>`).join('') || `${h.leeg('Geen activiteiten gepland', 'calendar')}${verder ? `<div class="lijst">${verder}</div>` : ''}`;
+        const blokken = weken.map(([w, as], i) => `${h.sectie(w === dezeWeek ? `Deze week${wk(w)}` : w === D.addDays(dezeWeek, 7) ? `Volgende week${wk(w)}` : `Week ${D.weeknr(w)}<span class="wk"> · ${periode(w)}</span>`)}<div class="lijst">${as.map((a) => h.rij({ ic: h.datumBlok(a), titel: h.actTitel(S, a), sub: h.actSub(S, a), rechts: M.status(S, pl, a).code === 'verwacht' ? '' : h.chip(M.status(S, pl, a)), act: 'open', attrs: `data-view="activiteit" data-id="${a.id}"` })).join('')}${i === weken.length - 1 ? verder : ''}</div>`).join('') || `${h.leeg('Geen activiteiten gepland', 'calendar')}${verder ? `<div class="lijst">${verder}</div>` : ''}`;
         const gesprek = CC.ouderGesprekRijen ? h.rij({ ic: 'star', titel: 'Ontwikkelgesprek en beoordeling', sub: `Twee keer per seizoen, met ${esc(pl.voornaam)} erbij`, act: 'open', attrs: `data-view="${(S.ontwGesprek || []).some((g) => g.teamId === pl.teamId) ? 'gesprekKiezen' : 'beoordelingKind'}" data-id="${pl.id}"` }) : '';
         return `${agenda}${blokken}
           ${h.sectie(`Over ${esc(pl.voornaam)}`)}<div class="lijst">${h.rij({ ic: 'chart-column', titel: 'Aanwezigheid en kaarten', sub: `Deze fase ${M.stats(S, pl, M.periode(S, 'blok')).pct ?? '–'}% · seizoen ${st.pct ?? '–'}% · afmeldgeschiedenis`, act: 'open', attrs: `data-view="kindOverzicht" data-id="${pl.id}"` })}${gesprek}</div>
@@ -93,11 +93,12 @@
         const acts = M.acts(S, pl.teamId, D.vandaag(), D.addDays(D.vandaag(), 28)).filter((a) => S.taken.some((t) => t.actId === a.id));
         const mijn = S.taken.filter((t) => t.personId === me.id).length;
         return `${CC.mijnHulp ? CC.mijnHulp(S, pl) : `<div class="info">${icon('info')}<span>Je hebt dit seizoen <b>${mijn}×</b> geholpen. Dank je wel!</span></div>`}
-          ${acts.map((a) => `${h.sectie(`${D.relatief(a.datum)} · ${h.actTitel(S, a)}`)}<div class="lijst">${S.taken.filter((t) => t.actId === a.id).map((t) => {
+          ${acts.map((a) => `${h.sectie(`${D.relatief(a.datum)} · ${a.soort === 'training' ? 'training' : a.thuis ? 'thuis' : 'uit'}`)}<div class="lijst">${S.taken.filter((t) => t.actId === a.id).map((t) => {
             const p = t.personId && M.persoon(S, t.personId);
-            return h.rij({ ic: t.soort === CC.VERVANGER ? 'user-cog' : t.soort === 'Coach' ? 'clipboard-check' : t.soort === 'Spelbegeleider' ? 'flag' : t.soort === 'Fotograaf' ? 'eye' : t.soort === 'Wastas' ? 'shirt' : 'hand-helping', titel: esc(t.soort), sub: p ? (p.id === me.id ? 'Jij doet dit. Top!' : esc(p.naam)) : (t.kanNiet || []).includes(me.id) ? 'Nog niemand · jij kunt deze keer niet' : 'Nog niemand', kleur: p ? '' : 'oranje',
+            return h.rij({ ic: t.soort === CC.VERVANGER ? 'user-cog' : t.soort === 'Coach' ? 'clipboard-check' : t.soort === 'Spelbegeleider' ? 'flag' : t.soort === 'Fotograaf' ? 'eye' : t.soort === 'Wastas' ? 'shirt' : 'hand-helping', titel: esc(t.soort), sub: p ? (p.id === me.id ? 'Jij doet dit. Top!' : esc(p.naam)) : (t.kanNiet || []).includes(me.id) ? 'Nog niemand · jij kunt deze keer niet' : 'Nog niemand', kleur: '',
               rechts: !p ? ((t.kanNiet || []).includes(me.id) ? `<button class="linkknop klein" data-act="taakKanToch" data-id="${t.id}">Toch wel?</button>` : `<span class="knoppen-rij"><button class="knop klein" data-act="ikDoeHet" data-id="${t.id}">Ik doe het</button><button class="knop klein licht" data-act="taakKanNiet" data-id="${t.id}">Kan niet</button></span>`) : p.id === me.id ? `<button class="knop klein licht" data-act="taakAf" data-id="${t.id}">Afmelden</button>` : icon('circle-check', 'groen') });
-          }).join('')}</div>`).join('') || h.leeg('Geen taken de komende weken', 'list-checks')}`;
+          }).join('')}</div>`).join('') || h.leeg('Geen taken de komende weken', 'list-checks')}
+          ${acts.length ? `<p class="zacht klein">Staat een taak ${S.club.inst.oproepDagen} dagen van tevoren nog open, dan krijgt iedereen automatisch een oproep.</p>` : ''}`;
       },
     },
   };

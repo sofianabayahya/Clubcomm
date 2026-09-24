@@ -73,7 +73,7 @@ p { margin: .4em 0; }
 .rij.oranje .rij-ic { color: var(--oranje); } .rij.oranje { box-shadow: inset 4px 0 0 var(--oranje); }
 .rij.rood .rij-ic { color: var(--rood); } .rij.rood { box-shadow: inset 4px 0 0 var(--rood); }
 .rij.groen .rij-ic { color: var(--groen); }
-.rij.blauw .rij-ic { color: var(--blauw); } .rij.blauw { box-shadow: inset 4px 0 0 var(--blauw); }
+.rij.blauw .rij-ic { color: var(--blauw); }
 .label { display: inline-block; font-size: 11px; font-weight: 600; color: var(--zacht); background: var(--vlak2); border: 1px solid var(--lijn); border-radius: 6px; padding: 0 5px; margin-left: 4px; vertical-align: 1px; }
 .stip { width: 12px; height: 12px; border-radius: 50%; display: inline-block; background: var(--zacht); flex: none; }
 .stip.groen { background: var(--groen); } .stip.oranje { background: var(--oranje); } .stip.rood { background: var(--rood); } .stip.grijs { background: var(--lijn); }

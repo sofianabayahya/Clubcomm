@@ -25,8 +25,7 @@
   CC.mijnHulp = (S, pl) => {
     const me = CC.me(); const r = bijdrage(S, pl.teamId, [me.id]);
     const team = CC.hulpPerGezin(S, pl.teamId).reduce((s, x) => s + x.r.totaal, 0);
-    return `<div class="info groen">${icon('hand-helping')}<span>${r.totaal ? `<b>Dit seizoen:</b> ${tekst(r)}. Dank je wel!` : 'Je hebt dit seizoen nog niet meegeholpen. Een taak is zo gedaan, en het team is je er dankbaar voor.'}${r.gepland ? ` Ingepland: ${r.gepland}×.` : ''}${team ? `<br><small>Samen hebben de ouders van ${esc(pl.teamId)} al ${team}× geholpen (taken en rijden).</small>` : ''}</span></div>
-      <p class="zacht klein">Staat een taak ${S.club.inst.oproepDagen} dagen van tevoren nog open, dan krijgt iedereen automatisch een oproep.</p>`;
+    return `<div class="info groen">${icon('hand-helping')}<span>${r.totaal ? `<b>Dit seizoen:</b> ${tekst(r)}. Dank je wel!` : 'Je hebt dit seizoen nog niet meegeholpen. Een taak is zo gedaan, en het team is je er dankbaar voor.'}${r.gepland ? ` Ingepland: ${r.gepland}×.` : ''}${team ? `<br><small>Samen hebben de ouders van ${esc(pl.teamId)} al ${team}× geholpen (taken en rijden).</small>` : ''}</span></div>`;
   };
 
   // ---- Teamleider ----

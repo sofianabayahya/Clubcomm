@@ -45,8 +45,7 @@
         if (af.length) rijen.push(h.rij({ ic: 'check', titel: `${af.length} ${af.length === 1 ? 'signaal' : 'signalen'} afgedaan als "geen actie nodig"`, sub: 'Afgelopen week, door trainers en teamleiders. Ter controle.', act: 'open', attrs: 'data-view="afgedaan"' }));
         if (A.wijz.length) rijen.push(h.rij({ ic: 'calendar-days', titel: `${A.wijz.length} planningswijziging${A.wijz.length > 1 ? 'en' : ''} door trainers`, sub: 'Ter informatie', act: 'tab', attrs: 'data-tab="planning"' }));
         return `<div class="clubregel"><span><b>${S.teams.length}</b> teams</span><span><b>${S.players.filter((p) => p.teamId).length}</b> spelers</span><span><b>${tot ? Math.round((100 * aan) / tot) : '–'}%</b> aanwezig</span></div>
-          ${CC.mag('clubbericht') ? `<div class="twee-knoppen"><button class="tegel groot" data-act="berichtAanClub">${icon('megaphone')}<span>Bericht aan club</span></button><button class="tegel groot rood" data-act="afgelasten">${icon('ban')}<span>Afgelasten</span></button></div>` : ''}
-          ${h.sectie('Aandacht nodig')}${rijen.length ? `<div class="lijst">${rijen.join('')}</div>` : h.leeg('Niets bijzonders 👍')}`;
+              ${h.sectie('Aandacht nodig')}${rijen.length ? `<div class="lijst">${rijen.join('')}</div>` : h.leeg('Niets bijzonders 👍')}`;
       },
       teams(S) {
         const modus = h.segVal('hjoTeams', 'teams');
