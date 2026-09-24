@@ -8,12 +8,12 @@
 
   // [trainer, teamleider, coördinator, HJO] — voorstel; de pilotclub geeft haar eigen basis
   CC.TAKEN = [
-    { groep: 'Planning en team', k: 'planning', titel: 'Planning aanpassen', sub: 'Training verplaatsen, extra training, oefenwedstrijd', std: [1, 1, 0, 1] },
+    { groep: 'Planning en team', k: 'planning', titel: 'Planning aanpassen', sub: 'Training verplaatsen, extra training, oefenwedstrijd', std: [1, 0, 0, 1] },
     { groep: 'Planning en team', k: 'clubbericht', titel: 'Bericht aan de hele club en afgelasten', sub: 'Clubbrede berichten, alles afgelasten', std: [0, 0, 0, 1] },
     { groep: 'Planning en team', k: 'staf', titel: 'Teams zonder staf oplossen', sub: 'Trainer of teamleider zoeken en koppelen', std: [0, 0, 0, 1] },
     { groep: 'Planning en team', k: 'aanmeldingen48', titel: 'Aanmeldingen die blijven liggen', sub: 'Langer dan 48 uur niet goedgekeurd', std: [0, 0, 1, 0] },
     { groep: 'Spelers opvolgen', k: 'afdoen', titel: 'Spelers opvolgen en signalen afdoen', sub: 'Aanwezigheid, kaarten en signalen zien; "Gezien, geen actie nodig"', std: [1, 0, 1, 1] },
-    { groep: 'Spelers opvolgen', k: 'langdurig', titel: 'Langdurig afwezig melden', sub: 'Na een gesprek met de ouder', std: [1, 1, 1, 1] },
+    { groep: 'Spelers opvolgen', k: 'langdurig', titel: 'Langdurig afwezig melden', sub: 'Na een gesprek met de ouder', std: [1, 0, 1, 1] },
     { groep: 'Spelers opvolgen', k: 'bellen', titel: 'Bellen of appen bij de drempel', sub: 'Stap 3 van de opschaling', std: [1, 0, 1, 0] },
     { groep: 'Spelers opvolgen', k: 'gesprek', titel: 'Persoonlijk gesprek met ouders', sub: 'Stap 4: als het na het bellen doorgaat', std: [0, 0, 1, 0] },
     { groep: 'Spelers opvolgen', k: 'clubbesluit', titel: 'Clubbesluit voorbereiden', sub: 'Stap 5, samen met het bestuur', std: [0, 0, 0, 1] },
@@ -63,6 +63,27 @@
   };
   CC.metToelichting = (ids, rolVan) => ids.filter(Boolean).reduce((acc, id) => { (CC.zicht('toelichting', rolVan(id)) ? acc.met : acc.zonder).push(id); return acc; }, { met: [], zonder: [] });
 
+  // ---------- Profielen (Besluit 34): zoals abonnementen, elk profiel is het vorige plus iets erbij ----------
+  const T_PLUS = ['afdoen', 'bellen', 'langdurig', 'toelichting'];
+  const TR_BASIS = ['afdoen', 'bellen', 'langdurig', 'toelichting', 'notities', 'materiaal'];
+  const TR_PLUS = [...TR_BASIS, 'beoordelen', 'ontwgesprek', 'beoordelingZien'];
+  CC.PROFIELEN = {
+    teamleider: [
+      { id: 'basis', naam: 'Basis', sub: 'Wedstrijden en taken, wie helpt mee, uitnodigen en aanmelden, berichten, contact met ouders', taken: [] },
+      { id: 'plus', naam: 'Plus', sub: '+ spelers opvolgen: aanwezigheid, kaarten, signalen, bellen bij rood, langdurig afwezig', taken: T_PLUS },
+      { id: 'coord', naam: 'Coördinerend', sub: '+ planning aanpassen, persoonlijke gesprekken, notities, trainer registreren', taken: [...T_PLUS, 'planning', 'gesprek', 'notities', 'trainerNiet'] },
+    ],
+    trainer: [
+      { id: 'basis', naam: 'Basis', sub: 'Aanwezigheid, spelers opvolgen, bellen bij rood, materiaal', taken: TR_BASIS },
+      { id: 'plus', naam: 'Plus', sub: '+ beoordelen en ontwikkelgesprekken', taken: TR_PLUS },
+      { id: 'compleet', naam: 'Compleet', sub: '+ planning aanpassen', taken: [...TR_PLUS, 'planning'] },
+    ],
+  };
+  const profielVan = (S, rol) => { const z = taken(S); return (CC.PROFIELEN[rol].find((p) => CC.TAKEN.every((t) => !!z[t.k][rol] === p.taken.includes(t.k))) || { id: 'eigen' }).id; };
+  CC.on('profielZet', (el) => { const S = CC.S(); const z = taken(S); const p = CC.PROFIELEN[el.dataset.rol].find((x) => x.id === el.dataset.id); CC.TAKEN.forEach((t) => { z[t.k][el.dataset.rol] = p.taken.includes(t.k); }); CC.save(); CC.render(); CC.toast(`Profiel ${p.naam} gekozen`); });
+  const profielBlok = (S) => Object.entries(CC.PROFIELEN).map(([rol, lijst]) => { const nu = profielVan(S, rol);
+    return `${h.sectie(`Profiel ${rol === 'teamleider' ? 'teamleider' : 'trainer'}`)}<div class="profielen">${lijst.map((p) => `<button class="profiel ${p.id === nu ? 'aan' : ''}" data-act="profielZet" data-rol="${rol}" data-id="${p.id}"><b>${esc(p.naam)}</b><small>${esc(p.sub)}</small></button>`).join('')}</div>${nu === 'eigen' ? '<p class="zacht klein">Eigen keuze: je hebt losse vinkjes aangepast (zie hieronder).</p>' : ''}`; }).join('');
+
   // ---------- Clubbeheerder: taken per rol ----------
   const matrix = (S) => {
     const z = taken(S); const L = S.club.labels; const co = S.club.coordinatorAan;
@@ -87,7 +108,7 @@
   CC.on('taakZet', (el) => { const S = CC.S(); taken(S)[el.dataset.k][el.dataset.rol] = el.checked; CC.save(); CC.render(); CC.toast('Opgeslagen'); });
   CC.on('takenStandaard', () => { const S = CC.S(); S.club.taken = standaard(); CC.save(); CC.render(); CC.toast('Teruggezet naar het voorstel'); });
   const origRollen = CC.rollen.beheerder.schermen.rollen;
-  CC.rollen.beheerder.schermen.rollen = (S) => origRollen(S) + matrix(S);
+  CC.rollen.beheerder.schermen.rollen = (S) => origRollen(S) + `<p class="zacht klein">Kies per rol een profiel. Daarna kun je in de tabel nog losse taken aan- of uitzetten.</p>` + profielBlok(S) + matrix(S);
 
   // ---------- Rol coördinator: de HJO-schermen, maar alleen voor de eigen groep teams ----------
   CC.rollen.coordinator = {

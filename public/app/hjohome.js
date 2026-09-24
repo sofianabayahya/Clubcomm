@@ -20,10 +20,8 @@
 
   // "Gezien": een informatieregel verdwijnt tot er iets verandert
   const gezien = (S) => { const me = CC.me(); const g = S.gezienInfo || (S.gezienInfo = {}); return g[me.id] || (g[me.id] = {}); };
-  const infoRij = (S, key, hash, rij, verborgen) => {
-    if (gezien(S)[key] === hash) { verborgen.n++; if (h.segVal('toonGezien', '0') !== '1') return ''; }
-    return `<div class="signaal">${rij}<div class="signaal-voet"><button class="knop klein licht" data-act="infoGezien" data-key="${esc(key)}" data-hash="${esc(hash)}">${icon('check')}Gezien</button></div></div>`;
-  };
+  // Ter informatie: geen "Gezien"-knop meer; een regel verdwijnt vanzelf als het is opgelost (Besluit 34)
+  const infoRij = (S, key, hash, rij) => rij;
   CC.on('infoGezien', (el) => { const S = CC.S(); gezien(S)[el.dataset.key] = el.dataset.hash; CC.save(); CC.render(); });
 
   const perTeam = (lijst) => { const t = {}; lijst.forEach((s) => { t[s.teamId] = (t[s.teamId] || 0) + 1; }); return Object.entries(t).sort((a, b) => b[1] - a[1]).map(([tid, n]) => `${esc(tid)} (${n})`).join(', '); };
@@ -35,7 +33,7 @@
     const groep = (soort, f = () => true) => sig.filter((s) => s.soort === soort && f(s));
     const rood = groep('speler', (s) => s.niveau === 'rood');
     // Blijft liggen: rood of opschaling, langer dan X dagen open zonder vastgelegd contact, in een team van de coördinator
-    const liggen = rol === 'hjo' ? sig.filter((s) => (s.soort === 'speler' && s.niveau === 'rood' || M.STAPPEN.includes(s.soort)) && !eigen(s) && dagenOpen(z[s.sleutel]) >= i.liggenDagen && !opgepakt(S, s, z[s.sleutel])) : [];
+    const liggen = rol === 'hjo' ? sig.filter((s) => M.STAPPEN.includes(s.soort) && !eigen(s) && dagenOpen(z[s.sleutel]) >= i.liggenDagen && !opgepakt(S, s, z[s.sleutel])) : [];
     const ernstig = rol === 'hjo' ? rood.filter((s) => !eigen(s) && Number((s.tekst.match(/: (\d+)%/) || [])[1]) < i.ernstig) : [];
     return { sig, z, eigen, groep, rood, liggen, ernstig, rol, i };
   };
@@ -57,8 +55,7 @@
     const bellen = groep('bellen'); // Bellen is eerst van de trainer/teamleider als die de taak hebben; dan is het voor jou ter informatie
     const belEigen = bellen.filter((s) => CC.mag('bellen', null, s.teamId) && eigen(s) && !CC.mag('bellen', 'trainer') && !CC.mag('bellen', 'teamleider'));
     if (belEigen.length) doen.push(h.rij({ ic: 'phone', titel: `${belEigen.length} ${belEigen.length === 1 ? 'ouder' : 'ouders'} bellen of appen`, sub: `Drempel bereikt · ${perTeam(belEigen)}`, kleur: 'rood', act: 'open', attrs: 'data-view="signalen" data-soort="bellen"' }));
-    const roodEigen = O.rood.filter(eigen);
-    if (roodEigen.length) doen.push(h.rij({ ic: 'triangle-alert', titel: `${roodEigen.length} ${roodEigen.length === 1 ? 'speler' : 'spelers'} in de rode zone`, sub: `${perTeam(roodEigen)} · kijk of de trainer het oppakt`, kleur: 'oranje', act: 'open', attrs: 'data-view="signalen" data-soort="speler"' }));
+    // Losse spelers (rode zone, patronen, langdurig) staan niet op Home: dat volgt de trainer. Zichtbaar bij Inzicht en per team (Besluit 34).
     O.liggen.forEach((s) => doen.push(h.rij({ ic: 'hourglass', titel: `Blijft liggen: ${esc(s.tekst.split(':')[0])} (${esc(s.teamId)})`, sub: `${dagenOpen(O.z[s.sleutel])} dagen open, nog geen contact vastgelegd · ${esc(L.coordinator.toLowerCase())}: ${esc((CC.coordinatorVoor(S, s.teamId) || { naam: '–' }).naam)}`, kleur: 'rood', act: 'open', attrs: `data-view="speler" data-id="${s.spelerId}"` })));
     const zonderStaf = CC.mag('staf') ? S.teams.filter((t) => !t.trainerId || !t.teamleiderId) : [];
     if (zonderStaf.length) doen.push(h.rij({ ic: 'user-cog', titel: zonderStaf.length === 1 ? `${esc(zonderStaf[0].naam)} zonder ${!zonderStaf[0].trainerId ? 'trainer' : 'teamleider'}` : `${zonderStaf.length} teams zonder complete staf`, sub: zonderStaf.map((t) => `${esc(t.naam)} (${!t.trainerId && !t.teamleiderId ? 'trainer + teamleider' : !t.trainerId ? 'trainer' : 'teamleider'})`).join(', '), kleur: 'oranje', act: 'open', attrs: zonderStaf.length === 1 ? `data-view="team" data-team="${zonderStaf[0].id}"` : 'data-view="zonderStaf"' }));
@@ -69,15 +66,6 @@
     // ---- Ter informatie ----
     const teams = groep('team');
     if (teams.length) { const r = teams.filter((s) => s.niveau === 'rood').length; info.push(infoRij(S, 'teams', teams.map((s) => s.teamId + s.niveau).join(), h.rij({ ic: 'shield', titel: `${teams.length} ${teams.length === 1 ? 'team' : 'teams'} in de ${r ? 'rode' : 'oranje'}${r && r < teams.length ? ' of oranje' : ''} zone`, sub: teams.map((s) => esc(s.tekst.split(':')[0]) + ' ' + s.tekst.match(/\d+%/)[0]).join(', '), kleur: r ? 'rood' : 'oranje', act: 'tab', attrs: 'data-tab="inzicht"' }), verborgen)); }
-    if (O.ernstig.length) info.push(infoRij(S, 'ernstig', O.ernstig.map((s) => s.sleutel).join(), h.rij({ ic: 'triangle-alert', titel: `${O.ernstig.length} ${O.ernstig.length === 1 ? 'speler' : 'spelers'} onder ${i.ernstig}% aanwezig`, sub: `${perTeam(O.ernstig)} · de ${esc(L.coordinator.toLowerCase())} pakt dit op`, kleur: 'rood', act: 'open', attrs: 'data-view="signalen" data-soort="ernstig"' }), verborgen));
-    const belAnder = bellen.filter((s) => !belEigen.includes(s)).filter((s) => eigen(s) || rol === 'coordinator');
-    if (belAnder.length) info.push(infoRij(S, 'bellen', belAnder.map((s) => s.sleutel).join(), h.rij({ ic: 'phone', titel: `${belAnder.length} ${belAnder.length === 1 ? 'ouder wordt' : 'ouders worden'} gebeld of geappt`, sub: `Door de ${esc(CC.wie('bellen', belAnder[0].teamId))} · ${perTeam(belAnder)} · blijft het liggen, dan zie je het bij Te doen`, act: 'open', attrs: 'data-view="signalen" data-soort="bellen"' }), verborgen));
-    const gAnder = gesprek.filter((s) => !magG(s) && (eigen(s) || rol === 'coordinator'));
-    if (gAnder.length) info.push(infoRij(S, 'gesprek', gAnder.map((s) => s.sleutel).join(), h.rij({ ic: 'users', titel: `${gAnder.length} ${gAnder.length === 1 ? 'gesprek' : 'gesprekken'} met ouders`, sub: `Door de ${esc(CC.wie('gesprek', gAnder[0].teamId))}`, act: 'open', attrs: 'data-view="signalen" data-soort="gesprek"' }), verborgen));
-    const lang = groep('lang', eigen);
-    if (lang.length) info.push(infoRij(S, 'lang', lang.map((s) => s.sleutel).join(), h.rij({ ic: 'hospital', titel: `${lang.length} speler${lang.length > 1 ? 's' : ''} langdurig afwezig`, sub: lang.map((s) => esc(s.tekst.split(':')[0])).join(', '), act: 'open', attrs: 'data-view="signalen" data-soort="lang"' }), verborgen));
-    const patroon = groep('patroon', eigen);
-    if (patroon.length) info.push(infoRij(S, 'patroon', patroon.map((s) => s.sleutel).join(), h.rij({ ic: 'repeat', titel: `${patroon.length} opvallende ${patroon.length === 1 ? 'patroon' : 'patronen'}`, sub: `Bijv. steeds op dezelfde dag afwezig · ${perTeam(patroon)}`, act: 'open', attrs: 'data-view="signalen" data-soort="patroon"' }), verborgen));
     const mat = CC.materiaalAandacht && CC.materiaalAandacht(S); if (mat) info.push(infoRij(S, 'materiaal', mat.replace(/<[^>]+>/g, '').slice(0, 80), mat, verborgen));
     const af = M.afgedaanRecent(S, S.teams.filter((t) => eersteLijn(S, t.id, rol)).map((t) => t.id), 14).filter((x) => !x.akkoord);
     if (af.length) info.push(h.rij({ ic: 'check', titel: `${af.length} ${af.length === 1 ? 'signaal' : 'signalen'} afgedaan als "geen actie nodig"`, sub: 'Door trainers en teamleiders. Akkoord, of toch oppakken?', act: 'open', attrs: 'data-view="afgedaan"' }));
@@ -87,9 +75,9 @@
     const infoHtml = info.filter(Boolean);
     return `<div class="clubregel"><span><b>${S.teams.length}</b> teams</span><span><b>${S.players.filter((p) => p.teamId && S.teams.some((t) => t.id === p.teamId)).length}</b> spelers</span><span><b>${tot ? Math.round((100 * aan) / tot) : '–'}%</b> aanwezig</span></div>
       ${h.sectie(`Te doen${doen.length ? ` (${doen.length})` : ''}`)}${doen.length ? `<div class="lijst">${doen.join('')}</div>` : h.leeg('Niets te doen 👍', 'circle-check')}
-      ${h.sectie('Ter informatie')}<p class="zacht klein">Om op de hoogte te zijn; je hoeft er niets mee. Tik op Gezien: het komt pas terug als er iets verandert.${rol === 'hjo' && S.club.coordinatorAan ? ` Spelerzaken van teams met een ${esc(L.coordinator.toLowerCase())} zie je pas als ze ${i.liggenDagen} dagen blijven liggen of als het ernstig is (onder ${i.ernstig}%).` : ''}</p>
+      ${h.sectie('Ter informatie')}<p class="zacht klein">Om op de hoogte te zijn; je hoeft er niets mee. Het verdwijnt vanzelf als het is opgelost. Losse spelers volgt de trainer${S.club.coordinatorAan ? ` en daarna de ${esc(L.coordinator.toLowerCase())}` : ''}; je ziet ze hier pas als het jouw stap is of als het ${i.liggenDagen} dagen blijft liggen. Alles blijft zichtbaar bij Inzicht.</p>
       ${infoHtml.length ? `<div class="lijst">${infoHtml.join('')}</div>` : '<p class="zacht klein">Niets nieuws.</p>'}
-      ${verborgen.n ? `<button class="linkknop" data-act="seg" data-key="toonGezien" data-val="${h.segVal('toonGezien', '0') === '1' ? '0' : '1'}">${h.segVal('toonGezien', '0') === '1' ? 'Verberg wat je al gezien hebt' : `Toon ook wat je al gezien hebt (${verborgen.n})`}</button>` : ''}`;
+      `;
   };
 
   // Signalenlijst: ook "ernstig", en alleen wat bij deze rol hoort

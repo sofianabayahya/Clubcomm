@@ -387,9 +387,11 @@
 
   M.stats = (S, pl, per) => {
     const acts = M.acts(S, pl.teamId, per.van, per.tot).filter((a) => !a.afgelast && S.pres[a.id] && S.pres[a.id].s[pl.id]);
-    const r = { totaal: 0, aanwezig: 0, telaat: 0, afwezig: 0, redenen: {}, lang: 0, niet: 0, lijst: [] };
+    const r = { totaal: 0, aanwezig: 0, telaat: 0, afwezig: 0, redenen: {}, lang: 0, niet: 0, lijst: [], tr: { tot: 0, aan: 0 }, wed: { tot: 0, aan: 0 } };
     acts.forEach((a) => {
       const st = M.status(S, pl, a); r.totaal++; r.lijst.push({ act: a, st });
+      // apart bijhouden: trainingen en wedstrijden (Besluit 34)
+      const soort = a.soort === 'training' ? r.tr : r.wed; soort.tot++; if (['aanwezig', 'telaat'].includes(st.code)) soort.aan++;
       if (st.code === 'aanwezig') r.aanwezig++;
       else if (st.code === 'telaat') { r.aanwezig++; r.telaat++; }
       else {
@@ -401,6 +403,7 @@
       }
     });
     r.pct = r.totaal ? Math.round((100 * r.aanwezig) / r.totaal) : null;
+    r.pctTr = r.tr.tot ? Math.round((100 * r.tr.aan) / r.tr.tot) : null; r.pctWed = r.wed.tot ? Math.round((100 * r.wed.aan) / r.wed.tot) : null;
     return r;
   };
   M.zone = (S, pct, teamId) => {

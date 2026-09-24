@@ -121,14 +121,13 @@
     const pl = M.speler(S, p.id); const soort = h.segVal('kindPer', 'blok'); const per = M.periode(S, soort);
     const st = M.stats(S, pl, per); const z = M.zone(S, st.pct, pl.teamId);
     const k = M.kaarten(S, pl); const stap = M.stap(S, pl, k);
-    const telSoort = (s) => st.lijst.filter((x) => x.act.soort === s).length;
     const hist = S.afm.filter((f) => f.spelerId === pl.id).map((f) => ({ f, a: M.act(S, f.actId) })).filter((x) => x.a && x.a.datum < D.vandaag() && x.a.datum >= per.van).sort((x, y) => y.a.datum.localeCompare(x.a.datum));
     return { titel: 'Aanwezigheid en kaarten', html: `${h.seg('kindPer', [['blok', `Deze fase (${M.blok(S, D.vandaag()).naam.toLowerCase()})`], ['seizoen', 'Heel seizoen']], 'blok')}
-      <div class="cijfers"><div class="cijfer ${z}"><b>${st.pct == null ? '–' : st.pct + '%'}</b><small>aanwezig</small></div><div class="cijfer"><b>${telSoort('training')}</b><small>trainingen geweest</small></div><div class="cijfer"><b>${telSoort('wedstrijd')}</b><small>wedstrijden geweest</small></div></div>
+      <div class="cijfers"><div class="cijfer ${z}"><b>${st.pct == null ? '–' : st.pct + '%'}</b><small>aanwezig</small></div><div class="cijfer"><b>${st.pctTr == null ? '–' : st.pctTr + '%'}</b><small>trainingen (${st.tr.aan}/${st.tr.tot})</small></div><div class="cijfer"><b>${st.pctWed == null ? '–' : st.pctWed + '%'}</b><small>wedstrijden (${st.wed.aan}/${st.wed.tot})</small></div></div>
       <p class="zacht klein">${st.aanwezig} van de ${st.totaal} keer aanwezig (te laat telt als aanwezig). Alleen activiteiten die al geweest zijn en waarbij de aanwezigheid is opgenomen; afgelaste trainingen tellen niet mee.</p>
       ${h.sectie('Afmelden: kaarten dit seizoen')}${k.ev.length ? `<div class="lijst compact">${k.ev.slice().reverse().map((e) => h.rij({ ic: CC.kaartIc(e), titel: CC.kaartTitel(e), sub: `${D.kort(e.act.datum)} · ${e.wat.toLowerCase()}${e.geaccepteerd ? ' · geaccepteerd door de trainer' : ''}` })).join('')}</div>` : '<p class="zacht klein">Geen herinneringen of kaarten. Top!</p>'}
       <p class="zacht klein">${k.herinneringen < k.max ? `Nog ${k.max - k.herinneringen === 1 ? 'één vriendelijke herinnering' : `${k.max - k.herinneringen} vriendelijke herinneringen`} dit seizoen; daarna volgt een kaart.` : 'De vriendelijke herinneringen van dit seizoen zijn gebruikt; hierna volgt bij te laat afmelden een gele kaart, bij niet afmelden een rode.'}${stap ? ` <b>Volgende stap: ${stap.soort === 'bellen' ? `de ${CC.wie('bellen', pl.teamId)} neemt contact met je op` : stap.soort === 'gesprekHjo' ? `een persoonlijk gesprek met de ${CC.wie('gesprek', pl.teamId)}` : 'de club bespreekt het vervolg'}.</b>` : ''} ${st.telaat ? `Te laat gekomen: ${st.telaat}× (geen kaart).` : ''}</p>
-      <button class="linkknop" data-act="uitlegKaarten">Wat betekenen de kaarten?</button> · <button class="linkknop" data-act="open" data-view="beoordelingKind" data-id="${pl.id}">Beoordelingen</button>
+      <div class="knoppen"><button class="linkknop" data-act="uitlegKaarten">Wat betekenen de kaarten?</button><button class="linkknop" data-act="open" data-view="beoordelingKind" data-id="${pl.id}">Beoordelingen</button></div>
       ${h.sectie('Afmeldgeschiedenis')}<div class="lijst compact">${hist.map(({ f, a }) => h.rij({ ic: h.reden(f.reden), titel: `${D.kort(a.datum)} · ${h.actTitel(S, a)}`, sub: `Reden: ${esc(f.reden)}${f.opm ? ' · ' + esc(f.opm) : ''}`, rechts: M.teLaatAfgemeld(S, f, a) ? '<span class="chip geel mini">te laat afgemeld</span>' : '<span class="chip groen mini">op tijd afgemeld</span>' })).join('') || '<p class="zacht klein">Geen afmeldingen in deze periode.</p>'}</div>` };
   };
 
@@ -163,7 +162,7 @@
       const af = sp.filter((x) => !['verwacht', 'aanwezig', 'telaat'].includes(x.st.code));
       meer = `${h.sectie(`Verwacht: ${sp.length - af.length} van ${sp.length}`)}<div class="lijst compact">${af.map((x) => h.rij({ ic: h.avatar(x.pl.voornaam), titel: esc(M.naam(S, x.pl)), rechts: h.chip(x.st), sub: x.st.afm && x.st.afm.opm && CC.zicht('toelichting') ? esc(x.st.afm.opm) : '' })).join('') || '<p class="zacht klein">Iedereen komt.</p>'}</div>
         ${rol === 'trainer' && CC.kanNietBlok ? CC.kanNietBlok(S, a) : ''}
-        ${['trainer', 'teamleider'].includes(rol) && a.soort === 'training' && !a.afgelast ? `<button class="knop licht vol" data-act="wijzigDeze" data-id="${a.id}">${icon('pencil')}Deze training aanpassen</button>` : ''}`;
+        ${['trainer', 'teamleider'].includes(rol) && CC.mag('planning') && a.soort === 'training' && !a.afgelast ? `<button class="knop licht vol" data-act="wijzigDeze" data-id="${a.id}">${icon('pencil')}Deze training aanpassen</button>` : ''}`;
     }
     return {
       titel: a.soort === 'training' ? 'Training' : a.soort === 'oefen' ? 'Oefenwedstrijd' : 'Wedstrijd',

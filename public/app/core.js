@@ -142,6 +142,8 @@
     },
     // Routeknop (Besluit 33): opent de route in kaarten, vanaf waar je bent
     route: (adres, klein) => (adres ? `<a class="knop licht${klein ? ' klein' : ''}" href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(adres)}" target="_blank" rel="noopener">${icon('navigation')}Route</a>` : ''),
+    // Aanwezigheid apart: trainingen en wedstrijden (Besluit 34)
+    split: (st) => `Trainingen ${st.pctTr == null ? '–' : st.pctTr + '%'} · wedstrijden ${st.pctWed == null ? '–' : st.pctWed + '%'}`,
     badge: (n) => (n ? `<span class="badge">${n > 99 ? '99+' : n}</span>` : ''),
     knop: (tekst, act, attrs = '', cls = '') => `<button class="knop ${cls}" data-act="${act}" ${attrs}>${tekst}</button>`,
   };
@@ -592,6 +594,9 @@
     </ol>
     <p class="zacht klein">Te laat komen is geen kaart. Gebeurt het vaak, dan praat de trainer er even over. Kaarten en stappen tellen over het hele seizoen.</p>`); });
 
+  // Contactkaart: een ouder met bellen, WhatsApp en mail (Besluit 34)
+  CC.contactRij = (o) => h.rij({ ic: h.avatar(o.naam), titel: esc(o.naam), sub: esc(o.tel || ''), rechts: `<span class="contactknoppen">${o.tel ? `<a class="icoonknop" href="tel:${esc(o.tel)}" aria-label="Bel ${esc(o.naam)}">${icon('phone')}</a><a class="icoonknop groen" href="https://wa.me/31${esc(o.tel.replace(/\D/g, '').replace(/^0/, ''))}" target="_blank" rel="noopener" aria-label="WhatsApp ${esc(o.naam)}">${icon('message-circle')}</a>` : ''}${o.email && !/\.invalid$/.test(o.email) ? `<a class="icoonknop" href="mailto:${esc(o.email)}" aria-label="Mail ${esc(o.naam)}">${icon('mail')}</a>` : ''}</span>` });
+
   // Volgt deze rol spelers op (aanwezigheid, kaarten, signalen)? De teamleider standaard niet (Besluit 33); de club kan het aanzetten.
   CC.volgtSpelers = (tid) => CC.rol().rol !== 'teamleider' || CC.mag('afdoen', null, tid) || CC.mag('bellen', null, tid);
 
@@ -607,13 +612,14 @@
     const gespr = S.gesprekken.filter((g) => g.spelerId === pl.id);
     return {
       titel: M.naam(S, pl),
-      html: `${!CC.volgtSpelers(t.id) ? `${lang ? `<div class="info">${icon('hospital')}<span><b>Langdurig afwezig</b> tot ongeveer ${D.kort(lang.tot)}.</span></div>` : ''}` : `${h.seg('spPer', [['blok', 'Deze fase'], ['seizoen', 'Heel seizoen']], 'blok')}
+      html: `${!CC.volgtSpelers(t.id) ? `${(() => { const v = M.komend(S, t.id, 6).find((x) => !x.afgelast); return v ? `<p class="klein">${D.relatief(v.datum)} · ${h.actTitel(S, v)}: ${h.chip(M.status(S, pl, v))}</p>` : ''; })()}${lang ? `<div class="info">${icon('hospital')}<span><b>Langdurig afwezig</b> tot ongeveer ${D.kort(lang.tot)}.</span></div>` : ''}` : `${h.seg('spPer', [['blok', 'Deze fase'], ['seizoen', 'Heel seizoen']], 'blok')}
       <div class="cijfers"><div class="cijfer ${z}"><b>${st.pct == null ? '–' : st.pct + '%'}</b><small>aanwezig</small></div><div class="cijfer"><b>${st.telaat}×</b><small>te laat</small></div><div class="cijfer"><b>${h.kaartjes(k) || '–'}</b><small>kaarten seizoen</small></div></div>
+      <p class="klein zacht">${h.split(st)}</p>
       ${lang ? `<div class="info">${icon('hospital')}<span><b>Langdurig afwezig</b> (${esc(lang.reden.toLowerCase())}) tot ongeveer ${D.kort(lang.tot)}. ${CC.zicht('toelichting') ? esc(lang.opm || '') : ''}</span></div>` : ''}
       ${Object.keys(st.redenen).length ? `${h.sectie('Redenen van afwezigheid')}<div class="balkjes">${Object.entries(st.redenen).sort((a, b) => b[1] - a[1]).map(([r, n]) => `<div class="balkje"><span>${esc(r)}</span><i style="--w:${(100 * n) / st.afwezig}%"></i><b>${n}</b></div>`).join('')}</div>` : ''}
       ${h.sectie('Geschiedenis')}<div class="lijst compact">${st.lijst.slice().reverse().map(({ act, st: s }) => h.rij({ ic: h.datumBlok(act), titel: h.actTitel(S, act), sub: s.afm && s.afm.opm && CC.zicht('toelichting') ? esc(s.afm.opm) : '', rechts: h.chip(s) + (s.laat ? '<span class="chip geel mini">te laat afgemeld</span>' : '') })).join('') || h.leeg('Nog geen activiteiten')}</div>
       ${k.ev.length ? `${h.sectie('Afmelden: herinneringen en kaarten dit seizoen')}<div class="lijst compact">${k.ev.slice().reverse().map((e) => h.rij({ ic: CC.kaartIc(e), titel: CC.kaartTitel(e), sub: `${D.kort(e.act.datum)} · ${e.wat.toLowerCase()}${e.geaccepteerd ? ' · <b>geaccepteerd</b>' : ''}` })).join('')}</div>` : ''}`}
-      ${rol !== 'ouder' ? `${h.sectie('Ouders')}<div class="lijst">${ouders.map((o) => h.rij({ ic: h.avatar(o.naam), titel: esc(o.naam), sub: esc(o.email), rechts: `<a class="icoonknop groen" href="https://wa.me/31${o.tel.slice(1)}" target="_blank" rel="noopener" aria-label="WhatsApp ${esc(o.naam)}">${icon('message-circle')}</a>` })).join('')}</div>` : ''}
+      ${rol !== 'ouder' ? `${h.sectie('Ouders')}<div class="lijst">${ouders.map((o) => CC.contactRij(o)).join('')}</div>` : ''}
       ${CC.zicht('beoordeling') && b ? `${h.sectie(`Beoordeling · ${esc(b.m.naam.toLowerCase())}`)}<div class="scores">${Object.entries(b.x.scores).map(([v, s]) => `<span>${esc(v)} ${CC.scoreTekst(t, s)}</span>`).join('')}</div>` : ''}
       ${rol !== 'ouder' ? `${CC.zicht('gesprekken') ? `${h.sectie('Gesprekken')}${gespr.map((g) => h.rij({ ic: g.soort === 'gesprek' ? 'users' : g.soort === 'geappt' ? 'message-circle' : g.soort === 'geaccepteerd' ? 'circle-check' : 'phone', titel: `${D.kort(g.datum)} · ${CC.gesprekLabel(g)} · ${esc((M.persoon(S, g.door) || { naam: '' }).naam)}`, sub: esc(g.notitie) + (g.afspraak ? `<br><b>Afspraak:</b> ${esc(g.afspraak)}` : '') })).join('') || '<p class="zacht klein">Nog geen gesprekken vastgelegd.</p>'}` : ''}
         <div class="knoppen">${CC.zicht('contact') ? `<button class="knop licht" data-act="gesprekVastleggen" data-id="${pl.id}">${icon('phone')}Contact vastleggen</button>` : ''}${CC.mag('langdurig') ? `<button class="knop licht" data-act="langdurigSheet" data-id="${pl.id}">${icon('hospital')}Langdurig afwezig</button>` : ''}</div>` : ''}`,

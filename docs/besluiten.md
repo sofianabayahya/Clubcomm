@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 24 september 2026 (Besluit 30 t/m 33 toegevoegd)
+Laatst bijgewerkt: 24 september 2026 (Besluit 30 t/m 34 toegevoegd)
 
 ---
 
@@ -507,6 +507,26 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 34 — Informatie is geen taak; profielen per rol
+*Besloten 24 september 2026.*
+
+**Vuistregel (geldt voor elk nieuw idee):** informatie gaat van de bron (meestal de ouder) rechtstreeks de app in. We maken er nooit een taak van voor iemand anders, tenzij er echt iets besloten of gedaan moet worden. Afmelden is communicatie van de ouder, geen taak voor de teamleider ("afmelden namens de ouder" bouwen we dus niet).
+
+**Profielen per rol** (zoals abonnementen: elk profiel is het vorige plus iets erbij). De clubbeheerder kiest bij **Rollen** een profiel en kan daarna losse taken aan- of uitzetten.
+| Rol | Basis | Plus | Coördinerend / Compleet |
+|---|---|---|---|
+| Teamleider | wedstrijden en taken, wie helpt mee, uitnodigen en aanmelden, berichten, contact met ouders | + spelers opvolgen (aanwezigheid, kaarten, signalen), bellen bij rood, langdurig afwezig | + planning aanpassen, persoonlijke gesprekken, notities, trainer registreren |
+| Trainer | aanwezigheid, spelers opvolgen, bellen bij rood, materiaal | + beoordelen en ontwikkelgesprekken | + planning aanpassen |
+Standaard: teamleider **Basis**, trainer **Compleet**.
+
+**Contactkaart:** tik op een speler → de ouders met bellen, WhatsApp en mail, of het kind bij de volgende activiteit komt, en alleen de knoppen die bij het profiel horen.
+
+**Aanwezigheid apart:** naast het totaal altijd *trainingen %* en *wedstrijden %*. Geen weging: het belang van een wedstrijd zit al in de langere afmeldtermijn en de rode kaart bij niet afmelden. De zones blijven op het totaal.
+
+**HJO pas als het op zijn bordje komt:** op de Home van de HJO (en coördinator) geen losse spelers meer (rode zone, onder 50%, patronen, langdurig). Die volgt de trainer; daarna de coördinator. De HJO ziet een speler pas bij zijn eigen stap (gesprek als er geen coördinator is, clubbesluit) of als een stap blijft liggen. Alles blijft zichtbaar bij Inzicht en per team.
+
+**Ter informatie zonder "Gezien"-knoppen:** een regel verdwijnt vanzelf als het is opgelost; wegklikken is geen werk meer.
 
 ## Besluit 33 — Teamleider: alles over de wedstrijd op één plek, en eerlijke speeltijd
 *Besloten 24 september 2026. Herziet de teamleider-app (Besluit 9), de wedstrijdbegeleider (Besluit 7) en de speeltijd.*

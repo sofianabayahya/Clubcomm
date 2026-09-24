@@ -235,6 +235,6 @@
     const ts = M.teamStats(S, tid, per);
     return `${h.seg('ovPer', [['blok', 'Deze fase'], ['seizoen', 'Heel seizoen']], 'blok')}
       <p class="zacht klein">Team: <b>${ts.pct ?? '–'}%</b> aanwezig · ${M.team(S, tid).type} · laagste bovenaan</p>
-      <div class="lijst">${rijen.map(({ pl, st, k }) => h.rij({ ic: h.stip(M.zone(S, st.pct, tid)), titel: esc(M.naam(S, pl)), sub: `${st.pct == null ? '–' : st.pct + '%'} aanwezig${st.telaat ? ` · ${st.telaat}× te laat` : ''}${st.lang ? ' · langdurig' : ''}`, rechts: h.let(S, pl, k), act: 'open', attrs: `data-view="speler" data-id="${pl.id}"` })).join('')}</div>`;
+      <div class="lijst">${rijen.map(({ pl, st, k }) => h.rij({ ic: h.stip(M.zone(S, st.pct, tid)), titel: esc(M.naam(S, pl)), sub: `${st.pct == null ? '–' : st.pct + '%'} aanwezig (${h.split(st).toLowerCase()})${st.telaat ? ` · ${st.telaat}× te laat` : ''}${st.lang ? ' · langdurig' : ''}`, rechts: h.let(S, pl, k), act: 'open', attrs: `data-view="speler" data-id="${pl.id}"` })).join('')}</div>`;
   };
 })();

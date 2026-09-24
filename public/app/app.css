@@ -415,3 +415,9 @@ details.uitklap.stil summary { font-size: 13px; color: var(--zacht); }
 .sorteer select { flex: 1; padding: 6px 8px; font-size: 13px; }
 
 .adresregel { display: flex; gap: 6px; align-items: flex-start; } .adresregel .ic { width: 16px; height: 16px; margin-top: 2px; color: var(--zacht); }
+.contactknoppen { display: flex; gap: 4px; }
+.profielen { display: grid; gap: 8px; }
+.profiel { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left; padding: 10px 12px; border: 1px solid var(--lijn); border-radius: var(--r); background: var(--vlak); color: inherit; cursor: pointer; }
+.profiel small { color: var(--zacht); font-size: 13px; }
+.profiel.aan { border-color: var(--blauw); box-shadow: inset 0 0 0 1px var(--blauw); }
+.profiel.aan b::after { content: ' ✓'; color: var(--blauw); }
