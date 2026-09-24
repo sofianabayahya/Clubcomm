@@ -43,7 +43,7 @@
         if (ot.length) { const a = M.act(S, ot[0].actId); acties.push(h.rij({ ic: 'hand-helping', titel: `${ot.length} ${ot.length === 1 ? 'taak' : 'taken'} nog open`, sub: `${esc(ot[0].soort)} · ${D.relatief(a.datum)}. Help je mee?`, act: 'tab', attrs: 'data-tab="taken"' })); }
         if (CC.ouderGesprekRijen) acties.push(...CC.ouderGesprekRijen(S, pl));
         const statusregel = st.pct == null ? 'Nog geen activiteiten deze fase' : `Aanwezig ${st.pct}%${st.telaat ? ` · ${st.telaat}× te laat` : ''}`;
-        const compliment = z === 'groen' && !k.geel && !k.oranje && !st.telaat ? `<span class="compliment">${icon('star')}Betrouwbare speler!</span>` : '';
+        const compliment = z === 'groen' && !k.geel && !k.rood && !st.telaat ? `<span class="compliment">${icon('star')}Betrouwbare speler!</span>` : '';
         return `
           ${lang ? `<div class="info">${icon('hospital')}<span><b>${esc(pl.voornaam)} is langdurig afwezig</b> tot ongeveer ${D.kort(lang.tot)}. Je hoeft niet per training af te melden.</span></div>` : ''}
           ${acties.length ? `${h.sectie('Actie nodig')}<div class="lijst">${acties.join('')}</div>` : ''}
@@ -119,22 +119,14 @@
   CC.views.kindOverzicht = (S, p) => {
     const pl = M.speler(S, p.id); const soort = h.segVal('kindPer', 'blok'); const per = M.periode(S, soort);
     const st = M.stats(S, pl, per); const z = M.zone(S, st.pct, pl.teamId);
-    const fases = soort === 'blok' ? [M.blok(S, D.vandaag())] : M.blokken(S).filter((b) => b.van <= D.vandaag());
-    const ev = fases.flatMap((b) => M.kaarten(S, pl, b).ev);
-    const tel = (f) => ev.filter(f).length;
     const k = M.kaarten(S, pl); const stap = M.stap(S, pl, k);
     const telSoort = (s) => st.lijst.filter((x) => x.act.soort === s).length;
     const hist = S.afm.filter((f) => f.spelerId === pl.id).map((f) => ({ f, a: M.act(S, f.actId) })).filter((x) => x.a && x.a.datum < D.vandaag() && x.a.datum >= per.van).sort((x, y) => y.a.datum.localeCompare(x.a.datum));
-    const regel = (kaart, titel, f, uitleg) => { const n = tel(f); const her = tel((e) => f(e) && e.waarschuwing); return h.rij({ ic: kaart, titel, sub: `${uitleg}${her ? ` · waarvan ${her}× alleen een herinnering` : ''}`, rechts: `<b>${n}×</b>` }); };
     return { titel: 'Aanwezigheid en kaarten', html: `${h.seg('kindPer', [['blok', `Deze fase (${M.blok(S, D.vandaag()).naam.toLowerCase()})`], ['seizoen', 'Heel seizoen']], 'blok')}
       <div class="cijfers"><div class="cijfer ${z}"><b>${st.pct == null ? '–' : st.pct + '%'}</b><small>aanwezig</small></div><div class="cijfer"><b>${telSoort('training')}</b><small>trainingen geweest</small></div><div class="cijfer"><b>${telSoort('wedstrijd')}</b><small>wedstrijden geweest</small></div></div>
       <p class="zacht klein">${st.aanwezig} van de ${st.totaal} keer aanwezig (te laat telt als aanwezig). Alleen activiteiten die al geweest zijn en waarbij de aanwezigheid is opgenomen; afgelaste trainingen tellen niet mee.</p>
-      ${h.sectie('Kaarten')}<div class="lijst compact">
-        ${regel('<span class="kaart oranje">1</span>', 'Te laat gekomen', (e) => e.soort === 'oranje', 'Oranje kaart')}
-        ${regel('<span class="kaart geel">1</span>', 'Te laat afgemeld', (e) => e.soort === 'geel' && e.punten === 1, 'Gele kaart, 1 punt')}
-        ${regel('<span class="kaart geel">2</span>', 'Niet afgemeld en niet gekomen', (e) => e.soort === 'geel' && e.punten === 2, 'Gele kaart, 2 punten')}
-      </div>
-      <p class="zacht klein">De eerste keer per fase (per kleur) is alleen een vriendelijke herinnering, zonder punten. Stand deze fase: ${k.geel} ${k.geel === 1 ? 'punt' : 'punten'} geel, ${k.oranje}× oranje.${stap ? ` <b>Volgende stap: ${stap.soort === 'bellen' ? `de ${CC.wie('bellen', pl.teamId)} neemt contact met je op` : stap.soort === 'gesprekHjo' ? `een persoonlijk gesprek met de ${CC.wie('gesprek', pl.teamId)}` : 'de club bespreekt het vervolg'}.</b>` : ''}</p>
+      ${h.sectie('Afmelden: kaarten dit seizoen')}${k.ev.length ? `<div class="lijst compact">${k.ev.slice().reverse().map((e) => h.rij({ ic: CC.kaartIc(e), titel: CC.kaartTitel(e), sub: `${D.kort(e.act.datum)} · ${e.wat.toLowerCase()}${e.geaccepteerd ? ' · geaccepteerd door de trainer' : ''}` })).join('')}</div>` : '<p class="zacht klein">Geen herinneringen of kaarten. Top!</p>'}
+      <p class="zacht klein">${k.herinneringen < k.max ? `Nog ${k.max - k.herinneringen === 1 ? 'één vriendelijke herinnering' : `${k.max - k.herinneringen} vriendelijke herinneringen`} dit seizoen; daarna volgt een kaart.` : 'De vriendelijke herinneringen van dit seizoen zijn gebruikt; hierna volgt bij te laat afmelden een gele kaart, bij niet afmelden een rode.'}${stap ? ` <b>Volgende stap: ${stap.soort === 'bellen' ? `de ${CC.wie('bellen', pl.teamId)} neemt contact met je op` : stap.soort === 'gesprekHjo' ? `een persoonlijk gesprek met de ${CC.wie('gesprek', pl.teamId)}` : 'de club bespreekt het vervolg'}.</b>` : ''} ${st.telaat ? `Te laat gekomen: ${st.telaat}× (geen kaart).` : ''}</p>
       <button class="linkknop" data-act="uitlegKaarten">Wat betekenen de kaarten?</button> · <button class="linkknop" data-act="open" data-view="beoordelingKind" data-id="${pl.id}">Beoordelingen</button>
       ${h.sectie('Afmeldgeschiedenis')}<div class="lijst compact">${hist.map(({ f, a }) => h.rij({ ic: h.reden(f.reden), titel: `${D.kort(a.datum)} · ${h.actTitel(S, a)}`, sub: `Reden: ${esc(f.reden)}${f.opm ? ' · ' + esc(f.opm) : ''}`, rechts: M.teLaatAfgemeld(S, f, a) ? '<span class="chip geel mini">te laat afgemeld</span>' : '<span class="chip groen mini">op tijd afgemeld</span>' })).join('') || '<p class="zacht klein">Geen afmeldingen in deze periode.</p>'}</div>` };
   };

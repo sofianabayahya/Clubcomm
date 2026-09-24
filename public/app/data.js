@@ -86,7 +86,7 @@
         stops: [{ id: 'goedevrijdag', naam: 'Goede Vrijdag (club dicht)', van: '2027-03-26', tot: '2027-03-26', trainen: false }],
         // Fases volgen de competitie-indeling (jaarplanning onderbouw 2026/27). De kaartenteller begint per fase opnieuw.
         fasen: [{ nr: 1, van: '2026-08-19' }, { nr: 2, van: '2026-10-31' }, { nr: 3, van: '2027-01-20' }, { nr: 4, van: '2027-04-02' }],
-        inst: { deadlineTraining: 3, deadlineWedstrijd: 24, geel: 3, oranje: 5, zones: { breedte: { groen: 80, oranje: 75 }, selectie: { groen: 90, oranje: 85 } }, oproepDagen: 2, opnemenUur: 48, waarschuwing: CC.WAARSCHUWING },
+        inst: { deadlineTraining: 3, deadlineWedstrijd: 24, waarschuwingen: { breedte: 2, selectie: 1 }, telaat: { breedte: { kort: 3, seizoen: 8 }, selectie: { kort: 2, seizoen: 5 } }, zones: { breedte: { groen: 80, oranje: 75 }, selectie: { groen: 90, oranje: 85 } }, oproepDagen: 2, opnemenUur: 48, waarschuwing: CC.WAARSCHUWING },
         modules: { vervoer: true, taken: true, speeltijd: true, beoordeling: true, beloningen: false },
         labels: { hjo: 'HJO', coordinator: 'Coördinator' }, coordinatorAan: false,
         ingericht: { seizoen: true, vakanties: true, regels: true, rollen: true, modules: false },
@@ -240,7 +240,7 @@
       // Noah: reeks korte blessuremeldingen
       if (a.datum >= addDays(today, -20) && a.soort === 'training' && idx % 2 === 0) { rec[pO('Noah').id] = 'x'; afmMaken(pO('Noah'), a, 'Blessure', 20); }
       // Liam: vaak te laat
-      if (a.soort === 'training' && idx % 3 === 1) rec[pO('Liam').id] = 'l';
+      if (a.soort === 'training' && idx % 3 === 2) rec[pO('Liam').id] = 'l';
       // Adam en Levi: incidenteel, netjes afgemeld
       if (idx === 2) { rec[pO('Adam').id] = 'x'; afmMaken(pO('Adam'), a, 'Ziek', 28); }
       if (idx === 5) { rec[pO('Levi').id] = 'x'; afmMaken(pO('Levi'), a, 'Familie', 50); }
@@ -395,22 +395,49 @@
     return { pct: tot ? Math.round((100 * aan) / tot) : null, spelers: sp, redenen, telaat: sp.reduce((s, x) => s + x.st.telaat, 0) };
   };
 
-  // kaarten binnen een blok
-  M.kaarten = (S, pl, blok) => {
-    blok = blok || M.blok(S, vandaag());
+  // Kaartregels (Besluit 32), per soort team; de club kan ze aanpassen
+  M.KAART_STD = { waarschuwingen: { breedte: 2, selectie: 1 }, telaat: { breedte: { kort: 3, seizoen: 8 }, selectie: { kort: 2, seizoen: 5 } } };
+  M.kaartRegels = (S, teamId) => {
+    const i = M.inst(S, teamId); const type = (teamId && M.team(S, teamId).type) === 'selectie' ? 'selectie' : 'breedte';
+    const w = (i.waarschuwingen || M.KAART_STD.waarschuwingen)[type]; const tl = (i.telaat || M.KAART_STD.telaat)[type];
+    return { type, waarschuwingen: w ?? M.KAART_STD.waarschuwingen[type], telaat: { ...M.KAART_STD.telaat[type], ...(tl || {}) } };
+  };
+  M.seizoen = (S) => ({ van: S.club.seizoen.start, tot: vandaag() });
+
+  // Kaarten over het hele seizoen (afmeldgedrag). Te laat komen is geen kaart meer (zie M.teLaat).
+  // - de eerste 1 (selectie) of 2 (breedte) keer: vriendelijke herinnering
+  // - te laat afgemeld: gele kaart; twee gele kaarten = rode kaart
+  // - niet afgemeld en niet gekomen: direct rode kaart
+  // - te laat afgemeld wegens ziekte telt niet (kinderen worden op de dag zelf ziek)
+  // - "geaccepteerd": de trainer/HJO legde na de kaart vast dat het begrijpelijk was; de kaart blijft zichtbaar maar telt niet voor de volgende stap
+  M.kaarten = (S, pl) => {
+    const r = M.kaartRegels(S, pl.teamId); const sz = M.seizoen(S);
     const ev = [];
-    M.acts(S, pl.teamId, blok.van, blok.tot < vandaag() ? blok.tot : vandaag()).filter((a) => !a.afgelast).forEach((a) => {
+    M.acts(S, pl.teamId, sz.van, sz.tot).filter((a) => !a.afgelast).forEach((a) => {
       const st = M.status(S, pl, a);
-      if (st.code === 'telaat') ev.push({ act: a, soort: 'oranje', punten: 1, wat: 'Te laat gekomen' });
-      if (st.code === 'afgemeld' && st.laat) ev.push({ act: a, soort: 'geel', punten: 1, wat: 'Te laat afgemeld' });
-      if (st.code === 'nietafgemeld') ev.push({ act: a, soort: 'geel', punten: 2, wat: 'Niet afgemeld en niet gekomen' });
+      if (st.code === 'afgemeld' && st.laat && st.afm.reden !== 'Ziek') ev.push({ act: a, soort: 'laat', wat: 'Te laat afgemeld' });
+      if (st.code === 'nietafgemeld') ev.push({ act: a, soort: 'niet', wat: 'Niet afgemeld en niet gekomen' });
     });
-    const eerst = {};
-    ev.forEach((e) => { if (!eerst[e.soort]) { eerst[e.soort] = true; e.waarschuwing = true; } });
-    const geel = ev.filter((e) => e.soort === 'geel' && !e.waarschuwing).reduce((s, e) => s + e.punten, 0);
-    const oranje = ev.filter((e) => e.soort === 'oranje' && !e.waarschuwing).reduce((s, e) => s + e.punten, 0);
-    const i = M.inst(S, pl.teamId);
-    return { ev, geel, oranje, drempel: geel >= i.geel || oranje >= i.oranje, inst: i };
+    const log = S.gesprekken.filter((g) => g.spelerId === pl.id && g.datum >= sz.van).sort((x, y) => x.datum.localeCompare(y.datum));
+    let n = 0, geelOpen = 0;
+    ev.forEach((e) => {
+      n++;
+      if (n <= r.waarschuwingen) { e.kaart = 'herinnering'; e.waarschuwing = true; e.laatsteHerinnering = n === r.waarschuwingen; return; }
+      if (e.soort === 'niet') e.kaart = 'rood';
+      else if (geelOpen) { e.kaart = 'rood'; e.tweedeGeel = true; geelOpen = 0; } else { e.kaart = 'geel'; geelOpen = 1; }
+      const eerste = log.find((g) => g.datum >= e.act.datum);
+      e.geaccepteerd = e.kaart === 'rood' && !!eerste && eerste.soort === 'geaccepteerd';
+    });
+    const tel = (k) => ev.filter((e) => e.kaart === k).length;
+    return { ev, geel: tel('geel'), rood: tel('rood'), herinneringen: Math.min(n, r.waarschuwingen), max: r.waarschuwingen, regels: r };
+  };
+
+  // Te laat komen: geen kaart, wel twee signalen (kort en vaak, of structureel over het seizoen)
+  M.teLaat = (S, pl) => {
+    const r = M.kaartRegels(S, pl.teamId); const sz = M.seizoen(S); const grens = addDays(vandaag(), -28);
+    const keer = M.acts(S, pl.teamId, sz.van, sz.tot).filter((a) => !a.afgelast && S.pres[a.id] && S.pres[a.id].s[pl.id] === 'l');
+    const kort = keer.filter((a) => a.datum >= grens).length;
+    return { seizoen: keer.length, kort, signaal: kort >= r.telaat.kort ? 'kort' : keer.length >= r.telaat.seizoen ? 'seizoen' : null, regels: r.telaat };
   };
 
   // signalen voor een persoon/rol
@@ -443,7 +470,10 @@
         // patroon: reeks korte ziek/blessuremeldingen
         const kort = S.afm.filter((f) => f.spelerId === pl.id && ['Ziek', 'Blessure'].includes(f.reden) && new Date(f.tijd) > new Date(Date.now() - 28 * 864e5));
         if (kort.length >= 3 && !lang) res.push({ soort: 'patroon', niveau: 'oranje', teamId: tid, spelerId: pl.id, tekst: `${naam}: ${kort.length}× ziek/blessure in 4 weken`, sub: `Waarvan ${kort.filter((f) => f.reden === 'Blessure').length}× blessure. Eerst vragen hoe het gaat?`, ernst: kort.length, sleutelExtra: 'kort' });
-        // kaartendrempel
+        // te laat komen (Besluit 32)
+        const tl = M.teLaat(S, pl);
+        if (tl.signaal === 'kort') res.push({ soort: 'telaat', niveau: 'oranje', teamId: tid, spelerId: pl.id, tekst: `${naam}: ${tl.kort}× te laat in 4 weken`, sub: 'Even vragen of er iets speelt?', ernst: tl.kort, sleutelExtra: 'kort' });
+        else if (tl.signaal === 'seizoen') res.push({ soort: 'telaat', niveau: 'oranje', teamId: tid, spelerId: pl.id, tekst: `${naam}: ${tl.seizoen}× te laat dit seizoen`, sub: 'Is dit een patroon? Even praten kan helpen.', ernst: tl.seizoen, sleutelExtra: 'seizoen' });
         const k = M.kaarten(S, pl);
         // Opschaling (Besluit 15): herinneren → waarschuwen (kaart) → bellen/appen → persoonlijk gesprek HJO → clubbesluit
         const stap = M.stap(S, pl, k);
@@ -464,20 +494,26 @@
   M.STAPPEN = ['bellen', 'gesprekHjo', 'clubbesluit'];
   M.afgedaanRecent = (S, teamIds, dagen = 14) => (S.signaalAfgedaan || []).filter((x) => teamIds.includes(x.teamId) && Date.now() - new Date(x.tijd) < dagen * 864e5);
 
-  // Opschalingsstap na de drempel. Contact = gebeld/geappt; gesprek = persoonlijk gesprek met de HJO.
+  // Opschaling (Besluit 15 en 32) met geheugen over het hele seizoen. Een rode kaart die niet is geaccepteerd:
+  // eerst bellen/appen; opnieuw rood na dat contact: persoonlijk gesprek (HJO); opnieuw na het gesprek: clubbesluit.
   M.stap = (S, pl, k) => {
     k = k || M.kaarten(S, pl);
-    if (!k.drempel) return null;
-    const fase = M.blok(S, vandaag());
-    const vast = S.gesprekken.filter((g) => g.spelerId === pl.id && g.datum >= fase.van).sort((a, b) => a.datum.localeCompare(b.datum));
-    const contact = vast.filter((g) => g.soort !== 'gesprek').pop();
-    const gesprek = vast.filter((g) => g.soort === 'gesprek').pop();
-    const naDatum = (d) => k.ev.filter((e) => !e.waarschuwing && e.act.datum > d);
+    const rood = k.ev.filter((e) => e.kaart === 'rood' && !e.geaccepteerd);
+    if (!rood.length) return null;
+    const log = S.gesprekken.filter((g) => g.spelerId === pl.id && g.datum >= M.seizoen(S).van).sort((a, b) => a.datum.localeCompare(b.datum));
+    const contact = log.filter((g) => ['gebeld', 'geappt'].includes(g.soort)).pop();
+    const gesprek = log.filter((g) => g.soort === 'gesprek').pop();
+    const na = (d) => rood.filter((e) => e.act.datum > d);
+    const wat = (e) => `${e.tweedeGeel ? 'tweede gele kaart (te laat afgemeld)' : 'niet afgemeld'} bij de ${e.act.soort === 'training' ? 'training' : 'wedstrijd'} van ${CC.date.kort(e.act.datum)}`;
     const hjo = S.club.labels.hjo;
-    if (gesprek) return naDatum(gesprek.datum).length ? { soort: 'clubbesluit', niveau: 'rood', stap: 5, tekst: 'opnieuw na het gesprek', sub: `Tweede gele kaart na het gesprek. Volgens het clubbeleid kan de club afscheid nemen; dat beslist de ${CC.wie ? CC.wie('clubbesluit', pl.teamId) : hjo} met het bestuur.` } : null;
-    if (contact) return naDatum(contact.datum).length ? { soort: 'gesprekHjo', niveau: 'rood', stap: 4, tekst: `persoonlijk gesprek met de ${CC.wie ? CC.wie('gesprek', pl.teamId) : hjo}`, sub: `Na het telefonisch contact (${CC.date.kort(contact.datum)}) opnieuw: ${naDatum(contact.datum).map((e) => e.wat.toLowerCase()).join(', ')}.` } : null;
-    return { soort: 'bellen', niveau: 'rood', stap: 3, tekst: 'bel of app de ouders', sub: `Drempel bereikt: ${k.geel} punten geel, ${k.oranje} oranje deze fase. ${CC.wie ? CC.wie('bellen', pl.teamId).replace(/^./, (c) => c.toUpperCase()) : 'Trainer of ' + hjo} neemt contact op.` };
+    if (gesprek) { const x = na(gesprek.datum); return x.length ? { soort: 'clubbesluit', niveau: 'rood', stap: 5, tekst: 'opnieuw rood na het gesprek', sub: `Rode kaart: ${wat(x[x.length - 1])}. Volgens het clubbeleid kan de club afscheid nemen; dat beslist de ${CC.wie ? CC.wie('clubbesluit', pl.teamId) : hjo} met het bestuur.` } : null; }
+    if (contact) { const x = na(contact.datum); return x.length ? { soort: 'gesprekHjo', niveau: 'rood', stap: 4, tekst: `persoonlijk gesprek met de ${CC.wie ? CC.wie('gesprek', pl.teamId) : hjo}`, sub: `Na het contact van ${CC.date.kort(contact.datum)} opnieuw rood: ${wat(x[x.length - 1])}.` } : null; }
+    const laatst = rood[rood.length - 1];
+    const al = log.find((g) => g.datum >= laatst.act.datum);
+    if (al) return null;
+    return { soort: 'bellen', niveau: 'rood', stap: 3, tekst: 'bel of app de ouders', sub: `Rode kaart: ${wat(laatst)}. ${CC.wie ? CC.wie('bellen', pl.teamId).replace(/^./, (c) => c.toUpperCase()) : 'Trainer of ' + hjo} neemt contact op. Begrijpelijk? Leg dan vast: geaccepteerd.` };
   };
+
 
   // Vervoer: aangeboden plekken zijn voor ándere kinderen; het eigen kind van de chauffeur telt niet mee
   M.meerijders = (S, v, chauffeurId) => Object.entries(v.plek).filter(([, d]) => d === chauffeurId).map(([s]) => M.speler(S, s)).filter(Boolean);

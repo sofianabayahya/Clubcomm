@@ -128,11 +128,17 @@
         default: return `<span class="chip blauw">${icon('circle-check')}Komt</span>`;
       }
     },
+    // Kaarten voor de ouder (Besluit 32): aantal gele en rode kaarten dit seizoen
     kaartjes(k) {
-      const n = (s) => k.ev.filter((e) => e.soort === s && !e.waarschuwing).length;
-      const g = n('geel'), o = n('oranje');
-      if (!g && !o) return '';
-      return `${g ? `<span class="kaart geel" title="Gele kaart">${k.geel}</span>` : ''}${o ? `<span class="kaart oranje" title="Oranje kaart">${k.oranje}</span>` : ''}`;
+      if (!k.geel && !k.rood) return '';
+      return `${k.geel ? `<span class="kaart geel" title="Gele kaart">${k.geel}</span>` : ''}${k.rood ? `<span class="kaart rood" title="Rode kaart">${k.rood}</span>` : ''}`;
+    },
+    // Voor trainer en HJO: geen kaartjes, alleen een teken als er iets is (📞 actie nodig, ⚠️ let op)
+    let(S, pl, k) {
+      k = k || M.kaarten(S, pl);
+      if (M.stap(S, pl, k)) return `<span class="let actie" title="Actie nodig: contact met de ouders">${icon('phone')}</span>`;
+      if (k.geel || k.ev.some((e) => e.kaart === 'rood' && !e.geaccepteerd) || M.teLaat(S, pl).signaal) return `<span class="let" title="Let op">${icon('triangle-alert')}</span>`;
+      return '';
     },
     badge: (n) => (n ? `<span class="badge">${n > 99 ? '99+' : n}</span>` : ''),
     knop: (tekst, act, attrs = '', cls = '') => `<button class="knop ${cls}" data-act="${act}" ${attrs}>${tekst}</button>`,
@@ -568,20 +574,20 @@
     const i = S.afm.findIndex((f) => f.spelerId === el.dataset.speler && f.actId === el.dataset.act2);
     if (i >= 0) S.afm.splice(i, 1); CC.save(); CC.render(); CC.toast('Afmelding ingetrokken: fijn dat je kind toch komt!');
   });
-  CC.on('uitlegKaarten', () => { const i = S.club.inst; CC.sheet('Wat betekenen de kaarten?', `
-    <p>Een kaart is <b>een registratie van een feit, geen straf</b>. Zo weten trainer en teamleider wat er speelt.</p>
-    <div class="uitleg"><span class="kaart oranje">1</span><span><b>Oranje: te laat gekomen</b><small>De trainer zet je kind op "te laat".</small></span></div>
-    <div class="uitleg"><span class="kaart geel">1</span><span><b>Geel: te laat afgemeld</b><small>Afgemeld na de afmeldtermijn (training ${i.deadlineTraining} uur, wedstrijd ${i.deadlineWedstrijd} uur van tevoren).</small></span></div>
-    <div class="uitleg"><span class="kaart geel">2</span><span><b>Geel (2 punten): niet afgemeld én niet gekomen</b><small>Dit is voor het team het lastigst.</small></span></div>
-    <h3 class="klein-kop">Zo gaat het stap voor stap (per fase)</h3>
+  CC.on('uitlegKaarten', () => { const r = M.kaartRegels(S, (CC.kind && CC.kind() || {}).teamId); const i = S.club.inst; CC.sheet('Wat betekenen de kaarten?', `
+    <p>De kaarten gaan over <b>afmelden</b>: zo weten trainer en teamleider op tijd wie er komt. Een kaart is <b>een registratie, geen straf</b>.</p>
+    <div class="uitleg"><span class="kaart geel">1</span><span><b>Geel: te laat afgemeld</b><small>Na de afmeldtermijn (training ${i.deadlineTraining} uur, wedstrijd ${i.deadlineWedstrijd} uur van tevoren). Ziek geworden op de dag zelf telt niet.</small></span></div>
+    <div class="uitleg"><span class="kaart geel">2</span><span><b>Twee keer geel is rood</b><small>Net als op het veld.</small></span></div>
+    <div class="uitleg"><span class="kaart rood">1</span><span><b>Rood: niet afgemeld en niet gekomen</b><small>Dit is voor het team het lastigst.</small></span></div>
+    <h3 class="klein-kop">Zo gaat het (per seizoen)</h3>
     <ol class="stappen">
-      <li><b>Herinneren:</b> de eerste keer krijg je een vriendelijke herinnering, zonder kaart.</li>
-      <li><b>Waarschuwen:</b> daarna volgt een kaart, met uitleg.</li>
-      <li><b>Bellen of appen:</b> bij ${i.geel} punten geel of ${i.oranje}× oranje neemt de trainer of de ${esc(S.club.labels.hjo)} contact met je op: <i>"Kunnen we je ergens mee helpen?"</i></li>
+      <li><b>Herinneren:</b> de eerste ${r.waarschuwingen === 1 ? 'keer' : `${r.waarschuwingen} keer`} per seizoen krijg je een vriendelijke herinnering, zonder kaart.</li>
+      <li><b>Kaart:</b> daarna volgt een gele of rode kaart, met uitleg.</li>
+      <li><b>Bij rood</b> neemt de trainer of de ${esc(S.club.labels.hjo)} contact met je op: <i>"Kunnen we je ergens mee helpen?"</i> Is er een goede reden, dan kan de trainer de kaart accepteren.</li>
       <li><b>Persoonlijk gesprek</b> met de ${esc(S.club.labels.hjo)} als het daarna opnieuw gebeurt.</li>
-      <li>Gebeurt het na dat gesprek nog eens, dan volgt een tweede gele kaart en kan de club besluiten afscheid te nemen. Dat beslissen altijd mensen, nooit de app.</li>
+      <li>Gebeurt het na dat gesprek nog eens, dan kan de club besluiten afscheid te nemen. Dat beslissen altijd mensen, nooit de app.</li>
     </ol>
-    <p class="zacht klein">Het seizoen heeft 4 fases (volgens de competitie). Bij een nieuwe fase begint de teller opnieuw; de geschiedenis blijft zichtbaar.</p>`); });
+    <p class="zacht klein">Te laat komen is geen kaart. Gebeurt het vaak, dan praat de trainer er even over. Kaarten en stappen tellen over het hele seizoen.</p>`); });
 
   // ---------- Speler-detail (trainer, teamleider, HJO) ----------
   CC.views.speler = (S, p) => {
@@ -596,27 +602,30 @@
     return {
       titel: M.naam(S, pl),
       html: `${h.seg('spPer', [['blok', 'Deze fase'], ['seizoen', 'Heel seizoen']], 'blok')}
-      <div class="cijfers"><div class="cijfer ${z}"><b>${st.pct == null ? '–' : st.pct + '%'}</b><small>aanwezig</small></div><div class="cijfer"><b>${st.telaat}×</b><small>te laat</small></div><div class="cijfer"><b>${k.geel}/${k.oranje}</b><small>geel / oranje</small></div></div>
+      <div class="cijfers"><div class="cijfer ${z}"><b>${st.pct == null ? '–' : st.pct + '%'}</b><small>aanwezig</small></div><div class="cijfer"><b>${st.telaat}×</b><small>te laat</small></div><div class="cijfer"><b>${h.kaartjes(k) || '–'}</b><small>kaarten seizoen</small></div></div>
       ${lang ? `<div class="info">${icon('hospital')}<span><b>Langdurig afwezig</b> (${esc(lang.reden.toLowerCase())}) tot ongeveer ${D.kort(lang.tot)}. ${CC.zicht('toelichting') ? esc(lang.opm || '') : ''}</span></div>` : ''}
       ${Object.keys(st.redenen).length ? `${h.sectie('Redenen van afwezigheid')}<div class="balkjes">${Object.entries(st.redenen).sort((a, b) => b[1] - a[1]).map(([r, n]) => `<div class="balkje"><span>${esc(r)}</span><i style="--w:${(100 * n) / st.afwezig}%"></i><b>${n}</b></div>`).join('')}</div>` : ''}
       ${h.sectie('Geschiedenis')}<div class="lijst compact">${st.lijst.slice().reverse().map(({ act, st: s }) => h.rij({ ic: h.datumBlok(act), titel: h.actTitel(S, act), sub: s.afm && s.afm.opm && CC.zicht('toelichting') ? esc(s.afm.opm) : '', rechts: h.chip(s) + (s.laat ? '<span class="chip geel mini">te laat afgemeld</span>' : '') })).join('') || h.leeg('Nog geen activiteiten')}</div>
-      ${k.ev.length ? `${h.sectie('Kaarten en waarschuwingen deze fase')}<div class="lijst compact">${k.ev.map((e) => h.rij({ ic: e.waarschuwing ? 'mail' : `<span class="kaart ${e.soort}">${e.punten}</span>`, titel: e.waarschuwing ? `Vriendelijke herinnering · ${e.wat.toLowerCase()}` : e.wat, sub: D.kort(e.act.datum) })).join('')}</div>` : ''}
+      ${k.ev.length ? `${h.sectie('Afmelden: herinneringen en kaarten dit seizoen')}<div class="lijst compact">${k.ev.slice().reverse().map((e) => h.rij({ ic: CC.kaartIc(e), titel: CC.kaartTitel(e), sub: `${D.kort(e.act.datum)} · ${e.wat.toLowerCase()}${e.geaccepteerd ? ' · <b>geaccepteerd</b>' : ''}` })).join('')}</div>` : ''}
       ${rol !== 'ouder' ? `${h.sectie('Ouders')}<div class="lijst">${ouders.map((o) => h.rij({ ic: h.avatar(o.naam), titel: esc(o.naam), sub: esc(o.email), rechts: `<a class="icoonknop groen" href="https://wa.me/31${o.tel.slice(1)}" target="_blank" rel="noopener" aria-label="WhatsApp ${esc(o.naam)}">${icon('message-circle')}</a>` })).join('')}</div>` : ''}
       ${CC.zicht('beoordeling') && b ? `${h.sectie(`Beoordeling · ${esc(b.m.naam.toLowerCase())}`)}<div class="scores">${Object.entries(b.x.scores).map(([v, s]) => `<span>${esc(v)} ${CC.scoreTekst(t, s)}</span>`).join('')}</div>` : ''}
-      ${rol !== 'ouder' ? `${CC.zicht('gesprekken') ? `${h.sectie('Gesprekken')}${gespr.map((g) => h.rij({ ic: g.soort === 'gesprek' ? 'users' : g.soort === 'geappt' ? 'message-circle' : 'phone', titel: `${D.kort(g.datum)} · ${g.soort === 'gesprek' ? 'Persoonlijk gesprek' : g.soort === 'geappt' ? 'Geappt' : 'Gebeld'} · ${esc((M.persoon(S, g.door) || { naam: '' }).naam)}`, sub: esc(g.notitie) + (g.afspraak ? `<br><b>Afspraak:</b> ${esc(g.afspraak)}` : '') })).join('') || '<p class="zacht klein">Nog geen gesprekken vastgelegd.</p>'}` : ''}
+      ${rol !== 'ouder' ? `${CC.zicht('gesprekken') ? `${h.sectie('Gesprekken')}${gespr.map((g) => h.rij({ ic: g.soort === 'gesprek' ? 'users' : g.soort === 'geappt' ? 'message-circle' : g.soort === 'geaccepteerd' ? 'circle-check' : 'phone', titel: `${D.kort(g.datum)} · ${CC.gesprekLabel(g)} · ${esc((M.persoon(S, g.door) || { naam: '' }).naam)}`, sub: esc(g.notitie) + (g.afspraak ? `<br><b>Afspraak:</b> ${esc(g.afspraak)}` : '') })).join('') || '<p class="zacht klein">Nog geen gesprekken vastgelegd.</p>'}` : ''}
         <div class="knoppen">${CC.zicht('contact') ? `<button class="knop licht" data-act="gesprekVastleggen" data-id="${pl.id}">${icon('phone')}Contact vastleggen</button>` : ''}${CC.mag('langdurig') ? `<button class="knop licht" data-act="langdurigSheet" data-id="${pl.id}">${icon('hospital')}Langdurig afwezig</button>` : ''}</div>` : ''}`,
     };
   };
+  CC.kaartIc = (e) => (e.kaart === 'herinnering' ? 'mail' : `<span class="kaart ${e.kaart}${e.geaccepteerd ? ' vaag' : ''}">${e.tweedeGeel ? '2' : '1'}</span>`);
+  CC.kaartTitel = (e) => (e.kaart === 'herinnering' ? 'Vriendelijke herinnering' : e.kaart === 'geel' ? 'Gele kaart' : e.tweedeGeel ? 'Rode kaart (tweede gele)' : 'Rode kaart');
+  CC.gesprekLabel = (g) => ({ gesprek: 'Persoonlijk gesprek', geappt: 'Geappt', geaccepteerd: 'Begrijpelijk, geaccepteerd' }[g.soort] || 'Gebeld');
   CC.scoreTekst = (t, s) => { const c = CC.categorie(t.cat); if (c.schaal === 'smiley' || c.schaal === 'mini') return ['', '<span class="smiley">😐</span>', '<span class="smiley">🙂</span>', '<span class="smiley">😃</span>'][s] || '–'; return `<b>${s}</b>/5`; };
   CC.on('gesprekVastleggen', (el) => {
     const pl = M.speler(S, el.dataset.id); const stap = M.stap(S, pl); const hjo = CC.mag ? CC.mag('gesprek') : CC.rol().rol === 'hjo';
     const std = stap && stap.soort === 'gesprekHjo' ? 'gesprek' : 'gebeld';
     CC.sheet('Contact vastleggen', `<form data-submit="gesprekOpslaan" data-id="${pl.id}" class="codeform">
-      <label for="g-s">Soort contact</label><select id="g-s" name="s"><option value="gebeld" ${std === 'gebeld' ? 'selected' : ''}>Gebeld</option><option value="geappt">Geappt</option><option value="gesprek" ${std === 'gesprek' ? 'selected' : ''}>Persoonlijk gesprek${hjo ? '' : ` (${esc(CC.wie ? CC.wie('gesprek', pl.teamId) : S.club.labels.hjo)})`}</option></select>
+      <label for="g-s">Soort contact</label><select id="g-s" name="s"><option value="gebeld" ${std === 'gebeld' ? 'selected' : ''}>Gebeld</option><option value="geappt">Geappt</option><option value="gesprek" ${std === 'gesprek' ? 'selected' : ''}>Persoonlijk gesprek${hjo ? '' : ` (${esc(CC.wie ? CC.wie('gesprek', pl.teamId) : S.club.labels.hjo)})`}</option><option value="geaccepteerd">Begrijpelijk, geaccepteerd (goede reden)</option></select>
       <label for="g-d">Datum</label><input id="g-d" name="d" type="date" value="${D.vandaag()}">
       <label for="g-n">Wat speelt er?</label><textarea id="g-n" name="n" rows="3" required placeholder="Bijv. zwemles op vrijdag; oma ziek."></textarea>
       <label for="g-a">Afspraak (mag leeg)</label><input id="g-a" name="a" placeholder="Bijv. altijd via de app afmelden, ook als het laat wordt">
-      <button class="knop">Opslaan</button><p class="zacht klein">Alleen trainer, teamleider en ${esc(S.club.labels.hjo)} zien dit. Gebeurt het daarna opnieuw, dan stelt de app de volgende stap voor.</p></form>`);
+      <button class="knop">Opslaan</button><p class="zacht klein">Alleen trainer, teamleider en ${esc(S.club.labels.hjo)} zien dit. Gebeurt het daarna opnieuw, dan stelt de app de volgende stap voor. Kies "geaccepteerd" als er een goede reden was: de kaart blijft zichtbaar, maar telt niet mee.</p></form>`);
   });
   CC.on('gesprekOpslaan', (f) => { S.gesprekken.push({ id: 'g' + Date.now(), spelerId: f.dataset.id, soort: f.s.value, datum: f.d.value, door: CC.me().id, notitie: f.n.value, afspraak: f.a.value }); CC.save(); CC.closeSheet(); CC.render(); CC.toast('Vastgelegd'); });
 

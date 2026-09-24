@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 24 september 2026 (Besluit 30 en 31 toegevoegd)
+Laatst bijgewerkt: 24 september 2026 (Besluit 30 t/m 32 toegevoegd)
 
 ---
 
@@ -193,6 +193,7 @@ Het systeem legt feiten vast. Een **gevolg** (zoals een gesprek) besluit altijd 
 - Ouders zien **dezelfde cijfers** van hun kind als de HJO (geen verrassingen in een gesprek). De HJO ziet ook de **redenen**, zodat 80% door blessure iets anders is dan 80% door andere sport.
 
 ### Soorten gebeurtenissen
+*Herzien in Besluit 32 (geel/rood zoals op het veld, te laat komen geen kaart, telling per seizoen). De tabel en "Kansen geven" hieronder zijn vervangen.*
 
 | Gebeurtenis | Wie registreert | Kaart | Telt voor drempel |
 |---|---|---|---|
@@ -506,6 +507,36 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 32 — Kaarten: afmelden zoals op het veld, te laat komen apart
+*Besloten 24 september 2026. Herziet de kaarten uit Besluit 5 en de telling per fase uit Besluit 15.*
+
+**Uitgangspunt:** signaleren, communiceren en vastleggen, zonder dat het als straf voelt. Wie echt niet anders kan, wordt begrepen; wie misbruik maakt, valt op. Altijd beslist een mens (trainer of HJO). Het gaat over het afmelden door de ouder, niet over het kind.
+
+**Afmeldgedrag (kaarten)**
+- **Vriendelijke herinneringen:** de eerste keren per seizoen geen kaart. **Breedte 2, selectie 1** (instelbaar door de club). Bij de laatste herinnering staat erbij dat hierna een kaart volgt.
+- **Te laat afgemeld = geel.** Twee keer geel = **rood**.
+- **Niet afgemeld en niet gekomen = direct rood.**
+- **Ziek geworden op de dag zelf** (reden "Ziek") telt niet als te laat afgemeld. Misbruik valt op via de bestaande patronen.
+- Geen punten meer, geen oranje kaart.
+
+**Rood = signaal voor de trainer (📞)**
+- De trainer (of HJO) belt of appt de ouder en legt vast: **gebeld/geappt met afspraak**, of **"Begrijpelijk, geaccepteerd"** (goede reden). Een geaccepteerde kaart blijft zichtbaar, maar telt niet voor de volgende stap.
+- **Geheugen over het hele seizoen** (niet meer terug naar nul per fase): opnieuw rood na het contact → persoonlijk gesprek HJO; opnieuw na het gesprek → clubbesluit (mensen, met het bestuur).
+
+**Te laat komen (geen kaart, wel een signaal ⚠️)**
+- Twee signalen: **kort en vaak** (breedte 3× binnen 4 weken, selectie 2×) en **structureel** (breedte 8× per seizoen, selectie 5×). Instelbaar door de club.
+- De trainer praat erover en kan kiezen: **"Begrijpelijk"** (bijv. werk of vervoer van de ouders). Het signaal komt terug als het vaker gebeurt.
+
+**Wie ziet wat**
+- **Ouder:** gele en rode kaarten met uitleg ("Wat betekenen de kaarten?"), hoeveel herinneringen er nog zijn, en de volgende stap.
+- **Trainer, teamleider en HJO:** in lijsten geen kaartjes maar alleen **📞** (actie nodig) of **⚠️** (let op). Details bij de speler.
+- **Seizoensoverzicht** per speler (aanwezigheid, te laat, kaarten, geaccepteerd, gesprekken) voor de teamindeling, altijd met redenen.
+
+**Nog te doen / afspraken**
+- Privacy: details na de teamindeling van het volgende seizoen verwijderen; alleen percentages bewaren (bewaartermijn vastleggen in de echte versie).
+- De HJO ziet bij afgedane signalen ook hoe vaak trainers kaarten accepteren (gelijke behandeling tussen trainers).
+- Het vaste startbericht van het seizoen legt afmelden, herinneringen en kaarten kort uit.
+
 ## Besluit 31 — Vervoer: iedereen brengt zijn eigen kind
 *Besloten 24 september 2026. Herziet het onderdeel Vervoer van de ouder-app.*
 
@@ -731,16 +762,17 @@ Gebaseerd op de jaarplanning onderbouw 2026/27 van SC Buitenveldert en de verdie
 
 ### Fases
 - Het seizoen volgt de **4 competitiefases**: fase 1 vanaf wo 19 aug 2026, fase 2 vanaf za 31 okt, fase 3 vanaf wo 20 jan 2027, fase 4 vanaf vr 2 apr (laatste training 4 jun, laatste wedstrijd 5 jun 2027).
-- Kaarten en de aanwezigheidszones tellen **per fase**; bij een nieuwe fase begint de teller opnieuw.
+- De aanwezigheidszones tellen **per fase**; bij een nieuwe fase begint de teller opnieuw.
 - De clubbeheerder stelt de startdatum per fase in (vervangt de "blokken" uit Besluit 5).
+- *Sinds Besluit 32 tellen kaarten en opschaling over het **hele seizoen**; de fases gelden nog voor de aanwezigheidszones.*
 - Jaarplanning 2026/27 in de app: seizoen 19 aug – 5 jun; geen training in herfst-, kerst-, voorjaars- en meivakantie; Goede Vrijdag (26 mrt 2027) club dicht; onderbouw traint woensdag en vrijdag.
 
 ### Opschaling
 | Stap | Wie | Wanneer | Wat |
 |---|---|---|---|
 | 1. Herinneren | app | eerste keer per fase | vriendelijke herinnering, geen kaart |
-| 2. Waarschuwen | app | daarna | gele (of oranje) kaart met uitleg |
-| 3. Bellen of appen | **trainer of HJO** | drempel: 3 punten geel of 5× oranje | kort persoonlijk contact, vastleggen (gebeld/geappt, afspraak) |
+| 2. Waarschuwen | app | daarna | gele of rode kaart met uitleg (Besluit 32) |
+| 3. Bellen of appen | **trainer of HJO** | bij een rode kaart | kort persoonlijk contact, vastleggen (gebeld/geappt, afspraak) of "begrijpelijk, geaccepteerd" |
 | 4. Persoonlijk gesprek | **HJO** | opnieuw na het contact | gesprek met ouders, afspraak vastleggen |
 | 5. Clubbesluit | **HJO + bestuur** | opnieuw na het gesprek | tweede gele kaart; club kan afscheid nemen (huidig clubbeleid) |
 

@@ -117,6 +117,9 @@ p { margin: .4em 0; }
 .chip.mini { padding: 1px 7px; font-size: 11px; }
 .kaart { display: inline-grid; place-items: center; width: 20px; height: 26px; border-radius: 4px; font-size: 12px; font-weight: 800; color: #3b2a00; flex: none; }
 .kaart.geel { background: var(--geel); } .kaart.oranje { background: var(--kaart-oranje); color: #fff; }
+.kaart.rood { background: var(--rood); color: #fff; } .kaart.vaag { opacity: .45; }
+.let { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; color: var(--oranje); flex: none; } .let .ic { width: 16px; height: 16px; }
+.let.actie { color: var(--rood); background: color-mix(in srgb, var(--rood) 12%, transparent); }
 
 /* Statusregel */
 .status { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; padding: 12px 14px; border-radius: var(--r); border: 1px solid var(--lijn); background: var(--vlak); text-align: left; font-weight: 600; }

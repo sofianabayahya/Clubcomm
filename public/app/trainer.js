@@ -43,11 +43,13 @@
       if (k.ev.length <= voor[pl.id]) return;
       nieuw.forEach((e) => {
         const tl = M.persoon(S, t.teamleiderId || t.trainerId);
-        const tekst = e.waarschuwing
-          ? S.club.inst.waarschuwing.replace(/\[kind\]/g, pl.voornaam).replace('[team]', t.naam).replace('[deadline]', `${M.inst(S, t.id).deadlineTraining} uur`).replace('[teamleider]', tl ? tl.naam : 'de trainer')
-          : `${pl.voornaam}: ${e.wat.toLowerCase()} bij de ${a.soort} van ${D.lang(a.datum)}. Dit is geregistreerd als ${e.soort === 'geel' ? 'gele' : 'oranje'} kaart (${e.punten} ${e.punten === 1 ? 'punt' : 'punten'}). Een kaart is een registratie, geen straf. Tik op de statusregel in de app voor uitleg.`;
-        S.msgs.push({ id: 'b' + Date.now() + pl.id, van: 'systeem', soort: 'persoonlijk', bereik: `ouders van ${pl.voornaam}`, onderwerp: e.waarschuwing ? 'Vriendelijke herinnering' : `${e.soort === 'geel' ? 'Gele' : 'Oranje'} kaart`, tekst, tijd: new Date().toISOString(), ontvangers: pl.ouders, gelezen: [], antw: [], urgent: false, gepland: null });
-        if (e.waarschuwing) herinnering++; else kaarten++;
+        const wanneer = `de ${a.soort === 'training' ? 'training' : 'wedstrijd'} van ${D.lang(a.datum)}`;
+        const tekst = e.kaart === 'herinnering'
+          ? S.club.inst.waarschuwing.replace(/\[kind\]/g, pl.voornaam).replace('[team]', t.naam).replace('[deadline]', `${M.inst(S, t.id).deadlineTraining} uur`).replace('[teamleider]', tl ? tl.naam : 'de trainer') + (e.laatsteHerinnering ? '\n\nLet op: dit was de laatste vriendelijke herinnering van dit seizoen. Hierna volgt een kaart.' : '')
+          : e.kaart === 'geel' ? `${pl.voornaam}: te laat afgemeld voor ${wanneer}. Dit is geregistreerd als gele kaart. Twee gele kaarten zijn samen een rode kaart. Een kaart is een registratie, geen straf; tik op de statusregel in de app voor uitleg.`
+          : `${pl.voornaam}: ${e.tweedeGeel ? 'opnieuw te laat afgemeld' : 'niet afgemeld en niet gekomen'} bij ${wanneer}. Dit is ${e.tweedeGeel ? 'de tweede gele kaart, samen een rode kaart' : 'een rode kaart'}. De trainer of ${esc(S.club.labels.hjo)} neemt contact met je op: kunnen we ergens mee helpen?`;
+        S.msgs.push({ id: 'b' + Date.now() + pl.id, van: 'systeem', soort: 'persoonlijk', bereik: `ouders van ${pl.voornaam}`, onderwerp: e.kaart === 'herinnering' ? 'Vriendelijke herinnering' : e.kaart === 'geel' ? 'Gele kaart' : 'Rode kaart', tekst, tijd: new Date().toISOString(), ontvangers: pl.ouders, gelezen: [], antw: [], urgent: false, gepland: null });
+        if (e.kaart === 'herinnering') herinnering++; else kaarten++;
       });
     });
     CC.save(); CC.ui.draft = null; CC.render();
@@ -100,8 +102,8 @@
     const volg = M.komend(S, tid, 8).find((a) => !a.afgelast);
     const rijen = M.spelers(S, tid).map((pl) => { const st = M.stats(S, pl, per); const k = M.kaarten(S, pl); return { pl, st, k, z: M.zone(S, st.pct, tid), vs: volg ? M.status(S, pl, volg) : null, b: CC.beoordLaatste ? CC.beoordLaatste(S, pl.id) : null }; });
     const filters = [['alle', 'Alle'], volg && ['komt', `Komt ${D.kort(volg.datum)}`], volg && ['af', `Afgemeld ${D.kort(volg.datum)}`], ['aandacht', 'Oranje/rood'], ['kaarten', 'Kaarten'], ['lang', 'Langdurig'], CC.mag('beoordelingZien') && ['nietbeo', 'Niet beoordeeld']].filter(Boolean);
-    const pas = { alle: () => true, komt: (x) => x.vs && x.vs.code === 'verwacht', af: (x) => x.vs && ['afgemeld', 'langdurig'].includes(x.vs.code), aandacht: (x) => ['oranje', 'rood'].includes(x.z), kaarten: (x) => x.k.geel || x.k.oranje, lang: (x) => x.vs && x.vs.code === 'langdurig' || S.lang.some((l) => l.spelerId === x.pl.id && l.tot >= D.vandaag()), nietbeo: (x) => !x.b }[f] || (() => true);
-    const sorteer = { naam: (a, b) => M.naam(S, a.pl).localeCompare(M.naam(S, b.pl)), laag: (a, b) => (a.st.pct ?? 101) - (b.st.pct ?? 101), hoog: (a, b) => (b.st.pct ?? -1) - (a.st.pct ?? -1), kaarten: (a, b) => (b.k.geel + b.k.oranje) - (a.k.geel + a.k.oranje) }[so];
+    const pas = { alle: () => true, komt: (x) => x.vs && x.vs.code === 'verwacht', af: (x) => x.vs && ['afgemeld', 'langdurig'].includes(x.vs.code), aandacht: (x) => ['oranje', 'rood'].includes(x.z), kaarten: (x) => x.k.geel || x.k.rood, lang: (x) => x.vs && x.vs.code === 'langdurig' || S.lang.some((l) => l.spelerId === x.pl.id && l.tot >= D.vandaag()), nietbeo: (x) => !x.b }[f] || (() => true);
+    const sorteer = { naam: (a, b) => M.naam(S, a.pl).localeCompare(M.naam(S, b.pl)), laag: (a, b) => (a.st.pct ?? 101) - (b.st.pct ?? 101), hoog: (a, b) => (b.st.pct ?? -1) - (a.st.pct ?? -1), kaarten: (a, b) => (b.k.geel + 2 * b.k.rood) - (a.k.geel + 2 * a.k.rood) }[so];
     const lijst = rijen.filter(pas).sort(sorteer);
     const bar = `<div class="chips scroll">${filters.map(([k, l]) => `<button class="chipknop ${k === f ? 'aan' : ''}" data-act="seg" data-key="spF" data-val="${k}">${esc(l)}</button>`).join('')}</div>
       <label class="sorteer">${icon('sliders-horizontal')}<select data-change="spSort" aria-label="Sorteren">${[['naam', 'Op naam'], ['laag', 'Aanwezigheid: laagste eerst'], ['hoog', 'Aanwezigheid: hoogste eerst'], ['kaarten', 'Meeste kaarten eerst']].map(([k, l]) => `<option value="${k}" ${k === so ? 'selected' : ''}>${l}</option>`).join('')}</select><small class="zacht">${lijst.length} van ${rijen.length}</small></label>`;
@@ -122,11 +124,11 @@
   CC.signaalRijAfdoen = (S, s) => {
     const rij = signaalRij(S, s);
     if (!s.afdoenbaar || !CC.mag('afdoen')) return rij;
-    const knop = `<button class="knop klein licht" data-act="signaalAfdoen" data-sleutel="${esc(s.sleutel)}">${icon('check')}Gezien</button>`;
-    return `<div class="signaal">${rij}<div class="signaal-voet">${knop}<small class="zacht">geen actie nodig</small></div></div>`;
+    const knop = `<button class="knop klein licht" data-act="signaalAfdoen" data-sleutel="${esc(s.sleutel)}">${icon('check')}${s.soort === 'telaat' ? 'Begrijpelijk' : 'Gezien'}</button>`;
+    return `<div class="signaal">${rij}<div class="signaal-voet">${knop}<small class="zacht">${s.soort === 'telaat' ? 'geaccepteerd; komt terug als het vaker gebeurt' : 'geen actie nodig'}</small></div></div>`;
   };
   CC.on('snelGebeld', (el) => { const S = CC.S(); S.gesprekken.push({ id: 'g' + Date.now(), spelerId: el.dataset.id, soort: 'gebeld', datum: D.vandaag(), door: CC.me().id, notitie: 'Gebeld (notitie kan nog worden aangevuld)', afspraak: '' }); CC.save(); CC.render(); CC.toast('Vastgelegd als gebeld. Aanvullen kan bij de speler.'); });
-  const signaalRij = (S, s) => h.rij({ ic: ['bellen'].includes(s.soort) ? 'phone' : ['gesprekHjo', 'clubbesluit'].includes(s.soort) ? 'users' : s.soort === 'gesprek' ? 'message-circle' : s.soort === 'lang' ? 'hospital' : s.soort === 'patroon' ? 'repeat' : 'triangle-alert', titel: esc(s.tekst), sub: esc(s.sub || ''), kleur: s.niveau === 'info' ? '' : s.niveau, act: s.spelerId ? 'open' : '', attrs: s.spelerId ? `data-view="speler" data-id="${s.spelerId}"` : '' });
+  const signaalRij = (S, s) => h.rij({ ic: ['bellen'].includes(s.soort) ? 'phone' : ['gesprekHjo', 'clubbesluit'].includes(s.soort) ? 'users' : s.soort === 'gesprek' ? 'message-circle' : s.soort === 'lang' ? 'hospital' : s.soort === 'patroon' ? 'repeat' : s.soort === 'telaat' ? 'clock' : 'triangle-alert', titel: esc(s.tekst), sub: esc(s.sub || ''), kleur: s.niveau === 'info' ? '' : s.niveau, act: s.spelerId ? 'open' : '', attrs: s.spelerId ? `data-view="speler" data-id="${s.spelerId}"` : '' });
   CC.signaalRij = signaalRij;
   // Home toont alleen voorgestelde gesprekken los; overige signalen in één regel (weinig scrollen)
   CC.signaalRegels = (S, tid, zonderLang) => {
@@ -204,7 +206,7 @@
       spelers(S) {
         const tid = CC.teamId(); const per = M.periode(S, 'blok');
         return `<div class="knoppen">${CC.mag('beoordelen') ? `<button class="knop" data-act="open" data-view="beoordelen">${icon('star')}Beoordelen</button>` : ''}<button class="knop licht" data-act="uitnodigSheet">${icon('user-plus')}Ouders uitnodigen</button></div>
-          ${(() => { const F = CC.spelerFilter(S, tid); return `${F.bar}<div class="lijst">${F.lijst.map(({ pl, st, k, z, vs, b }) => h.rij({ ic: h.avatar(pl.voornaam), titel: esc(M.naam(S, pl)), sub: `${st.pct == null ? '–' : st.pct + '%'} aanwezig${k.geel || k.oranje ? ` · ${h.kaartjes(k)}` : ''}${vs && vs.code !== 'verwacht' ? ` · ${h.chip(vs)}` : ''} · ${b ? `beoordeeld (${b.m.naam.toLowerCase()})` : 'nog niet beoordeeld'}`, rechts: h.stip(z), act: 'open', attrs: `data-view="speler" data-id="${pl.id}"` })).join('') || h.leeg('Geen spelers met dit filter')}</div>`; })()}
+          ${(() => { const F = CC.spelerFilter(S, tid); return `${F.bar}<div class="lijst">${F.lijst.map(({ pl, st, k, z, vs, b }) => h.rij({ ic: h.avatar(pl.voornaam), titel: esc(M.naam(S, pl)), sub: `${st.pct == null ? '–' : st.pct + '%'} aanwezig${vs && vs.code !== 'verwacht' ? ` · ${h.chip(vs)}` : ''} · ${b ? `beoordeeld (${b.m.naam.toLowerCase()})` : 'nog niet beoordeeld'}`, rechts: h.let(S, pl, k) + h.stip(z), act: 'open', attrs: `data-view="speler" data-id="${pl.id}"` })).join('') || h.leeg('Geen spelers met dit filter')}</div>`; })()}
           ${CC.materiaalStatus && S.club.modules.materiaal ? `${h.sectie('Team')}<div class="lijst">${CC.materiaalStatus(S, tid)}</div>` : ''}`;
       },
       speeltijd: (S) => CC.speeltijdHtml(S, CC.teamId()),
@@ -220,6 +222,6 @@
     const ts = M.teamStats(S, tid, per);
     return `${h.seg('ovPer', [['blok', 'Deze fase'], ['seizoen', 'Heel seizoen']], 'blok')}
       <p class="zacht klein">Team: <b>${ts.pct ?? '–'}%</b> aanwezig · ${M.team(S, tid).type} · laagste bovenaan</p>
-      <div class="lijst">${rijen.map(({ pl, st, k }) => h.rij({ ic: h.stip(M.zone(S, st.pct, tid)), titel: esc(M.naam(S, pl)), sub: `${st.pct == null ? '–' : st.pct + '%'} aanwezig${st.telaat ? ` · ${st.telaat}× te laat` : ''}${st.lang ? ' · langdurig' : ''}`, rechts: h.kaartjes(k), act: 'open', attrs: `data-view="speler" data-id="${pl.id}"` })).join('')}</div>`;
+      <div class="lijst">${rijen.map(({ pl, st, k }) => h.rij({ ic: h.stip(M.zone(S, st.pct, tid)), titel: esc(M.naam(S, pl)), sub: `${st.pct == null ? '–' : st.pct + '%'} aanwezig${st.telaat ? ` · ${st.telaat}× te laat` : ''}${st.lang ? ' · langdurig' : ''}`, rechts: h.let(S, pl, k), act: 'open', attrs: `data-view="speler" data-id="${pl.id}"` })).join('')}</div>`;
   };
 })();
