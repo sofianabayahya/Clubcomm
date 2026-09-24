@@ -250,7 +250,8 @@ Bovenaan een **weekstrook** met de trainingen/wedstrijden van deze en volgende w
 - **Tik op een naam** om te wisselen: ✓ aanwezig → ⏰ te laat → ✗ afwezig.
 - Afgemelde spelers staan al grijs met reden; komt een afgemeld kind toch, dan tikt de trainer het aan als aanwezig.
 - Eén knop **Opslaan** → systeem verwerkt waarschuwingen, kaarten en percentages (Besluit 5).
-- Past op één telefoonscherm; corrigeren kan tot 48 uur na de activiteit.
+- Past op één telefoonscherm. **Invullen en corrigeren kan vanaf de dag zelf tot 48 uur na de start** (clubinstelling bij Regels, standaard 48 uur). Daarna staat de lijst vast, zodat ouders niet achteraf nog een kaart krijgen.
+- Is de aanwezigheid van een eerdere training nog niet ingevuld, dan ziet de trainer op Home **"Aanwezigheid nog niet ingevuld"** met tot wanneer het nog kan (24 sep 2026).
 - Bij **wedstrijden** neemt de **wedstrijdbegeleider** de aanwezigheid op (zie Speeltijd), niet per se de trainer.
 
 **B. Overzicht per speler**

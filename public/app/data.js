@@ -86,7 +86,7 @@
         stops: [{ id: 'goedevrijdag', naam: 'Goede Vrijdag (club dicht)', van: '2027-03-26', tot: '2027-03-26', trainen: false }],
         // Fases volgen de competitie-indeling (jaarplanning onderbouw 2026/27). De kaartenteller begint per fase opnieuw.
         fasen: [{ nr: 1, van: '2026-08-19' }, { nr: 2, van: '2026-10-31' }, { nr: 3, van: '2027-01-20' }, { nr: 4, van: '2027-04-02' }],
-        inst: { deadlineTraining: 3, deadlineWedstrijd: 24, geel: 3, oranje: 5, zones: { breedte: { groen: 80, oranje: 75 }, selectie: { groen: 90, oranje: 85 } }, oproepDagen: 2, waarschuwing: CC.WAARSCHUWING },
+        inst: { deadlineTraining: 3, deadlineWedstrijd: 24, geel: 3, oranje: 5, zones: { breedte: { groen: 80, oranje: 75 }, selectie: { groen: 90, oranje: 85 } }, oproepDagen: 2, opnemenUur: 48, waarschuwing: CC.WAARSCHUWING },
         modules: { vervoer: true, taken: true, speeltijd: true, beoordeling: true, beloningen: false },
         labels: { hjo: 'HJO', coordinator: 'Coördinator' }, coordinatorAan: false,
         ingericht: { seizoen: true, vakanties: true, regels: true, rollen: true, modules: false },

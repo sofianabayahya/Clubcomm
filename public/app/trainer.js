@@ -3,7 +3,10 @@
   const CC = window.CC; const D = CC.date, M = CC.m, h = CC.h, icon = CC.icon, esc = CC.esc;
 
   // ---------- Aanwezigheid opnemen (herbruikbaar: trainer, teamleider, wedstrijdbegeleider) ----------
-  const kanOpnemen = (a) => { const s = D.start(a); const nu = new Date(); return !a.afgelast && a.datum <= D.vandaag() && nu - s < 48 * 3600e3; };
+  // Invullen kan vanaf de dag zelf tot een instelbaar aantal uur na de start (clubinstelling, standaard 48)
+  const opnemenUur = () => CC.S().club.inst.opnemenUur || 48;
+  CC.opnemenTot = (a) => new Date(D.start(a).getTime() + opnemenUur() * 3600e3);
+  const kanOpnemen = (a) => !a.afgelast && a.datum <= D.vandaag() && new Date() < CC.opnemenTot(a);
   const volgende = { a: 'l', l: 'x', x: 'a' };
   CC.opnemenHtml = (S, a) => {
     const ui = CC.ui;
@@ -17,7 +20,7 @@
     const d = ui.draft.s;
     const n = Object.values(d).filter((v) => v !== 'x').length;
     if (!kanOpnemen(a)) {
-      const reden = a.afgelast ? 'Deze activiteit is afgelast.' : a.datum > D.vandaag() ? 'Aanwezigheid opnemen kan vanaf de dag zelf.' : 'Corrigeren kan tot 48 uur na de activiteit.';
+      const reden = a.afgelast ? 'Deze activiteit is afgelast.' : a.datum > D.vandaag() ? 'Aanwezigheid opnemen kan vanaf de dag zelf.' : `Invullen en corrigeren kon tot ${opnemenUur()} uur na de start.`;
       return `<div class="info">${icon('info')}<span>${reden}</span></div><div class="lijst compact">${sp.map((pl) => h.rij({ ic: h.avatar(pl.voornaam), titel: esc(M.naam(S, pl)), rechts: h.chip(M.status(S, pl, a)) })).join('')}</div>`;
     }
     return `<p class="zacht klein">Iedereen staat op aanwezig. Tik op een naam: aanwezig → te laat → afwezig.</p>
@@ -168,6 +171,11 @@
         const n = M.ongelezen(S, me.id); if (n) acties.push(h.rij({ ic: 'message-circle', titel: `${n} ${n === 1 ? 'nieuw bericht' : 'nieuwe berichten'}`, act: 'tab', attrs: 'data-tab="berichten"', kleur: 'blauw' }));
         if (!t.teamleiderId) { const open = S.aanm.filter((x) => x.teamId === tid && x.status === 'open').length; if (open) acties.push(h.rij({ ic: 'user-check', titel: `${open} aanmelding${open > 1 ? 'en' : ''} goedkeuren`, sub: 'Dit team heeft geen teamleider, dus jij keurt goed', act: 'open', attrs: 'data-view="aanmeldingen"', kleur: 'oranje' })); }
         acties.push(...CC.signaalRegels(S, tid, true));
+        // Herinnering: training van een eerdere dag waarvan de aanwezigheid nog niet is ingevuld, zolang het nog kan
+        S.acts.filter((a) => a.teamId === tid && a.soort === 'training' && a.datum < D.vandaag() && !a.afgelast && !a.vervangerId && !S.pres[a.id] && kanOpnemen(a)).forEach((a) => {
+          const tot = CC.opnemenTot(a);
+          acties.push(h.rij({ ic: 'clipboard-check', titel: 'Aanwezigheid nog niet ingevuld', sub: `Training ${D.kort(a.datum)} ${a.tijd} · kan nog tot ${D.kort(D.iso(tot))} ${String(tot.getHours()).padStart(2, '0')}:${String(tot.getMinutes()).padStart(2, '0')}`, kleur: 'oranje', act: 'open', attrs: `data-view="opnemen" data-id="${a.id}"` }));
+        });
         const mat = CC.materiaalRij && CC.mag('materiaal') && CC.materiaalRij(S, tid); if (mat) acties.push(mat);
         if (CC.beoordRijTrainer) acties.push(...CC.beoordRijTrainer(S, tid));
         return `<article class="kaartje hoofd">
