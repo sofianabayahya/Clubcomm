@@ -37,7 +37,8 @@
         const pers = S.msgs.filter((m) => M.zichtbaar(S, m, me.id) && m.soort === 'persoonlijk' && !m.gelezen.includes(me.id));
         pers.forEach((m) => acties.push(h.rij({ ic: 'message-circle', titel: m.van === 'systeem' ? 'Bericht van ClubComm' : `Bericht van ${esc((M.persoon(S, m.van) || { naam: 'onbekend' }).naam.split(' ')[0])}`, sub: esc(m.onderwerp), act: 'open', attrs: `data-view="bericht" data-id="${m.id}"`, kleur: 'blauw' })));
         S.acts.filter((a) => a.vervangerId === me.id && a.datum >= D.vandaag() && !a.afgelast).slice(0, 1).forEach((a) => acties.push(h.rij({ ic: 'user-cog', titel: `Jij geeft de training ${D.relatief(a.datum).toLowerCase()} ${a.tijd}`, sub: `${esc(a.teamId)} · ${esc(a.veld || '')} · aanwezigheid opnemen`, act: 'open', attrs: `data-view="begeleiden" data-id="${a.id}"`, kleur: 'blauw' })));
-        S.acts.filter((a) => a.begeleiderId === me.id && a.teamId === pl.teamId && a.datum >= D.vandaag() && !a.afgelast).slice(0, 1).forEach((a) => acties.push(h.rij({ ic: 'clipboard-check', titel: `Jij begeleidt ${D.relatief(a.datum).toLowerCase()}`, sub: `Aanwezigheid${S.club.modules.speeltijd ? ' en speeltijd' : ''} voor deze wedstrijd`, act: 'open', attrs: `data-view="begeleiden" data-id="${a.id}"`, kleur: 'blauw' })));
+        // Taak op de wedstrijddag (Besluit 33): trainer-coach → aanwezigheid, timekeeper → wisselschema
+        S.taken.filter((t) => t.personId === me.id && ['Trainer-coach', 'Timekeeper'].includes(t.soort)).map((t) => ({ t, a: M.act(S, t.actId) })).filter(({ a }) => a && a.teamId === pl.teamId && !a.afgelast && a.datum >= D.vandaag() && a.datum <= D.addDays(D.vandaag(), homeDagen(S))).slice(0, 1).forEach(({ t, a }) => acties.push(h.rij({ ic: t.soort === 'Timekeeper' ? 'timer' : 'clipboard-check', titel: `Jij bent ${t.soort.toLowerCase()} ${D.relatief(a.datum).toLowerCase()}`, sub: t.soort === 'Timekeeper' ? 'Op de dag zelf: het wisselschema' : 'Op de dag zelf: de aanwezigheid invullen', act: 'open', attrs: `data-view="begeleiden" data-id="${a.id}"`, kleur: 'blauw' })));
         const zp = zoektPlek(S, pl); if (zp) acties.push(h.rij({ ic: 'car', titel: zp.wie.length === 1 ? `${esc(zp.wie[0].voornaam)} zoekt vervoer` : `${zp.wie.length} kinderen zoeken vervoer`, sub: `${D.relatief(zp.a.datum)} uit bij ${esc(zp.a.tegen)}. Kan er iemand met jou mee?`, act: 'tab', attrs: 'data-tab="vervoer"' }));
         const ot = S.club.modules.taken ? openTaken(S, pl.teamId) : [];
         if (ot.length) { const a = M.act(S, ot[0].actId); acties.push(h.rij({ ic: 'hand-helping', titel: `${ot.length} ${ot.length === 1 ? 'taak' : 'taken'} nog open`, sub: `${esc(ot[0].soort)} · ${D.relatief(a.datum)}. Help je mee?`, act: 'tab', attrs: 'data-tab="taken"' })); }
@@ -104,7 +105,7 @@
         return `${CC.mijnHulp ? CC.mijnHulp(S, pl) : `<div class="info">${icon('info')}<span>Je hebt dit seizoen <b>${mijn}×</b> geholpen. Dank je wel!</span></div>`}
           ${acts.map((a) => `${h.sectie(`${D.relatief(a.datum)} · ${a.soort === 'training' ? 'training' : a.thuis ? 'thuis' : 'uit'}`)}<div class="lijst">${S.taken.filter((t) => t.actId === a.id).map((t) => {
             const p = t.personId && M.persoon(S, t.personId);
-            return h.rij({ ic: t.soort === CC.VERVANGER ? 'user-cog' : t.soort === 'Coach' ? 'clipboard-check' : t.soort === 'Spelbegeleider' ? 'flag' : t.soort === 'Fotograaf' ? 'eye' : t.soort === 'Wastas' ? 'shirt' : 'hand-helping', titel: esc(t.soort), sub: p ? (p.id === me.id ? 'Jij doet dit. Top!' : esc(p.naam)) : (t.kanNiet || []).includes(me.id) ? 'Nog niemand · jij kunt deze keer niet' : 'Nog niemand', kleur: '',
+            return h.rij({ ic: t.soort === CC.VERVANGER ? 'user-cog' : t.soort === 'Trainer-coach' ? 'clipboard-check' : t.soort === 'Timekeeper' ? 'timer' : t.soort === 'Spelbegeleider' ? 'flag' : t.soort === 'Fotograaf' ? 'eye' : t.soort === 'Wastas' ? 'shirt' : 'hand-helping', titel: esc(t.soort), sub: p ? (p.id === me.id ? 'Jij doet dit. Top!' : esc(p.naam)) : (t.kanNiet || []).includes(me.id) ? 'Nog niemand · jij kunt deze keer niet' : 'Nog niemand', kleur: '',
               rechts: !p ? ((t.kanNiet || []).includes(me.id) ? `<button class="linkknop klein" data-act="taakKanToch" data-id="${t.id}">Toch wel?</button>` : `<span class="knoppen-rij"><button class="knop klein" data-act="ikDoeHet" data-id="${t.id}">Ik doe het</button><button class="knop klein licht" data-act="taakKanNiet" data-id="${t.id}">Kan niet</button></span>`) : p.id === me.id ? `<button class="knop klein licht" data-act="taakAf" data-id="${t.id}">Afmelden</button>` : icon('circle-check', 'groen') });
           }).join('')}</div>`).join('') || h.leeg('Geen taken de komende weken', 'list-checks')}
           ${acts.length ? `<p class="zacht klein">Staat een taak ${S.club.inst.oproepDagen} dagen van tevoren nog open, dan krijgt iedereen automatisch een oproep.</p>` : ''}`;
@@ -154,7 +155,7 @@
   // Activiteit-detail (alle rollen)
   CC.views.activiteit = (S, p) => {
     const a = M.act(S, p.id); const rol = CC.rol().rol; const t = M.team(S, a.teamId);
-    const kaart = a.adres ? `<a class="rij" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(a.adres)}" target="_blank" rel="noopener"><span class="rij-ic">${icon('map-pin')}</span><span class="rij-tekst"><b>${esc(a.adres)}</b><small>Open in kaarten</small></span>${icon('chevron-right', 'chev')}</a>` : '';
+    const kaart = a.adres ? `<p class="klein adresregel">${icon('map-pin')}<span>${esc(a.adres)}</span></p><div class="knoppen">${h.route(a.adres)}</div>` : '';
     let meer = '';
     if (rol === 'ouder') { const pl = CC.kind(); meer = `<div class="acts">${CC.actKaart(S, a, pl)}</div>`; }
     else {
@@ -167,7 +168,7 @@
     return {
       titel: a.soort === 'training' ? 'Training' : a.soort === 'oefen' ? 'Oefenwedstrijd' : 'Wedstrijd',
       html: `<article class="kaartje"><div class="kaart-kop">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${D.lang(a.datum)} · ${esc(t.naam)}</small></div></div>
-        <dl class="gegevens">${a.soort === 'training' ? `<dt>Tijd</dt><dd>${a.tijd}–${a.eind}</dd><dt>Veld</dt><dd>${esc(a.veld)}</dd>` : `<dt>Verzamelen</dt><dd>${a.verzamel}</dd><dt>Aftrap</dt><dd>${a.tijd}</dd>${a.veld ? `<dt>Veld</dt><dd>${esc(a.veld)}</dd>` : ''}<dt>Tenue</dt><dd>${esc(a.tenue || '–')}</dd>${a.uitslag ? `<dt>Uitslag</dt><dd>${esc(a.uitslag)}</dd>` : ''}`}<dt>Afmelden</dt><dd>tot ${M.deadlineTekst(S, a)}</dd></dl>
+        <dl class="gegevens">${a.soort === 'training' ? `<dt>Tijd</dt><dd>${a.tijd}–${a.eind}</dd><dt>Veld</dt><dd>${esc(a.veld)}</dd>` : `<dt>Verzamelen</dt><dd>${a.verzamel}</dd><dt>Aftrap</dt><dd>${a.tijd}</dd>${a.veld ? `<dt>Veld</dt><dd>${esc(a.veld)}</dd>` : ''}${a.uitslag ? `<dt>Uitslag</dt><dd>${esc(a.uitslag)}</dd>` : ''}`}<dt>Afmelden</dt><dd>tot ${M.deadlineTekst(S, a)}</dd></dl>
         ${a.afgelast ? `<div class="info rood">${icon('ban')}<span>Deze activiteit is afgelast.</span></div>` : ''}${kaart}</article>${meer}`,
     };
   };
@@ -191,18 +192,20 @@
     const S = CC.S(); const t = S.taken.find((x) => x.id === el.dataset.id); t.personId = CC.me().id;
     const a = M.act(S, t.actId); let extra = '';
     if (t.soort === CC.VERVANGER && !a.vervangerId) { CC.vervangerNeemOver(S, a, CC.me()); extra = ' Je geeft deze training; je ziet de aanwezigheid op Home.'; }
-    if (t.soort === 'Coach' && !a.begeleiderId) { a.begeleiderId = CC.me().id; extra = ' Je bent wedstrijdbegeleider: je ziet aanwezigheid en speeltijd op Home.'; }
+    if (t.soort === 'Trainer-coach') extra = ' Op de wedstrijddag vul je de aanwezigheid in; je ziet het op Home.';
+    if (t.soort === 'Timekeeper') extra = ' Op de wedstrijddag doe je de wissels met het wisselschema; je ziet het op Home.';
     CC.save(); CC.render(); CC.toast(`Top! Jij bent ${t.soort.toLowerCase()}.${extra}`);
   });
   // Tijdelijke toegang voor de ouder-coach (Besluit 7): alleen deze wedstrijd, vervalt daarna vanzelf
   CC.views.begeleiden = (S, p) => {
     const a = M.act(S, p.id);
     const ik = CC.me().id;
-    if ((a.begeleiderId !== ik && a.vervangerId !== ik) || a.datum < D.vandaag()) return { titel: 'Begeleiden', html: h.leeg('Je toegang voor deze activiteit is verlopen.', 'lock') };
+    const coach = M.taakVan(S, a, 'Trainer-coach') === ik || a.vervangerId === ik; const tk = M.taakVan(S, a, 'Timekeeper') === ik;
+    if ((!coach && !tk) || a.datum < D.vandaag()) return { titel: 'Begeleiden', html: h.leeg('Je toegang voor deze activiteit is verlopen.', 'lock') };
     const training = a.soort === 'training';
-    return { titel: training ? 'Training geven' : 'Wedstrijd begeleiden', html: `<div class="info">${icon('info')}<span>Je hebt tijdelijk toegang, alleen voor deze ${training ? 'training' : 'wedstrijd'}.</span></div>
+    return { titel: training ? 'Training geven' : tk && !coach ? 'Timekeeper' : 'Trainer-coach', html: `<div class="info">${icon('info')}<span>Je hebt tijdelijk toegang, alleen voor deze ${training ? 'training' : 'wedstrijd'}.</span></div>
       <div class="kaart-kop los">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${training ? `${a.tijd}–${a.eind} · ${esc(a.veld || '')}` : `Verzamelen ${a.verzamel} · aftrap ${a.tijd}`}</small></div></div>
-      ${h.sectie('Aanwezigheid')}${CC.opnemenHtml(S, a)}${!training && S.club.modules.speeltijd ? `${h.sectie('Speeltijd')}${CC.speeltijdHtml(S, a.teamId)}` : ''}` };
+      ${coach ? `${h.sectie('Aanwezigheid')}${CC.opnemenHtml(S, a)}` : ''}${!training && tk && S.club.modules.speeltijd ? `${h.sectie('Wisselschema')}${CC.speeltijdHtml(S, a.teamId, { alleenSchema: true, act: a.id })}` : ''}` };
   };
-  CC.on('taakAf', (el) => { const S = CC.S(); const t = S.taken.find((x) => x.id === el.dataset.id); const a = M.act(S, t.actId); if (t.soort === 'Coach' && a.begeleiderId === t.personId) a.begeleiderId = null; if (t.soort === CC.VERVANGER && a.vervangerId === t.personId) a.vervangerId = null; t.personId = null; CC.save(); CC.render(); CC.toast('Afgemeld voor deze taak; de teamleider krijgt bericht'); });
+  CC.on('taakAf', (el) => { const S = CC.S(); const t = S.taken.find((x) => x.id === el.dataset.id); const a = M.act(S, t.actId); if (t.soort === CC.VERVANGER && a.vervangerId === t.personId) a.vervangerId = null; t.personId = null; CC.save(); CC.render(); CC.toast('Afgemeld voor deze taak; de teamleider krijgt bericht'); });
 })();

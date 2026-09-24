@@ -413,3 +413,5 @@ details.uitklap.stil summary { font-size: 13px; color: var(--zacht); }
 .chips.scroll .chipknop { flex: none; }
 .sorteer { display: flex; align-items: center; gap: 8px; margin: 8px 2px; font-size: 13px; }
 .sorteer select { flex: 1; padding: 6px 8px; font-size: 13px; }
+
+.adresregel { display: flex; gap: 6px; align-items: flex-start; } .adresregel .ic { width: 16px; height: 16px; margin-top: 2px; color: var(--zacht); }

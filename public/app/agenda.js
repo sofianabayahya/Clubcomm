@@ -28,7 +28,7 @@
     const esc2 = (t) => String(t).replace(/\\/g, '\\\\').replace(/[,;]/g, (c) => '\\' + c).replace(/\n/g, '\\n');
     const regels = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//ClubComm//NL', 'CALSCALE:GREGORIAN', `X-WR-CALNAME:ClubComm ${S.club.naam}`, 'X-WR-TIMEZONE:Europe/Amsterdam', 'REFRESH-INTERVAL;VALUE=DURATION:PT1H'];
     events(S, p).forEach((a) => {
-      const omschr = `${a.soort === 'training' ? '' : `Verzamelen ${a.verzamel}, aftrap ${a.tijd}. Tenue: ${a.tenue || '-'}.\n`}Kan je kind niet? Meld af in ClubComm: https://clubcomm.nl`;
+      const omschr = `${a.soort === 'training' ? '' : `Verzamelen ${a.verzamel}, aftrap ${a.tijd}.\n`}Kan je kind niet? Meld af in ClubComm: https://clubcomm.nl`;
       regels.push('BEGIN:VEVENT', `UID:${a.id}@clubcomm.nl`, `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').slice(0, 15)}Z`,
         `DTSTART;TZID=Europe/Amsterdam:${st(a.datum, beginTijd(a))}`, `DTEND;TZID=Europe/Amsterdam:${st(a.datum, a.eind || a.tijd)}`,
         `SUMMARY:${esc2((a.afgelast ? 'AFGELAST: ' : '') + titel(S, a))}`, `LOCATION:${esc2(plaats(a))}`, `DESCRIPTION:${esc2(omschr)}`,

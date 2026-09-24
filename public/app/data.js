@@ -29,7 +29,9 @@
     ['Ziek', 'thermometer'], ['Blessure', 'bandage'], ['School/huiswerk', 'graduation-cap'], ['Vakantie', 'plane'],
     ['Familie', 'heart'], ['Andere sport', 'dumbbell'], ['Overig', 'ellipsis'],
   ];
-  CC.TAAKSOORTEN = ['Spelbegeleider', 'Coach', 'Fotograaf', 'Bardienst', 'Wastas'];
+  CC.TAAKSOORTEN = ['Trainer-coach', 'Timekeeper', 'Spelbegeleider', 'Fotograaf', 'Bardienst', 'Wastas'];
+  // Vaste taken bij elke wedstrijd (Besluit 33); de club kan de lijst aanpassen. Spelbegeleider alleen bij thuiswedstrijden.
+  CC.VASTE_TAKEN = ['Trainer-coach', 'Timekeeper', 'Spelbegeleider'];
   CC.VAARDIGHEDEN = {
     mini: ['Plezier', 'Balgevoel'],
     o8: ['Passen', 'Aannemen', 'Dribbelen', 'Schieten', 'Inzet'],
@@ -92,7 +94,7 @@
         ingericht: { seizoen: true, vakanties: true, regels: true, rollen: true, modules: false },
       },
       teams: [], people: [], players: [], acts: [], afm: [], pres: {}, lang: [], gesprekken: [], msgs: [],
-      vervoer: {}, taken: [], aanm: [], beoord: {}, notities: {}, speeltijd: { min: {}, schema: {} }, wijzigingen: [],
+      vervoer: {}, taken: [], aanm: [], beoord: {}, notities: {}, speeltijd: { min: {}, schema: {}, mogelijk: {} }, wijzigingen: [],
     };
 
     const person = (naam, extra = {}) => {
@@ -193,7 +195,6 @@
     // Wedstrijdbegeleiders en uitslagen
     S.acts.filter((a) => a.soort === 'wedstrijd').forEach((a) => {
       const t = T(a.teamId);
-      a.begeleiderId = t.teamleiderId || t.trainerId || null;
       if (a.datum < today) { const g = Math.floor(R() * 6), h = Math.floor(R() * 6); a.uitslag = a.thuis ? `${g}-${h}` : `${h}-${g}`; }
     });
 
@@ -267,20 +268,17 @@
     if (eersteTraining) afmMaken(pO('Noah'), eersteTraining, 'Blessure', 30);
     if (w1) {
       afmMaken(pO('Sem'), w1, 'Familie', 72);
-      w1.begeleiderId = linda.id;
       const ouder = (n) => pO(n).ouders[0];
       S.vervoer[w1.id] = { aanbod: [{ personId: linda.id, plekken: 3 }, { personId: ouder('Lucas'), plekken: 3 }], plek: {} };
       S.vervoer[w1.id].plek[pO('Noah').id] = linda.id; S.vervoer[w1.id].plek[pO('Levi').id] = linda.id; S.vervoer[w1.id].plek[pO('Mees').id] = linda.id;
       S.vervoer[w1.id].plek[pO('Lucas').id] = ouder('Lucas'); S.vervoer[w1.id].plek[pO('Adam').id] = ouder('Lucas');
       // Twee ouders kunnen zelf niet rijden en vragen om een plek
       S.vervoer[w1.id].vraag = { [pO('Daan').id]: { door: ouder('Daan'), tijd: new Date().toISOString() }, [pO('Sven').id]: { door: ouder('Sven'), tijd: new Date().toISOString() } };
-      S.taken.push({ id: id('t'), actId: w1.id, soort: 'Spelbegeleider', personId: null });
       S.taken.push({ id: id('t'), actId: w1.id, soort: 'Wastas', personId: pO('Omar').ouders[0] });
       S.taken.push({ id: id('t'), actId: w1.id, soort: 'Fotograaf', personId: null });
     }
     if (w2) {
-      w2.begeleiderId = null;
-      S.taken.push({ id: id('t'), actId: w2.id, soort: 'Coach', personId: null });
+      S.taken.push({ id: id('t'), actId: w2.id, soort: 'Trainer-coach', personId: null });
       S.taken.push({ id: id('t'), actId: w2.id, soort: 'Bardienst', personId: pO('Sven').ouders[0] });
       S.taken.push({ id: id('t'), actId: w2.id, soort: 'Spelbegeleider', personId: null });
     }
@@ -291,7 +289,12 @@
     });
 
     // Speeltijd: minuten tot nu toe
-    o10.forEach((pl, k) => { S.speeltijd.min[pl.id] = pl.voornaam === 'Finn' ? 60 : 110 + ((k * 37) % 70); });
+    // Speeltijd tot nu toe: mogelijk = 48 min per bijgewoonde wedstrijd; gespeeld ongeveer 65–80% daarvan
+    S.speeltijd.mogelijk = {};
+    o10.forEach((pl, k) => {
+      const wed = verleden.filter((a) => a.soort === 'wedstrijd' && ['a', 'l'].includes((S.pres[a.id] || { s: {} }).s[pl.id])).length;
+      S.speeltijd.mogelijk[pl.id] = wed * 48; S.speeltijd.min[pl.id] = Math.round(wed * 48 * (0.65 + ((k * 7) % 16) / 100));
+    });
 
     // Beoordelingen (fase 1 deels ingevuld)
     const vaardig = CC.categorie('O10').vaardig;
@@ -330,6 +333,23 @@
   M.naam = (S, pl) => `${pl.voornaam} ${pl.achternaam}`;
   M.inst = (S, teamId) => ({ ...S.club.inst, ...((teamId && M.team(S, teamId).afwijking) || {}) });
 
+  // Vaste taken aanvullen voor komende wedstrijden (vaste id's, dus nooit dubbel)
+  M.vulVasteTaken = (S) => {
+    if (!S.club.modules || !S.club.modules.taken) return;
+    const vaste = S.club.vasteTaken || CC.VASTE_TAKEN; const nu = vandaag();
+    S.acts.forEach((a) => {
+      if (a.soort === 'training' || a.afgelast || a.datum < nu) return;
+      vaste.forEach((soort) => {
+        if (soort === 'Spelbegeleider' && !a.thuis) return;
+        if (S.taken.some((t) => t.actId === a.id && t.soort === soort)) return;
+        const t = S.teams.find((x) => x.id === a.teamId) || {};
+        S.taken.push({ id: `v-${a.id}-${soort.toLowerCase().replace(/[^a-z]/g, '')}`, actId: a.id, soort, personId: soort === 'Trainer-coach' ? t.trainerId || null : null });
+      });
+    });
+  };
+  // Wie doet wat op de wedstrijddag: de trainer-coach vult de aanwezigheid in, de timekeeper doet de wissels
+  M.taakVan = (S, a, soort) => { const t = S.taken.find((x) => x.actId === a.id && x.soort === soort); return t ? t.personId : null; };
+  M.coachVan = (S, a) => M.taakVan(S, a, 'Trainer-coach') || (M.team(S, a.teamId) || {}).trainerId || null;
   M.acts = (S, teamId, van, tot) => S.acts.filter((a) => a.teamId === teamId && (!van || a.datum >= van) && (!tot || a.datum <= tot));
   M.komend = (S, teamId, n) => { const nu = Date.now(); return S.acts.filter((a) => a.teamId === teamId && start(a).getTime() + 90 * 6e4 > nu).slice(0, n || 999); };
   M.afm = (S, spelerId, actId) => S.afm.find((f) => f.spelerId === spelerId && f.actId === actId);
@@ -533,22 +553,43 @@
   M.oudersVan = (S, teamId) => [...new Set(M.spelers(S, teamId).flatMap((p) => p.ouders))];
 
   // speeltijdschema: eerlijke verdeling, keepers rouleren, minste minuten eerst
-  M.maakSchema = (S, act) => {
+  // Speeltijd (Besluit 33): eerlijk = percentage van de mogelijke speeltijd in de wedstrijden waarbij het kind er was.
+  // Gemiste wedstrijden (ziek, blessure, andere reden) tellen niet mee: geen achterstand en geen inhaalvoorrang.
+  M.speeltijdStand = (S, pl) => {
+    const min = S.speeltijd.min[pl.id] || 0; const mog = (S.speeltijd.mogelijk || {})[pl.id] || 0;
+    const wed = M.acts(S, pl.teamId, S.club.seizoen.start, vandaag()).filter((a) => a.soort !== 'training' && !a.afgelast && S.pres[a.id] && S.pres[a.id].s[pl.id]);
+    const gemist = {}; let gespeeld = 0;
+    wed.forEach((a) => { const st = M.status(S, pl, a); if (['aanwezig', 'telaat'].includes(st.code)) gespeeld++; else { const r = st.code === 'langdurig' ? st.lang.reden : st.code === 'afgemeld' ? st.afm.reden : 'niet afgemeld'; gemist[r] = (gemist[r] || 0) + 1; } });
+    return { min, mogelijk: mog, pct: mog ? Math.round((100 * min) / mog) : null, gespeeld, gemist };
+  };
+  // Mag de trainer bij dit team afwijken (een blok minder)? Standaard alleen bij selectieteams.
+  M.speeltijdAfwijken = (S, teamId) => { const i = M.inst(S, teamId).speeltijdAfwijken || { breedte: false, selectie: true }; return !!i[M.team(S, teamId).type === 'selectie' ? 'selectie' : 'breedte']; };
+  M.maakSchema = (S, act, minder) => {
     const t = M.team(S, act.teamId); const c = CC.categorie(t.cat);
     const beschikbaar = M.spelers(S, act.teamId).filter((pl) => ['verwacht', 'aanwezig', 'telaat'].includes(M.status(S, pl, act).code));
+    const wedMin = c.blokken * c.blokMin; const mog = S.speeltijd.mogelijk || {};
     const min = {}; beschikbaar.forEach((p) => { min[p.id] = S.speeltijd.min[p.id] || 0; });
+    // voorrang: laagste percentage (inclusief deze wedstrijd) eerst
+    const score = (p) => (min[p.id]) / ((mog[p.id] || 0) + wedMin);
     // Clubbeleid: geen vaste keeper → elke week een andere speler de hele wedstrijd op doel.
     const kb = S.speeltijd.keeper || (S.speeltijd.keeper = {});
-    const keeper = [...beschikbaar].sort((x, y) => (kb[x.id] || 0) - (kb[y.id] || 0) || min[x.id] - min[y.id] || x.voornaam.localeCompare(y.voornaam))[0];
+    const keeper = [...beschikbaar].sort((x, y) => (kb[x.id] || 0) - (kb[y.id] || 0) || score(x) - score(y) || x.voornaam.localeCompare(y.voornaam))[0];
     const veld = beschikbaar.filter((p) => p !== keeper);
+    // minder speeltijd (alleen als de club dat toestaat): één blok minder dan een gelijke verdeling
+    const minderIds = (minder || []).filter((id) => veld.some((p) => p.id === id));
+    const gelijk = veld.length ? Math.floor((c.blokken * Math.min(c.opVeld - 1, veld.length)) / veld.length) : 0;
+    const blokkenVan = {}; const cap = (p) => (minderIds.includes(p.id) ? Math.max(1, gelijk - 1) : 99);
     const blokken = []; const keepers = [];
     for (let b = 0; b < c.blokken; b++) {
-      const volgorde = [...veld].sort((x, y) => min[x.id] - min[y.id] || x.voornaam.localeCompare(y.voornaam));
-      const inBlok = volgorde.slice(0, Math.min(c.opVeld - 1, volgorde.length));
-      inBlok.forEach((p) => { min[p.id] += c.blokMin; });
+      const plek = Math.min(c.opVeld - 1, veld.length);
+      // eerst gelijk verdelen binnen deze wedstrijd, dan voorrang voor het laagste seizoenspercentage
+      const volgorde = [...veld].sort((x, y) => ((blokkenVan[x.id] || 0) >= cap(x)) - ((blokkenVan[y.id] || 0) >= cap(y)) || (blokkenVan[x.id] || 0) - (blokkenVan[y.id] || 0) || score(x) - score(y) || x.voornaam.localeCompare(y.voornaam));
+      const inBlok = volgorde.slice(0, plek);
+      inBlok.forEach((p) => { min[p.id] += c.blokMin; blokkenVan[p.id] = (blokkenVan[p.id] || 0) + 1; });
       keepers.push(keeper && keeper.id);
       blokken.push([keeper, ...inBlok].filter(Boolean).map((p) => p.id));
     }
-    return { blokken, keepers, huidig: 0, bevestigd: false, blokMin: c.blokMin, vorm: c.vorm };
+    return { blokken, keepers, huidig: 0, bevestigd: false, blokMin: c.blokMin, vorm: c.vorm, spelers: beschikbaar.map((p) => p.id), wedMin, minder: minderIds };
   };
+
 })();

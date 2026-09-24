@@ -58,21 +58,33 @@
   CC.views.opnemen = (S, p) => { const a = M.act(S, p.id); return { titel: 'Aanwezigheid', html: `<div class="kaart-kop los">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${D.lang(a.datum)} · ${a.tijd}</small></div></div>${CC.opnemenHtml(S, a)}` }; };
 
   // ---------- Speeltijd (gedeeld met teamleider, module) ----------
-  CC.speeltijdHtml = (S, teamId) => {
-    const wedstrijden = M.komend(S, teamId, 10).filter((a) => a.soort !== 'training' && !a.afgelast);
+  // opties.alleenSchema: voor de timekeeper (ouder) alleen het wisselschema van deze wedstrijd, zonder seizoenscijfers
+  CC.speeltijdHtml = (S, teamId, opties = {}) => {
+    const wedstrijden = M.komend(S, teamId, 10).filter((a) => a.soort !== 'training' && !a.afgelast && (!opties.act || a.id === opties.act));
     const kies = h.segVal('stWed', wedstrijden[0] && wedstrijden[0].id);
     const a = wedstrijden.find((x) => x.id === kies) || wedstrijden[0];
     const t = M.team(S, teamId); const c = CC.categorie(t.cat);
-    const seizoen = M.spelers(S, teamId).map((pl) => ({ pl, m: S.speeltijd.min[pl.id] || 0 })).sort((x, y) => x.m - y.m);
-    const max = Math.max(1, ...seizoen.map((x) => x.m));
-    const tabel = `${h.sectie('Speeltijd dit seizoen')}<div class="balkjes">${seizoen.map((x) => `<div class="balkje"><span>${esc(x.pl.voornaam)}</span><i style="--w:${(100 * x.m) / max}%"></i><b>${x.m}′</b></div>`).join('')}</div>`;
-    if (!a) return h.leeg('Geen wedstrijden gepland') + tabel;
+    // Percentage van de mogelijke speeltijd in bijgewoonde wedstrijden (Besluit 33)
+    const seizoen = M.spelers(S, teamId).map((pl) => ({ pl, x: M.speeltijdStand(S, pl) })).sort((a, b) => (a.x.pct ?? -1) - (b.x.pct ?? -1));
+    const gemistTekst = (g) => Object.entries(g).map(([r, n]) => `${n}× ${r.toLowerCase()}`).join(', ');
+    const tabel = `${h.sectie('Speeltijd dit seizoen')}<div class="balkjes">${seizoen.map(({ pl, x }) => `<div class="balkje"><span>${esc(pl.voornaam)}</span><i style="--w:${x.pct ?? 0}%"></i><b>${x.pct == null ? '–' : x.pct + '%'}</b></div>`).join('')}</div>
+      <p class="zacht klein">Percentage van de mogelijke speeltijd in de wedstrijden waarbij het kind er was. Gemiste wedstrijden tellen niet mee${seizoen.some(({ x }) => Object.keys(x.gemist).length) ? `: ${seizoen.filter(({ x }) => Object.keys(x.gemist).length).map(({ pl, x }) => `${esc(pl.voornaam)} (${gemistTekst(x.gemist)})`).join(', ')}` : ''}.</p>`;
+    if (!a) return h.leeg('Geen wedstrijden gepland') + (opties.alleenSchema ? '' : tabel);
     const sch = S.speeltijd.schema[a.id];
     const naam = (id) => (M.speler(S, id) || {}).voornaam;
     let body;
     if (!sch) {
       const n = M.spelers(S, teamId).filter((pl) => M.status(S, pl, a).code === 'verwacht').length;
-      body = `<div class="kaartje"><p><b>${n} spelers</b> komen · ${c.vorm} · ${c.blokken} blokken van ${c.blokMin} minuten.</p><p class="zacht klein">De app verdeelt de speeltijd eerlijk: spelers met minder minuten dit seizoen krijgen voorrang. De keeper staat de hele wedstrijd op doel en wisselt per week (clubbeleid).</p><button class="knop vol" data-act="maakSchema" data-id="${a.id}">${icon('sparkles')}Maak wisselschema</button></div>`;
+      // Selectie (instelbaar): de trainer mag iemand een blok minder geven; de app laat de trainingen van deze week zien
+      let minderBlok = '';
+      if (!opties.alleenSchema && M.speeltijdAfwijken(S, teamId)) {
+        const gekozen = (h.segVal(`minder_${a.id}`, '') || '').split(',').filter(Boolean);
+        const week = S.acts.filter((x) => x.teamId === teamId && x.soort === 'training' && !x.afgelast && x.datum < D.vandaag() && x.datum >= D.addDays(D.vandaag(), -7) && S.pres[x.id]);
+        const rij = (pl) => { const w = week.map((x) => M.status(S, pl, x)); const er = w.filter((st) => ['aanwezig', 'telaat'].includes(st.code)).length; const niet = w.filter((st) => st.code === 'nietafgemeld').length; const aan = gekozen.includes(pl.id);
+          return h.rij({ ic: h.avatar(pl.voornaam), titel: esc(pl.voornaam), sub: `${er} van ${week.length} trainingen deze week${niet ? ` · ${niet}× niet afgemeld` : ''}`, rechts: `<button class="knop klein ${aan ? '' : 'licht'}" data-act="minderBlok" data-a="${a.id}" data-s="${pl.id}">${aan ? 'Blok minder ✓' : 'Blok minder'}</button>` }); };
+        minderBlok = `<details class="uitklap" ${gekozen.length ? 'open' : ''}><summary>${icon('sliders-horizontal')}Iemand een blok minder geven${gekozen.length ? ` (${gekozen.length})` : ''}</summary><p class="zacht klein">Alleen als jij dat beslist, bijvoorbeeld na weinig trainen. Het wordt vastgelegd bij deze wedstrijd.</p><div class="lijst compact">${M.spelers(S, teamId).filter((pl) => M.status(S, pl, a).code === 'verwacht').map(rij).join('')}</div></details>`;
+      }
+      body = `<div class="kaartje"><p><b>${n} spelers</b> komen · ${c.vorm} · ${c.blokken} blokken van ${c.blokMin} minuten.</p><p class="zacht klein">De app verdeelt de speeltijd eerlijk: wie in de gespeelde wedstrijden het laagste percentage speeltijd had, krijgt voorrang. Gemiste wedstrijden tellen niet mee. De keeper staat de hele wedstrijd op doel en wisselt per week (clubbeleid).</p>${minderBlok}<button class="knop vol" data-act="maakSchema" data-id="${a.id}">${icon('sparkles')}Maak wisselschema</button></div>`;
     } else if (!sch.bevestigd) {
       const cur = sch.huidig;
       const inNu = sch.blokken[cur] || []; const vorig = cur > 0 ? sch.blokken[cur - 1] : [];
@@ -81,32 +93,33 @@
       body = `<div class="blokken">${sch.blokken.map((_, i) => `<span class="${i === cur ? 'aan' : i < cur ? 'klaar' : ''}">${i + 1}</span>`).join('')}</div>
         <div class="kaartje"><h4>Blok ${cur + 1} van ${sch.blokken.length} · ${sch.blokMin} min</h4>
         ${cur > 0 ? `<div class="wissel"><div><small>Erin</small>${erin.map((x) => `<span class="chip groen">${esc(naam(x))}</span>`).join('') || '–'}</div><div><small>Eruit</small>${eruit.map((x) => `<span class="chip grijs">${esc(naam(x))}</span>`).join('') || '–'}</div></div>` : ''}
-        <p><b>Keeper:</b> ${esc(naam(sch.keepers[cur]))}</p><p><b>In het veld:</b> ${inNu.filter((x) => x !== sch.keepers[cur]).map(naam).map(esc).join(', ')}</p><p class="zacht"><b>Wissel:</b> ${bank.map((p) => esc(p.voornaam)).join(', ') || 'niemand'}</p></div>
+        ${(sch.minder || []).length ? `<p class="klein zacht">Blok minder (besluit trainer): ${sch.minder.map(naam).map(esc).join(', ')}</p>` : ''}<p><b>Keeper:</b> ${esc(naam(sch.keepers[cur]))}</p><p><b>In het veld:</b> ${inNu.filter((x) => x !== sch.keepers[cur]).map(naam).map(esc).join(', ')}</p><p class="zacht"><b>Wissel:</b> ${bank.map((p) => esc(p.voornaam)).join(', ') || 'niemand'}</p></div>
         ${cur < sch.blokken.length - 1 ? `<button class="knop groot vol" data-act="volgendBlok" data-id="${a.id}">${icon('skip-forward')}Volgend blok</button>` : `<button class="knop groot vol" data-act="bevestigSchema" data-id="${a.id}">${icon('circle-check')}Wedstrijd klaar: bevestigen</button>`}
         <button class="linkknop" data-act="nieuwSchema" data-id="${a.id}">Schema opnieuw maken</button>`;
     } else body = `<div class="info groen">${icon('circle-check')}<span>Speeltijd van deze wedstrijd is verwerkt in de seizoenstotalen.</span></div>`;
     return `${wedstrijden.length > 1 ? `<label class="klein-kop" for="stw">Wedstrijd</label><select id="stw" class="kies" data-change="kiesStWed">${wedstrijden.map((w) => `<option value="${w.id}" ${w.id === a.id ? 'selected' : ''}>${D.kort(w.datum)} · ${h.actTitel(S, w)}</option>`).join('')}</select>` : ''}
-      ${body}${tabel}`;
+      ${body}${opties.alleenSchema ? '' : tabel}`;
   };
   CC.on('kiesStWed', (el) => { CC.ui.seg.stWed = el.value; CC.render(); });
-  CC.on('maakSchema', (el) => { const S = CC.S(); S.speeltijd.schema[el.dataset.id] = M.maakSchema(S, M.act(S, el.dataset.id)); CC.save(); CC.render(); });
+  CC.on('minderBlok', (el) => { const k = `minder_${el.dataset.a}`; const l = (CC.ui.seg[k] || '').split(',').filter(Boolean); const i = l.indexOf(el.dataset.s); if (i >= 0) l.splice(i, 1); else l.push(el.dataset.s); CC.ui.seg[k] = l.join(','); CC.render(); });
+  CC.on('maakSchema', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.id); const minder = M.speeltijdAfwijken(S, a.teamId) ? (CC.ui.seg[`minder_${a.id}`] || '').split(',').filter(Boolean) : []; S.speeltijd.schema[a.id] = M.maakSchema(S, a, minder); CC.save(); CC.render(); });
   CC.on('nieuwSchema', (el) => { const S = CC.S(); delete S.speeltijd.schema[el.dataset.id]; CC.save(); CC.render(); });
   CC.on('volgendBlok', (el) => { const S = CC.S(); S.speeltijd.schema[el.dataset.id].huidig++; CC.save(); CC.render(); });
-  CC.on('bevestigSchema', (el) => { const S = CC.S(); const sch = S.speeltijd.schema[el.dataset.id]; const kb = S.speeltijd.keeper || (S.speeltijd.keeper = {}); if (sch.keepers[0]) kb[sch.keepers[0]] = (kb[sch.keepers[0]] || 0) + 1; sch.blokken.forEach((b) => b.forEach((id) => { S.speeltijd.min[id] = (S.speeltijd.min[id] || 0) + sch.blokMin; })); sch.bevestigd = true; CC.save(); CC.render(); CC.toast('Speeltijd bijgewerkt'); });
+  CC.on('bevestigSchema', (el) => { const S = CC.S(); const sch = S.speeltijd.schema[el.dataset.id]; const kb = S.speeltijd.keeper || (S.speeltijd.keeper = {}); if (sch.keepers[0]) kb[sch.keepers[0]] = (kb[sch.keepers[0]] || 0) + 1; sch.blokken.forEach((b) => b.forEach((id) => { S.speeltijd.min[id] = (S.speeltijd.min[id] || 0) + sch.blokMin; })); const mog = S.speeltijd.mogelijk || (S.speeltijd.mogelijk = {}); (sch.spelers || [...new Set(sch.blokken.flat())]).forEach((id) => { mog[id] = (mog[id] || 0) + (sch.wedMin || sch.blokMin * sch.blokken.length); }); sch.bevestigd = true; CC.save(); CC.render(); CC.toast('Speeltijd bijgewerkt'); });
 
   // Beoordelen: zie beoordeling.js (Besluit 23)
 
   // Spelers filteren en sorteren (trainer en teamleider)
-  CC.spelerFilter = (S, tid) => {
+  CC.spelerFilter = (S, tid, eenvoudig) => {
     const per = M.periode(S, 'blok'); const f = h.segVal('spF', 'alle'); const so = h.segVal('spSort', 'naam');
     const volg = M.komend(S, tid, 8).find((a) => !a.afgelast);
     const rijen = M.spelers(S, tid).map((pl) => { const st = M.stats(S, pl, per); const k = M.kaarten(S, pl); return { pl, st, k, z: M.zone(S, st.pct, tid), vs: volg ? M.status(S, pl, volg) : null, b: CC.beoordLaatste ? CC.beoordLaatste(S, pl.id) : null }; });
-    const filters = [['alle', 'Alle'], volg && ['komt', `Komt ${D.kort(volg.datum)}`], volg && ['af', `Afgemeld ${D.kort(volg.datum)}`], ['aandacht', 'Oranje/rood'], ['kaarten', 'Kaarten'], ['lang', 'Langdurig'], CC.mag('beoordelingZien') && ['nietbeo', 'Niet beoordeeld']].filter(Boolean);
+    const filters = [['alle', 'Alle'], volg && ['komt', `Komt ${D.kort(volg.datum)}`], volg && ['af', `Afgemeld ${D.kort(volg.datum)}`], !eenvoudig && ['aandacht', 'Oranje/rood'], !eenvoudig && ['kaarten', 'Kaarten'], ['lang', 'Langdurig'], !eenvoudig && CC.mag('beoordelingZien') && ['nietbeo', 'Niet beoordeeld']].filter(Boolean);
     const pas = { alle: () => true, komt: (x) => x.vs && x.vs.code === 'verwacht', af: (x) => x.vs && ['afgemeld', 'langdurig'].includes(x.vs.code), aandacht: (x) => ['oranje', 'rood'].includes(x.z), kaarten: (x) => x.k.geel || x.k.rood, lang: (x) => x.vs && x.vs.code === 'langdurig' || S.lang.some((l) => l.spelerId === x.pl.id && l.tot >= D.vandaag()), nietbeo: (x) => !x.b }[f] || (() => true);
     const sorteer = { naam: (a, b) => M.naam(S, a.pl).localeCompare(M.naam(S, b.pl)), laag: (a, b) => (a.st.pct ?? 101) - (b.st.pct ?? 101), hoog: (a, b) => (b.st.pct ?? -1) - (a.st.pct ?? -1), kaarten: (a, b) => (b.k.geel + 2 * b.k.rood) - (a.k.geel + 2 * a.k.rood) }[so];
     const lijst = rijen.filter(pas).sort(sorteer);
     const bar = `<div class="chips scroll">${filters.map(([k, l]) => `<button class="chipknop ${k === f ? 'aan' : ''}" data-act="seg" data-key="spF" data-val="${k}">${esc(l)}</button>`).join('')}</div>
-      <label class="sorteer">${icon('sliders-horizontal')}<select data-change="spSort" aria-label="Sorteren">${[['naam', 'Op naam'], ['laag', 'Aanwezigheid: laagste eerst'], ['hoog', 'Aanwezigheid: hoogste eerst'], ['kaarten', 'Meeste kaarten eerst']].map(([k, l]) => `<option value="${k}" ${k === so ? 'selected' : ''}>${l}</option>`).join('')}</select><small class="zacht">${lijst.length} van ${rijen.length}</small></label>`;
+      <label class="sorteer">${icon('sliders-horizontal')}<select data-change="spSort" aria-label="Sorteren">${(eenvoudig ? [['naam', 'Op naam']] : [['naam', 'Op naam'], ['laag', 'Aanwezigheid: laagste eerst'], ['hoog', 'Aanwezigheid: hoogste eerst'], ['kaarten', 'Meeste kaarten eerst']]).map(([k, l]) => `<option value="${k}" ${k === so ? 'selected' : ''}>${l}</option>`).join('')}</select><small class="zacht">${lijst.length} van ${rijen.length}</small></label>`;
     return { bar, lijst, volg };
   };
   CC.on('spSort', (el) => { CC.ui.seg.spSort = el.value; CC.render(); });

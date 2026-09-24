@@ -7,7 +7,7 @@
   // Lege S met alle verzamelingen die de app kent
   const leeg = () => ({
     v: 8, gen: '', club: {}, teams: [], people: [], players: [], acts: [], afm: [], pres: {}, lang: [], gesprekken: [], msgs: [],
-    vervoer: {}, taken: [], aanm: [], beoord: {}, notities: {}, speeltijd: { min: {}, schema: {}, keeper: {} }, wijzigingen: [],
+    vervoer: {}, taken: [], aanm: [], beoord: {}, notities: {}, speeltijd: { min: {}, schema: {}, keeper: {}, mogelijk: {} }, wijzigingen: [],
     demo: {}, materiaal: {}, mails: [], trainerLog: [], trainerGesprekken: [], ontwGesprek: [], sigSinds: {}, signaalAfgedaan: [],
     gezienInfo: {}, mijlpaalGezien: {}, autoVerstuurd: {}, beoordGedeeld: {}, beoordGezien: {},
     // voorkomt dat de demo-onderdelen voorbeelddata toevoegen
@@ -48,6 +48,7 @@
     ['beoordGedeeld', 'beoordGedeeld', 'beoord', (k, v, I) => { const s = k.replace(/m\d+$/, ''); return { team: I.teamVanSpeler(s), speler: s }; }],
     ['beoordGezien', 'beoordGezien', 'speler', (k, v, I) => { const s = k.replace(/m\d+$/, ''); return { team: I.teamVanSpeler(s), speler: s }; }],
     ['speeltijdMin', 'speeltijd.min', 'speeltijd', (k, v, I) => ({ team: I.teamVanSpeler(k), speler: k })],
+    ['speeltijdMogelijk', 'speeltijd.mogelijk', 'speeltijd', (k, v, I) => ({ team: I.teamVanSpeler(k), speler: k })],
     ['speeltijdKeeper', 'speeltijd.keeper', 'speeltijd', (k, v, I) => ({ team: I.teamVanSpeler(k), speler: k })],
     ['speeltijdSchema', 'speeltijd.schema', 'act', (k, v, I) => ({ team: I.teamVanAct(k), act: k })],
   ];

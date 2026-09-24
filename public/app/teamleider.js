@@ -1,18 +1,21 @@
-// ClubComm prototype — Teamleider (Besluit 9): Home · Wedstrijd · Regelen · Berichten · Team
+// ClubComm prototype — Teamleider (Besluit 9 en 33): Home · Wedstrijd · Berichten · Team
 (function () {
   const CC = window.CC; const D = CC.date, M = CC.m, h = CC.h, icon = CC.icon, esc = CC.esc;
 
   const volgendeWedstrijd = (S, tid) => M.komend(S, tid, 20).find((a) => a.soort !== 'training' && !a.afgelast);
-  const takenInfo = (S, a) => { const t = S.taken.filter((x) => x.actId === a.id); return { t, bezet: t.filter((x) => x.personId).length }; };
+  const volgorde = (x) => { const i = CC.TAAKSOORTEN.indexOf(x.soort); return i < 0 ? 99 : i; };
+  const takenInfo = (S, a) => { const t = S.taken.filter((x) => x.actId === a.id).sort((x, y) => volgorde(x) - volgorde(y)); return { t, bezet: t.filter((x) => x.personId).length }; };
   const openAanm = (S, tid) => S.aanm.filter((x) => x.teamId === tid && x.status === 'open');
   CC.openAanm = openAanm;
+  // Volgt de teamleider spelers op (aanwezigheid, kaarten, signalen)? Standaard niet; de club kan het aanzetten (Taken per rol).
+  const volgtSpelers = (tid) => CC.volgtSpelers(tid);
 
   CC.rollen.teamleider = {
     context(S) { const t = M.team(S, CC.teamId()); return { titel: t.naam, sub: `Teamleider · ${S.club.naam}` }; },
     tabs(S) {
       const me = CC.me(); const tid = CC.teamId(); const a = volgendeWedstrijd(S, tid);
-      let regel = 0; if (a) { const t = takenInfo(S, a); regel = t.t.length - t.bezet ? 1 : 0; }
-      return [['home', 'Home', 'house'], ['wedstrijd', 'Wedstrijd', 'trophy'], S.club.modules.taken && ['regelen', 'Regelen', 'hand-helping', regel], ['berichten', 'Berichten', 'message-circle', M.ongelezen(S, me.id)], ['team', 'Team', 'users', openAanm(S, tid).length]];
+      let open = 0; if (a && S.club.modules.taken) { const t = takenInfo(S, a); open = t.t.length - t.bezet ? 1 : 0; }
+      return [['home', 'Home', 'house'], ['wedstrijd', 'Wedstrijd', 'trophy', open], ['berichten', 'Berichten', 'message-circle', M.ongelezen(S, me.id)], ['team', 'Team', 'users', openAanm(S, tid).length]];
     },
     schermen: {
       home(S) {
@@ -21,62 +24,47 @@
         const open = openAanm(S, tid); if (open.length) acties.push(h.rij({ ic: 'user-check', titel: `${open.length} aanmelding${open.length > 1 ? 'en' : ''} goedkeuren`, sub: 'Ouders wachten op toegang', act: 'tab', attrs: 'data-tab="team"', kleur: 'oranje' }));
         const n = M.ongelezen(S, me.id); if (n) acties.push(h.rij({ ic: 'message-circle', titel: `${n} ${n === 1 ? 'nieuw bericht' : 'nieuwe berichten'}`, act: 'tab', attrs: 'data-tab="berichten"', kleur: 'blauw' }));
         if (CC.vervangerRijen) acties.unshift(...CC.mijnVervangingen(S), ...CC.vervangerRijen(S, [tid]));
-        acties.push(...CC.signaalRegels(S, tid, false));
+        if (volgtSpelers(tid)) acties.push(...CC.signaalRegels(S, tid, false));
         if (!a) return h.leeg('Geen wedstrijden gepland') + (acties.length ? `${h.sectie('Actie nodig')}<div class="lijst">${acties.join('')}</div>` : '');
         const sp = M.spelers(S, tid); const komt = sp.filter((pl) => M.status(S, pl, a).code === 'verwacht').length;
-        const t = takenInfo(S, a); const beg = a.begeleiderId && M.persoon(S, a.begeleiderId);
+        const t = takenInfo(S, a);
         const minimum = CC.categorie(M.team(S, tid).cat).opVeld;
         return `<article class="kaartje hoofd">
           <small>${D.relatief(a.datum)} · verzamelen ${a.verzamel}</small><h2>${h.actTitel(S, a)}</h2><p class="zacht">Aftrap ${a.tijd}${a.thuis ? ` · ${esc(a.veld)}` : ` · ${esc(a.adres)}`}</p>
           <div class="lijst">
             ${h.rij({ ic: 'users', titel: 'Spelers', sub: `${komt} van ${sp.length} komen`, rechts: komt < minimum + 1 ? '<span class="chip oranje mini">krap</span>' : '', kleur: komt < minimum + 1 ? 'oranje' : '', act: 'tab', attrs: 'data-tab="wedstrijd"' })}
-            ${S.club.modules.taken ? h.rij({ ic: 'list-checks', titel: 'Taken', sub: t.t.length ? `${t.bezet} van ${t.t.length} bezet` : 'Geen taken', kleur: t.t.length - t.bezet ? 'oranje' : '', act: 'tab', attrs: 'data-tab="regelen"' }) : ''}
-            ${h.rij({ ic: 'clipboard-check', titel: 'Begeleider', sub: beg ? esc(beg.naam) : 'Nog niemand', kleur: beg ? '' : 'oranje', act: 'tab', attrs: 'data-tab="wedstrijd"' })}
+            ${S.club.modules.taken ? h.rij({ ic: 'list-checks', titel: 'Taken', sub: t.t.length ? `${t.bezet} van ${t.t.length} bezet${t.t.length - t.bezet ? ` · open: ${t.t.filter((x) => !x.personId).map((x) => x.soort.toLowerCase()).join(', ')}` : ''}` : 'Geen taken', kleur: t.t.length - t.bezet ? 'oranje' : '', act: 'tab', attrs: 'data-tab="wedstrijd"' }) : ''}
           </div>
-          <button class="knop licht vol" data-act="deelWedstrijd" data-id="${a.id}">${icon('share-2')}Wedstrijdinfo delen in de teamgroep</button></article>
+          <div class="knoppen">${a.thuis ? '' : h.route(a.adres)}<button class="knop licht" data-act="deelWedstrijd" data-id="${a.id}">${icon('share-2')}Delen in de teamgroep</button></div></article>
           ${acties.length ? `${h.sectie('Actie nodig')}<div class="lijst">${acties.join('')}</div>` : ''}`;
       },
+      // Alles over één wedstrijd op één plek, in de volgorde van de dag (Besluit 33)
       wedstrijd(S) {
-        const tid = CC.teamId(); const t = M.team(S, tid);
+        const tid = CC.teamId();
         const lijst = S.acts.filter((a) => a.teamId === tid && a.soort !== 'training' && a.datum >= D.addDays(D.vandaag(), -14)).slice(0, 8);
         const std = volgendeWedstrijd(S, tid);
         const a = lijst.find((x) => x.id === h.segVal('tlWed', std && std.id)) || std || lijst[0];
         if (!a) return h.leeg('Geen wedstrijden') + `<button class="knop vol" data-act="wedstrijdToevoegen">${icon('plus')}Wedstrijd toevoegen</button>`;
         const sp = M.spelers(S, tid).map((pl) => ({ pl, st: M.status(S, pl, a) }));
         const af = sp.filter((x) => !['verwacht', 'aanwezig', 'telaat'].includes(x.st.code));
-        const kandidaten = [t.teamleiderId, t.trainerId, ...S.taken.filter((x) => x.actId === a.id && x.soort === 'Coach' && x.personId).map((x) => x.personId)].filter(Boolean);
         const gespeeld = a.datum < D.vandaag() || (a.datum === D.vandaag() && new Date() > D.start(a));
-        return `<select class="kies" data-change="kiesTlWed" aria-label="Wedstrijd">${lijst.map((w) => `<option value="${w.id}" ${w.id === a.id ? 'selected' : ''}>${D.kort(w.datum)} · ${h.actTitel(S, w)}${w.uitslag ? ' · ' + w.uitslag : ''}</option>`).join('')}</select>
+        const vandaag = a.datum === D.vandaag();
+        const t = takenInfo(S, a);
+        const taakIc = (soort) => ({ 'Trainer-coach': 'clipboard-check', Timekeeper: 'timer', Spelbegeleider: 'flag', Fotograaf: 'eye', Wastas: 'shirt' }[soort] || 'hand-helping');
+        return `<select class="kies" data-change="kiesTlWed" aria-label="Wedstrijd">${lijst.map((w) => `<option value="${w.id}" ${w.id === a.id ? 'selected' : ''}>${D.kort(w.datum)} · ${h.actTitel(S, w)}${w.afgelast ? ' · afgelast' : w.uitslag ? ' · ' + w.uitslag : ''}</option>`).join('')}</select>
+          ${a.afgelast ? `<div class="info rood">${icon('ban')}<span>Deze wedstrijd is afgelast.</span></div>` : ''}
           <form class="kaartje codeform" data-submit="wedstrijdInfo" data-id="${a.id}">
-            <div class="kaart-kop">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>Aftrap ${a.tijd}</small></div></div>
-            <div class="twee"><div><label for="wi-v">Verzamelen</label><input id="wi-v" name="verzamel" type="time" value="${a.verzamel}"></div><div><label for="wi-t">Tenue</label><input id="wi-t" name="tenue" value="${esc(a.tenue || '')}"></div></div>
-            <label for="wi-a">Adres</label><input id="wi-a" name="adres" value="${esc(a.adres || '')}">
-            ${gespeeld ? `<label for="wi-u">Uitslag</label><input id="wi-u" name="uitslag" placeholder="bijv. 3-2" value="${esc(a.uitslag || '')}">` : ''}
-            <div class="knoppen"><button class="knop">Opslaan</button><button type="button" class="knop licht" data-act="deelWedstrijd" data-id="${a.id}">${icon('share-2')}Delen</button></div></form>
-          ${h.sectie('Wedstrijdbegeleider')}
-          <div class="kaartje"><select class="kies" data-change="zetBegeleider" data-id="${a.id}" aria-label="Begeleider"><option value="">Nog niemand</option>${[...new Set(kandidaten)].map((pid) => `<option value="${pid}" ${a.begeleiderId === pid ? 'selected' : ''}>${esc(M.persoon(S, pid).naam)}${pid === t.teamleiderId ? ' (teamleider)' : pid === t.trainerId ? ' (trainer)' : ' (ouder-coach)'}</option>`).join('')}</select>
-            <p class="zacht klein">Volgorde: teamleider → trainer → ouder die zich als "Coach" heeft aangemeld. De begeleider doet aanwezigheid${S.club.modules.speeltijd ? ' en speeltijd' : ''} voor deze wedstrijd.</p>
-            <div class="knoppen"><button class="knop licht" data-act="open" data-view="opnemen" data-id="${a.id}">${icon('clipboard-check')}Aanwezigheid</button>${S.club.modules.speeltijd ? `<button class="knop licht" data-act="open" data-view="speeltijd" data-team="${tid}">${icon('timer')}Speeltijd</button>` : ''}</div></div>
+            <div class="kaart-kop">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${D.relatief(a.datum)} · aftrap ${a.tijd}</small></div></div>
+            <div class="twee"><div><label for="wi-v">Verzamelen</label><input id="wi-v" name="verzamel" type="time" value="${a.verzamel}"></div>${gespeeld ? `<div><label for="wi-u">Uitslag</label><input id="wi-u" name="uitslag" placeholder="bijv. 3-2" value="${esc(a.uitslag || '')}"></div>` : ''}</div>
+            ${a.thuis ? `<p class="klein zacht">Thuis · ${esc(a.veld || '')}</p>` : `<label for="wi-a">Adres</label><input id="wi-a" name="adres" value="${esc(a.adres || '')}">`}
+            <div class="knoppen"><button class="knop licht">Opslaan</button>${a.thuis ? '' : h.route(a.adres)}<button type="button" class="knop licht" data-act="deelWedstrijd" data-id="${a.id}">${icon('share-2')}Delen</button></div></form>
           ${h.sectie(`Komen: ${sp.length - af.length} van ${sp.length}`)}
           <div class="lijst compact">${af.map((x) => h.rij({ ic: h.avatar(x.pl.voornaam), titel: esc(M.naam(S, x.pl)), rechts: h.chip(x.st) })).join('') || '<p class="zacht klein">Iedereen komt.</p>'}</div>
-          <button class="knop licht vol" data-act="wedstrijdToevoegen">${icon('plus')}Wedstrijd toevoegen</button>`;
-      },
-      regelen(S) {
-        const tid = CC.teamId();
-        const wed = M.komend(S, tid, 20).filter((a) => a.soort !== 'training' && !a.afgelast).slice(0, 3);
-        const hulp = {}; M.oudersVan(S, tid).forEach((p) => { hulp[p] = 0; });
-        S.taken.forEach((x) => { const a = M.act(S, x.actId); if (a && a.teamId === tid && x.personId && hulp[x.personId] != null && a.datum < D.vandaag()) hulp[x.personId]++; });
-        const rang = Object.entries(hulp).sort((a, b) => b[1] - a[1]);
-        const nooit = rang.filter(([, n]) => n === 0);
-        return `<div class="info">${icon('bell')}<span>Herinneringen gaan <b>automatisch</b>: ${S.club.inst.oproepDagen} dagen van tevoren krijgen ouders een oproep voor open taken.</span></div>
-          ${wed.map((a) => {
-            const t = takenInfo(S, a);
-            return `${h.sectie(`${D.relatief(a.datum)} · ${h.actTitel(S, a)}`)}<div class="kaartje">
-              ${S.club.modules.taken ? `<h4>${icon('list-checks')}Taken · ${t.bezet} van ${t.t.length} bezet</h4>
-                ${t.t.map((x) => `<p class="klein">${esc(x.soort)}: ${x.personId ? esc(M.persoon(S, x.personId).naam) : '<b class="oranje-tekst">open</b>'}</p>`).join('')}
-                <div class="knoppen"><button class="knop klein licht" data-act="taakToevoegen" data-a="${a.id}">${icon('plus')}Taak</button><button class="knop klein licht" data-act="deelTaken" data-a="${a.id}">${icon('share-2')}Oproep delen</button></div>` : ''}</div>`;
-          }).join('') || h.leeg('Geen wedstrijden gepland')}
-          ${S.club.modules.taken ? (CC.hulpTeamleider ? CC.hulpTeamleider(S, tid) : '') : ''}`;
+          ${S.club.modules.taken ? `${h.sectie(`Taken · ${t.bezet} van ${t.t.length} bezet`)}<div class="lijst">${t.t.map((x) => h.rij({ ic: taakIc(x.soort), titel: esc(x.soort), sub: x.personId ? esc(M.persoon(S, x.personId).naam) : '<b class="oranje-tekst">nog open</b>' })).join('') || '<p class="zacht klein">Geen taken.</p>'}</div>
+            <div class="knoppen"><button class="knop klein licht" data-act="taakToevoegen" data-a="${a.id}">${icon('plus')}Taak</button>${t.t.length - t.bezet ? `<button class="knop klein licht" data-act="deelTaken" data-a="${a.id}">${icon('share-2')}Oproep delen</button>` : ''}</div>
+            <p class="zacht klein">Staat een taak ${S.club.inst.oproepDagen} dagen van tevoren nog open, dan krijgen de ouders automatisch een oproep.</p>` : ''}
+          ${!a.afgelast && (vandaag || gespeeld) ? `${h.sectie('Op de dag zelf')}<div class="knoppen"><button class="knop licht" data-act="open" data-view="opnemen" data-id="${a.id}">${icon('clipboard-check')}Aanwezigheid</button>${S.club.modules.speeltijd ? `<button class="knop licht" data-act="open" data-view="speeltijd" data-team="${tid}">${icon('timer')}Wisselschema</button>` : ''}</div><p class="zacht klein">De trainer-coach vult de aanwezigheid in, de timekeeper doet de wissels.</p>` : ''}
+          <div class="knoppen">${!a.afgelast && !gespeeld ? `<button class="knop licht rood-tekst" data-act="wedstrijdAfgelast" data-id="${a.id}">${icon('ban')}Afgelast</button>` : ''}<button class="knop licht" data-act="wedstrijdToevoegen">${icon('plus')}Wedstrijd toevoegen</button></div>`;
       },
       berichten: (S) => CC.berichtenScherm(S, { nieuw: true }),
       team(S) {
@@ -85,9 +73,10 @@
         const eenOuder = sp.filter((pl) => pl.ouders.length < 2);
         return `${open.length ? `${h.sectie(`Aanmeldingen goedkeuren (${open.length})`)}<div class="lijst">${open.map((x) => CC.aanmRij(S, x)).join('')}</div>` : ''}
           ${h.sectie('Ouders uitnodigen')}${CC.uitnodigBlok(tid)}
-          ${h.sectie(`Spelers (${sp.length})`, `<button class="linkknop" data-act="open" data-view="overzichtTeam" data-team="${tid}">Aanwezigheid</button>`)}
-          ${(() => { const F = CC.spelerFilter(S, tid); return F.bar + `<div class="lijst">${F.lijst.map(({ pl, st, vs, z }) => { const o = pl.ouders.map((x) => M.persoon(S, x)); return h.rij({ ic: h.avatar(pl.voornaam), titel: esc(M.naam(S, pl)), sub: `${st.pct == null ? '–' : st.pct + '%'} aanwezig${vs && vs.code !== 'verwacht' ? ` · ${h.chip(vs)}` : ''} · ${o.map((p) => esc(p.naam.split(' ')[0])).join(' en ')}`, rechts: `<a class="icoonknop groen" href="https://wa.me/31${o[0].tel.slice(1)}" target="_blank" rel="noopener" aria-label="WhatsApp ouder van ${esc(pl.voornaam)}" data-stop="1">${icon('message-circle')}</a>`, act: 'open', attrs: `data-view="speler" data-id="${pl.id}"` }); }).join('') || h.leeg('Geen spelers met dit filter')}</div>`; })()}
-          ${CC.recenteTrainingen ? CC.recenteTrainingen(S, tid) : ''}
+          ${h.sectie(`Spelers (${sp.length})`, volgtSpelers(tid) ? `<button class="linkknop" data-act="open" data-view="overzichtTeam" data-team="${tid}">Aanwezigheid</button>` : '')}
+          ${(() => { const volgt = volgtSpelers(tid); const F = CC.spelerFilter(S, tid, !volgt); return F.bar + `<div class="lijst">${F.lijst.map(({ pl, st, vs, z }) => { const o = pl.ouders.map((x) => M.persoon(S, x)); return h.rij({ ic: h.avatar(pl.voornaam), titel: esc(M.naam(S, pl)), sub: `${volgt ? `${st.pct == null ? '–' : st.pct + '%'} aanwezig · ` : ''}${vs && vs.code !== 'verwacht' ? `${h.chip(vs)} · ` : ''}${o.map((p) => esc(p.naam.split(' ')[0])).join(' en ')}`, rechts: `<a class="icoonknop groen" href="https://wa.me/31${o[0].tel.slice(1)}" target="_blank" rel="noopener" aria-label="WhatsApp ouder van ${esc(pl.voornaam)}" data-stop="1">${icon('message-circle')}</a>`, act: 'open', attrs: `data-view="speler" data-id="${pl.id}"` }); }).join('') || h.leeg('Geen spelers met dit filter')}</div>`; })()}
+          ${S.club.modules.taken && CC.hulpTeamleider ? CC.hulpTeamleider(S, tid) : ''}
+          ${CC.recenteTrainingen && CC.mag('trainerNiet', null, tid) ? CC.recenteTrainingen(S, tid) : ''}
           <details class="uitklap"><summary>${icon('user-plus')}Nog niet aangemeld</summary><p class="klein">${eenOuder.length} spelers hebben één ouder gekoppeld. De tweede ouder kan zich via de uitnodiging aanmelden of door de eerste ouder worden uitgenodigd.</p><p class="zacht klein">Van team wisselen is een clubbeslissing en loopt via de ${esc(S.club.labels.hjo)}.</p></details>`;
       },
     },
@@ -96,9 +85,18 @@
   CC.views.speeltijd = (S, p) => ({ titel: 'Speeltijd', html: CC.speeltijdHtml(S, p.team) });
 
   CC.on('kiesTlWed', (el) => { CC.ui.seg.tlWed = el.value; CC.render(); });
-  CC.on('wedstrijdInfo', (f) => { const S = CC.S(); const a = M.act(S, f.dataset.id); a.verzamel = f.verzamel.value; a.tenue = f.tenue.value; a.adres = f.adres.value; if (f.uitslag) a.uitslag = f.uitslag.value; CC.save(); CC.render(); CC.toast('Opgeslagen; ouders zien het direct'); });
-  CC.on('zetBegeleider', (el) => { const S = CC.S(); M.act(S, el.dataset.id).begeleiderId = el.value || null; CC.save(); CC.render(); CC.toast(el.value ? 'Begeleider ingesteld' : 'Begeleider verwijderd'); });
-  CC.on('deelWedstrijd', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.id); CC.deel(`${a.teamId} ${D.lang(a.datum)}: ${a.thuis ? 'thuis' : 'uit'} tegen ${a.tegen}. Verzamelen ${a.verzamel}, aftrap ${a.tijd}. ${a.thuis ? '' : `Adres: ${a.adres}. `}Tenue: ${a.tenue}. Kan je kind niet? Meld af in ClubComm: ${location.origin}${location.pathname}`, 'Wedstrijdinfo'); });
+  CC.on('wedstrijdInfo', (f) => { const S = CC.S(); const a = M.act(S, f.dataset.id); a.verzamel = f.verzamel.value; if (f.adres) a.adres = f.adres.value; if (f.uitslag) a.uitslag = f.uitslag.value; CC.save(); CC.render(); CC.toast('Opgeslagen; ouders zien het direct'); });
+  CC.on('wedstrijdAfgelast', (el) => CC.sheet('Wedstrijd afgelast', `<form data-submit="wedstrijdAfgelastOk" data-id="${el.dataset.id}" class="codeform"><label for="wa-r">Waarom?</label><select id="wa-r" name="r"><option>De tegenstander heeft afgezegd</option><option>Het veld is afgekeurd</option><option>Te weinig spelers</option><option>Anders</option></select><button class="knop rood vol">${icon('ban')}Afgelasten en ouders inlichten</button><p class="zacht klein">Alle ouders van het team krijgen direct een melding. Trainer en ${esc(CC.S().club.labels.hjo)} krijgen een melding ter informatie.</p></form>`));
+  CC.on('wedstrijdAfgelastOk', (f) => {
+    const S = CC.S(); const a = M.act(S, f.dataset.id); const t = M.team(S, a.teamId); const me = CC.me(); const now = new Date().toISOString();
+    a.afgelast = true; CC.ui.seg.tlWed = a.id; const tekst = `De wedstrijd van ${D.lang(a.datum)} tegen ${a.tegen} gaat niet door. Reden: ${f.r.value.toLowerCase()}.`;
+    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'nieuws', bereik: a.teamId, onderwerp: 'Wedstrijd afgelast', tekst, tijd: now, ontvangers: M.oudersVan(S, a.teamId), gelezen: [], antw: [], urgent: true, gepland: null });
+    const hjo = S.people.filter((p) => p.rollen.some((r) => r.rol === 'hjo')).map((p) => p.id);
+    S.msgs.push({ id: 'b' + Date.now() + 1, van: 'systeem', soort: 'melding', bereik: 'Ter informatie', onderwerp: `${a.teamId}: wedstrijd afgelast`, tekst: `${me.naam}: ${tekst} Je hoeft niets te doen.`, tijd: now, ontvangers: [...hjo, t.trainerId].filter((x) => x && x !== me.id), gelezen: [], antw: [], urgent: false, gepland: null });
+    S.wijzigingen.push({ id: 'w' + Date.now(), teamId: a.teamId, door: me.id, tekst, tijd: now });
+    CC.save(); CC.closeSheet(); CC.render(); CC.toast('Afgelast; ouders zijn ingelicht');
+  });
+  CC.on('deelWedstrijd', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.id); CC.deel(`${a.teamId} ${D.lang(a.datum)}: ${a.thuis ? 'thuis' : 'uit'} tegen ${a.tegen}. Verzamelen ${a.verzamel}, aftrap ${a.tijd}. ${a.thuis ? '' : `Adres: ${a.adres}. `}Kan je kind niet? Meld af in ClubComm: ${location.origin}${location.pathname}`, 'Wedstrijdinfo'); });
   CC.on('deelTaken', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.a); const open = S.taken.filter((x) => x.actId === a.id && !x.personId).map((x) => x.soort); CC.deel(open.length ? `Voor ${D.lang(a.datum)} (${a.tegen}) zoeken we nog: ${open.join(', ')}. Kun jij? Tik op "Ik doe het" in ClubComm: ${location.origin}${location.pathname}` : 'Alle taken zijn bezet, dank jullie wel!', 'Taken'); });
   CC.on('taakToevoegen', (el) => CC.sheet('Taak toevoegen', `<div class="lijst">${CC.TAAKSOORTEN.map((s) => h.rij({ ic: 'plus', titel: s, act: 'taakToevoegenOk', attrs: `data-a="${el.dataset.a}" data-s="${s}"` })).join('')}</div>`));
   CC.on('taakToevoegenOk', (el) => { const S = CC.S(); S.taken.push({ id: 't' + Date.now(), actId: el.dataset.a, soort: el.dataset.s, personId: null }); CC.save(); CC.closeSheet(); CC.render(); });

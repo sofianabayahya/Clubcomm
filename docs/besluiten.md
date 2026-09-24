@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 24 september 2026 (Besluit 30 t/m 32 toegevoegd)
+Laatst bijgewerkt: 24 september 2026 (Besluit 30 t/m 33 toegevoegd)
 
 ---
 
@@ -328,6 +328,7 @@ Niet elke trainer gaat mee naar wedstrijden. Per wedstrijd is er daarom een **we
 ---
 
 ## Besluit 9 — Teamleiderportaal
+*Deels herzien in Besluit 33 (vier knoppen, Regelen opgegaan in Wedstrijd).*
 
 **Rol:** de regelaar rond wedstrijden (genoeg spelers, vervoer, taken, begeleiding) en de beheerder van het team (wie hoort erbij, welke ouders, wie is nog niet aangemeld).
 
@@ -506,6 +507,30 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 33 — Teamleider: alles over de wedstrijd op één plek, en eerlijke speeltijd
+*Besloten 24 september 2026. Herziet de teamleider-app (Besluit 9), de wedstrijdbegeleider (Besluit 7) en de speeltijd.*
+
+**Teamleider**
+- **Vier knoppen:** Home · Wedstrijd · Berichten · Team. Het tabblad Regelen is opgegaan in Wedstrijd; "Wie helpt er mee?" staat bij Team.
+- **Wedstrijd** toont per wedstrijd, in de volgorde van de dag: gegevens (verzamelen, adres, **Route**, delen) → wie komen → taken → op de dag zelf (aanwezigheid, wisselschema) → uitslag. Met een knop **Afgelast** (reden kiezen; ouders krijgen direct bericht, trainer en HJO ter informatie).
+- **Tenue** is weggehaald (bijna altijd hetzelfde).
+- **Routeknop** overal waar een adres staat (ook bij de ouder): opent de route in kaarten. Later vullen adressen zich via voetbal.nl.
+- De teamleider **volgt spelers standaard niet op**: geen percentages, kaarten of signalen, alleen spelers, ouders (appen) en wie er komt. De club kan het aanzetten via Taken per rol ("Spelers opvolgen en signalen afdoen").
+- **Registreren of de trainer kwam** staat standaard uit (voor alle rollen); de club kan het aanzetten.
+
+**Vaste taken bij elke wedstrijd** (instelbaar door de club)
+- **Trainer-coach** (standaard de trainer): vult op de wedstrijddag de aanwezigheid in.
+- **Timekeeper:** doet de wissels met het wisselschema.
+- **Spelbegeleider:** alleen bij thuiswedstrijden.
+- Fotograaf, bardienst en wastas voegt de teamleider toe als de club erom vraagt.
+- De losse "wedstrijdbegeleider" is vervallen: een ouder met de taak trainer-coach of timekeeper ziet het op Home en krijgt alleen voor die wedstrijd tijdelijk toegang (de timekeeper alleen het wisselschema, geen seizoenscijfers van andere kinderen).
+
+**Eerlijke speeltijd**
+- Het wisselschema kijkt naar het **percentage van de mogelijke speeltijd in de wedstrijden waarbij het kind er was**. Gemiste wedstrijden (ziek, blessure, andere reden) tellen niet mee: geen achterstand en geen inhaalvoorrang.
+- Binnen één wedstrijd eerst gelijk verdelen; wie het laagste seizoenspercentage heeft, krijgt het extra blok.
+- **Breedte:** iedereen evenveel, geen koppeling aan trainen (afwezigheid gaat via kaarten en gesprek, niet via de speeltijd van het kind).
+- **Selectie:** de trainer mag iemand **een blok minder** geven; de app laat de trainingen van die week zien en legt het vast bij de wedstrijd. Instelbaar per soort team (Regels → Speeltijd).
 
 ## Besluit 32 — Kaarten: afmelden zoals op het veld, te laat komen apart
 *Besloten 24 september 2026. Herziet de kaarten uit Besluit 5 en de telling per fase uit Besluit 15.*
