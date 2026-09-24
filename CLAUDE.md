@@ -26,6 +26,12 @@ Gemigreerd uit Replit op 2026-09-22. Taal van de UI: Nederlands.
 - `server.js` (Express) serveert alleen `public/`; mock-endpoints `/api/*` worden niet gebruikt.
 - Pagina-overzicht en rollen van het oude prototype: `APP_BLUEPRINT.md` (verouderd; `docs/besluiten.md` gaat voor).
 
+## Echte versie (sinds 2026-09-24)
+- Zie `docs/techniek.md`. Supabase (tabel `rij` + RLS, migraties in `supabase/migrations/`), online via Vercel (map `public`).
+- `public/app/config.js` (url + publishable key), `opslag.js` (S ↔ rijen), `live.js` (inloggen met e-mailcode, laden, automatisch opslaan, beheer: voorbeelddata/leegmaken), `vendor/supabase.js`.
+- Zonder config of met `?demo`: demo-modus zoals voorheen. De artifact-preview (build-preview2.py) laat live.js/config.js weg.
+- Testen zonder netwerk naar Supabase: `supabase/tests/fake-supabase.js` (nagebootste client, code 123456) en `supabase/tests/rls_test.sql` (via SQL).
+
 ## Bekende problemen
 - Logo: `public/assets/clubcomm-logo.jpg` (volledig), `clubcomm-icon.png` (icoon, login/QR) en `favicon.png` (alle pagina's). Het logo-blauw is lichter dan de app-kleur `#1e5ba8`.
 - Demo-trainers gebruiken nog fictieve `@btv.nl`-adressen (trainers-beheren, trainer-instellingen).
