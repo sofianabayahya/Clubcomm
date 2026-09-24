@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 24 september 2026 (Besluit 30 t/m 34 toegevoegd)
+Laatst bijgewerkt: 24 september 2026 (Besluit 30 t/m 35 toegevoegd)
 
 ---
 
@@ -507,6 +507,17 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 35 — Pilot RKSV DCG: activiteiten, taken per leeftijd en e-mailmeldingen
+*Besloten 24 september 2026.*
+
+**Pilot:** één team, **O12-1 (talententeam, selectie)** van RKSV DCG, 17 spelers. Geen HJO of coördinator: de initiatiefnemer is trainer én beheerder, met twee teamleiders. Trainingen di en do 17:15–18:30 op veld 1, vr op veld 2. Wedstrijden vanaf fase 2 (za 31 okt, na de herfstvakantie). Nu al starten met de trainingen zodat iedereen went. Spelers en ouders melden zich zelf aan via de uitnodiging; de teamleiders keuren goed (de koppeling e-mail ↔ kind ontstaat zo bij de bron).
+
+**Activiteit** (naast training, wedstrijd en oefenwedstrijd): voor zaalvoetbal, pleintjesvoetbal, toernooi of teamuitje. Met naam, datum en tijd, verzamelen, waar (met routeknop), toelichting. Afmelden zoals bij een training (zelfde termijn); telt bij de trainingen voor de aanwezigheid; geen wedstrijdtaken. De trainer zet het erin via *Planning aanpassen*; ouders krijgen een bericht.
+
+**Vaste taken per leeftijd:** t/m O12 trainer-coach, timekeeper en spelbegeleider (thuis). Vanaf O13 trainer-coach, **vlagger** (elke wedstrijd) en **scheidsrechter** (thuis). Vlagger en scheidsrechter zijn ook los toe te voegen.
+
+**E-mailmeldingen:** bij een nieuw bericht krijgen de ontvangers een e-mail (via Brevo): persoonlijke berichten, herinneringen en kaarten, nieuws en nieuwe activiteiten, afgelastingen en wijzigingen (urgent). Niet: meldingen ter informatie aan staf, ingeplande berichten (nog niet), oude berichten en voorbeelddata. Elk bericht hooguit één e-mail. Pushmeldingen op de telefoon volgen later.
 
 ## Besluit 34 — Informatie is geen taak; profielen per rol
 *Besloten 24 september 2026.*

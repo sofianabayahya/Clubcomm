@@ -17,7 +17,7 @@
   };
   CC.teamleiderTeller = (S, p) => {
     const v = D.vandaag(); const st = S.club.seizoen.start; const tids = teamsVan(p, 'teamleider');
-    const wed = S.acts.filter((a) => tids.includes(a.teamId) && a.soort !== 'training' && !a.afgelast && a.datum >= st && a.datum < v);
+    const wed = S.acts.filter((a) => tids.includes(a.teamId) && M.isWed(a) && !a.afgelast && a.datum >= st && a.datum < v);
     const taken = S.taken.filter((t) => { const a = M.act(S, t.actId); return a && tids.includes(a.teamId) && a.datum >= st && a.datum < v && t.personId; }).length;
     const goed = S.aanm.filter((x) => tids.includes(x.teamId) && x.status !== 'open' && x.status !== 'af').length;
     return { wedstrijden: wed.length, taken, goed, team: tids[0] };

@@ -15,11 +15,11 @@
   };
   const events = (S, p, n) => {
     const keuze = p.agendaKeuze || { training: true, wedstrijd: true };
-    return S.acts.filter((a) => teamsVan(S, p).includes(a.teamId) && a.datum >= D.vandaag() && (a.soort === 'training' ? keuze.training : keuze.wedstrijd)).slice(0, n || 500);
+    return S.acts.filter((a) => teamsVan(S, p).includes(a.teamId) && a.datum >= D.vandaag() && (!CC.m.isWed(a) ? keuze.training : keuze.wedstrijd)).slice(0, n || 500);
   };
-  const titel = (S, a) => (a.soort === 'training' ? `Training ${a.teamId}` : a.soort === 'oefen' ? `Oefenwedstrijd ${a.teamId}` : `${a.teamId} ${a.thuis ? 'thuis' : 'uit'} tegen ${a.tegen}`);
+  const titel = (S, a) => (a.soort === 'activiteit' ? `${a.naam || 'Activiteit'} ${a.teamId}` : a.soort === 'training' ? `Training ${a.teamId}` : a.soort === 'oefen' ? `Oefenwedstrijd ${a.teamId}` : `${a.teamId} ${a.thuis ? 'thuis' : 'uit'} tegen ${a.tegen}`);
   const sportpark = () => { const c = CC.S().club; return c.sportpark || (c.naam ? `Sportpark ${c.naam}` : 'Sportpark'); };
-  const plaats = (a) => (a.soort === 'training' || a.thuis ? `${a.adres && a.thuis ? a.adres : sportpark()}${a.veld ? ', ' + a.veld : ''}` : a.adres || '');
+  const plaats = (a) => (a.soort === 'activiteit' ? a.adres || a.plaats || '' : a.soort === 'training' || a.thuis ? `${a.adres && a.thuis ? a.adres : sportpark()}${a.veld ? ', ' + a.veld : ''}` : a.adres || '');
   const beginTijd = (a) => (a.soort === 'training' ? a.tijd : a.verzamel || a.tijd);
 
   // Echte iCalendar-tekst (RFC 5545), zoals de server in versie 2 hem levert
@@ -28,7 +28,7 @@
     const esc2 = (t) => String(t).replace(/\\/g, '\\\\').replace(/[,;]/g, (c) => '\\' + c).replace(/\n/g, '\\n');
     const regels = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//ClubComm//NL', 'CALSCALE:GREGORIAN', `X-WR-CALNAME:ClubComm ${S.club.naam}`, 'X-WR-TIMEZONE:Europe/Amsterdam', 'REFRESH-INTERVAL;VALUE=DURATION:PT1H'];
     events(S, p).forEach((a) => {
-      const omschr = `${a.soort === 'training' ? '' : `Verzamelen ${a.verzamel}, aftrap ${a.tijd}.\n`}Kan je kind niet? Meld af in ClubComm: https://clubcomm.nl`;
+      const omschr = `${a.soort === 'training' ? '' : a.soort === 'activiteit' ? `${a.toelichting ? a.toelichting + '\n' : ''}` : `Verzamelen ${a.verzamel}, aftrap ${a.tijd}.\n`}Kan je kind niet? Meld af in ClubComm: https://clubcomm.nl`;
       regels.push('BEGIN:VEVENT', `UID:${a.id}@clubcomm.nl`, `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').slice(0, 15)}Z`,
         `DTSTART;TZID=Europe/Amsterdam:${st(a.datum, beginTijd(a))}`, `DTEND;TZID=Europe/Amsterdam:${st(a.datum, a.eind || a.tijd)}`,
         `SUMMARY:${esc2((a.afgelast ? 'AFGELAST: ' : '') + titel(S, a))}`, `LOCATION:${esc2(plaats(a))}`, `DESCRIPTION:${esc2(omschr)}`,

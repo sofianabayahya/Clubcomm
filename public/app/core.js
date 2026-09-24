@@ -107,12 +107,14 @@
     sectie: (titel, rechts = '') => `<div class="sectie-kop"><h3>${titel}</h3>${rechts}</div>`,
     actTitel(S, a) {
       if (a.soort === 'training') return 'Training';
+      if (a.soort === 'activiteit') return esc(a.naam || 'Activiteit');
       if (a.soort === 'oefen') return `Oefenwedstrijd${a.tegen ? ' · ' + esc(a.tegen) : ''}`;
       return `${a.thuis ? 'Thuis' : 'Uit'} · ${esc(a.tegen)}`;
     },
     actSub(S, a) {
       if (a.afgelast) return 'Afgelast';
       if (a.soort === 'training') return `${a.tijd}–${a.eind} · ${esc(a.veld)}`;
+      if (a.soort === 'activiteit') return `${a.verzamel ? `Verzamelen ${a.verzamel} · ` : ''}${a.tijd}–${a.eind}${a.plaats ? ' · ' + esc(a.plaats) : ''}`;
       return `Verzamelen ${a.verzamel} · aftrap ${a.tijd}${a.thuis ? ' · ' + esc(a.veld || '') : ''}`;
     },
     datumBlok(a) { const d = D.parse(a.datum); return `<span class="datum ${a.afgelast ? 'afg' : ''}"><small>${D.DAG_KORT[d.getDay()]}</small><b>${d.getDate()}</b><small>${D.MAAND[d.getMonth()]}</small></span>`; },
@@ -470,7 +472,7 @@
     }
     if (soort === 'teams') extra = `<fieldset class="vinkjes"><legend>Teams</legend>${S.teams.map((x) => `<label><input type="checkbox" name="teams" value="${x.id}"> ${x.naam}</label>`).join('')}</fieldset>`;
     if (soort === 'gepland') extra = `<label for="m-op">Versturen op</label><input id="m-op" name="op" type="datetime-local" required value="${D.addDays(D.vandaag(), 7)}T09:00">`;
-    if (soort === 'herinnering') { const a = M.komend(S, tid, 1)[0]; onderwerp = 'Herinnering'; tekst = a ? `Vergeet niet: ${a.soort === 'training' ? 'training' : 'wedstrijd'} ${D.lang(a.datum)} om ${a.tijd}. Kan je kind niet? Meld af in ClubComm.` : ''; }
+    if (soort === 'herinnering') { const a = M.komend(S, tid, 1)[0]; onderwerp = 'Herinnering'; tekst = a ? `Vergeet niet: ${M.isWed(a) ? 'wedstrijd' : a.soort === 'activiteit' ? esc(a.naam || 'activiteit').toLowerCase() : 'training'} ${D.lang(a.datum)} om ${a.tijd}. Kan je kind niet? Meld af in ClubComm.` : ''; }
     CC.sheet('Nieuw bericht', `<form data-submit="verstuurBericht" data-soort="${soort}" class="codeform">
       ${extra}
       <label for="m-ond">Onderwerp</label><input id="m-ond" name="ond" required value="${esc(onderwerp)}">
@@ -498,19 +500,21 @@
     const komend = M.komend(S, tid, 12).filter((a) => !a.afgelast);
     CC.sheet('Planning aanpassen', `<form data-submit="wijzigPlanning" class="codeform">
       <label for="w-wat">Wat wil je doen?</label>
-      <select id="w-wat" name="wat" data-change="wijzigWat"><option value="verplaats">Training verplaatsen of veld wijzigen</option><option value="afgelast">Training afgelasten</option><option value="extra">Extra training toevoegen</option><option value="oefen">Oefenwedstrijd toevoegen</option></select>
+      <select id="w-wat" name="wat" data-change="wijzigWat"><option value="verplaats">Training verplaatsen of veld wijzigen</option><option value="afgelast">Training afgelasten</option><option value="extra">Extra training toevoegen</option><option value="oefen">Oefenwedstrijd toevoegen</option><option value="activiteit">Activiteit toevoegen (zaalvoetbal, toernooi, uitje)</option></select>
       <div id="w-bestaand"><label for="w-act">Welke training?</label><select id="w-act" name="act">${komend.filter((a) => a.soort === 'training').map((a) => `<option value="${a.id}" ${a.id === actId ? 'selected' : ''}>${D.kort(a.datum)} · ${a.tijd} · ${esc(a.veld)}</option>`).join('')}</select></div>
       <div id="w-nieuw"><label for="w-dat">Datum</label><input id="w-dat" name="datum" type="date" value="${D.addDays(D.vandaag(), 1)}">
       <div class="twee"><div><label for="w-tijd">Tijd</label><input id="w-tijd" name="tijd" type="time" value="17:30"></div><div><label for="w-veld">Veld</label><input id="w-veld" name="veld" value="Veld 2"></div></div>
-      <div id="w-tegen" hidden><label for="w-t">Tegenstander</label><input id="w-t" name="tegen" placeholder="Bijv. FC Amstelland O10-3"></div></div>
+      <div id="w-tegen" hidden><label for="w-t">Tegenstander</label><input id="w-t" name="tegen" placeholder="Bijv. FC Amstelland O10-3"></div>
+      <div id="w-activ" hidden><label for="w-n">Wat gaan we doen?</label><input id="w-n" name="naam" placeholder="Bijv. Pleintjesvoetbal"><div class="twee"><div><label for="w-vz">Verzamelen (mag leeg)</label><input id="w-vz" name="verzamel" type="time"></div><div><label for="w-e">Tot</label><input id="w-e" name="eind" type="time"></div></div><label for="w-p">Waar?</label><input id="w-p" name="plaats" placeholder="Bijv. Cruyff Court Osdorp"><label for="w-ad">Adres (voor de routeknop, mag leeg)</label><input id="w-ad" name="adres" placeholder="Straat en plaats"><label for="w-tl">Toelichting (mag leeg)</label><input id="w-tl" name="toelichting" placeholder="Bijv. neem gymschoenen en een bidon mee"></div></div>
       <button class="knop">Opslaan en ouders informeren</button>
-      <p class="zacht klein">Ouders krijgen direct een pushmelding. De teamleider en de ${esc(S.club.labels.hjo)} krijgen een niet-urgente melding.</p></form>`);
+      <p class="zacht klein">Ouders krijgen direct een bericht. De teamleider en de ${esc(S.club.labels.hjo)} krijgen een niet-urgente melding.</p></form>`);
   };
   CC.on('wijzigWat', (el) => {
     const f = el.form; const v = el.value;
     f.querySelector('#w-bestaand').hidden = !(v === 'verplaats' || v === 'afgelast');
     f.querySelector('#w-nieuw').hidden = v === 'afgelast';
     f.querySelector('#w-tegen').hidden = v !== 'oefen';
+    f.querySelector('#w-activ').hidden = v !== 'activiteit'; f.querySelector('#w-veld').closest('div').hidden = v === 'activiteit';
   });
   CC.on('wijzigPlanning', (f) => {
     const tid = CC.teamId(); const t = M.team(S, tid); const me = CC.me(); const wat = f.wat.value;
@@ -520,12 +524,15 @@
       if (wat === 'afgelast') { a.afgelast = true; tekst = `Training van ${D.lang(a.datum)} gaat niet door.`; }
       else { const oud = `${D.kort(a.datum)} ${a.tijd}`; a.datum = f.datum.value; a.tijd = f.tijd.value; a.veld = f.veld.value; a.eind = CC.plusMin(a.tijd, 75); tekst = `Training van ${oud} is verplaatst naar ${D.lang(a.datum)} ${a.tijd} op ${a.veld}.`; }
     } else {
-      const a = { id: 'a' + Date.now(), teamId: tid, soort: wat === 'oefen' ? 'oefen' : 'training', datum: f.datum.value, tijd: f.tijd.value, eind: CC.plusMin(f.tijd.value, wat === 'oefen' ? 60 : 75), veld: f.veld.value, tegen: f.tegen.value, thuis: true, verzamel: f.tijd.value, adres: 'Sportpark Buitenveldert', afgelast: false };
+      if (wat === 'activiteit' && !f.naam.value.trim()) return CC.toast('Vul in wat jullie gaan doen', 'fout');
+      const a = wat === 'activiteit'
+        ? { id: 'a' + Date.now(), teamId: tid, soort: 'activiteit', naam: f.naam.value.trim(), datum: f.datum.value, tijd: f.tijd.value, eind: f.eind.value || CC.plusMin(f.tijd.value, 90), verzamel: f.verzamel.value || '', plaats: f.plaats.value.trim(), adres: f.adres.value.trim(), toelichting: f.toelichting.value.trim(), veld: '', afgelast: false }
+        : { id: 'a' + Date.now(), teamId: tid, soort: wat === 'oefen' ? 'oefen' : 'training', datum: f.datum.value, tijd: f.tijd.value, eind: CC.plusMin(f.tijd.value, wat === 'oefen' ? 60 : 75), veld: f.veld.value, tegen: f.tegen.value, thuis: true, verzamel: f.tijd.value, adres: S.club.sportpark || '', afgelast: false };
       S.acts.push(a); S.acts.sort((x, y) => (x.datum + x.tijd).localeCompare(y.datum + y.tijd));
-      tekst = `${wat === 'oefen' ? 'Oefenwedstrijd' : 'Extra training'} op ${D.lang(a.datum)} om ${a.tijd} (${a.veld}).`;
+      tekst = wat === 'activiteit' ? `${a.naam} op ${D.lang(a.datum)} van ${a.tijd} tot ${a.eind}${a.plaats ? ` bij ${a.plaats}` : ''}.${a.verzamel ? ` Verzamelen om ${a.verzamel}.` : ''}${a.toelichting ? ` ${a.toelichting}` : ''} Kan je kind niet? Meld af in ClubComm.` : `${wat === 'oefen' ? 'Oefenwedstrijd' : 'Extra training'} op ${D.lang(a.datum)} om ${a.tijd} (${a.veld}).`;
     }
     const now = new Date().toISOString();
-    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'nieuws', bereik: tid, onderwerp: 'Wijziging in de planning', tekst, tijd: now, ontvangers: M.oudersVan(S, tid), gelezen: [], antw: [], urgent: true, gepland: null });
+    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'nieuws', bereik: tid, onderwerp: wat === 'activiteit' ? `Nieuw: ${f.naam.value.trim()}` : 'Wijziging in de planning', tekst, tijd: now, ontvangers: M.oudersVan(S, tid), gelezen: [], antw: [], urgent: wat !== 'activiteit', gepland: null });
     const hjo = S.people.filter((p) => p.rollen.some((r) => r.rol === 'hjo')).map((p) => p.id);
     const info = [...hjo, t.teamleiderId, t.trainerId].filter((x) => x && x !== me.id);
     S.msgs.push({ id: 'b' + Date.now() + 1, van: 'systeem', soort: 'melding', bereik: 'Ter informatie', onderwerp: `Planning ${tid} gewijzigd`, tekst: `${me.naam}: ${tekst} Je hoeft niets te doen.`, tijd: now, ontvangers: info, gelezen: [], antw: [], urgent: false, gepland: null });

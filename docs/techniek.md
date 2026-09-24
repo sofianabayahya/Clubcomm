@@ -33,3 +33,9 @@
 - De toelichting bij een afmelding staat in dezelfde regel als de afmelding; het scherm verbergt hem voor de teamleider, maar de database zou hem technisch kunnen geven.
 - Pushmeldingen en e-mail bij nieuwe berichten zijn er nog niet (alleen binnen de app).
 - Gelijktijdig wijzigen van dezelfde regel: de laatste wint (vervoer, aanwezigheid en berichten zijn zo opgesplitst dat dit zelden gebeurt).
+
+## E-mailmeldingen (Besluit 35)
+- Migratie `supabase/migrations/005_meldingen.sql`: trigger `cc_mail` op `public.rij` (soort `msgs`, na insert) roept via `pg_net` de Edge Function `melding` aan met `{ club, id }`. Tabel `public.mail_log` (alleen service role) zorgt dat elk bericht hooguit één keer wordt gemaild.
+- Edge Function `supabase/functions/melding/index.ts` (verify_jwt uit; doet zelf de controles): leest het bericht en de contactgegevens met de service role en verstuurt per ontvanger een e-mail via de Brevo API.
+- Secrets (Supabase → Edge Functions → Secrets): `BREVO_API_KEY`, `AFZENDER_EMAIL` (een in Brevo geverifieerde afzender), optioneel `APP_URL`. Zonder secrets gebeurt er niets.
+- Overgeslagen: berichten ouder dan 15 minuten (voorbeelddata), ingeplande berichten, niet-urgente meldingen aan staf, adressen op `.invalid`.

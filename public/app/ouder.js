@@ -103,9 +103,9 @@
         const acts = M.acts(S, pl.teamId, D.vandaag(), D.addDays(D.vandaag(), 28)).filter((a) => S.taken.some((t) => t.actId === a.id));
         const mijn = S.taken.filter((t) => t.personId === me.id).length;
         return `${CC.mijnHulp ? CC.mijnHulp(S, pl) : `<div class="info">${icon('info')}<span>Je hebt dit seizoen <b>${mijn}×</b> geholpen. Dank je wel!</span></div>`}
-          ${acts.map((a) => `${h.sectie(`${D.relatief(a.datum)} · ${a.soort === 'training' ? 'training' : a.thuis ? 'thuis' : 'uit'}`)}<div class="lijst">${S.taken.filter((t) => t.actId === a.id).map((t) => {
+          ${acts.map((a) => `${h.sectie(`${D.relatief(a.datum)} · ${!M.isWed(a) ? 'training' : a.thuis ? 'thuis' : 'uit'}`)}<div class="lijst">${S.taken.filter((t) => t.actId === a.id).map((t) => {
             const p = t.personId && M.persoon(S, t.personId);
-            return h.rij({ ic: t.soort === CC.VERVANGER ? 'user-cog' : t.soort === 'Trainer-coach' ? 'clipboard-check' : t.soort === 'Timekeeper' ? 'timer' : t.soort === 'Spelbegeleider' ? 'flag' : t.soort === 'Fotograaf' ? 'eye' : t.soort === 'Wastas' ? 'shirt' : 'hand-helping', titel: esc(t.soort), sub: p ? (p.id === me.id ? 'Jij doet dit. Top!' : esc(p.naam)) : (t.kanNiet || []).includes(me.id) ? 'Nog niemand · jij kunt deze keer niet' : 'Nog niemand', kleur: '',
+            return h.rij({ ic: t.soort === CC.VERVANGER ? 'user-cog' : t.soort === 'Trainer-coach' ? 'clipboard-check' : t.soort === 'Timekeeper' ? 'timer' : t.soort === 'Spelbegeleider' || t.soort === 'Vlagger' ? 'flag' : t.soort === 'Scheidsrechter' ? 'megaphone' : t.soort === 'Fotograaf' ? 'eye' : t.soort === 'Wastas' ? 'shirt' : 'hand-helping', titel: esc(t.soort), sub: p ? (p.id === me.id ? 'Jij doet dit. Top!' : esc(p.naam)) : (t.kanNiet || []).includes(me.id) ? 'Nog niemand · jij kunt deze keer niet' : 'Nog niemand', kleur: '',
               rechts: !p ? ((t.kanNiet || []).includes(me.id) ? `<button class="linkknop klein" data-act="taakKanToch" data-id="${t.id}">Toch wel?</button>` : `<span class="knoppen-rij"><button class="knop klein" data-act="ikDoeHet" data-id="${t.id}">Ik doe het</button><button class="knop klein licht" data-act="taakKanNiet" data-id="${t.id}">Kan niet</button></span>`) : p.id === me.id ? `<button class="knop klein licht" data-act="taakAf" data-id="${t.id}">Afmelden</button>` : icon('circle-check', 'groen') });
           }).join('')}</div>`).join('') || h.leeg('Geen taken de komende weken', 'list-checks')}
           ${acts.length ? `<p class="zacht klein">Staat een taak ${S.club.inst.oproepDagen} dagen van tevoren nog open, dan krijgt iedereen automatisch een oproep.</p>` : ''}`;
@@ -165,9 +165,9 @@
         ${['trainer', 'teamleider'].includes(rol) && CC.mag('planning') && a.soort === 'training' && !a.afgelast ? `<button class="knop licht vol" data-act="wijzigDeze" data-id="${a.id}">${icon('pencil')}Deze training aanpassen</button>` : ''}`;
     }
     return {
-      titel: a.soort === 'training' ? 'Training' : a.soort === 'oefen' ? 'Oefenwedstrijd' : 'Wedstrijd',
+      titel: a.soort === 'training' ? 'Training' : a.soort === 'activiteit' ? 'Activiteit' : a.soort === 'oefen' ? 'Oefenwedstrijd' : 'Wedstrijd',
       html: `<article class="kaartje"><div class="kaart-kop">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${D.lang(a.datum)} · ${esc(t.naam)}</small></div></div>
-        <dl class="gegevens">${a.soort === 'training' ? `<dt>Tijd</dt><dd>${a.tijd}–${a.eind}</dd><dt>Veld</dt><dd>${esc(a.veld)}</dd>` : `<dt>Verzamelen</dt><dd>${a.verzamel}</dd><dt>Aftrap</dt><dd>${a.tijd}</dd>${a.veld ? `<dt>Veld</dt><dd>${esc(a.veld)}</dd>` : ''}${a.uitslag ? `<dt>Uitslag</dt><dd>${esc(a.uitslag)}</dd>` : ''}`}<dt>Afmelden</dt><dd>tot ${M.deadlineTekst(S, a)}</dd></dl>
+        ${a.soort === 'activiteit' && a.toelichting ? `<p>${esc(a.toelichting)}</p>` : ''}<dl class="gegevens">${a.soort === 'activiteit' ? `${a.verzamel ? `<dt>Verzamelen</dt><dd>${a.verzamel}</dd>` : ''}<dt>Tijd</dt><dd>${a.tijd}–${a.eind}</dd>${a.plaats ? `<dt>Waar</dt><dd>${esc(a.plaats)}</dd>` : ''}` : a.soort === 'training' ? `<dt>Tijd</dt><dd>${a.tijd}–${a.eind}</dd><dt>Veld</dt><dd>${esc(a.veld)}</dd>` : `<dt>Verzamelen</dt><dd>${a.verzamel}</dd><dt>Aftrap</dt><dd>${a.tijd}</dd>${a.veld ? `<dt>Veld</dt><dd>${esc(a.veld)}</dd>` : ''}${a.uitslag ? `<dt>Uitslag</dt><dd>${esc(a.uitslag)}</dd>` : ''}`}<dt>Afmelden</dt><dd>tot ${M.deadlineTekst(S, a)}</dd></dl>
         ${a.afgelast ? `<div class="info rood">${icon('ban')}<span>Deze activiteit is afgelast.</span></div>` : ''}${kaart}</article>${meer}`,
     };
   };
@@ -201,7 +201,7 @@
     const ik = CC.me().id;
     const coach = M.taakVan(S, a, 'Trainer-coach') === ik || a.vervangerId === ik; const tk = M.taakVan(S, a, 'Timekeeper') === ik;
     if ((!coach && !tk) || a.datum < D.vandaag()) return { titel: 'Begeleiden', html: h.leeg('Je toegang voor deze activiteit is verlopen.', 'lock') };
-    const training = a.soort === 'training';
+    const training = !M.isWed(a);
     return { titel: training ? 'Training geven' : tk && !coach ? 'Timekeeper' : 'Trainer-coach', html: `<div class="info">${icon('info')}<span>Je hebt tijdelijk toegang, alleen voor deze ${training ? 'training' : 'wedstrijd'}.</span></div>
       <div class="kaart-kop los">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${training ? `${a.tijd}–${a.eind} · ${esc(a.veld || '')}` : `Verzamelen ${a.verzamel} · aftrap ${a.tijd}`}</small></div></div>
       ${coach ? `${h.sectie('Aanwezigheid')}${CC.opnemenHtml(S, a)}` : ''}${!training && tk && S.club.modules.speeltijd ? `${h.sectie('Wisselschema')}${CC.speeltijdHtml(S, a.teamId, { alleenSchema: true, act: a.id })}` : ''}` };

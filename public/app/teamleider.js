@@ -2,7 +2,7 @@
 (function () {
   const CC = window.CC; const D = CC.date, M = CC.m, h = CC.h, icon = CC.icon, esc = CC.esc;
 
-  const volgendeWedstrijd = (S, tid) => M.komend(S, tid, 20).find((a) => a.soort !== 'training' && !a.afgelast);
+  const volgendeWedstrijd = (S, tid) => M.komend(S, tid, 20).find((a) => M.isWed(a) && !a.afgelast);
   const volgorde = (x) => { const i = CC.TAAKSOORTEN.indexOf(x.soort); return i < 0 ? 99 : i; };
   const takenInfo = (S, a) => { const t = S.taken.filter((x) => x.actId === a.id).sort((x, y) => volgorde(x) - volgorde(y)); return { t, bezet: t.filter((x) => x.personId).length }; };
   const openAanm = (S, tid) => S.aanm.filter((x) => x.teamId === tid && x.status === 'open');
@@ -41,7 +41,7 @@
       // Alles over één wedstrijd op één plek, in de volgorde van de dag (Besluit 33)
       wedstrijd(S) {
         const tid = CC.teamId();
-        const lijst = S.acts.filter((a) => a.teamId === tid && a.soort !== 'training' && a.datum >= D.addDays(D.vandaag(), -14)).slice(0, 8);
+        const lijst = S.acts.filter((a) => a.teamId === tid && M.isWed(a) && a.datum >= D.addDays(D.vandaag(), -14)).slice(0, 8);
         const std = volgendeWedstrijd(S, tid);
         const a = lijst.find((x) => x.id === h.segVal('tlWed', std && std.id)) || std || lijst[0];
         if (!a) return h.leeg('Geen wedstrijden') + `<button class="knop vol" data-act="wedstrijdToevoegen">${icon('plus')}Wedstrijd toevoegen</button>`;
@@ -50,7 +50,7 @@
         const gespeeld = a.datum < D.vandaag() || (a.datum === D.vandaag() && new Date() > D.start(a));
         const vandaag = a.datum === D.vandaag();
         const t = takenInfo(S, a);
-        const taakIc = (soort) => ({ 'Trainer-coach': 'clipboard-check', Timekeeper: 'timer', Spelbegeleider: 'flag', Fotograaf: 'eye', Wastas: 'shirt' }[soort] || 'hand-helping');
+        const taakIc = (soort) => ({ 'Trainer-coach': 'clipboard-check', Timekeeper: 'timer', Spelbegeleider: 'flag', Vlagger: 'flag', Scheidsrechter: 'megaphone', Fotograaf: 'eye', Wastas: 'shirt' }[soort] || 'hand-helping');
         return `<select class="kies" data-change="kiesTlWed" aria-label="Wedstrijd">${lijst.map((w) => `<option value="${w.id}" ${w.id === a.id ? 'selected' : ''}>${D.kort(w.datum)} · ${h.actTitel(S, w)}${w.afgelast ? ' · afgelast' : w.uitslag ? ' · ' + w.uitslag : ''}</option>`).join('')}</select>
           ${a.afgelast ? `<div class="info rood">${icon('ban')}<span>Deze wedstrijd is afgelast.</span></div>` : ''}
           <form class="kaartje codeform" data-submit="wedstrijdInfo" data-id="${a.id}">
@@ -106,7 +106,7 @@
     CC.sheet(`${t.soort} verwijderen?`, `<p>${p ? `<b>${esc(p.naam)}</b> doet deze taak en krijgt bericht dat het niet meer nodig is.` : 'Niemand heeft deze taak nog opgepakt.'}</p><div class="knoppen kolom"><button class="knop rood" data-act="taakVerwijderenOk" data-id="${t.id}">${icon('trash-2')}Verwijderen</button></div>`); });
   CC.on('taakVerwijderenOk', (el) => {
     const S = CC.S(); const t = S.taken.find((x) => x.id === el.dataset.id); const a = M.act(S, t.actId);
-    if ((S.club.vasteTaken || CC.VASTE_TAKEN).includes(t.soort) && !S.taken.some((x) => x !== t && x.actId === t.actId && x.soort === t.soort)) (a.zonderTaken || (a.zonderTaken = [])).push(t.soort);
+    if (CC.vasteTakenVoor(S, M.team(S, a.teamId)).includes(t.soort) && !S.taken.some((x) => x !== t && x.actId === t.actId && x.soort === t.soort)) (a.zonderTaken || (a.zonderTaken = [])).push(t.soort);
     if (t.personId && t.personId !== CC.me().id) S.msgs.push({ id: 'b' + Date.now(), van: CC.me().id, soort: 'persoonlijk', bereik: (M.persoon(S, t.personId) || {}).naam || '', onderwerp: `${t.soort} niet meer nodig`, tekst: `De taak ${t.soort.toLowerCase()} bij de wedstrijd van ${D.lang(a.datum)} tegen ${a.tegen} is niet meer nodig. Dank je wel voor het aanbod!`, tijd: new Date().toISOString(), ontvangers: [t.personId], gelezen: [], antw: [], urgent: false, gepland: null });
     S.taken = S.taken.filter((x) => x !== t); CC.save(); CC.closeSheet(); CC.render(); CC.toast('Taak verwijderd');
   });

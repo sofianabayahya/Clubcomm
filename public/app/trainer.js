@@ -43,7 +43,7 @@
       if (k.ev.length <= voor[pl.id]) return;
       nieuw.forEach((e) => {
         const tl = M.persoon(S, t.teamleiderId || t.trainerId);
-        const wanneer = `de ${a.soort === 'training' ? 'training' : 'wedstrijd'} van ${D.lang(a.datum)}`;
+        const wanneer = `de ${M.isWed(a) ? 'wedstrijd' : a.soort === 'activiteit' ? 'activiteit' : 'training'} van ${D.lang(a.datum)}`;
         const tekst = e.kaart === 'herinnering'
           ? S.club.inst.waarschuwing.replace(/\[kind\]/g, pl.voornaam).replace('[team]', t.naam).replace('[deadline]', `${M.inst(S, t.id).deadlineTraining} uur`).replace('[teamleider]', tl ? tl.naam : 'de trainer') + (e.laatsteHerinnering ? '\n\nLet op: dit was de laatste vriendelijke herinnering van dit seizoen. Hierna volgt een kaart.' : '')
           : e.kaart === 'geel' ? `${pl.voornaam}: te laat afgemeld voor ${wanneer}. Dit is geregistreerd als gele kaart. Twee gele kaarten zijn samen een rode kaart. Een kaart is een registratie, geen straf; tik op de statusregel in de app voor uitleg.`
@@ -60,7 +60,7 @@
   // ---------- Speeltijd (gedeeld met teamleider, module) ----------
   // opties.alleenSchema: voor de timekeeper (ouder) alleen het wisselschema van deze wedstrijd, zonder seizoenscijfers
   CC.speeltijdHtml = (S, teamId, opties = {}) => {
-    const wedstrijden = M.komend(S, teamId, 10).filter((a) => a.soort !== 'training' && !a.afgelast && (!opties.act || a.id === opties.act));
+    const wedstrijden = M.komend(S, teamId, 10).filter((a) => M.isWed(a) && !a.afgelast && (!opties.act || a.id === opties.act));
     const kies = h.segVal('stWed', wedstrijden[0] && wedstrijden[0].id);
     const a = wedstrijden.find((x) => x.id === kies) || wedstrijden[0];
     const t = M.team(S, teamId); const c = CC.categorie(t.cat);
@@ -187,9 +187,9 @@
         if (!t.teamleiderId) { const open = S.aanm.filter((x) => x.teamId === tid && x.status === 'open').length; if (open) acties.push(h.rij({ ic: 'user-check', titel: `${open} aanmelding${open > 1 ? 'en' : ''} goedkeuren`, sub: 'Dit team heeft geen teamleider, dus jij keurt goed', act: 'open', attrs: 'data-view="aanmeldingen"', kleur: 'oranje' })); }
         acties.push(...CC.signaalRegels(S, tid, true));
         // Herinnering: training van een eerdere dag waarvan de aanwezigheid nog niet is ingevuld, zolang het nog kan
-        S.acts.filter((a) => a.teamId === tid && a.soort === 'training' && a.datum < D.vandaag() && !a.afgelast && !a.vervangerId && !S.pres[a.id] && kanOpnemen(a)).forEach((a) => {
+        S.acts.filter((a) => a.teamId === tid && !M.isWed(a) && a.datum < D.vandaag() && !a.afgelast && !a.vervangerId && !S.pres[a.id] && kanOpnemen(a)).forEach((a) => {
           const tot = CC.opnemenTot(a);
-          acties.push(h.rij({ ic: 'clipboard-check', titel: 'Aanwezigheid nog niet ingevuld', sub: `Training ${D.kort(a.datum)} ${a.tijd} · kan nog tot ${D.kort(D.iso(tot))} ${String(tot.getHours()).padStart(2, '0')}:${String(tot.getMinutes()).padStart(2, '0')}`, kleur: 'oranje', act: 'open', attrs: `data-view="opnemen" data-id="${a.id}"` }));
+          acties.push(h.rij({ ic: 'clipboard-check', titel: 'Aanwezigheid nog niet ingevuld', sub: `${a.soort === 'activiteit' ? esc(a.naam || 'Activiteit') : 'Training'} ${D.kort(a.datum)} ${a.tijd} · kan nog tot ${D.kort(D.iso(tot))} ${String(tot.getHours()).padStart(2, '0')}:${String(tot.getMinutes()).padStart(2, '0')}`, kleur: 'oranje', act: 'open', attrs: `data-view="opnemen" data-id="${a.id}"` }));
         });
         const mat = CC.materiaalRij && CC.mag('materiaal') && CC.materiaalRij(S, tid); if (mat) acties.push(mat);
         if (CC.beoordRijTrainer) acties.push(...CC.beoordRijTrainer(S, tid));
@@ -213,7 +213,7 @@
         return `${h.seg('aanwModus', [['opnemen', 'Opnemen'], ['overzicht', 'Overzicht']], 'opnemen')}
           <div class="weekstrook" role="tablist">${acts.map((x) => { const d = D.parse(x.datum); return `<button role="tab" aria-selected="${x.id === a.id}" class="${x.id === a.id ? 'aan' : ''} ${x.afgelast ? 'afg' : ''} ${x.datum === D.vandaag() ? 'vandaag' : ''} ${S.pres[x.id] ? 'gedaan' : ''}" data-act="seg" data-key="aanwAct" data-val="${x.id}"><small>${D.DAG_KORT[d.getDay()]}</small><b>${d.getDate()}</b><small>${x.soort === 'training' ? 'T' : 'W'}</small></button>`; }).join('')}</div>
           ${a ? `<div class="kaart-kop los">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${h.actSub(S, a)}</small></div></div>${CC.opnemenHtml(S, a)}${CC.kanNietBlok && D.start(a) > new Date() ? CC.kanNietBlok(S, a) : ''}` : ''}
-          ${CC.mag('planning') ? `<button class="knop licht vol" data-act="planningAanpassen">${icon('calendar-plus')}Planning aanpassen of oefenwedstrijd toevoegen</button>` : ''}`;
+          ${CC.mag('planning') ? `<button class="knop licht vol" data-act="planningAanpassen">${icon('calendar-plus')}Planning aanpassen of iets toevoegen (activiteit, oefenwedstrijd)</button>` : ''}`;
       },
       berichten: (S) => CC.berichtenScherm(S, { nieuw: true }),
       spelers(S) {

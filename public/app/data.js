@@ -29,9 +29,12 @@
     ['Ziek', 'thermometer'], ['Blessure', 'bandage'], ['School/huiswerk', 'graduation-cap'], ['Vakantie', 'plane'],
     ['Familie', 'heart'], ['Andere sport', 'dumbbell'], ['Overig', 'ellipsis'],
   ];
-  CC.TAAKSOORTEN = ['Trainer-coach', 'Timekeeper', 'Spelbegeleider', 'Fotograaf', 'Bardienst', 'Wastas'];
-  // Vaste taken bij elke wedstrijd (Besluit 33); de club kan de lijst aanpassen. Spelbegeleider alleen bij thuiswedstrijden.
-  CC.VASTE_TAKEN = ['Trainer-coach', 'Timekeeper', 'Spelbegeleider'];
+  CC.TAAKSOORTEN = ['Trainer-coach', 'Timekeeper', 'Spelbegeleider', 'Vlagger', 'Scheidsrechter', 'Fotograaf', 'Bardienst', 'Wastas'];
+  // Vaste taken bij elke wedstrijd, per leeftijd (Besluit 33 en 35); de club kan de lijsten aanpassen.
+  // Tot en met O12: spelbegeleider (alleen thuis). Vanaf O13: vlagger (elke wedstrijd) en scheidsrechter (alleen thuis).
+  CC.VASTE_TAKEN = { pupillen: ['Trainer-coach', 'Timekeeper', 'Spelbegeleider'], junioren: ['Trainer-coach', 'Vlagger', 'Scheidsrechter'] };
+  CC.ALLEEN_THUIS = ['Spelbegeleider', 'Scheidsrechter'];
+  CC.vasteTakenVoor = (S, team) => { const n = parseInt(String((team || {}).cat || '').replace(/\D/g, ''), 10) || 0; const v = S.club.vasteTaken || CC.VASTE_TAKEN; return Array.isArray(v) ? v : v[n >= 13 ? 'junioren' : 'pupillen']; };
   CC.VAARDIGHEDEN = {
     mini: ['Plezier', 'Balgevoel'],
     o8: ['Passen', 'Aannemen', 'Dribbelen', 'Schieten', 'Inzet'],
@@ -336,13 +339,13 @@
   // Vaste taken aanvullen voor komende wedstrijden (vaste id's, dus nooit dubbel)
   M.vulVasteTaken = (S) => {
     if (!S.club.modules || !S.club.modules.taken) return;
-    const vaste = S.club.vasteTaken || CC.VASTE_TAKEN; const nu = vandaag();
+    const nu = vandaag();
     S.acts.forEach((a) => {
-      if (a.soort === 'training' || a.afgelast || a.datum < nu) return;
-      vaste.forEach((soort) => {
-        if ((soort === 'Spelbegeleider' && !a.thuis) || (a.zonderTaken || []).includes(soort)) return;
-        if (S.taken.some((t) => t.actId === a.id && t.soort === soort)) return;
-        const t = S.teams.find((x) => x.id === a.teamId) || {};
+      if (!M.isWed(a) || a.afgelast || a.datum < nu) return;
+      const t = S.teams.find((x) => x.id === a.teamId) || {};
+      CC.vasteTakenVoor(S, t).forEach((soort) => {
+        if ((CC.ALLEEN_THUIS.includes(soort) && !a.thuis) || (a.zonderTaken || []).includes(soort)) return;
+        if (S.taken.some((x) => x.actId === a.id && x.soort === soort)) return;
         S.taken.push({ id: `v-${a.id}-${soort.toLowerCase().replace(/[^a-z]/g, '')}`, actId: a.id, soort, personId: soort === 'Trainer-coach' ? t.trainerId || null : null });
       });
     });
@@ -350,6 +353,8 @@
   // Wie doet wat op de wedstrijddag: de trainer-coach vult de aanwezigheid in, de timekeeper doet de wissels
   M.taakVan = (S, a, soort) => { const t = S.taken.find((x) => x.actId === a.id && x.soort === soort); return t ? t.personId : null; };
   M.coachVan = (S, a) => M.taakVan(S, a, 'Trainer-coach') || (M.team(S, a.teamId) || {}).trainerId || null;
+  // Wedstrijd of oefenwedstrijd? (een 'activiteit' zoals zaalvoetbal of een uitje telt als training)
+  M.isWed = (a) => a.soort === 'wedstrijd' || a.soort === 'oefen';
   M.acts = (S, teamId, van, tot) => S.acts.filter((a) => a.teamId === teamId && (!van || a.datum >= van) && (!tot || a.datum <= tot));
   M.komend = (S, teamId, n) => { const nu = Date.now(); return S.acts.filter((a) => a.teamId === teamId && start(a).getTime() + 90 * 6e4 > nu).slice(0, n || 999); };
   M.afm = (S, spelerId, actId) => S.afm.find((f) => f.spelerId === spelerId && f.actId === actId);
@@ -391,7 +396,7 @@
     acts.forEach((a) => {
       const st = M.status(S, pl, a); r.totaal++; r.lijst.push({ act: a, st });
       // apart bijhouden: trainingen en wedstrijden (Besluit 34)
-      const soort = a.soort === 'training' ? r.tr : r.wed; soort.tot++; if (['aanwezig', 'telaat'].includes(st.code)) soort.aan++;
+      const soort = M.isWed(a) ? r.wed : r.tr; soort.tot++; if (['aanwezig', 'telaat'].includes(st.code)) soort.aan++;
       if (st.code === 'aanwezig') r.aanwezig++;
       else if (st.code === 'telaat') { r.aanwezig++; r.telaat++; }
       else {
@@ -527,7 +532,7 @@
     const contact = log.filter((g) => ['gebeld', 'geappt'].includes(g.soort)).pop();
     const gesprek = log.filter((g) => g.soort === 'gesprek').pop();
     const na = (d) => rood.filter((e) => e.act.datum > d);
-    const wat = (e) => `${e.tweedeGeel ? 'tweede gele kaart (te laat afgemeld)' : 'niet afgemeld'} bij de ${e.act.soort === 'training' ? 'training' : 'wedstrijd'} van ${CC.date.kort(e.act.datum)}`;
+    const wat = (e) => `${e.tweedeGeel ? 'tweede gele kaart (te laat afgemeld)' : 'niet afgemeld'} bij de ${M.isWed(e.act) ? 'wedstrijd' : e.act.soort === 'activiteit' ? 'activiteit' : 'training'} van ${CC.date.kort(e.act.datum)}`;
     const hjo = S.club.labels.hjo;
     if (gesprek) { const x = na(gesprek.datum); return x.length ? { soort: 'clubbesluit', niveau: 'rood', stap: 5, tekst: 'opnieuw rood na het gesprek', sub: `Rode kaart: ${wat(x[x.length - 1])}. Volgens het clubbeleid kan de club afscheid nemen; dat beslist de ${CC.wie ? CC.wie('clubbesluit', pl.teamId) : hjo} met het bestuur.` } : null; }
     if (contact) { const x = na(contact.datum); return x.length ? { soort: 'gesprekHjo', niveau: 'rood', stap: 4, tekst: `persoonlijk gesprek met de ${CC.wie ? CC.wie('gesprek', pl.teamId) : hjo}`, sub: `Na het contact van ${CC.date.kort(contact.datum)} opnieuw rood: ${wat(x[x.length - 1])}.` } : null; }
@@ -560,7 +565,7 @@
   // Gemiste wedstrijden (ziek, blessure, andere reden) tellen niet mee: geen achterstand en geen inhaalvoorrang.
   M.speeltijdStand = (S, pl) => {
     const min = S.speeltijd.min[pl.id] || 0; const mog = (S.speeltijd.mogelijk || {})[pl.id] || 0;
-    const wed = M.acts(S, pl.teamId, S.club.seizoen.start, vandaag()).filter((a) => a.soort !== 'training' && !a.afgelast && S.pres[a.id] && S.pres[a.id].s[pl.id]);
+    const wed = M.acts(S, pl.teamId, S.club.seizoen.start, vandaag()).filter((a) => M.isWed(a) && !a.afgelast && S.pres[a.id] && S.pres[a.id].s[pl.id]);
     const gemist = {}; let gespeeld = 0;
     wed.forEach((a) => { const st = M.status(S, pl, a); if (['aanwezig', 'telaat'].includes(st.code)) gespeeld++; else { const r = st.code === 'langdurig' ? st.lang.reden : st.code === 'afgemeld' ? st.afm.reden : 'niet afgemeld'; gemist[r] = (gemist[r] || 0) + 1; } });
     return { min, mogelijk: mog, pct: mog ? Math.round((100 * min) / mog) : null, gespeeld, gemist };
