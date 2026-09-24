@@ -44,7 +44,7 @@
         const compliment = z === 'groen' && !k.geel && !k.oranje && !st.telaat ? `<span class="compliment">${icon('star')}Betrouwbare speler!</span>` : '';
         return `
           ${lang ? `<div class="info">${icon('hospital')}<span><b>${esc(pl.voornaam)} is langdurig afwezig</b> tot ongeveer ${D.kort(lang.tot)}. Je hoeft niet per training af te melden.</span></div>` : ''}
-          ${h.sectie('Komt eraan')}
+          ${h.sectie(`Komt eraan${weekLabel(komend)}`)}
           <div class="acts">${komend.map((a) => CC.actKaart(S, a, pl)).join('') || h.leeg('Geen activiteiten gepland', 'calendar')}</div>
           <button class="status ${z}" data-act="open" data-view="kindOverzicht" data-id="${pl.id}"><span>${h.stip(z)}${statusregel} <small>deze fase</small></span><span>${h.kaartjes(k)}${compliment}${icon('circle-help', 'zacht')}</span></button>
           ${acties.length ? `${h.sectie('Actie nodig')}<div class="lijst">${acties.join('')}</div>` : ''}`;
@@ -59,7 +59,7 @@
         const groepen = {}; acts.forEach((a) => { (groepen[week(a)] = groepen[week(a)] || []).push(a); });
         const st = M.stats(S, pl, M.periode(S, 'seizoen'));
         const agenda = CC.agendaRij && !CC.me().agendaAbonnement ? `<div class="lijst">${CC.agendaRij()}</div>` : '';
-        return `${agenda}${Object.entries(groepen).map(([w, as]) => `${h.sectie(w === dezeWeek ? 'Deze week' : w === D.addDays(dezeWeek, 7) ? 'Volgende week' : `Week van ${D.kort(w)}`)}<div class="lijst">${as.map((a) => h.rij({ ic: h.datumBlok(a), titel: h.actTitel(S, a), sub: h.actSub(S, a), rechts: h.chip(M.status(S, pl, a)), act: 'open', attrs: `data-view="activiteit" data-id="${a.id}"` })).join('')}</div>`).join('')}
+        return `${agenda}${Object.entries(groepen).map(([w, as]) => `${h.sectie(w === dezeWeek ? `Deze week${wk(w)}` : w === D.addDays(dezeWeek, 7) ? `Volgende week${wk(w)}` : `Week ${D.weeknr(w)}<span class="wk"> · ${periode(w)}</span>`)}<div class="lijst">${as.map((a) => h.rij({ ic: h.datumBlok(a), titel: h.actTitel(S, a), sub: h.actSub(S, a), rechts: h.chip(M.status(S, pl, a)), act: 'open', attrs: `data-view="activiteit" data-id="${a.id}"` })).join('')}</div>`).join('')}
           ${!ver ? `<button class="knop licht vol" data-act="seg" data-key="verder" data-val="1">${icon('calendar-days')}Verder vooruit kijken</button>` : ''}
           <div class="lijst">${h.rij({ ic: 'chart-column', titel: 'Aanwezigheid en kaarten', sub: `Deze fase ${M.stats(S, pl, M.periode(S, 'blok')).pct ?? '–'}% · seizoen ${st.pct ?? '–'}% · afmeldgeschiedenis`, act: 'open', attrs: `data-view="kindOverzicht" data-id="${pl.id}"` })}</div>
           ${CC.ouderGesprekRijen ? `<div class="lijst">${h.rij({ ic: 'star', titel: 'Ontwikkelgesprek en beoordeling', sub: `Twee keer per seizoen, met ${esc(pl.voornaam)} erbij`, act: 'open', attrs: `data-view="${(S.ontwGesprek || []).some((g) => g.teamId === pl.teamId) ? 'gesprekKiezen' : 'beoordelingKind'}" data-id="${pl.id}"` })}</div>` : ''}
@@ -128,6 +128,11 @@
   };
 
   // Activiteitkaart met afmeldknop (Home)
+  // Weeknummer in een kop, klein achter de titel (week 39, of week 39–40 als het over twee weken gaat)
+  const wk = (s) => `<span class="wk"> · week ${D.weeknr(s)}</span>`;
+  const weekLabel = (acts) => { const n = [...new Set(acts.map((a) => D.weeknr(a.datum)))]; return n.length ? `<span class="wk"> · week ${n[0]}${n.length > 1 ? `–${n[n.length - 1]}` : ''}</span>` : ''; };
+  const periode = (ma) => { const zo = D.addDays(ma, 6); const [a, b] = [D.parse(ma), D.parse(zo)]; return a.getMonth() === b.getMonth() ? `${a.getDate()}–${b.getDate()} ${D.MAAND[b.getMonth()]}` : `${a.getDate()} ${D.MAAND[a.getMonth()]} – ${b.getDate()} ${D.MAAND[b.getMonth()]}`; };
+
   CC.actKaart = (S, a, pl) => {
     const st = M.status(S, pl, a);
     const voorDeadline = new Date() < M.deadline(S, a);

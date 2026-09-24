@@ -94,7 +94,10 @@ p { margin: .4em 0; }
 .datum.afg { background: var(--vlak2); color: var(--zacht); text-decoration: line-through; }
 
 /* Activiteiten (ouder home) */
-.acts { display: flex; flex-direction: column; gap: 10px; }
+.acts { display: flex; flex-direction: column; background: var(--vlak); border-radius: var(--r); box-shadow: var(--schaduw); overflow: hidden; }
+.acts .act { box-shadow: none; border-radius: 0; }
+.acts .act + .act { border-top: 1px solid var(--lijn); }
+.sectie-kop h3 .wk { font-weight: 400; text-transform: none; letter-spacing: 0; }
 .act { background: var(--vlak); border-radius: var(--r); box-shadow: var(--schaduw); overflow: hidden; }
 .act.afgelast { opacity: .7; }
 .act-body { display: flex; gap: 12px; padding: 10px 14px 4px; width: 100%; border: 0; background: none; text-align: left; align-items: center; }

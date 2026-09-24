@@ -15,7 +15,9 @@
   const vandaag = () => iso(new Date());
   const start = (act) => { const d = parse(act.datum); const [h, m] = act.tijd.split(':').map(Number); d.setHours(h, m, 0, 0); return d; };
   const dagen = (a, b) => Math.round((parse(b) - parse(a)) / 864e5);
-  CC.date = { DAG, DAG_KORT, MAAND, iso, parse, addDays, vandaag, start, dagen,
+  // Weeknummer volgens de kalender (ISO): een week loopt van maandag tot en met zondag
+  const weeknr = (s) => { const d = parse(s); d.setDate(d.getDate() + 3 - ((d.getDay() + 6) % 7)); const jan4 = new Date(d.getFullYear(), 0, 4); return 1 + Math.round(((d - jan4) / 864e5 - 3 + ((jan4.getDay() + 6) % 7)) / 7); };
+  CC.date = { DAG, DAG_KORT, MAAND, iso, parse, addDays, vandaag, start, dagen, weeknr,
     kort: (s) => { const d = parse(s); return `${DAG_KORT[d.getDay()]} ${d.getDate()} ${MAAND[d.getMonth()]}`; },
     lang: (s) => { const d = parse(s); return `${DAG[d.getDay()]} ${d.getDate()} ${MAAND[d.getMonth()]}`; },
     relatief: (s) => { const n = dagen(vandaag(), s); if (n === 0) return 'Vandaag'; if (n === 1) return 'Morgen'; if (n === -1) return 'Gisteren'; return CC.date.kort(s); },
