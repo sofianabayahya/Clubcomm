@@ -372,9 +372,11 @@
     const nieuw = opties.nieuw ? `<button class="knop vol" data-act="nieuwBericht">${icon('plus')}Nieuw bericht</button>` : '';
     if (opties.ouder) {
       const tab = h.segVal('berichten', 'persoonlijk');
-      const pers = mijn.filter((m) => m.soort === 'persoonlijk'), nws = mijn.filter((m) => m.soort !== 'persoonlijk');
-      const n = (ms) => ms.filter((m) => !m.gelezen.includes(me.id)).length;
-      return `${vastBlok}${h.seg('berichten', [['persoonlijk', 'Persoonlijk', n(pers)], ['nieuws', 'Nieuws', n(nws)]], 'persoonlijk')}${lijst(zonderVast(tab === 'persoonlijk' ? pers : nws))}`;
+      // Eigen vragen aan trainer/teamleider staan ook bij Persoonlijk (met de antwoorden)
+      const pers = [...mijn.filter((m) => m.soort === 'persoonlijk'), ...S.msgs.filter((m) => m.van === me.id && m.soort === 'persoonlijk')], nws = mijn.filter((m) => m.soort !== 'persoonlijk');
+      const n = (ms) => ms.filter((m) => m.van !== me.id && !m.gelezen.includes(me.id)).length;
+      const vraag = tab === 'persoonlijk' && CC.kinderen().length ? `<button class="knop licht vol" data-act="vraagStaf">${icon('message-circle')}Vraag aan trainer of teamleider</button>` : '';
+      return `${vastBlok}${h.seg('berichten', [['persoonlijk', 'Persoonlijk', n(pers)], ['nieuws', 'Nieuws', n(nws)]], 'persoonlijk')}${vraag}${lijst(zonderVast(tab === 'persoonlijk' ? pers : nws))}`;
     }
     const tab = h.segVal('berichtenStaf', 'inbox');
     const verstuurd = S.msgs.filter((m) => m.van === me.id).sort((a, b) => b.tijd.localeCompare(a.tijd));
@@ -416,6 +418,23 @@
   };
   CC.on('vastzetten', (el) => { const m = S.msgs.find((x) => x.id === el.dataset.id); const weg = CC.zetVast(m, Number(el.dataset.d)); CC.save(); CC.render(); CC.toast(weg ? `Vastgezet; "${weg.onderwerp}" is losgemaakt (max. 2)` : 'Vastgezet bovenaan'); });
   CC.on('losmaken', (el) => { const m = S.msgs.find((x) => x.id === el.dataset.id); m.vastTot = null; CC.save(); CC.render(); CC.toast('Losgemaakt'); });
+  // Ouder: vraag aan de trainer en teamleider van het eigen team (geen groepschat, geen andere ouders)
+  CC.on('vraagStaf', () => {
+    const kids = CC.kinderen(); const k = CC.kind();
+    CC.sheet('Vraag aan trainer of teamleider', `<form data-submit="vraagStafOk" class="codeform">
+      ${kids.length > 1 ? `<label for="vs-k">Over</label><select id="vs-k" name="k">${kids.map((x) => `<option value="${x.id}" ${x.id === k.id ? 'selected' : ''}>${esc(x.voornaam)} (${esc(x.teamId)})</option>`).join('')}</select>` : `<input type="hidden" name="k" value="${k.id}">`}
+      <label for="vs-o">Onderwerp</label><input id="vs-o" name="o" required maxlength="80" placeholder="Bijv. schoenen laten liggen">
+      <label for="vs-t">Je vraag</label><textarea id="vs-t" name="t" rows="4" required></textarea>
+      <button class="knop vol">${icon('send')}Versturen</button>
+      <p class="zacht klein">Alleen de trainer en teamleider van het team zien dit. Afmelden gaat via de knop Afmelden, niet via een bericht.</p></form>`);
+  });
+  CC.on('vraagStafOk', (f) => {
+    const me = CC.me(); const pl = M.speler(S, f.k.value); const t = M.team(S, pl.teamId);
+    const ontv = [t.trainerId, t.teamleiderId].filter((x) => x && x !== me.id);
+    if (!ontv.length) return CC.toast('Dit team heeft nog geen trainer of teamleider', 'fout');
+    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'persoonlijk', bereik: `${pl.voornaam} (${pl.teamId})`, onderwerp: f.o.value.trim(), tekst: f.t.value.trim(), tijd: new Date().toISOString(), ontvangers: [...new Set(ontv)], gelezen: [me.id], antw: [], urgent: false, gepland: null, vastTot: null });
+    CC.save(); CC.closeSheet(); CC.render(); CC.toast('Verstuurd naar de trainer en teamleider');
+  });
   CC.on('reageer', (f) => { const m = S.msgs.find((x) => x.id === f.dataset.id); m.antw.push({ van: CC.me().id, tekst: f.t.value, tijd: new Date().toISOString() }); CC.save(); CC.render(); CC.toast('Verstuurd'); });
 
   // Nieuw bericht (trainer, teamleider, HJO) — Besluit 7 en 11

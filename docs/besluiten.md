@@ -149,6 +149,7 @@ Een Sportlink-export bevat: voornaam, achternaam, geboortedatum, **bondsnummer**
 - Twee tabbladen: **Persoonlijk** (trainer / teamleider / HJO → ouder) en **Nieuws** (team en club), elk met teller voor ongelezen.
 - Volgorde: ongelezen en urgent bovenaan, daarna nieuwste eerst.
 - **Reageren** alleen op persoonlijke berichten; nieuws is alleen-lezen.
+- **Vraag aan trainer of teamleider** (aanvulling 24 september 2026): een ouder kan zelf een vraag stellen aan de trainer en teamleider van het eigen team (niet aan andere ouders, geen groepschat). Het gesprek staat bij Persoonlijk; afmelden blijft via de knop Afmelden.
 - **Geplande berichten:** HJO schrijft één keer en kiest wanneer het verstuurd wordt (bijv. aftellen naar de zomervakantie).
 - Afzender ziet **wie het gelezen heeft** ("gelezen door 11 van 12").
 
