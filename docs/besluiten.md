@@ -524,6 +524,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Timekeeper:** doet de wissels met het wisselschema.
 - **Spelbegeleider:** alleen bij thuiswedstrijden.
 - Fotograaf, bardienst en wastas voegt de teamleider toe als de club erom vraagt.
+- De teamleider kan elke taak **verwijderen** (kruisje); wie de taak had, krijgt bericht. Een verwijderde vaste taak komt bij die wedstrijd niet vanzelf terug. Een taak die er al staat, kan niet nog een keer worden toegevoegd.
 - De losse "wedstrijdbegeleider" is vervallen: een ouder met de taak trainer-coach of timekeeper ziet het op Home en krijgt alleen voor die wedstrijd tijdelijk toegang (de timekeeper alleen het wisselschema, geen seizoenscijfers van andere kinderen).
 
 **Eerlijke speeltijd**

@@ -340,7 +340,7 @@
     S.acts.forEach((a) => {
       if (a.soort === 'training' || a.afgelast || a.datum < nu) return;
       vaste.forEach((soort) => {
-        if (soort === 'Spelbegeleider' && !a.thuis) return;
+        if ((soort === 'Spelbegeleider' && !a.thuis) || (a.zonderTaken || []).includes(soort)) return;
         if (S.taken.some((t) => t.actId === a.id && t.soort === soort)) return;
         const t = S.teams.find((x) => x.id === a.teamId) || {};
         S.taken.push({ id: `v-${a.id}-${soort.toLowerCase().replace(/[^a-z]/g, '')}`, actId: a.id, soort, personId: soort === 'Trainer-coach' ? t.trainerId || null : null });
