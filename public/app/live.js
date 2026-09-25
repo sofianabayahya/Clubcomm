@@ -32,7 +32,7 @@
   };
 
   // ---------- Opslaan: alleen wat veranderd is ----------
-  CC.save = () => { clearTimeout(L.timer); L.timer = setTimeout(sync, 400); };
+  CC.save = () => { clearTimeout(L.timer); L.timer = setTimeout(() => { L.timer = null; sync(); }, 400); };
   const RECHTEN = /row-level security|mag alleen|Alleen |niet|42501|P0001/i;
   const sync = async () => {
     if (!L.pid) return;
@@ -76,7 +76,7 @@
     } catch (e) { console.warn(e); offline = true; }
     L.bezig = false;
     if (geweigerd) CC.toast('Niet alles is opgeslagen: daarvoor heb je geen rechten', 'fout');
-    if (offline) { CC.toast('Geen verbinding. We proberen het zo opnieuw.', 'fout'); clearTimeout(L.timer); L.timer = setTimeout(sync, 15000); }
+    if (offline) { CC.toast('Geen verbinding. We proberen het zo opnieuw.', 'fout'); clearTimeout(L.timer); L.timer = setTimeout(() => { L.timer = null; sync(); }, 15000); }
     if (L.opnieuw) { L.opnieuw = false; sync(); }
   };
   // Is alles opgeslagen? (dan mogen we veilig verversen)
@@ -95,6 +95,10 @@
     try { await laden(); CC.render(); } catch (e) { console.warn(e); }
   };
   document.addEventListener('visibilitychange', () => ververs(false));
+  // App naar de achtergrond of dicht (iPhone sluit snel): wat nog niet is opgeslagen, meteen versturen in plaats van na 0,4 s
+  const nuOpslaan = () => { if (!L.pid || !L.timer) return; clearTimeout(L.timer); L.timer = null; sync(); };
+  document.addEventListener('visibilitychange', () => { if (document.hidden) nuOpslaan(); });
+  window.addEventListener('pagehide', nuOpslaan);
   setInterval(() => ververs(false), 120000);
   CC.ververs = () => ververs(true);
 
