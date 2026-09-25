@@ -535,6 +535,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **iPhone:** alleen als ClubComm op het beginscherm staat (iOS 16.4+). De app legt dat uit. Op Home staat één keer "Zet pushmeldingen aan" (met "Niet nu": 30 dagen weg).
 - **Tik op een melding** → de app opent op dat bericht.
 - **Techniek:** de serverfunctie `melding` verstuurt e-mail én push; het sleutelpaar voor push is op de server gemaakt en blijft daar (geen sleutel in de chat of in de app). Migratie 012.
+- **Getest 25-09 22:03** op een echte iPhone (beginscherm): melding kwam direct binnen, tik opende het bericht.
 - **Stap 2 (later):** automatische herinneringen vanaf de server (pg_cron), zodat ze op tijd komen, ook als niemand de app opent.
 
 ## Besluit 52 — Inloggen alleen met de code, geen knop in de mail
