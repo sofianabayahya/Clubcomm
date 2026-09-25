@@ -69,6 +69,7 @@
           const contact = (p) => `${CC.belKnoppen(p)}<a class="icoonknop" href="mailto:${esc(p.email)}" aria-label="Mail ${esc(p.naam)}">${icon('mail')}</a>`;
           return `${seg}<div class="zoek">${icon('search')}<input type="search" placeholder="Zoek persoon (ook ouders)" value="${esc(q)}" data-input="zoekMens" aria-label="Zoek persoon"></div>
             ${q ? '' : `<div class="chips">${filters.map(([k, l]) => `<button class="chipknop ${k === f ? 'aan' : ''}" data-act="seg" data-key="stafRol" data-val="${k}">${esc(l)}</button>`).join('')}</div>`}
+            ${CC.mag('staf') || CC.rol().rol === 'beheerder' ? `<button class="knop licht vol" data-act="stafNieuw">${icon('user-plus')}Staflid toevoegen</button>` : ''}
             <p class="zacht klein">Iedereen met een rol in de club: bellen, appen of mailen met één tik. Tik op een naam om rollen te koppelen of te wijzigen (bijv. een ouder ook trainer maken).</p>
             <div class="lijst">${res.map((p) => h.rij({ ic: h.avatar(p.naam), titel: esc(p.naam), sub: p.rollen.filter((r) => r.rol !== 'ouder' || !staf(p)).map((r) => `${esc(CC.rolNaam(r))}${r.teamId ? ' ' + esc(r.teamId) : r.groep ? ' ' + esc(r.groep) : ''}`).join(' · ') || 'Ouder', rechts: contact(p), act: 'rollenPersoon', attrs: `data-id="${p.id}"` })).join('') || h.leeg('Niemand gevonden')}</div>`;
         }
@@ -168,6 +169,35 @@
     if (r === 'trainer') M.team(S, t).trainerId = p.id; if (r === 'teamleider') M.team(S, t).teamleiderId = p.id;
     CC.save(); CC.closeSheet(); CC.render(); CC.toast(`${p.naam.split(' ')[0]} is nu ook ${CC.rolNaam({ rol: r }).toLowerCase()}`);
   });
+  // Staflid toevoegen (Besluit 42): de club legt trainer of teamleider vast; die logt in met dit e-mailadres en is meteen gekoppeld
+  CC.on('stafNieuw', () => { const S = CC.S(); CC.sheet('Staflid toevoegen', `<form data-submit="stafNieuwOk" class="codeform">
+      <label for="sn-n">Naam</label><input id="sn-n" name="n" required autocomplete="off" placeholder="Voor- en achternaam">
+      <label for="sn-e">E-mailadres</label><input id="sn-e" name="e" type="email" required autocomplete="off" placeholder="Hiermee logt hij of zij in">
+      <label for="sn-t">Telefoonnummer (mag leeg)</label><input id="sn-t" name="tel" type="tel" inputmode="tel" autocomplete="off" placeholder="06 12345678">
+      <div class="twee"><div><label for="sn-r">Rol</label><select id="sn-r" name="r"><option value="trainer">Trainer</option><option value="teamleider">Teamleider</option>${S.club.coordinatorAan ? `<option value="coordinator">${esc(S.club.labels.coordinator)}</option>` : ''}<option value="hjo">${esc(S.club.labels.hjo)}</option></select></div>
+      <div><label for="sn-team">Team of groep</label><select id="sn-team" name="team">${S.teams.map((t) => `<option value="${t.id}">${esc(t.naam)}</option>`).join('')}${S.club.coordinatorAan ? `<optgroup label="Groep (voor ${esc(S.club.labels.coordinator.toLowerCase())})">${(S.club.groepen || []).map((g) => `<option value="groep:${esc(g.naam)}">${esc(g.naam)}</option>`).join('')}</optgroup>` : ''}</select></div></div>
+      <button class="knop">Toevoegen en uitnodigen</button>
+      <p class="zacht klein">Hij of zij krijgt een welkomstmail met hoe je inlogt. Staat dit e-mailadres al in de club (bijv. als ouder), dan komt de rol erbij.</p></form>`); });
+  CC.on('stafNieuwOk', (f) => {
+    const S = CC.S(); const me = CC.me(); const naam = f.n.value.trim(); const email = f.e.value.trim().toLowerCase(); const r = f.r.value; const t = f.team.value;
+    const tel = f.tel.value.replace(/[^0-9+]/g, ''); if (tel && !/^(\+\d{10,14}|0\d{9})$/.test(tel)) return CC.toast('Vul een geldig telefoonnummer in, of laat het leeg', 'fout');
+    let rol;
+    if (r === 'coordinator') { const g = (S.club.groepen || []).find((x) => 'groep:' + x.naam === t); if (!g) return CC.toast('Kies een groep teams', 'fout'); rol = { rol: r, groep: g.naam, cats: g.cats }; }
+    else if (r === 'hjo') rol = { rol: 'hjo' };
+    else { if (!t || t.startsWith('groep:')) return CC.toast('Kies een team', 'fout'); rol = { rol: r, teamId: t }; }
+    let p = S.people.find((x) => (x.email || '').toLowerCase() === email); const bestond = !!p;
+    if (!p) { p = { id: 'p' + Date.now(), naam, email, tel, rollen: [] }; S.people.push(p); } else if (tel && !p.tel) p.tel = tel;
+    if (p.rollen.some((x) => x.rol === rol.rol && (x.teamId || x.groep || '') === (rol.teamId || rol.groep || ''))) return CC.toast(`${p.naam.split(' ')[0]} heeft deze rol al`, 'fout');
+    p.rollen.push(rol);
+    const team = rol.teamId && M.team(S, rol.teamId);
+    if (team && r === 'trainer' && !team.trainerId) team.trainerId = p.id; if (team && r === 'teamleider' && !team.teamleiderId) team.teamleiderId = p.id;
+    const wat = `${CC.rolNaam(rol).toLowerCase()}${team ? ` van ${team.naam}` : rol.groep ? ` ${rol.groep}` : ''}`;
+    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'persoonlijk', bereik: p.naam, onderwerp: `Welkom bij ClubComm`, tekst: `Hoi ${p.naam.split(' ')[0]}! Je bent in ClubComm van ${S.club.naam} toegevoegd als ${wat}.\n\nInloggen: ga naar ${location.host}, vul ${email} in en typ de code van 6 cijfers uit de mail over. Je hoeft je niet aan te melden.\n\nTip: zet ClubComm op je beginscherm (iPhone: Delen → Zet op beginscherm).`, tijd: new Date().toISOString(), ontvangers: [p.id], gelezen: [], antw: [], urgent: false, gepland: null });
+    CC.save(); CC.closeSheet(); CC.render();
+    CC.sheet('Toegevoegd', `<p><b>${esc(p.naam)}</b> is nu ${esc(wat)}${bestond ? ' (stond al in de club; de rol is erbij gekomen)' : ''}.</p><p class="zacht">Er gaat een welkomstmail naar ${esc(email)} met hoe je inlogt. Wil je het ook zelf even laten weten?</p>
+      <button class="knop vol" data-act="stafDeel" data-naam="${esc(p.naam.split(' ')[0])}" data-wat="${esc(wat)}" data-email="${esc(email)}">${icon('share-2')}Deel de inloglink</button>`);
+  });
+  CC.on('stafDeel', (el) => CC.deel(`Hoi ${el.dataset.naam}! Je bent in ClubComm toegevoegd als ${el.dataset.wat}. Log in op ${location.origin} met ${el.dataset.email}: je krijgt een code van 6 cijfers per mail.`, 'ClubComm'));
   CC.on('rolWeg', (el) => { const S = CC.S(); const p = M.persoon(S, el.dataset.id); const r = p.rollen.splice(Number(el.dataset.i), 1)[0]; if (r && r.teamId) { const t = M.team(S, r.teamId); if (t.trainerId === p.id && r.rol === 'trainer') t.trainerId = null; if (t.teamleiderId === p.id && r.rol === 'teamleider') t.teamleiderId = null; } CC.save(); CC.closeSheet(); CC.render(); CC.toast('Rol verwijderd'); });
   CC.on('exportPdf', () => { CC.toast('Printvenster: kies "Opslaan als PDF"'); setTimeout(() => window.print(), 300); });
 

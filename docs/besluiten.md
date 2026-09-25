@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 41 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 42 toegevoegd)
 
 ---
 
@@ -507,6 +507,14 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 42 — Stafleden zonder kind: de club voegt ze toe
+*Besloten 25 september 2026.*
+
+- Een trainer of teamleider zonder kind in het team meldt zich niet aan zoals een ouder. De **HJO of clubbeheerder** voegt hem toe: **Teams → Staf → Staflid toevoegen** (naam, e-mailadres, eventueel telefoon, rol en team of groep).
+- Hij krijgt een **welkomstbericht per e-mail** met hoe je inlogt, en logt in op mijnclubcomm.nl met dat e-mailadres en de code. De app koppelt hem meteen aan zijn rol, zonder goedkeuren. Daarna kan de HJO ook zelf de inloglink delen.
+- Staat het e-mailadres al in de club (bijv. als ouder), dan komt de rol erbij (rolwisselaar).
+- Een tweede trainer (assistent) vervangt de hoofdtrainer van het team niet.
 
 ## Besluit 41 — Vastgezette berichten ook voor nieuwe ouders; welkomstbericht bij goedkeuren
 *Besloten 25 september 2026.*
