@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 38 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 39 toegevoegd)
 
 ---
 
@@ -507,6 +507,17 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 39 — Wisselschema: de club kiest om de hoeveel minuten, de trainer past zelf aan
+*Besloten 25 september 2026. Vult Besluit 33 (eerlijke speeltijd) aan.*
+
+- **Om de hoeveel minuten wisselen bepaalt de club**, per speelvorm (Regels → Speeltijd). ClubComm geeft het advies: **per blok wisselen** (4 tegen 4: 10 min, 6 tegen 6: 12,5 min, 8 tegen 8: 15 min, 11 tegen 11: 17,5 min). Elke waarde vanaf 3 minuten mag, ook bijv. 5 of 7.
+- **De trainer mag per wedstrijd afwijken**, vóór hij het schema maakt. Het laatste blok is de rest; een heel korte rest (minder dan een half blok) gaat bij het laatste blok (7 min bij 50 minuten: 7+7+7+7+7+7+8).
+- **Speelduur per speelvorm:** 4 tegen 4 40 min, 6 tegen 6 50 min, 8 tegen 8 60 min, 11 tegen 11 70 min.
+- **Zelf aanpassen:** de app maakt een eerlijk voorstel; daarna tikt de trainer per blok wie erin staat (een tabel met spelers en wisselmomenten). De app toont de **minuten per speler** en waarschuwt als er in een blok niet genoeg of te veel spelers in het veld staan. De keeper is te kiezen (ruilt zijn plek in het schema met de vorige keeper). Blokken die al gespeeld zijn, liggen vast.
+- **Ook bij oefenwedstrijden** (trainer: Planning aanpassen → Oefenwedstrijd toevoegen); die tellen mee voor de eerlijke speeltijd.
+- **Timekeeper** ziet alleen wie erin en eruit gaat en bij welke minuut de volgende wissel is; geen seizoenscijfers en geen aanpasscherm.
+- Eerlijke verdeling rekent in minuten (niet in blokken), zodat een korter laatste blok eerlijk meetelt. "Een blok minder" (selectie) = één wisselmoment minder dan gelijk verdeeld.
 
 ## Besluit 38 — Start pilot: het O12 talententeam
 *Besloten 25 september 2026.*

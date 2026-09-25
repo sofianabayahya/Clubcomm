@@ -43,10 +43,11 @@
   };
   CC.categorie = (cat) => {
     const n = parseInt(cat.replace(/\D/g, ''), 10);
-    if (n <= 7) return { naam: "Mini's", vorm: '4 tegen 4', opVeld: 4, blokken: 4, blokMin: 10, schaal: 'mini', vaardig: CC.VAARDIGHEDEN.mini };
-    if (n <= 10) return { naam: 'Onderbouw', vorm: '6 tegen 6', opVeld: 6, blokken: 4, blokMin: 12, schaal: 'smiley', vaardig: CC.VAARDIGHEDEN.o8 };
-    if (n <= 12) return { naam: 'Onderbouw', vorm: '8 tegen 8', opVeld: 8, blokken: 4, blokMin: 15, schaal: '1-5', vaardig: CC.VAARDIGHEDEN.o11 };
-    return { naam: 'Middenbouw', vorm: '11 tegen 11', opVeld: 11, blokken: 4, blokMin: 20, schaal: '1-5', vaardig: CC.VAARDIGHEDEN.o13 };
+    // duur = speeltijd van de wedstrijd in minuten; blokMin = advies: wisselen per blok (Besluit 39)
+    if (n <= 7) return { naam: "Mini's", vorm: '4 tegen 4', key: 'v4', opVeld: 4, duur: 40, blokken: 4, blokMin: 10, schaal: 'mini', vaardig: CC.VAARDIGHEDEN.mini };
+    if (n <= 10) return { naam: 'Onderbouw', vorm: '6 tegen 6', key: 'v6', opVeld: 6, duur: 50, blokken: 4, blokMin: 12.5, schaal: 'smiley', vaardig: CC.VAARDIGHEDEN.o8 };
+    if (n <= 12) return { naam: 'Onderbouw', vorm: '8 tegen 8', key: 'v8', opVeld: 8, duur: 60, blokken: 4, blokMin: 15, schaal: '1-5', vaardig: CC.VAARDIGHEDEN.o11 };
+    return { naam: 'Middenbouw', vorm: '11 tegen 11', key: 'v11', opVeld: 11, duur: 70, blokken: 4, blokMin: 17.5, schaal: '1-5', vaardig: CC.VAARDIGHEDEN.o13 };
   };
 
   // ---------- Demo genereren ----------
@@ -574,10 +575,24 @@
   };
   // Mag de trainer bij dit team afwijken (een blok minder)? Standaard alleen bij selectieteams.
   M.speeltijdAfwijken = (S, teamId) => { const i = M.inst(S, teamId).speeltijdAfwijken || { breedte: false, selectie: true }; return !!i[M.team(S, teamId).type === 'selectie' ? 'selectie' : 'breedte']; };
-  M.maakSchema = (S, act, minder) => {
+  // Wisselen om de … minuten (Besluit 39): de club kiest per speelvorm, de trainer mag per wedstrijd afwijken. Advies: per blok.
+  CC.SPEELVORMEN = [['v4', '4 tegen 4', 10, 40], ['v6', '6 tegen 6', 12.5, 50], ['v8', '8 tegen 8', 15, 60], ['v11', '11 tegen 11', 17.5, 70]];
+  M.wisselMin = (S, teamId) => { const c = CC.categorie(M.team(S, teamId).cat); return Number((M.inst(S, teamId).wissel || {})[c.key]) || c.blokMin; };
+  // Lengte van elk blok: steeds het gekozen aantal minuten; het laatste blok is de rest (een korte rest gaat bij het laatste blok)
+  M.blokLengtes = (duur, om) => {
+    om = Math.min(Math.max(Number(om) || duur, 1), duur); let n = Math.ceil(duur / om - 1e-9);
+    if (n > 1 && duur - om * (n - 1) < om / 2) n--;
+    return Array.from({ length: n }, (_, i) => Math.round((i < n - 1 ? om : duur - om * (n - 1)) * 10) / 10);
+  };
+  M.minTekst = (m) => String(m).replace('.', ',');
+  // Minuten per speler in een schema (ook oude schema's met vaste blokken)
+  M.schemaLengtes = (sch) => sch.blokLen || sch.blokken.map(() => sch.blokMin);
+  M.schemaMinuten = (sch) => { const len = M.schemaLengtes(sch); const m = {}; sch.blokken.forEach((b, i) => b.forEach((id) => { m[id] = Math.round(((m[id] || 0) + len[i]) * 10) / 10; })); return m; };
+  M.maakSchema = (S, act, minder, om) => {
     const t = M.team(S, act.teamId); const c = CC.categorie(t.cat);
     const beschikbaar = M.spelers(S, act.teamId).filter((pl) => ['verwacht', 'aanwezig', 'telaat'].includes(M.status(S, pl, act).code));
-    const wedMin = c.blokken * c.blokMin; const mog = S.speeltijd.mogelijk || {};
+    const blokLen = M.blokLengtes(c.duur, om || M.wisselMin(S, act.teamId));
+    const wedMin = c.duur; const mog = S.speeltijd.mogelijk || {};
     const min = {}; beschikbaar.forEach((p) => { min[p.id] = S.speeltijd.min[p.id] || 0; });
     // voorrang: laagste percentage (inclusief deze wedstrijd) eerst
     const score = (p) => (min[p.id]) / ((mog[p.id] || 0) + wedMin);
@@ -587,19 +602,20 @@
     const veld = beschikbaar.filter((p) => p !== keeper);
     // minder speeltijd (alleen als de club dat toestaat): één blok minder dan een gelijke verdeling
     const minderIds = (minder || []).filter((id) => veld.some((p) => p.id === id));
-    const gelijk = veld.length ? Math.floor((c.blokken * Math.min(c.opVeld - 1, veld.length)) / veld.length) : 0;
-    const blokkenVan = {}; const cap = (p) => (minderIds.includes(p.id) ? Math.max(1, gelijk - 1) : 99);
+    // in minuten, want het laatste blok kan korter zijn; "blok minder" = één wisselmoment minder dan gelijk verdeeld
+    const plek = Math.min(c.opVeld - 1, veld.length);
+    const gelijk = veld.length ? (wedMin * plek) / veld.length : 0;
+    const minNu = {}; const cap = (p) => (minderIds.includes(p.id) ? Math.max(blokLen[0], gelijk - blokLen[0]) : Infinity);
     const blokken = []; const keepers = [];
-    for (let b = 0; b < c.blokken; b++) {
-      const plek = Math.min(c.opVeld - 1, veld.length);
+    blokLen.forEach((len) => {
       // eerst gelijk verdelen binnen deze wedstrijd, dan voorrang voor het laagste seizoenspercentage
-      const volgorde = [...veld].sort((x, y) => ((blokkenVan[x.id] || 0) >= cap(x)) - ((blokkenVan[y.id] || 0) >= cap(y)) || (blokkenVan[x.id] || 0) - (blokkenVan[y.id] || 0) || score(x) - score(y) || x.voornaam.localeCompare(y.voornaam));
+      const volgorde = [...veld].sort((x, y) => ((minNu[x.id] || 0) >= cap(x)) - ((minNu[y.id] || 0) >= cap(y)) || (minNu[x.id] || 0) - (minNu[y.id] || 0) || score(x) - score(y) || x.voornaam.localeCompare(y.voornaam));
       const inBlok = volgorde.slice(0, plek);
-      inBlok.forEach((p) => { min[p.id] += c.blokMin; blokkenVan[p.id] = (blokkenVan[p.id] || 0) + 1; });
+      inBlok.forEach((p) => { min[p.id] += len; minNu[p.id] = (minNu[p.id] || 0) + len; });
       keepers.push(keeper && keeper.id);
       blokken.push([keeper, ...inBlok].filter(Boolean).map((p) => p.id));
-    }
-    return { blokken, keepers, huidig: 0, bevestigd: false, blokMin: c.blokMin, vorm: c.vorm, spelers: beschikbaar.map((p) => p.id), wedMin, minder: minderIds };
+    });
+    return { blokken, keepers, huidig: 0, bevestigd: false, blokMin: blokLen[0], blokLen, vorm: c.vorm, opVeld: c.opVeld, spelers: beschikbaar.map((p) => p.id), wedMin, minder: minderIds };
   };
 
 })();

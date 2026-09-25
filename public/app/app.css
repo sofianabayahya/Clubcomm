@@ -422,3 +422,12 @@ details.uitklap.stil summary { font-size: 13px; color: var(--zacht); }
 .profiel.aan { border-color: var(--blauw); box-shadow: inset 0 0 0 1px var(--blauw); }
 .profiel.aan b::after { content: ' ✓'; color: var(--blauw); }
 .privacy h3 { font-size: 15px; margin: 14px 0 4px; } .privacy p, .privacy li { font-size: 14px; line-height: 1.5; } .privacy ul { padding-left: 18px; margin: 4px 0; }
+
+/* Wisselschema zelf aanpassen (Besluit 39) */
+.tabel.wisselgrid td, .tabel.wisselgrid th { padding: 3px 1px; text-align: center; white-space: nowrap; }
+.tabel.wisselgrid td:first-child, .tabel.wisselgrid th:first-child { text-align: left; padding-left: 6px; max-width: 64px; overflow: hidden; text-overflow: ellipsis; }
+.tabel.wisselgrid .cel { width: 30px; height: 32px; border-radius: 8px; border: 1px solid var(--lijn); background: var(--vlak); color: #fff; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; }
+.tabel.wisselgrid .cel.aan { background: var(--blauw); border-color: var(--blauw); }
+.tabel.wisselgrid .cel.k { background: var(--vlak2); color: var(--zacht); }
+.tabel.wisselgrid .cel:disabled { opacity: .45; }
+.tabel.wisselgrid tr.som td { font-size: 12px; }
