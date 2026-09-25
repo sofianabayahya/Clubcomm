@@ -85,7 +85,7 @@
             <p class="klein">Geen training in: ${zonder.map((v) => esc(v.naam.toLowerCase())).join(', ')}. ${c.vakanties.filter((v) => v.trainen).map((v) => `Wel in de ${esc(v.naam.toLowerCase())}.`).join(' ')}</p>
             <p class="zacht klein">Seizoen en vakanties stelt de clubbeheerder in. Het systeem maakt alle trainingen aan en slaat vakanties over.</p></div>
           <div class="twee-knoppen"><button class="tegel" data-act="bulkRooster">${icon('calendar-plus')}<span>Rooster voor meerdere teams</span></button><button class="tegel" data-act="excelImport">${icon('upload')}<span>Importeren uit Excel</span></button></div>
-          <button class="knop licht vol rood-tekst" data-act="afgelasten">${icon('ban')}Afgelasten (vorst, veld afgekeurd)</button>
+          <button class="knop licht vol rood-tekst" data-act="noodbericht">${icon('triangle-alert')}Noodbericht of afgelasten</button>
           ${h.sectie('Weekrooster en veldindeling')}
           <div class="lijst compact">${S.teams.map((t) => h.rij({ ic: 'shield', titel: esc(t.naam), sub: t.rooster.map((r) => `${D.DAG_KORT[r.dag]} ${r.tijd} ${esc(r.veld)}`).join(' · ') || 'Nog geen rooster', act: 'roosterTeam', attrs: `data-team="${t.id}"` })).join('')}</div>
           ${h.sectie('Uitzonderingen door trainers')}

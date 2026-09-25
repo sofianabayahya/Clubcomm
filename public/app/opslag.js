@@ -7,7 +7,7 @@
   // Lege S met alle verzamelingen die de app kent
   const leeg = () => ({
     v: 8, gen: '', club: {}, teams: [], people: [], players: [], acts: [], afm: [], pres: {}, lang: [], gesprekken: [], msgs: [],
-    vervoer: {}, taken: [], aanm: [], beoord: {}, notities: {}, speeltijd: { min: {}, schema: {}, keeper: {}, mogelijk: {} }, wijzigingen: [],
+    vervoer: {}, taken: [], opgave: [], aanm: [], beoord: {}, notities: {}, speeltijd: { min: {}, schema: {}, keeper: {}, mogelijk: {} }, wijzigingen: [],
     demo: {}, materiaal: {}, mails: [], trainerLog: [], trainerGesprekken: [], ontwGesprek: [], sigSinds: {}, signaalAfgedaan: [],
     gezienInfo: {}, mijlpaalGezien: {}, autoVerstuurd: {}, beoordGedeeld: {}, beoordGezien: {},
     // voorkomt dat de demo-onderdelen voorbeelddata toevoegen
@@ -31,6 +31,7 @@
     ['msgs', 'bericht', () => ({})],
     ['taken', 'team', (r, I) => ({ team: I.teamVanAct(r.actId), act: r.actId })],
     ['aanm', 'aanm', (r) => ({ team: r.teamId })],
+    ['opgave', 'speler', (r, I) => ({ team: I.teamVanAct(r.actId), speler: r.spelerId, act: r.actId })],
     ['wijzigingen', 'teamstaf', (r) => ({ team: r.teamId })],
     ['mails', 'hjo', () => ({})],
     ['trainerLog', 'teamstaf', (r) => ({ team: r.teamId, act: r.actId })],

@@ -14,7 +14,7 @@
     const opgeslagen = S.pres[a.id];
     if (!ui.draft || ui.draft.actId !== a.id) {
       const s = {};
-      sp.forEach((pl) => { const st = M.status(S, pl, a); s[pl.id] = opgeslagen && opgeslagen.s[pl.id] ? opgeslagen.s[pl.id] : ['afgemeld', 'langdurig'].includes(st.code) ? 'x' : 'a'; });
+      sp.forEach((pl) => { const st = M.status(S, pl, a); s[pl.id] = opgeslagen && opgeslagen.s[pl.id] ? opgeslagen.s[pl.id] : ['afgemeld', 'langdurig', 'open'].includes(st.code) ? 'x' : 'a'; });
       ui.draft = { actId: a.id, s };
     }
     const d = ui.draft.s;

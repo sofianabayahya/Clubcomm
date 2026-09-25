@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 24 september 2026 (Besluit 30 t/m 35 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 36 toegevoegd)
 
 ---
 
@@ -508,6 +508,46 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 36 — Communicatieplan: aankondigen, herinneren, noodberichten en wanneer een e-mail
+*Besloten 25 september 2026. Herziet Besluit 26 (vaste berichten).*
+
+**Drie soorten berichten**
+| Soort | Weten ouders het al? | Voorbeeld | Hoe |
+|---|---|---|---|
+| **Aankondiging** | nee, het is nieuw | bowlen, extra training, toernooi | door een mens, meteen bij het aanmaken |
+| **Herinnering** | ja (jaarplanning of app) | vakantie, Goede Vrijdag, start seizoen | automatisch, volgens het schema |
+| **Noodbericht** | nee, en het is nu | code rood, velden afgekeurd | één tik met een klaargezette tekst, altijd urgent |
+
+**Standaard herinneringsschema** (per onderwerp aan te passen: meerdere momenten, automatisch of klaarzetten, app en e-mail of alleen app):
+- Start seizoen: 14 en 2 dagen voor de eerste training · Einde seizoen: 14 dagen.
+- Vakantie: 7 dagen voor de eerste vakantiedag · Na de vakantie "we trainen weer": 2 dagen voor de eerste training.
+- Vrije dag / club dicht (korter dan 3 dagen, bijv. Goede Vrijdag): 7 dagen.
+- De wedstrijden beginnen (per fase): 7 dagen voor de eerste wedstrijd. ("Nieuwe fase" vervalt: dat zegt ouders niets.)
+- Beoordelingen en ontwikkelgesprekken: 7 dagen.
+- Gewone trainingen en wedstrijden: geen herinnering (routine).
+
+**Vuistregels:** hooguit 3 berichten per onderwerp; een herinnering alleen aan wie hem nodig heeft; vallen meerdere herinneringen tegelijk, dan één gebundeld bericht ("Goed om te weten"); per moment gaat alleen de laatste termijn uit als er een is gemist.
+
+**Eigen berichten:** krijgt de club vaak dezelfde vraag van ouders, dan maakt de HJO/beheerder er een vast bericht van (datum, termijnen, tekst).
+
+**Activiteiten:** bij het aanmaken kies je de herinneringen (standaard 7 en 2 dagen). **Opgave nodig** (bijv. bowlen): ouders geven ja of nee door vóór een uiterste datum; herinneringen tellen tot die datum en gaan alleen naar wie nog niet reageerde; de trainer ziet "x komen · y niet · z nog geen antwoord". Activiteiten met opgave tellen niet mee voor aanwezigheid en kaarten (vrijwillig).
+
+**Noodberichten:** code rood (alles afgelast), code oranje (mogelijk afgelast, bericht uiterlijk om ...), velden afgekeurd, club onverwacht dicht. Bij HJO → Planning → *Noodbericht of afgelasten*.
+
+**Waar:** alles staat in het **Communicatieplan** (HJO → Planning, en clubbeheerder → Seizoen), met een tijdlijn per maand (ingeklapt). Automatische berichten komen **niet** op Home of in het berichtencentrum van de HJO; alleen berichten op "klaarzetten" geven één regel "x berichten klaar om te versturen".
+
+**Wanneer ook een e-mail** (naast het bericht in de app):
+| E-mail | Geen e-mail |
+|---|---|
+| urgent (noodbericht, afgelast, planningswijziging) | meldingen ter informatie aan staf |
+| persoonlijk (bericht, vraag, **antwoord**, kaart, vriendelijke herinnering) | herinneringen die op "alleen in de app" staan |
+| aankondigingen en herinneringen van activiteiten (opgave) | ingeplande berichten (nog niet) |
+| vaste herinneringen (standaard, zolang er geen pushmeldingen zijn) | oude berichten en voorbeelddata |
+| nieuws van team of club (de afzender kan "ook per e-mail" uitzetten) | |
+Zodra er pushmeldingen zijn, gaan vaste herinneringen standaard alleen nog als pushmelding.
+
+**Nog te doen (versie 2):** automatisch versturen vanaf de server (nu gebeurt het zodra de beheerder/HJO of de staf van het team de app opent); ingeplande berichten ook per e-mail; weekbericht als optie.
+
 ## Besluit 35 — Pilot RKSV DCG: activiteiten, taken per leeftijd en e-mailmeldingen
 *Besloten 24 september 2026.*
 
@@ -658,6 +698,7 @@ Toegepast (24 sep 2026):
 - De 7 dagen stelt de clubbeheerder in bij Regels (naast "automatische oproepen").
 
 ## Besluit 26 — Home van HJO en coördinator: te doen en ter informatie
+*Herzien in Besluit 36 (Communicatieplan).*
 *Besloten 23 september 2026. Vult Besluit 11 aan.*
 
 - **Home heeft twee delen:**

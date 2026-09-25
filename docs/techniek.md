@@ -39,3 +39,4 @@
 - Edge Function `supabase/functions/melding/index.ts` (verify_jwt uit; doet zelf de controles): leest het bericht en de contactgegevens met de service role en verstuurt per ontvanger een e-mail via de Brevo API.
 - Secrets (Supabase → Edge Functions → Secrets): `BREVO_API_KEY`, `AFZENDER_EMAIL` (een in Brevo geverifieerde afzender), optioneel `APP_URL`. Zonder secrets gebeurt er niets.
 - Overgeslagen: berichten ouder dan 15 minuten (voorbeelddata), ingeplande berichten, niet-urgente meldingen aan staf, adressen op `.invalid`.
+- Migratie `006_meldingen_antwoord.sql`: trigger `cc_mail_antw` bij een nieuw antwoord (lijst `antw` groeit) → e-mail naar de afzender (en bij persoonlijke berichten de andere deelnemers). Berichten met `mail: false` krijgen geen e-mail, tenzij urgent (Besluit 36).

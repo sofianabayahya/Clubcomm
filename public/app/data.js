@@ -97,7 +97,7 @@
         ingericht: { seizoen: true, vakanties: true, regels: true, rollen: true, modules: false },
       },
       teams: [], people: [], players: [], acts: [], afm: [], pres: {}, lang: [], gesprekken: [], msgs: [],
-      vervoer: {}, taken: [], aanm: [], beoord: {}, notities: {}, speeltijd: { min: {}, schema: {}, mogelijk: {} }, wijzigingen: [],
+      vervoer: {}, taken: [], opgave: [], aanm: [], beoord: {}, notities: {}, speeltijd: { min: {}, schema: {}, mogelijk: {} }, wijzigingen: [],
     };
 
     const person = (naam, extra = {}) => {
@@ -361,7 +361,7 @@
   M.lang = (S, spelerId, datum) => S.lang.find((l) => l.spelerId === spelerId && datum >= l.van && datum <= l.tot);
   M.deadline = (S, act) => { const i = M.inst(S, act.teamId); return new Date(start(act).getTime() - (act.soort === 'wedstrijd' ? i.deadlineWedstrijd : i.deadlineTraining) * 3600e3); };
   M.deadlineTekst = (S, act) => { const i = M.inst(S, act.teamId); const u = act.soort === 'wedstrijd' ? i.deadlineWedstrijd : i.deadlineTraining; const d = M.deadline(S, act); return u >= 24 ? `${CC.date.kort(iso(d))} ${pad(d.getHours())}:${pad(d.getMinutes())}` : `${pad(d.getHours())}:${pad(d.getMinutes())}`; };
-  M.teLaatAfgemeld = (S, f, act) => new Date(f.tijd) > M.deadline(S, act);
+  M.teLaatAfgemeld = (S, f, act) => !act.opgave && new Date(f.tijd) > M.deadline(S, act);
 
   // status van een speler bij een activiteit
   M.status = (S, pl, act) => {
@@ -378,6 +378,8 @@
       return { code: 'nietafgemeld' };
     }
     if (l) return { code: 'langdurig', lang: l };
+    // Activiteit met opgave (Besluit 36): ja = komt, nee = afgemeld, nog niets = open
+    if (act.opgave) { if (f) return { code: 'afgemeld', afm: f, laat: false }; return (S.opgave || []).some((o) => o.actId === act.id && o.spelerId === pl.id) ? { code: 'verwacht', opgave: true } : { code: 'open' }; }
     if (f) return { code: 'afgemeld', afm: f, laat: M.teLaatAfgemeld(S, f, act) };
     return { code: 'verwacht' };
   };
@@ -391,7 +393,7 @@
   M.periode = (S, soort) => soort === 'seizoen' ? { van: S.club.seizoen.start, tot: vandaag() } : { van: M.blok(S, vandaag()).van, tot: vandaag() };
 
   M.stats = (S, pl, per) => {
-    const acts = M.acts(S, pl.teamId, per.van, per.tot).filter((a) => !a.afgelast && S.pres[a.id] && S.pres[a.id].s[pl.id]);
+    const acts = M.acts(S, pl.teamId, per.van, per.tot).filter((a) => !a.afgelast && !a.opgave && S.pres[a.id] && S.pres[a.id].s[pl.id]);
     const r = { totaal: 0, aanwezig: 0, telaat: 0, afwezig: 0, redenen: {}, lang: 0, niet: 0, lijst: [], tr: { tot: 0, aan: 0 }, wed: { tot: 0, aan: 0 } };
     acts.forEach((a) => {
       const st = M.status(S, pl, a); r.totaal++; r.lijst.push({ act: a, st });
@@ -441,7 +443,7 @@
   M.kaarten = (S, pl) => {
     const r = M.kaartRegels(S, pl.teamId); const sz = M.seizoen(S);
     const ev = [];
-    M.acts(S, pl.teamId, sz.van, sz.tot).filter((a) => !a.afgelast).forEach((a) => {
+    M.acts(S, pl.teamId, sz.van, sz.tot).filter((a) => !a.afgelast && !a.opgave).forEach((a) => {
       const st = M.status(S, pl, a);
       if (st.code === 'afgemeld' && st.laat && st.afm.reden !== 'Ziek') ev.push({ act: a, soort: 'laat', wat: 'Te laat afgemeld' });
       if (st.code === 'nietafgemeld') ev.push({ act: a, soort: 'niet', wat: 'Niet afgemeld en niet gekomen' });
