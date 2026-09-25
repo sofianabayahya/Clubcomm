@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 47 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 48 toegevoegd)
 
 ---
 
@@ -507,6 +507,13 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 48 — Verversen elke 30 seconden
+- De app haalt de gegevens **elke 30 seconden** opnieuw op zolang hij open en zichtbaar is (was 2 minuten), en meteen bij terugkomen in de app.
+- Niet verversen als iemand aan het typen is of een venster open heeft; eerst wordt eigen werk opgeslagen.
+- Het scherm wordt **alleen opnieuw getekend als er echt iets veranderd is**, en blijft op dezelfde plek staan (geen verspringen).
+- Kosten: bij DCG is alles samen ± 30 kB per keer; ruim binnen Supabase Pro. Staat de app op de achtergrond of dicht, dan gebeurt er niets (geen batterij).
+- **Later (bij meer clubs of wedstrijddag):** "live" meldingen via Supabase Realtime (de server stuurt een seintje bij een wijziging, dus binnen 1 seconde) en alleen gewijzigde regels ophalen. Staat op Openstaand.
 
 ## Besluit 47 — Aanmeldingen: teamleider eerst, trainer kan altijd
 *Besloten 25 september 2026.*

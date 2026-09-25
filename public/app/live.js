@@ -85,21 +85,27 @@
     nu.forEach((r, k) => { if (!ok) return; const j = JSON.stringify(r); if (L.snap.get(k) !== j && L.geweigerd.get(k) !== j) ok = false; });
     return ok && [...L.snap.keys()].every((k) => nu.has(k));
   };
-  // Verversen: bij terugkomen in de app en elke 2 minuten, maar niet als iemand aan het typen is
+  // Verversen (Besluit 48): bij terugkomen in de app en elke 30 seconden zolang de app open en zichtbaar is,
+  // maar niet als iemand aan het typen is of een venster open heeft. Alleen opnieuw tekenen als er echt iets veranderd is.
   const ververs = async (dwing) => {
     if (!L.pid || document.hidden) return;
-    if (!dwing && Date.now() - L.geladen < 60000) return;
+    if (!dwing && Date.now() - L.geladen < 20000) return;
     const actief = document.activeElement; const typt = actief && /INPUT|TEXTAREA|SELECT/.test(actief.tagName);
     const sheet = document.getElementById('sheet'); if (!dwing && (typt || (sheet && !sheet.hidden))) return;
     if (!allesOpgeslagen()) { CC.save(); return; }
-    try { await laden(); CC.render(); } catch (e) { console.warn(e); }
+    const voor = L.snap;
+    try {
+      await laden();
+      const anders = voor.size !== L.snap.size || [...L.snap].some(([k, v]) => voor.get(k) !== v);
+      if (anders || dwing) { const y = window.scrollY; CC.render(); window.scrollTo(0, y); }
+    } catch (e) { console.warn(e); }
   };
   document.addEventListener('visibilitychange', () => ververs(false));
   // App naar de achtergrond of dicht (iPhone sluit snel): wat nog niet is opgeslagen, meteen versturen in plaats van na 0,4 s
   const nuOpslaan = () => { if (!L.pid || !L.timer) return; clearTimeout(L.timer); L.timer = null; sync(); };
   document.addEventListener('visibilitychange', () => { if (document.hidden) nuOpslaan(); });
   window.addEventListener('pagehide', nuOpslaan);
-  setInterval(() => ververs(false), 120000);
+  setInterval(() => ververs(false), 30000);
   CC.ververs = () => ververs(true);
 
   // ---------- Inloggen ----------

@@ -31,7 +31,7 @@ Besluiten staan in `besluiten.md`; dit is het logboek van fouten. Nieuwste boven
 - **F. Echte gegevens:** lange e-mailadressen, spaties, hoofdletters, geen telefoonnummer.
 
 ## Bekende risico's (nog niet opgelost)
-- **Verversen:** de app haalt nieuwe gegevens op bij terugkomen in de app en elke 2 minuten. Een afmelding van een paar seconden geleden zie je dus soms pas na even wachten of opnieuw openen.
+- **Verversen:** nu elke 30 seconden en bij terugkomen in de app (Besluit 48). Echt direct (binnen 1 s) kan later met Supabase Realtime.
 - **Automatische berichten** gaan uit als een beheerder/staflid de app opent, niet vanzelf vanaf de server.
 - **Tegelijk wijzigen** van dezelfde regel: de laatste wint (zelden, maar mogelijk bij twee teamleiders).
 - **Brevo-afmeldknop** in elke mail: wie tikt, krijgt geen inlogcode meer (deblokkeren in Brevo).
