@@ -258,7 +258,7 @@
         <label for="a-ouder">Jouw naam</label><input id="a-ouder" name="ouder" required placeholder="Voor- en achternaam">
         <label for="a-kind">Voornaam van je kind</label><input id="a-kind" name="voor" required>
         <label for="a-kind2">Achternaam van je kind</label><input id="a-kind2" name="achter" required>
-        <label class="vink"><input type="checkbox" name="ok" required> Ik heb de <a href="#" data-act="privacy">privacyverklaring</a> gelezen en geef toestemming dat de club de gegevens van mijn kind in ClubComm gebruikt.</label>
+        <label class="vink"><input type="checkbox" name="ok" required><span>Ik heb de <a href="#" data-act="privacy">privacyverklaring</a> gelezen en geef toestemming dat de club de gegevens van mijn kind in ClubComm gebruikt.</span></label>
         <button class="knop" type="submit">Aanmelden</button>
       </form></div>`;
   };
