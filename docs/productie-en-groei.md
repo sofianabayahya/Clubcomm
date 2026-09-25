@@ -60,8 +60,8 @@ Legenda: ✅ gedaan · ⚠️ nodig vóór of tijdens de pilot · 🔜 nodig vó
 ### Back-ups en betrouwbaarheid
 | Punt | Status | Toelichting |
 |---|---|---|
-| Back-ups | ✅ 25-09 (pilot) | Elke zondag 02:00 een kopie in het afgeschermde schema `backup` (8 weken bewaard) + knop "Back-up downloaden" voor de beheerder. Daarna Supabase Pro (dagelijkse back-ups, ook als het hele project weg is). |
-| Supabase gratis: pauzeert na 7 dagen zonder gebruik | ⚠️ | In de pilot geen probleem, wel in een lange vakantie (zomer). |
+| Back-ups | ✅ 25-09 | Supabase Pro (sinds 25-09): elke dag een back-up buiten de database, 7 dagen terug te zetten; het project pauzeert niet meer. Daarnaast elke zondag 02:00 een kopie in het schema `backup` (8 weken) + knop "Back-up downloaden". |
+| Supabase pauzeert na 7 dagen zonder gebruik | ✅ 25-09 | Opgelost met Supabase Pro. |
 | Bewaking of de site werkt (uptime) | 🔜 | Gratis dienst (bijv. UptimeRobot) die je mailt als de app plat ligt. |
 | Aparte testomgeving (niet in de echte database testen) | 🔜 | Tweede Supabase-project + Vercel-preview. Nu testen we in de echte database. |
 | Automatische berichten vanaf de server | 🔜 | Nu gaan ze uit zodra een beheerder of staflid de app opent; later elke ochtend vanzelf (pg_cron). |
