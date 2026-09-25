@@ -44,7 +44,8 @@
     return regels.join('\r\n');
   };
 
-  CC.agendaRij = () => !teamsVan(CC.S(), CC.me()).length ? '' : h.rij({ ic: 'calendar-plus', titel: 'Zet in mijn agenda', sub: 'Trainingen en wedstrijden automatisch in je eigen agenda', act: 'agendaSheet' });
+  // In de echte versie pas tonen als de agenda-link echt werkt (eigen domein + server die de .ics levert)
+  CC.agendaRij = () => CC.live || !teamsVan(CC.S(), CC.me()).length ? '' : h.rij({ ic: 'calendar-plus', titel: 'Zet in mijn agenda', sub: 'Trainingen en wedstrijden automatisch in je eigen agenda', act: 'agendaSheet' });
 
   CC.on('agendaSheet', () => {
     const S = CC.S(); const p = CC.me(); const k = p.agendaKeuze || { training: true, wedstrijd: true };

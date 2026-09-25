@@ -22,7 +22,7 @@ Gemigreerd uit Replit op 2026-09-22. Taal van de UI: Nederlands.
   - Icoontjes: één set (Lucide) in `vendor/icons.js`. Kleuren als tokens in `app.css`, met donkere modus.
 - Pilot = onderbouw (O6–O12); de demo heeft alleen onderbouwteams.
 - Demo-accounts: Sanne (ouder), Mark (trainer + ouder), Linda (teamleider + ouder), Peter (HJO + clubbeheerder), Esther (coördinator O10–O12). Data in localStorage, wordt elke dag opnieuw gemaakt.
-- Oude Replit-pagina's staan in `public/oud/` (alleen ter referentie).
+- Oude Replit-pagina's staan in `docs/oud-replit/` (alleen ter referentie; niet meer online).
 - `server.js` (Express) serveert alleen `public/`; mock-endpoints `/api/*` worden niet gebruikt.
 - Pagina-overzicht en rollen van het oude prototype: `APP_BLUEPRINT.md` (verouderd; `docs/besluiten.md` gaat voor).
 
