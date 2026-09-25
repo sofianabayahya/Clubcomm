@@ -151,7 +151,7 @@
   CC.stapRij = (S, s) => {
     const pl = M.speler(S, s.spelerId); const o = pl && M.persoon(S, pl.ouders[0]);
     // Bellen: 1) bel of app de ouder, 2) leg vast wat je afsprak (dan verdwijnt de stap)
-    const knoppen = s.soort === 'bellen' && o && CC.mag('bellen', null, pl.teamId) ? `<div class="stap-knoppen"><a class="knop klein licht" href="tel:${o.tel}">${icon('phone')}Bel ${esc(o.naam.split(' ')[0])}</a><a class="knop klein licht" href="https://wa.me/31${o.tel.slice(1)}" target="_blank" rel="noopener">${icon('message-circle')}WhatsApp</a><button class="knop klein" data-act="gesprekVastleggen" data-id="${s.spelerId}">${icon('check')}Contact vastleggen</button></div>` : '';
+    const knoppen = s.soort === 'bellen' && o && CC.mag('bellen', null, pl.teamId) ? `<div class="stap-knoppen">${o.tel ? `<a class="knop klein licht" href="tel:${esc(o.tel)}">${icon('phone')}Bel ${esc(o.naam.split(' ')[0])}</a><a class="knop klein licht" href="https://wa.me/${CC.waNummer(o.tel)}" target="_blank" rel="noopener">${icon('message-circle')}WhatsApp</a>` : `<button class="knop klein licht" data-act="geenTel" data-naam="${esc(o.naam)}">${icon('phone')}Nog geen nummer</button>`}<button class="knop klein" data-act="gesprekVastleggen" data-id="${s.spelerId}">${icon('check')}Contact vastleggen</button></div>` : '';
     const rij = h.rij({ ic: s.soort === 'bellen' ? 'phone' : 'users', titel: esc(s.tekst), sub: esc(s.sub), kleur: 'rood', act: 'open', attrs: `data-view="speler" data-id="${s.spelerId}"` });
     return knoppen ? `<div class="signaal">${rij}<div class="signaal-voet">${knoppen}</div></div>` : rij;
   };

@@ -644,7 +644,13 @@
     <p class="zacht klein">Te laat komen is geen kaart. Gebeurt het vaak, dan praat de trainer er even over. Kaarten en stappen tellen over het hele seizoen.</p>`); });
 
   // Contactkaart: een ouder met bellen, WhatsApp en mail (Besluit 34)
-  CC.contactRij = (o) => h.rij({ ic: h.avatar(o.naam), titel: esc(o.naam), sub: esc(o.tel || ''), rechts: `<span class="contactknoppen">${o.tel ? `<a class="icoonknop" href="tel:${esc(o.tel)}" aria-label="Bel ${esc(o.naam)}">${icon('phone')}</a><a class="icoonknop groen" href="https://wa.me/31${esc(o.tel.replace(/\D/g, '').replace(/^0/, ''))}" target="_blank" rel="noopener" aria-label="WhatsApp ${esc(o.naam)}">${icon('message-circle')}</a>` : ''}${o.email && !/\.invalid$/.test(o.email) ? `<a class="icoonknop" href="mailto:${esc(o.email)}" aria-label="Mail ${esc(o.naam)}">${icon('mail')}</a>` : ''}</span>` });
+  // Bellen en WhatsApp (Besluit 40): altijd zichtbaar; zonder nummer grijs, en een tik legt uit hoe het nummer erin komt
+  CC.waNummer = (t) => { const d = String(t || '').replace(/\D/g, ''); return d.startsWith('00') ? d.slice(2) : d.startsWith('0') ? '31' + d.slice(1) : d; };
+  CC.belKnoppen = (o, extra = '') => o && o.tel
+    ? `<a class="icoonknop" href="tel:${esc(o.tel)}" aria-label="Bel ${esc(o.naam)}" ${extra}>${icon('phone')}</a><a class="icoonknop groen" href="https://wa.me/${CC.waNummer(o.tel)}" target="_blank" rel="noopener" aria-label="WhatsApp ${esc(o.naam)}" ${extra}>${icon('message-circle')}</a>`
+    : `<button class="icoonknop uit" data-act="geenTel" data-naam="${esc(o ? o.naam : '')}" aria-label="Nog geen telefoonnummer" ${extra}>${icon('phone')}</button><button class="icoonknop uit" data-act="geenTel" data-naam="${esc(o ? o.naam : '')}" aria-label="Nog geen telefoonnummer" ${extra}>${icon('message-circle')}</button>`;
+  CC.on('geenTel', (el) => CC.toast(`${(el.dataset.naam || 'Deze ouder').split(' ')[0]} heeft nog geen telefoonnummer ingevuld. Vraag het via een bericht: ouders vullen het zelf in bij Profiel.`));
+  CC.contactRij = (o) => h.rij({ ic: h.avatar(o.naam), titel: esc(o.naam), sub: esc(o.tel || 'Nog geen telefoonnummer'), rechts: `<span class="contactknoppen">${CC.belKnoppen(o)}${o.email && !/\.invalid$/.test(o.email) ? `<a class="icoonknop" href="mailto:${esc(o.email)}" aria-label="Mail ${esc(o.naam)}">${icon('mail')}</a>` : ''}</span>` });
 
   // Volgt deze rol spelers op (aanwezigheid, kaarten, signalen)? De teamleider standaard niet (Besluit 33); de club kan het aanzetten.
   CC.volgtSpelers = (tid) => CC.rol().rol !== 'teamleider' || CC.mag('afdoen', null, tid) || CC.mag('bellen', null, tid);

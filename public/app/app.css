@@ -43,7 +43,7 @@ p { margin: .4em 0; }
 .avatar.sys { background: var(--vlak2); color: var(--zacht); }
 .icoonknop { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; border: 0; background: transparent; color: var(--inkt); flex: none; }
 .icoonknop:hover { background: var(--vlak2); }
-.icoonknop.groen { color: var(--groen); } .icoonknop.blauw { background: var(--blauw); color: #fff; }
+.icoonknop.groen { color: var(--groen); } .icoonknop.blauw { background: var(--blauw); color: #fff; } .icoonknop.uit { color: var(--zacht); opacity: .45; }
 
 /* Inhoud en navigatie */
 .inhoud { padding: 14px 16px calc(var(--nav-h) + 24px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 12px; }

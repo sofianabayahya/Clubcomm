@@ -513,7 +513,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 - Bij goedkeuren van een aanmelding (of speler handmatig toevoegen) krijgt de ouder **geen** telefoonnummer meer (eerder een voorbeeldnummer, waardoor de belknop naar een verkeerd nummer ging).
 - De ouder vult zijn nummer zelf in: **Profiel → Telefoonnummer toevoegen**. Alleen trainer, teamleider en jeugdleiding zien het (zoals alle contactgegevens); andere ouders niet.
-- Zonder nummer toont de contactkaart geen bel- of appknop.
+- Bellen en WhatsApp staan altijd bij de ouder (contactkaart, spelerslijst, bel-signaal, staf). Zonder nummer zijn ze grijs; een tik legt uit dat de ouder het nummer zelf invult bij Profiel. SMS niet (weinig gebruikt). WhatsApp-links werken ook met +31/0031-nummers.
 - Aandachtspunt: de app mailt de staf niet bij een nieuwe aanmelding; die staat op Home van trainer (zonder teamleider) of teamleider.
 
 ## Besluit 39 — Wisselschema: de club kiest om de hoeveel minuten, de trainer past zelf aan

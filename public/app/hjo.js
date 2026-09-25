@@ -66,7 +66,7 @@
             .filter((p) => q || f === 'alle' || (f === 'geen' ? p.rollen.some((r) => ['trainer', 'teamleider'].includes(r.rol) && !r.teamId) || (staf(p) && !p.rollen.some((r) => r.teamId || r.groep || ['hjo', 'beheerder'].includes(r.rol))) : p.rollen.some((r) => r.rol === f)))
             .filter((p) => !CC.coordinatorVoor || CC.rol().rol !== 'coordinator' || q || p.rollen.some((r) => !r.teamId || S.teams.some((t) => t.id === r.teamId)))
             .sort((a, b) => a.naam.localeCompare(b.naam)).slice(0, 60);
-          const contact = (p) => `${p.tel ? `<a class="icoonknop blauw" href="tel:${esc(p.tel)}" aria-label="Bel ${esc(p.naam)}">${icon('phone')}</a><a class="icoonknop groen" href="https://wa.me/31${esc(p.tel.slice(1))}" target="_blank" rel="noopener" aria-label="WhatsApp ${esc(p.naam)}">${icon('message-circle')}</a>` : ''}<a class="icoonknop" href="mailto:${esc(p.email)}" aria-label="Mail ${esc(p.naam)}">${icon('mail')}</a>`;
+          const contact = (p) => `${CC.belKnoppen(p)}<a class="icoonknop" href="mailto:${esc(p.email)}" aria-label="Mail ${esc(p.naam)}">${icon('mail')}</a>`;
           return `${seg}<div class="zoek">${icon('search')}<input type="search" placeholder="Zoek persoon (ook ouders)" value="${esc(q)}" data-input="zoekMens" aria-label="Zoek persoon"></div>
             ${q ? '' : `<div class="chips">${filters.map(([k, l]) => `<button class="chipknop ${k === f ? 'aan' : ''}" data-act="seg" data-key="stafRol" data-val="${k}">${esc(l)}</button>`).join('')}</div>`}
             <p class="zacht klein">Iedereen met een rol in de club: bellen, appen of mailen met één tik. Tik op een naam om rollen te koppelen of te wijzigen (bijv. een ouder ook trainer maken).</p>
