@@ -171,7 +171,7 @@ async function teamleider() {
       ['Typ de code over', 'Je krijgt een mail met een code van 6 cijfers. Typ die over in de app.'],
       ['Klaar', 'Je blijft ingelogd op je telefoon.'],
     ],
-    tip: 'Zet ClubComm op je beginscherm (iPhone: Delen → Zet op beginscherm). Log daarna in via het icoon en typ de code over: de knop in de mail opent Safari.',
+    tip: 'Zet ClubComm op je beginscherm (iPhone: Delen → Zet op beginscherm). Log daarna in via het icoon en typ de code van 6 cijfers uit de mail over.',
   });
   await stappen(pres, v, {
     label: 'Stap 3', titel: 'Wisselen tussen teamleider en ouder', intro: 'Je hebt één account met twee rollen. Bovenaan zie je altijd in welke rol je zit.', beeld: 'tl-profiel',
@@ -281,7 +281,7 @@ async function ouders() {
       ['Ga naar mijnclubcomm.nl', 'Vul je e-mailadres in en tik op Stuur mij een inlogcode.'],
       ['Typ de code over', 'Je krijgt een mail met een code van 6 cijfers. Typ die over in de app.'],
     ],
-    tip: 'Zet ClubComm op je beginscherm (iPhone: Delen → Zet op beginscherm). Log daarna in via het icoon en typ de code over: de knop in de mail opent Safari.',
+    tip: 'Zet ClubComm op je beginscherm (iPhone: Delen → Zet op beginscherm). Log daarna in via het icoon en typ de code van 6 cijfers uit de mail over.',
   });
   await stappen(pres, v, {
     label: 'Home', titel: 'Alles voor jouw kind', intro: 'Bovenaan wat jouw aandacht vraagt, daaronder het programma.', beeld: 'ou-home',

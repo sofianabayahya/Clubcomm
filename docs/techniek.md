@@ -17,12 +17,12 @@
 - Migraties: `supabase/migrations/001…011` (009: vastgezet nieuws leesbaar voor nieuwe ouders van het team; 010: telefoonnummer bij aanmelden; 011: geen dubbele aanmelding voor hetzelfde kind).
 
 ## Inloggen
-- Met een e-mailcode of de link in de mail (geen wachtwoord). Na inloggen koppelt de database het account aan de persoon met hetzelfde e-mailadres.
+- Met een e-mailcode van 6 cijfers (geen wachtwoord, geen knop in de mail: Besluit 52). Na inloggen koppelt de database het account aan de persoon met hetzelfde e-mailadres.
 - Nieuwe ouder: via de team-uitnodiging (QR/link) aanmelden → de teamleider keurt goed → daarna koppelt het account vanzelf.
 
 ## Nog in te stellen in Supabase (dashboard, door de eigenaar)
 1. **Authentication → URL Configuration**: Site URL `https://mijnclubcomm.nl`; bij Redirect URLs `https://mijnclubcomm.nl/**` en `https://clubcomm-nine.vercel.app/**`.
-2. **Authentication → Emails → Magic Link**: zet `{{ .Token }}` in de tekst, zodat de mail ook de code bevat.
+2. **Authentication → Emails → Magic Link én Confirm signup**: tekst uit `supabase/templates/inlogcode.html` (alleen de code, geen knop; Besluit 52). Onderwerp: `Je inlogcode voor ClubComm: {{ .Token }}`.
 3. **Voor de pilot: eigen e-mailverzender (SMTP)**, bijv. Resend of Brevo. De ingebouwde verzender stuurt maar een paar mails per uur.
 
 ## Beheer

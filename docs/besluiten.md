@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 51 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 52 toegevoegd)
 
 ---
 
@@ -26,7 +26,7 @@ Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 51 toegevoegd)
 **Voor iedereen: geen wachtwoorden.**
 
 - Je vult je e-mailadres in en krijgt één mail met:
-  - een **magische link** (klikken = ingelogd), én
+  - ~~een **magische link** (klikken = ingelogd), én~~ *(vervallen, Besluit 52)*
   - een **code van 6 cijfers** om over te typen.
   De code is nodig omdat een link soms op het verkeerde apparaat opent (mail op de laptop, app op de telefoon) of al "gebruikt" is door een virusscanner.
 - **Ouders blijven ingelogd** tot ze zelf uitloggen, met vangnetten:
@@ -507,6 +507,13 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 52 — Inloggen alleen met de code, geen knop in de mail
+- De inlogmail bevat **alleen een code van 6 cijfers**, groot in beeld. Geen knop of link meer (vervangt de "magische link" uit Besluit 1).
+- Reden: de knop opent de browser (op de iPhone Safari), niet de app op het beginscherm. Je bent dan in de browser ingelogd en in de app niet. Juist de ouders die de app op hun beginscherm zetten, liepen hierop vast.
+- Eén manier van inloggen, overal hetzelfde (telefoon, beginscherm, computer). De iPhone stelt de code uit de mail vaak al boven het toetsenbord voor.
+- Het onderwerp van de mail bevat de code ("Je inlogcode voor ClubComm: 123456"), zodat je hem al in de meldingen ziet.
+- Mailtekst: `supabase/templates/inlogcode.html`; de beheerder plakt hem in Supabase bij **Magic Link** en **Confirm signup**.
 
 ## Besluit 51 — Geen dubbele aanmelding voor hetzelfde kind
 - Meldt dezelfde ouder (zelfde e-mailadres) **hetzelfde kind** (zelfde voornaam) nog eens aan voor hetzelfde team, dan komt er **geen tweede aanvraag**. Staat de eerste nog open, dan wordt die bijgewerkt (bijv. telefoonnummer). Is hij al goedgekeurd, dan gebeurt er niets.
