@@ -201,6 +201,7 @@
     const b = new URLSearchParams(location.search).get('bericht');
     if (b) { history.replaceState(null, '', location.pathname); if (CC.S().msgs.some((m) => m.id === b)) CC.open('bericht', { id: b }); }
     if (CC.pushVernieuw) CC.pushVernieuw();
+    if (!b && CC.pushWelkom) CC.pushWelkom();
   };
 
   // ---------- Beheer: club vullen met voorbeelddata om te testen, of leegmaken ----------

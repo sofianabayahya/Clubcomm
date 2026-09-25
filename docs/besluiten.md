@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 54 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 55 toegevoegd)
 
 ---
 
@@ -507,6 +507,13 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 55 — Meldingen: meteen vragen bij de eerste keer
+- Automatisch aanzetten zonder toestemming kan niet: Apple en Google verplichten dat de gebruiker zelf "Sta toe" tikt (ook bij gewone apps). Op de iPhone mag die vraag pas na een tik op een knop.
+- Daarom vragen we het **meteen na het eerste inloggen**, één keer per telefoon: scherm **"Mis niets van het team"** met één grote knop **Meldingen aanzetten** en "Later". Dan is de kans op "ja" het grootst.
+- **Alle soorten staan standaard aan**; uitzetten per soort kan in Profiel → Meldingen (dus: uitzetten in plaats van aanzetten).
+- Opent iemand ClubComm in Safari (niet vanaf het beginscherm), dan toont het scherm eerst de drie stappen om de app op het beginscherm te zetten.
+- "Later" → de regel "Zet pushmeldingen aan" blijft op Home (met "Niet nu": 30 dagen weg).
 
 ## Besluit 54 — Profiel opgeschoond
 - **Instellingen** zijn alleen nog echte instellingen: Meldingen · Privacyverklaring · Feedback · App op je beginscherm.

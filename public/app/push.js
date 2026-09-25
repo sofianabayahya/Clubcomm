@@ -65,17 +65,34 @@
     CC.sheet('Meldingen', inhoud);
   });
 
-  CC.on('pushOk', async (f) => {
-    const voorkeur = {}; SOORTEN.forEach(([k]) => { if (f[k]) voorkeur[k] = f[k].checked; });
-    // Toestemming vragen meteen bij de tik (de iPhone staat het alleen dan toe)
+  // Aanzetten: toestemming vragen meteen bij de tik (de iPhone staat het alleen dan toe), daarna de telefoon aanmelden
+  const zetAan = async (voorkeur, knop) => {
     const toestemming = Notification.permission === 'granted' ? Promise.resolve('granted') : Notification.requestPermission();
-    const knop = f.querySelector('button'); if (knop) { knop.disabled = true; knop.textContent = 'Even geduld…'; }
+    if (knop) { knop.disabled = true; knop.textContent = 'Even geduld…'; }
     try {
       if ((await toestemming) !== 'granted') { CC.closeSheet(); CC.toast('Geen toestemming: meldingen staan uit', 'fout'); return; }
       await aanmelden(voorkeur);
       CC.closeSheet(); CC.render(); CC.toast('Pushmeldingen staan aan');
     } catch (e) { console.warn(e); if (knop) { knop.disabled = false; knop.textContent = 'Opnieuw proberen'; } CC.toast(`Aanzetten lukte niet: ${e.message || e}`, 'fout'); }
+  };
+  CC.on('pushOk', (f) => {
+    const voorkeur = {}; SOORTEN.forEach(([k]) => { if (f[k]) voorkeur[k] = f[k].checked; });
+    zetAan(voorkeur, f.querySelector('button'));
   });
+
+  // Welkom (Besluit 55): één keer per telefoon, meteen na het eerste inloggen. Alles staat standaard aan; één tik + "Sta toe".
+  const WELKOM = 'clubcomm-push-welkom';
+  CC.pushWelkom = () => {
+    const st = CC.pushStatus(); if (st !== 'uit' && st !== 'beginscherm') return;
+    try { if (localStorage.getItem(WELKOM)) return; localStorage.setItem(WELKOM, String(Date.now())); } catch (e) { return; }
+    if (st === 'beginscherm') return CC.sheet('Mis niets van het team', `<p>Krijg een melding bij een afgelasting, wijziging of bericht voor jou. Zet ClubComm daarvoor eerst op je beginscherm:</p>${CC.beginStappen ? CC.beginStappen() : ''}<p class="zacht klein">Open ClubComm daarna via het icoon en log in met de code. Dan vragen we of je meldingen wilt.</p>`);
+    CC.sheet('Mis niets van het team', `<div class="welkom-push">${icon('bell')}</div>
+      <p>Krijg een melding bij een <b>afgelasting</b>, een <b>wijziging</b> of een <b>bericht voor jou</b>, ook als de app dicht is.</p>
+      <button class="knop groot vol" data-act="pushWelkomAan">${icon('bell')}Meldingen aanzetten</button>
+      <button class="linkknop vol" data-act="sluit">Later</button>
+      <p class="zacht klein">Tik daarna op <b>Sta toe</b>. Je kiest later zelf wat je wel en niet wilt (Profiel → Meldingen). Tussen 21:00 en 07:30 alleen noodberichten.</p>`);
+  };
+  CC.on('pushWelkomAan', (el) => zetAan({}, el));
 
   CC.on('pushUit', async () => {
     const nu = lees();

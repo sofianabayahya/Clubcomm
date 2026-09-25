@@ -443,3 +443,6 @@ details.uitklap.stil summary { font-size: 13px; color: var(--zacht); }
 .beginstap { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--lijn); font-size: 15px; }
 .beginnr { flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--blauw); color: #fff; font-weight: 700; display: grid; place-items: center; font-size: 14px; }
 .beginic { flex: none; width: 36px; height: 36px; border-radius: 10px; background: var(--blauw-l); color: var(--blauw); display: grid; place-items: center; }
+.welkom-push { width: 64px; height: 64px; margin: 4px auto 12px; border-radius: 50%; background: var(--blauw-l); color: var(--blauw); display: grid; place-items: center; }
+.welkom-push .ic { width: 30px; height: 30px; }
+.linkknop.vol { display: block; width: 100%; text-align: center; padding: 12px; }
