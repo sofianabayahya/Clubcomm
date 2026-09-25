@@ -151,10 +151,10 @@ async function teamleider() {
     label: 'Stap 2', titel: 'Inloggen zonder wachtwoord', intro: 'ClubComm werkt met een code per e-mail. Een wachtwoord onthouden is niet nodig.', beeld: 'inloggen',
     stappen: [
       ['Ga naar mijnclubcomm.nl', 'Vul je e-mailadres in en tik op Stuur mij een inlogcode.'],
-      ['Open de mail', 'Tik op de knop in de mail, of typ de code van 6 cijfers over.'],
+      ['Typ de code over', 'Je krijgt een mail met een code van 6 cijfers. Typ die over in de app.'],
       ['Klaar', 'Je blijft ingelogd op je telefoon.'],
     ],
-    tip: 'Zet ClubComm op je beginscherm. iPhone: Delen → Zet op beginscherm. Android: tik op ClubComm installeren.',
+    tip: 'Zet ClubComm op je beginscherm (iPhone: Delen → Zet op beginscherm). Log daarna in via het icoon en typ de code over: de knop in de mail opent Safari.',
   });
   await stappen(pres, v, {
     label: 'Stap 3', titel: 'Wisselen tussen teamleider en ouder', intro: 'Je hebt één account met twee rollen. Bovenaan zie je altijd in welke rol je zit.', beeld: 'tl-profiel',
@@ -258,9 +258,9 @@ async function ouders() {
     label: 'Stap 2', titel: 'Inloggen zonder wachtwoord', intro: 'Je krijgt een code per e-mail. Daarna blijf je ingelogd.', beeld: 'inloggen',
     stappen: [
       ['Ga naar mijnclubcomm.nl', 'Vul je e-mailadres in en tik op Stuur mij een inlogcode.'],
-      ['Open de mail', 'Tik op de knop in de mail, of typ de code van 6 cijfers over.'],
+      ['Typ de code over', 'Je krijgt een mail met een code van 6 cijfers. Typ die over in de app.'],
     ],
-    tip: 'Zet ClubComm op je beginscherm. iPhone: Delen → Zet op beginscherm. Android: tik op ClubComm installeren.',
+    tip: 'Zet ClubComm op je beginscherm (iPhone: Delen → Zet op beginscherm). Log daarna in via het icoon en typ de code over: de knop in de mail opent Safari.',
   });
   await stappen(pres, v, {
     label: 'Home', titel: 'Alles voor jouw kind', intro: 'Bovenaan wat jouw aandacht vraagt, daaronder het programma.', beeld: 'ou-home',
