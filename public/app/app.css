@@ -68,6 +68,7 @@ p { margin: .4em 0; }
 .rij-tekst { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .rij-tekst b { font-weight: 600; }
 .rij-tekst small { color: var(--zacht); font-size: 13px; }
+.rij-tekst b, .rij-tekst small { overflow-wrap: anywhere; } /* lange e-mailadressen lopen niet onder de knoppen door */
 .rij-r { display: flex; align-items: center; gap: 6px; flex: none; flex-wrap: wrap; justify-content: flex-end; }
 .rij .chev { color: var(--zacht); width: 18px; height: 18px; }
 .rij.oranje .rij-ic { color: var(--oranje); } .rij.oranje { box-shadow: inset 4px 0 0 var(--oranje); }
