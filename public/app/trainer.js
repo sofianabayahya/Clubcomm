@@ -205,7 +205,10 @@
         const vandaag = S.acts.find((a) => a.teamId === tid && a.datum === D.vandaag() && !a.afgelast);
         const acties = [];
         const n = M.ongelezen(S, me.id); if (n) acties.push(h.rij({ ic: 'message-circle', titel: `${n} ${n === 1 ? 'nieuw bericht' : 'nieuwe berichten'}`, act: 'tab', attrs: 'data-tab="berichten"', kleur: 'blauw' }));
-        if (!t.teamleiderId) { const open = S.aanm.filter((x) => x.teamId === tid && x.status === 'open').length; if (open) acties.push(h.rij({ ic: 'user-check', titel: `${open} aanmelding${open > 1 ? 'en' : ''} goedkeuren`, sub: 'Dit team heeft geen teamleider, dus jij keurt goed', act: 'open', attrs: 'data-view="aanmeldingen"', kleur: 'oranje' })); }
+        // Aanmeldingen: zonder teamleider keurt de trainer goed; met teamleider pas als het langer dan een dag blijft liggen (Besluit 47)
+        { const open = S.aanm.filter((x) => x.teamId === tid && x.status === 'open'); const lang = open.filter((x) => Date.now() - new Date(x.tijd) > 24 * 3600e3);
+          if (!t.teamleiderId && open.length) acties.push(h.rij({ ic: 'user-check', titel: `${open.length} aanmelding${open.length > 1 ? 'en' : ''} goedkeuren`, sub: 'Dit team heeft geen teamleider, dus jij keurt goed', act: 'open', attrs: 'data-view="aanmeldingen"', kleur: 'oranje' }));
+          else if (lang.length) acties.push(h.rij({ ic: 'user-check', titel: `${lang.length} aanmelding${lang.length > 1 ? 'en wachten' : ' wacht'} al een dag`, sub: 'De teamleider heeft nog niet goedgekeurd. Jij kunt het ook doen.', act: 'open', attrs: 'data-view="aanmeldingen"', kleur: 'oranje' })); }
         acties.push(...CC.signaalRegels(S, tid, true));
         // Herinnering: training van een eerdere dag waarvan de aanwezigheid nog niet is ingevuld, zolang het nog kan
         S.acts.filter((a) => a.teamId === tid && !M.isWed(a) && a.datum < D.vandaag() && !a.afgelast && !a.vervangerId && !S.pres[a.id] && kanOpnemen(a)).forEach((a) => {
@@ -240,6 +243,7 @@
       spelers(S) {
         const tid = CC.teamId(); const per = M.periode(S, 'blok');
         return `<div class="knoppen">${CC.mag('beoordelen') ? `<button class="knop" data-act="open" data-view="beoordelen">${icon('star')}Beoordelen</button>` : ''}<button class="knop licht" data-act="uitnodigSheet">${icon('user-plus')}Ouders uitnodigen</button></div>
+          ${(() => { const open = S.aanm.filter((x) => x.teamId === tid && x.status === 'open').length; return open ? `<div class="lijst">${h.rij({ ic: 'user-check', titel: `${open} aanmelding${open > 1 ? 'en' : ''} om goed te keuren`, sub: M.team(S, tid).teamleiderId ? 'Meestal doet de teamleider dit; jij kunt het ook' : 'Jij keurt goed (dit team heeft geen teamleider)', act: 'open', attrs: 'data-view="aanmeldingen"' })}</div>` : ''; })()}
           ${(() => { const F = CC.spelerFilter(S, tid); return `${F.bar}<div class="lijst">${F.lijst.map(({ pl, st, k, z, vs, b }) => h.rij({ ic: h.avatar(pl.voornaam), titel: esc(M.naam(S, pl)), sub: `${st.pct == null ? '–' : st.pct + '%'} aanwezig${vs && vs.code !== 'verwacht' ? ` · ${h.chip(vs)}` : ''} · ${b ? `beoordeeld (${b.m.naam.toLowerCase()})` : 'nog niet beoordeeld'}`, rechts: h.let(S, pl, k) + h.stip(z), act: 'open', attrs: `data-view="speler" data-id="${pl.id}"` })).join('') || h.leeg('Geen spelers met dit filter')}</div>`; })()}
           ${CC.materiaalStatus && S.club.modules.materiaal ? `${h.sectie('Team')}<div class="lijst">${CC.materiaalStatus(S, tid)}</div>` : ''}`;
       },

@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 46 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 47 toegevoegd)
 
 ---
 
@@ -507,6 +507,13 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 47 — Aanmeldingen: teamleider eerst, trainer kan altijd
+*Besloten 25 september 2026.*
+
+- Heeft een team een teamleider, dan staat "aanmeldingen goedkeuren" op Home van de teamleider (eerste lijn). Zonder teamleider bij de trainer.
+- De trainer ziet openstaande aanmeldingen altijd onder **Spelers** ("… aanmeldingen om goed te keuren") en kan zelf goedkeuren.
+- Blijft een aanmelding langer dan een dag liggen, dan komt hij ook op Home van de trainer; na 48 uur bij de HJO/coördinator (bestond al).
 
 ## Besluit 46 — Telefoonnummer al bij het aanmelden
 *Besloten 25 september 2026. Vult Besluit 40 aan.*
