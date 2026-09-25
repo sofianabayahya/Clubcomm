@@ -7,6 +7,7 @@ Besluiten staan in `besluiten.md`; dit is het logboek van fouten. Nieuwste boven
 
 | Wat de gebruiker zag | Oorzaak | Opgelost | Patroon |
 |---|---|---|---|
+| Demo-knoppen (ander demo-account, demo opnieuw, account verwijderen) stonden in het echte profiel | Profiel was gebouwd voor de demo; "account verwijderen" werkte in het echt maar half | Alleen in de demo; echt: verzoek aan beheerder (Besluit 54) | **C. Demo verbergt het** |
 | (zelf gevonden) Trainer zonder geplande activiteit zag ook geen acties (bijv. aanmeldingen) | Home stopte meteen bij "Geen activiteiten gepland" | Acties worden altijd getoond | **C. Demo verbergt het** |
 | Ouder meldde hetzelfde kind twee keer aan (Tahsin, 15 min ertussen) | Aanmelden controleerde niet of er al een aanvraag was | Database voegt dubbele samen (Besluit 51); duplicaat verwijderd | **A. Momentopname / F. Echt gedrag** |
 | Materiaalbericht stond in de inbox van de trainer zelf | Bericht kwam van 'systeem' naar alle HJO's, en de trainer is ook HJO | Bericht is van de trainer (Verstuurd), niet naar jezelf (Besluit 50) | **D. Eén persoon, meer rollen** |

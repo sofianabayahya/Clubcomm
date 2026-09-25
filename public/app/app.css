@@ -438,3 +438,8 @@ details.uitklap.stil summary { font-size: 13px; color: var(--zacht); }
 .adreskeuze { display: block; width: 100%; text-align: left; padding: 11px 14px; border: 0; border-bottom: 1px solid var(--lijn); background: transparent; color: var(--inkt); font: inherit; font-size: 15px; }
 .adreskeuze:last-child { border-bottom: 0; }
 .adreskeuze:active, .adreskeuze:hover { background: var(--blauw-l); }
+
+/* App op je beginscherm: stappen met icoon (Besluit 54) */
+.beginstap { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--lijn); font-size: 15px; }
+.beginnr { flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--blauw); color: #fff; font-weight: 700; display: grid; place-items: center; font-size: 14px; }
+.beginic { flex: none; width: 36px; height: 36px; border-radius: 10px; background: var(--blauw-l); color: var(--blauw); display: grid; place-items: center; }

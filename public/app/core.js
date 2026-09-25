@@ -309,25 +309,35 @@
       ${h.rij({ ic: 'phone', titel: me.tel ? 'Telefoonnummer wijzigen' : 'Telefoonnummer toevoegen', sub: me.tel ? esc(me.tel) : 'Zodat trainer en teamleider je kunnen bellen of appen', act: 'telSheet', kleur: me.tel ? '' : 'blauw' })}
       ${me.rollen.length > 1 ? `<h3 class="klein-kop">Wissel van rol</h3><div class="rollen">${rollen}</div>` : ''}
       ${rol.rol === 'ouder' || kids.length ? `<h3 class="klein-kop">Mijn kinderen</h3>${kids.map((k) => h.rij({ ic: h.avatar(k.voornaam), titel: esc(M.naam(S, k)), sub: esc(CC.tn(k.teamId)) })).join('')}
-        ${h.rij({ ic: 'user-plus', titel: 'Kind toevoegen', sub: 'Via de uitnodiging van het andere team', act: 'demoMelding', attrs: 'data-tekst="Vraag de teamleider van het andere team om de uitnodiging (link of QR-code) en meld je daar aan met hetzelfde e-mailadres."' })}
+        ${S.teams.length > 1 ? h.rij({ ic: 'user-plus', titel: 'Nog een kind aanmelden', sub: 'Speelt je andere kind in een ander team?', act: 'demoMelding', attrs: 'data-tekst="Vraag de teamleider van het andere team om de uitnodiging (link of QR-code) en meld je daar aan met hetzelfde e-mailadres. Dan staan beide kinderen onder jouw account."' }) : ''}
         ${h.rij({ ic: 'users', titel: 'Tweede ouder uitnodigen', sub: 'Ieder een eigen account, jullie zien elkaars e-mail niet', act: 'tweedeOuder' })}` : ''}
       <h3 class="klein-kop">Instellingen</h3>
       ${CC.agendaRij ? CC.agendaRij() : ''}
-      ${CC.trainerEigenRij ? CC.trainerEigenRij() : ''}
       ${h.rij({ ic: 'bell', titel: 'Meldingen', sub: CC.meldingenSub ? CC.meldingenSub() : 'In de app, en per e-mail bij belangrijke berichten', act: 'meldingen' })}
       ${CC.live ? '' : h.rij({ ic: 'globe', titel: 'Taal', sub: 'Nederlands (Engels komt in versie 2)', act: 'taalEN' })}
       ${h.rij({ ic: 'lock', titel: 'Privacyverklaring', act: 'privacy' })}
       ${h.rij({ ic: 'message-circle', titel: 'Feedback of een probleem melden', sub: 'Er klopt iets niet, of je hebt een idee', act: 'feedback' })}
       ${h.rij({ ic: 'smartphone', titel: 'App op je beginscherm zetten', act: 'beginscherm' })}
-      ${kids.length ? `<h3 class="klein-kop">Uitschrijven</h3>${h.rij({ ic: 'user-cog', titel: 'Kind uitschrijven', sub: 'Stopt je kind of gaat het naar een andere club?', act: 'uitschrijfSheet' })}` : ''}
+      <h3 class="klein-kop">Uitschrijven</h3>
+      ${kids.length ? h.rij({ ic: 'user-cog', titel: 'Kind uitschrijven', sub: 'Stopt je kind of gaat het naar een andere club?', act: 'uitschrijfSheet' }) : ''}
+      ${CC.live ? h.rij({ ic: 'trash-2', titel: 'Account laten verwijderen', sub: 'De clubbeheerder wist je gegevens', act: 'verwijderVerzoek' }) : h.rij({ ic: 'trash-2', titel: 'Mijn account verwijderen', sub: 'Al je gegevens worden gewist', act: 'verwijderSheet' })}
       <h3 class="klein-kop">Uitloggen</h3>
-      ${h.rij({ ic: 'log-out', titel: 'Uitloggen', act: 'logout', chevron: false })}
-      ${h.rij({ ic: 'log-out', titel: 'Uitloggen op alle apparaten', sub: 'Telefoon kwijt? Hiermee sluit je overal af.', act: 'logoutAlles', chevron: false })}
-      <div class="demo-blok"><h3 class="klein-kop">Demo</h3>
-        ${h.rij({ ic: 'trash-2', titel: 'Mijn account verwijderen', sub: 'Al je gegevens worden gewist', act: 'verwijderSheet', kleur: 'rood' })}
+      ${h.rij({ ic: 'log-out', titel: 'Uitloggen', sub: CC.live ? 'Je wordt op al je apparaten uitgelogd' : '', act: 'logout', chevron: false })}
+      ${CC.live ? '' : `<div class="demo-blok"><h3 class="klein-kop">Demo</h3>
         ${h.rij({ ic: 'users', titel: 'Ander demo-account kiezen', act: 'logout', chevron: false })}
         ${h.rij({ ic: 'refresh-cw', titel: 'Demo opnieuw beginnen', sub: 'Zet alle demodata terug', act: 'resetDemo', chevron: false })}
-      </div>`);
+      </div>`}`);
+  });
+  // Echte versie: verzoek aan de clubbeheerder om het account te verwijderen (Besluit 54). Later automatisch vanaf de server.
+  CC.on('verwijderVerzoek', () => CC.sheet('Account laten verwijderen', `<p>De clubbeheerder krijgt een verzoek en wist daarna je naam, e-mailadres, telefoonnummer en koppelingen. Je hoort het binnen een week.</p>
+    <p class="zacht klein">Stopt je kind bij de club? Gebruik dan eerst <b>Kind uitschrijven</b>. Het lidmaatschap zeg je apart op bij de ledenadministratie.</p>
+    <div class="knoppen kolom"><button class="knop rood" data-act="verwijderVerzoekOk">Verzoek versturen</button><button class="knop licht" data-act="sluit">Annuleren</button></div>`));
+  CC.on('verwijderVerzoekOk', () => {
+    const me = CC.me(); const ontv = S.people.filter((p) => p.id !== me.id && p.rollen.some((r) => r.rol === 'beheerder')).map((p) => p.id);
+    if (!ontv.length) { CC.closeSheet(); return CC.toast('Er is nog geen clubbeheerder. Vraag het de trainer of teamleider.', 'fout'); }
+    const kids = CC.kinderen().map((k) => `${k.voornaam} (${CC.tn(k.teamId)})`).join(', ');
+    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'persoonlijk', bereik: 'Clubbeheer', onderwerp: `Verzoek: account van ${me.naam} verwijderen`, tekst: `${me.naam} (${me.email}) vraagt om het account te verwijderen.${kids ? ` Kinderen: ${kids}.` : ''}\n\nVerwijder de persoon via HJO → Teams → Ouders of Staf, en laat het weten als het gedaan is.`, tijd: new Date().toISOString(), ontvangers: ontv, gelezen: [me.id], antw: [], urgent: false, gepland: null, mail: true });
+    CC.save(); CC.closeSheet(); CC.toast('Verzoek verstuurd naar de clubbeheerder');
   });
   CC.on('wisselRol', (el) => CC.wisselRol(Number(el.dataset.idx)));
   // Eigen telefoonnummer (alleen trainer, teamleider en staf van het team zien het; Besluit 40)
@@ -393,15 +403,22 @@
     CC.save(); CC.logout(); CC.toast('Je account is verwijderd. Tot ziens!');
   });
   CC.on('logout', () => CC.logout());
-  CC.on('logoutAlles', () => { CC.toast('Je bent op alle apparaten uitgelogd'); setTimeout(CC.logout, 600); });
   CC.on('resetDemo', () => { CC.reset(); CC.closeSheet(); CC.logout(); CC.toast('Demo staat weer aan het begin'); });
   CC.on('demoMelding', (el) => CC.toast(el.dataset.tekst));
   CC.on('meldingen', () => CC.sheet('Meldingen', `<p>Alles staat in de app bij <b>Berichten</b>. Daarnaast krijg je een <b>e-mail</b> bij:</p>
     <ul><li>afgelastingen, wijzigingen en noodberichten (urgent)</li><li>persoonlijke berichten en antwoorden op je vraag</li><li>herinneringen over afmelden en kaarten</li><li>nieuwe activiteiten, opgave en belangrijke clubberichten</li></ul>
     <p class="zacht klein">Pushmeldingen op je telefoon komen later. Zet ClubComm alvast op je beginscherm (Profiel → App op je beginscherm).</p>`));
+  // App op je beginscherm (Besluit 54): Android met één knop als Chrome het aanbiedt; iPhone kan alleen via Delen (regel van Apple)
   CC.on('beginscherm', () => {
     const al = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-    CC.sheet('App op je beginscherm', al ? '<p>ClubComm staat al op je beginscherm. Top!</p>' : `${CC.installPrompt ? `<button class="knop vol" data-act="installeren">${icon('smartphone')}ClubComm installeren</button><p class="zacht klein">Of doe het zelf:</p>` : ''}<ol class="stappen"><li><b>iPhone:</b> open ClubComm in <b>Safari</b>, tik op ${icon('share-2')} <b>Delen</b> en kies <b>Zet op beginscherm</b>.</li><li><b>Android:</b> open ClubComm in <b>Chrome</b>, tik op de drie puntjes en kies <b>App installeren</b> of <b>Toevoegen aan startscherm</b>.</li></ol><p class="zacht">Daarna open je ClubComm met één tik, net als een gewone app. Je blijft ingelogd.</p>`);
+    const ios = /iPhone|iPad|iPod/.test(navigator.userAgent); const android = /Android/.test(navigator.userAgent);
+    const stap = (n, ic, tekst) => `<div class="beginstap"><span class="beginnr">${n}</span><span class="beginic">${icon(ic)}</span><span>${tekst}</span></div>`;
+    const iphone = `${stap(1, 'share', 'Tik onderin Safari op <b>Delen</b> (het vierkantje met het pijltje omhoog).')}${stap(2, 'square-plus', 'Scrol een stukje naar beneden en kies <b>Zet op beginscherm</b>.')}${stap(3, 'check', 'Tik rechtsboven op <b>Voeg toe</b>. Open ClubComm voortaan via het icoon.')}
+      <p class="zacht klein">Een knop die dit voor je doet, staat Apple niet toe. Gebruik je Chrome op de iPhone? Dan zit Delen rechtsboven.</p>`;
+    const droid = `${stap(1, 'ellipsis', 'Tik in Chrome rechtsboven op de <b>drie puntjes</b>.')}${stap(2, 'square-plus', 'Kies <b>App installeren</b> of <b>Toevoegen aan startscherm</b>.')}`;
+    CC.sheet('App op je beginscherm', al ? '<p>ClubComm staat al op je beginscherm. Top!</p>'
+      : CC.installPrompt ? `<button class="knop vol" data-act="installeren">${icon('smartphone')}ClubComm installeren</button><p class="zacht klein">Eén tik, dan staat ClubComm op je beginscherm.</p>`
+      : `${ios ? iphone : android ? droid : `<h3 class="klein-kop">iPhone</h3>${iphone}<h3 class="klein-kop">Android</h3>${droid}`}<p class="zacht">Daarna open je ClubComm met één tik, net als een gewone app, en blijf je ingelogd.</p>`);
   });
   CC.on('installeren', async () => { const p = CC.installPrompt; if (!p) return; p.prompt(); const r = await p.userChoice.catch(() => ({})); CC.installPrompt = null; CC.closeSheet(); if (r.outcome === 'accepted') CC.toast('ClubComm staat op je beginscherm'); });
   CC.on('tweedeOuder', () => { const k = CC.kind(); if (!k) return; const link = `${location.origin}${location.pathname}#uitnodiging-${k.teamId}`;

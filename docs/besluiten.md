@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 53 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 54 toegevoegd)
 
 ---
 
@@ -31,7 +31,7 @@ Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 53 toegevoegd)
   De code is nodig omdat een link soms op het verkeerde apparaat opent (mail op de laptop, app op de telefoon) of al "gebruikt" is door een virusscanner.
 - **Ouders blijven ingelogd** tot ze zelf uitloggen, met vangnetten:
   - na **6 maanden** niets doen moet je opnieuw inloggen;
-  - knop **"Uitloggen op alle apparaten"** in het profiel (telefoon kwijt);
+  - ~~knop **"Uitloggen op alle apparaten"**~~ → één knop **Uitloggen** die overal uitlogt (Besluit 54);
   - teamleider, trainer of HJO kan de toegang van een account **intrekken**.
 - **Trainers en teamleiders:** zelfde als ouders.
 - **HJO:** ziet gegevens van alle kinderen, daarom opnieuw inloggen na **30 dagen**.
@@ -158,13 +158,13 @@ Een Sportlink-export bevat: voornaam, achternaam, geboortedatum, **bondsnummer**
 
 ### Profiel
 - Eigen gegevens (naam, e-mail, telefoon)
-- Mijn kinderen + **Kind toevoegen**
+- Mijn kinderen + **Nog een kind aanmelden** (alleen bij meer teams; Besluit 54)
 - **Tweede ouder uitnodigen**
 - Meldingen (wat, via push of mail)
 - Taal (Nederlands / Engels)
 - Rolwisselaar (als je ook trainer/teamleider bent)
 - Privacy en toestemming
-- Uitloggen / uitloggen op alle apparaten
+- Uitloggen (overal; Besluit 54)
 
 Weg uit het profiel: nep-statistieken en "Training geschiedenis" (staat al bij Planning).
 
@@ -507,6 +507,15 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 54 — Profiel opgeschoond
+- **Instellingen** zijn alleen nog echte instellingen: Meldingen · Privacyverklaring · Feedback · App op je beginscherm.
+- **"Mijn afmeldingen als trainer"** weg uit het profiel (dat was informatie, geen instelling). De trainer ziet zijn telling op het moment van afmelden ("Ik kan zelf niet"); de HJO bij Inzicht.
+- **"Nog een kind aanmelden"** (was "Kind toevoegen") alleen als de club meer dan één team heeft, met uitleg: uitnodiging van het andere team, zelfde e-mailadres.
+- **App op je beginscherm:** Android: één knop als Chrome het aanbiedt. iPhone: kan niet met een knop (Apple staat het niet toe), dus drie stappen met plaatjes (Delen → Zet op beginscherm → Voeg toe).
+- **Eén knop Uitloggen**; die logt je op al je apparaten uit.
+- **Demo-knoppen** (ander demo-account, demo opnieuw) alleen in de demo.
+- **Account laten verwijderen** (onder Uitschrijven): in de echte versie een verzoek aan de clubbeheerder (persoonlijk bericht + e-mail), die het binnen een week afhandelt. Later automatisch vanaf de server.
 
 ## Besluit 53 — Pushmeldingen (stap 1)
 **Vuistregel: een pushmelding alleen als je iets moet weten of doen. Ter informatie en statistieken nooit.** Te veel meldingen = mensen zetten ze uit, en dan mis je ook de belangrijke.

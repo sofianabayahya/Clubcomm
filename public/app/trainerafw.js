@@ -79,11 +79,10 @@
   });
 
   // Eigen telling voor de trainer (profiel)
-  CC.trainerEigenRij = () => {
-    const S = CC.S(); const me = CC.me();
-    if (!me.rollen.some((r) => r.rol === 'trainer')) return '';
-    const t = CC.trainerTelling(S, me.id);
-    return h.rij({ ic: 'user-cog', titel: 'Mijn afmeldingen als trainer', sub: `Dit seizoen ${t.afmeldingen}× afgemeld${t.telaat ? `, waarvan ${t.telaat}× te laat` : ''}${t.niet ? ` · ${t.niet}× niet gekomen` : ''}. Afmelden kan het best ${inst(S).deadlineUur} uur van tevoren.` });
+  // Eigen telling voor de trainer, alleen op het moment van afmelden (Besluit 54; stond eerst in het profiel)
+  CC.trainerEigenTekst = (S, id) => {
+    const t = CC.trainerTelling(S, id);
+    return `Dit seizoen ${t.afmeldingen}× afgemeld${t.telaat ? `, waarvan ${t.telaat}× te laat` : ''}${t.niet ? ` · ${t.niet}× niet gekomen` : ''}. Afmelden kan het best ${inst(S).deadlineUur} uur van tevoren.`;
   };
 
   // Demo: trainer O12-1 te laat afgemeld + niet gekomen (3 punten), trainer O8-1 vijf keer op tijd afgemeld
