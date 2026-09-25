@@ -37,8 +37,8 @@ function nieuw(titel) {
 const voet = (s, tekst) => s.addText(tekst, { x: 0.7, y: H - 0.45, w: 7, h: 0.3, fontSize: 10, color: MUTED, fontFace: FONT, margin: 0, isTextBox: true });
 
 // Telefoon met schermafbeelding (rechts)
-function telefoon(s, beeld, x = 9.05, y = 0.45) {
-  s.addShape('roundRect', { x, y, w: 3.42, h: 6.6, rectRadius: 0.35, fill: { color: NAVY }, shadow: { type: 'outer', color: '000000', opacity: 0.18, blur: 12, offset: 3, angle: 90 } });
+function telefoon(s, beeld, x = 9.05, y = 0.45, rand = NAVY) {
+  s.addShape('roundRect', { x, y, w: 3.42, h: 6.6, rectRadius: 0.35, fill: { color: rand }, shadow: { type: 'outer', color: '000000', opacity: 0.18, blur: 12, offset: 3, angle: 90 } });
   s.addImage({ path: BEELD(beeld), x: x + 0.12, y: y + 0.12, w: 3.18, h: 6.36 });
 }
 
@@ -96,14 +96,31 @@ async function kaarten(pres, voetTekst, { label, titel, intro, items, kol = 2, n
 }
 
 // Donkere titeldia (begin) met telefoon
-async function titelDia(pres, { titel, sub, regel, beeld }) {
+async function titelDia(pres, { titel, sub, regel, beeld, punten, oproep }) {
   const s = pres.addSlide(); s.background = { color: NAVY };
   s.addImage({ path: LOGO, x: 0.8, y: 0.8, w: 0.9, h: 0.9 });
   s.addText('ClubComm', { x: 1.9, y: 0.95, w: 5, h: 0.6, fontSize: 24, bold: true, color: WHITE, fontFace: FONT, margin: 0, isTextBox: true });
-  s.addText(titel, { x: 0.8, y: 2.3, w: 7.8, h: 1.9, fontSize: 44, bold: true, color: WHITE, fontFace: FONT, margin: 0, valign: 'top', isTextBox: true });
-  s.addText(sub, { x: 0.8, y: 4.3, w: 7.6, h: 1.0, fontSize: 20, color: 'CADCFC', fontFace: FONT, margin: 0, valign: 'top', isTextBox: true });
-  s.addText(regel, { x: 0.8, y: 6.3, w: 7.6, h: 0.4, fontSize: 14, color: '9FB3D1', fontFace: FONT, margin: 0, isTextBox: true });
-  if (beeld) telefoon(s, beeld, 9.3, 0.45);
+  if (!punten) {
+    s.addText(titel, { x: 0.8, y: 2.3, w: 7.8, h: 1.9, fontSize: 44, bold: true, color: WHITE, fontFace: FONT, margin: 0, valign: 'top', isTextBox: true });
+    s.addText(sub, { x: 0.8, y: 4.3, w: 7.6, h: 1.0, fontSize: 20, color: 'CADCFC', fontFace: FONT, margin: 0, valign: 'top', isTextBox: true });
+  } else {
+    // Wervend voorblad: wat het de lezer oplevert, in drie punten, en één oproep
+    s.addText(titel, { x: 0.8, y: 1.95, w: 8.0, h: 0.85, fontSize: 40, bold: true, color: WHITE, fontFace: FONT, margin: 0, valign: 'top', isTextBox: true });
+    s.addText(sub, { x: 0.8, y: 2.85, w: 7.8, h: 0.5, fontSize: 19, color: 'CADCFC', fontFace: FONT, margin: 0, valign: 'top', isTextBox: true });
+    let y = 3.75;
+    for (const [ic, tekst] of punten) {
+      s.addShape('ellipse', { x: 0.8, y, w: 0.5, h: 0.5, fill: { color: BLUE } });
+      s.addImage({ data: await icon(ic, WHITE), x: 0.93, y: y + 0.13, w: 0.24, h: 0.24 });
+      s.addText(tekst, { x: 1.5, y, w: 7.0, h: 0.5, fontSize: 18, color: WHITE, fontFace: FONT, margin: 0, valign: 'middle', isTextBox: true });
+      y += 0.6;
+    }
+    if (oproep) {
+      s.addShape('roundRect', { x: 0.8, y: 5.75, w: 4.6, h: 0.6, rectRadius: 0.3, fill: { color: 'F5A623' } });
+      s.addText(oproep, { x: 0.8, y: 5.75, w: 4.6, h: 0.6, fontSize: 16, bold: true, color: NAVY, align: 'center', valign: 'middle', fontFace: FONT, margin: 0, isTextBox: true });
+    }
+  }
+  if (regel) s.addText(regel, { x: punten ? 5.7 : 0.8, y: punten ? 6.3 : 6.3, w: punten ? 3.2 : 7.6, h: 0.4, fontSize: 14, color: '9FB3D1', fontFace: FONT, margin: 0, isTextBox: true });
+  if (beeld) telefoon(s, beeld, 9.3, 0.45, '2A4A7A');
   return s;
 }
 
@@ -244,7 +261,11 @@ async function teamleider() {
 // ======================================================================
 async function ouders() {
   const pres = nieuw('ClubComm voor ouders'); const v = `ClubComm voor ouders · ${CLUB}`;
-  await titelDia(pres, { titel: 'ClubComm voor ouders', sub: 'Afmelden, planning, vervoer en berichten van het team. Op je telefoon.', regel: `O12 talententeam · ${CLUB}`, beeld: 'ou-home' });
+  await titelDia(pres, {
+    titel: 'Alles van het team op één plek', sub: `ClubComm voor ouders · O12 talententeam · ${CLUB}`, beeld: 'ou-home',
+    punten: [['FaCalendarXmark', 'Afmelden in 10 seconden'], ['FaCalendarDays', 'Tijden, velden en adressen altijd bij de hand'], ['FaCarSide', 'Samen rijden en meehelpen, zonder appgedoe']],
+    oproep: 'Aanmelden duurt 1 minuut',
+  });
   await stappen(pres, v, {
     label: 'Stap 1', titel: 'Aanmelden', intro: 'Je meldt je één keer aan via de uitnodiging van het team.', beeld: 'aanmelden',
     stappen: [
