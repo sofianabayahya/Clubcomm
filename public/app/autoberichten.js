@@ -193,7 +193,7 @@
     const S = CC.S(); const n = CC.NOOD.find((x) => x.id === f.s.value); const teams = [...f.querySelectorAll('[name=teams]:checked')].map((x) => x.value);
     const acts = n.afgelast ? S.acts.filter((a) => a.datum === f.d.value && teams.includes(a.teamId) && !a.afgelast && (n.afgelast === 'alles' || !M.isWed(a) || a.thuis)) : [];
     acts.forEach((a) => { a.afgelast = true; });
-    const ontv = [...new Set(teams.flatMap((t) => { const tm = M.team(S, t); return [...M.oudersVan(S, t), tm.trainerId, tm.teamleiderId]; }).concat(S.people.filter((p) => p.rollen.some((r) => ['hjo', 'coordinator'].includes(r.rol))).map((p) => p.id)).filter((x) => x && x !== CC.me().id))];
+    const ontv = [...new Set(teams.flatMap((t) => [...M.oudersVan(S, t), ...M.stafVan(S, t)]).concat(S.people.filter((p) => p.rollen.some((r) => ['hjo', 'coordinator'].includes(r.rol))).map((p) => p.id)).filter((x) => x && x !== CC.me().id))];
     S.msgs.push({ id: 'b' + Date.now(), van: CC.me().id, soort: 'nieuws', bereik: teams.length === S.teams.length ? 'Hele club' : teams.join(', '), onderwerp: f.o.value, tekst: f.t.value, tijd: new Date().toISOString(), ontvangers: ontv, gelezen: [], antw: [], urgent: true, gepland: null });
     CC.save(); CC.closeSheet(); CC.render(); CC.toast(`${acts.length ? `${acts.length} activiteiten afgelast · ` : ''}${ontv.length} mensen ingelicht`);
   });

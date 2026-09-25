@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 43 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 44 toegevoegd)
 
 ---
 
@@ -507,6 +507,12 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 44 — Meer trainers en teamleiders per team; rollen pas opslaan na bevestigen
+*Besloten 25 september 2026.*
+
+- Een team kan **meerdere trainers en teamleiders** hebben. Allemaal krijgen ze de berichten en meldingen voor de staf (vraag van een ouder, planningswijziging, afgelast, vervanger nodig, groepsberichten). De eerste blijft het aanspreekpunt van het team; een nieuwe vervangt niemand.
+- **Rol toevoegen of weghalen** (HJO → Teams → Staf → naam): eerst een bevestiging ("Sanne wordt teamleider van O12 talententeam. Dit team heeft al een teamleider: … Klopt dit?"), pas bij **Ja, opslaan** wordt het bewaard. Weghalen idem. Wordt het aanspreekpunt weggehaald, dan neemt een andere trainer of teamleider van het team het over.
 
 ## Besluit 43 — Adres aanvullen tijdens het typen
 *Besloten 25 september 2026.*

@@ -68,7 +68,7 @@
     if (f.k.value === 'afgelast') return afgelasten(S, a, f.r.value || 'trainer afwezig');
     a.trainerAfwezig = { door: me.id, reden: f.r.value, tijd: new Date().toISOString() }; a.vervangerId = null;
     S.taken.push({ id: 't' + Date.now(), actId: a.id, soort: CC.VERVANGER, personId: null });
-    melding(S, [t.teamleiderId, ...hjoIds(S)], `Vervanger nodig: ${a.teamId} ${D.kort(a.datum)}`, `${me.naam} kan de training van ${D.lang(a.datum)} om ${a.tijd} niet geven${f.r.value ? ' (' + f.r.value + ')' : ''}. Kun jij het overnemen? Open ClubComm en tik op "Ik neem over".`, true);
+    melding(S, [...M.stafVan(S, a.teamId, ['teamleider']), ...hjoIds(S)], `Vervanger nodig: ${a.teamId} ${D.kort(a.datum)}`, `${me.naam} kan de training van ${D.lang(a.datum)} om ${a.tijd} niet geven${f.r.value ? ' (' + f.r.value + ')' : ''}. Kun jij het overnemen? Open ClubComm en tik op "Ik neem over".`, true);
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Doorgegeven; teamleider en HJO zijn gevraagd');
   });
   const neemOver = (S, a, p) => {
@@ -91,7 +91,7 @@
     const t = M.team(S, a.teamId); const me = CC.me();
     a.afgelast = true; S.taken = S.taken.filter((x) => !(x.actId === a.id && x.soort === CC.VERVANGER && !x.personId));
     S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'nieuws', bereik: a.teamId, onderwerp: `Training ${D.kort(a.datum)} gaat niet door`, tekst: `De training van ${D.lang(a.datum)} om ${a.tijd} gaat niet door (${reden}). Excuses voor het ongemak.`, tijd: new Date().toISOString(), ontvangers: M.oudersVan(S, a.teamId), gelezen: [], antw: [], urgent: true, gepland: null, vastTot: null });
-    melding(S, [t.teamleiderId, t.trainerId, ...hjoIds(S)].filter((x) => x !== me.id), `Afgelast: ${a.teamId} ${D.kort(a.datum)}`, `${me.naam} heeft de training van ${D.lang(a.datum)} afgelast (${reden}).`);
+    melding(S, [...M.stafVan(S, a.teamId), ...hjoIds(S)].filter((x) => x !== me.id), `Afgelast: ${a.teamId} ${D.kort(a.datum)}`, `${me.naam} heeft de training van ${D.lang(a.datum)} afgelast (${reden}).`);
     S.wijzigingen.push({ id: 'w' + Date.now(), teamId: a.teamId, door: me.id, tekst: `Training ${D.kort(a.datum)} afgelast (${reden})`, tijd: new Date().toISOString() });
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Afgelast; ouders krijgen een pushmelding');
   };

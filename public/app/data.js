@@ -564,6 +564,10 @@
     && (m.bereik === 'Hele club' || String(m.bereik || '').split(', ').some((t) => S.players.some((p) => p.teamId === t && p.ouders.includes(pid))));
   M.zichtbaar = (S, m, pid) => (m.ontvangers.includes(pid) || M.vastVoor(S, m, pid)) && (!m.gepland || new Date(m.gepland) <= new Date());
   M.ongelezen = (S, pid, soort) => S.msgs.filter((m) => m.ontvangers.includes(pid) && M.zichtbaar(S, m, pid) && !m.gelezen.includes(pid) && (!soort || m.soort === soort) && m.van !== pid).length;
+  // Alle trainers en/of teamleiders van een team (een team kan er meer hebben; Besluit 44)
+  M.stafVan = (S, teamId, rollen = ['trainer', 'teamleider']) => { const t = M.team(S, teamId) || {};
+    return [...new Set([...(rollen.includes('trainer') ? [t.trainerId] : []), ...(rollen.includes('teamleider') ? [t.teamleiderId] : []),
+      ...S.people.filter((p) => p.rollen.some((r) => rollen.includes(r.rol) && r.teamId === teamId)).map((p) => p.id)].filter(Boolean))]; };
   M.oudersVan = (S, teamId) => [...new Set(M.spelers(S, teamId).flatMap((p) => p.ouders))];
 
   // speeltijdschema: eerlijke verdeling, keepers rouleren, minste minuten eerst

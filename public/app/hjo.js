@@ -136,7 +136,7 @@
     const acts = S.acts.filter((a) => a.datum === f.d.value && teams.includes(a.teamId) && !a.afgelast && (f.w.value === 'alles' ? (a.soort === 'training' || a.thuis) : a.soort === 'training'));
     acts.forEach((a) => { a.afgelast = true; });
     const tIds = [...new Set(acts.map((a) => a.teamId))];
-    const ontv = [...new Set(tIds.flatMap((t) => { const tm = M.team(S, t); return [...M.oudersVan(S, t), tm.trainerId, tm.teamleiderId]; }).filter(Boolean))];
+    const ontv = [...new Set(tIds.flatMap((t) => [...M.oudersVan(S, t), ...M.stafVan(S, t)]).filter(Boolean))];
     S.msgs.push({ id: 'b' + Date.now(), van: CC.me().id, soort: 'nieuws', bereik: tIds.length === S.teams.length ? 'Hele club' : tIds.join(', '), onderwerp: `Afgelast: ${D.lang(f.d.value)}`, tekst: `${f.r.value}. ${f.w.value === 'alles' ? 'Alle trainingen en thuiswedstrijden' : 'Alle trainingen'} van ${D.lang(f.d.value)} gaan niet door.`, tijd: new Date().toISOString(), ontvangers: ontv, gelezen: [], antw: [], urgent: true, gepland: null });
     CC.save(); CC.closeSheet(); CC.render(); CC.toast(acts.length ? `${acts.length} activiteiten afgelast · ${ontv.length} mensen ingelicht` : 'Op die dag stond niets gepland');
   });
@@ -161,14 +161,38 @@
     CC.sheet(p.naam, `<p class="zacht">${esc(p.email)}</p><div class="lijst">${p.rollen.map((r, i) => h.rij({ ic: 'user-cog', titel: CC.rolNaam(r) + (r.teamId ? ` · ${r.teamId}` : ''), rechts: `<button class="icoonknop" data-act="rolWeg" data-id="${p.id}" data-i="${i}" aria-label="Rol verwijderen">${icon('trash-2')}</button>` })).join('')}</div>
       <form data-submit="rolErbij" data-id="${p.id}" class="codeform"><div class="twee"><div><label for="rb-r">Rol</label><select id="rb-r" name="r"><option value="trainer">Trainer</option><option value="teamleider">Teamleider</option><option value="ouder">Ouder</option><option value="hjo">${esc(S.club.labels.hjo)}</option>${S.club.coordinatorAan ? `<option value="coordinator">${esc(S.club.labels.coordinator)}</option>` : ''}</select></div><div><label for="rb-t">Team</label><select id="rb-t" name="t"><option value="">–</option>${S.teams.map((t) => `<option>${t.id}</option>`).join('')}${S.club.coordinatorAan ? `<optgroup label="Groep (voor ${esc(S.club.labels.coordinator.toLowerCase())})">${(S.club.groepen || []).map((g) => `<option value="groep:${esc(g.naam)}">${esc(g.naam)}</option>`).join('')}</optgroup>` : ''}</select></div></div><button class="knop">${icon('plus')}Rol koppelen</button><p class="zacht klein">Eén account per persoon. Met meerdere rollen verschijnt de rolwisselaar in het profiel.</p></form>`);
   });
+  // Rol toevoegen of weghalen: eerst bevestigen, zodat een verkeerde keuze niet meteen wordt opgeslagen (Besluit 44)
+  const rolUit = (S, r, t) => {
+    if (r === 'coordinator') { const g = (S.club.groepen || []).find((x) => 'groep:' + x.naam === t); return g ? { rol: r, groep: g.naam, cats: g.cats } : null; }
+    if (['trainer', 'teamleider'].includes(r)) return t && !t.startsWith('groep:') ? { rol: r, teamId: t } : null;
+    return { rol: r };
+  };
+  const rolTekst = (S, rol) => `${CC.rolNaam(rol).toLowerCase()}${rol.teamId ? ` van ${(M.team(S, rol.teamId) || {}).naam || rol.teamId}` : rol.groep ? ` ${rol.groep}` : ''}`;
   CC.on('rolErbij', (f) => {
-    const S = CC.S(); const p = M.persoon(S, f.dataset.id); const r = f.r.value; const t = f.t.value;
-    if (['trainer', 'teamleider'].includes(r) && (!t || t.startsWith('groep:'))) return CC.toast('Kies een team', 'fout');
-    if (r === 'coordinator') { const g = (S.club.groepen || []).find((x) => 'groep:' + x.naam === t); if (!g) return CC.toast('Kies een groep teams', 'fout'); p.rollen.push({ rol: r, groep: g.naam, cats: g.cats }); CC.save(); CC.closeSheet(); CC.render(); return CC.toast(`${p.naam.split(' ')[0]} is nu ${S.club.labels.coordinator.toLowerCase()} ${g.naam}`); }
-    p.rollen.push(t && r !== 'ouder' && r !== 'hjo' ? { rol: r, teamId: t } : { rol: r });
-    if (r === 'trainer') M.team(S, t).trainerId = p.id; if (r === 'teamleider') M.team(S, t).teamleiderId = p.id;
-    CC.save(); CC.closeSheet(); CC.render(); CC.toast(`${p.naam.split(' ')[0]} is nu ook ${CC.rolNaam({ rol: r }).toLowerCase()}`);
+    const S = CC.S(); const p = M.persoon(S, f.dataset.id); const rol = rolUit(S, f.r.value, f.t.value);
+    if (!rol) return CC.toast(f.r.value === 'coordinator' ? 'Kies een groep teams' : 'Kies een team', 'fout');
+    if (p.rollen.some((x) => x.rol === rol.rol && (x.teamId || x.groep || '') === (rol.teamId || rol.groep || ''))) return CC.toast(`${p.naam.split(' ')[0]} heeft deze rol al`, 'fout');
+    const al = rol.teamId ? M.stafVan(S, rol.teamId, [rol.rol]).map((id) => M.persoon(S, id)).filter(Boolean) : [];
+    CC.sheet('Klopt dit?', `<p><b>${esc(p.naam)}</b> wordt <b>${esc(rolTekst(S, rol))}</b>.</p>
+      ${al.length ? `<p class="zacht">Dit team heeft al ${al.length === 1 ? 'een' : al.length} ${esc(CC.rolNaam(rol).toLowerCase())}${al.length === 1 ? '' : 's'}: ${al.map((x) => esc(x.naam)).join(', ')}. ${esc(p.naam.split(' ')[0])} komt erbij; niemand wordt vervangen.</p>` : ''}
+      <div class="knoppen kolom"><button class="knop" data-act="rolErbijOk" data-id="${p.id}" data-r="${esc(f.r.value)}" data-t="${esc(f.t.value)}">Ja, opslaan</button><button class="knop licht" data-act="rollenPersoon" data-id="${p.id}">Terug</button></div>`);
   });
+  CC.on('rolErbijOk', (el) => {
+    const S = CC.S(); const p = M.persoon(S, el.dataset.id); const rol = rolUit(S, el.dataset.r, el.dataset.t); if (!rol) return;
+    p.rollen.push(rol);
+    const t = rol.teamId && M.team(S, rol.teamId);
+    // Het eerste aanspreekpunt van het team blijft; een tweede trainer of teamleider komt erbij
+    if (t && rol.rol === 'trainer' && !t.trainerId) t.trainerId = p.id; if (t && rol.rol === 'teamleider' && !t.teamleiderId) t.teamleiderId = p.id;
+    CC.save(); CC.closeSheet(); CC.render(); CC.toast(`Opgeslagen: ${p.naam.split(' ')[0]} is nu ${rolTekst(S, rol)}`);
+  });
+  CC.on('rolWeg', (el) => { const S = CC.S(); const p = M.persoon(S, el.dataset.id); const rol = p.rollen[Number(el.dataset.i)];
+    CC.sheet('Rol weghalen?', `<p><b>${esc(p.naam)}</b> is dan geen <b>${esc(rolTekst(S, rol))}</b> meer.</p><div class="knoppen kolom"><button class="knop rood" data-act="rolWegOk" data-id="${p.id}" data-i="${el.dataset.i}">Ja, weghalen</button><button class="knop licht" data-act="rollenPersoon" data-id="${p.id}">Terug</button></div>`); });
+  CC.on('rolWegOk', (el) => { const S = CC.S(); const p = M.persoon(S, el.dataset.id); const r = p.rollen.splice(Number(el.dataset.i), 1)[0];
+    if (r && r.teamId) { const t = M.team(S, r.teamId);
+      // Was dit het aanspreekpunt van het team? Dan neemt een andere trainer of teamleider van het team het over
+      if (t.trainerId === p.id && r.rol === 'trainer') t.trainerId = M.stafVan(S, t.id, ['trainer']).find((x) => x !== p.id) || null;
+      if (t.teamleiderId === p.id && r.rol === 'teamleider') t.teamleiderId = M.stafVan(S, t.id, ['teamleider']).find((x) => x !== p.id) || null; }
+    CC.save(); CC.closeSheet(); CC.render(); CC.toast(`Rol weggehaald bij ${p.naam.split(' ')[0]}`); });
   // Staflid toevoegen (Besluit 42): de club legt trainer of teamleider vast; die logt in met dit e-mailadres en is meteen gekoppeld
   CC.on('stafNieuw', () => { const S = CC.S(); CC.sheet('Staflid toevoegen', `<form data-submit="stafNieuwOk" class="codeform">
       <label for="sn-n">Naam</label><input id="sn-n" name="n" required autocomplete="off" placeholder="Voor- en achternaam">
@@ -198,7 +222,6 @@
       <button class="knop vol" data-act="stafDeel" data-naam="${esc(p.naam.split(' ')[0])}" data-wat="${esc(wat)}" data-email="${esc(email)}">${icon('share-2')}Deel de inloglink</button>`);
   });
   CC.on('stafDeel', (el) => CC.deel(`Hoi ${el.dataset.naam}! Je bent in ClubComm toegevoegd als ${el.dataset.wat}. Log in op ${location.origin} met ${el.dataset.email}: je krijgt een code van 6 cijfers per mail.`, 'ClubComm'));
-  CC.on('rolWeg', (el) => { const S = CC.S(); const p = M.persoon(S, el.dataset.id); const r = p.rollen.splice(Number(el.dataset.i), 1)[0]; if (r && r.teamId) { const t = M.team(S, r.teamId); if (t.trainerId === p.id && r.rol === 'trainer') t.trainerId = null; if (t.teamleiderId === p.id && r.rol === 'teamleider') t.teamleiderId = null; } CC.save(); CC.closeSheet(); CC.render(); CC.toast('Rol verwijderd'); });
   CC.on('exportPdf', () => { CC.toast('Printvenster: kies "Opslaan als PDF"'); setTimeout(() => window.print(), 300); });
 
   // Rooster

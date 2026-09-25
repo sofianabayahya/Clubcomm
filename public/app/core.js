@@ -335,7 +335,7 @@
   // ---------- Uitschrijven en account verwijderen (Besluit 14) ----------
   const hjoIds = () => S.people.filter((p) => p.rollen.some((r) => r.rol === 'hjo')).map((p) => p.id);
   const meldStaf = (teamId, onderwerp, tekst) => {
-    const t = M.team(S, teamId); const ontv = [...new Set([t.trainerId, t.teamleiderId, ...hjoIds()].filter(Boolean))];
+    const ontv = [...new Set([...M.stafVan(S, teamId), ...hjoIds()].filter(Boolean))];
     S.msgs.push({ id: 'b' + Date.now() + Math.random(), van: 'systeem', soort: 'melding', bereik: teamId, onderwerp, tekst, tijd: new Date().toISOString(), ontvangers: ontv, gelezen: [], antw: [], urgent: false, gepland: null });
   };
   // Kind uit het team halen. De aanwezigheid blijft alleen als anonieme telling in de teamcijfers bewaard.
@@ -483,7 +483,7 @@
   });
   CC.on('vraagStafOk', (f) => {
     const me = CC.me(); const pl = M.speler(S, f.k.value); const t = M.team(S, pl.teamId);
-    const ontv = [t.trainerId, t.teamleiderId].filter((x) => x && x !== me.id);
+    const ontv = M.stafVan(S, t.id).filter((x) => x !== me.id);
     if (!ontv.length) return CC.toast('Dit team heeft nog geen trainer of teamleider', 'fout');
     S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'persoonlijk', bereik: `${pl.voornaam} (${pl.teamId})`, onderwerp: f.o.value.trim(), tekst: f.t.value.trim(), tijd: new Date().toISOString(), ontvangers: [...new Set(ontv)], gelezen: [me.id], antw: [], urgent: false, gepland: null, vastTot: null });
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Verstuurd naar de trainer en teamleider');
@@ -526,7 +526,7 @@
     if (soort === 'persoon') { ontvangers = [f.aan.value]; bereik = M.persoon(S, f.aan.value).naam; ms = 'persoonlijk'; }
     else if (soort === 'teams') { const ts = [...f.querySelectorAll('[name=teams]:checked')].map((x) => x.value); if (!ts.length) return CC.toast('Kies minstens één team', 'fout'); ontvangers = [...new Set(ts.flatMap((x) => M.oudersVan(S, x)))]; bereik = ts.join(', '); }
     else if (soort === 'club' || soort === 'gepland') { ontvangers = S.people.map((p) => p.id).filter((x) => x !== me.id); bereik = 'Hele club'; }
-    else { ontvangers = M.oudersVan(S, tid); const tl = M.team(S, tid); [tl.teamleiderId, tl.trainerId].forEach((x) => { if (x && x !== me.id) ontvangers.push(x); }); bereik = tid; }
+    else { ontvangers = M.oudersVan(S, tid); M.stafVan(S, tid).forEach((x) => { if (x !== me.id) ontvangers.push(x); }); bereik = tid; }
     const nieuwM = { id: 'b' + Date.now(), van: me.id, soort: ms, bereik, onderwerp: f.ond.value, tekst: f.tekst.value, tijd: new Date().toISOString(), gepland: soort === 'gepland' ? new Date(f.op.value).toISOString() : null, ontvangers: [...new Set(ontvangers)], gelezen: [], antw: [], urgent: !!(f.urgent && f.urgent.checked), vastTot: null, mail: !f.mail || f.mail.checked || !!(f.urgent && f.urgent.checked) };
     S.msgs.push(nieuwM); if (f.vast && Number(f.vast.value)) CC.zetVast(nieuwM, Number(f.vast.value));
     CC.save(); CC.closeSheet(); ui.seg.berichtenStaf = 'verstuurd'; CC.render(); CC.toast(soort === 'gepland' ? 'Bericht ingepland' : `Verstuurd aan ${ontvangers.length} ${ontvangers.length === 1 ? 'persoon' : 'personen'}`);
@@ -576,7 +576,7 @@
     const now = new Date().toISOString();
     S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'nieuws', bereik: tid, onderwerp: wat === 'activiteit' ? `Nieuw: ${f.naam.value.trim()}` : 'Wijziging in de planning', tekst, tijd: now, ontvangers: M.oudersVan(S, tid), gelezen: [], antw: [], urgent: wat !== 'activiteit', gepland: null });
     const hjo = S.people.filter((p) => p.rollen.some((r) => r.rol === 'hjo')).map((p) => p.id);
-    const info = [...hjo, t.teamleiderId, t.trainerId].filter((x) => x && x !== me.id);
+    const info = [...new Set([...hjo, ...M.stafVan(S, tid)])].filter((x) => x && x !== me.id);
     S.msgs.push({ id: 'b' + Date.now() + 1, van: 'systeem', soort: 'melding', bereik: 'Ter informatie', onderwerp: `Planning ${tid} gewijzigd`, tekst: `${me.naam}: ${tekst} Je hoeft niets te doen.`, tijd: now, ontvangers: info, gelezen: [], antw: [], urgent: false, gepland: null });
     S.wijzigingen.push({ id: 'w' + Date.now(), teamId: tid, door: me.id, tekst, tijd: now });
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Planning aangepast, ouders zijn ingelicht');
