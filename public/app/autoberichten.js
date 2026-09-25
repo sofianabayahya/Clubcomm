@@ -49,8 +49,9 @@
     });
     M.blokken(S).forEach((b) => { const w = S.acts.filter((a) => M.isWed(a) && !a.afgelast && a.datum >= b.van && a.datum <= b.tot).sort((x, y) => x.datum.localeCompare(y.datum))[0]; if (w) res.push({ sjabloon: 'wedstrijden', id: 'wed-' + b.nr, datum: w.datum, titel: `Wedstrijden ${b.naam.toLowerCase()}`, vars: { datum: D.lang(w.datum), fase: b.naam } }); });
     (CC.momenten ? CC.momenten(S) : []).forEach((m) => res.push({ sjabloon: 'beoordeling', id: 'beoordeling-' + m.id, datum: m.van, titel: `Beoordeling ${m.naam.toLowerCase()}`, vars: { moment: m.naam.toLowerCase(), datum: D.lang(m.van), tot: D.lang(m.tot) } }));
-    const t0 = eersteTraining(D.addDays(c.seizoen.start, -1));
-    res.push({ sjabloon: 'start', id: 'start-' + c.seizoen.start, datum: t0 ? t0.datum : c.seizoen.start, titel: 'Start seizoen', vars: { datum: D.lang(t0 ? t0.datum : c.seizoen.start) } });
+    // Eerste training van het seizoen; ligt die veel later (club halverwege het seizoen ingericht), dan geldt de startdatum en gaat er geen startbericht meer uit
+    const t0 = eersteTraining(D.addDays(c.seizoen.start, -1)); const start = t0 && D.dagen(c.seizoen.start, t0.datum) <= 14 ? t0.datum : c.seizoen.start;
+    res.push({ sjabloon: 'start', id: 'start-' + c.seizoen.start, datum: start, titel: 'Start seizoen', vars: { datum: D.lang(start) } });
     res.push({ sjabloon: 'eind', id: 'eind-' + c.seizoen.eind, datum: c.seizoen.eind, titel: 'Einde seizoen', vars: { datum: D.lang(c.seizoen.eind) } });
     lijst(S).filter((x) => x.eigen && x.datum).forEach((x) => res.push({ sjabloon: x.id, id: 'eigen-' + x.id, datum: x.datum, titel: x.naam, vars: { datum: D.lang(x.datum) } }));
     return res.flatMap((m) => { const sj = lijst(S).find((x) => x.id === m.sjabloon); return sj ? (sj.schema || []).map((d) => ({ ...m, sj, dagen: d, zid: `${m.id}@${d}`, klaar: D.addDays(m.datum, -d) })) : []; })

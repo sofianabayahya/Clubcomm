@@ -1,7 +1,7 @@
 # ClubComm
 
 Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoer, berichten, kaarten, speeltijd.
-**Pilot:** RKSV DCG (Amsterdam, Sportpark Ookmeer), team **O12-1 (talententeam, selectie)**, 17 spelers. De gebruiker (Sofian) is trainer, ouder (zijn kind speelt in het team) en clubbeheerder, met twee teamleiders. Wedstrijden vanaf fase 2 (za 31 okt 2026).
+**Pilot:** RKSV DCG (Amsterdam, Sportpark Ookmeer), team **O12 talententeam** (code `O12-1`, selectie), 17 spelers. Database sinds 25-09 leeg op dit team na (Besluit 38). De gebruiker (Sofian) is trainer, ouder (zijn kind speelt in het team) en clubbeheerder, met twee teamleiders. Wedstrijden vanaf fase 2 (za 31 okt 2026).
 
 ## Werkafspraken met de gebruiker
 - De gebruiker is beginner: altijd **eenvoudig Nederlands**, één stap tegelijk, uitleg waar je klikt.
@@ -13,7 +13,7 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
 ## Waar staat wat
 | Bestand | Inhoud |
 |---|---|
-| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 37). |
+| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 38). |
 | `docs/productie-en-groei.md` | Controlelijst, **Openstaand**, meerdere clubs, app of website, kosten. |
 | `docs/techniek.md` | Opbouw van de echte versie (Supabase, Vercel, Brevo, migraties, e-mail, back-up). |
 | `docs/onderzoek/` | Achtergrond: analyse clubproblemen, vergelijking Teamy en VeldPlanner (voorstellen, geen besluiten). |
@@ -28,7 +28,7 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
 
 ## Online
 - App: https://clubcomm-nine.vercel.app — Vercel-project `clubcomm` (map `public`). Online zetten: Vercel `create_deployment` (project `clubcomm`, target production, gitSource github `sofianabayahya/Clubcomm`, ref = de werkbranch, zonder teamId).
-- Supabase-project `pkvacwbdgumkffxnxnqk` (Frankfurt). Club-id `dcg`; account van de gebruiker: persoon `p-beheer`. Migraties: bestand in `supabase/migrations/` **en** toepassen met `apply_migration`. Edge Function `melding` (e-mail via Brevo; secrets `BREVO_API_KEY`, `AFZENDER_EMAIL`).
+- Supabase-project `pkvacwbdgumkffxnxnqk` (Frankfurt). Club-id `dcg`; account van de gebruiker: persoon `p-beheer`. Migraties: bestand in `supabase/migrations/` **en** toepassen met `apply_migration`. Eenmalige datawijzigingen: bestand in `supabase/scripts/` en uitvoeren met `execute_sql`. Edge Function `melding` (e-mail via Brevo; secrets `BREVO_API_KEY`, `AFZENDER_EMAIL`).
 - E-mail: Brevo (inlogmail via SMTP, meldingen via API). Afzender nu een Gmail-adres; eigen domein staat op Openstaand.
 
 ## Testen

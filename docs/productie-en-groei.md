@@ -1,7 +1,7 @@
 # ClubComm — Controlelijst productie en groei
 
 > **Openstaand — hier kijken bij de vraag "wat zijn de volgende stappen?"**
-> *Vóór de ouders erbij komen:* teamleiders ontvangen → database leegmaken en O12-1 inrichten (trainingen di/do veld 1, vr veld 2, 17:15–18:30; selectie; rollen trainer/coördinator/HJO/beheerder voor de initiatiefnemer; teamleiders profiel Basis) → privacycontact invullen (Regels → Privacy) → toestemming bestuur (met een nieuwe, korte presentatie voor RKSV DCG) → teksten voor teamleiders en ouders → testen op echte telefoons.
+> *Vóór de ouders erbij komen:* ~~database leegmaken en O12 talententeam inrichten~~ ✅ 25-09 (Besluit 38) → teamleiders ontvangen (account + rol teamleider via Rollen) → kind van de initiatiefnemer in het team zetten (rol ouder) → privacycontact invullen (Regels → Privacy) → toestemming bestuur (met een nieuwe, korte presentatie voor RKSV DCG) → teksten voor teamleiders en ouders → testen op echte telefoons.
 > *Later in de pilot:* nieuwe handleidingen per rol · fouten automatisch vastleggen · Content-Security-Policy · gebruikerstest met 3–5 ouders · welkomstuitleg bij eerste keer inloggen · agenda-koppeling (heeft domein nodig).
 > *Vóór een tweede club:* merknaam checken (clubcomm.nl/.com/.app zijn bezet) en domein kopen + e-mail vanaf eigen domein · testomgeving, automatische tests (GitHub Actions), uptime-bewaking · Supabase Pro, Vercel Pro · automatische berichten vanaf de server (pg_cron) · pushmeldingen · club-wizard, meerdere clubs per persoon, Sportlink/voetbal.nl-import · verwerkersovereenkomsten, DPIA, bewaartermijnen automatisch · toegankelijkheid (WCAG) · twee beheerders per club, logboek, rate limiting.
 > *Later:* store-app (Capacitor), huiswerk en filmpjes, fondsenwerving, weekbericht.
@@ -22,7 +22,7 @@ Legenda: ✅ gedaan · ⚠️ nodig vóór of tijdens de pilot · 🔜 nodig vó
 |---|---|---|
 | Automatische tests voor alle rollen | ⚠️ | De testscripts bestaan, maar staan nog niet in het project. Opnemen en vóór elke publicatie draaien. |
 | Testen op echte telefoons (iPhone/Safari en Android/Chrome) | ⚠️ | In week 1 met jou en de teamleiders; ook op een trage verbinding. |
-| Een lege club (zonder voorbeelddata) | ⚠️ | Kloppen alle schermen als er nog niets is? Controleren bij het inrichten van O12-1. |
+| Een lege club (zonder voorbeelddata) | ✅ 25-09 | Alle schermen van alle rollen doorgelopen met de echte, lege club; drie fouten gevonden en opgelost (Besluit 38). |
 | Twee mensen tegelijk (bijv. twee teamleiders) | ⚠️ | Opslaan per rij voorkomt de meeste botsingen; in de pilot extra op letten. |
 | Foutmeldingen opvangen | 🔜 (later in de pilot) | Nu zie je een fout alleen op het scherm van de gebruiker. Fouten automatisch laten vastleggen (tabel in Supabase of een dienst als Sentry). |
 | Feedbackknop in de app | ✅ 25-09 | "Er klopt iets niet / idee" → komt bij jou binnen. Belangrijk om van de pilot te leren. |
@@ -123,7 +123,7 @@ Legenda: ✅ gedaan · ⚠️ nodig vóór of tijdens de pilot · 🔜 nodig vó
 2. ✅ Feedbackknop in de app.
 3. ✅ Privacytekst + akkoord bij aanmelden. Nog: toestemming van het bestuur en het privacycontact invullen.
 4. ✅ Wekelijkse back-up + downloadknop.
-5. Testen op echte telefoons (jij + teamleiders) en de lege-club-check bij het inrichten.
+5. ✅ Club leeggemaakt en O12 talententeam ingericht, lege-club-check gedaan. Nog: testen op echte telefoons (jij + teamleiders).
 
 **Later in de pilot:** foutmeldingen automatisch vastleggen · Content-Security-Policy.
 

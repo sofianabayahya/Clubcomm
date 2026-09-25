@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 37 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 38 toegevoegd)
 
 ---
 
@@ -507,6 +507,16 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 38 — Start pilot: het O12 talententeam
+*Besloten 25 september 2026.*
+
+- **Club leeggemaakt:** alle voorbeelddata en testaccounts zijn weg. Een vaste kopie van daarvoor staat in de database (`backup.rij_voor_pilot`, `backup.lid_voor_pilot`). De clubinstellingen (seizoen, fasen, vakanties, regels, taken per rol, communicatieplan) zijn gebleven.
+- **Eén team:** *O12 talententeam* (code `O12-1`, selectie). Trainingen di en do op veld 1, vr op veld 2, 17:15–18:30, van 25 september tot het einde van het seizoen, zonder vakanties en Goede Vrijdag.
+- **Rollen van de initiatiefnemer:** trainer van het O12 talententeam, coördinator O10–O12, HJO en clubbeheerder. De rol ouder komt erbij zodra zijn kind in het team staat.
+- **Teamleiders:** profiel Basis (was al de clubinstelling). Ze krijgen hun rol via Rollen zodra ze een account hebben.
+- **Speler toevoegen door de beheerder** bij een ouder die al in de club staat (bijv. een staflid) geeft die persoon nu ook de rol ouder.
+- **Lege club moet kloppen:** een team zonder gegevens is geen "team in de rode zone", een nieuw team zonder cijfer van vorig seizoen toont alleen het huidige percentage, en een club die halverwege het seizoen begint krijgt geen bericht "het seizoen begint".
 
 ## Besluit 37 — Klaar voor de ouders: privacy, installeren, feedback en back-up
 *Besloten 25 september 2026.*

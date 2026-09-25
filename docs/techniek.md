@@ -27,6 +27,7 @@
 
 ## Beheer
 - Clubbeheerder → Home → "Voorbeelddata laden" (om te testen) en "Club leegmaken" (voor de start met echte gegevens).
+- Teams maken kan nog niet in de app: het O12 talententeam is met SQL ingericht (`supabase/scripts/2026-09-25_pilot_o12_inrichten.sql`, Besluit 38). Een vaste kopie van de club daarvoor staat in `backup.rij_voor_pilot` en `backup.lid_voor_pilot`.
 - Het gratis Supabase-plan pauzeert een project na een week zonder gebruik; tijdens de pilot wordt het dagelijks gebruikt.
 
 ## Bekende beperkingen (pilot)

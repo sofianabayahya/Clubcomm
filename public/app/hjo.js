@@ -106,7 +106,7 @@
           <div class="staven">${rij.slice(0, 10).map(({ t, s }) => { const tot = Object.values(s.redenen).reduce((a, b) => a + b, 0) || 1; const del = Object.entries(s.redenen).map(([r, n]) => `${r}: ${n}`).join(', ') || 'geen afwezigheid'; return `<div class="staaf gestapeld" role="img" aria-label="${esc(t.naam)}: ${esc(del)}"><span>${esc(t.naam)}</span><span class="stapel">${Object.entries(s.redenen).map(([r, n]) => `<i style="width:${(100 * n) / tot}%;background:${kleur(r.startsWith('Langdurig') ? 'Blessure' : r)}" title="${esc(r)}: ${n}"></i>`).join('')}</span><b>${Object.values(s.redenen).reduce((a, b) => a + b, 0)}×</b></div>`; }).join('')}</div>
           <p class="zacht klein">Aantal keer afwezig per reden, voor de 10 teams met de laagste aanwezigheid. Zo zie je of 80% komt door blessures of door andere sporten.</p>
           ${h.sectie('3. Hoe ontwikkelt het zich?')}
-          <div class="lijst compact">${rij.slice(0, 8).map(({ t, s }) => { const d = (s.pct ?? 0) - t.vorig; return h.rij({ ic: h.stip(M.zone(S, s.pct, t.id)), titel: esc(t.naam), sub: `Vorig seizoen ${t.vorig}% → nu ${s.pct ?? '–'}%`, rechts: `<b class="${d < -3 ? 'rood-tekst' : d > 3 ? 'groen-tekst' : 'zacht'}">${d > 0 ? '▲' : d < 0 ? '▼' : '='} ${Math.abs(d)}</b>` }); }).join('')}</div>
+          <div class="lijst compact">${rij.slice(0, 8).map(({ t, s }) => { if (t.vorig == null || s.pct == null) return h.rij({ ic: h.stip(M.zone(S, s.pct, t.id)), titel: esc(t.naam), sub: `Nu ${s.pct ?? '–'}%${t.vorig == null ? ' · nog geen cijfer van vorig seizoen' : ''}` }); const d = s.pct - t.vorig; return h.rij({ ic: h.stip(M.zone(S, s.pct, t.id)), titel: esc(t.naam), sub: `Vorig seizoen ${t.vorig}% → nu ${s.pct}%`, rechts: `<b class="${d < -3 ? 'rood-tekst' : d > 3 ? 'groen-tekst' : 'zacht'}">${d > 0 ? '▲' : d < 0 ? '▼' : '='} ${Math.abs(d)}</b>` }); }).join('')}</div>
           <p class="zacht klein">Na elke fase komt er een punt bij, zodat je de trend per fase ziet.</p>
           ${CC.beoordInzicht && S.club.modules.beoordeling ? CC.beoordInzicht(S) : ''}
           ${h.sectie('Gelezen berichten per team')}
@@ -151,6 +151,7 @@
   CC.on('spelerToevoegenOk', (f) => {
     const S = CC.S(); let o = S.people.find((p) => p.email === f.e.value);
     if (!o) { o = { id: 'p' + Date.now(), naam: `Ouder van ${f.v.value}`, email: f.e.value, tel: '0600000000', rollen: [{ rol: 'ouder' }] }; S.people.push(o); }
+    else if (!o.rollen.some((r) => r.rol === 'ouder')) o.rollen.push({ rol: 'ouder' });
     S.players.push({ id: 's' + Date.now(), voornaam: f.v.value, achternaam: f.a.value, teamId: f.t.value, ouders: [o.id], bondsnummer: null });
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Toegevoegd; de ouder krijgt een uitnodiging');
   });

@@ -478,7 +478,7 @@
       const t = M.team(S, tid);
       const ts = M.teamStats(S, tid, per);
       const tz = M.zone(S, ts.pct, tid);
-      if (voorHjo && tz !== 'groen') res.push({ soort: 'team', niveau: tz, teamId: tid, tekst: `${t.naam}: teamgemiddelde ${ts.pct}% (${t.type})`, sub: 'Waarschijnlijk iets in het team: tijd, trainer of sfeer?', ernst: 100 - (ts.pct || 0) });
+      if (voorHjo && ['oranje', 'rood'].includes(tz)) res.push({ soort: 'team', niveau: tz, teamId: tid, tekst: `${t.naam}: teamgemiddelde ${ts.pct}% (${t.type})`, sub: 'Waarschijnlijk iets in het team: tijd, trainer of sfeer?', ernst: 100 - (ts.pct || 0) });
       ts.spelers.forEach(({ pl, st }) => {
         const z = M.zone(S, st.pct, tid);
         const naam = M.naam(S, pl);
