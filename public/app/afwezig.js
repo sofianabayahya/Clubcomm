@@ -2,7 +2,7 @@
 (function () {
   const CC = window.CC; const D = CC.date, M = CC.m, h = CC.h, icon = CC.icon, esc = CC.esc;
   const hjoIds = (S) => S.people.filter((p) => p.rollen.some((r) => r.rol === 'hjo')).map((p) => p.id);
-  const melding = (S, ontv, onderwerp, tekst, urgent) => S.msgs.push({ id: 'b' + Date.now() + Math.random().toString(36).slice(2, 6), van: 'systeem', soort: 'melding', bereik: 'Ter informatie', onderwerp, tekst, tijd: new Date().toISOString(), ontvangers: [...new Set(ontv.filter(Boolean))], gelezen: [], antw: [], urgent: !!urgent, gepland: null });
+  const melding = (S, ontv, onderwerp, tekst, urgent, push) => S.msgs.push({ id: 'b' + Date.now() + Math.random().toString(36).slice(2, 6), van: 'systeem', soort: 'melding', bereik: 'Ter informatie', onderwerp, tekst, tijd: new Date().toISOString(), ontvangers: [...new Set(ontv.filter(Boolean))], gelezen: [], antw: [], urgent: !!urgent, gepland: null, ...(push ? { push: true } : {}) });
   CC.VERVANGER = 'Vervangende trainer';
 
   // ---------- 1. Een periode afmelden (ouder) ----------

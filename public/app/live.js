@@ -8,6 +8,7 @@
 
   const sb = window.supabase.createClient(cfg.url, cfg.key, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
   CC.sb = sb;
+  CC.clubId = () => club;
   let club = cfg.club; // na inloggen: de club uit de koppeling
   const L = { stap: 'laden', email: '', fout: '', snap: new Map(), geweigerd: new Map(), bezig: false, opnieuw: false, timer: null, geladen: 0, pid: null, uitleg: '' };
   const WACHT = 'clubcomm-aanmelding-v1';
@@ -196,6 +197,10 @@
     CC.zetSessie(L.pid);
     if (!CC.me()) { L.stap = 'mail'; L.fout = 'Je account is gekoppeld, maar je gegevens konden niet worden geladen. Ververs de pagina.'; L.pid = null; CC.render(); return; }
     L.stap = 'klaar'; CC.render();
+    // Getikt op een pushmelding: meteen het bericht openen (Besluit 53)
+    const b = new URLSearchParams(location.search).get('bericht');
+    if (b) { history.replaceState(null, '', location.pathname); if (CC.S().msgs.some((m) => m.id === b)) CC.open('bericht', { id: b }); }
+    if (CC.pushVernieuw) CC.pushVernieuw();
   };
 
   // ---------- Beheer: club vullen met voorbeelddata om te testen, of leegmaken ----------

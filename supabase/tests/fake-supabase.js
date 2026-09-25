@@ -52,6 +52,10 @@
     if (naam === 'bericht_bij') { const r = db.rows[`dcg|msgs|${a.p_id}`]; if (r) { if (a.p_gelezen && !r.data.gelezen.includes(ik())) r.data.gelezen.push(ik()); r.data.antw.push(...(a.p_antw || [])); bewaar(); } return antw(null); }
     if (naam === 'club_vullen') { a.p_rijen.forEach((r) => { if (r.soort === 'club' || (['people', 'contact'].includes(r.soort) && r.id === ik())) return; db.rows[`dcg|${r.soort}|${r.id}`] = { ...r, club_id: 'dcg' }; }); bewaar(); return antw(a.p_rijen.length); }
     if (naam === 'club_leegmaken') { let n = 0; Object.entries(db.rows).forEach(([k, r]) => { if (r.soort !== 'club' && !(['people', 'contact'].includes(r.soort) && r.id === ik())) { delete db.rows[k]; n++; } }); bewaar(); return antw(n); }
+    // Pushmeldingen (Besluit 53)
+    if (naam === 'push_sleutel') return antw('BCVpzPwah6lIdVl0Iq-lNMovdQzhApVaNWu8EzOUtSOHot_OhnsSGGKbNlFuRGaPfXKNSQQBNoOBTgurba4HlFo');
+    if (naam === 'push_aan') { db.push = db.push || {}; db.push[a.p_endpoint] = { persoon: db.lid[db.user && db.user.id], voorkeur: a.p_voorkeur, toestel: a.p_toestel }; bewaar(); return antw(true); }
+    if (naam === 'push_uit') { if (db.push) delete db.push[a.p_endpoint]; bewaar(); return antw(true); }
     return antw(null, { message: 'onbekende rpc ' + naam });
   };
   window.supabase = { createClient: () => ({ auth, from, rpc }) };

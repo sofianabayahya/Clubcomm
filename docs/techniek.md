@@ -14,7 +14,7 @@
   - contactgegevens (e-mail, telefoon) apart: staf ziet alleen die van ouders uit de eigen teams.
 - Extra bewaking: niemand kan zichzelf rollen geven; berichten van een ander kun je alleen als gelezen markeren of beantwoorden; ouders kunnen trainingen niet verplaatsen.
 - Test: `supabase/tests/rls_test.sql` (draait per rol wat iemand ziet en wat geweigerd wordt).
-- Migraties: `supabase/migrations/001…011` (009: vastgezet nieuws leesbaar voor nieuwe ouders van het team; 010: telefoonnummer bij aanmelden; 011: geen dubbele aanmelding voor hetzelfde kind).
+- Migraties: `supabase/migrations/001…012` (009: vastgezet nieuws leesbaar voor nieuwe ouders van het team; 010: telefoonnummer bij aanmelden; 011: geen dubbele aanmelding voor hetzelfde kind; 012: pushmeldingen).
 
 ## Inloggen
 - Met een e-mailcode van 6 cijfers (geen wachtwoord, geen knop in de mail: Besluit 52). Na inloggen koppelt de database het account aan de persoon met hetzelfde e-mailadres.
@@ -51,3 +51,9 @@
 - Er is geen mailbox op noreply@: antwoorden per mail komen nergens aan (de mails zeggen: reageren doe je in de app).
 - Brevo zet in elke mail een afmeldknop (List-Unsubscribe; uitzetten kan alleen bij Brevo Enterprise). Wie erop tikt, komt op de blokkeerlijst en krijgt ook geen inlogcode meer. Deblokkeren: Brevo → Transactional → Contacts/Blocked (of API `DELETE /smtp/blockedContacts/{email}`).
 
+## Pushmeldingen (Besluit 53)
+- App: Profiel → Meldingen (`public/app/push.js`) vraagt toestemming en meldt de telefoon aan met `push_aan` (tabel `push_abonnement`, per telefoon, met keuzes per soort). `sw.js` toont de melding en opent bij een tik `/?bericht=<id>`.
+- Server: Edge Function `melding` stuurt bij elk nieuw bericht/antwoord (triggers `cc_mail`, `cc_mail_antw`) e-mail én push; bij een nieuwe afmelding of aanmelding (trigger `cc_push`) alleen push naar de staf.
+- Sleutelpaar (VAPID): één keer gemaakt door de functie (`{ "sleutel": true }`), staat in `push_sleutel` (RLS zonder policies); de app krijgt alleen de publieke helft via `push_sleutel()`.
+- Nachtrust 21:00–07:30: niet-urgente push in `push_wachtrij`; pg_cron-taak `clubcomm-push-ochtend` (elke 15 min 05:00–07:59 UTC) verstuurt vanaf 07:30 Nederlandse tijd.
+- Verlopen telefoons (404/410 van de pushdienst) worden automatisch opgeruimd.

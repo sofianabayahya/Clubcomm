@@ -98,7 +98,7 @@
     },
     segVal: (key, standaard) => ui.seg[key] || standaard,
     // Blok "Actie nodig": altijd zichtbaar, ook als het leeg is, zodat je weet waar acties straks verschijnen (Besluit 50)
-    actieBlok: (acties, wat) => `${h.sectie('Actie nodig')}${acties.length ? `<div class="lijst">${acties.join('')}</div>` : `<p class="zacht klein">Niets te doen 👍 Hier verschijnen je acties, bijvoorbeeld ${wat}.</p>`}`,
+    actieBlok: (acties0, wat) => { const p = CC.pushRij ? CC.pushRij() : ''; const acties = p ? [...acties0, p] : acties0; return `${h.sectie('Actie nodig')}${acties.length ? `<div class="lijst">${acties.join('')}</div>` : `<p class="zacht klein">Niets te doen 👍 Hier verschijnen je acties, bijvoorbeeld ${wat}.</p>`}`; },
     rij({ ic, titel, sub, rechts, act, attrs = '', kleur = '', chevron = true }) {
       const tag = 'div';
       return `<${tag} class="rij ${kleur} ${act ? 'klikbaar' : ''}" ${act ? `data-act="${act}" role="button" tabindex="0"` : ''} ${attrs}>${ic ? `<span class="rij-ic">${ic.startsWith('<') ? ic : icon(ic)}</span>` : ''}<span class="rij-tekst"><b>${titel}</b>${sub ? `<small>${sub}</small>` : ''}</span>${rechts ? `<span class="rij-r">${rechts}</span>` : ''}${act && chevron ? icon('chevron-right', 'chev') : ''}</${tag}>`;
@@ -314,7 +314,7 @@
       <h3 class="klein-kop">Instellingen</h3>
       ${CC.agendaRij ? CC.agendaRij() : ''}
       ${CC.trainerEigenRij ? CC.trainerEigenRij() : ''}
-      ${h.rij({ ic: 'bell', titel: 'Meldingen', sub: 'In de app, en per e-mail bij belangrijke berichten', act: 'meldingen' })}
+      ${h.rij({ ic: 'bell', titel: 'Meldingen', sub: CC.meldingenSub ? CC.meldingenSub() : 'In de app, en per e-mail bij belangrijke berichten', act: 'meldingen' })}
       ${CC.live ? '' : h.rij({ ic: 'globe', titel: 'Taal', sub: 'Nederlands (Engels komt in versie 2)', act: 'taalEN' })}
       ${h.rij({ ic: 'lock', titel: 'Privacyverklaring', act: 'privacy' })}
       ${h.rij({ ic: 'message-circle', titel: 'Feedback of een probleem melden', sub: 'Er klopt iets niet, of je hebt een idee', act: 'feedback' })}

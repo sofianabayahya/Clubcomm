@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 52 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 53 toegevoegd)
 
 ---
 
@@ -507,6 +507,26 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 53 — Pushmeldingen (stap 1)
+**Vuistregel: een pushmelding alleen als je iets moet weten of doen. Ter informatie en statistieken nooit.** Te veel meldingen = mensen zetten ze uit, en dan mis je ook de belangrijke.
+
+| Soort | Voorbeelden | Push | E-mail | Waarom |
+|---|---|---|---|---|
+| **Noodbericht / wijziging** | afgelast, tijd of veld gewijzigd, code rood, vervanger nodig | ✅ altijd, ook 's nachts | ✅ | Tijdkritisch: je staat anders voor niets op het veld. |
+| **Persoonlijk** | bericht of antwoord aan jou, kaart, taak/vervoer, aanmelding goedgekeurd | ✅ | ✅ | Gaat over jou of je kind; iemand wacht op je. |
+| **Aankondiging** | nieuwe activiteit, nieuws van team of club | ✅ | ✅ (afzender kan uitzetten) | Nieuw, vaak met opgave of datum. |
+| **Herinnering** | vakantie, start seizoen, opgave | ✅ | ❌ als je push hebt | Je wist het al; een tik is genoeg (Besluit 36). |
+| **Staf** | nieuwe aanmelding (teamleider + trainer), afmelding **op de dag zelf** (trainer) | ✅ | ❌ | Eerdere afmeldingen staan op Home; op de dag zelf moet de trainer het nú weten. |
+| **Ter informatie** | planning aangepast (staf), statistieken, zones | ❌ | ❌ | Informatie is geen taak (Besluit 30). |
+
+- **Nachtrust 21:00–07:30:** alleen noodberichten komen direct; de rest komt om 07:30 (dubbele samengevoegd).
+- **Zelf kiezen:** Profiel → Meldingen: per soort aan/uit (noodberichten altijd aan), per telefoon. Uitzetten kan altijd.
+- **Wie geen push heeft** (app niet op het beginscherm, of uitgezet) krijgt alles per e-mail zoals nu.
+- **iPhone:** alleen als ClubComm op het beginscherm staat (iOS 16.4+). De app legt dat uit. Op Home staat één keer "Zet pushmeldingen aan" (met "Niet nu": 30 dagen weg).
+- **Tik op een melding** → de app opent op dat bericht.
+- **Techniek:** de serverfunctie `melding` verstuurt e-mail én push; het sleutelpaar voor push is op de server gemaakt en blijft daar (geen sleutel in de chat of in de app). Migratie 012.
+- **Stap 2 (later):** automatische herinneringen vanaf de server (pg_cron), zodat ze op tijd komen, ook als niemand de app opent.
 
 ## Besluit 52 — Inloggen alleen met de code, geen knop in de mail
 - De inlogmail bevat **alleen een code van 6 cijfers**, groot in beeld. Geen knop of link meer (vervangt de "magische link" uit Besluit 1).

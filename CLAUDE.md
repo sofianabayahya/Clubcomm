@@ -13,7 +13,7 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
 ## Waar staat wat
 | Bestand | Inhoud |
 |---|---|
-| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 52). |
+| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 53). |
 | `docs/pilotlog.md` | **Fouten uit de pilot met oorzaak en patroon** (momentopname, opslaan, demo verbergt het, één persoon per rol, buiten de app, rommelige gegevens). Bij elke wijziging langs deze patronen lopen. |
 | `docs/productie-en-groei.md` | Controlelijst, **Openstaand**, meerdere clubs, app of website, kosten. |
 | `docs/techniek.md` | Opbouw van de echte versie (Supabase, Vercel, Brevo, migraties, e-mail, back-up). |
@@ -24,14 +24,14 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
 - `public/index.html` + `public/app/*.js`: één webapp voor de telefoon (vanilla JS, geen build), installeerbaar (manifest + `sw.js`).
   - `data.js`: demodata + rekenregels (aanwezigheid, kaarten per seizoen, zones, signalen, speeltijd, vaste taken). `opslag.js`: app-gegevens ↔ databaserijen. `core.js`: inloggen, kop, profiel, berichten, afmelden, planning aanpassen, privacy, feedback.
   - Schermen per rol: `ouder.js`, `trainer.js`, `teamleider.js`, `hjo.js` (ook clubbeheerder), `hjohome.js`; coördinator via `taken.js` (ook taken per rol en profielen).
-  - `adres.js`: adres aanvullen via PDOK (velden met `data-adres`).
+  - `adres.js`: adres aanvullen via PDOK (velden met `data-adres`). `push.js`: pushmeldingen aanzetten en keuzes (Besluit 53); tonen in `sw.js`.
   - Modules: `autoberichten.js` (Communicatieplan, noodberichten, herinneringen activiteiten), `afwezig.js`, `trainerafw.js`, `beoordeling.js`, `materiaal.js`, `meehelpen.js`, `waardering.js`, `hjofilter.js`, `agenda.js`.
   - `live.js`: echte versie (Supabase: inloggen met e-mailcode, laden, automatisch opslaan, beheer).
 - **Demo:** `/?demo` (of zonder `config.js`). Accounts: Sanne (ouder), Mark (trainer + ouder), Linda (teamleider + ouder), Peter (HJO + beheerder), Esther (coördinator). Demodata heet nog "SC Buitenveldert" en staat in localStorage.
 
 ## Online
 - App: https://mijnclubcomm.nl (domein bij Hostnet, DNS naar Vercel; oud adres clubcomm-nine.vercel.app werkt ook) — Vercel-project `clubcomm` (map `public`). Online zetten: Vercel `create_deployment` (project `clubcomm`, target production, gitSource github `sofianabayahya/Clubcomm`, ref = de werkbranch, zonder teamId).
-- Supabase-project `pkvacwbdgumkffxnxnqk` (Frankfurt). Club-id `dcg`; account van de gebruiker: persoon `p-beheer`. Migraties: bestand in `supabase/migrations/` **en** toepassen met `apply_migration`. Eenmalige datawijzigingen: bestand in `supabase/scripts/` en uitvoeren met `execute_sql`. Edge Function `melding` (e-mail via Brevo; secrets `BREVO_API_KEY`, `AFZENDER_EMAIL`).
+- Supabase-project `pkvacwbdgumkffxnxnqk` (Frankfurt). Club-id `dcg`; account van de gebruiker: persoon `p-beheer`. Migraties: bestand in `supabase/migrations/` **en** toepassen met `apply_migration`. Eenmalige datawijzigingen: bestand in `supabase/scripts/` en uitvoeren met `execute_sql`. Edge Function `melding` (e-mail via Brevo én pushmeldingen; secrets `BREVO_API_KEY`, `AFZENDER_EMAIL`; push-sleutelpaar staat in tabel `push_sleutel`, alleen voor de server).
 - E-mail: Brevo (inlogmail via SMTP, meldingen via API). Afzender nu een Gmail-adres; eigen domein staat op Openstaand.
 
 ## Testen

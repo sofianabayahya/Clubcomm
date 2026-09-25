@@ -205,8 +205,7 @@
       home(S) {
         const tid = CC.teamId(); const t = M.team(S, tid); const me = CC.me();
         const volgendeT = M.komend(S, tid, 8).find((a) => !a.afgelast);
-        if (!volgendeT) return h.leeg('Geen activiteiten gepland');
-        const sp = M.spelers(S, tid).map((pl) => ({ pl, st: M.status(S, pl, volgendeT) }));
+        const sp = volgendeT ? M.spelers(S, tid).map((pl) => ({ pl, st: M.status(S, pl, volgendeT) })) : [];
         const af = sp.filter((x) => ['afgemeld', 'langdurig'].includes(x.st.code));
         const vandaag = S.acts.find((a) => a.teamId === tid && a.datum === D.vandaag() && !a.afgelast);
         const acties = [];
@@ -223,6 +222,8 @@
         });
         const mat = CC.materiaalRij && CC.mag('materiaal') && CC.materiaalRij(S, tid); if (mat) acties.push(mat);
         if (CC.beoordRijTrainer) acties.push(...CC.beoordRijTrainer(S, tid));
+        // Geen activiteit gepland: wel de acties tonen (bijv. aanmeldingen)
+        if (!volgendeT) return h.leeg('Geen activiteiten gepland') + h.actieBlok(acties, 'nieuwe berichten, aanmeldingen of aanwezigheid die nog open staat');
         return `<article class="kaartje hoofd">
             <small>${D.relatief(volgendeT.datum)}${volgendeT.soort !== 'training' ? '' : ''}</small><h2>${h.actTitel(S, volgendeT)}</h2><p class="zacht">${h.actSub(S, volgendeT)}</p>
             <div class="verwacht"><b>${sp.length - af.length}</b><span>van ${sp.length} verwacht</span></div>
