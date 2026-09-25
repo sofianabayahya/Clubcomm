@@ -48,7 +48,7 @@
         const compliment = z === 'groen' && !k.geel && !k.rood && !st.telaat ? `<span class="compliment">${icon('star')}Betrouwbare speler!</span>` : '';
         return `
           ${lang ? `<div class="info">${icon('hospital')}<span><b>${esc(pl.voornaam)} is langdurig afwezig</b> tot ongeveer ${D.kort(lang.tot)}. Je hoeft niet per training af te melden.</span></div>` : ''}
-          ${acties.length ? `${h.sectie('Actie nodig')}<div class="lijst">${acties.join('')}</div>` : ''}
+          ${h.actieBlok(acties, 'nieuwe berichten, een taak of vervoer waar je voor bent ingedeeld')}
           ${h.sectie(`Programma${weekLabel(komend)}`)}
           <div class="acts">${komend.map((a) => CC.actKaart(S, a, pl)).join('') || h.leeg('Geen activiteiten gepland', 'calendar')}</div>
           <button class="status ${z}" data-act="open" data-view="kindOverzicht" data-id="${pl.id}"><span>${h.stip(z)}${statusregel} <small>deze fase</small></span><span>${h.kaartjes(k)}${compliment}${icon('circle-help', 'zacht')}</span></button>`;

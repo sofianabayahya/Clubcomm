@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 49 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 50 toegevoegd)
 
 ---
 
@@ -507,6 +507,11 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 50 — Actie nodig altijd zichtbaar, materiaalbericht bij Verstuurd, geen filters bij spelers
+- **Actie nodig** staat altijd op Home (trainer, teamleider, ouder). Is het leeg: "Niets te doen 👍 Hier verschijnen je acties, bijvoorbeeld …". Zo weet je waar straks iets komt.
+- **Materiaal doorgeven:** het bericht aan de HJO is nu *van de trainer*. Het staat dus bij de trainer onder **Verstuurd**, niet in de eigen inbox. Is de trainer zelf ook HJO, dan krijgt hij het niet nog eens.
+- **Spelerslijst (trainer en teamleider): geen filters meer**, alleen **sorteren** (op naam, aanwezigheid laagste/hoogste eerst, meeste kaarten). Bij ± 17 spelers staat alles al in de rij: aanwezigheid, afgemeld/langdurig, kaarten, zone en beoordeeld. "Aanwezigheid: laagste eerst" zet oranje/rood bovenaan. (Vervangt de filters uit eerdere besluiten.)
 
 ## Besluit 49 — HJO: vierde knop Ouders onder Teams
 - Onder **Teams** staan nu vier knoppen: **Teams · Spelers · Staf · Ouders**.

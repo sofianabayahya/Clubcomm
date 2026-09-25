@@ -97,6 +97,8 @@
       return `<div class="seg" role="tablist">${opties.map(([v, l, n]) => `<button role="tab" aria-selected="${cur === v}" class="${cur === v ? 'aan' : ''}" data-act="seg" data-key="${key}" data-val="${v}">${esc(l)}${n ? ` <span class="tel">${n}</span>` : ''}</button>`).join('')}</div>`;
     },
     segVal: (key, standaard) => ui.seg[key] || standaard,
+    // Blok "Actie nodig": altijd zichtbaar, ook als het leeg is, zodat je weet waar acties straks verschijnen (Besluit 50)
+    actieBlok: (acties, wat) => `${h.sectie('Actie nodig')}${acties.length ? `<div class="lijst">${acties.join('')}</div>` : `<p class="zacht klein">Niets te doen 👍 Hier verschijnen je acties, bijvoorbeeld ${wat}.</p>`}`,
     rij({ ic, titel, sub, rechts, act, attrs = '', kleur = '', chevron = true }) {
       const tag = 'div';
       return `<${tag} class="rij ${kleur} ${act ? 'klikbaar' : ''}" ${act ? `data-act="${act}" role="button" tabindex="0"` : ''} ${attrs}>${ic ? `<span class="rij-ic">${ic.startsWith('<') ? ic : icon(ic)}</span>` : ''}<span class="rij-tekst"><b>${titel}</b>${sub ? `<small>${sub}</small>` : ''}</span>${rechts ? `<span class="rij-r">${rechts}</span>` : ''}${act && chevron ? icon('chevron-right', 'chev') : ''}</${tag}>`;

@@ -7,6 +7,7 @@ Besluiten staan in `besluiten.md`; dit is het logboek van fouten. Nieuwste boven
 
 | Wat de gebruiker zag | Oorzaak | Opgelost | Patroon |
 |---|---|---|---|
+| Materiaalbericht stond in de inbox van de trainer zelf | Bericht kwam van 'systeem' naar alle HJO's, en de trainer is ook HJO | Bericht is van de trainer (Verstuurd), niet naar jezelf (Besluit 50) | **D. Eén persoon, meer rollen** |
 | Nieuw goedgekeurde speler stond op "afwezig" in Aanwezigheid (Jack) | Het concept van de aanwezigheidslijst werd één keer gemaakt en niet bijgewerkt | Lijst werkt zich bij; alleen eigen tikken blijven | **A. Momentopname** |
 | (zelf gevonden) Wisselschema blijft staan als een kind na het maken afmeldt | Schema bevat de spelers van het moment van maken | Waarschuwing + knop "Maak het schema opnieuw" | **A. Momentopname** |
 | Afmelding van een ouder kwam nooit aan | Opslaan wachtte 0,4 s; iPhone stopt de app bij wegvegen | Meteen opslaan als de app naar de achtergrond gaat | **B. Opslaan niet zeker** |

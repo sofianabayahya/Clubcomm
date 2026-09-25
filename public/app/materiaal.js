@@ -89,8 +89,8 @@
     if (mist.length) {
       const tekst = `${t.naam} (trainer ${me.naam}) mist: ${mist.map((x) => `${x.naam} (${aantalTekst(S, t, x)})`).join(', ')}.${c.opm ? ` Opmerking: ${c.opm}` : ''}`;
       S.mails.push({ aan: S.club.materiaal.mail, onderwerp: `Materiaal ${t.naam}`, tekst, tijd: new Date().toISOString() });
-      const hjo = S.people.filter((x) => x.rollen.some((r) => r.rol === 'hjo')).map((x) => x.id);
-      S.msgs.push({ id: 'b' + Date.now(), van: 'systeem', soort: 'melding', bereik: tid, onderwerp: `Materiaal ${t.naam} niet compleet`, tekst: `${tekst} De ${S.club.materiaal.wie.toLowerCase()} is gemaild.`, tijd: new Date().toISOString(), ontvangers: hjo, gelezen: [], antw: [], urgent: false, gepland: null });
+      const hjo = S.people.filter((x) => x.id !== me.id && x.rollen.some((r) => r.rol === 'hjo')).map((x) => x.id);
+      S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'melding', bereik: tid, onderwerp: `Materiaal ${t.naam} niet compleet`, tekst: `${tekst} De ${S.club.materiaal.wie.toLowerCase()} is gemaild.`, tijd: new Date().toISOString(), ontvangers: hjo, gelezen: [], antw: [], urgent: false, gepland: null });
     }
     CC.ui.matConcept = null; CC.save(); CC.terug();
     CC.toast(mist.length ? `Doorgegeven; mail naar ${S.club.materiaal.mail}` : 'Top, alles is compleet!');

@@ -137,16 +137,16 @@
   // Beoordelen: zie beoordeling.js (Besluit 23)
 
   // Spelers filteren en sorteren (trainer en teamleider)
+  // Spelers sorteren (trainer en teamleider). Filters zijn weg (Besluit 50): bij ± 17 spelers staat alles al in de rij
+  // (aanwezigheid, afgemeld/langdurig, kaarten, zone, beoordeeld); sorteren zet wie aandacht nodig heeft bovenaan.
   CC.spelerFilter = (S, tid, eenvoudig) => {
-    const per = M.periode(S, 'blok'); const f = h.segVal('spF', 'alle'); const so = h.segVal('spSort', 'naam');
+    const per = M.periode(S, 'blok'); const so = h.segVal('spSort', 'naam');
     const volg = M.komend(S, tid, 8).find((a) => !a.afgelast);
     const rijen = M.spelers(S, tid).map((pl) => { const st = M.stats(S, pl, per); const k = M.kaarten(S, pl); return { pl, st, k, z: M.zone(S, st.pct, tid), vs: volg ? M.status(S, pl, volg) : null, b: CC.beoordLaatste ? CC.beoordLaatste(S, pl.id) : null }; });
-    const filters = [['alle', 'Alle'], volg && ['komt', `Komt ${D.kort(volg.datum)}`], volg && ['af', `Afgemeld ${D.kort(volg.datum)}`], !eenvoudig && ['aandacht', 'Oranje/rood'], !eenvoudig && ['kaarten', 'Kaarten'], ['lang', 'Langdurig'], !eenvoudig && CC.mag('beoordelingZien') && ['nietbeo', 'Niet beoordeeld']].filter(Boolean);
-    const pas = { alle: () => true, komt: (x) => x.vs && x.vs.code === 'verwacht', af: (x) => x.vs && ['afgemeld', 'langdurig'].includes(x.vs.code), aandacht: (x) => ['oranje', 'rood'].includes(x.z), kaarten: (x) => x.k.geel || x.k.rood, lang: (x) => x.vs && x.vs.code === 'langdurig' || S.lang.some((l) => l.spelerId === x.pl.id && l.tot >= D.vandaag()), nietbeo: (x) => !x.b }[f] || (() => true);
-    const sorteer = { naam: (a, b) => M.naam(S, a.pl).localeCompare(M.naam(S, b.pl)), laag: (a, b) => (a.st.pct ?? 101) - (b.st.pct ?? 101), hoog: (a, b) => (b.st.pct ?? -1) - (a.st.pct ?? -1), kaarten: (a, b) => (b.k.geel + 2 * b.k.rood) - (a.k.geel + 2 * a.k.rood) }[so];
-    const lijst = rijen.filter(pas).sort(sorteer);
-    const bar = `<div class="chips scroll">${filters.map(([k, l]) => `<button class="chipknop ${k === f ? 'aan' : ''}" data-act="seg" data-key="spF" data-val="${k}">${esc(l)}</button>`).join('')}</div>
-      <label class="sorteer">${icon('sliders-horizontal')}<select data-change="spSort" aria-label="Sorteren">${(eenvoudig ? [['naam', 'Op naam']] : [['naam', 'Op naam'], ['laag', 'Aanwezigheid: laagste eerst'], ['hoog', 'Aanwezigheid: hoogste eerst'], ['kaarten', 'Meeste kaarten eerst']]).map(([k, l]) => `<option value="${k}" ${k === so ? 'selected' : ''}>${l}</option>`).join('')}</select><small class="zacht">${lijst.length} van ${rijen.length}</small></label>`;
+    const sorteer = { naam: (a, b) => M.naam(S, a.pl).localeCompare(M.naam(S, b.pl)), laag: (a, b) => (a.st.pct ?? 101) - (b.st.pct ?? 101), hoog: (a, b) => (b.st.pct ?? -1) - (a.st.pct ?? -1), kaarten: (a, b) => (b.k.geel + 2 * b.k.rood) - (a.k.geel + 2 * a.k.rood) }[so] || ((a, b) => M.naam(S, a.pl).localeCompare(M.naam(S, b.pl)));
+    const lijst = rijen.sort(sorteer);
+    const opties = eenvoudig ? [] : [['naam', 'Op naam'], ['laag', 'Aanwezigheid: laagste eerst'], ['hoog', 'Aanwezigheid: hoogste eerst'], ['kaarten', 'Meeste kaarten eerst']];
+    const bar = opties.length ? `<label class="sorteer">${icon('sliders-horizontal')}<select data-change="spSort" aria-label="Sorteren">${opties.map(([k, l]) => `<option value="${k}" ${k === so ? 'selected' : ''}>${l}</option>`).join('')}</select><small class="zacht">${rijen.length} spelers</small></label>` : '';
     return { bar, lijst, volg };
   };
   CC.on('spSort', (el) => { CC.ui.seg.spSort = el.value; CC.render(); });
@@ -230,7 +230,7 @@
             ${vandaag ? (S.pres[vandaag.id] ? `<button class="knop licht vol" data-act="open" data-view="opnemen" data-id="${vandaag.id}">${icon('circle-check')}Aanwezigheid opgeslagen · aanpassen</button>` : `<button class="knop groot vol" data-act="open" data-view="opnemen" data-id="${vandaag.id}">${icon('clipboard-check')}Aanwezigheid opnemen</button>`) : ''}
             ${CC.kanNietBlok ? CC.kanNietBlok(S, volgendeT, true) : ''}
           </article>
-          ${acties.length ? `${h.sectie('Actie nodig')}<div class="lijst">${acties.join('')}</div>` : ''}`;
+          ${h.actieBlok(acties, 'nieuwe berichten, aanmeldingen, aanwezigheid die nog open staat of spelers die vaak afwezig zijn')}`;
       },
       aanwezigheid(S) {
         const tid = CC.teamId(); const modus = h.segVal('aanwModus', 'opnemen');
@@ -250,7 +250,7 @@
         const tid = CC.teamId(); const per = M.periode(S, 'blok');
         return `<div class="knoppen">${CC.mag('beoordelen') ? `<button class="knop" data-act="open" data-view="beoordelen">${icon('star')}Beoordelen</button>` : ''}<button class="knop licht" data-act="uitnodigSheet">${icon('user-plus')}Ouders uitnodigen</button></div>
           ${(() => { const open = S.aanm.filter((x) => x.teamId === tid && x.status === 'open').length; return open ? `<div class="lijst">${h.rij({ ic: 'user-check', titel: `${open} aanmelding${open > 1 ? 'en' : ''} om goed te keuren`, sub: M.team(S, tid).teamleiderId ? 'Meestal doet de teamleider dit; jij kunt het ook' : 'Jij keurt goed (dit team heeft geen teamleider)', act: 'open', attrs: 'data-view="aanmeldingen"' })}</div>` : ''; })()}
-          ${(() => { const F = CC.spelerFilter(S, tid); return `${F.bar}<div class="lijst">${F.lijst.map(({ pl, st, k, z, vs, b }) => h.rij({ ic: h.avatar(pl.voornaam), titel: esc(M.naam(S, pl)), sub: `${st.pct == null ? '–' : st.pct + '%'} aanwezig${vs && vs.code !== 'verwacht' ? ` · ${h.chip(vs)}` : ''} · ${b ? `beoordeeld (${b.m.naam.toLowerCase()})` : 'nog niet beoordeeld'}`, rechts: h.let(S, pl, k) + h.stip(z), act: 'open', attrs: `data-view="speler" data-id="${pl.id}"` })).join('') || h.leeg('Geen spelers met dit filter')}</div>`; })()}
+          ${(() => { const F = CC.spelerFilter(S, tid); return `${F.bar}<div class="lijst">${F.lijst.map(({ pl, st, k, z, vs, b }) => h.rij({ ic: h.avatar(pl.voornaam), titel: esc(M.naam(S, pl)), sub: `${st.pct == null ? '–' : st.pct + '%'} aanwezig${vs && vs.code !== 'verwacht' ? ` · ${h.chip(vs)}` : ''} · ${b ? `beoordeeld (${b.m.naam.toLowerCase()})` : 'nog niet beoordeeld'}`, rechts: h.let(S, pl, k) + h.stip(z), act: 'open', attrs: `data-view="speler" data-id="${pl.id}"` })).join('') || h.leeg('Nog geen spelers')}</div>`; })()}
           ${CC.materiaalStatus && S.club.modules.materiaal ? `${h.sectie('Team')}<div class="lijst">${CC.materiaalStatus(S, tid)}</div>` : ''}`;
       },
       speeltijd: (S) => CC.speeltijdHtml(S, CC.teamId()),
