@@ -569,9 +569,9 @@
         <h2>${esc(m.onderwerp)}</h2><p class="brief">${esc(m.tekst).replace(/\n/g, '<br>')}</p>${gelezenLijst}
         ${eigen && !pers ? `<div class="knoppen">${CC.isVast(m) ? `<button class="knop licht klein" data-act="losmaken" data-id="${m.id}">${icon('pin-off')}Losmaken</button>` : `<button class="knop licht klein" data-act="vastzetten" data-id="${m.id}" data-d="7">${icon('pin')}1 week vastzetten</button><button class="knop licht klein" data-act="vastzetten" data-id="${m.id}" data-d="14">${icon('pin')}2 weken</button>`}</div>` : ''}
         ${acties ? `<div class="knoppen">${acties}</div>` : ''}</article>
-        ${m.antw.map((a) => `<div class="antwoord ${a.van === me.id ? 'mijn' : ''}"><small>${esc(pNaam(a.van))} · ${D.tijdstip(a.tijd)}</small><p>${esc(a.tekst)}</p></div>`).join('')}
+        ${m.antw.map((a) => `<div class="antwoord ${a.van === me.id ? 'mijn' : ''}"><small>${esc(pNaam(a.van))} · ${D.tijdstip(a.tijd)}</small><p>${esc(a.tekst).replace(/\n/g, '<br>')}</p></div>`).join('')}
         ${pers && m.antw.length ? gezien : ''}
-        ${pers && m.van !== 'systeem' ? `<form class="reageer" data-submit="reageer" data-id="${m.id}"><input name="t" placeholder="Reageer…" required aria-label="Reactie"><button class="icoonknop blauw" aria-label="Versturen">${icon('send')}</button></form>`
+        ${pers && m.van !== 'systeem' ? `<form class="reageer" data-submit="reageer" data-id="${m.id}"><textarea name="t" rows="1" placeholder="Reageer… (Enter = nieuwe regel)" required aria-label="Reactie" data-input="groei"></textarea><button class="icoonknop blauw" aria-label="Versturen">${icon('send')}</button></form>`
           : !pers ? `${vraagOver}<p class="zacht klein midden">Nieuws is alleen-lezen${vraagOver ? '; een vraag wordt een persoonlijk gesprek met de afzender' : ''}.</p>` : ''}`,
     };
   };
@@ -614,8 +614,10 @@
     S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'persoonlijk', bereik: `${pl.voornaam} (${CC.tn(pl.teamId)})`, onderwerp: f.o.value.trim(), tekst: f.t.value.trim(), tijd: new Date().toISOString(), ontvangers: [...new Set(ontv)], gelezen: [me.id], antw: [], urgent: false, gepland: null, vastTot: null });
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Verstuurd naar de trainer en teamleider');
   });
+  // Reactievak groeit mee met de tekst; Enter = nieuwe regel, versturen met de blauwe knop (Besluit 58)
+  CC.on('groei', (el) => { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 200) + 'px'; });
   // Antwoord (Besluit 57): het gesprek is weer ongelezen voor de anderen en komt uit ieders archief
-  CC.on('reageer', (f) => { const m = S.msgs.find((x) => x.id === f.dataset.id); const me = CC.me(); m.antw.push({ van: me.id, tekst: f.t.value, tijd: new Date().toISOString() }); m.gelezen = [me.id]; m.archief = []; CC.save(); CC.render(); CC.toast('Verstuurd'); });
+  CC.on('reageer', (f) => { const t = f.t.value.replace(/\s+$/, '').replace(/^\s*\n/, ''); if (!t.trim()) return; const m = S.msgs.find((x) => x.id === f.dataset.id); const me = CC.me(); m.antw.push({ van: me.id, tekst: t, tijd: new Date().toISOString() }); m.gelezen = [me.id]; m.archief = []; CC.save(); CC.render(); CC.toast('Verstuurd'); });
 
   // Nieuw bericht (trainer, teamleider, HJO) — Besluit 7 en 11
   CC.on('nieuwBericht', () => {

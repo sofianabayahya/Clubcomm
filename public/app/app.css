@@ -242,8 +242,9 @@ button.staaf:hover { background: var(--vlak2); }
 .antwoord { background: var(--vlak); border-radius: var(--r); padding: 10px 12px; margin-right: 40px; }
 .antwoord.mijn { background: var(--blauw-l); margin: 0 0 0 40px; }
 .antwoord small { color: var(--zacht); font-size: 12px; } .antwoord p { margin: 2px 0 0; }
-.reageer { display: flex; gap: 8px; align-items: center; position: sticky; bottom: calc(var(--nav-h) + 8px); }
-.reageer input { flex: 1; min-height: 44px; border-radius: 22px; border: 1px solid var(--lijn); padding: 0 16px; background: var(--vlak); }
+.reageer { display: flex; gap: 8px; align-items: flex-end; position: sticky; bottom: calc(var(--nav-h) + 8px); }
+.reageer input, .reageer textarea { flex: 1; min-height: 44px; border-radius: 22px; border: 1px solid var(--lijn); padding: 0 16px; background: var(--vlak); }
+.reageer textarea { padding: 11px 16px; resize: none; max-height: 200px; line-height: 1.4; font: inherit; overflow-y: auto; }
 .uitklap { background: var(--vlak); border-radius: var(--r); box-shadow: var(--schaduw); padding: 0 14px; }
 .uitklap summary { display: flex; align-items: center; gap: 8px; padding: 12px 0; font-weight: 600; cursor: pointer; list-style: none; }
 .uitklap summary::-webkit-details-marker { display: none; }
