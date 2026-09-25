@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 50 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 51 toegevoegd)
 
 ---
 
@@ -507,6 +507,11 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 51 — Geen dubbele aanmelding voor hetzelfde kind
+- Meldt dezelfde ouder (zelfde e-mailadres) **hetzelfde kind** (zelfde voornaam) nog eens aan voor hetzelfde team, dan komt er **geen tweede aanvraag**. Staat de eerste nog open, dan wordt die bijgewerkt (bijv. telefoonnummer). Is hij al goedgekeurd, dan gebeurt er niets.
+- Een **ander kind** met hetzelfde e-mailadres (broer, zus, tweeling) kan wel: dat is een aparte aanvraag.
+- Geregeld in de database (migratie 011), dus het werkt ook als iemand de uitnodigingslink twee keer opent of op twee toestellen.
 
 ## Besluit 50 — Actie nodig altijd zichtbaar, materiaalbericht bij Verstuurd, geen filters bij spelers
 - **Actie nodig** staat altijd op Home (trainer, teamleider, ouder). Is het leeg: "Niets te doen 👍 Hier verschijnen je acties, bijvoorbeeld …". Zo weet je waar straks iets komt.

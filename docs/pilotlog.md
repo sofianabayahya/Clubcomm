@@ -7,6 +7,7 @@ Besluiten staan in `besluiten.md`; dit is het logboek van fouten. Nieuwste boven
 
 | Wat de gebruiker zag | Oorzaak | Opgelost | Patroon |
 |---|---|---|---|
+| Ouder meldde hetzelfde kind twee keer aan (Tahsin, 15 min ertussen) | Aanmelden controleerde niet of er al een aanvraag was | Database voegt dubbele samen (Besluit 51); duplicaat verwijderd | **A. Momentopname / F. Echt gedrag** |
 | Materiaalbericht stond in de inbox van de trainer zelf | Bericht kwam van 'systeem' naar alle HJO's, en de trainer is ook HJO | Bericht is van de trainer (Verstuurd), niet naar jezelf (Besluit 50) | **D. Eén persoon, meer rollen** |
 | Nieuw goedgekeurde speler stond op "afwezig" in Aanwezigheid (Jack) | Het concept van de aanwezigheidslijst werd één keer gemaakt en niet bijgewerkt | Lijst werkt zich bij; alleen eigen tikken blijven | **A. Momentopname** |
 | (zelf gevonden) Wisselschema blijft staan als een kind na het maken afmeldt | Schema bevat de spelers van het moment van maken | Waarschuwing + knop "Maak het schema opnieuw" | **A. Momentopname** |
