@@ -137,13 +137,13 @@
   CC.keurGoed = (x, spelerId) => {
     const S = CC.S();
     let ouder = S.people.find((p) => p.email.toLowerCase() === x.email.toLowerCase());
-    if (!ouder) { ouder = { id: 'p' + Date.now(), naam: x.ouderNaam, email: x.email, tel: '', rollen: [{ rol: 'ouder' }] }; S.people.push(ouder); }
-    else if (!ouder.rollen.some((r) => r.rol === 'ouder')) ouder.rollen.push({ rol: 'ouder' });
+    if (!ouder) { ouder = { id: 'p' + Date.now(), naam: x.ouderNaam, email: x.email, tel: x.tel || '', rollen: [{ rol: 'ouder' }] }; S.people.push(ouder); }
+    else { if (!ouder.rollen.some((r) => r.rol === 'ouder')) ouder.rollen.push({ rol: 'ouder' }); if (!ouder.tel && x.tel) ouder.tel = x.tel; }
     let pl = spelerId && M.speler(S, spelerId);
     if (pl) { if (!pl.ouders.includes(ouder.id)) pl.ouders.push(ouder.id); }
     else { pl = { id: 's' + Date.now(), voornaam: x.kindVoor, achternaam: x.kindAchter, teamId: x.teamId, ouders: [ouder.id], bondsnummer: null }; S.players.push(pl); }
     x.status = 'ok';
-    S.msgs.push({ id: 'b' + Date.now(), van: CC.me().id, soort: 'persoonlijk', bereik: ouder.naam, onderwerp: `Welkom bij ${(M.team(S, x.teamId) || {}).naam || x.teamId}!`, tekst: `Je aanmelding is goedgekeurd: je bent gekoppeld aan ${pl.voornaam}.\n\nInloggen: ga naar mijnclubcomm.nl, vul je e-mailadres in en typ de code van 6 cijfers uit de mail over.\n\nHandig om meteen te doen:\n• Zet ClubComm op je beginscherm (iPhone: Delen → Zet op beginscherm).\n• Vul bij Profiel je telefoonnummer in, zodat de trainer en teamleider je kunnen bellen of appen.\n• Kan ${pl.voornaam} een keer niet? Meld af bij de training of wedstrijd.\n\nTot op het veld!`, tijd: new Date().toISOString(), ontvangers: [ouder.id], gelezen: [], antw: [], urgent: false, gepland: null });
+    S.msgs.push({ id: 'b' + Date.now(), van: CC.me().id, soort: 'persoonlijk', bereik: ouder.naam, onderwerp: `Welkom bij ${(M.team(S, x.teamId) || {}).naam || x.teamId}!`, tekst: `Je aanmelding is goedgekeurd: je bent gekoppeld aan ${pl.voornaam}.\n\nInloggen: ga naar mijnclubcomm.nl, vul je e-mailadres in en typ de code van 6 cijfers uit de mail over.\n\nHandig om meteen te doen:\n• Zet ClubComm op je beginscherm (iPhone: Delen → Zet op beginscherm).${ouder.tel ? '' : '\n• Vul bij Profiel je telefoonnummer in, zodat de trainer en teamleider je kunnen bellen of appen.'}\n• Kan ${pl.voornaam} een keer niet? Meld af bij de training of wedstrijd.\n\nTot op het veld!`, tijd: new Date().toISOString(), ontvangers: [ouder.id], gelezen: [], antw: [], urgent: false, gepland: null });
     CC.save(); CC.closeSheet(); CC.render(); CC.toast(`${pl.voornaam} is gekoppeld; ${ouder.naam.split(' ')[0]} krijgt een welkomstmail`);
   };
   CC.on('afwijzen', (el) => CC.sheet('Aanmelding afwijzen', `<form data-submit="afwijzenOk" data-id="${el.dataset.id}" class="codeform"><label for="aw">Reden (de ouder krijgt dit te zien)</label><select id="aw" name="r"><option>Dit kind zit niet in dit team</option><option>Onbekend bij de club</option><option>Dubbele aanmelding</option></select><button class="knop rood">Afwijzen</button><p class="zacht klein">Typfout in de naam? Keur dan goed en pas de naam later aan.</p></form>`));

@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 45 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 46 toegevoegd)
 
 ---
 
@@ -507,6 +507,13 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 46 — Telefoonnummer al bij het aanmelden
+*Besloten 25 september 2026. Vult Besluit 40 aan.*
+
+- Het aanmeldformulier heeft een veld **"Jouw telefoonnummer (mag leeg)"**, met de uitleg dat alleen trainer en teamleider het zien.
+- Bij goedkeuren komt het nummer meteen bij de ouder te staan; het welkomstbericht vraagt er dan niet meer om. Leeg gelaten: de ouder kan het later bij Profiel invullen.
+- Database: migratie 010 (`aanmelden` met `p_tel`).
 
 ## Besluit 45 — Gegevens van een ander wijzigen: alleen HJO/clubbeheerder
 *Besloten 25 september 2026.*

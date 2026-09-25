@@ -134,6 +134,7 @@
         <label for="a-ouder">Jouw naam</label><input id="a-ouder" name="ouder" required placeholder="Voor- en achternaam" autocomplete="name">
         <label for="a-kind">Voornaam van je kind</label><input id="a-kind" name="voor" required>
         <label for="a-kind2">Achternaam van je kind</label><input id="a-kind2" name="achter" required>
+        <label for="a-tel">Jouw telefoonnummer (mag leeg)</label><input id="a-tel" name="tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="06 12345678"><p class="zacht klein">Alleen de trainer en teamleider zien dit, om je te bellen of te appen. Andere ouders niet.</p>
         <label class="vink"><input type="checkbox" name="ok" required><span>Ik heb de <a href="#" data-act="privacy">privacyverklaring</a> gelezen en geef toestemming dat de club de gegevens van mijn kind in ClubComm gebruikt.</span></label>
         <button class="knop" type="submit">Aanmelden</button></form>`);
   };
@@ -153,7 +154,8 @@
     await naInloggen();
   });
   CC.on('liveAanmelden', (f) => {
-    store.set(WACHT, { team: f.dataset.team, ouder: f.ouder.value.trim(), voor: f.voor.value.trim(), achter: f.achter.value.trim() });
+    const tel = f.tel.value.replace(/[^0-9+]/g, ''); if (tel && !/^(\+\d{10,14}|0\d{9})$/.test(tel)) return CC.toast('Vul een geldig telefoonnummer in (bijv. 0612345678), of laat het leeg', 'fout');
+    store.set(WACHT, { team: f.dataset.team, ouder: f.ouder.value.trim(), voor: f.voor.value.trim(), achter: f.achter.value.trim(), tel });
     history.replaceState(null, '', location.pathname);
     stuurCode(f.email.value.trim().toLowerCase());
   });
@@ -178,7 +180,7 @@
     if (error) { L.stap = 'mail'; L.fout = `Er ging iets mis: ${error.message}`; CC.render(); return; }
     const wacht = store.get(WACHT);
     if (wacht) {
-      const { error: e2 } = await sb.rpc('aanmelden', { p_club: club, p_team: wacht.team, p_ouder: wacht.ouder, p_voor: wacht.voor, p_achter: wacht.achter, p_akkoord: true });
+      const { error: e2 } = await sb.rpc('aanmelden', { p_club: club, p_team: wacht.team, p_ouder: wacht.ouder, p_voor: wacht.voor, p_achter: wacht.achter, p_akkoord: true, p_tel: wacht.tel || null });
       store.del(WACHT);
       if (!e2 && !(kop && kop.length)) { L.stap = 'wacht'; L.uitleg = `Je aanmelding voor ${wacht.voor} is verstuurd naar de teamleider.`; CC.render(); return; }
       if (!e2) CC.toast(`Aanmelding voor ${wacht.voor} verstuurd naar de teamleider`);
