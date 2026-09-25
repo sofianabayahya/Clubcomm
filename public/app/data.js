@@ -604,7 +604,14 @@
   // speeltijdschema: eerlijke verdeling, keepers rouleren, minste minuten eerst
   // Speeltijd (Besluit 33): eerlijk = percentage van de mogelijke speeltijd in de wedstrijden waarbij het kind er was.
   // Gemiste wedstrijden (ziek, blessure, andere reden) tellen niet mee: geen achterstand en geen inhaalvoorrang.
+  // Stand en doelpunten (Besluit 62). a.goals = [{ id, wij, spelerId }]; stand altijd als thuis-uit
+  M.stand = (a) => { const g = a.goals || []; const wij = g.filter((x) => x.wij).length, zij = g.length - wij; return a.thuis ? { thuis: wij, uit: zij } : { thuis: zij, uit: wij }; };
+  // KNVB: bij O7–O10 geen uitslagen en standen publiceren; club kan dat per groep anders instellen
+  M.uitslagInst = (S, teamId) => { const u = M.inst(S, teamId).uitslag || {}; const n = parseInt(String(M.team(S, teamId).cat).replace(/\D/g, ''), 10) || 12;
+    return { naarOuders: n <= 10 ? !!u.onder : u.boven !== false, makers: u.makers !== false }; };
+  M.doelpuntenSeizoen = (S, spelerId) => S.acts.reduce((n, a) => n + (a.goals || []).filter((g) => g.wij && g.spelerId === spelerId).length, 0);
   M.speeltijdStand = (S, pl) => {
+
     const min = S.speeltijd.min[pl.id] || 0; const mog = (S.speeltijd.mogelijk || {})[pl.id] || 0;
     const wed = M.acts(S, pl.teamId, S.club.seizoen.start, vandaag()).filter((a) => M.isWed(a) && !a.afgelast && S.pres[a.id] && S.pres[a.id].s[pl.id]);
     const gemist = {}; let gespeeld = 0;

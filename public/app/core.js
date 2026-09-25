@@ -834,7 +834,8 @@
     const b = CC.beoordLaatste && CC.beoordLaatste(S, pl.id);
     const gespr = S.gesprekken.filter((g) => g.spelerId === pl.id);
     const sp = M.speeltijdStand ? M.speeltijdStand(S, pl) : null;
-    const kopSub = [CC.tn(pl.teamId), sp && sp.pct != null ? `${sp.pct}% speeltijd` : '', staf && CC.zicht('beoordeling') ? (b ? `beoordeeld (${b.m.naam.toLowerCase()})` : 'nog niet beoordeeld') : ''].filter(Boolean).join(' · ');
+    const dp = staf && M.doelpuntenSeizoen ? M.doelpuntenSeizoen(S, pl.id) : 0;
+    const kopSub = [CC.tn(pl.teamId), sp && sp.pct != null ? `${sp.pct}% speeltijd` : '', dp ? `${dp} ${dp === 1 ? 'doelpunt' : 'doelpunten'}` : '', staf && CC.zicht('beoordeling') ? (b ? `beoordeeld (${b.m.naam.toLowerCase()})` : 'nog niet beoordeeld') : ''].filter(Boolean).join(' · ');
     const oudersBlok = staf && ouders.length ? `${h.sectie(ouders.length > 1 ? 'Ouders' : 'Ouder')}<div class="lijst">${ouders.map((o) => CC.contactRij(o)).join('')}</div>` : '';
     const langBlok = (kort) => (lang ? `<div class="info">${icon('hospital')}<span><b>Langdurig afwezig</b>${kort ? '' : ` (${esc(lang.reden.toLowerCase())})`} tot ongeveer ${D.kort(lang.tot)}.${!kort && CC.zicht('toelichting') ? ' ' + esc(lang.opm || '') : ''}</span></div>` : '');
     // Teamleider die geen spelerszaken volgt: alleen de volgende activiteit en de ouders

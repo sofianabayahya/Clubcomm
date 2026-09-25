@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 61 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 62 toegevoegd)
 
 ---
 
@@ -507,6 +507,14 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 62 — Scorebord en uitslag
+- **Waar:** bij de wedstrijd zelf, bovenaan het wisselschema (Speeltijd), alleen op de wedstrijddag. De timekeeper (ouder met die taak) en de trainer houden het bij; geen apart kopje.
+- **Scorebord met een Thuis- en een Uit-kant** (zoals een echt scorebord), elk met een knop **+ Doelpunt**. Een doelpunt van ons → **"Wie scoorde?"**: eerst wie nu in het veld staat (blauw), dan de rest; ook "Weet ik niet" en "Eigen doelpunt tegenstander". Tegendoelpunt: één tik.
+- Onder het bord de doelpunten met tussenstand (⚽ 1-0 Adam · ⚽ 1-1 tegen); vergissing? Tik op het kruisje.
+- **Einde wedstrijd: uitslag opslaan** → de uitslag staat bij de wedstrijd. Met een vinkje (per wedstrijd aan of uit) gaat er een **nieuwsbericht naar de ouders**: "Uitslag: … 2-1. Doelpunten: Adam 2×." (in de app en als pushmelding, niet per e-mail).
+- **Standaard (Regels → Speeltijd):** O7–O10 **uit** (de KNVB publiceert daar sinds 2026/'27 geen uitslagen en standen; intern bijhouden mag wel), O11 en ouder **aan**; doelpuntenmakers noemen: aan. Ouders van O7–O10 zien de uitslag ook niet bij de wedstrijd, tenzij de club het aanzet.
+- **Doelpunten per speler:** alleen voor de staf, in de kop van de spelerpagina ("3 doelpunten"). **Geen topscorerslijst** (eerlijke speeltijd en teamgevoel gaan voor).
 
 ## Besluit 61 — Spelerpagina: actie eerst, info in de kop
 - **In de kop bij de naam:** team · speeltijd dit seizoen (%) · beoordeeld of nog niet. Scheelt ruimte op de pagina.

@@ -62,7 +62,8 @@
   // ---------- Speeltijd (gedeeld met teamleider, module) ----------
   // opties.alleenSchema: voor de timekeeper (ouder) alleen het wisselschema van deze wedstrijd, zonder seizoenscijfers
   CC.speeltijdHtml = (S, teamId, opties = {}) => {
-    const wedstrijden = M.komend(S, teamId, 10).filter((a) => M.isWed(a) && !a.afgelast && (!opties.act || a.id === opties.act));
+    const vandaagW = S.acts.filter((a) => a.teamId === teamId && M.isWed(a) && !a.afgelast && a.datum === D.vandaag());
+    const wedstrijden = [...new Set([...vandaagW, ...M.komend(S, teamId, 10)])].filter((a) => M.isWed(a) && !a.afgelast && (!opties.act || a.id === opties.act));
     const kies = h.segVal('stWed', wedstrijden[0] && wedstrijden[0].id);
     const a = wedstrijden.find((x) => x.id === kies) || wedstrijden[0];
     const t = M.team(S, teamId); const c = CC.categorie(t.cat);
@@ -123,8 +124,54 @@
         <button class="linkknop" data-act="nieuwSchema" data-id="${a.id}">Schema opnieuw maken</button>`;
     } else body = `<div class="info groen">${icon('circle-check')}<span>Speeltijd van deze wedstrijd is verwerkt in de seizoenstotalen.</span></div>`;
     return `${wedstrijden.length > 1 ? `<label class="klein-kop" for="stw">Wedstrijd</label><select id="stw" class="kies" data-change="kiesStWed">${wedstrijden.map((w) => `<option value="${w.id}" ${w.id === a.id ? 'selected' : ''}>${D.kort(w.datum)} · ${h.actTitel(S, w)}</option>`).join('')}</select>` : ''}
-      ${body}${opties.alleenSchema ? '' : tabel}`;
+      ${CC.scorebord(S, a, t)}${body}${opties.alleenSchema ? '' : tabel}`;
   };
+  // ---------- Scorebord (Besluit 62): thuis en uit, wie scoorde, uitslag naar de ouders ----------
+  // Alleen op de wedstrijddag (of als er al gescoord is). De timekeeper en de trainer houden het bij.
+  CC.scorebord = (S, a, t) => {
+    if (a.datum !== D.vandaag() && !(a.goals || []).length) return '';
+    const ons = `${S.club.naam}${t ? ' ' + t.naam : ''}`; const thuisNaam = a.thuis ? ons : (a.tegen || 'Tegenstander'); const uitNaam = a.thuis ? (a.tegen || 'Tegenstander') : ons;
+    const st = M.stand(a); const g = a.goals || [];
+    const kant = (k, naam, n) => `<div class="sb-kant"><small>${k === 'thuis' ? 'Thuis' : 'Uit'}</small><b>${esc(naam)}</b><span class="sb-stand">${n}</span>${a.uitslagKlaar ? '' : `<button class="knop klein vol" data-act="goal" data-a="${a.id}" data-kant="${k}">${icon('plus')}Doelpunt</button>`}</div>`;
+    const lijst = g.length ? `<div class="sb-goals">${g.map((x, i) => { const tussen = g.slice(0, i + 1); const w = tussen.filter((y) => y.wij).length, z = tussen.length - w; const tussenstand = a.thuis ? `${w}-${z}` : `${z}-${w}`;
+      return `<span class="chip ${x.wij ? 'groen' : 'grijs'}">⚽ ${tussenstand} ${x.wij ? esc(x.spelerId ? (M.speler(S, x.spelerId) || {}).voornaam || '' : x.eigen ? 'eigen doelpunt tegenstander' : 'wij') : 'tegen'}${a.uitslagKlaar ? '' : `<button class="chip-x" data-act="goalWeg" data-a="${a.id}" data-g="${x.id}" aria-label="Doelpunt weghalen">${icon('x')}</button>`}</span>`; }).join('')}</div>` : '';
+    const einde = a.uitslagKlaar ? `<p class="klein zacht">${icon('circle-check')} Uitslag opgeslagen${a.uitslagVerstuurd ? ' en naar de ouders gestuurd' : ''}. <button class="linkknop" data-act="uitslagHeropen" data-a="${a.id}">Aanpassen</button></p>`
+      : `<button class="knop licht vol" data-act="uitslagKlaar" data-a="${a.id}">${icon('flag')}Einde wedstrijd: uitslag opslaan</button>`;
+    return `<div class="kaartje scorebord"><div class="sb-rij">${kant('thuis', thuisNaam, st.thuis)}<span class="sb-streep">–</span>${kant('uit', uitNaam, st.uit)}</div>${lijst}${einde}</div>`;
+  };
+  CC.on('goal', (el) => {
+    const S = CC.S(); const a = M.act(S, el.dataset.a); const wij = (el.dataset.kant === 'thuis') === !!a.thuis;
+    if (!wij) { (a.goals || (a.goals = [])).push({ id: 'g' + Date.now(), wij: false }); CC.save(); CC.render(); CC.toast('Tegendoelpunt genoteerd'); return; }
+    // Wie scoorde? Eerst wie nu in het veld staat, dan de rest die er is
+    const sch = S.speeltijd.schema[a.id]; const inVeld = sch && !sch.bevestigd ? (sch.blokken[sch.huidig] || []) : [];
+    const er = M.spelers(S, a.teamId).filter((pl) => ['verwacht', 'aanwezig', 'telaat'].includes(M.status(S, pl, a).code));
+    const volg = [...er.filter((pl) => inVeld.includes(pl.id)), ...er.filter((pl) => !inVeld.includes(pl.id))];
+    CC.sheet('Wie scoorde?', `<div class="scoorders">${volg.map((pl) => `<button class="knop ${inVeld.includes(pl.id) ? '' : 'licht'}" data-act="goalOk" data-a="${a.id}" data-s="${pl.id}">${esc(pl.voornaam)}</button>`).join('')}</div>
+      <div class="knoppen kolom"><button class="knop licht" data-act="goalOk" data-a="${a.id}" data-s="">Weet ik niet</button><button class="knop licht" data-act="goalOk" data-a="${a.id}" data-s="eigen">Eigen doelpunt tegenstander</button></div>
+      ${inVeld.length ? '<p class="zacht klein">Blauw = staat nu in het veld.</p>' : ''}`);
+  });
+  CC.on('goalOk', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.a); const s = el.dataset.s;
+    (a.goals || (a.goals = [])).push({ id: 'g' + Date.now(), wij: true, spelerId: s && s !== 'eigen' ? s : null, eigen: s === 'eigen' });
+    CC.save(); CC.closeSheet(); CC.render(); CC.toast(s && s !== 'eigen' ? `Doelpunt ${(M.speler(S, s) || {}).voornaam}!` : 'Doelpunt genoteerd'); });
+  CC.on('goalWeg', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.a); a.goals = (a.goals || []).filter((x) => x.id !== el.dataset.g); CC.save(); CC.render(); CC.toast('Doelpunt weggehaald'); });
+  // Einde wedstrijd: uitslag opslaan, en (instelbaar, per wedstrijd aan of uit) een bericht naar de ouders
+  CC.on('uitslagKlaar', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.a); const st = M.stand(a); const u = M.uitslagInst(S, a.teamId);
+    CC.sheet('Uitslag opslaan', `<form data-submit="uitslagOk" data-a="${a.id}" class="codeform"><p class="groot-cijfer">${st.thuis} – ${st.uit}</p>
+      <label class="vink"><input type="checkbox" name="stuur" ${u.naarOuders ? 'checked' : ''}><span><b>Stuur de uitslag naar de ouders</b><br><small class="zacht">${u.naarOuders ? 'Standaard aan voor dit team.' : 'Standaard uit: de KNVB publiceert bij O7–O10 geen uitslagen.'}</small></span></label>
+      <label class="vink"><input type="checkbox" name="makers" ${u.makers ? 'checked' : ''}><span>Noem wie er scoorden</span></label>
+      <button class="knop vol">${icon('circle-check')}Opslaan</button></form>`); });
+  CC.on('uitslagOk', (f) => { const S = CC.S(); const a = M.act(S, f.dataset.a); const me = CC.me(); const t = M.team(S, a.teamId); const st = M.stand(a);
+    a.uitslag = `${st.thuis}-${st.uit}`; a.uitslagKlaar = true;
+    if (f.stuur.checked) {
+      const ons = `${S.club.naam} ${t.naam}`; const thuisNaam = a.thuis ? ons : (a.tegen || 'Tegenstander'); const uitNaam = a.thuis ? (a.tegen || 'Tegenstander') : ons;
+      const tel = {}; (a.goals || []).filter((x) => x.wij && x.spelerId).forEach((x) => { tel[x.spelerId] = (tel[x.spelerId] || 0) + 1; });
+      const makers = f.makers.checked && Object.keys(tel).length ? `\n\nDoelpunten: ${Object.entries(tel).map(([id, n]) => `${(M.speler(S, id) || {}).voornaam}${n > 1 ? ` ${n}×` : ''}`).join(', ')}.` : '';
+      const ontv = [...new Set([...M.oudersVan(S, a.teamId), ...M.stafVan(S, a.teamId)])].filter((x) => x !== me.id);
+      S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'nieuws', bereik: a.teamId, onderwerp: `Uitslag: ${thuisNaam} – ${uitNaam} ${st.thuis}-${st.uit}`, tekst: `${thuisNaam} – ${uitNaam}: ${st.thuis}-${st.uit}.${makers}`, tijd: new Date().toISOString(), ontvangers: ontv, gelezen: [], antw: [], urgent: false, gepland: null, mail: false });
+      a.uitslagVerstuurd = new Date().toISOString();
+    }
+    CC.save(); CC.closeSheet(); CC.render(); CC.toast(f.stuur.checked ? 'Uitslag opgeslagen en naar de ouders gestuurd' : 'Uitslag opgeslagen'); });
+  CC.on('uitslagHeropen', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.a); a.uitslagKlaar = false; CC.save(); CC.render(); });
   CC.on('kiesStWed', (el) => { CC.ui.seg.stWed = el.value; CC.render(); });
   CC.on('minderBlok', (el) => { const k = `minder_${el.dataset.a}`; const l = (CC.ui.seg[k] || '').split(',').filter(Boolean); const i = l.indexOf(el.dataset.s); if (i >= 0) l.splice(i, 1); else l.push(el.dataset.s); CC.ui.seg[k] = l.join(','); CC.render(); });
   CC.on('maakSchema', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.id); const minder = M.speeltijdAfwijken(S, a.teamId) ? (CC.ui.seg[`minder_${a.id}`] || '').split(',').filter(Boolean) : []; S.speeltijd.schema[a.id] = M.maakSchema(S, a, minder, Number(CC.ui.seg[`om_${a.id}`]) || null); CC.save(); CC.render(); });
