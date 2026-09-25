@@ -512,7 +512,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - In een gesprek maakt **Enter een nieuwe regel** (alinea's mogelijk, zoals in een e-mail). **Versturen** gaat alleen met de blauwe knop.
 - Het reactievak groeit mee met de tekst (tot ongeveer 8 regels, daarna scrollen). Regeleinden worden in het gesprek getoond.
 - Een reactie met alleen spaties of lege regels wordt niet verstuurd.
-- **In een gesprek geen knoppenbalk onderin** (zoals WhatsApp; terug via het pijltje linksboven), zodat het reactievak nooit achter de knoppen valt; de pagina schuift mee met wat je typt.
+- **In een gesprek geen knoppenbalk onderin** (zoals WhatsApp; terug via het pijltje linksboven), zodat het reactievak nooit achter de knoppen valt. Het reactievak hoort bij de pagina: groeit het, dan schuiven de berichten erboven mee omhoog (geen overlap). Een gesprek opent onderaan, bij het nieuwste bericht.
 
 ## Besluit 57 — Berichtenpagina: gesprekken, opruimen en één e-mail per onderwerp
 **Twee tabbladen voor iedereen** (ouder, trainer, teamleider, HJO): **Persoonlijk** en **Nieuws** (vervangt Inbox/Verstuurd).
