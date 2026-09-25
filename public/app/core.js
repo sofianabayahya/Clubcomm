@@ -437,7 +437,7 @@
       ${tab === 'inbox' ? vastBlok + lijst(zonderVast(mijn)) : verstuurd.length ? `<div class="lijst">${verstuurd.map((m) => bericht(m, me, true)).join('')}</div>` : h.leeg('Nog niets verstuurd', 'send')}`;
   };
   const bericht = (m, me, eigen) => {
-    const ongelezen = !eigen && !m.gelezen.includes(me.id);
+    const ongelezen = !eigen && m.ontvangers.includes(me.id) && !m.gelezen.includes(me.id);
     const gepland = m.gepland && new Date(m.gepland) > new Date();
     const sub = eigen ? (gepland ? `Gepland voor ${D.tijdstip(m.gepland)}` : `Gelezen door ${m.gelezen.length} van ${m.ontvangers.length}`) : `${esc(vanNaam(m))} · ${esc(m.bereik || '')}`;
     return `<button class="bericht ${ongelezen ? 'nieuw' : ''}" data-act="open" data-view="bericht" data-id="${m.id}">

@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 40 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 41 toegevoegd)
 
 ---
 
@@ -507,6 +507,14 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 41 — Vastgezette berichten ook voor nieuwe ouders; welkomstbericht bij goedkeuren
+*Besloten 25 september 2026.*
+
+- Een bericht gaat naar wie op dat moment in de app staat. **Vastgezette nieuwsberichten** (speldje) zijn daarnaast te lezen voor ouders die later instromen, zolang het bericht vastgezet is: voor het eigen team, of de hele club bij een clubbericht. Persoonlijke berichten nooit.
+- Voor nieuwkomers telt zo'n bericht niet als ongelezen (geen blijvend rood bolletje); ze krijgen er ook geen e-mail van achteraf.
+- De database regelt dit (migratie 009): alleen lezen, alleen soort nieuws, alleen zolang vastgezet.
+- **Welkomstbericht bij goedkeuren** gaat in de app én per e-mail (de ouder weet dan dat hij kan inloggen). Inhoud: gekoppeld aan [kind], zo log je in (code van 6 cijfers), beginscherm, telefoonnummer invullen, afmelden.
 
 ## Besluit 40 — Telefoonnummer vult de ouder zelf in
 *Besloten 25 september 2026.*

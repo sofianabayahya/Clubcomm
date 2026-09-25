@@ -559,8 +559,11 @@
   M.meerijderNaam = (S, v, pl, chauffeurId) => pl.voornaam + (pl.ouders.includes(chauffeurId) ? ' (eigen kind)' : (v.ouderMee || {})[pl.id] ? ' + ouder' : '');
 
   // ontvangers en ongelezen
-  M.zichtbaar = (S, m, pid) => m.ontvangers.includes(pid) && (!m.gepland || new Date(m.gepland) <= new Date());
-  M.ongelezen = (S, pid, soort) => S.msgs.filter((m) => M.zichtbaar(S, m, pid) && !m.gelezen.includes(pid) && (!soort || m.soort === soort) && m.van !== pid).length;
+  // Vastgezet nieuws is ook te lezen voor ouders die later instromen (Besluit 41); het telt dan niet als ongelezen
+  M.vastVoor = (S, m, pid) => m.soort === 'nieuws' && !!m.vastTot && new Date(m.vastTot) > new Date()
+    && (m.bereik === 'Hele club' || String(m.bereik || '').split(', ').some((t) => S.players.some((p) => p.teamId === t && p.ouders.includes(pid))));
+  M.zichtbaar = (S, m, pid) => (m.ontvangers.includes(pid) || M.vastVoor(S, m, pid)) && (!m.gepland || new Date(m.gepland) <= new Date());
+  M.ongelezen = (S, pid, soort) => S.msgs.filter((m) => m.ontvangers.includes(pid) && M.zichtbaar(S, m, pid) && !m.gelezen.includes(pid) && (!soort || m.soort === soort) && m.van !== pid).length;
   M.oudersVan = (S, teamId) => [...new Set(M.spelers(S, teamId).flatMap((p) => p.ouders))];
 
   // speeltijdschema: eerlijke verdeling, keepers rouleren, minste minuten eerst

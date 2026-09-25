@@ -14,7 +14,7 @@
   - contactgegevens (e-mail, telefoon) apart: staf ziet alleen die van ouders uit de eigen teams.
 - Extra bewaking: niemand kan zichzelf rollen geven; berichten van een ander kun je alleen als gelezen markeren of beantwoorden; ouders kunnen trainingen niet verplaatsen.
 - Test: `supabase/tests/rls_test.sql` (draait per rol wat iemand ziet en wat geweigerd wordt).
-- Migraties: `supabase/migrations/001…004`.
+- Migraties: `supabase/migrations/001…009` (009: vastgezet nieuws leesbaar voor nieuwe ouders van het team).
 
 ## Inloggen
 - Met een e-mailcode of de link in de mail (geen wachtwoord). Na inloggen koppelt de database het account aan de persoon met hetzelfde e-mailadres.
