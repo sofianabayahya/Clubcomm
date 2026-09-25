@@ -114,9 +114,10 @@
   };
   CC.on('pushLater', () => { try { localStorage.setItem(LATER, String(Date.now() + 30 * 864e5)); } catch (e) { /* */ } CC.render(); });
 
-  // Houdt de server op de hoogte als de telefoon een nieuw adres kreeg (bijv. na een update van de browser)
+  // Bij elk inloggen: stonden meldingen aan op deze telefoon, dan de telefoon (opnieuw) aanmelden bij de server.
+  // Zo klopt de server altijd, ook na een nieuw adres (bijv. na een update van de browser).
   CC.pushVernieuw = async () => {
     const nu = lees(); if (!nu || !CC.live || !kan() || Notification.permission !== 'granted') return;
-    try { const reg = await navigator.serviceWorker.ready; const sub = await reg.pushManager.getSubscription(); if (!sub || sub.endpoint !== nu.endpoint) await aanmelden(nu.voorkeur || {}); } catch (e) { console.warn(e); }
+    try { await aanmelden(nu.voorkeur || {}); } catch (e) { console.warn(e); }
   };
 })();

@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 55 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 56 toegevoegd)
 
 ---
 
@@ -507,6 +507,12 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 56 — Meldingen blijven komen na uitloggen
+- Uitloggen stopt de pushmeldingen **niet**: zo missen ouders nooit een afgelasting of bericht, ook niet als ze (per ongeluk of op een ander toestel) zijn uitgelogd.
+- Stoppen met meldingen kan via **Profiel → Meldingen → Uitzetten op deze telefoon**, of in de instellingen van de telefoon.
+- Bij elk inloggen meldt de app een telefoon waar meldingen aan stonden opnieuw aan bij de server (zo blijft de server kloppen).
+- Let op bij een telefoon die iemand anders krijgt: eerst meldingen uitzetten, dan uitloggen.
 
 ## Besluit 55 — Meldingen: meteen vragen bij de eerste keer
 - Automatisch aanzetten zonder toestemming kan niet: Apple en Google verplichten dat de gebruiker zelf "Sta toe" tikt (ook bij gewone apps). Op de iPhone mag die vraag pas na een tik op een knop.
