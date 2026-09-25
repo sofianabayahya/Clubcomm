@@ -7,6 +7,7 @@ Besluiten staan in `besluiten.md`; dit is het logboek van fouten. Nieuwste boven
 
 | Wat de gebruiker zag | Oorzaak | Opgelost | Patroon |
 |---|---|---|---|
+| (zelf gevonden) Speelduur klopte niet voor O8–O9 (50 i.p.v. 40 min) en vanaf O13 (steeds 70 min) | Speelduur hing aan de spelvorm, niet aan de leeftijd | Per leeftijd volgens de KNVB (Besluit 60) | **C. Demo verbergt het** (demo had alleen O10/O12) |
 | Lange reactie verdween achter de knoppenbalk onderin | Reactievak rekende niet met de hogere balk op iPhones met streep onderin | In een gesprek geen knoppenbalk; vak onderaan en schuift mee (Besluit 58) | **E. Buiten de app** (toestel) |
 | (zelf gevonden) Afzender kon een net binnengekomen antwoord overschrijven bij opslaan | Afzender schreef het hele bericht opnieuw weg | Antwoorden/gelezen/archief altijd via `bericht_bij` (Besluit 57) | **B. Opslaan niet zeker** |
 | Bij elk antwoord in een gesprek een nieuwe e-mail | E-mail per bericht én per antwoord | Eén e-mail per onderwerp, alleen zonder push (Besluit 57) | — |

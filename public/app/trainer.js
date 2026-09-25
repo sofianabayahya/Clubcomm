@@ -71,7 +71,9 @@
     const gemistTekst = (g) => Object.entries(g).map(([r, n]) => `${n}× ${r.toLowerCase()}`).join(', ');
     const tabel = `${h.sectie('Speeltijd dit seizoen')}<div class="balkjes">${seizoen.map(({ pl, x }) => `<div class="balkje"><span>${esc(pl.voornaam)}</span><i style="--w:${x.pct ?? 0}%"></i><b>${x.pct == null ? '–' : x.pct + '%'}</b></div>`).join('')}</div>
       <p class="zacht klein">Percentage van de mogelijke speeltijd in de wedstrijden waarbij het kind er was. Gemiste wedstrijden tellen niet mee${seizoen.some(({ x }) => Object.keys(x.gemist).length) ? `: ${seizoen.filter(({ x }) => Object.keys(x.gemist).length).map(({ pl, x }) => `${esc(pl.voornaam)} (${gemistTekst(x.gemist)})`).join(', ')}` : ''}.</p>`;
-    if (!a) return h.leeg('Geen wedstrijden gepland') + (opties.alleenSchema ? '' : tabel);
+    // Nog geen wedstrijd: uitleggen wat hier komt, met de KNVB-speelduur van dit team (Besluit 60)
+    if (!a) { const c0 = CC.categorie(M.team(S, teamId).cat);
+      return `${h.leeg('Nog geen wedstrijd gepland', 'timer')}<p class="zacht klein midden">Zodra er een (oefen)wedstrijd in de planning staat, maak je hier het wisselschema. ${esc(c0.leeftijd)}: ${esc(c0.vorm)}, ${esc(c0.speelduur)}${c0.timeout ? ', met een time-out halverwege elke helft' : ''} (KNVB).</p>` + (opties.alleenSchema ? '' : tabel); }
     const sch = S.speeltijd.schema[a.id];
     const naam = (id) => (M.speler(S, id) || {}).voornaam;
     let body;
@@ -90,7 +92,7 @@
       const om = Number(h.segVal(`om_${a.id}`, '')) || M.wisselMin(S, teamId); const len = M.blokLengtes(c.duur, om);
       const omKeuze = opties.alleenSchema ? '' : `<label for="st-om">Wisselen om de … minuten</label><input id="st-om" type="number" inputmode="decimal" min="3" max="${c.duur}" step="0.5" value="${om}" data-change="stOm" data-a="${a.id}">
         <p class="zacht klein">${len.length} ${len.length === 1 ? 'blok' : 'wisselblokken'}: ${len.map(M.minTekst).join(' + ')} minuten. Advies: per blok wisselen, om de ${M.minTekst(c.blokMin)} minuten${M.wisselMin(S, teamId) !== c.blokMin ? ` (jullie club: ${M.minTekst(M.wisselMin(S, teamId))})` : ''}.</p>`;
-      body = `<div class="kaartje"><p><b>${n} spelers</b> komen · ${c.vorm} · ${c.duur} minuten.</p>${omKeuze}<p class="zacht klein">De app verdeelt de speeltijd eerlijk: wie in de gespeelde wedstrijden het laagste percentage speeltijd had, krijgt voorrang. Gemiste wedstrijden tellen niet mee. De keeper staat de hele wedstrijd op doel en wisselt per week (clubbeleid).</p>${minderBlok}<button class="knop vol" data-act="maakSchema" data-id="${a.id}">${icon('sparkles')}Maak wisselschema</button></div>`;
+      body = `<div class="kaartje"><p><b>${n} spelers</b> komen · ${c.vorm} · ${c.speelduur}.</p>${c.timeout ? `<p class="zacht klein">KNVB: halverwege elke helft een time-out (max. 2 minuten), een goed moment om te wisselen.</p>` : ''}${omKeuze}<p class="zacht klein">De app verdeelt de speeltijd eerlijk: wie in de gespeelde wedstrijden het laagste percentage speeltijd had, krijgt voorrang. Gemiste wedstrijden tellen niet mee. De keeper staat de hele wedstrijd op doel en wisselt per week (clubbeleid).</p>${minderBlok}<button class="knop vol" data-act="maakSchema" data-id="${a.id}">${icon('sparkles')}Maak wisselschema</button></div>`;
     } else if (!sch.bevestigd) {
       const cur = sch.huidig;
       const inNu = sch.blokken[cur] || []; const vorig = cur > 0 ? sch.blokken[cur - 1] : [];

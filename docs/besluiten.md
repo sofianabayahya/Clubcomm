@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 59 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 60 toegevoegd)
 
 ---
 
@@ -507,6 +507,23 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 60 — Speelduur per leeftijd volgens de KNVB
+| Leeftijd | Spelvorm | Speelduur | Wisselen (advies, 4 blokken) |
+|---|---|---|---|
+| O7 (mini's) | 4 tegen 4 | toernooivorm, samen max. 40 min | om de 10 min |
+| O8–O9 | 6 tegen 6 | 2 × 20 min, time-out halverwege elke helft | om de 10 min |
+| O10 | 6 tegen 6 | 2 × 25 min, time-out halverwege elke helft | om de 12,5 min |
+| O11–O12 | 8 tegen 8 | 2 × 30 min, time-out halverwege elke helft | om de 15 min |
+| O13 | 11 tegen 11 | 2 × 30 min | om de 15 min |
+| O14–O15 | 11 tegen 11 | 2 × 35 min | om de 17,5 min |
+| O16–O17 | 11 tegen 11 | 2 × 40 min | om de 20 min |
+| O18–O19 | 11 tegen 11 | 2 × 45 min | om de 22,5 min |
+- Eerder stond alles van O8 t/m O10 op 50 minuten en alles vanaf O13 op 70 minuten; dat klopte niet.
+- De time-out (O8 t/m O12, max. 2 minuten) is een natuurlijk wisselmoment; de app zegt dat in het wisselschema.
+- Wisselen instellen (Regels → Speeltijd) nu **per leeftijdsgroep** in plaats van per spelvorm (O8–O9 en O10 spelen allebei 6 tegen 6 maar niet even lang).
+- Nog geen wedstrijd: het Speeltijd-scherm legt uit wat er komt en noemt de KNVB-speelduur van het team.
+- Bron: KNVB-richtlijnen pupillen en junioren (gecontroleerd 25-09-2026 via meerdere bronnen; knvb.nl zelf was niet bereikbaar vanuit de bouwomgeving).
 
 ## Besluit 59 — Gesprekken als tekstballonnen: zie wie wat zei
 - **Alles als tekstballon**, ook het eerste bericht; het onderwerp en met wie staan bovenaan. Jij rechts (blauw), de ander links (wit) met een rondje met initialen.

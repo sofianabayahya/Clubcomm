@@ -41,13 +41,27 @@
     o11: ['Passen', 'Aannemen', 'Dribbelen', 'Schieten', 'Positie kiezen', 'Overzicht', 'Samenwerken'],
     o13: ['Techniek', 'Tactiek', 'Fysiek', 'Mentaal', 'Sociaal'],
   };
+  // Speelduur per leeftijd volgens de KNVB (Besluit 60). helft = minuten per helft; timeout = time-out halverwege elke helft
+  // (O8 t/m O12, max. 2 minuten): een natuurlijk wisselmoment. Mini's (O7): toernooivorm, samen max. 40 minuten.
+  // Wisselen per blok (Besluit 39): 4 blokken van een kwart wedstrijd, per leeftijdsgroep door de club aan te passen.
+  CC.LEEFTIJDEN = [
+    { key: 'o7', tot: 7, label: "O7 (mini's)", vorm: '4 tegen 4', vormKey: 'v4', opVeld: 4, helften: 1, helft: 40, timeout: false },
+    { key: 'o8', tot: 9, label: 'O8–O9', vorm: '6 tegen 6', vormKey: 'v6', opVeld: 6, helften: 2, helft: 20, timeout: true },
+    { key: 'o10', tot: 10, label: 'O10', vorm: '6 tegen 6', vormKey: 'v6', opVeld: 6, helften: 2, helft: 25, timeout: true },
+    { key: 'o11', tot: 12, label: 'O11–O12', vorm: '8 tegen 8', vormKey: 'v8', opVeld: 8, helften: 2, helft: 30, timeout: true },
+    { key: 'o13', tot: 13, label: 'O13', vorm: '11 tegen 11', vormKey: 'v11', opVeld: 11, helften: 2, helft: 30, timeout: false },
+    { key: 'o14', tot: 15, label: 'O14–O15', vorm: '11 tegen 11', vormKey: 'v11', opVeld: 11, helften: 2, helft: 35, timeout: false },
+    { key: 'o16', tot: 17, label: 'O16–O17', vorm: '11 tegen 11', vormKey: 'v11', opVeld: 11, helften: 2, helft: 40, timeout: false },
+    { key: 'o18', tot: 99, label: 'O18–O19', vorm: '11 tegen 11', vormKey: 'v11', opVeld: 11, helften: 2, helft: 45, timeout: false },
+  ];
   CC.categorie = (cat) => {
-    const n = parseInt(cat.replace(/\D/g, ''), 10);
-    // duur = speeltijd van de wedstrijd in minuten; blokMin = advies: wisselen per blok (Besluit 39)
-    if (n <= 7) return { naam: "Mini's", vorm: '4 tegen 4', key: 'v4', opVeld: 4, duur: 40, blokken: 4, blokMin: 10, schaal: 'mini', vaardig: CC.VAARDIGHEDEN.mini };
-    if (n <= 10) return { naam: 'Onderbouw', vorm: '6 tegen 6', key: 'v6', opVeld: 6, duur: 50, blokken: 4, blokMin: 12.5, schaal: 'smiley', vaardig: CC.VAARDIGHEDEN.o8 };
-    if (n <= 12) return { naam: 'Onderbouw', vorm: '8 tegen 8', key: 'v8', opVeld: 8, duur: 60, blokken: 4, blokMin: 15, schaal: '1-5', vaardig: CC.VAARDIGHEDEN.o11 };
-    return { naam: 'Middenbouw', vorm: '11 tegen 11', key: 'v11', opVeld: 11, duur: 70, blokken: 4, blokMin: 17.5, schaal: '1-5', vaardig: CC.VAARDIGHEDEN.o13 };
+    const n = parseInt(String(cat).replace(/\D/g, ''), 10) || 12;
+    const l = CC.LEEFTIJDEN.find((x) => n <= x.tot);
+    const duur = l.helften * l.helft;
+    const basis = n <= 7 ? { naam: "Mini's", schaal: 'mini', vaardig: CC.VAARDIGHEDEN.mini } : n <= 10 ? { naam: 'Onderbouw', schaal: 'smiley', vaardig: CC.VAARDIGHEDEN.o8 }
+      : n <= 12 ? { naam: 'Onderbouw', schaal: '1-5', vaardig: CC.VAARDIGHEDEN.o11 } : { naam: 'Middenbouw', schaal: '1-5', vaardig: CC.VAARDIGHEDEN.o13 };
+    return { ...basis, key: l.key, vormKey: l.vormKey, leeftijd: l.label, vorm: l.vorm, opVeld: l.opVeld, duur, helften: l.helften, helft: l.helft, timeout: l.timeout,
+      speelduur: l.helften === 2 ? `2 × ${l.helft} minuten` : `${duur} minuten (toernooivorm)`, blokken: 4, blokMin: duur / 4 };
   };
 
   // ---------- Demo genereren ----------
@@ -600,8 +614,9 @@
   // Mag de trainer bij dit team afwijken (een blok minder)? Standaard alleen bij selectieteams.
   M.speeltijdAfwijken = (S, teamId) => { const i = M.inst(S, teamId).speeltijdAfwijken || { breedte: false, selectie: true }; return !!i[M.team(S, teamId).type === 'selectie' ? 'selectie' : 'breedte']; };
   // Wisselen om de … minuten (Besluit 39): de club kiest per speelvorm, de trainer mag per wedstrijd afwijken. Advies: per blok.
-  CC.SPEELVORMEN = [['v4', '4 tegen 4', 10, 40], ['v6', '6 tegen 6', 12.5, 50], ['v8', '8 tegen 8', 15, 60], ['v11', '11 tegen 11', 17.5, 70]];
-  M.wisselMin = (S, teamId) => { const c = CC.categorie(M.team(S, teamId).cat); return Number((M.inst(S, teamId).wissel || {})[c.key]) || c.blokMin; };
+  // Instellen per leeftijdsgroep (Regels → Speeltijd): [sleutel, naam, advies wisselen, speelduur]
+  CC.SPEELVORMEN = CC.LEEFTIJDEN.map((l) => [l.key, `${l.label} · ${l.vorm}, ${l.helften === 2 ? `2×${l.helft}` : l.helft}`, (l.helften * l.helft) / 4, l.helften * l.helft]);
+  M.wisselMin = (S, teamId) => { const c = CC.categorie(M.team(S, teamId).cat); const w = M.inst(S, teamId).wissel || {}; return Number(w[c.key]) || Number(w[c.vormKey]) || c.blokMin; };
   // Lengte van elk blok: steeds het gekozen aantal minuten; het laatste blok is de rest (een korte rest gaat bij het laatste blok)
   M.blokLengtes = (duur, om) => {
     om = Math.min(Math.max(Number(om) || duur, 1), duur); let n = Math.ceil(duur / om - 1e-9);
