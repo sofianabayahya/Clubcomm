@@ -49,6 +49,7 @@
     // ---- Te doen ----
     if (CC.vervangerRijen) doen.push(...CC.mijnVervangingen(S), ...CC.vervangerRijen(S, S.teams.map((t) => t.id)));
     if (CC.autoBerichtRijen) doen.push(...CC.autoBerichtRijen(S));
+    { const w = CC.wachtRij && CC.wachtRij(); if (w) doen.push(w); }
     const gesprek = [...groep('clubbesluit'), ...groep('gesprekHjo')];
     const magG = (s) => CC.mag(s.soort === 'clubbesluit' ? 'clubbesluit' : 'gesprek', null, s.teamId);
     gesprek.filter(magG).forEach((s) => doen.push(CC.stapRij(S, s)));

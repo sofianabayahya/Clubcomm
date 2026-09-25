@@ -5,9 +5,10 @@
 // Secrets (Supabase → Edge Functions → Secrets): BREVO_API_KEY, AFZENDER_EMAIL; optioneel APP_URL.
 // Pushmeldingen (Besluit 53): naast de e-mail een pushmelding naar de telefoons van de ontvangers (tabel push_abonnement),
 // per soort: nood (altijd, ook 's nachts), persoonlijk, aankondiging, herinnering, staf. Nachtrust 21:00–07:30: dan in de
-// wachtrij, 's ochtends verstuurd ({ wachtrij: true }, via pg_cron). Herinneringen gaan niet meer per e-mail naar wie ze
-// als pushmelding krijgt. Verder: { club, soort: 'afm'|'aanm', rij } = seintje bij afmelding (trainer, alleen op de dag
-// zelf) en aanmelding (staf); { sleutel: true } = sleutelpaar voor push maken (één keer; de geheime helft blijft hier).
+// wachtrij, 's ochtends verstuurd ({ wachtrij: true }, via pg_cron). E-mail is het vangnet (Besluit 57): alleen naar wie
+// geen pushmelding krijgt (noodberichten altijd), één e-mail per onderwerp, antwoorden nooit per e-mail.
+// Verder: { club, soort: 'afm'|'aanm', rij } = seintje bij afmelding (trainer, alleen op de dag zelf) en aanmelding (staf);
+// { sleutel: true } = sleutelpaar voor push maken (één keer; de geheime helft blijft hier).
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import webpush from "npm:web-push@3.6.7";
 
@@ -154,8 +155,9 @@ Deno.serve(async (req) => {
   // Soort pushmelding (Besluit 53); null = geen pushmelding
   const pushSoort = a ? "persoonlijk" : m.urgent ? "nood" : m.soort === "persoonlijk" ? "persoonlijk"
     : m.soort === "melding" ? (m.push ? "staf" : null) : (m.herinnering || m.auto) ? "herinnering" : "aankondiging";
-  // E-mail: niet bij meldingen ter informatie aan staf en niet bij "alleen in de app"
-  let mailen = !!(sleutel && afzender);
+  // E-mail (Besluit 57): één e-mail per onderwerp. Antwoorden in een gesprek nooit per e-mail (alleen push); de ontvanger
+  // weet dat het gesprek loopt en ziet het in de app. Niet bij meldingen ter informatie en niet bij "alleen in de app".
+  let mailen = !!(sleutel && afzender) && !a;
   if (!a && m.soort === "melding" && !m.urgent) mailen = false;
   if (!a && m.mail === false && !m.urgent) mailen = false;
   if (!pushSoort && !mailen) { await log(m.soort === "melding" ? "melding ter informatie" : "alleen in de app"); return json({ overgeslagen: "geen mail of push" }); }
@@ -176,8 +178,8 @@ Deno.serve(async (req) => {
     });
     pushN = r.n; bereikt = r.bereikt;
   }
-  // Herinneringen: niet ook nog per e-mail naar wie ze als pushmelding krijgt (Besluit 36/53)
-  const mailNaar = pushSoort === "herinnering" ? ontvangers.filter((x) => !bereikt.has(x)) : ontvangers;
+  // E-mail is het vangnet (Besluit 57): alleen naar wie geen pushmelding krijgt. Noodberichten altijd ook per e-mail.
+  const mailNaar = pushSoort === "nood" ? ontvangers : ontvangers.filter((x) => !bereikt.has(x));
   if (!mailen || !mailNaar.length) { await log(`push ${pushN}${mailen ? ", mail niet nodig" : ", geen mail"}`, pushN); return json({ push: pushN, verstuurd: 0 }); }
   const { data: contacten } = await sb.from("rij").select("id, data").eq("club_id", club).eq("soort", "contact").in("id", mailNaar);
   const { data: c } = await sb.from("rij").select("data").eq("club_id", club).eq("soort", "club").eq("id", "club").maybeSingle();
@@ -192,7 +194,7 @@ Deno.serve(async (req) => {
     <p style="color:#5b6b7f;font-size:13px;margin:0 0 8px">${esc(clubnaam)} · ${esc(vanNaam)}${m.urgent ? ' · <b style="color:#c62828">Urgent</b>' : ""}</p>
     <h2 style="font-size:20px;margin:0 0 12px">${esc(onderwerp)}</h2>
     <p style="font-size:15px;line-height:1.5;white-space:pre-line">${esc(tekst)}</p>
-    <p style="margin:24px 0"><a href="${app}" style="background:#1e5ba8;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;display:inline-block">Open ClubComm</a></p>
+    <p style="margin:24px 0"><a href="${app}/?bericht=${encodeURIComponent(id)}" style="background:#1e5ba8;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;display:inline-block">Open ClubComm</a></p>
     <p style="color:#5b6b7f;font-size:12px">Je krijgt deze e-mail omdat je bij ${esc(clubnaam)} in ClubComm staat. Reageren of afmelden doe je in de app.</p></div>`;
 
   let n = 0; const fouten: string[] = [];

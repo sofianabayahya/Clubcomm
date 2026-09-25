@@ -446,3 +446,9 @@ details.uitklap.stil summary { font-size: 13px; color: var(--zacht); }
 .welkom-push { width: 64px; height: 64px; margin: 4px auto 12px; border-radius: 50%; background: var(--blauw-l); color: var(--blauw); display: grid; place-items: center; }
 .welkom-push .ic { width: 30px; height: 30px; }
 .linkknop.vol { display: block; width: 100%; text-align: center; padding: 12px; }
+
+/* Berichten (Besluit 57) */
+.bericht.ingetrokken { opacity: .6; }
+.uitklap.blok { margin: 14px 0 4px; } .uitklap.blok > summary { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--zacht, #5b6778); cursor: pointer; padding: 6px 0; }
+.archieflink { width: 100%; margin-top: 16px; background: transparent; border: 1px dashed var(--lijn); text-align: left; font: inherit; color: inherit; }
+.rechts { text-align: right; } .rechts .linkknop { display: inline-flex; align-items: center; gap: 4px; }

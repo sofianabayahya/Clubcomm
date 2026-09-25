@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 56 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 57 toegevoegd)
 
 ---
 
@@ -507,6 +507,31 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 57 — Berichtenpagina: gesprekken, opruimen en één e-mail per onderwerp
+**Twee tabbladen voor iedereen** (ouder, trainer, teamleider, HJO): **Persoonlijk** en **Nieuws** (vervangt Inbox/Verstuurd).
+- **Persoonlijk** = gesprekken (zoals WhatsApp), wie ook begon. Gesorteerd op laatste activiteit; in de lijst de laatste regel ("Jij: …" of "Dorothee: …").
+  - **Wacht op jou** (alleen staf): de andere kant heeft het laatste woord. Heeft een collega al geantwoord: "beantwoord door …" (niet dubbel antwoorden).
+  - Onder je eigen laatste bericht: **Gelezen door …** of "Nog niet gelezen".
+  - Een nieuw antwoord maakt het gesprek weer ongelezen voor de anderen.
+- **Nieuws** = groepsberichten en meldingen, alleen lezen. Ook je eigen berichten, met "Jij · gelezen door x van y". Knop **Stel een vraag hierover** → persoonlijk gesprek met de afzender.
+- **Indeling:** Vastgezet (max. 2) · Wacht op jou · Nieuw · Deze week · Eerder (ingeklapt) · Ter informatie (ingeklapt, staf; telt niet mee als nieuw) · Archief. Per groep 10, dan **Toon meer** (geen pagina's met nummers: werkt slecht op een telefoon). **Alles gelezen** bij meer dan 3 ongelezen.
+- **Urgent** is rood tot je het gelezen hebt; daarna grijs.
+
+**Opruimen**
+- **Archief:** nieuws na **14 dagen** vanzelf; gesprekken alleen als jij ze archiveert (alleen voor jou). Een nieuw antwoord haalt een gesprek terug. Terugzetten kan altijd.
+- **Intrekken:** alleen de afzender, binnen **24 uur**. Ontvangers zien "Ingetrokken door …". Een al verstuurde pushmelding of e-mail kan niet terug.
+- **Verwijderen** door ontvangers kan niet (archiveren is veiliger en blijft terug te vinden). Echt wissen gebeurt met de bewaartermijn aan het eind van het seizoen.
+
+**E-mail = vangnet, één per onderwerp** (herziet de e-mailtabel van Besluit 36)
+- Alleen naar wie **geen pushmelding** krijgt. **Noodberichten** altijd ook per e-mail.
+- **Antwoorden in een gesprek nooit per e-mail** (wel een pushmelding): wie een vraag stelde, weet dat er antwoord komt en ziet het in de app. Zo geen stroom mails bij heen-en-weer.
+- De knop in de e-mail opent de app op het bericht.
+
+**Home:** "x gesprekken wachten op jou" bij Actie nodig (trainer, teamleider) en Te doen (HJO).
+
+**Techniek:** antwoorden, gelezen en archief gaan altijd via de databasefunctie `bericht_bij` (migratie 013), ook voor de afzender; zo kan een antwoord van een ander nooit worden overschreven. Een antwoord telt alleen als het van jezelf is.
+**Bewust nog niet:** zoeken (pas bij meer teams), gesprek dempen, berichten aanpassen.
 
 ## Besluit 56 — Meldingen blijven komen na uitloggen
 - Uitloggen stopt de pushmeldingen **niet**: zo missen ouders nooit een afgelasting of bericht, ook niet als ze (per ongeluk of op een ander toestel) zijn uitgelogd.

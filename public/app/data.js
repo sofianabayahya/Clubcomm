@@ -562,8 +562,23 @@
   // Vastgezet nieuws is ook te lezen voor ouders die later instromen (Besluit 41); het telt dan niet als ongelezen
   M.vastVoor = (S, m, pid) => m.soort === 'nieuws' && !!m.vastTot && new Date(m.vastTot) > new Date()
     && (m.bereik === 'Hele club' || String(m.bereik || '').split(', ').some((t) => S.players.some((p) => p.teamId === t && p.ouders.includes(pid))));
-  M.zichtbaar = (S, m, pid) => (m.ontvangers.includes(pid) || M.vastVoor(S, m, pid)) && (!m.gepland || new Date(m.gepland) <= new Date());
-  M.ongelezen = (S, pid, soort) => S.msgs.filter((m) => m.ontvangers.includes(pid) && M.zichtbaar(S, m, pid) && !m.gelezen.includes(pid) && (!soort || m.soort === soort) && m.van !== pid).length;
+  // Berichten als gesprekken (Besluit 57): bij een persoonlijk bericht doet de afzender ook mee; het laatste woord telt
+  M.deelnemers = (m) => (m.soort === 'persoonlijk' ? [m.van, ...m.ontvangers] : m.ontvangers);
+  M.laatste = (m) => ((m.antw || []).length ? m.antw[m.antw.length - 1] : { van: m.van, tekst: m.tekst, tijd: m.tijd });
+  M.gearchiveerd = (m, pid) => (m.archief || []).includes(pid);
+  M.zichtbaar = (S, m, pid) => (M.deelnemers(m).includes(pid) || M.vastVoor(S, m, pid)) && (!m.gepland || new Date(m.gepland) <= new Date());
+  M.isOngelezen = (S, m, pid) => !m.ingetrokken && M.deelnemers(m).includes(pid) && M.zichtbaar(S, m, pid) && !(m.gelezen || []).includes(pid) && M.laatste(m).van !== pid;
+  // Meldingen ter informatie (niet urgent, geen pushmelding) tellen niet mee als "nieuw bericht": informatie is geen taak
+  M.terInfo = (m) => m.soort === 'melding' && !m.urgent && !m.push;
+  M.ongelezen = (S, pid, soort) => S.msgs.filter((m) => M.isOngelezen(S, m, pid) && !M.terInfo(m) && (!soort || m.soort === soort)).length;
+  // Wacht een gesprek op jou (alleen voor de staf)? Ja als de andere kant het laatste woord heeft. Heeft een collega van jouw kant
+  // al geantwoord, dan niet ("Beantwoord door …"). Berichten van ClubComm zelf en gearchiveerde gesprekken wachten nooit.
+  M.wachtOpMij = (m, pid) => {
+    if (m.soort !== 'persoonlijk' || m.van === 'systeem' || m.ingetrokken || M.gearchiveerd(m, pid)) return false;
+    const l = M.laatste(m).van;
+    if (m.van === pid) return l !== pid && m.ontvangers.includes(l);
+    return m.ontvangers.includes(pid) && l === m.van;
+  };
   // Alle trainers en/of teamleiders van een team (een team kan er meer hebben; Besluit 44)
   M.stafVan = (S, teamId, rollen = ['trainer', 'teamleider']) => { const t = M.team(S, teamId) || {};
     return [...new Set([...(rollen.includes('trainer') ? [t.trainerId] : []), ...(rollen.includes('teamleider') ? [t.teamleiderId] : []),

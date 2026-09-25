@@ -7,6 +7,8 @@ Besluiten staan in `besluiten.md`; dit is het logboek van fouten. Nieuwste boven
 
 | Wat de gebruiker zag | Oorzaak | Opgelost | Patroon |
 |---|---|---|---|
+| (zelf gevonden) Afzender kon een net binnengekomen antwoord overschrijven bij opslaan | Afzender schreef het hele bericht opnieuw weg | Antwoorden/gelezen/archief altijd via `bericht_bij` (Besluit 57) | **B. Opslaan niet zeker** |
+| Bij elk antwoord in een gesprek een nieuwe e-mail | E-mail per bericht én per antwoord | Eén e-mail per onderwerp, alleen zonder push (Besluit 57) | — |
 | Demo-knoppen (ander demo-account, demo opnieuw, account verwijderen) stonden in het echte profiel | Profiel was gebouwd voor de demo; "account verwijderen" werkte in het echt maar half | Alleen in de demo; echt: verzoek aan beheerder (Besluit 54) | **C. Demo verbergt het** |
 | (zelf gevonden) Trainer zonder geplande activiteit zag ook geen acties (bijv. aanmeldingen) | Home stopte meteen bij "Geen activiteiten gepland" | Acties worden altijd getoond | **C. Demo verbergt het** |
 | Ouder meldde hetzelfde kind twee keer aan (Tahsin, 15 min ertussen) | Aanmelden controleerde niet of er al een aanvraag was | Database voegt dubbele samen (Besluit 51); duplicaat verwijderd | **A. Momentopname / F. Echt gedrag** |
@@ -37,6 +39,6 @@ Besluiten staan in `besluiten.md`; dit is het logboek van fouten. Nieuwste boven
 ## Bekende risico's (nog niet opgelost)
 - **Verversen:** nu elke 30 seconden en bij terugkomen in de app (Besluit 48). Echt direct (binnen 1 s) kan later met Supabase Realtime.
 - **Automatische berichten** gaan uit als een beheerder/staflid de app opent, niet vanzelf vanaf de server.
-- **Tegelijk wijzigen** van dezelfde regel: de laatste wint (zelden, maar mogelijk bij twee teamleiders).
+- **Tegelijk wijzigen** van dezelfde regel: de laatste wint (zelden, maar mogelijk bij twee teamleiders). Voor berichten opgelost (Besluit 57).
 - **Brevo-afmeldknop** in elke mail: wie tikt, krijgt geen inlogcode meer (deblokkeren in Brevo).
 - **Wedstrijden** staan er nog niet in; vaste taken en wisselschema pas testen bij de eerste (oefen)wedstrijd.

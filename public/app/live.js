@@ -43,8 +43,12 @@
       const nu = CC.naarRijen(CC.S(), club); const nieuw = []; const berichten = [];
       nu.forEach((r, k) => {
         const j = JSON.stringify(r); if (L.snap.get(k) === j || L.geweigerd.get(k) === j) return;
-        // Berichten van een ander: alleen "gelezen" en antwoorden, veilig samenvoegen via de database
-        if (r.soort === 'msgs' && r.data.van !== L.pid && L.snap.has(k)) { berichten.push({ k, j, r, oud: JSON.parse(L.snap.get(k)).data }); return; }
+        // Bestaande berichten: gelezen, antwoorden en archief veilig samenvoegen via de database (Besluit 57), zodat een
+        // antwoord van een ander nooit wordt overschreven. Alleen de afzender mag daarnaast de rest wijzigen (vastzetten, intrekken).
+        if (r.soort === 'msgs' && L.snap.has(k)) {
+          const oud = JSON.parse(L.snap.get(k)).data; const zonder = (d) => JSON.stringify({ ...d, gelezen: 0, antw: 0, archief: 0 });
+          if (r.data.van !== L.pid || zonder(oud) === zonder(r.data)) { berichten.push({ k, j, r, oud }); return; }
+        }
         nieuw.push({ k, j, r });
       });
       const weg = [...L.snap.keys()].filter((k) => !nu.has(k));
@@ -64,9 +68,10 @@
       for (const b of berichten) {
         const gelezen = (b.r.data.gelezen || []).includes(L.pid) && !(b.oud.gelezen || []).includes(L.pid);
         const oudAntw = new Set((b.oud.antw || []).map((a) => JSON.stringify(a)));
-        const antw = (b.r.data.antw || []).filter((a) => !oudAntw.has(JSON.stringify(a)));
-        if (!gelezen && !antw.length) { L.geweigerd.set(b.k, b.j); continue; }
-        const { error } = await sb.rpc('bericht_bij', { p_id: b.r.id, p_gelezen: gelezen, p_antw: antw });
+        const antw = (b.r.data.antw || []).filter((a) => !oudAntw.has(JSON.stringify(a)) && a.van === L.pid);
+        const inArch = (d) => (d.archief || []).includes(L.pid); const archief = inArch(b.r.data) === inArch(b.oud) ? null : inArch(b.r.data);
+        if (!gelezen && !antw.length && archief === null) { if (b.r.data.van !== L.pid) L.geweigerd.set(b.k, b.j); else L.snap.set(b.k, b.j); continue; }
+        const { error } = await sb.rpc('bericht_bij', { p_id: b.r.id, p_gelezen: gelezen, p_antw: antw, p_archief: archief });
         if (!error) L.snap.set(b.k, b.j); else offline = true;
       }
       const perSoort = {}; weg.forEach((k) => { const [s, ...id] = k.split('|'); (perSoort[s] || (perSoort[s] = [])).push(id.join('|')); });

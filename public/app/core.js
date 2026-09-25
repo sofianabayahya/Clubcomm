@@ -430,63 +430,164 @@
     CC.sheet('Tweede ouder uitnodigen', `<p>Stuur de andere ouder de uitnodiging van ${esc(CC.tn(k.teamId))}. Die meldt zich aan met een eigen e-mailadres en vult de naam van ${esc(k.voornaam)} in. De teamleider koppelt jullie dan aan hetzelfde kind.</p><p class="klein zacht">Jullie zien elkaars e-mailadres niet.</p><div class="knoppen kolom"><button class="knop" data-act="tweedeOuderDeel" data-link="${esc(link)}">${icon('share-2')}Uitnodiging delen</button></div>`); });
   CC.on('tweedeOuderDeel', (el) => CC.deel(`Je kunt je aanmelden bij ClubComm voor ${CC.kind().voornaam} (${CC.kind().teamId}): ${el.dataset.link}`));
 
-  // ---------- Berichten (voor alle rollen) ----------
+  // ---------- Berichten (voor alle rollen) — Besluit 57 ----------
+  // Twee tabbladen voor iedereen: Persoonlijk (gesprekken, wie ook begon) en Nieuws (groepsberichten en meldingen, alleen lezen).
+  // Indeling: Vastgezet · Wacht op jou (staf) · Nieuw · Deze week · Eerder (ingeklapt) · Ter informatie (ingeklapt) · Archief.
+  // Nieuws gaat na 14 dagen vanzelf naar het Archief; een gesprek alleen als jij het archiveert (nieuw antwoord = terug).
   const vanNaam = (m) => (m.van === 'systeem' ? 'ClubComm' : (M.persoon(S, m.van) || { naam: 'Verwijderd account' }).naam);
+  const pNaam = (id) => (id === 'systeem' ? 'ClubComm' : (M.persoon(S, id) || { naam: 'Verwijderd account' }).naam);
+  const voornaam = (id) => pNaam(id).split(' ')[0];
+  // Bereik bevat teamcodes (nodig voor de rechten); toon de teamnaam
+  const bereikNaam = (m) => String(m.bereik || '').split(', ').map((x) => (S.teams.some((t) => t.id === x) ? CC.tn(x) : x)).join(', ');
   // Berichten van de club (HJO/clubbeheerder) zijn herkenbaar; vastgezette berichten blijven tijdelijk bovenaan (Besluit 19)
   CC.isClub = (m) => { const p = m.van !== 'systeem' && M.persoon(S, m.van); return !!(p && p.rollen.some((r) => ['hjo', 'beheerder'].includes(r.rol))); };
   CC.isVast = (m) => !!(m.vastTot && new Date(m.vastTot) > new Date());
-  const volgorde = (me) => (a, b) => (a.gelezen.includes(me.id) - b.gelezen.includes(me.id)) || ((b.urgent ? 1 : 0) - (a.urgent ? 1 : 0)) || b.tijd.localeCompare(a.tijd);
   const afzenderIc = (m, naam) => (m.van === 'systeem' ? `<span class="avatar sys">${icon('bell')}</span>` : CC.isClub(m) ? `<span class="avatar club">${icon('shield')}</span>` : h.avatar(naam));
+  const ARCHIEF_DAGEN = 14;
+  const laatstTijd = (m) => M.laatste(m).tijd || m.tijd;
+  const dagenOud = (m) => (Date.now() - new Date(laatstTijd(m))) / 864e5;
+  const isStaf = () => CC.rol().rol !== 'ouder';
+  const terInfo = (m) => M.terInfo(m);
+  const nieuwsArchief = (m, pid) => M.gearchiveerd(m, pid) || (!CC.isVast(m) && dagenOud(m) > ARCHIEF_DAGEN);
+  const kanIntrekken = (m, me) => m.van === me.id && !m.ingetrokken && Date.now() - new Date(m.tijd) < 24 * 3600e3;
+  const nieuwst = (a, b) => laatstTijd(b).localeCompare(laatstTijd(a));
+
+  // Alle berichten per tabblad voor deze persoon
+  const perTab = (me) => {
+    const pers = S.msgs.filter((m) => m.soort === 'persoonlijk' && M.zichtbaar(S, m, me.id));
+    const nws = S.msgs.filter((m) => m.soort !== 'persoonlijk' && (m.van === me.id || M.zichtbaar(S, m, me.id)));
+    return { pers, nws };
+  };
+  // Beperk een lijst tot 10, met "Toon meer"
+  const meer = (sleutel, ms, render) => {
+    const n = Number(h.segVal('meer-' + sleutel, 10));
+    return `<div class="lijst">${ms.slice(0, n).map(render).join('')}</div>${ms.length > n ? `<button class="linkknop vol" data-act="seg" data-key="meer-${sleutel}" data-val="${n + 10}">Toon meer (${ms.length - n})</button>` : ''}`;
+  };
+  const blok = (titel, ms, render, sleutel) => (ms.length ? `${h.sectie(titel)}${meer(sleutel, ms, render)}` : '');
+  const inklap = (titel, ms, render, sleutel) => (ms.length ? `<details class="uitklap blok"><summary>${titel} (${ms.length})</summary>${meer(sleutel, ms, render)}</details>` : '');
+
   CC.berichtenScherm = (S, opties = {}) => {
-    const me = CC.me();
-    const mijn = S.msgs.filter((m) => M.zichtbaar(S, m, me.id) && m.van !== me.id);
-    const lijst = (ms) => ms.length ? `<div class="lijst">${ms.sort(volgorde(me)).map((m) => bericht(m, me)).join('')}</div>` : h.leeg('Geen berichten', 'message-circle');
-    const vast = mijn.filter(CC.isVast).sort((a, b) => b.tijd.localeCompare(a.tijd));
-    const vastBlok = vast.length ? `${h.sectie(`${icon('pin', 'klein')} Vastgezet`)}<div class="lijst vast">${vast.map((m) => bericht(m, me)).join('')}</div>` : '';
-    const zonderVast = (ms) => ms.filter((m) => !CC.isVast(m));
-    const nieuw = opties.nieuw ? `<button class="knop vol" data-act="nieuwBericht">${icon('plus')}Nieuw bericht</button>` : '';
-    if (opties.ouder) {
-      const tab = h.segVal('berichten', 'persoonlijk');
-      // Eigen vragen aan trainer/teamleider staan ook bij Persoonlijk (met de antwoorden)
-      const pers = [...mijn.filter((m) => m.soort === 'persoonlijk'), ...S.msgs.filter((m) => m.van === me.id && m.soort === 'persoonlijk')], nws = mijn.filter((m) => m.soort !== 'persoonlijk');
-      const n = (ms) => ms.filter((m) => m.van !== me.id && !m.gelezen.includes(me.id)).length;
-      const vraag = tab === 'persoonlijk' && CC.kinderen().length ? `<button class="knop licht vol" data-act="vraagStaf">${icon('message-circle')}Vraag aan trainer of teamleider</button>` : '';
-      // Tabbladen altijd bovenaan; vastgezette berichten onder het tabblad waar ze bij horen
-      const hier = tab === 'persoonlijk' ? pers : nws; const vastHier = vast.filter((m) => hier.includes(m));
-      const vastBlokHier = vastHier.length ? `${h.sectie(`${icon('pin', 'klein')} Vastgezet`)}<div class="lijst vast">${vastHier.map((m) => bericht(m, me)).join('')}</div>` : '';
-      return `${h.seg('berichten', [['persoonlijk', 'Persoonlijk', n(pers)], ['nieuws', 'Nieuws', n(nws)]], 'persoonlijk')}${vraag}${vastBlokHier}${lijst(zonderVast(hier))}`;
+    const me = CC.me(); const staf = isStaf();
+    const tab = h.segVal('berichten', 'persoonlijk');
+    const { pers, nws } = perTab(me);
+    const actiefPers = pers.filter((m) => !M.gearchiveerd(m, me.id));
+    const actiefNws = nws.filter((m) => !nieuwsArchief(m, me.id));
+    const n = (ms) => ms.filter((m) => M.isOngelezen(S, m, me.id) && !terInfo(m)).length;
+    const knop = staf && opties.nieuw ? `<button class="knop vol" data-act="nieuwBericht">${icon('plus')}Nieuw bericht</button>`
+      : tab === 'persoonlijk' && CC.kinderen().length ? `<button class="knop licht vol" data-act="vraagStaf">${icon('message-circle')}Vraag aan trainer of teamleider</button>` : '';
+    const lijst = tab === 'persoonlijk' ? actiefPers : actiefNws;
+    const ongelezen = lijst.filter((m) => M.isOngelezen(S, m, me.id) && !terInfo(m));
+    const allesGelezen = ongelezen.length > 3 ? `<button class="linkknop" data-act="allesGelezen" data-tab="${tab}">${icon('check')}Alles gelezen</button>` : '';
+    const archiefLink = (aantal) => `<button class="rij klikbaar archieflink" data-act="open" data-view="archief" data-tab="${tab}">${icon('archive')}<span class="rij-tekst"><b>Archief</b><small>${aantal ? `${aantal} ${aantal === 1 ? 'bericht' : 'berichten'}` : 'Leeg'}</small></span>${icon('chevron-right', 'chev')}</button>`;
+    let inhoud;
+    if (tab === 'persoonlijk') {
+      const wacht = staf ? actiefPers.filter((m) => M.wachtOpMij(m, me.id)).sort(nieuwst) : [];
+      const nieuw = actiefPers.filter((m) => !wacht.includes(m) && M.isOngelezen(S, m, me.id)).sort(nieuwst);
+      const rest = actiefPers.filter((m) => !wacht.includes(m) && !nieuw.includes(m)).sort(nieuwst);
+      inhoud = actiefPers.length
+        ? `${blok('Wacht op jou', wacht, (m) => gesprek(m, me), 'wacht')}${blok('Nieuw', nieuw, (m) => gesprek(m, me), 'pnieuw')}${blok(wacht.length || nieuw.length ? 'Gesprekken' : '', rest, (m) => gesprek(m, me), 'prest')}`
+        : h.leeg(staf ? 'Nog geen gesprekken' : 'Nog geen persoonlijke berichten', 'message-circle');
+      inhoud += archiefLink(pers.length - actiefPers.length);
+    } else {
+      const vast = actiefNws.filter(CC.isVast).sort(nieuwst);
+      const info = staf ? actiefNws.filter((m) => !vast.includes(m) && terInfo(m)) : [];
+      const gewoon = actiefNws.filter((m) => !vast.includes(m) && !info.includes(m));
+      const nieuw = gewoon.filter((m) => M.isOngelezen(S, m, me.id)).sort(nieuwst);
+      const week = gewoon.filter((m) => !nieuw.includes(m) && dagenOud(m) <= 7).sort(nieuwst);
+      const eerder = gewoon.filter((m) => !nieuw.includes(m) && dagenOud(m) > 7).sort(nieuwst);
+      inhoud = actiefNws.length
+        ? `${blok(`${icon('pin', 'klein')} Vastgezet`, vast, (m) => nieuwsRij(m, me), 'vast')}${blok('Nieuw', nieuw, (m) => nieuwsRij(m, me), 'nnieuw')}${blok('Deze week', week, (m) => nieuwsRij(m, me), 'week')}${inklap('Eerder', eerder, (m) => nieuwsRij(m, me), 'eerder')}${inklap('Ter informatie', info.sort(nieuwst), (m) => nieuwsRij(m, me), 'info')}`
+        : h.leeg('Geen nieuws van de laatste twee weken', 'megaphone');
+      inhoud += archiefLink(nws.length - actiefNws.length);
     }
-    const tab = h.segVal('berichtenStaf', 'inbox');
-    const verstuurd = S.msgs.filter((m) => m.van === me.id).sort((a, b) => b.tijd.localeCompare(a.tijd));
-    return `${nieuw}${h.seg('berichtenStaf', [['inbox', 'Inbox', M.ongelezen(S, me.id)], ['verstuurd', 'Verstuurd']], 'inbox')}
-      ${tab === 'inbox' ? vastBlok + lijst(zonderVast(mijn)) : verstuurd.length ? `<div class="lijst">${verstuurd.map((m) => bericht(m, me, true)).join('')}</div>` : h.leeg('Nog niets verstuurd', 'send')}`;
+    return `${knop}${h.seg('berichten', [['persoonlijk', 'Persoonlijk', n(actiefPers)], ['nieuws', 'Nieuws', n(actiefNws)]], 'persoonlijk')}${allesGelezen ? `<div class="rechts">${allesGelezen}</div>` : ''}${inhoud}`;
   };
-  const bericht = (m, me, eigen) => {
-    const ongelezen = !eigen && m.ontvangers.includes(me.id) && !m.gelezen.includes(me.id);
+
+  // Eén gesprek in de lijst: onderwerp, met wie, laatste regel ("Jij: …"), wacht op jou / beantwoord door
+  const gesprek = (m, me) => {
+    const l = M.laatste(m); const ong = M.isOngelezen(S, m, me.id);
+    const anderen = M.deelnemers(m).filter((x) => x !== me.id);
+    const met = m.van === me.id ? (bereikNaam(m) || anderen.map(voornaam).join(', ')) : pNaam(m.van);
+    const collega = m.van !== me.id && m.ontvangers.includes(l.van) && l.van !== me.id;
+    const regel = m.ingetrokken ? `<i>Ingetrokken door ${esc(pNaam(m.ingetrokken.door))}</i>` : `${l.van === me.id ? 'Jij' : esc(voornaam(l.van))}: ${esc(String(l.tekst || '').split('\n')[0])}`;
+    return `<button class="bericht ${ong ? 'nieuw' : ''} ${m.ingetrokken ? 'ingetrokken' : ''}" data-act="open" data-view="bericht" data-id="${m.id}">
+      ${m.van === me.id ? h.avatar(anderen.length === 1 ? pNaam(anderen[0]) : (bereikNaam(m) || '?')) : afzenderIc(m, pNaam(m.van))}
+      <span class="b-tekst"><b>${isStaf() && M.wachtOpMij(m, me.id) ? '<span class="chip oranje mini">Wacht op jou</span> ' : ''}${esc(m.onderwerp)}</b><small>${esc(met)}${collega ? ` · beantwoord door ${esc(voornaam(l.van))}` : ''}</small><span class="b-voorbeeld">${regel}</span></span>
+      <span class="b-tijd">${D.tijdstip(laatstTijd(m))}${ong ? '<i class="nieuwstip"></i>' : ''}</span></button>`;
+  };
+  // Eén nieuwsbericht in de lijst; eigen berichten met "gelezen door x van y"
+  const nieuwsRij = (m, me) => {
+    const eigen = m.van === me.id; const ong = M.isOngelezen(S, m, me.id);
     const gepland = m.gepland && new Date(m.gepland) > new Date();
-    const sub = eigen ? (gepland ? `Gepland voor ${D.tijdstip(m.gepland)}` : `Gelezen door ${m.gelezen.length} van ${m.ontvangers.length}`) : `${esc(vanNaam(m))} · ${esc(m.bereik || '')}`;
-    return `<button class="bericht ${ongelezen ? 'nieuw' : ''}" data-act="open" data-view="bericht" data-id="${m.id}">
-      ${eigen ? h.avatar(m.bereik || '?') : afzenderIc(m, vanNaam(m))}
-      <span class="b-tekst"><b>${m.urgent ? `<span class="chip rood mini">Urgent</span> ` : ''}${CC.isClub(m) && !eigen ? `<span class="chip blauw mini">Club</span> ` : ''}${esc(m.onderwerp)}</b><small>${sub}</small><span class="b-voorbeeld">${esc(m.tekst.split('\n')[0])}</span></span>
-      <span class="b-tijd">${gepland ? icon('clock') : D.tijdstip(m.tijd)}${CC.isVast(m) ? icon('pin', 'klein') : ''}${ongelezen ? '<i class="nieuwstip"></i>' : ''}</span></button>`;
+    const urgentRood = m.urgent && (ong || eigen && dagenOud(m) < 1);
+    const sub = eigen ? (gepland ? `Jij · gepland voor ${D.tijdstip(m.gepland)}` : `Jij · gelezen door ${m.gelezen.filter((x) => x !== me.id).length} van ${m.ontvangers.length}`) : `${esc(vanNaam(m))}${m.bereik ? ` · ${esc(bereikNaam(m))}` : ''}`;
+    return `<button class="bericht ${ong ? 'nieuw' : ''} ${m.ingetrokken ? 'ingetrokken' : ''}" data-act="open" data-view="bericht" data-id="${m.id}">
+      ${eigen ? `<span class="avatar sys">${icon('send')}</span>` : afzenderIc(m, vanNaam(m))}
+      <span class="b-tekst"><b>${m.urgent ? `<span class="chip ${urgentRood ? 'rood' : 'grijs'} mini">Urgent</span> ` : ''}${CC.isClub(m) && !eigen ? '<span class="chip blauw mini">Club</span> ' : ''}${esc(m.onderwerp)}</b><small>${sub}</small><span class="b-voorbeeld">${m.ingetrokken ? `<i>Ingetrokken door ${esc(pNaam(m.ingetrokken.door))}</i>` : esc(m.tekst.split('\n')[0])}</span></span>
+      <span class="b-tijd">${gepland ? icon('clock') : D.tijdstip(m.tijd)}${CC.isVast(m) ? icon('pin', 'klein') : ''}${ong ? '<i class="nieuwstip"></i>' : ''}</span></button>`;
   };
+  // Archief: nieuws ouder dan 14 dagen en wat je zelf archiveerde
+  CC.views.archief = (S, p) => {
+    const me = CC.me(); const { pers, nws } = perTab(me);
+    const ms = (p.tab === 'nieuws' ? nws.filter((m) => nieuwsArchief(m, me.id)) : pers.filter((m) => M.gearchiveerd(m, me.id))).sort(nieuwst);
+    return { titel: p.tab === 'nieuws' ? 'Archief · Nieuws' : 'Archief · Persoonlijk',
+      html: `<p class="zacht klein">${p.tab === 'nieuws' ? `Nieuws gaat na ${ARCHIEF_DAGEN} dagen vanzelf hierheen.` : 'Gesprekken die je archiveerde. Komt er een nieuw antwoord, dan staat het gesprek weer bij Persoonlijk.'} Aan het eind van het seizoen worden oude berichten gewist.</p>
+        ${ms.length ? meer('archief-' + p.tab, ms, (m) => (p.tab === 'nieuws' ? nieuwsRij(m, me) : gesprek(m, me))) : h.leeg('Het archief is leeg', 'archive')}` };
+  };
+  // Regel voor Home (Besluit 57): gesprekken die op jou wachten
+  CC.wachtRij = () => { const me = CC.me(); const n = S.msgs.filter((m) => M.zichtbaar(S, m, me.id) && M.wachtOpMij(m, me.id)).length;
+    return n ? h.rij({ ic: 'message-circle', titel: `${n} ${n === 1 ? 'gesprek wacht' : 'gesprekken wachten'} op jou`, sub: 'Een vraag die nog niemand van de staf beantwoordde', act: 'wachtOpen', kleur: 'oranje' }) : ''; };
+  CC.on('wachtOpen', () => { CC.ui.seg.berichten = 'persoonlijk'; CC.go('berichten'); });
+  CC.on('allesGelezen', (el) => {
+    const me = CC.me(); const { pers, nws } = perTab(me);
+    (el.dataset.tab === 'nieuws' ? nws : pers).forEach((m) => { if (M.isOngelezen(S, m, me.id)) m.gelezen.push(me.id); });
+    CC.save(); CC.render(); CC.toast('Alles gelezen');
+  });
+
   CC.views.bericht = (S, p) => {
     const m = S.msgs.find((x) => x.id === p.id); const me = CC.me();
-    if (!m.gelezen.includes(me.id) && m.ontvangers.includes(me.id)) { m.gelezen.push(me.id); CC.save(); }
-    const eigen = m.van === me.id;
-    const gelezenLijst = eigen ? `<details class="uitklap"><summary>Gelezen door ${m.gelezen.length} van ${m.ontvangers.length}</summary><p class="zacht klein">${m.ontvangers.map((id) => { const pp = M.persoon(S, id); return pp ? `${m.gelezen.includes(id) ? '✓' : '·'} ${esc(pp.naam)}` : ''; }).slice(0, 40).join('<br>')}</p></details>` : '';
-    const kanReageren = m.soort === 'persoonlijk' && !eigen;
+    if (!m) return { titel: 'Bericht', html: h.leeg('Dit bericht bestaat niet meer', 'message-circle') };
+    if (M.isOngelezen(S, m, me.id)) { m.gelezen.push(me.id); CC.save(); }
+    const eigen = m.van === me.id; const pers = m.soort === 'persoonlijk';
+    const arch = pers ? M.gearchiveerd(m, me.id) : nieuwsArchief(m, me.id);
+    const gelezenLijst = eigen && !pers ? `<details class="uitklap"><summary>Gelezen door ${m.gelezen.filter((x) => x !== me.id).length} van ${m.ontvangers.length}</summary><p class="zacht klein">${m.ontvangers.map((id) => { const pp = M.persoon(S, id); return pp ? `${m.gelezen.includes(id) ? '✓' : '·'} ${esc(pp.naam)}` : ''; }).slice(0, 40).join('<br>')}</p></details>` : '';
+    // Gesprek: onder je eigen laatste bericht wie het gelezen heeft (zoals WhatsApp)
+    const l = M.laatste(m);
+    const gezienDoor = pers && l.van === me.id ? m.gelezen.filter((x) => x !== me.id).map(voornaam) : [];
+    const gezien = pers && l.van === me.id ? `<p class="zacht klein rechts">${gezienDoor.length ? `${icon('check')}Gelezen door ${esc(gezienDoor.join(', '))}` : 'Nog niet gelezen'}</p>` : '';
+    const acties = [
+      pers || !CC.isVast(m) ? (arch && (pers || M.gearchiveerd(m, me.id)) ? `<button class="knop licht klein" data-act="archiefUit" data-id="${m.id}">${icon('archive-restore')}Terugzetten</button>` : !arch ? `<button class="knop licht klein" data-act="archiveer" data-id="${m.id}">${icon('archive')}Archiveren</button>` : '') : '',
+      kanIntrekken(m, me) ? `<button class="knop licht klein rood-tekst" data-act="berichtIntrekken" data-id="${m.id}">${icon('undo-2')}Intrekken</button>` : '',
+    ].filter(Boolean).join('');
+    if (m.ingetrokken) return { titel: pers ? 'Gesprek' : 'Nieuws', html: `<article class="kaartje"><h2>${esc(m.onderwerp)}</h2><p class="zacht"><i>Dit bericht is ingetrokken door ${esc(pNaam(m.ingetrokken.door))} (${D.tijdstip(m.ingetrokken.tijd)}).</i></p>${acties ? `<div class="knoppen">${acties}</div>` : ''}</article>` };
+    const vraagOver = !pers && !eigen && m.van !== 'systeem' ? `<button class="knop licht vol" data-act="vraagOver" data-id="${m.id}">${icon('message-circle')}Stel een vraag hierover</button>` : '';
     return {
-      titel: m.soort === 'persoonlijk' ? 'Persoonlijk bericht' : m.soort === 'melding' ? 'Melding' : 'Nieuws',
+      titel: pers ? 'Gesprek' : m.soort === 'melding' ? 'Melding' : 'Nieuws',
       html: `<article class="kaartje">
-        <div class="b-kop">${afzenderIc(m, vanNaam(m))}<div><b>${esc(vanNaam(m))}${CC.isClub(m) ? ' <span class="chip blauw mini">Club</span>' : ''}</b><small>aan ${esc(m.bereik || '')} · ${D.tijdstip(m.gepland || m.tijd)}</small></div></div>
+        <div class="b-kop">${afzenderIc(m, vanNaam(m))}<div><b>${esc(vanNaam(m))}${CC.isClub(m) ? ' <span class="chip blauw mini">Club</span>' : ''}</b><small>aan ${esc(bereikNaam(m))} · ${D.tijdstip(m.gepland || m.tijd)}</small></div></div>
         ${m.urgent || CC.isVast(m) ? `<p class="klein">${m.urgent ? '<span class="chip rood mini">Urgent</span> ' : ''}${CC.isVast(m) ? `<span class="chip grijs mini">${icon('pin', 'klein')}Vastgezet tot ${D.kort(m.vastTot.slice(0, 10))}</span>` : ''}</p>` : ''}
         <h2>${esc(m.onderwerp)}</h2><p class="brief">${esc(m.tekst).replace(/\n/g, '<br>')}</p>${gelezenLijst}
-        ${eigen && m.soort !== 'persoonlijk' ? `<div class="knoppen">${CC.isVast(m) ? `<button class="knop licht klein" data-act="losmaken" data-id="${m.id}">${icon('pin-off')}Losmaken</button>` : `<button class="knop licht klein" data-act="vastzetten" data-id="${m.id}" data-d="7">${icon('pin')}1 week vastzetten</button><button class="knop licht klein" data-act="vastzetten" data-id="${m.id}" data-d="14">${icon('pin')}2 weken</button>`}</div>` : ''}</article>
-        ${m.antw.map((a) => `<div class="antwoord ${a.van === me.id ? 'mijn' : ''}"><small>${esc((M.persoon(S, a.van) || {}).naam || '')} · ${D.tijdstip(a.tijd)}</small><p>${esc(a.tekst)}</p></div>`).join('')}
-        ${kanReageren || (eigen && m.soort === 'persoonlijk') ? `<form class="reageer" data-submit="reageer" data-id="${m.id}"><input name="t" placeholder="Reageer…" required aria-label="Reactie"><button class="icoonknop blauw" aria-label="Versturen">${icon('send')}</button></form>` : m.soort !== 'persoonlijk' ? `<p class="zacht klein midden">Nieuws is alleen-lezen. Vragen? Stuur een persoonlijk bericht.</p>` : ''}`,
+        ${eigen && !pers ? `<div class="knoppen">${CC.isVast(m) ? `<button class="knop licht klein" data-act="losmaken" data-id="${m.id}">${icon('pin-off')}Losmaken</button>` : `<button class="knop licht klein" data-act="vastzetten" data-id="${m.id}" data-d="7">${icon('pin')}1 week vastzetten</button><button class="knop licht klein" data-act="vastzetten" data-id="${m.id}" data-d="14">${icon('pin')}2 weken</button>`}</div>` : ''}
+        ${acties ? `<div class="knoppen">${acties}</div>` : ''}</article>
+        ${m.antw.map((a) => `<div class="antwoord ${a.van === me.id ? 'mijn' : ''}"><small>${esc(pNaam(a.van))} · ${D.tijdstip(a.tijd)}</small><p>${esc(a.tekst)}</p></div>`).join('')}
+        ${pers && m.antw.length ? gezien : ''}
+        ${pers && m.van !== 'systeem' ? `<form class="reageer" data-submit="reageer" data-id="${m.id}"><input name="t" placeholder="Reageer…" required aria-label="Reactie"><button class="icoonknop blauw" aria-label="Versturen">${icon('send')}</button></form>`
+          : !pers ? `${vraagOver}<p class="zacht klein midden">Nieuws is alleen-lezen${vraagOver ? '; een vraag wordt een persoonlijk gesprek met de afzender' : ''}.</p>` : ''}`,
     };
   };
+  CC.on('archiveer', (el) => { const m = S.msgs.find((x) => x.id === el.dataset.id); const me = CC.me(); m.archief = [...new Set([...(m.archief || []), me.id])]; if (!m.gelezen.includes(me.id)) m.gelezen.push(me.id); CC.save(); CC.terug(); CC.toast('Gearchiveerd'); });
+  CC.on('archiefUit', (el) => { const m = S.msgs.find((x) => x.id === el.dataset.id); const me = CC.me(); m.archief = (m.archief || []).filter((x) => x !== me.id); CC.save(); CC.render(); CC.toast('Teruggezet'); });
+  // Intrekken (alleen de afzender, binnen 24 uur): ontvangers zien "ingetrokken door …"; een verstuurde push of e-mail kan niet terug
+  CC.on('berichtIntrekken', (el) => CC.sheet('Bericht intrekken?', `<p>Ontvangers zien daarna alleen: <i>"Dit bericht is ingetrokken door ${esc(CC.me().naam)}"</i>.</p><p class="zacht klein">Een pushmelding of e-mail die al is verstuurd, kan niet meer terug. Stuur zo nodig een nieuw bericht met de juiste informatie.</p>
+    <div class="knoppen kolom"><button class="knop rood" data-act="berichtIntrekkenOk" data-id="${el.dataset.id}">Ja, intrekken</button><button class="knop licht" data-act="sluit">Annuleren</button></div>`));
+  CC.on('berichtIntrekkenOk', (el) => { const m = S.msgs.find((x) => x.id === el.dataset.id); m.ingetrokken = { door: CC.me().id, tijd: new Date().toISOString() }; m.vastTot = null; CC.save(); CC.closeSheet(); CC.render(); CC.toast('Ingetrokken'); });
+  // Vraag over een nieuwsbericht: een persoonlijk gesprek met de afzender
+  CC.on('vraagOver', (el) => { const m = S.msgs.find((x) => x.id === el.dataset.id);
+    CC.sheet(`Vraag aan ${esc(pNaam(m.van))}`, `<form data-submit="vraagOverOk" data-id="${m.id}" class="codeform"><label for="vo-o">Onderwerp</label><input id="vo-o" name="o" required maxlength="80" value="${esc(('Vraag over: ' + m.onderwerp).slice(0, 80))}">
+      <label for="vo-t">Je vraag</label><textarea id="vo-t" name="t" rows="4" required></textarea><button class="knop vol">${icon('send')}Versturen</button><p class="zacht klein">Alleen ${esc(pNaam(m.van))} ziet dit.</p></form>`); });
+  CC.on('vraagOverOk', (f) => { const m = S.msgs.find((x) => x.id === f.dataset.id); const me = CC.me();
+    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'persoonlijk', bereik: pNaam(m.van), onderwerp: f.o.value.trim(), tekst: f.t.value.trim(), tijd: new Date().toISOString(), ontvangers: [m.van], gelezen: [me.id], antw: [], urgent: false, gepland: null, vastTot: null });
+    CC.save(); CC.closeSheet(); CC.ui.seg.berichten = 'persoonlijk'; CC.render(); CC.toast(`Verstuurd naar ${pNaam(m.van)}`); });
   // Maximaal 2 vastgezette berichten per bereik: het oudste gaat eruit
   CC.zetVast = (m, dagen) => {
     const actief = S.msgs.filter((x) => x !== m && x.bereik === m.bereik && CC.isVast(x)).sort((a, b) => a.tijd.localeCompare(b.tijd));
@@ -513,7 +614,8 @@
     S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'persoonlijk', bereik: `${pl.voornaam} (${CC.tn(pl.teamId)})`, onderwerp: f.o.value.trim(), tekst: f.t.value.trim(), tijd: new Date().toISOString(), ontvangers: [...new Set(ontv)], gelezen: [me.id], antw: [], urgent: false, gepland: null, vastTot: null });
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Verstuurd naar de trainer en teamleider');
   });
-  CC.on('reageer', (f) => { const m = S.msgs.find((x) => x.id === f.dataset.id); m.antw.push({ van: CC.me().id, tekst: f.t.value, tijd: new Date().toISOString() }); CC.save(); CC.render(); CC.toast('Verstuurd'); });
+  // Antwoord (Besluit 57): het gesprek is weer ongelezen voor de anderen en komt uit ieders archief
+  CC.on('reageer', (f) => { const m = S.msgs.find((x) => x.id === f.dataset.id); const me = CC.me(); m.antw.push({ van: me.id, tekst: f.t.value, tijd: new Date().toISOString() }); m.gelezen = [me.id]; m.archief = []; CC.save(); CC.render(); CC.toast('Verstuurd'); });
 
   // Nieuw bericht (trainer, teamleider, HJO) — Besluit 7 en 11
   CC.on('nieuwBericht', () => {
@@ -540,10 +642,10 @@
       <label for="m-ond">Onderwerp</label><input id="m-ond" name="ond" required value="${esc(onderwerp)}">
       <label for="m-tekst">Bericht</label><textarea id="m-tekst" name="tekst" rows="5" required>${esc(tekst)}</textarea>
       ${soort !== 'persoon' ? `<label for="m-vast">Vastzetten bovenaan</label><select id="m-vast" name="vast"><option value="0">Nee</option><option value="7">1 week</option><option value="14">2 weken</option></select>
-      <label class="vink"><input type="checkbox" name="urgent"> Urgent: alleen voor iets van vandaag of morgen (bovenaan, altijd ook per e-mail)</label>
-      <label class="vink"><input type="checkbox" name="mail" checked> Ook per e-mail (zet uit voor iets wat niet belangrijk is)</label>` : ''}
+      <label class="vink"><input type="checkbox" name="urgent"> Urgent: alleen voor iets van vandaag of morgen (ook 's nachts een pushmelding, en altijd per e-mail)</label>
+      <label class="vink"><input type="checkbox" name="mail" checked> Per e-mail naar wie geen pushmeldingen heeft (zet uit voor iets wat niet belangrijk is)</label>` : ''}
       <button class="knop">${soort === 'gepland' ? 'Inplannen' : 'Versturen'}</button>
-      ${t ? `<p class="zacht klein">Wordt verstuurd aan ${soort === 'persoon' ? 'één ouder, in de app en per e-mail' : `alle ouders van ${esc(t.naam)}`}.</p>` : ''}</form>`);
+      ${t ? `<p class="zacht klein">Wordt verstuurd aan ${soort === 'persoon' ? 'één persoon: in de app, met een pushmelding of anders één e-mail' : `alle ouders van ${esc(t.naam)}`}.</p>` : ''}</form>`);
   };
   CC.on('verstuurBericht', (f) => {
     const soort = f.dataset.soort; const me = CC.me(); const tid = CC.teamId();
@@ -554,7 +656,7 @@
     else { ontvangers = M.oudersVan(S, tid); M.stafVan(S, tid).forEach((x) => { if (x !== me.id) ontvangers.push(x); }); bereik = tid; }
     const nieuwM = { id: 'b' + Date.now(), van: me.id, soort: ms, bereik, onderwerp: f.ond.value, tekst: f.tekst.value, tijd: new Date().toISOString(), gepland: soort === 'gepland' ? new Date(f.op.value).toISOString() : null, ontvangers: [...new Set(ontvangers)], gelezen: [], antw: [], urgent: !!(f.urgent && f.urgent.checked), vastTot: null, mail: !f.mail || f.mail.checked || !!(f.urgent && f.urgent.checked) };
     S.msgs.push(nieuwM); if (f.vast && Number(f.vast.value)) CC.zetVast(nieuwM, Number(f.vast.value));
-    CC.save(); CC.closeSheet(); ui.seg.berichtenStaf = 'verstuurd'; CC.render(); CC.toast(soort === 'gepland' ? 'Bericht ingepland' : `Verstuurd aan ${ontvangers.length} ${ontvangers.length === 1 ? 'persoon' : 'personen'}`);
+    CC.save(); CC.closeSheet(); ui.seg.berichten = ms === 'persoonlijk' ? 'persoonlijk' : 'nieuws'; CC.render(); CC.toast(soort === 'gepland' ? 'Bericht ingepland' : `Verstuurd aan ${ontvangers.length} ${ontvangers.length === 1 ? 'persoon' : 'personen'}`);
   });
 
   // Trainingswijziging / planning aanpassen (Besluit 7): past de planning aan + melding HJO en teamleider

@@ -209,7 +209,7 @@
         const af = sp.filter((x) => ['afgemeld', 'langdurig'].includes(x.st.code));
         const vandaag = S.acts.find((a) => a.teamId === tid && a.datum === D.vandaag() && !a.afgelast);
         const acties = [];
-        const n = M.ongelezen(S, me.id); if (n) acties.push(h.rij({ ic: 'message-circle', titel: `${n} ${n === 1 ? 'nieuw bericht' : 'nieuwe berichten'}`, act: 'tab', attrs: 'data-tab="berichten"', kleur: 'blauw' }));
+        const n = M.ongelezen(S, me.id); if (n) acties.push(h.rij({ ic: 'message-circle', titel: `${n} ${n === 1 ? 'nieuw bericht' : 'nieuwe berichten'}`, act: 'tab', attrs: 'data-tab="berichten"', kleur: 'blauw' })); { const w = CC.wachtRij && CC.wachtRij(); if (w) acties.push(w); }
         // Aanmeldingen: zonder teamleider keurt de trainer goed; met teamleider pas als het langer dan een dag blijft liggen (Besluit 47)
         { const open = S.aanm.filter((x) => x.teamId === tid && x.status === 'open'); const lang = open.filter((x) => Date.now() - new Date(x.tijd) > 24 * 3600e3);
           if (!t.teamleiderId && open.length) acties.push(h.rij({ ic: 'user-check', titel: `${open.length} aanmelding${open.length > 1 ? 'en' : ''} goedkeuren`, sub: 'Dit team heeft geen teamleider, dus jij keurt goed', act: 'open', attrs: 'data-view="aanmeldingen"', kleur: 'oranje' }));
