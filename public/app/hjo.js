@@ -158,9 +158,23 @@
   });
   CC.on('rollenPersoon', (el) => {
     const S = CC.S(); const p = M.persoon(S, el.dataset.id);
-    CC.sheet(p.naam, `<p class="zacht">${esc(p.email)}</p><div class="lijst">${p.rollen.map((r, i) => h.rij({ ic: 'user-cog', titel: CC.rolNaam(r) + (r.teamId ? ` · ${r.teamId}` : ''), rechts: `<button class="icoonknop" data-act="rolWeg" data-id="${p.id}" data-i="${i}" aria-label="Rol verwijderen">${icon('trash-2')}</button>` })).join('')}</div>
+    CC.sheet(p.naam, `<p class="zacht">${esc(p.email)}${p.tel ? ` · ${esc(p.tel)}` : ' · nog geen telefoonnummer'}</p>
+      ${CC.mag('staf') || CC.rol().rol === 'beheerder' ? `<button class="knop licht klein" data-act="gegevensPersoon" data-id="${p.id}">${icon('pencil')}Gegevens wijzigen</button>` : ''}<div class="lijst">${p.rollen.map((r, i) => h.rij({ ic: 'user-cog', titel: CC.rolNaam(r) + (r.teamId ? ` · ${r.teamId}` : ''), rechts: `<button class="icoonknop" data-act="rolWeg" data-id="${p.id}" data-i="${i}" aria-label="Rol verwijderen">${icon('trash-2')}</button>` })).join('')}</div>
       <form data-submit="rolErbij" data-id="${p.id}" class="codeform"><div class="twee"><div><label for="rb-r">Rol</label><select id="rb-r" name="r"><option value="trainer">Trainer</option><option value="teamleider">Teamleider</option><option value="ouder">Ouder</option><option value="hjo">${esc(S.club.labels.hjo)}</option>${S.club.coordinatorAan ? `<option value="coordinator">${esc(S.club.labels.coordinator)}</option>` : ''}</select></div><div><label for="rb-t">Team</label><select id="rb-t" name="t"><option value="">–</option>${S.teams.map((t) => `<option>${t.id}</option>`).join('')}${S.club.coordinatorAan ? `<optgroup label="Groep (voor ${esc(S.club.labels.coordinator.toLowerCase())})">${(S.club.groepen || []).map((g) => `<option value="groep:${esc(g.naam)}">${esc(g.naam)}</option>`).join('')}</optgroup>` : ''}</select></div></div><button class="knop">${icon('plus')}Rol koppelen</button><p class="zacht klein">Eén account per persoon. Met meerdere rollen verschijnt de rolwisselaar in het profiel.</p></form>`);
   });
+  // Naam en telefoonnummer van een ander wijzigen: alleen HJO/clubbeheerder, als uitzondering (Besluit 45). E-mailadres niet: daarmee logt iemand in.
+  CC.on('gegevensPersoon', (el) => { const S = CC.S(); const p = M.persoon(S, el.dataset.id);
+    CC.sheet('Gegevens wijzigen', `<form data-submit="gegevensPersoonOk" data-id="${p.id}" class="codeform">
+      <label for="gp-n">Naam</label><input id="gp-n" name="n" required value="${esc(p.naam)}">
+      <label for="gp-t">Telefoonnummer</label><input id="gp-t" name="t" type="tel" inputmode="tel" value="${esc(p.tel || '')}" placeholder="06 12345678">
+      <label>E-mailadres</label><p class="zacht">${esc(p.email)}<br><small>Hiermee logt ${esc(p.naam.split(' ')[0])} in. Wijzigen kan alleen door ${esc(p.naam.split(' ')[0])} zelf.</small></p>
+      <button class="knop">Opslaan</button><button type="button" class="knop licht" data-act="rollenPersoon" data-id="${p.id}">Terug</button>
+      <p class="zacht klein">Vul een telefoonnummer alleen in als de persoon dat zelf wil (bijv. op verzoek). Neem geen nummers over uit de WhatsApp-groep.</p></form>`); });
+  CC.on('gegevensPersoonOk', (f) => { const S = CC.S(); const p = M.persoon(S, f.dataset.id);
+    const t = f.t.value.replace(/[^0-9+]/g, ''); if (t && !/^(\+\d{10,14}|0\d{9})$/.test(t)) return CC.toast('Vul een geldig telefoonnummer in, bijv. 0612345678', 'fout');
+    const n = f.n.value.trim(); if (!n) return CC.toast('Vul een naam in', 'fout');
+    p.naam = n; p.tel = t; CC.save(); CC.render(); CC.toast(`Gegevens van ${n.split(' ')[0]} opgeslagen`);
+    const knop = document.createElement('button'); knop.dataset.act = 'rollenPersoon'; knop.dataset.id = p.id; knop.hidden = true; document.body.appendChild(knop); knop.click(); knop.remove(); });
   // Rol toevoegen of weghalen: eerst bevestigen, zodat een verkeerde keuze niet meteen wordt opgeslagen (Besluit 44)
   const rolUit = (S, r, t) => {
     if (r === 'coordinator') { const g = (S.club.groepen || []).find((x) => 'groep:' + x.naam === t); return g ? { rol: r, groep: g.naam, cats: g.cats } : null; }
