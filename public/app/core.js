@@ -164,9 +164,9 @@
     const R = CC.rollen[rol.rol];
     const tabs = R.tabs(S).filter(Boolean);
     if (!tabs.find((t) => t[0] === ui.tab)) ui.tab = 'home';
-    let kop, inhoud, terug = false;
+    let kop, kopSub = null, inhoud, terug = false;
     try {
-      if (ui.view && CC.views[ui.view.naam]) { const v = CC.views[ui.view.naam](S, ui.view); kop = v.titel; inhoud = v.html; terug = true; }
+      if (ui.view && CC.views[ui.view.naam]) { const v = CC.views[ui.view.naam](S, ui.view); kop = v.titel; kopSub = v.sub == null ? null : v.sub; inhoud = v.html; terug = true; }
       else inhoud = R.schermen[ui.tab](S);
     } catch (err) { console.error(err); inhoud = h.leeg(`Er ging iets mis op dit scherm: ${esc(err.message)}`, 'circle-alert'); }
     const ctx = R.context(S);
@@ -176,7 +176,7 @@
         ${terug ? `<button class="icoonknop" data-act="terug" aria-label="Terug">${icon('chevron-left')}</button>` : `<img class="kop-logo" src="assets/clubcomm-icon.png" alt="">`}
         <div class="kop-tekst" ${!terug && ctx.act ? `data-act="${ctx.act}" role="button" tabindex="0"` : ''}>
           <b>${terug ? esc(kop) : esc(ctx.titel)}${!terug && ctx.act ? icon('chevron-down', 'klein') : ''}</b>
-          <small>${terug ? esc(ctx.titel) : esc(ctx.sub)}</small>
+          <small>${terug ? esc(kopSub != null ? kopSub : ctx.titel) : esc(ctx.sub)}</small>
         </div>
         <button class="profielknop" data-act="profiel" aria-label="Profiel">${h.avatar(me.naam)}${me.rollen.length > 1 ? `<span class="rolstip">${esc(CC.rolNaam(rol)[0])}</span>` : ''}</button>
       </header>
@@ -821,28 +821,45 @@
   CC.volgtSpelers = (tid) => CC.rol().rol !== 'teamleider' || CC.mag('afdoen', null, tid) || CC.mag('bellen', null, tid);
 
   // ---------- Speler-detail (trainer, teamleider, HJO) ----------
+  // Spelerpagina (Besluit 61): actie eerst. Info in de kop bij de naam (team · speeltijd · beoordeling), dan ouders
+  // (bellen/appen), cijfers, beoordeling, gesprekken + "Contact vastleggen", geschiedenis (laatste 5, "Toon meer").
+  // Langdurig afwezig melden doet de ouder, niet de staf.
   CC.views.speler = (S, p) => {
     const pl = M.speler(S, p.id); const t = M.team(S, pl.teamId);
     const per = M.periode(S, h.segVal('spPer', 'blok'));
     const st = M.stats(S, pl, per); const k = M.kaarten(S, pl); const z = M.zone(S, st.pct, t.id);
     const lang = S.lang.find((l) => l.spelerId === pl.id && l.tot >= D.vandaag());
-    const rol = CC.rol().rol;
-    const ouders = pl.ouders.map((o) => M.persoon(S, o));
+    const rol = CC.rol().rol; const staf = rol !== 'ouder';
+    const ouders = pl.ouders.map((o) => M.persoon(S, o)).filter(Boolean);
     const b = CC.beoordLaatste && CC.beoordLaatste(S, pl.id);
     const gespr = S.gesprekken.filter((g) => g.spelerId === pl.id);
+    const sp = M.speeltijdStand ? M.speeltijdStand(S, pl) : null;
+    const kopSub = [CC.tn(pl.teamId), sp && sp.pct != null ? `${sp.pct}% speeltijd` : '', staf && CC.zicht('beoordeling') ? (b ? `beoordeeld (${b.m.naam.toLowerCase()})` : 'nog niet beoordeeld') : ''].filter(Boolean).join(' · ');
+    const oudersBlok = staf && ouders.length ? `${h.sectie(ouders.length > 1 ? 'Ouders' : 'Ouder')}<div class="lijst">${ouders.map((o) => CC.contactRij(o)).join('')}</div>` : '';
+    const langBlok = (kort) => (lang ? `<div class="info">${icon('hospital')}<span><b>Langdurig afwezig</b>${kort ? '' : ` (${esc(lang.reden.toLowerCase())})`} tot ongeveer ${D.kort(lang.tot)}.${!kort && CC.zicht('toelichting') ? ' ' + esc(lang.opm || '') : ''}</span></div>` : '');
+    // Teamleider die geen spelerszaken volgt: alleen de volgende activiteit en de ouders
+    if (!CC.volgtSpelers(t.id)) {
+      const v = M.komend(S, t.id, 6).find((x) => !x.afgelast);
+      return { titel: M.naam(S, pl), sub: kopSub, html: `${v ? `<p class="klein">${D.relatief(v.datum)} · ${h.actTitel(S, v)}: ${h.chip(M.status(S, pl, v))}</p>` : ''}${langBlok(true)}${oudersBlok}` };
+    }
+    const n = Number(h.segVal('gesch-' + pl.id, 5)); const gesch = st.lijst.slice().reverse();
+    const beoBlok = staf && CC.zicht('beoordeling') && (b || CC.mag('beoordelen'))
+      ? `${h.sectie(b ? `Beoordeling · ${esc(b.m.naam.toLowerCase())}` : 'Beoordeling')}${b ? `<div class="scores">${Object.entries(b.x.scores).map(([v, s]) => `<span>${esc(v)} ${CC.scoreTekst(t, s)}</span>`).join('')}</div>` : '<p class="zacht klein">Nog niet beoordeeld.</p>'}${CC.mag('beoordelen') ? `<button class="knop licht klein" data-act="open" data-view="beoordelen">${icon('star')}Beoordelen</button>` : ''}`
+      : !staf && CC.zicht('beoordeling') && b ? `${h.sectie(`Beoordeling · ${esc(b.m.naam.toLowerCase())}`)}<div class="scores">${Object.entries(b.x.scores).map(([v, s]) => `<span>${esc(v)} ${CC.scoreTekst(t, s)}</span>`).join('')}</div>` : '';
+    const gesprBlok = staf && CC.zicht('gesprekken') ? `${h.sectie('Gesprekken')}${gespr.map((g) => h.rij({ ic: g.soort === 'gesprek' ? 'users' : g.soort === 'geappt' ? 'message-circle' : g.soort === 'geaccepteerd' ? 'circle-check' : 'phone', titel: `${D.kort(g.datum)} · ${CC.gesprekLabel(g)} · ${esc((M.persoon(S, g.door) || { naam: '' }).naam)}`, sub: esc(g.notitie) + (g.afspraak ? `<br><b>Afspraak:</b> ${esc(g.afspraak)}` : '') })).join('') || '<p class="zacht klein">Nog geen gesprekken vastgelegd.</p>'}${CC.zicht('contact') ? `<button class="knop licht klein" data-act="gesprekVastleggen" data-id="${pl.id}">${icon('phone')}Contact vastleggen</button>` : ''}` : '';
     return {
-      titel: M.naam(S, pl),
-      html: `${!CC.volgtSpelers(t.id) ? `${(() => { const v = M.komend(S, t.id, 6).find((x) => !x.afgelast); return v ? `<p class="klein">${D.relatief(v.datum)} · ${h.actTitel(S, v)}: ${h.chip(M.status(S, pl, v))}</p>` : ''; })()}${lang ? `<div class="info">${icon('hospital')}<span><b>Langdurig afwezig</b> tot ongeveer ${D.kort(lang.tot)}.</span></div>` : ''}` : `${h.seg('spPer', [['blok', 'Deze fase'], ['seizoen', 'Heel seizoen']], 'blok')}
+      titel: M.naam(S, pl), sub: kopSub,
+      html: `${oudersBlok}
+      ${h.seg('spPer', [['blok', 'Deze fase'], ['seizoen', 'Heel seizoen']], 'blok')}
       <div class="cijfers"><div class="cijfer ${z}"><b>${st.pct == null ? '–' : st.pct + '%'}</b><small>aanwezig</small></div><div class="cijfer"><b>${st.telaat}×</b><small>te laat</small></div><div class="cijfer"><b>${h.kaartjes(k) || '–'}</b><small>kaarten seizoen</small></div></div>
       <p class="klein zacht">${h.split(st)}</p>
-      ${lang ? `<div class="info">${icon('hospital')}<span><b>Langdurig afwezig</b> (${esc(lang.reden.toLowerCase())}) tot ongeveer ${D.kort(lang.tot)}. ${CC.zicht('toelichting') ? esc(lang.opm || '') : ''}</span></div>` : ''}
-      ${Object.keys(st.redenen).length ? `${h.sectie('Redenen van afwezigheid')}<div class="balkjes">${Object.entries(st.redenen).sort((a, b) => b[1] - a[1]).map(([r, n]) => `<div class="balkje"><span>${esc(r)}</span><i style="--w:${(100 * n) / st.afwezig}%"></i><b>${n}</b></div>`).join('')}</div>` : ''}
-      ${h.sectie('Geschiedenis')}<div class="lijst compact">${st.lijst.slice().reverse().map(({ act, st: s }) => h.rij({ ic: h.datumBlok(act), titel: h.actTitel(S, act), sub: s.afm && s.afm.opm && CC.zicht('toelichting') ? esc(s.afm.opm) : '', rechts: h.chip(s) + (s.laat ? '<span class="chip geel mini">te laat afgemeld</span>' : '') })).join('') || h.leeg('Nog geen activiteiten')}</div>
-      ${k.ev.length ? `${h.sectie('Afmelden: herinneringen en kaarten dit seizoen')}<div class="lijst compact">${k.ev.slice().reverse().map((e) => h.rij({ ic: CC.kaartIc(e), titel: CC.kaartTitel(e), sub: `${D.kort(e.act.datum)} · ${e.wat.toLowerCase()}${e.geaccepteerd ? ' · <b>geaccepteerd</b>' : ''}` })).join('')}</div>` : ''}`}
-      ${rol !== 'ouder' ? `${h.sectie('Ouders')}<div class="lijst">${ouders.map((o) => CC.contactRij(o)).join('')}</div>` : ''}
-      ${CC.zicht('beoordeling') && b ? `${h.sectie(`Beoordeling · ${esc(b.m.naam.toLowerCase())}`)}<div class="scores">${Object.entries(b.x.scores).map(([v, s]) => `<span>${esc(v)} ${CC.scoreTekst(t, s)}</span>`).join('')}</div>` : ''}
-      ${rol !== 'ouder' ? `${CC.zicht('gesprekken') ? `${h.sectie('Gesprekken')}${gespr.map((g) => h.rij({ ic: g.soort === 'gesprek' ? 'users' : g.soort === 'geappt' ? 'message-circle' : g.soort === 'geaccepteerd' ? 'circle-check' : 'phone', titel: `${D.kort(g.datum)} · ${CC.gesprekLabel(g)} · ${esc((M.persoon(S, g.door) || { naam: '' }).naam)}`, sub: esc(g.notitie) + (g.afspraak ? `<br><b>Afspraak:</b> ${esc(g.afspraak)}` : '') })).join('') || '<p class="zacht klein">Nog geen gesprekken vastgelegd.</p>'}` : ''}
-        <div class="knoppen">${CC.zicht('contact') ? `<button class="knop licht" data-act="gesprekVastleggen" data-id="${pl.id}">${icon('phone')}Contact vastleggen</button>` : ''}${CC.mag('langdurig') ? `<button class="knop licht" data-act="langdurigSheet" data-id="${pl.id}">${icon('hospital')}Langdurig afwezig</button>` : ''}</div>` : ''}`,
+      ${langBlok(false)}
+      ${beoBlok}
+      ${gesprBlok}
+      ${h.sectie('Geschiedenis')}<div class="lijst compact">${gesch.slice(0, n).map(({ act, st: s }) => h.rij({ ic: h.datumBlok(act), titel: h.actTitel(S, act), sub: s.afm && s.afm.opm && CC.zicht('toelichting') ? esc(s.afm.opm) : '', rechts: h.chip(s) + (s.laat ? '<span class="chip geel mini">te laat afgemeld</span>' : '') })).join('') || h.leeg('Nog geen activiteiten')}</div>
+      ${gesch.length > n ? `<button class="linkknop vol" data-act="seg" data-key="gesch-${pl.id}" data-val="${n + 10}">Toon meer (${gesch.length - n})</button>` : ''}
+      ${k.ev.length ? `${h.sectie('Afmelden: herinneringen en kaarten dit seizoen')}<div class="lijst compact">${k.ev.slice().reverse().map((e) => h.rij({ ic: CC.kaartIc(e), titel: CC.kaartTitel(e), sub: `${D.kort(e.act.datum)} · ${e.wat.toLowerCase()}${e.geaccepteerd ? ' · <b>geaccepteerd</b>' : ''}` })).join('')}</div>` : ''}
+      ${Object.keys(st.redenen).length ? `${h.sectie('Redenen van afwezigheid')}<div class="balkjes">${Object.entries(st.redenen).sort((a, b2) => b2[1] - a[1]).map(([r, c]) => `<div class="balkje"><span>${esc(r)}</span><i style="--w:${(100 * c) / st.afwezig}%"></i><b>${c}</b></div>`).join('')}</div>` : ''}`,
     };
   };
   CC.kaartIc = (e) => (e.kaart === 'herinnering' ? 'mail' : `<span class="kaart ${e.kaart}${e.geaccepteerd ? ' vaag' : ''}">${e.tweedeGeel ? '2' : '1'}</span>`);
