@@ -32,6 +32,9 @@ Gemigreerd uit Replit op 2026-09-22. Taal van de UI: Nederlands.
 - Zonder config of met `?demo`: demo-modus zoals voorheen. De artifact-preview (build-preview2.py) laat live.js/config.js weg.
 - Testen zonder netwerk naar Supabase: `supabase/tests/fake-supabase.js` (nagebootste client, code 123456) en `supabase/tests/rls_test.sql` (via SQL).
 
+## Volgende stappen
+- Vraagt de gebruiker "wat zijn de volgende stappen?": kijk in `docs/productie-en-groei.md` → blok **Openstaand** (bijhouden als iets gedaan is).
+
 ## Bekende problemen
 - Logo: `public/assets/clubcomm-logo.jpg` (volledig), `clubcomm-icon.png` (icoon, login/QR) en `favicon.png` (alle pagina's). Het logo-blauw is lichter dan de app-kleur `#1e5ba8`.
 - Demo-trainers gebruiken nog fictieve `@btv.nl`-adressen (trainers-beheren, trainer-instellingen).

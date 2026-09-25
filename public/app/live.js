@@ -119,7 +119,7 @@
   };
   const uitnodiging = (teamId) => {
     if (!L.uitnod || L.uitnod.team !== teamId) { L.uitnod = { team: teamId, info: null }; sb.rpc('uitnodiging_info', { p_club: club, p_team: teamId }).then(({ data }) => { L.uitnod.info = data || {}; CC.render(); }); return scherm('<p class="zacht">Even laden…</p>'); }
-    const i = L.uitnod.info || {};
+    const i = L.uitnod.info || {}; CC.privacyClub = { naam: i.club };
     if (!i.team) return scherm(`<h1>Uitnodiging</h1><p class="zacht">Deze uitnodiging bestaat niet (meer). Vraag de teamleider om een nieuwe.</p><button class="knop" data-act="liveSluitUitnodiging">Naar inloggen</button>`);
     return scherm(`<h1>Aanmelden bij ${esc(i.team)}</h1><p class="zacht">${esc(i.club || '')} gebruikt ClubComm voor afmelden, planning en berichten.</p>${foutRegel()}
       <form data-submit="liveAanmelden" data-team="${esc(teamId)}" class="codeform">
@@ -127,7 +127,7 @@
         <label for="a-ouder">Jouw naam</label><input id="a-ouder" name="ouder" required placeholder="Voor- en achternaam" autocomplete="name">
         <label for="a-kind">Voornaam van je kind</label><input id="a-kind" name="voor" required>
         <label for="a-kind2">Achternaam van je kind</label><input id="a-kind2" name="achter" required>
-        <label class="vink"><input type="checkbox" name="ok" required> Ik geef toestemming dat de club de gegevens van mijn kind in ClubComm gebruikt. <a href="#" data-act="privacy">Privacyverklaring</a></label>
+        <label class="vink"><input type="checkbox" name="ok" required> Ik heb de <a href="#" data-act="privacy">privacyverklaring</a> gelezen en geef toestemming dat de club de gegevens van mijn kind in ClubComm gebruikt.</label>
         <button class="knop" type="submit">Aanmelden</button></form>`);
   };
   const stuurCode = async (email) => {
@@ -171,7 +171,7 @@
     if (error) { L.stap = 'mail'; L.fout = `Er ging iets mis: ${error.message}`; CC.render(); return; }
     const wacht = store.get(WACHT);
     if (wacht) {
-      const { error: e2 } = await sb.rpc('aanmelden', { p_club: club, p_team: wacht.team, p_ouder: wacht.ouder, p_voor: wacht.voor, p_achter: wacht.achter });
+      const { error: e2 } = await sb.rpc('aanmelden', { p_club: club, p_team: wacht.team, p_ouder: wacht.ouder, p_voor: wacht.voor, p_achter: wacht.achter, p_akkoord: true });
       store.del(WACHT);
       if (!e2 && !(kop && kop.length)) { L.stap = 'wacht'; L.uitleg = `Je aanmelding voor ${wacht.voor} is verstuurd naar de teamleider.`; CC.render(); return; }
       if (!e2) CC.toast(`Aanmelding voor ${wacht.voor} verstuurd naar de teamleider`);
@@ -211,8 +211,17 @@
     if (error) return CC.toast(`Mislukt: ${error.message}`, 'fout');
     await laden(); CC.render(); CC.toast(`${data} rijen verwijderd`);
   });
+  // Back-up (Besluit 37): de server maakt elke zondag een back-up (8 weken bewaard); de beheerder kan zelf een kopie downloaden
+  CC.on('liveBackup', () => {
+    const rijen = [...CC.naarRijen(CC.S(), club).values()];
+    const blob = new Blob([JSON.stringify({ club, gemaakt: new Date().toISOString(), rijen }, null, 1)], { type: 'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `clubcomm-${club}-${D.vandaag()}.json`; document.body.appendChild(a); a.click(); a.remove();
+    CC.toast(`Back-up gedownload (${rijen.length} rijen). Bewaar hem veilig: er staan persoonsgegevens in.`);
+  });
   const origBeheerHome = CC.rollen.beheerder.schermen.home;
-  CC.rollen.beheerder.schermen.home = (S) => origBeheerHome(S) + `${h.sectie('Testen')}<div class="lijst">
+  CC.rollen.beheerder.schermen.home = (S) => origBeheerHome(S) + `${h.sectie('Gegevens')}<div class="lijst">
+    ${h.rij({ ic: 'file-down', titel: 'Back-up downloaden', sub: 'Automatisch: elke zondag op de server (8 weken). Download af en toe zelf een kopie.', act: 'liveBackup' })}</div>
+    ${h.sectie('Testen')}<div class="lijst">
     ${h.rij({ ic: 'upload', titel: 'Voorbeelddata laden', sub: S.teams.length ? `${S.teams.length} teams in de club` : 'De club is nog leeg', act: 'liveVullen' })}
     ${h.rij({ ic: 'trash-2', titel: 'Club leegmaken', sub: 'Voor de start met echte gegevens', act: 'liveLeeg', kleur: 'rood' })}</div>`;
 

@@ -258,17 +258,44 @@
         <label for="a-ouder">Jouw naam</label><input id="a-ouder" name="ouder" required placeholder="Voor- en achternaam">
         <label for="a-kind">Voornaam van je kind</label><input id="a-kind" name="voor" required>
         <label for="a-kind2">Achternaam van je kind</label><input id="a-kind2" name="achter" required>
-        <label class="vink"><input type="checkbox" name="ok" required> Ik geef toestemming dat ClubComm de gegevens van mijn kind gebruikt voor de club. <a href="#" data-act="privacy">Privacyverklaring</a></label>
+        <label class="vink"><input type="checkbox" name="ok" required> Ik heb de <a href="#" data-act="privacy">privacyverklaring</a> gelezen en geef toestemming dat de club de gegevens van mijn kind in ClubComm gebruikt.</label>
         <button class="knop" type="submit">Aanmelden</button>
       </form></div>`;
   };
   CC.on('openUitnodiging', (el) => { location.hash = `uitnodiging-${el.dataset.team}`; CC.render(); });
   CC.on('sluitUitnodiging', () => { history.replaceState(null, '', location.pathname); ui.login = { stap: 'mail', email: '' }; CC.render(); });
   CC.on('aanmelden', (f) => {
-    S.aanm.push({ id: 'm' + Date.now(), teamId: f.dataset.team, email: f.email.value.trim(), ouderNaam: f.ouder.value.trim(), kindVoor: f.voor.value.trim(), kindAchter: f.achter.value.trim(), tijd: new Date().toISOString(), status: 'open' });
+    S.aanm.push({ id: 'm' + Date.now(), teamId: f.dataset.team, email: f.email.value.trim(), ouderNaam: f.ouder.value.trim(), kindVoor: f.voor.value.trim(), kindAchter: f.achter.value.trim(), tijd: new Date().toISOString(), status: 'open', privacyAkkoord: new Date().toISOString() });
     CC.save(); ui.login.aangemeld = f.voor.value.trim(); CC.render();
   });
-  CC.on('privacy', () => CC.sheet('Privacy', `<p>ClubComm bewaart alleen wat nodig is: naam van je kind, team, jouw naam en e-mailadres, afmeldingen en aanwezigheid.</p><p>Alleen jij, de trainer en teamleider van het team en de ${esc(S.club.labels.hjo)} zien de gegevens van jouw kind. Andere ouders nooit.</p><p class="zacht">In versie 2 staat hier de volledige privacyverklaring van de club.</p>`));
+  // Privacyverklaring (Besluit 37). De club is verantwoordelijk; ClubComm verwerkt de gegevens in opdracht van de club.
+  CC.privacyHtml = (club) => { const c = club || {}; const naam = esc(c.naam || 'de club'); const contact = c.privacyContact ? `<b>${esc(c.privacyContact)}</b>` : `het bestuur van ${naam}`;
+    return `<div class="privacy">
+    <p class="zacht klein">Versie 25 september 2026${c.pilot !== false ? ' · ClubComm is bij deze club in de proeffase' : ''}</p>
+    <h3>Wie is verantwoordelijk?</h3><p>${naam} gebruikt ClubComm voor afmelden, planning, taken, vervoer en berichten. De club is verantwoordelijk voor jouw gegevens en die van je kind. ClubComm verwerkt ze alleen in opdracht van de club.</p>
+    <h3>Welke gegevens?</h3><ul><li><b>Van jou:</b> naam, e-mailadres en (als je dat invult) telefoonnummer.</li><li><b>Van je kind:</b> voor- en achternaam en team.</li><li><b>Wat er in de app gebeurt:</b> afmeldingen met reden, aanwezigheid, herinneringen en kaarten over afmelden, taken, vervoer en berichten.</li><li><b>Van de trainer:</b> beoordelingen en afspraken uit gesprekken. Die zijn alleen voor de trainer en de club, en de beoordeling bespreekt de trainer met jou.</li></ul>
+    <h3>Waarvoor?</h3><p>Alleen om trainingen, wedstrijden en activiteiten te regelen en de spelers goed te begeleiden. Nooit voor reclame, en we verkopen niets.</p>
+    <h3>Wie ziet wat?</h3><ul><li>Jij ziet alleen je eigen kind.</li><li>De trainer en teamleider zien hun eigen team, volgens de taken die de club hun geeft. De jeugdcoördinator en het hoofd jeugdopleiding alleen als het bij hun taak hoort.</li><li>Andere ouders van het team zien alleen de voornaam van je kind (bijvoorbeeld bij vervoer of taken). Nooit afmeldredenen, kaarten of jouw contactgegevens.</li></ul>
+    <h3>Waar staan de gegevens?</h3><p>In de Europese Unie: de database en het inloggen bij Supabase (Frankfurt, Duitsland), de e-mails via Brevo (Frankrijk). Vercel levert alleen de app zelf, zonder persoonsgegevens. De verbinding is altijd versleuteld.</p>
+    <h3>Hoe lang?</h3><p>Zolang je kind bij de club in ClubComm staat. Details over aanwezigheid, kaarten en gesprekken worden verwijderd na de teamindeling van het volgende seizoen. Schrijf je je kind uit of verwijder je je account, dan worden de gegevens gewist; in de wekelijkse back-up staan ze nog hooguit 8 weken.</p>
+    <h3>Cookies</h3><p>Geen reclame- of volgcookies. ClubComm onthoudt alleen op je telefoon dat je bent ingelogd.</p>
+    <h3>Jouw rechten</h3><p>Je mag je gegevens inzien, laten aanpassen of laten verwijderen, en bezwaar maken. Neem daarvoor contact op met ${contact}. Ben je het er niet mee eens hoe de club met je gegevens omgaat, dan kun je een klacht indienen bij de Autoriteit Persoonsgegevens.</p></div>`; };
+  CC.on('privacy', () => CC.sheet('Privacyverklaring', CC.privacyHtml(CC.me() ? S.club : CC.privacyClub || S.club), { groot: true }));
+
+  // ---------- Feedback (Besluit 37): komt als persoonlijk bericht (en e-mail) bij de clubbeheerder ----------
+  CC.on('feedback', () => CC.sheet('Feedback of een probleem', `<form data-submit="feedbackOk" class="codeform">
+      <label for="fb-s">Waar gaat het over?</label><select id="fb-s" name="s"><option>Er klopt iets niet</option><option>Ik heb een idee</option><option>Ik heb een vraag</option></select>
+      <label for="fb-t">Vertel het kort</label><textarea id="fb-t" name="t" rows="5" required placeholder="Wat deed je, wat gebeurde er, wat had je verwacht?"></textarea>
+      <p class="zacht klein">We sturen automatisch mee op welk scherm je was en welke telefoon je gebruikt, zodat we het kunnen nazoeken.</p>
+      <button class="knop vol">${icon('send')}Versturen</button></form>`));
+  CC.on('feedbackOk', (f) => {
+    const me = CC.me(); const r = CC.rol(); const beheer = S.people.filter((p) => p.rollen.some((x) => x.rol === 'beheerder')).map((p) => p.id).filter((x) => x !== me.id);
+    const ontv = beheer.length ? beheer : S.people.filter((p) => p.rollen.some((x) => x.rol === 'hjo')).map((p) => p.id).filter((x) => x !== me.id);
+    const context = `\n\n— Rol: ${r.rol}${r.teamId ? ' ' + r.teamId : ''} · scherm: ${ui.view ? ui.view.naam : ui.tab} · ${navigator.userAgent.replace(/\s*\(KHTML.*$/, '').slice(0, 120)}`;
+    if (!ontv.length) { CC.closeSheet(); return CC.toast('Dank je! (er is nog geen beheerder om het naartoe te sturen)'); }
+    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'persoonlijk', bereik: 'Feedback', onderwerp: `Feedback: ${f.s.value.toLowerCase()}`, tekst: f.t.value + context, tijd: new Date().toISOString(), ontvangers: ontv, gelezen: [me.id], antw: [], urgent: false, gepland: null, mail: true });
+    CC.save(); CC.closeSheet(); CC.render(); CC.toast('Dank je wel! We kijken ernaar.');
+  });
 
   // ---------- Profiel (Besluit 4 en 8) ----------
   CC.on('profiel', () => {
@@ -279,14 +306,15 @@
       <div class="profiel-kop">${h.avatar(me.naam, 'groot')}<div><b>${esc(me.naam)}</b><small>${esc(me.email)} · ${esc(me.tel)}</small></div></div>
       ${me.rollen.length > 1 ? `<h3 class="klein-kop">Wissel van rol</h3><div class="rollen">${rollen}</div>` : ''}
       ${rol.rol === 'ouder' || kids.length ? `<h3 class="klein-kop">Mijn kinderen</h3>${kids.map((k) => h.rij({ ic: h.avatar(k.voornaam), titel: esc(M.naam(S, k)), sub: esc(k.teamId) })).join('')}
-        ${h.rij({ ic: 'user-plus', titel: 'Kind toevoegen', sub: 'Scan de QR-code van het andere team', act: 'demoMelding', attrs: 'data-tekst="Scan de QR-code of open de uitnodiging van het team van je andere kind."' })}
+        ${h.rij({ ic: 'user-plus', titel: 'Kind toevoegen', sub: 'Via de uitnodiging van het andere team', act: 'demoMelding', attrs: 'data-tekst="Vraag de teamleider van het andere team om de uitnodiging (link of QR-code) en meld je daar aan met hetzelfde e-mailadres."' })}
         ${h.rij({ ic: 'users', titel: 'Tweede ouder uitnodigen', sub: 'Ieder een eigen account, jullie zien elkaars e-mail niet', act: 'tweedeOuder' })}` : ''}
       <h3 class="klein-kop">Instellingen</h3>
       ${CC.agendaRij ? CC.agendaRij() : ''}
       ${CC.trainerEigenRij ? CC.trainerEigenRij() : ''}
-      ${h.rij({ ic: 'bell', titel: 'Meldingen', sub: 'Push aan · mail als reserve', act: 'meldingen' })}
-      ${h.rij({ ic: 'globe', titel: 'Taal', sub: 'Nederlands (Engels komt in versie 2)', act: 'taalEN' })}
-      ${h.rij({ ic: 'lock', titel: 'Privacy en toestemming', act: 'privacy' })}
+      ${h.rij({ ic: 'bell', titel: 'Meldingen', sub: 'In de app, en per e-mail bij belangrijke berichten', act: 'meldingen' })}
+      ${CC.live ? '' : h.rij({ ic: 'globe', titel: 'Taal', sub: 'Nederlands (Engels komt in versie 2)', act: 'taalEN' })}
+      ${h.rij({ ic: 'lock', titel: 'Privacyverklaring', act: 'privacy' })}
+      ${h.rij({ ic: 'message-circle', titel: 'Feedback of een probleem melden', sub: 'Er klopt iets niet, of je hebt een idee', act: 'feedback' })}
       ${h.rij({ ic: 'smartphone', titel: 'App op je beginscherm zetten', act: 'beginscherm' })}
       ${kids.length ? `<h3 class="klein-kop">Uitschrijven</h3>${h.rij({ ic: 'user-cog', titel: 'Kind uitschrijven', sub: 'Stopt je kind of gaat het naar een andere club?', act: 'uitschrijfSheet' })}` : ''}
       <h3 class="klein-kop">Uitloggen</h3>
@@ -296,7 +324,6 @@
         ${h.rij({ ic: 'trash-2', titel: 'Mijn account verwijderen', sub: 'Al je gegevens worden gewist', act: 'verwijderSheet', kleur: 'rood' })}
         ${h.rij({ ic: 'users', titel: 'Ander demo-account kiezen', act: 'logout', chevron: false })}
         ${h.rij({ ic: 'refresh-cw', titel: 'Demo opnieuw beginnen', sub: 'Zet alle demodata terug', act: 'resetDemo', chevron: false })}
-        <p class="zacht klein"><a href="oud/index.html">Oude Replit-pagina's bekijken</a></p>
       </div>`);
   });
   CC.on('wisselRol', (el) => CC.wisselRol(Number(el.dataset.idx)));
@@ -362,12 +389,17 @@
   CC.on('logoutAlles', () => { CC.toast('Je bent op alle apparaten uitgelogd'); setTimeout(CC.logout, 600); });
   CC.on('resetDemo', () => { CC.reset(); CC.closeSheet(); CC.logout(); CC.toast('Demo staat weer aan het begin'); });
   CC.on('demoMelding', (el) => CC.toast(el.dataset.tekst));
-  CC.on('meldingen', () => CC.sheet('Meldingen', `
-    ${[['Afmeldingen en wijzigingen in de planning', true], ['Persoonlijke berichten', true], ['Nieuws van team en club', true], ['Oproepen voor taken', true], ['Herinnering om af te melden', false]].map(([t, aan]) => `<label class="schakel"><span>${t}</span><input type="checkbox" ${aan ? 'checked' : ''}><i></i></label>`).join('')}
-    <p class="zacht klein">Staat de app niet op je beginscherm of zijn pushmeldingen uit? Dan krijg je dezelfde berichten per mail.</p>`));
-  CC.on('beginscherm', () => CC.sheet('App op je beginscherm', `<ol class="stappen"><li><b>iPhone:</b> open ClubComm in Safari, tik op ${icon('share-2')} Delen en kies <b>Zet op beginscherm</b>.</li><li><b>Android:</b> open ClubComm in Chrome, tik op de drie puntjes en kies <b>App installeren</b>.</li></ol><p class="zacht">Daarna opent ClubComm als een gewone app, met meldingen en een rood bolletje op het icoon.</p>`));
-  CC.on('tweedeOuder', () => { const k = CC.kind(); CC.sheet('Tweede ouder uitnodigen', `<form data-submit="tweedeOuderStuur" class="codeform"><label for="to">E-mailadres van de andere ouder</label><input id="to" name="email" type="email" required autofocus><p class="zacht klein">Die ouder krijgt een uitnodiging voor ${esc(k ? k.voornaam : 'je kind')}. De teamleider hoeft niet goed te keuren, want jij bent al gekoppeld.</p><button class="knop">Uitnodiging sturen</button></form>`); });
-  CC.on('tweedeOuderStuur', () => { CC.closeSheet(); CC.toast('Uitnodiging verstuurd'); });
+  CC.on('meldingen', () => CC.sheet('Meldingen', `<p>Alles staat in de app bij <b>Berichten</b>. Daarnaast krijg je een <b>e-mail</b> bij:</p>
+    <ul><li>afgelastingen, wijzigingen en noodberichten (urgent)</li><li>persoonlijke berichten en antwoorden op je vraag</li><li>herinneringen over afmelden en kaarten</li><li>nieuwe activiteiten, opgave en belangrijke clubberichten</li></ul>
+    <p class="zacht klein">Pushmeldingen op je telefoon komen later. Zet ClubComm alvast op je beginscherm (Profiel → App op je beginscherm).</p>`));
+  CC.on('beginscherm', () => {
+    const al = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+    CC.sheet('App op je beginscherm', al ? '<p>ClubComm staat al op je beginscherm. Top!</p>' : `${CC.installPrompt ? `<button class="knop vol" data-act="installeren">${icon('smartphone')}ClubComm installeren</button><p class="zacht klein">Of doe het zelf:</p>` : ''}<ol class="stappen"><li><b>iPhone:</b> open ClubComm in <b>Safari</b>, tik op ${icon('share-2')} <b>Delen</b> en kies <b>Zet op beginscherm</b>.</li><li><b>Android:</b> open ClubComm in <b>Chrome</b>, tik op de drie puntjes en kies <b>App installeren</b> of <b>Toevoegen aan startscherm</b>.</li></ol><p class="zacht">Daarna open je ClubComm met één tik, net als een gewone app. Je blijft ingelogd.</p>`);
+  });
+  CC.on('installeren', async () => { const p = CC.installPrompt; if (!p) return; p.prompt(); const r = await p.userChoice.catch(() => ({})); CC.installPrompt = null; CC.closeSheet(); if (r.outcome === 'accepted') CC.toast('ClubComm staat op je beginscherm'); });
+  CC.on('tweedeOuder', () => { const k = CC.kind(); if (!k) return; const link = `${location.origin}${location.pathname}#uitnodiging-${k.teamId}`;
+    CC.sheet('Tweede ouder uitnodigen', `<p>Stuur de andere ouder de uitnodiging van ${esc(k.teamId)}. Die meldt zich aan met een eigen e-mailadres en vult de naam van ${esc(k.voornaam)} in. De teamleider koppelt jullie dan aan hetzelfde kind.</p><p class="klein zacht">Jullie zien elkaars e-mailadres niet.</p><div class="knoppen kolom"><button class="knop" data-act="tweedeOuderDeel" data-link="${esc(link)}">${icon('share-2')}Uitnodiging delen</button></div>`); });
+  CC.on('tweedeOuderDeel', (el) => CC.deel(`Je kunt je aanmelden bij ClubComm voor ${CC.kind().voornaam} (${CC.kind().teamId}): ${el.dataset.link}`));
 
   // ---------- Berichten (voor alle rollen) ----------
   const vanNaam = (m) => (m.van === 'systeem' ? 'ClubComm' : (M.persoon(S, m.van) || { naam: 'Verwijderd account' }).naam);

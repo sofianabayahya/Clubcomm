@@ -40,3 +40,7 @@
 - Secrets (Supabase → Edge Functions → Secrets): `BREVO_API_KEY`, `AFZENDER_EMAIL` (een in Brevo geverifieerde afzender), optioneel `APP_URL`. Zonder secrets gebeurt er niets.
 - Overgeslagen: berichten ouder dan 15 minuten (voorbeelddata), ingeplande berichten, niet-urgente meldingen aan staf, adressen op `.invalid`.
 - Migratie `006_meldingen_antwoord.sql`: trigger `cc_mail_antw` bij een nieuw antwoord (lijst `antw` groeit) → e-mail naar de afzender (en bij persoonlijke berichten de andere deelnemers). Berichten met `mail: false` krijgen geen e-mail, tenzij urgent (Besluit 36).
+
+## Privacy, installeren en back-up (Besluit 37)
+- Migratie `008_privacy_en_backup.sql`: `aanmelden(..., p_akkoord)` weigert zonder akkoord en legt `privacyAkkoord` vast; schema `backup` (tabellen `rij`, `lid`, functie `backup.maak()`), pg_cron-taak `clubcomm-backup` elke zondag 02:00 UTC, 8 weken bewaard. Terugzetten: met SQL uit `backup.rij` (per datum `gemaakt`).
+- `public/manifest.webmanifest`, `public/sw.js` (netwerk eerst, cache alleen als reserve, alleen eigen domein), iconen `assets/icon-192.png`, `icon-512.png`, `icon-maskable-512.png`.

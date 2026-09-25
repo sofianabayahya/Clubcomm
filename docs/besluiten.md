@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 36 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 37 toegevoegd)
 
 ---
 
@@ -507,6 +507,17 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 37 — Klaar voor de ouders: privacy, installeren, feedback en back-up
+*Besloten 25 september 2026.*
+
+- **Privacyverklaring** in de app (profiel en bij het aanmelden), in gewone taal: wie verantwoordelijk is (de club), welke gegevens, waarvoor, wie wat ziet, waar (EU), hoe lang, cookies, rechten. Het contactadres stelt de club in bij Regels → Privacy.
+- **Aanmelden alleen met akkoord** op de privacyverklaring; het moment van akkoord wordt vastgelegd bij de aanmelding.
+- **Installeerbaar:** app-icoon, manifest en service worker (altijd eerst het netwerk, zodat iedereen de nieuwste versie heeft; gegevens worden niet op de telefoon bewaard). Op Android een knop "ClubComm installeren", op iPhone de uitleg via Delen → Zet op beginscherm.
+- **Feedbackknop** (Profiel → Feedback of een probleem melden): komt als persoonlijk bericht en e-mail bij de clubbeheerder, met rol, scherm en telefoon erbij.
+- **Back-up:** elke zondag een volledige kopie in een afgeschermd deel van de database (8 weken bewaard) en een knop "Back-up downloaden" voor de beheerder.
+- **Eerlijk profiel:** knoppen die in de echte app niets deden zijn aangepast: "Tweede ouder uitnodigen" deelt nu de teamuitnodiging, "Meldingen" legt uit wanneer er een e-mail komt, "Taal" alleen in de demo.
+- **Bewust later:** foutmeldingen automatisch vastleggen en een Content-Security-Policy (zie `docs/productie-en-groei.md`, Openstaand).
 
 ## Besluit 36 — Communicatieplan: aankondigen, herinneren, noodberichten en wanneer een e-mail
 *Besloten 25 september 2026. Herziet Besluit 26 (vaste berichten).*

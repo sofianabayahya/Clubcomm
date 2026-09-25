@@ -280,6 +280,7 @@
       regels(S) {
         const i = S.club.inst;
         return `<form data-submit="regelsOk" class="codeform">
+          ${h.sectie('Privacy')}<div class="kaartje"><label for="r-pc">Contact voor privacyvragen (e-mailadres, staat in de privacyverklaring)</label><input id="r-pc" name="pc" type="email" value="${esc(S.club.privacyContact || '')}" placeholder="bijv. secretaris@club.nl"></div>
           ${h.sectie('Afmelden')}<div class="kaartje"><div class="twee"><div><label for="r-dt">Training: uur van tevoren</label><input id="r-dt" name="dt" type="number" min="0" max="48" value="${i.deadlineTraining}"></div><div><label for="r-dw">Wedstrijd: uur van tevoren</label><input id="r-dw" name="dw" type="number" min="0" max="96" value="${i.deadlineWedstrijd}"></div></div></div>
           ${(() => { const w = i.waarschuwingen || M.KAART_STD.waarschuwingen; const tl = i.telaat || M.KAART_STD.telaat; const veld = (id, naam, lab, v, max) => `<div><label for="${id}">${lab}</label><input id="${id}" name="${naam}" type="number" min="0" max="${max}" value="${v}"></div>`; return `${h.sectie('Kaarten (afmelden)')}<div class="kaartje"><p class="klein">Te laat afgemeld = geel · twee keer geel = rood · niet afgemeld = direct rood. Rood: de trainer of ${esc(S.club.labels.hjo)} neemt contact op en kan de kaart accepteren.</p><p class="klein"><b>Vriendelijke herinneringen per seizoen</b> (daarna kaarten)</p><div class="twee">${veld('r-wb', 'wb', 'Breedte', w.breedte, 5)}${veld('r-ws', 'ws', 'Selectie', w.selectie, 5)}</div></div>
           ${h.sectie('Te laat komen (geen kaart, wel een signaal)')}<div class="kaartje"><p class="klein"><b>Breedte</b></p><div class="twee">${veld('r-tkb', 'tkb', '… keer binnen 4 weken', tl.breedte.kort, 10)}${veld('r-tsb', 'tsb', '… keer per seizoen', tl.breedte.seizoen, 30)}</div><p class="klein"><b>Selectie</b></p><div class="twee">${veld('r-tks', 'tks', '… keer binnen 4 weken', tl.selectie.kort, 10)}${veld('r-tss', 'tss', '… keer per seizoen', tl.selectie.seizoen, 30)}</div></div>`; })()}
@@ -315,6 +316,7 @@
   CC.on('stopOk', (f) => { const S = CC.S(); S.club.stops.push({ id: 's' + Date.now(), naam: f.n.value, van: f.v.value, tot: f.t.value, trainen: f.tr.checked }); CC.save(); CC.closeSheet(); CC.render(); });
   CC.on('regelsOk', (f) => {
     const S = CC.S(); const i = S.club.inst; const n = (x) => Number(f[x].value);
+    S.club.privacyContact = f.pc.value.trim();
     Object.assign(i, { deadlineTraining: n('dt'), deadlineWedstrijd: n('dw'), waarschuwingen: { breedte: n('wb'), selectie: n('ws') }, telaat: { breedte: { kort: n('tkb'), seizoen: n('tsb') }, selectie: { kort: n('tks'), seizoen: n('tss') } }, oproepDagen: n('op'), homeDagen: n('hd'), opnemenUur: n('ou'), speeltijdAfwijken: { breedte: f.sab.checked, selectie: f.sas.checked }, waarschuwing: f.w.value, trainer: { deadlineUur: n('tu'), drempel: n('tp'), maxSeizoen: n('ts') }, zones: { breedte: { groen: n('bg'), oranje: n('bo') }, selectie: { groen: n('sg'), oranje: n('so') } } });
     S.club.ingericht.regels = true; CC.save(); CC.render(); CC.toast('Regels opgeslagen voor de hele club');
   });

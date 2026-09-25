@@ -1,5 +1,11 @@
 # ClubComm — Controlelijst productie en groei
 
+> **Openstaand — hier kijken bij de vraag "wat zijn de volgende stappen?"**
+> *Vóór de ouders erbij komen:* teamleiders ontvangen → database leegmaken en O12-1 inrichten (trainingen di/do veld 1, vr veld 2, 17:15–18:30; selectie; rollen trainer/coördinator/HJO/beheerder voor de initiatiefnemer; teamleiders profiel Basis) → privacycontact invullen (Regels → Privacy) → toestemming bestuur → teksten voor teamleiders en ouders → testen op echte telefoons.
+> *Later in de pilot:* fouten automatisch vastleggen · Content-Security-Policy · gebruikerstest met 3–5 ouders · welkomstuitleg bij eerste keer inloggen · agenda-koppeling (heeft domein nodig).
+> *Vóór een tweede club:* merknaam checken (clubcomm.nl/.com/.app zijn bezet) en domein kopen + e-mail vanaf eigen domein · testomgeving, automatische tests (GitHub Actions), uptime-bewaking · Supabase Pro, Vercel Pro · automatische berichten vanaf de server (pg_cron) · pushmeldingen · club-wizard, meerdere clubs per persoon, Sportlink/voetbal.nl-import · verwerkersovereenkomsten, DPIA, bewaartermijnen automatisch · toegankelijkheid (WCAG) · twee beheerders per club, logboek, rate limiting.
+> *Later:* store-app (Capacitor), huiswerk en filmpjes, fondsenwerving, weekbericht.
+
 *Opgesteld 25 september 2026, na de beveiligingscontrole. Denk als appontwikkelaar: wat moet er nog gebeuren voor de pilot, voor een tweede club, en voor de lange termijn?*
 
 Legenda: ✅ gedaan · ⚠️ nodig vóór of tijdens de pilot · 🔜 nodig vóór een tweede club · 💡 later
@@ -18,8 +24,8 @@ Legenda: ✅ gedaan · ⚠️ nodig vóór of tijdens de pilot · 🔜 nodig vó
 | Testen op echte telefoons (iPhone/Safari en Android/Chrome) | ⚠️ | In week 1 met jou en de teamleiders; ook op een trage verbinding. |
 | Een lege club (zonder voorbeelddata) | ⚠️ | Kloppen alle schermen als er nog niets is? Controleren bij het inrichten van O12-1. |
 | Twee mensen tegelijk (bijv. twee teamleiders) | ⚠️ | Opslaan per rij voorkomt de meeste botsingen; in de pilot extra op letten. |
-| Foutmeldingen opvangen | ⚠️ | Nu zie je een fout alleen op het scherm van de gebruiker. Fouten automatisch laten vastleggen (tabel in Supabase of een dienst als Sentry). |
-| Feedbackknop in de app | ⚠️ | "Er klopt iets niet / idee" → komt bij jou binnen. Belangrijk om van de pilot te leren. |
+| Foutmeldingen opvangen | 🔜 (later in de pilot) | Nu zie je een fout alleen op het scherm van de gebruiker. Fouten automatisch laten vastleggen (tabel in Supabase of een dienst als Sentry). |
+| Feedbackknop in de app | ✅ 25-09 | "Er klopt iets niet / idee" → komt bij jou binnen. Belangrijk om van de pilot te leren. |
 
 ### Gebruiksvriendelijkheid
 | Punt | Status | Toelichting |
@@ -27,7 +33,7 @@ Legenda: ✅ gedaan · ⚠️ nodig vóór of tijdens de pilot · 🔜 nodig vó
 | Vaste ontwerpregels (Besluit 30, 34) | ✅ | Actie eerst, één blok per onderwerp, informatie is geen taak. |
 | Gebruikerstest | ⚠️ | Kijk mee met 3–5 ouders bij de eerste keer inloggen en afmelden (zonder te helpen). Wat gaat mis? |
 | Eerste keer inloggen (uitleg) | ⚠️ | Korte welkomst met 3 tips (afmelden, vervoer, taken). |
-| "App op je beginscherm" | ⚠️ | Zie punt 4 (PWA): nu kan het op iPhone, maar Android toont nog geen installatievraag. |
+| "App op je beginscherm" | ✅ 25-09 | Manifest, app-icoon en service worker; op Android een knop "ClubComm installeren". |
 
 ### Design en toegankelijkheid
 | Punt | Status | Toelichting |
@@ -46,7 +52,7 @@ Legenda: ✅ gedaan · ⚠️ nodig vóór of tijdens de pilot · 🔜 nodig vó
 ### Beveiliging (aanvullend)
 | Punt | Status | Toelichting |
 |---|---|---|
-| Content-Security-Policy (welke scripts mogen draaien) | ⚠️ | Extra bescherming tegen misbruik; kleine aanpassing in `vercel.json`. |
+| Content-Security-Policy (welke scripts mogen draaien) | 🔜 (later in de pilot) | Extra bescherming tegen misbruik; kleine aanpassing in `vercel.json`. |
 | Misbruik van aanmelden (spam) | 🔜 | Maximaal aantal aanmeldingen per uur. |
 | Twee beheerders per club | 🔜 | Als jij er niet bent, moet iemand anders kunnen beheren. |
 | Wie heeft wat gewijzigd (logboek) | 🔜 | Elke rij heeft al een veld "door"; een echt logboek voor gevoelige zaken (kaarten, gesprekken). |
@@ -54,7 +60,7 @@ Legenda: ✅ gedaan · ⚠️ nodig vóór of tijdens de pilot · 🔜 nodig vó
 ### Back-ups en betrouwbaarheid
 | Punt | Status | Toelichting |
 |---|---|---|
-| Back-ups | ⚠️ | Op het gratis Supabase-abonnement kun je geen back-up terugzetten. Voor de pilot: wekelijkse export; daarna Supabase Pro (dagelijkse back-ups). |
+| Back-ups | ✅ 25-09 (pilot) | Elke zondag 02:00 een kopie in het afgeschermde schema `backup` (8 weken bewaard) + knop "Back-up downloaden" voor de beheerder. Daarna Supabase Pro (dagelijkse back-ups, ook als het hele project weg is). |
 | Supabase gratis: pauzeert na 7 dagen zonder gebruik | ⚠️ | In de pilot geen probleem, wel in een lange vakantie (zomer). |
 | Bewaking of de site werkt (uptime) | 🔜 | Gratis dienst (bijv. UptimeRobot) die je mailt als de app plat ligt. |
 | Aparte testomgeving (niet in de echte database testen) | 🔜 | Tweede Supabase-project + Vercel-preview. Nu testen we in de echte database. |
@@ -65,7 +71,7 @@ Legenda: ✅ gedaan · ⚠️ nodig vóór of tijdens de pilot · 🔜 nodig vó
 |---|---|---|
 | Gegevens in de EU | ✅ | Supabase Frankfurt, Brevo Frankrijk. Vercel levert alleen de pagina (geen persoonsgegevens). |
 | Account verwijderen / uitschrijven | ✅ | Besluit 14. |
-| Privacytekst in de app + akkoord bij aanmelden | ⚠️ | Wat bewaren we, wie ziet het, hoe lang, wie is het aanspreekpunt. |
+| Privacytekst in de app + akkoord bij aanmelden | ✅ 25-09 | Privacyverklaring in de app; aanmelden kan alleen met akkoord, het moment wordt vastgelegd. Contactadres instellen bij Regels → Privacy. |
 | Toestemming van het bestuur voor de pilot | ⚠️ | De club is verantwoordelijk voor de gegevens. |
 | Bewaartermijnen (automatisch opschonen) | 🔜 | Besluit 32: details na de teamindeling van het volgende seizoen verwijderen. |
 | Verwerkersovereenkomsten | 🔜 | Met Supabase, Vercel en Brevo (standaard online te accepteren) én tussen jou (ClubComm) en elke club. |
@@ -113,13 +119,13 @@ Legenda: ✅ gedaan · ⚠️ nodig vóór of tijdens de pilot · 🔜 nodig vó
 
 ## 6. Stappenplan
 **Deze week (vóór de ouders erbij komen)**
-1. App installeerbaar maken (manifest + icoon + service worker).
-2. Feedbackknop in de app.
-3. Privacytekst + akkoord bij aanmelden; toestemming van het bestuur.
-4. Foutmeldingen automatisch vastleggen.
-5. Content-Security-Policy.
-6. Wekelijkse export als back-up.
-7. Testen op echte telefoons (jij + teamleiders) en de lege-club-check bij het inrichten.
+1. ✅ App installeerbaar maken (manifest + icoon + service worker).
+2. ✅ Feedbackknop in de app.
+3. ✅ Privacytekst + akkoord bij aanmelden. Nog: toestemming van het bestuur en het privacycontact invullen.
+4. ✅ Wekelijkse back-up + downloadknop.
+5. Testen op echte telefoons (jij + teamleiders) en de lege-club-check bij het inrichten.
+
+**Later in de pilot:** foutmeldingen automatisch vastleggen · Content-Security-Policy.
 
 **Tijdens de pilot (8 weken)**
 - Gebruikerstest met 3–5 ouders; elke week de feedback doorlopen; bijhouden hoeveel afmeldingen via de app gaan.
