@@ -12,11 +12,13 @@
     const ui = CC.ui;
     const sp = M.spelers(S, a.teamId);
     const opgeslagen = S.pres[a.id];
-    if (!ui.draft || ui.draft.actId !== a.id) {
-      const s = {};
-      sp.forEach((pl) => { const st = M.status(S, pl, a); s[pl.id] = opgeslagen && opgeslagen.s[pl.id] ? opgeslagen.s[pl.id] : ['afgemeld', 'langdurig', 'open'].includes(st.code) ? 'x' : 'a'; });
-      ui.draft = { actId: a.id, s };
-    }
+    // Concept van de lijst. Bij elke weergave bijwerken: nieuwe spelers (net goedgekeurd) komen erbij en een afmelding
+    // die intussen binnenkwam telt mee. Alleen wat de trainer zelf heeft aangetikt, blijft staan.
+    const standaard = (pl) => { const st = M.status(S, pl, a); return opgeslagen && opgeslagen.s[pl.id] ? opgeslagen.s[pl.id] : ['afgemeld', 'langdurig', 'open'].includes(st.code) ? 'x' : 'a'; };
+    if (!ui.draft || ui.draft.actId !== a.id) ui.draft = { actId: a.id, s: {}, getikt: {} };
+    const ids = new Set(sp.map((pl) => pl.id));
+    Object.keys(ui.draft.s).forEach((id) => { if (!ids.has(id)) delete ui.draft.s[id]; });
+    sp.forEach((pl) => { if (!ui.draft.getikt[pl.id]) ui.draft.s[pl.id] = standaard(pl); });
     const d = ui.draft.s;
     const n = Object.values(d).filter((v) => v !== 'x').length;
     if (!kanOpnemen(a)) {
@@ -32,7 +34,7 @@
       }).join('')}</div>
       <div class="plakvoet"><span><b>${n}</b> van ${sp.length} aanwezig</span><button class="knop" data-act="opslaanAanwezigheid" data-id="${a.id}">${opgeslagen ? 'Wijziging opslaan' : 'Opslaan'}</button></div>`;
   };
-  CC.on('tikSpeler', (el) => { const d = CC.ui.draft.s; d[el.dataset.id] = volgende[d[el.dataset.id]]; CC.render(); });
+  CC.on('tikSpeler', (el) => { const d = CC.ui.draft.s; d[el.dataset.id] = volgende[d[el.dataset.id]]; (CC.ui.draft.getikt || (CC.ui.draft.getikt = {}))[el.dataset.id] = true; CC.render(); });
   CC.on('opslaanAanwezigheid', (el) => {
     const S = CC.S(); const a = M.act(S, el.dataset.id); const me = CC.me(); const t = M.team(S, a.teamId);
     const voor = {}; M.spelers(S, a.teamId).forEach((pl) => { voor[pl.id] = M.kaarten(S, pl).ev.length; });
