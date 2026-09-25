@@ -36,7 +36,7 @@
   const openVraag = (S, a) => a.trainerAfwezig && !a.vervangerId && !a.afgelast && a.datum >= D.vandaag();
   CC.vervangerRijen = (S, teamIds) => S.acts.filter((a) => teamIds.includes(a.teamId) && openVraag(S, a)).map((a) => {
     const tr = M.persoon(S, a.trainerAfwezig.door);
-    return h.rij({ ic: 'user-cog', titel: `Trainer kan niet: ${a.teamId} ${D.relatief(a.datum).toLowerCase()} ${a.tijd}`, sub: `${esc(tr ? tr.naam : 'Trainer')}${a.trainerAfwezig.reden ? ' · ' + esc(a.trainerAfwezig.reden) : ''} · nog geen vervanger`, kleur: 'rood vraag',
+    return h.rij({ ic: 'user-cog', titel: `Trainer kan niet: ${CC.tn(a.teamId)} ${D.relatief(a.datum).toLowerCase()} ${a.tijd}`, sub: `${esc(tr ? tr.naam : 'Trainer')}${a.trainerAfwezig.reden ? ' · ' + esc(a.trainerAfwezig.reden) : ''} · nog geen vervanger`, kleur: 'rood vraag',
       rechts: `<button class="knop klein" data-act="neemOver" data-id="${a.id}">Ik neem over</button><button class="knop klein licht rood-tekst" data-act="trainingAfgelasten" data-id="${a.id}">Afgelasten</button>` });
   });
   // Blok onder de trainingskaart van de trainer
@@ -68,30 +68,30 @@
     if (f.k.value === 'afgelast') return afgelasten(S, a, f.r.value || 'trainer afwezig');
     a.trainerAfwezig = { door: me.id, reden: f.r.value, tijd: new Date().toISOString() }; a.vervangerId = null;
     S.taken.push({ id: 't' + Date.now(), actId: a.id, soort: CC.VERVANGER, personId: null });
-    melding(S, [...M.stafVan(S, a.teamId, ['teamleider']), ...hjoIds(S)], `Vervanger nodig: ${a.teamId} ${D.kort(a.datum)}`, `${me.naam} kan de training van ${D.lang(a.datum)} om ${a.tijd} niet geven${f.r.value ? ' (' + f.r.value + ')' : ''}. Kun jij het overnemen? Open ClubComm en tik op "Ik neem over".`, true);
+    melding(S, [...M.stafVan(S, a.teamId, ['teamleider']), ...hjoIds(S)], `Vervanger nodig: ${CC.tn(a.teamId)} ${D.kort(a.datum)}`, `${me.naam} kan de training van ${D.lang(a.datum)} om ${a.tijd} niet geven${f.r.value ? ' (' + f.r.value + ')' : ''}. Kun jij het overnemen? Open ClubComm en tik op "Ik neem over".`, true);
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Doorgegeven; teamleider en HJO zijn gevraagd');
   });
   const neemOver = (S, a, p) => {
     a.vervangerId = p.id; (S.trainerLog || []).filter((x) => x.actId === a.id).forEach((x) => { x.vervanger = true; });
     const taak = S.taken.find((x) => x.actId === a.id && x.soort === CC.VERVANGER); if (taak) taak.personId = p.id;
-    melding(S, [a.trainerAfwezig && a.trainerAfwezig.door, M.team(S, a.teamId).teamleiderId], `${p.naam} neemt de training over`, `De training van ${a.teamId} op ${D.lang(a.datum)} om ${a.tijd} wordt gegeven door ${p.naam}.`);
+    melding(S, [a.trainerAfwezig && a.trainerAfwezig.door, M.team(S, a.teamId).teamleiderId], `${p.naam} neemt de training over`, `De training van ${CC.tn(a.teamId)} op ${D.lang(a.datum)} om ${a.tijd} wordt gegeven door ${p.naam}.`);
   };
   CC.vervangerNeemOver = neemOver;
   // Voor staf die een training overneemt: rij op Home naar aanwezigheid opnemen
-  CC.mijnVervangingen = (S) => { const me = CC.me(); return S.acts.filter((a) => a.vervangerId === me.id && a.datum >= D.vandaag() && !a.afgelast).map((a) => h.rij({ ic: 'user-cog', titel: `Jij geeft de training van ${a.teamId} ${D.relatief(a.datum).toLowerCase()} ${a.tijd}`, sub: `${esc(a.veld || '')} · aanwezigheid opnemen`, act: 'open', attrs: `data-view="opnemen" data-id="${a.id}"`, kleur: 'blauw' })); };
+  CC.mijnVervangingen = (S) => { const me = CC.me(); return S.acts.filter((a) => a.vervangerId === me.id && a.datum >= D.vandaag() && !a.afgelast).map((a) => h.rij({ ic: 'user-cog', titel: `Jij geeft de training van ${CC.tn(a.teamId)} ${D.relatief(a.datum).toLowerCase()} ${a.tijd}`, sub: `${esc(a.veld || '')} · aanwezigheid opnemen`, act: 'open', attrs: `data-view="opnemen" data-id="${a.id}"`, kleur: 'blauw' })); };
   CC.on('neemOver', (el) => { const S = CC.S(); neemOver(S, M.act(S, el.dataset.id), CC.me()); CC.save(); CC.render(); CC.toast('Top! Jij geeft deze training'); });
   CC.on('kanToch', (el) => {
     const S = CC.S(); const a = M.act(S, el.dataset.id); const v = a.vervangerId;
     a.trainerAfwezig = null; a.vervangerId = null; S.taken = S.taken.filter((x) => !(x.actId === a.id && x.soort === CC.VERVANGER));
     if (S.trainerLog) S.trainerLog = S.trainerLog.filter((x) => !(x.actId === a.id && x.soort !== 'niet'));
-    if (v) melding(S, [v], 'Trainer kan toch', `De trainer geeft de training van ${a.teamId} op ${D.lang(a.datum)} toch zelf. Bedankt voor je hulp!`);
+    if (v) melding(S, [v], 'Trainer kan toch', `De trainer geeft de training van ${CC.tn(a.teamId)} op ${D.lang(a.datum)} toch zelf. Bedankt voor je hulp!`);
     CC.save(); CC.render(); CC.toast('Fijn! Je staat weer als trainer genoteerd');
   });
   const afgelasten = (S, a, reden) => {
     const t = M.team(S, a.teamId); const me = CC.me();
     a.afgelast = true; S.taken = S.taken.filter((x) => !(x.actId === a.id && x.soort === CC.VERVANGER && !x.personId));
     S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'nieuws', bereik: a.teamId, onderwerp: `Training ${D.kort(a.datum)} gaat niet door`, tekst: `De training van ${D.lang(a.datum)} om ${a.tijd} gaat niet door (${reden}). Excuses voor het ongemak.`, tijd: new Date().toISOString(), ontvangers: M.oudersVan(S, a.teamId), gelezen: [], antw: [], urgent: true, gepland: null, vastTot: null });
-    melding(S, [...M.stafVan(S, a.teamId), ...hjoIds(S)].filter((x) => x !== me.id), `Afgelast: ${a.teamId} ${D.kort(a.datum)}`, `${me.naam} heeft de training van ${D.lang(a.datum)} afgelast (${reden}).`);
+    melding(S, [...M.stafVan(S, a.teamId), ...hjoIds(S)].filter((x) => x !== me.id), `Afgelast: ${CC.tn(a.teamId)} ${D.kort(a.datum)}`, `${me.naam} heeft de training van ${D.lang(a.datum)} afgelast (${reden}).`);
     S.wijzigingen.push({ id: 'w' + Date.now(), teamId: a.teamId, door: me.id, tekst: `Training ${D.kort(a.datum)} afgelast (${reden})`, tijd: new Date().toISOString() });
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Afgelast; ouders krijgen een pushmelding');
   };

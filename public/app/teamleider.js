@@ -92,11 +92,11 @@
     a.afgelast = true; CC.ui.seg.tlWed = a.id; const tekst = `De wedstrijd van ${D.lang(a.datum)} tegen ${a.tegen} gaat niet door. Reden: ${f.r.value.toLowerCase()}.`;
     S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'nieuws', bereik: a.teamId, onderwerp: 'Wedstrijd afgelast', tekst, tijd: now, ontvangers: M.oudersVan(S, a.teamId), gelezen: [], antw: [], urgent: true, gepland: null });
     const hjo = S.people.filter((p) => p.rollen.some((r) => r.rol === 'hjo')).map((p) => p.id);
-    S.msgs.push({ id: 'b' + Date.now() + 1, van: 'systeem', soort: 'melding', bereik: 'Ter informatie', onderwerp: `${a.teamId}: wedstrijd afgelast`, tekst: `${me.naam}: ${tekst} Je hoeft niets te doen.`, tijd: now, ontvangers: [...hjo, t.trainerId].filter((x) => x && x !== me.id), gelezen: [], antw: [], urgent: false, gepland: null });
+    S.msgs.push({ id: 'b' + Date.now() + 1, van: 'systeem', soort: 'melding', bereik: 'Ter informatie', onderwerp: `${CC.tn(a.teamId)}: wedstrijd afgelast`, tekst: `${me.naam}: ${tekst} Je hoeft niets te doen.`, tijd: now, ontvangers: [...hjo, t.trainerId].filter((x) => x && x !== me.id), gelezen: [], antw: [], urgent: false, gepland: null });
     S.wijzigingen.push({ id: 'w' + Date.now(), teamId: a.teamId, door: me.id, tekst, tijd: now });
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Afgelast; ouders zijn ingelicht');
   });
-  CC.on('deelWedstrijd', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.id); CC.deel(`${a.teamId} ${D.lang(a.datum)}: ${a.thuis ? 'thuis' : 'uit'} tegen ${a.tegen}. Verzamelen ${a.verzamel}, aftrap ${a.tijd}. ${a.thuis ? '' : `Adres: ${a.adres}. `}Kan je kind niet? Meld af in ClubComm: ${location.origin}${location.pathname}`, 'Wedstrijdinfo'); });
+  CC.on('deelWedstrijd', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.id); CC.deel(`${CC.tn(a.teamId)} ${D.lang(a.datum)}: ${a.thuis ? 'thuis' : 'uit'} tegen ${a.tegen}. Verzamelen ${a.verzamel}, aftrap ${a.tijd}. ${a.thuis ? '' : `Adres: ${a.adres}. `}Kan je kind niet? Meld af in ClubComm: ${location.origin}${location.pathname}`, 'Wedstrijdinfo'); });
   CC.on('deelTaken', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.a); const open = S.taken.filter((x) => x.actId === a.id && !x.personId).map((x) => x.soort); CC.deel(open.length ? `Voor ${D.lang(a.datum)} (${a.tegen}) zoeken we nog: ${open.join(', ')}. Kun jij? Tik op "Ik doe het" in ClubComm: ${location.origin}${location.pathname}` : 'Alle taken zijn bezet, dank jullie wel!', 'Taken'); });
   // Taak toevoegen: een soort die er al staat, kan niet nog een keer (voorkomt dubbele taken)
   CC.on('taakToevoegen', (el) => { const S = CC.S(); const al = S.taken.filter((x) => x.actId === el.dataset.a).map((x) => x.soort);
@@ -128,7 +128,7 @@
   CC.on('goedkeuren', (el) => {
     const S = CC.S(); const x = S.aanm.find((y) => y.id === el.dataset.id);
     const dubbel = S.players.find((pl) => pl.teamId === x.teamId && lijkt(pl.voornaam + pl.achternaam, x.kindVoor + x.kindAchter));
-    if (dubbel) return CC.sheet('Is dit hetzelfde kind?', `<p><b>${esc(x.ouderNaam)}</b> meldt <b>${esc(x.kindVoor)} ${esc(x.kindAchter)}</b> aan. In ${esc(x.teamId)} staat al:</p>${h.rij({ ic: h.avatar(dubbel.voornaam), titel: esc(M.naam(S, dubbel)), sub: `Ouder: ${dubbel.ouders.map((o) => esc(M.persoon(S, o).naam)).join(', ')}` })}
+    if (dubbel) return CC.sheet('Is dit hetzelfde kind?', `<p><b>${esc(x.ouderNaam)}</b> meldt <b>${esc(x.kindVoor)} ${esc(x.kindAchter)}</b> aan. In ${esc(CC.tn(x.teamId))} staat al:</p>${h.rij({ ic: h.avatar(dubbel.voornaam), titel: esc(M.naam(S, dubbel)), sub: `Ouder: ${dubbel.ouders.map((o) => esc(M.persoon(S, o).naam)).join(', ')}` })}
       <div class="knoppen kolom"><button class="knop" data-act="koppelOuder" data-id="${x.id}" data-s="${dubbel.id}">Ja, koppel als tweede ouder</button><button class="knop licht" data-act="nieuwKind" data-id="${x.id}">Nee, het is een ander kind</button></div>`);
     CC.keurGoed(x, null);
   });

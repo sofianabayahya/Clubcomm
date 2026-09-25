@@ -568,6 +568,8 @@
   M.stafVan = (S, teamId, rollen = ['trainer', 'teamleider']) => { const t = M.team(S, teamId) || {};
     return [...new Set([...(rollen.includes('trainer') ? [t.trainerId] : []), ...(rollen.includes('teamleider') ? [t.teamleiderId] : []),
       ...S.people.filter((p) => p.rollen.some((r) => rollen.includes(r.rol) && r.teamId === teamId)).map((p) => p.id)].filter(Boolean))]; };
+  // Teamnaam voor mensen ("O12 talententeam"); de code ("O12-1") alleen intern
+  M.tn = (S, id) => ((M.team(S, id) || {}).naam || id || '');
   M.oudersVan = (S, teamId) => [...new Set(M.spelers(S, teamId).flatMap((p) => p.ouders))];
 
   // speeltijdschema: eerlijke verdeling, keepers rouleren, minste minuten eerst

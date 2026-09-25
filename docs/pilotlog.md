@@ -1,0 +1,38 @@
+# ClubComm — Pilotlog (fouten en lessen)
+
+Wat we tijdens de pilot vinden, met de oorzaak en het patroon erachter. Doel: dezelfde soort fout niet twee keer maken.
+Besluiten staan in `besluiten.md`; dit is het logboek van fouten. Nieuwste bovenaan.
+
+## 25 september 2026 (eerste dag met echte ouders)
+
+| Wat de gebruiker zag | Oorzaak | Opgelost | Patroon |
+|---|---|---|---|
+| Nieuw goedgekeurde speler stond op "afwezig" in Aanwezigheid (Jack) | Het concept van de aanwezigheidslijst werd één keer gemaakt en niet bijgewerkt | Lijst werkt zich bij; alleen eigen tikken blijven | **A. Momentopname** |
+| (zelf gevonden) Wisselschema blijft staan als een kind na het maken afmeldt | Schema bevat de spelers van het moment van maken | Waarschuwing + knop "Maak het schema opnieuw" | **A. Momentopname** |
+| Afmelding van een ouder kwam nooit aan | Opslaan wachtte 0,4 s; iPhone stopt de app bij wegvegen | Meteen opslaan als de app naar de achtergrond gaat | **B. Opslaan niet zeker** |
+| Nep-telefoonnummer 0612345678 bij goedgekeurde ouders | Voorbeeldwaarde uit de demo bleef in de echte versie | Leeg; ouder vult zelf in (ook bij aanmelden) | **C. Demo-waarden in echt gebruik** |
+| Trainer zag aanmeldingen niet meer | Met teamleider gingen ze alleen naar de teamleider | Altijd zichtbaar onder Spelers (Besluit 47) | **D. Eén persoon per rol aangenomen** |
+| Tweede teamleider zou de eerste uit de berichten duwen | Team kende maar één trainer/teamleider | Alle staf van het team krijgt de berichten (Besluit 44) | **D. Eén persoon per rol aangenomen** |
+| Overal "O12-1" in plaats van "O12 talententeam" (zelf gevonden, ± 40 plekken) | Teamcode en teamnaam waren in de demo gelijk | Overal de naam; code alleen intern (`M.tn`) | **C. Demo verbergt het** |
+| Oude berichten niet zichtbaar voor nieuwe ouders | Ontvangers liggen vast bij versturen | Vastgezet nieuws ook voor nieuwkomers (Besluit 41) | **A. Momentopname** |
+| Code niet ontvangen (Hotmail) | Nieuwe afzender → map Ongewenste e-mail | Tip op het codescherm | **E. Buiten de app** |
+| Na inloggen via de mail knop: app op beginscherm niet ingelogd | iPhone: beginscherm-app en Safari delen geen inlog | Vanaf beginscherm alleen de code overtypen | **E. Buiten de app** |
+| Knop over e-mailadres heen | Lange woorden zonder spatie breken niet af | Afbreken toegestaan | **F. Echte gegevens zijn langer/rommeliger** |
+| Voornaam "Amin " met spatie; e-mail met hoofdletters | Invoer niet opgeschoond | Trimmen, e-mail kleine letters | **F. Echte gegevens zijn rommeliger** |
+| Rol meteen opgeslagen zonder bevestiging | Geen controle-stap | Eerst "Klopt dit?" (Besluit 44) | — |
+| Lege club: HJO-Home liep vast, "undefined%", verkeerd startbericht | Schermen alleen getest met volle demo | Lege-club-test toegevoegd | **C. Demo verbergt het** |
+
+## De patronen (waar we bij elke wijziging op letten)
+- **A. Momentopname:** iets wordt één keer gemaakt (lijst, schema, ontvangers) terwijl de werkelijkheid doorloopt. Vraag: *wat als er intussen iets verandert?*
+- **B. Opslaan niet zeker:** telefoon sluit apps hard. Belangrijke acties meteen versturen en laten zien dat het gelukt is.
+- **C. Demo verbergt het:** de demo is vol, netjes en heeft code = naam. Altijd ook testen met de echte, (bijna) lege club.
+- **D. Eén persoon per rol:** een team kan meer trainers, teamleiders, ouders per kind hebben. Nooit "de" trainer aannemen.
+- **E. Buiten de app:** e-mail, spamfilters, iPhone-gedrag. Uitleg op het scherm waar het misgaat.
+- **F. Echte gegevens:** lange e-mailadressen, spaties, hoofdletters, geen telefoonnummer.
+
+## Bekende risico's (nog niet opgelost)
+- **Verversen:** de app haalt nieuwe gegevens op bij terugkomen in de app en elke 2 minuten. Een afmelding van een paar seconden geleden zie je dus soms pas na even wachten of opnieuw openen.
+- **Automatische berichten** gaan uit als een beheerder/staflid de app opent, niet vanzelf vanaf de server.
+- **Tegelijk wijzigen** van dezelfde regel: de laatste wint (zelden, maar mogelijk bij twee teamleiders).
+- **Brevo-afmeldknop** in elke mail: wie tikt, krijgt geen inlogcode meer (deblokkeren in Brevo).
+- **Wedstrijden** staan er nog niet in; vaste taken en wisselschema pas testen bij de eerste (oefen)wedstrijd.

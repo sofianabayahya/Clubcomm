@@ -16,7 +16,7 @@
   };
 
   CC.rollen.ouder = {
-    context(S) { const k = CC.kind(); const kids = CC.kinderen(); return k ? { titel: `${k.voornaam} · ${k.teamId}`, sub: S.club.naam, act: kids.length > 1 ? 'kiesKind' : null } : { titel: 'ClubComm', sub: S.club.naam }; },
+    context(S) { const k = CC.kind(); const kids = CC.kinderen(); return k ? { titel: `${k.voornaam} · ${CC.tn(k.teamId)}`, sub: S.club.naam, act: kids.length > 1 ? 'kiesKind' : null } : { titel: 'ClubComm', sub: S.club.naam }; },
     tabs(S) {
       const me = CC.me(); const k = CC.kind();
       return [['home', 'Home', 'house'], ['planning', 'Planning', 'calendar-days'], S.club.modules.vervoer && ['vervoer', 'Vervoer', 'car', k && zoektPlek(S, k) ? zoektPlek(S, k).wie.length : 0],
@@ -36,7 +36,7 @@
         S.msgs.filter((m) => M.zichtbaar(S, m, me.id) && m.ontvangers.includes(me.id) && m.soort !== 'persoonlijk' && !m.gelezen.includes(me.id) && m.urgent).forEach((m) => acties.push(h.rij({ ic: m.urgent ? 'triangle-alert' : 'pin', titel: esc(m.onderwerp), sub: `${m.urgent ? 'Urgent · ' : ''}${esc(CC.isClub(m) ? 'Club' : m.bereik || '')}`, act: 'open', attrs: `data-view="bericht" data-id="${m.id}"`, kleur: m.urgent ? 'rood' : 'blauw' })));
         const pers = S.msgs.filter((m) => M.zichtbaar(S, m, me.id) && m.soort === 'persoonlijk' && !m.gelezen.includes(me.id));
         pers.forEach((m) => acties.push(h.rij({ ic: 'message-circle', titel: m.van === 'systeem' ? 'Bericht van ClubComm' : `Bericht van ${esc((M.persoon(S, m.van) || { naam: 'onbekend' }).naam.split(' ')[0])}`, sub: esc(m.onderwerp), act: 'open', attrs: `data-view="bericht" data-id="${m.id}"`, kleur: 'blauw' })));
-        S.acts.filter((a) => a.vervangerId === me.id && a.datum >= D.vandaag() && !a.afgelast).slice(0, 1).forEach((a) => acties.push(h.rij({ ic: 'user-cog', titel: `Jij geeft de training ${D.relatief(a.datum).toLowerCase()} ${a.tijd}`, sub: `${esc(a.teamId)} · ${esc(a.veld || '')} · aanwezigheid opnemen`, act: 'open', attrs: `data-view="begeleiden" data-id="${a.id}"`, kleur: 'blauw' })));
+        S.acts.filter((a) => a.vervangerId === me.id && a.datum >= D.vandaag() && !a.afgelast).slice(0, 1).forEach((a) => acties.push(h.rij({ ic: 'user-cog', titel: `Jij geeft de training ${D.relatief(a.datum).toLowerCase()} ${a.tijd}`, sub: `${esc(CC.tn(a.teamId))} · ${esc(a.veld || '')} · aanwezigheid opnemen`, act: 'open', attrs: `data-view="begeleiden" data-id="${a.id}"`, kleur: 'blauw' })));
         // Taak op de wedstrijddag (Besluit 33): trainer-coach → aanwezigheid, timekeeper → wisselschema
         S.taken.filter((t) => t.personId === me.id && ['Trainer-coach', 'Timekeeper'].includes(t.soort)).map((t) => ({ t, a: M.act(S, t.actId) })).filter(({ a }) => a && a.teamId === pl.teamId && !a.afgelast && a.datum >= D.vandaag() && a.datum <= D.addDays(D.vandaag(), homeDagen(S))).slice(0, 1).forEach(({ t, a }) => acties.push(h.rij({ ic: t.soort === 'Timekeeper' ? 'timer' : 'clipboard-check', titel: `Jij bent ${t.soort.toLowerCase()} ${D.relatief(a.datum).toLowerCase()}`, sub: t.soort === 'Timekeeper' ? 'Op de dag zelf: het wisselschema' : 'Op de dag zelf: de aanwezigheid invullen', act: 'open', attrs: `data-view="begeleiden" data-id="${a.id}"`, kleur: 'blauw' })));
         M.komend(S, pl.teamId, 30).filter((a) => a.opgave && !a.afgelast && (a.opgaveTot || a.datum) >= D.vandaag() && M.status(S, pl, a).code === 'open').slice(0, 2).forEach((a) => acties.push(h.rij({ ic: 'circle-help', titel: `Geef ${esc(pl.voornaam)} op: ${esc(a.naam || 'activiteit')}`, sub: `${D.kort(a.datum)} · opgeven tot ${D.kort(a.opgaveTot || a.datum)}`, act: 'open', attrs: `data-view="activiteit" data-id="${a.id}"`, kleur: 'oranje' })));
@@ -180,7 +180,7 @@
 
   CC.on('kiesKind', () => {
     const kids = CC.kinderen(); const cur = CC.kind();
-    CC.sheet('Kies je kind', `<div class="lijst">${kids.map((k) => h.rij({ ic: h.avatar(k.voornaam), titel: esc(M.naam(CC.S(), k)), sub: esc(k.teamId), act: 'zetKind', attrs: `data-id="${k.id}"`, rechts: k.id === cur.id ? icon('check') : '' })).join('')}</div>`);
+    CC.sheet('Kies je kind', `<div class="lijst">${kids.map((k) => h.rij({ ic: h.avatar(k.voornaam), titel: esc(M.naam(CC.S(), k)), sub: esc(CC.tn(k.teamId)), act: 'zetKind', attrs: `data-id="${k.id}"`, rechts: k.id === cur.id ? icon('check') : '' })).join('')}</div>`);
   });
   CC.on('zetKind', (el) => { CC.sessie().kindId = el.dataset.id; try { localStorage.setItem('clubcomm-sessie-v1', JSON.stringify(CC.sessie())); } catch (e) { /* */ } CC.closeSheet(); CC.render(); });
 

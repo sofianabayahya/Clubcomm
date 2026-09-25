@@ -101,6 +101,10 @@
       const ids = sch.spelers || [...new Set(sch.blokken.flat())]; const kp = sch.keepers[0]; const mins = M.schemaMinuten(sch);
       const doel = Math.min(sch.opVeld || c.opVeld, ids.length);
       const rijen = [kp, ...ids.filter((x) => x !== kp).sort((x, y) => String(naam(x)).localeCompare(String(naam(y))))].filter(Boolean);
+      // Veranderd sinds het schema is gemaakt? (afmelding of een nieuw kind) Dan waarschuwen, niet stilletjes laten staan
+      const nuKomen = M.spelers(S, teamId).filter((pl) => ['verwacht', 'aanwezig', 'telaat'].includes(M.status(S, pl, a).code)).map((pl) => pl.id);
+      const weg = ids.filter((x) => !nuKomen.includes(x)), bij = nuKomen.filter((x) => !ids.includes(x));
+      const veranderd = !sch.gestart && (weg.length || bij.length) ? `<div class="info oranje">${icon('triangle-alert')}<span>Sinds je het schema maakte ${[weg.length ? `${weg.map(naam).map(esc).join(', ')} ${weg.length === 1 ? 'komt' : 'komen'} niet meer` : '', bij.length ? `${bij.map(naam).map(esc).join(', ')} ${bij.length === 1 ? 'komt' : 'komen'} erbij` : ''].filter(Boolean).join(' en ')}. ${opties.alleenSchema ? 'Vraag de trainer het schema opnieuw te maken.' : ''}</span></div>${opties.alleenSchema ? '' : `<button class="knop vol" data-act="nieuwSchema" data-id="${a.id}">${icon('refresh-cw')}Maak het schema opnieuw</button>`}` : '';
       const aanpassen = opties.alleenSchema ? '' : `<details class="uitklap" ${sch.gestart ? '' : 'open'}><summary>${icon('sliders-horizontal')}Schema aanpassen</summary>
         <p class="zacht klein">Tik op een vakje om een speler in of uit dat blok te zetten. Rechts de minuten in deze wedstrijd. Het voorstel van de app is eerlijk verdeeld; jij beslist.</p>
         <div class="tabelvak"><table class="tabel wisselgrid"><thead><tr><th></th>${len.map((_, i) => `<th>${M.minTekst(vanaf(i))}'</th>`).join('')}<th>Min.</th></tr></thead><tbody>
@@ -108,7 +112,7 @@
         <tr class="som"><td>In het veld</td>${sch.blokken.map((b) => `<td class="${b.length !== doel ? 'rood-tekst' : 'zacht'}">${b.length}/${doel}</td>`).join('')}<td></td></tr></tbody></table></div>
         ${sch.blokken.some((b) => b.length !== doel) ? `<p class="klein rood-tekst">Let op: niet in elk blok staan ${doel} spelers in het veld.</p>` : ''}
         <label for="st-kp">Keeper (de hele wedstrijd)</label><select id="st-kp" class="kies" data-change="stKeeper" data-a="${a.id}">${ids.map((x) => `<option value="${x}" ${x === kp ? 'selected' : ''}>${esc(naam(x))}</option>`).join('')}</select></details>`;
-      body = `<div class="blokken">${sch.blokken.map((_, i) => `<span class="${i === cur ? 'aan' : i < cur ? 'klaar' : ''}">${i + 1}</span>`).join('')}</div>
+      body = `${veranderd}<div class="blokken">${sch.blokken.map((_, i) => `<span class="${i === cur ? 'aan' : i < cur ? 'klaar' : ''}">${i + 1}</span>`).join('')}</div>
         <div class="kaartje"><h4>Blok ${cur + 1} van ${sch.blokken.length} · minuut ${M.minTekst(vanaf(cur))}–${M.minTekst(vanaf(cur + 1))}</h4>
         ${cur > 0 ? `<div class="wissel"><div><small>Erin</small>${erin.map((x) => `<span class="chip groen">${esc(naam(x))}</span>`).join('') || '–'}</div><div><small>Eruit</small>${eruit.map((x) => `<span class="chip grijs">${esc(naam(x))}</span>`).join('') || '–'}</div></div>` : ''}
         ${(sch.minder || []).length ? `<p class="klein zacht">Blok minder (besluit trainer): ${sch.minder.map(naam).map(esc).join(', ')}</p>` : ''}<p><b>Keeper:</b> ${esc(naam(sch.keepers[cur]))}</p><p><b>In het veld:</b> ${inNu.filter((x) => x !== sch.keepers[cur]).map(naam).map(esc).join(', ')}</p><p class="zacht"><b>Wissel:</b> ${bank.map((p) => esc(p.voornaam)).join(', ') || 'niemand'}</p></div>
@@ -253,7 +257,7 @@
     },
   };
   CC.on('planningAanpassen', () => CC.wijzigingSheet());
-  CC.on('uitnodigSheet', () => CC.sheet('Ouders uitnodigen', `<p class="zacht">Deel de uitnodiging van ${esc(CC.teamId())}. Ouders vullen zelf hun e-mail en de naam van hun kind in; daarna keur je goed.</p>${CC.uitnodigBlok(CC.teamId())}`));
+  CC.on('uitnodigSheet', () => CC.sheet('Ouders uitnodigen', `<p class="zacht">Deel de uitnodiging van ${esc(CC.tn(CC.teamId()))}. Ouders vullen zelf hun e-mail en de naam van hun kind in; daarna keur je goed.</p>${CC.uitnodigBlok(CC.teamId())}`));
 
   // Overzicht per speler (trainer + teamleider)
   CC.overzichtHtml = (S, tid) => {

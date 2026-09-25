@@ -17,7 +17,7 @@
     const keuze = p.agendaKeuze || { training: true, wedstrijd: true };
     return S.acts.filter((a) => teamsVan(S, p).includes(a.teamId) && a.datum >= D.vandaag() && (!CC.m.isWed(a) ? keuze.training : keuze.wedstrijd)).slice(0, n || 500);
   };
-  const titel = (S, a) => (a.soort === 'activiteit' ? `${a.naam || 'Activiteit'} ${a.teamId}` : a.soort === 'training' ? `Training ${a.teamId}` : a.soort === 'oefen' ? `Oefenwedstrijd ${a.teamId}` : `${a.teamId} ${a.thuis ? 'thuis' : 'uit'} tegen ${a.tegen}`);
+  const titel = (S, a) => (a.soort === 'activiteit' ? `${a.naam || 'Activiteit'} ${CC.tn(a.teamId)}` : a.soort === 'training' ? `Training ${CC.tn(a.teamId)}` : a.soort === 'oefen' ? `Oefenwedstrijd ${CC.tn(a.teamId)}` : `${CC.tn(a.teamId)} ${a.thuis ? 'thuis' : 'uit'} tegen ${a.tegen}`);
   const sportpark = () => { const c = CC.S().club; return c.sportpark || (c.naam ? `Sportpark ${c.naam}` : 'Sportpark'); };
   const plaats = (a) => (a.soort === 'activiteit' ? a.adres || a.plaats || '' : a.soort === 'training' || a.thuis ? `${a.adres && a.thuis ? a.adres : sportpark()}${a.veld ? ', ' + a.veld : ''}` : a.adres || '');
   const beginTijd = (a) => (a.soort === 'training' ? a.tijd : a.verzamel || a.tijd);
@@ -38,7 +38,7 @@
       const pl = M.speler(S, g.spelerId);
       regels.push('BEGIN:VEVENT', `UID:${g.id}@clubcomm.nl`, `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').slice(0, 15)}Z`,
         `DTSTART;TZID=Europe/Amsterdam:${st(g.datum, g.tijd)}`, `DTEND;TZID=Europe/Amsterdam:${st(g.datum, g.eind)}`,
-        `SUMMARY:${esc2(`Ontwikkelgesprek ${pl.voornaam} (${g.teamId})`)}`, `LOCATION:${esc2(`${sportpark()}, ${g.plek}`)}`, `DESCRIPTION:${esc2('Gesprek met de trainer; ouder en kind zijn er samen bij.')}`, 'STATUS:CONFIRMED', 'END:VEVENT');
+        `SUMMARY:${esc2(`Ontwikkelgesprek ${pl.voornaam} (${CC.tn(g.teamId)})`)}`, `LOCATION:${esc2(`${sportpark()}, ${g.plek}`)}`, `DESCRIPTION:${esc2('Gesprek met de trainer; ouder en kind zijn er samen bij.')}`, 'STATUS:CONFIRMED', 'END:VEVENT');
     });
     regels.push('END:VCALENDAR');
     return regels.join('\r\n');

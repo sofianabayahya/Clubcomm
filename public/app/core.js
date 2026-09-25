@@ -301,12 +301,12 @@
   CC.on('profiel', () => {
     const me = CC.me(); const rol = CC.rol();
     const kids = CC.kinderen();
-    const rollen = me.rollen.map((r, i) => `<button class="rolkeuze ${i === (sessie.rolIdx || 0) ? 'aan' : ''}" data-act="wisselRol" data-idx="${i}">${icon({ ouder: 'heart', trainer: 'clipboard-check', teamleider: 'hand-helping', hjo: 'shield', beheerder: 'building-2', coordinator: 'users' }[r.rol])}<span><b>${esc(CC.rolNaam(r))}</b><small>${r.teamId ? esc(r.teamId) : r.groep ? esc(r.groep) : r.rol === 'ouder' ? kids.map((k) => esc(k.voornaam)).join(', ') : esc(S.club.naam)}</small></span>${i === (sessie.rolIdx || 0) ? icon('check') : ''}</button>`).join('');
+    const rollen = me.rollen.map((r, i) => `<button class="rolkeuze ${i === (sessie.rolIdx || 0) ? 'aan' : ''}" data-act="wisselRol" data-idx="${i}">${icon({ ouder: 'heart', trainer: 'clipboard-check', teamleider: 'hand-helping', hjo: 'shield', beheerder: 'building-2', coordinator: 'users' }[r.rol])}<span><b>${esc(CC.rolNaam(r))}</b><small>${r.teamId ? esc(CC.tn(r.teamId)) : r.groep ? esc(r.groep) : r.rol === 'ouder' ? kids.map((k) => esc(k.voornaam)).join(', ') : esc(S.club.naam)}</small></span>${i === (sessie.rolIdx || 0) ? icon('check') : ''}</button>`).join('');
     CC.sheet('Profiel', `
       <div class="profiel-kop">${h.avatar(me.naam, 'groot')}<div><b>${esc(me.naam)}</b><small>${esc(me.email)}${me.tel ? ` · ${esc(me.tel)}` : ''}</small></div></div>
       ${h.rij({ ic: 'phone', titel: me.tel ? 'Telefoonnummer wijzigen' : 'Telefoonnummer toevoegen', sub: me.tel ? esc(me.tel) : 'Zodat trainer en teamleider je kunnen bellen of appen', act: 'telSheet', kleur: me.tel ? '' : 'blauw' })}
       ${me.rollen.length > 1 ? `<h3 class="klein-kop">Wissel van rol</h3><div class="rollen">${rollen}</div>` : ''}
-      ${rol.rol === 'ouder' || kids.length ? `<h3 class="klein-kop">Mijn kinderen</h3>${kids.map((k) => h.rij({ ic: h.avatar(k.voornaam), titel: esc(M.naam(S, k)), sub: esc(k.teamId) })).join('')}
+      ${rol.rol === 'ouder' || kids.length ? `<h3 class="klein-kop">Mijn kinderen</h3>${kids.map((k) => h.rij({ ic: h.avatar(k.voornaam), titel: esc(M.naam(S, k)), sub: esc(CC.tn(k.teamId)) })).join('')}
         ${h.rij({ ic: 'user-plus', titel: 'Kind toevoegen', sub: 'Via de uitnodiging van het andere team', act: 'demoMelding', attrs: 'data-tekst="Vraag de teamleider van het andere team om de uitnodiging (link of QR-code) en meld je daar aan met hetzelfde e-mailadres."' })}
         ${h.rij({ ic: 'users', titel: 'Tweede ouder uitnodigen', sub: 'Ieder een eigen account, jullie zien elkaars e-mail niet', act: 'tweedeOuder' })}` : ''}
       <h3 class="klein-kop">Instellingen</h3>
@@ -333,6 +333,7 @@
   CC.on('telOk', (f) => { const t = f.t.value.replace(/[^0-9+]/g, ''); if (t && !/^(\+\d{10,14}|0\d{9})$/.test(t)) return CC.toast('Vul een geldig nummer in, bijv. 0612345678', 'fout'); CC.me().tel = t; CC.save(); CC.closeSheet(); CC.toast(t ? 'Telefoonnummer opgeslagen' : 'Telefoonnummer verwijderd'); });
 
   // ---------- Uitschrijven en account verwijderen (Besluit 14) ----------
+  CC.tn = (id) => M.tn(CC.S(), id);
   const hjoIds = () => S.people.filter((p) => p.rollen.some((r) => r.rol === 'hjo')).map((p) => p.id);
   const meldStaf = (teamId, onderwerp, tekst) => {
     const ontv = [...new Set([...M.stafVan(S, teamId), ...hjoIds()].filter(Boolean))];
@@ -349,7 +350,7 @@
   CC.on('uitschrijfSheet', () => {
     const kids = CC.kinderen();
     CC.sheet('Kind uitschrijven', `<form data-submit="uitschrijvenOk" class="codeform">
-      <label for="us-k">Welk kind?</label><select id="us-k" name="k">${kids.map((k) => `<option value="${k.id}">${esc(M.naam(S, k))} (${esc(k.teamId)})</option>`).join('')}</select>
+      <label for="us-k">Welk kind?</label><select id="us-k" name="k">${kids.map((k) => `<option value="${k.id}">${esc(M.naam(S, k))} (${esc(CC.tn(k.teamId))})</option>`).join('')}</select>
       <label for="us-r">Reden</label><select id="us-r" name="r"><option>Stopt met voetbal</option><option>Naar een andere club</option><option>Verhuisd</option><option>Anders</option></select>
       <div class="info oranje">${icon('info')}<span>Hiermee verdwijnt je kind uit het team en uit ClubComm. De trainer, teamleider en ${esc(S.club.labels.hjo)} krijgen een melding. <b>Let op:</b> het lidmaatschap zeg je apart op bij de ledenadministratie (vóór 31 mei, per mail). De contributie loopt tot het einde van het seizoen.</span></div>
       <button class="knop rood vol">Uitschrijven</button></form>`);
@@ -371,7 +372,7 @@
     CC.sheet('Account verwijderen', `<p>We wissen je naam, e-mailadres, telefoonnummer en al je koppelingen. Je kunt daarna niet meer inloggen.</p>
       ${alleen.length ? `<div class="info oranje">${icon('info')}<span>${alleen.map((k) => esc(k.voornaam)).join(' en ')} ${alleen.length > 1 ? 'hebben' : 'heeft'} geen andere ouder in ClubComm en ${alleen.length > 1 ? 'worden' : 'wordt'} dus ook uitgeschreven.</span></div>` : ''}
       ${kids.some((k) => k.ouders.length > 1) ? `<p class="klein">${kids.filter((k) => k.ouders.length > 1).map((k) => esc(k.voornaam)).join(' en ')} blijft gekoppeld aan de andere ouder.</p>` : ''}
-      ${staf.length ? `<div class="info oranje">${icon('user-cog')}<span>Je bent ook ${staf.map((r) => `${r.rol} van ${esc(r.teamId)}`).join(' en ')}. De ${esc(S.club.labels.hjo)} krijgt een melding om een vervanger te zoeken.</span></div>` : ''}
+      ${staf.length ? `<div class="info oranje">${icon('user-cog')}<span>Je bent ook ${staf.map((r) => `${r.rol} van ${esc(CC.tn(r.teamId))}`).join(' en ')}. De ${esc(S.club.labels.hjo)} krijgt een melding om een vervanger te zoeken.</span></div>` : ''}
       <p class="zacht klein">Aanwezigheid blijft alleen als anonieme telling in de teamcijfers bewaard. Het lidmaatschap zeg je apart op bij de ledenadministratie.</p>
       <div class="knoppen kolom"><button class="knop rood" data-act="verwijderDef">Ja, verwijder mijn account</button><button class="knop licht" data-act="sluit">Annuleren</button></div>`);
   });
@@ -402,7 +403,7 @@
   });
   CC.on('installeren', async () => { const p = CC.installPrompt; if (!p) return; p.prompt(); const r = await p.userChoice.catch(() => ({})); CC.installPrompt = null; CC.closeSheet(); if (r.outcome === 'accepted') CC.toast('ClubComm staat op je beginscherm'); });
   CC.on('tweedeOuder', () => { const k = CC.kind(); if (!k) return; const link = `${location.origin}${location.pathname}#uitnodiging-${k.teamId}`;
-    CC.sheet('Tweede ouder uitnodigen', `<p>Stuur de andere ouder de uitnodiging van ${esc(k.teamId)}. Die meldt zich aan met een eigen e-mailadres en vult de naam van ${esc(k.voornaam)} in. De teamleider koppelt jullie dan aan hetzelfde kind.</p><p class="klein zacht">Jullie zien elkaars e-mailadres niet.</p><div class="knoppen kolom"><button class="knop" data-act="tweedeOuderDeel" data-link="${esc(link)}">${icon('share-2')}Uitnodiging delen</button></div>`); });
+    CC.sheet('Tweede ouder uitnodigen', `<p>Stuur de andere ouder de uitnodiging van ${esc(CC.tn(k.teamId))}. Die meldt zich aan met een eigen e-mailadres en vult de naam van ${esc(k.voornaam)} in. De teamleider koppelt jullie dan aan hetzelfde kind.</p><p class="klein zacht">Jullie zien elkaars e-mailadres niet.</p><div class="knoppen kolom"><button class="knop" data-act="tweedeOuderDeel" data-link="${esc(link)}">${icon('share-2')}Uitnodiging delen</button></div>`); });
   CC.on('tweedeOuderDeel', (el) => CC.deel(`Je kunt je aanmelden bij ClubComm voor ${CC.kind().voornaam} (${CC.kind().teamId}): ${el.dataset.link}`));
 
   // ---------- Berichten (voor alle rollen) ----------
@@ -475,7 +476,7 @@
   CC.on('vraagStaf', () => {
     const kids = CC.kinderen(); const k = CC.kind();
     CC.sheet('Vraag aan trainer of teamleider', `<form data-submit="vraagStafOk" class="codeform">
-      ${kids.length > 1 ? `<label for="vs-k">Over</label><select id="vs-k" name="k">${kids.map((x) => `<option value="${x.id}" ${x.id === k.id ? 'selected' : ''}>${esc(x.voornaam)} (${esc(x.teamId)})</option>`).join('')}</select>` : `<input type="hidden" name="k" value="${k.id}">`}
+      ${kids.length > 1 ? `<label for="vs-k">Over</label><select id="vs-k" name="k">${kids.map((x) => `<option value="${x.id}" ${x.id === k.id ? 'selected' : ''}>${esc(x.voornaam)} (${esc(CC.tn(x.teamId))})</option>`).join('')}</select>` : `<input type="hidden" name="k" value="${k.id}">`}
       <label for="vs-o">Onderwerp</label><input id="vs-o" name="o" required maxlength="80" placeholder="Bijv. schoenen laten liggen">
       <label for="vs-t">Je vraag</label><textarea id="vs-t" name="t" rows="4" required></textarea>
       <button class="knop vol">${icon('send')}Versturen</button>
@@ -485,7 +486,7 @@
     const me = CC.me(); const pl = M.speler(S, f.k.value); const t = M.team(S, pl.teamId);
     const ontv = M.stafVan(S, t.id).filter((x) => x !== me.id);
     if (!ontv.length) return CC.toast('Dit team heeft nog geen trainer of teamleider', 'fout');
-    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'persoonlijk', bereik: `${pl.voornaam} (${pl.teamId})`, onderwerp: f.o.value.trim(), tekst: f.t.value.trim(), tijd: new Date().toISOString(), ontvangers: [...new Set(ontv)], gelezen: [me.id], antw: [], urgent: false, gepland: null, vastTot: null });
+    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'persoonlijk', bereik: `${pl.voornaam} (${CC.tn(pl.teamId)})`, onderwerp: f.o.value.trim(), tekst: f.t.value.trim(), tijd: new Date().toISOString(), ontvangers: [...new Set(ontv)], gelezen: [me.id], antw: [], urgent: false, gepland: null, vastTot: null });
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Verstuurd naar de trainer en teamleider');
   });
   CC.on('reageer', (f) => { const m = S.msgs.find((x) => x.id === f.dataset.id); m.antw.push({ van: CC.me().id, tekst: f.t.value, tijd: new Date().toISOString() }); CC.save(); CC.render(); CC.toast('Verstuurd'); });
@@ -577,7 +578,7 @@
     S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'nieuws', bereik: tid, onderwerp: wat === 'activiteit' ? `Nieuw: ${f.naam.value.trim()}` : 'Wijziging in de planning', tekst, tijd: now, ontvangers: M.oudersVan(S, tid), gelezen: [], antw: [], urgent: wat !== 'activiteit', gepland: null });
     const hjo = S.people.filter((p) => p.rollen.some((r) => r.rol === 'hjo')).map((p) => p.id);
     const info = [...new Set([...hjo, ...M.stafVan(S, tid)])].filter((x) => x && x !== me.id);
-    S.msgs.push({ id: 'b' + Date.now() + 1, van: 'systeem', soort: 'melding', bereik: 'Ter informatie', onderwerp: `Planning ${tid} gewijzigd`, tekst: `${me.naam}: ${tekst} Je hoeft niets te doen.`, tijd: now, ontvangers: info, gelezen: [], antw: [], urgent: false, gepland: null });
+    S.msgs.push({ id: 'b' + Date.now() + 1, van: 'systeem', soort: 'melding', bereik: 'Ter informatie', onderwerp: `Planning ${CC.tn(tid)} gewijzigd`, tekst: `${me.naam}: ${tekst} Je hoeft niets te doen.`, tijd: now, ontvangers: info, gelezen: [], antw: [], urgent: false, gepland: null });
     S.wijzigingen.push({ id: 'w' + Date.now(), teamId: tid, door: me.id, tekst, tijd: now });
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Planning aangepast, ouders zijn ingelicht');
   });
@@ -595,7 +596,7 @@
     try { await navigator.clipboard.writeText(tekst); CC.toast('Tekst gekopieerd: plak hem in WhatsApp'); }
     catch (e) { CC.sheet('Kopieer deze tekst', `<textarea rows="6" class="kopieer" readonly>${esc(tekst)}</textarea><p class="zacht klein">Selecteer en kopieer de tekst, en plak hem in de teamgroep.</p>`); }
   };
-  CC.on('deelUitnodiging', (el) => CC.deel(`Hoi ouders van ${el.dataset.team}! Meld je kind aan in ClubComm (afmelden, planning en berichten): ${CC.uitnodigLink(el.dataset.team)}`, `Uitnodiging ${el.dataset.team}`));
+  CC.on('deelUitnodiging', (el) => CC.deel(`Hoi ouders van ${CC.tn(el.dataset.team)}! Meld je kind aan in ClubComm (afmelden, planning en berichten): ${CC.uitnodigLink(el.dataset.team)}`, `Uitnodiging ${el.dataset.team}`));
   CC.on('toonQR', (el) => CC.sheet(`Scan om aan te melden · ${el.dataset.team}`, `<div class="qr">${CC.qrSvg(CC.uitnodigLink(el.dataset.team), 8)}</div><p class="midden">Open de camera van je telefoon en richt hem op de code.</p>`, { groot: true }));
   CC.on('printQR', (el) => {
     const t = M.team(S, el.dataset.team);
