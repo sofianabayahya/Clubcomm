@@ -615,7 +615,7 @@
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Verstuurd naar de trainer en teamleider');
   });
   // Reactievak groeit mee met de tekst; Enter = nieuwe regel, versturen met de blauwe knop (Besluit 58)
-  CC.on('groei', (el) => { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 200) + 'px'; });
+  CC.on('groei', (el) => { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 200) + 'px'; const f = el.closest('form'); if (f) f.scrollIntoView({ block: 'end' }); });
   // Antwoord (Besluit 57): het gesprek is weer ongelezen voor de anderen en komt uit ieders archief
   CC.on('reageer', (f) => { const t = f.t.value.replace(/\s+$/, '').replace(/^\s*\n/, ''); if (!t.trim()) return; const m = S.msgs.find((x) => x.id === f.dataset.id); const me = CC.me(); m.antw.push({ van: me.id, tekst: t, tijd: new Date().toISOString() }); m.gelezen = [me.id]; m.archief = []; CC.save(); CC.render(); CC.toast('Verstuurd'); });
 

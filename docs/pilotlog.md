@@ -7,6 +7,7 @@ Besluiten staan in `besluiten.md`; dit is het logboek van fouten. Nieuwste boven
 
 | Wat de gebruiker zag | Oorzaak | Opgelost | Patroon |
 |---|---|---|---|
+| Lange reactie verdween achter de knoppenbalk onderin | Reactievak rekende niet met de hogere balk op iPhones met streep onderin | In een gesprek geen knoppenbalk; vak onderaan en schuift mee (Besluit 58) | **E. Buiten de app** (toestel) |
 | (zelf gevonden) Afzender kon een net binnengekomen antwoord overschrijven bij opslaan | Afzender schreef het hele bericht opnieuw weg | Antwoorden/gelezen/archief altijd via `bericht_bij` (Besluit 57) | **B. Opslaan niet zeker** |
 | Bij elk antwoord in een gesprek een nieuwe e-mail | E-mail per bericht én per antwoord | Eén e-mail per onderwerp, alleen zonder push (Besluit 57) | — |
 | Demo-knoppen (ander demo-account, demo opnieuw, account verwijderen) stonden in het echte profiel | Profiel was gebouwd voor de demo; "account verwijderen" werkte in het echt maar half | Alleen in de demo; echt: verzoek aan beheerder (Besluit 54) | **C. Demo verbergt het** |
