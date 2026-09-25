@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 42 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 43 toegevoegd)
 
 ---
 
@@ -507,6 +507,15 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 43 — Adres aanvullen tijdens het typen
+*Besloten 25 september 2026.*
+
+- Bij het adres van een activiteit en van een uitwedstrijd stelt de app tijdens het typen adressen voor (vanaf 3 tekens).
+- Bron: **PDOK Locatieserver** van de Nederlandse overheid: gratis, geen account of sleutel, geen tracking. Vindt adressen, straten, pleinen, postcodes en plaatsen in Nederland; geen plekken op naam.
+- Daarnaast eigen suggesties: het sportpark van de club en adressen die al eerder bij activiteiten of wedstrijden zijn gebruikt.
+- Niet gekozen: Google Maps (betaalaccount nodig en wat je typt gaat naar Google).
+- Zonder internet of als PDOK even niet werkt, typ je gewoon zelf; de Routeknop gebruikt wat er staat.
 
 ## Besluit 42 — Stafleden zonder kind: de club voegt ze toe
 *Besloten 25 september 2026.*

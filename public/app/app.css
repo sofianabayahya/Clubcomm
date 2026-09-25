@@ -431,3 +431,9 @@ details.uitklap.stil summary { font-size: 13px; color: var(--zacht); }
 .tabel.wisselgrid .cel.k { background: var(--vlak2); color: var(--zacht); }
 .tabel.wisselgrid .cel:disabled { opacity: .45; }
 .tabel.wisselgrid tr.som td { font-size: 12px; }
+
+/* Adres aanvullen (Besluit 43) */
+.adreslijst { margin: -4px 0 8px; background: var(--vlak); border: 1px solid var(--lijn); border-radius: 12px; box-shadow: 0 6px 18px rgba(11, 37, 69, .12); overflow: hidden; }
+.adreskeuze { display: block; width: 100%; text-align: left; padding: 11px 14px; border: 0; border-bottom: 1px solid var(--lijn); background: transparent; color: var(--inkt); font: inherit; font-size: 15px; }
+.adreskeuze:last-child { border-bottom: 0; }
+.adreskeuze:active, .adreskeuze:hover { background: var(--blauw-l); }
