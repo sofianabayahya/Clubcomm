@@ -510,10 +510,13 @@
     const anderen = M.deelnemers(m).filter((x) => x !== me.id);
     const met = m.van === me.id ? (bereikNaam(m) || anderen.map(voornaam).join(', ')) : pNaam(m.van);
     const collega = m.van !== me.id && m.ontvangers.includes(l.van) && l.van !== me.id;
-    const regel = m.ingetrokken ? `<i>Ingetrokken door ${esc(pNaam(m.ingetrokken.door))}</i>` : `${l.van === me.id ? 'Jij' : esc(voornaam(l.van))}: ${esc(String(l.tekst || '').split('\n')[0])}`;
+    const gezien = l.van === me.id && (m.gelezen || []).some((x) => x !== me.id);
+    const regel = m.ingetrokken ? `<i>Ingetrokken door ${esc(pNaam(m.ingetrokken.door))}</i>` : `${l.van === me.id ? `<span class="vinkje ${gezien ? 'gelezen' : ''}">${gezien ? '✓✓' : '✓'}</span> Jij` : esc(voornaam(l.van))}: ${esc(String(l.tekst || '').split('\n')[0])}`;
+    // Status (Besluit 59): "Wacht op jou" (staf, de ander heeft het laatste woord) of "Wacht op antwoord" (jij hebt het laatste woord in een echt gesprek)
+    const wachtAntw = !m.ingetrokken && l.van === me.id && m.van !== 'systeem' && (m.antw.length > 0 || (m.van === me.id && !isStaf()));
     return `<button class="bericht ${ong ? 'nieuw' : ''} ${m.ingetrokken ? 'ingetrokken' : ''}" data-act="open" data-view="bericht" data-id="${m.id}">
       ${m.van === me.id ? h.avatar(anderen.length === 1 ? pNaam(anderen[0]) : (bereikNaam(m) || '?')) : afzenderIc(m, pNaam(m.van))}
-      <span class="b-tekst"><b>${isStaf() && M.wachtOpMij(m, me.id) ? '<span class="chip oranje mini">Wacht op jou</span> ' : ''}${esc(m.onderwerp)}</b><small>${esc(met)}${collega ? ` · beantwoord door ${esc(voornaam(l.van))}` : ''}</small><span class="b-voorbeeld">${regel}</span></span>
+      <span class="b-tekst"><b>${isStaf() && M.wachtOpMij(m, me.id) ? '<span class="chip oranje mini">Wacht op jou</span> ' : wachtAntw ? '<span class="chip grijs mini">Wacht op antwoord</span> ' : ''}${esc(m.onderwerp)}</b><small>${esc(met)}${collega ? ` · beantwoord door ${esc(voornaam(l.van))}` : ''}</small><span class="b-voorbeeld">${regel}</span></span>
       <span class="b-tijd">${D.tijdstip(laatstTijd(m))}${ong ? '<i class="nieuwstip"></i>' : ''}</span></button>`;
   };
   // Eén nieuwsbericht in de lijst; eigen berichten met "gelezen door x van y"
@@ -561,6 +564,38 @@
       kanIntrekken(m, me) ? `<button class="knop licht klein rood-tekst" data-act="berichtIntrekken" data-id="${m.id}">${icon('undo-2')}Intrekken</button>` : '',
     ].filter(Boolean).join('');
     if (m.ingetrokken) return { titel: pers ? 'Gesprek' : 'Nieuws', html: `<article class="kaartje"><h2>${esc(m.onderwerp)}</h2><p class="zacht"><i>Dit bericht is ingetrokken door ${esc(pNaam(m.ingetrokken.door))} (${D.tijdstip(m.ingetrokken.tijd)}).</i></p>${acties ? `<div class="knoppen">${acties}</div>` : ''}</article>` };
+    // Gesprek als tekstballonnen (Besluit 59): ook het eerste bericht; jij rechts in blauw, de ander links met initialen;
+    // dagscheiding; berichten achter elkaar van dezelfde persoon samengevoegd; vinkjes: ✓ verstuurd, ✓✓ blauw gelezen.
+    if (pers) {
+      const alle = [{ van: m.van, tekst: m.tekst, tijd: m.gepland || m.tijd }, ...m.antw];
+      const anderen = M.deelnemers(m).filter((x) => x !== me.id);
+      const gelezenDoor = m.gelezen.filter((x) => x !== me.id);
+      const dagLabel = (t) => { const d = new Date(t); const v = new Date(); const g = new Date(Date.now() - 864e5);
+        const zelfde = (a, b) => a.toDateString() === b.toDateString();
+        return zelfde(d, v) ? 'Vandaag' : zelfde(d, g) ? 'Gisteren' : d.toLocaleDateString('nl-NL', { weekday: 'long', day: 'numeric', month: 'short' }); };
+      const uur = (t) => new Date(t).toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
+      let vorigeDag = '', vorigeVan = '';
+      const ballonnen = alle.map((b, i) => {
+        const dag = dagLabel(b.tijd); const mijn = b.van === me.id;
+        const scheiding = dag !== vorigeDag ? `<div class="dagscheiding"><span>${esc(dag)}</span></div>` : '';
+        const nieuweGroep = scheiding || b.van !== vorigeVan; vorigeDag = dag; vorigeVan = b.van;
+        const volgendeZelfde = alle[i + 1] && alle[i + 1].van === b.van && dagLabel(alle[i + 1].tijd) === dag;
+        // Vinkjes: gelezen als er daarna iemand anders iets zei, of (laatste bericht) als iemand het gelezen heeft
+        const laterAnder = alle.slice(i + 1).some((x) => x.van !== me.id);
+        const gezien = laterAnder || gelezenDoor.length > 0; // 'gelezen' wordt bij elk nieuw bericht opnieuw gevuld, dus wie erin staat las alles
+        const vink = mijn ? `<span class="vinkje ${gezien ? 'gelezen' : ''}" title="${gezien ? 'Gelezen' : 'Verstuurd'}">${gezien ? '✓✓' : '✓'}</span>` : '';
+        const ic = !mijn ? `<span class="bubbel-ic">${!volgendeZelfde ? (b.van === 'systeem' ? `<span class="avatar sys klein">${icon('bell')}</span>` : h.avatar(pNaam(b.van), 'klein')) : ''}</span>` : '';
+        return `${scheiding}<div class="bubbel-rij ${mijn ? 'mijn' : 'ander'} ${nieuweGroep ? 'begin' : ''}">${ic}<div class="bubbel ${mijn ? 'mijn' : 'ander'}">${!mijn && nieuweGroep && anderen.length > 1 ? `<b class="bubbel-naam">${esc(pNaam(b.van))}</b>` : !mijn && nieuweGroep ? `<b class="bubbel-naam">${esc(voornaam(b.van))}</b>` : ''}<p>${esc(b.tekst).replace(/\n/g, '<br>')}</p><small>${uur(b.tijd)}${vink}</small></div></div>`;
+      }).join('');
+      const l2 = alle[alle.length - 1];
+      const status = l2.van === me.id ? `<p class="zacht klein rechts">${gelezenDoor.length ? `Gelezen door ${esc(gelezenDoor.map(voornaam).join(', '))}` : 'Nog niet gelezen'}</p>` : '';
+      return {
+        titel: 'Gesprek',
+        html: `<article class="kaartje gesprek-kop"><h2>${esc(m.onderwerp)}</h2><small class="zacht">Met ${esc(anderen.map(pNaam).join(', ') || bereikNaam(m))}${m.urgent ? ' · <span class="chip rood mini">Urgent</span>' : ''}</small>${acties ? `<div class="knoppen">${acties}</div>` : ''}</article>
+          <div class="bubbels">${ballonnen}</div>${status}
+          ${m.van !== 'systeem' ? `<form class="reageer" data-submit="reageer" data-id="${m.id}"><textarea name="t" rows="1" placeholder="Reageer… (Enter = nieuwe regel)" required aria-label="Reactie" data-input="groei"></textarea><button class="icoonknop blauw" aria-label="Versturen">${icon('send')}</button></form>` : ''}`,
+      };
+    }
     const vraagOver = !pers && !eigen && m.van !== 'systeem' ? `<button class="knop licht vol" data-act="vraagOver" data-id="${m.id}">${icon('message-circle')}Stel een vraag hierover</button>` : '';
     return {
       titel: pers ? 'Gesprek' : m.soort === 'melding' ? 'Melding' : 'Nieuws',

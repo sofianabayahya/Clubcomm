@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 58 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 59 toegevoegd)
 
 ---
 
@@ -507,6 +507,13 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 59 — Gesprekken als tekstballonnen: zie wie wat zei
+- **Alles als tekstballon**, ook het eerste bericht; het onderwerp en met wie staan bovenaan. Jij rechts (blauw), de ander links (wit) met een rondje met initialen.
+- **Vinkjes** onder je eigen berichten: ✓ = verstuurd, ✓✓ blauw = gelezen. Ook in de lijst vóór "Jij: …".
+- **Dagscheiding:** "Vandaag", "Gisteren", "vrijdag 25 sep".
+- **Berichten achter elkaar** van dezelfde persoon: naam één keer bovenaan, rondje alleen bij het laatste.
+- **Status in de lijst:** "Wacht op jou" (oranje, staf: de ander heeft het laatste woord) of "Wacht op antwoord" (grijs: jij hebt het laatste woord in een lopend gesprek of stelde een vraag). Geen label = afgerond of een mededeling.
 
 ## Besluit 58 — Reageren met alinea's
 - In een gesprek maakt **Enter een nieuwe regel** (alinea's mogelijk, zoals in een e-mail). **Versturen** gaat alleen met de blauwe knop.
