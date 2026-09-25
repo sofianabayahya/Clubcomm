@@ -149,10 +149,10 @@
   CC.on('verplaats', (f) => { const S = CC.S(); const pl = M.speler(S, f.dataset.id); const oud = pl.teamId; pl.teamId = f.t.value; CC.save(); CC.closeSheet(); CC.render(); CC.toast(`${pl.voornaam} verplaatst van ${oud} naar ${pl.teamId}`); });
   CC.on('spelerToevoegen', () => { const S = CC.S(); CC.sheet('Speler toevoegen', `<form data-submit="spelerToevoegenOk" class="codeform"><div class="twee"><div><label for="st-v">Voornaam</label><input id="st-v" name="v" required></div><div><label for="st-a">Achternaam</label><input id="st-a" name="a" required></div></div><label for="st-t">Team</label><select id="st-t" name="t">${S.teams.map((t) => `<option>${t.id}</option>`).join('')}</select><label for="st-e">E-mail van een ouder</label><input id="st-e" name="e" type="email" required><button class="knop">Toevoegen en ouder uitnodigen</button></form>`); });
   CC.on('spelerToevoegenOk', (f) => {
-    const S = CC.S(); let o = S.people.find((p) => p.email === f.e.value);
-    if (!o) { o = { id: 'p' + Date.now(), naam: `Ouder van ${f.v.value}`, email: f.e.value, tel: '0600000000', rollen: [{ rol: 'ouder' }] }; S.people.push(o); }
+    const S = CC.S(); const mail = f.e.value.trim(); let o = S.people.find((p) => (p.email || '').toLowerCase() === mail.toLowerCase());
+    if (!o) { o = { id: 'p' + Date.now(), naam: `Ouder van ${f.v.value.trim()}`, email: mail, tel: '0600000000', rollen: [{ rol: 'ouder' }] }; S.people.push(o); }
     else if (!o.rollen.some((r) => r.rol === 'ouder')) o.rollen.push({ rol: 'ouder' });
-    S.players.push({ id: 's' + Date.now(), voornaam: f.v.value, achternaam: f.a.value, teamId: f.t.value, ouders: [o.id], bondsnummer: null });
+    S.players.push({ id: 's' + Date.now(), voornaam: f.v.value.trim(), achternaam: f.a.value.trim(), teamId: f.t.value, ouders: [o.id], bondsnummer: null });
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Toegevoegd; de ouder krijgt een uitnodiging');
   });
   CC.on('rollenPersoon', (el) => {
