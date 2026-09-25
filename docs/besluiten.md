@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 39 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 40 toegevoegd)
 
 ---
 
@@ -507,6 +507,14 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 40 — Telefoonnummer vult de ouder zelf in
+*Besloten 25 september 2026.*
+
+- Bij goedkeuren van een aanmelding (of speler handmatig toevoegen) krijgt de ouder **geen** telefoonnummer meer (eerder een voorbeeldnummer, waardoor de belknop naar een verkeerd nummer ging).
+- De ouder vult zijn nummer zelf in: **Profiel → Telefoonnummer toevoegen**. Alleen trainer, teamleider en jeugdleiding zien het (zoals alle contactgegevens); andere ouders niet.
+- Zonder nummer toont de contactkaart geen bel- of appknop.
+- Aandachtspunt: de app mailt de staf niet bij een nieuwe aanmelding; die staat op Home van trainer (zonder teamleider) of teamleider.
 
 ## Besluit 39 — Wisselschema: de club kiest om de hoeveel minuten, de trainer past zelf aan
 *Besloten 25 september 2026. Vult Besluit 33 (eerlijke speeltijd) aan.*

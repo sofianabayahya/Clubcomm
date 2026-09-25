@@ -137,7 +137,7 @@
   CC.keurGoed = (x, spelerId) => {
     const S = CC.S();
     let ouder = S.people.find((p) => p.email.toLowerCase() === x.email.toLowerCase());
-    if (!ouder) { ouder = { id: 'p' + Date.now(), naam: x.ouderNaam, email: x.email, tel: '0612345678', rollen: [{ rol: 'ouder' }] }; S.people.push(ouder); }
+    if (!ouder) { ouder = { id: 'p' + Date.now(), naam: x.ouderNaam, email: x.email, tel: '', rollen: [{ rol: 'ouder' }] }; S.people.push(ouder); }
     else if (!ouder.rollen.some((r) => r.rol === 'ouder')) ouder.rollen.push({ rol: 'ouder' });
     let pl = spelerId && M.speler(S, spelerId);
     if (pl) { if (!pl.ouders.includes(ouder.id)) pl.ouders.push(ouder.id); }

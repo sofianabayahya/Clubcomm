@@ -303,7 +303,8 @@
     const kids = CC.kinderen();
     const rollen = me.rollen.map((r, i) => `<button class="rolkeuze ${i === (sessie.rolIdx || 0) ? 'aan' : ''}" data-act="wisselRol" data-idx="${i}">${icon({ ouder: 'heart', trainer: 'clipboard-check', teamleider: 'hand-helping', hjo: 'shield', beheerder: 'building-2', coordinator: 'users' }[r.rol])}<span><b>${esc(CC.rolNaam(r))}</b><small>${r.teamId ? esc(r.teamId) : r.groep ? esc(r.groep) : r.rol === 'ouder' ? kids.map((k) => esc(k.voornaam)).join(', ') : esc(S.club.naam)}</small></span>${i === (sessie.rolIdx || 0) ? icon('check') : ''}</button>`).join('');
     CC.sheet('Profiel', `
-      <div class="profiel-kop">${h.avatar(me.naam, 'groot')}<div><b>${esc(me.naam)}</b><small>${esc(me.email)} · ${esc(me.tel)}</small></div></div>
+      <div class="profiel-kop">${h.avatar(me.naam, 'groot')}<div><b>${esc(me.naam)}</b><small>${esc(me.email)}${me.tel ? ` · ${esc(me.tel)}` : ''}</small></div></div>
+      ${h.rij({ ic: 'phone', titel: me.tel ? 'Telefoonnummer wijzigen' : 'Telefoonnummer toevoegen', sub: me.tel ? esc(me.tel) : 'Zodat trainer en teamleider je kunnen bellen of appen', act: 'telSheet', kleur: me.tel ? '' : 'blauw' })}
       ${me.rollen.length > 1 ? `<h3 class="klein-kop">Wissel van rol</h3><div class="rollen">${rollen}</div>` : ''}
       ${rol.rol === 'ouder' || kids.length ? `<h3 class="klein-kop">Mijn kinderen</h3>${kids.map((k) => h.rij({ ic: h.avatar(k.voornaam), titel: esc(M.naam(S, k)), sub: esc(k.teamId) })).join('')}
         ${h.rij({ ic: 'user-plus', titel: 'Kind toevoegen', sub: 'Via de uitnodiging van het andere team', act: 'demoMelding', attrs: 'data-tekst="Vraag de teamleider van het andere team om de uitnodiging (link of QR-code) en meld je daar aan met hetzelfde e-mailadres."' })}
@@ -327,6 +328,9 @@
       </div>`);
   });
   CC.on('wisselRol', (el) => CC.wisselRol(Number(el.dataset.idx)));
+  // Eigen telefoonnummer (alleen trainer, teamleider en staf van het team zien het; Besluit 40)
+  CC.on('telSheet', () => { const me = CC.me(); CC.sheet('Telefoonnummer', `<form data-submit="telOk" class="codeform"><label for="tn">Je mobiele nummer</label><input id="tn" name="t" type="tel" inputmode="tel" autocomplete="tel" value="${esc(me.tel || '')}" placeholder="06 12345678"><button class="knop">Opslaan</button><p class="zacht klein">Alleen de trainer en teamleider van het team van je kind en de jeugdleiding zien dit nummer, om je te bellen of te appen. Andere ouders zien het niet.</p></form>`); });
+  CC.on('telOk', (f) => { const t = f.t.value.replace(/[^0-9+]/g, ''); if (t && !/^(\+\d{10,14}|0\d{9})$/.test(t)) return CC.toast('Vul een geldig nummer in, bijv. 0612345678', 'fout'); CC.me().tel = t; CC.save(); CC.closeSheet(); CC.toast(t ? 'Telefoonnummer opgeslagen' : 'Telefoonnummer verwijderd'); });
 
   // ---------- Uitschrijven en account verwijderen (Besluit 14) ----------
   const hjoIds = () => S.people.filter((p) => p.rollen.some((r) => r.rol === 'hjo')).map((p) => p.id);
