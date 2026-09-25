@@ -867,7 +867,7 @@ Net als bij spelers: ClubComm registreert en signaleert, de HJO beslist.
 
 ## Besluit 15 — Fases en opschaling
 
-Gebaseerd op de jaarplanning onderbouw 2026/27 van SC Buitenveldert en de verdieping in `docs/verdieping-consequenties.md`.
+Gebaseerd op de jaarplanning onderbouw 2026/27 (toen nog van SC Buitenveldert; de pilotclub is nu RKSV DCG).
 
 ### Fases
 - Het seizoen volgt de **4 competitiefases**: fase 1 vanaf wo 19 aug 2026, fase 2 vanaf za 31 okt, fase 3 vanaf wo 20 jan 2027, fase 4 vanaf vr 2 apr (laatste training 4 jun, laatste wedstrijd 5 jun 2027).
@@ -935,8 +935,7 @@ Een ouder regelt dit **zelf** in het profiel, zonder tussenkomst van de club.
 
 ## Handleidingen
 
-Eén A4-pagina per rol (Ouder, Trainer, Teamleider, HJO) in `docs/handleidingen/`. Ze volgen de besluiten hierboven.
-Verandert er een besluit, pas dan de tekst aan in `maak-handleidingen.js` en maak ze opnieuw (instructie bovenin het script).
+De oude handleidingen per rol (23 sep) zijn verwijderd: ze klopten niet meer met Besluit 30–37. Nieuwe handleidingen maken we na de start van de pilot (zie `docs/productie-en-groei.md`, Openstaand).
 
 ---
 
@@ -947,10 +946,10 @@ Verandert er een besluit, pas dan de tekst aan in `maak-handleidingen.js` en maa
 - **Beloningen** (punten, contributie terugverdienen) als optionele module die de HJO per club of team aanzet.
 - **Planning uit voetbal.nl** koppelen.
 - **Import uit Sportlink** (zie Besluit 2).
-- **Uit de vergelijking met Teamy** (`docs/concurrent-teamy.md`): eerlijk clubrooster voor vrijwilligerstaken, meelezer (bijv. opa/oma die brengt), rollen en tags voor vrijwilligers.
-- **Uit de vergelijking met VeldPlanner** (`docs/concurrent-veldplanner.md`): veldkaart bij een training (plattegrond met het veld van het team), veldindeling importeren uit Sportlink Club i.p.v. dubbel invoeren, infoscherm in de kantine, uitslag delen als nette post voor WhatsApp.
+- **Uit de vergelijking met Teamy** (`docs/onderzoek/concurrent-teamy.md`): eerlijk clubrooster voor vrijwilligerstaken, meelezer (bijv. opa/oma die brengt), rollen en tags voor vrijwilligers.
+- **Uit de vergelijking met VeldPlanner** (`docs/onderzoek/concurrent-veldplanner.md`): veldkaart bij een training (plattegrond met het veld van het team), veldindeling importeren uit Sportlink Club i.p.v. dubbel invoeren, infoscherm in de kantine, uitslag delen als nette post voor WhatsApp.
 - **Club inrichten bij de start (onboarding):** bij de verkoop samen met een bestuurslid de taakverdeling instellen: welke taak ligt bij welke rol (HJO, coördinator, clubbeheerder, secretaris…). De tabel "Wie doet wat" wordt dan per club instelbaar.
-- **Handleiding bij de verkoop:** per rol (bestaat al in `docs/handleidingen/`) en voor de clubbeheerder.
+- **Handleiding bij de verkoop:** per rol en voor de clubbeheerder (opnieuw te maken).
 - **Online hulp met AI:** een assistent die de app volledig kent en stap voor stap uitlegt, bijvoorbeeld "hoe zet ik de taken van X uit?" of "hoe zet ik deze module uit?". Scheelt telefoontjes.
 - **Evaluatieformulier aan het einde van het seizoen** (ouders, trainers, teamleiders), zodat we per seizoen een rapport kunnen maken van wat beter kan.
 - **Checklist rollen en taken bij de club:** per rol aankruisen "hebben wij", "wie doet het" en "in de pilot ja/nee" (o.a. vertrouwenscontactpersoon, ledenadministratie, wedstrijdsecretaris, VOG-controle, technisch jeugdcoördinator, kantine, vrijwilligers). Voor nu blijven de rollen: ouder, trainer, teamleider, coördinator, HJO, clubbeheerder.
@@ -972,9 +971,9 @@ Verandert er een besluit, pas dan de tekst aan in `maak-handleidingen.js` en maa
   - Verschilt per club, dus **instelbaar door de clubbeheerder**: welke spullen, hoeveel (clubbeleid, bijv. aantal ballen per team), per teamgroep (nu onderbouw, later bovenbouw).
   - **Wie is verantwoordelijk, verschilt per soort en per club:** trainingsmateriaal hoort bij de trainer; tenues kunnen in bruikleen zijn (bijv. selectieteams) en vallen dan vaak onder de teamleider; bij andere clubs kopen spelers hun eigen tenue. De clubbeheerder moet per soort materiaal kunnen kiezen wie tekent.
   - Nog uitzoeken: wie geeft uit en neemt terug (secretaris of materiaalbeheerder), trainingspak terug of niet, wie tekent bij een team zonder trainer, en of de trainer zelf extra spullen mag toevoegen.
-- **Consequenties, nog open** (`docs/verdieping-consequenties.md`): speler O13+ bij gesprek; zones pas na 6 activiteiten; gemiste wedstrijd 3 punten; gerichte herinnering vooraf + sociale norm; compliment bij verbetering; dalingssignaal O13+; minder speeltijd bij te laat/gemiste training (jaarplanning vraag 3).
+- **Consequenties, nog open:** speler O13+ bij het gesprek betrekken; compliment bij verbetering; een dalingssignaal bij O13+. (De kaarten zelf zijn besloten in Besluit 32.)
 - **Jaarplanning importeren:** de jaarplanning (trainingen, wedstrijden, oefenwedstrijden "zelf organiseren", teamuitje, zaalvoetbal, vrije dagen) kan het startpunt zijn voor de planning in ClubComm.
-- **Analyse clubproblemen** (`docs/analyse-clubproblemen.md`): voorstellen voor wat ontbreekt (o.a. afmelden namens ouder, bereikbaarheid per ouder, VCP/gedragscode, "mijn kind twijfelt"). Nog niet besloten. Adoptie door ouders ziet de gebruiker niet als risico (mail + push, uitleg, coulante start).
+- **Analyse clubproblemen** (`docs/onderzoek/analyse-clubproblemen.md`): voorstellen voor wat ontbreekt (o.a. afmelden namens ouder, bereikbaarheid per ouder, VCP/gedragscode, "mijn kind twijfelt"). Nog niet besloten. Adoptie door ouders ziet de gebruiker niet als risico (mail + push, uitleg, coulante start).
 
-- **Presentatie** voor bestuur/trainersavond en eventueel een rollenbeschrijving.
+- **Presentatie** voor het bestuur van RKSV DCG (de oude presentatie voor SC Buitenveldert is verwijderd) en eventueel een rollenbeschrijving.
 - **Huisstijl:** één set icoontjes in één stijl (Lucide, in het prototype); kleur alleen met betekenis (groen = goed, oranje = aandacht, rood = probleem); verder rustig met het logo-blauw `#0D88F9` als hoofdkleur. **Besloten:** de app is altijd licht (witte achtergrond), ook als de telefoon op donkere modus staat.

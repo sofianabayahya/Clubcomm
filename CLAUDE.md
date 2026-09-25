@@ -1,63 +1,42 @@
-# ClubComm (voorheen BTV Connect)
+# ClubComm
 
-Communicatie- en managementplatform voor jeugdvoetbal (pilotclub: RKSV DCG, Amsterdam (Sportpark Ookmeer); eerder SC Buitenveldert).
-Gemigreerd uit Replit op 2026-09-22. Taal van de UI: Nederlands.
+Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoer, berichten, kaarten, speeltijd.
+**Pilot:** RKSV DCG (Amsterdam, Sportpark Ookmeer), team **O12-1 (talententeam, selectie)**, 17 spelers. De gebruiker (Sofian) is trainer, ouder (zijn kind speelt in het team) en clubbeheerder, met twee teamleiders. Wedstrijden vanaf fase 2 (za 31 okt 2026).
 
-## Huidige staat (prototype versie 2, sinds 2026-09-23)
-- `public/index.html` + `public/app/`: één app voor de telefoon (vanilla JS, geen build), volgens `docs/besluiten.md`.
-  - `data.js`: demodata (20 teams, O10-1 uitgewerkt) + rekenregels (aanwezigheid, kaarten per blok, zones, signalen, speeltijd).
-  - `core.js`: inloggen (link/code, demo), kop, 5 knoppen onderaan, profiel/rolwisselaar, berichten, afmelden, uitnodigen (QR via `vendor/qrcode.js`).
-  - `ouder.js`, `trainer.js`, `teamleider.js`, `hjo.js` (ook clubbeheerder): schermen per rol.
-  - `materiaal.js`: module Materiaal (checklist per team, mail naar secretaris).
-  - `afwezig.js`: periode afmelden (ouder) en "trainer kan niet" (vervanger of afgelasten).
-  - `trainerafw.js`: afwezigheid van trainers signaleren (punten per fase, signaal naar HJO).
-  - `beoordeling.js`: twee beoordelingsmomenten (winter, einde seizoen) met ontwikkelgesprekken, tijdsloten en agenda (Besluit 23).
-  - `taken.js`: taken per rol (trainer, teamleider, coördinator, HJO), aan te vinken door de clubbeheerder; rol coördinator met groep teams (Besluit 25).
-  - `hjohome.js`: Home van HJO/coördinator met Te doen en Ter informatie, spelerzaken eerst via de coördinator, afgedane signalen akkoord/oppakken (Besluit 26).
-  - `autoberichten.js`: vaste berichten bij de jaarplanning (vakanties, fases, beoordeling, seizoen), klaarzetten of automatisch (Besluit 26).
-  - `meehelpen.js`: wie helpt er mee (taken en rijden): ouder eigen bijdrage, teamleider per gezin, coördinator/HJO per team met signaal "scheef" (Besluit 28).
-  - `waardering.js`: waardering voor trainer en teamleider (regel op Home, mijlpalen), coördinator/HJO kunnen bedanken (Besluit 29).
-  - `hjofilter.js`: HJO Teams-tab filteren/sorteren en Inzicht per groep (coördinator).
-  - `agenda.js`: agenda-abonnement (iCalendar-link; `CC.icsTekst` maakt de echte .ics-inhoud voor versie 2).
-  - Icoontjes: één set (Lucide) in `vendor/icons.js`. Kleuren als tokens in `app.css`, met donkere modus.
-- Pilot = onderbouw (O6–O12); de demo heeft alleen onderbouwteams.
-- Demo-accounts: Sanne (ouder), Mark (trainer + ouder), Linda (teamleider + ouder), Peter (HJO + clubbeheerder), Esther (coördinator O10–O12). Data in localStorage, wordt elke dag opnieuw gemaakt.
-- Oude Replit-pagina's staan in `docs/oud-replit/` (alleen ter referentie; niet meer online).
-- `server.js` (Express) serveert alleen `public/`; mock-endpoints `/api/*` worden niet gebruikt.
-- Pagina-overzicht en rollen van het oude prototype: `APP_BLUEPRINT.md` (verouderd; `docs/besluiten.md` gaat voor).
+## Werkafspraken met de gebruiker
+- De gebruiker is beginner: altijd **eenvoudig Nederlands**, één stap tegelijk, uitleg waar je klikt.
+- Nieuwe keuze → vastleggen als **besluit** in `docs/besluiten.md` → bouwen → testen → committen en pushen → online zetten.
+- Vraagt de gebruiker **"wat zijn de volgende stappen?"**: kijk in `docs/productie-en-groei.md` → blok **Openstaand** en houd dat blok bij.
+- Vraag nooit om geheime sleutels in de chat (Brevo, Supabase service key); de gebruiker zet ze zelf in het dashboard.
+- Vuistregels voor elk scherm (Besluit 30 en 34): actie eerst, wat bij elkaar hoort in één blok, elke actie één vaste plek, kleur alleen voor aandacht, **informatie is geen taak**, "ClubComm signaleert, mensen beslissen".
 
-## Echte versie (sinds 2026-09-24)
-- Zie `docs/techniek.md`. Controlelijst productie, meerdere clubs en app-of-website: `docs/productie-en-groei.md`. Supabase (tabel `rij` + RLS, migraties in `supabase/migrations/`), online via Vercel (map `public`).
-- `public/app/config.js` (url + publishable key), `opslag.js` (S ↔ rijen), `live.js` (inloggen met e-mailcode, laden, automatisch opslaan, beheer: voorbeelddata/leegmaken), `vendor/supabase.js`.
-- Zonder config of met `?demo`: demo-modus zoals voorheen. De artifact-preview (build-preview2.py) laat live.js/config.js weg.
-- Testen zonder netwerk naar Supabase: `supabase/tests/fake-supabase.js` (nagebootste client, code 123456) en `supabase/tests/rls_test.sql` (via SQL).
+## Waar staat wat
+| Bestand | Inhoud |
+|---|---|
+| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 37). |
+| `docs/productie-en-groei.md` | Controlelijst, **Openstaand**, meerdere clubs, app of website, kosten. |
+| `docs/techniek.md` | Opbouw van de echte versie (Supabase, Vercel, Brevo, migraties, e-mail, back-up). |
+| `docs/onderzoek/` | Achtergrond: analyse clubproblemen, vergelijking Teamy en VeldPlanner (voorstellen, geen besluiten). |
 
-## Volgende stappen
-- Vraagt de gebruiker "wat zijn de volgende stappen?": kijk in `docs/productie-en-groei.md` → blok **Openstaand** (bijhouden als iets gedaan is).
+## De app
+- `public/index.html` + `public/app/*.js`: één webapp voor de telefoon (vanilla JS, geen build), installeerbaar (manifest + `sw.js`).
+  - `data.js`: demodata + rekenregels (aanwezigheid, kaarten per seizoen, zones, signalen, speeltijd, vaste taken). `opslag.js`: app-gegevens ↔ databaserijen. `core.js`: inloggen, kop, profiel, berichten, afmelden, planning aanpassen, privacy, feedback.
+  - Schermen per rol: `ouder.js`, `trainer.js`, `teamleider.js`, `hjo.js` (ook clubbeheerder), `hjohome.js`; coördinator via `taken.js` (ook taken per rol en profielen).
+  - Modules: `autoberichten.js` (Communicatieplan, noodberichten, herinneringen activiteiten), `afwezig.js`, `trainerafw.js`, `beoordeling.js`, `materiaal.js`, `meehelpen.js`, `waardering.js`, `hjofilter.js`, `agenda.js`.
+  - `live.js`: echte versie (Supabase: inloggen met e-mailcode, laden, automatisch opslaan, beheer).
+- **Demo:** `/?demo` (of zonder `config.js`). Accounts: Sanne (ouder), Mark (trainer + ouder), Linda (teamleider + ouder), Peter (HJO + beheerder), Esther (coördinator). Demodata heet nog "SC Buitenveldert" en staat in localStorage.
 
-## Bekende problemen
-- Logo: `public/assets/clubcomm-logo.jpg` (volledig), `clubcomm-icon.png` (icoon, login/QR) en `favicon.png` (alle pagina's). Het logo-blauw is lichter dan de app-kleur `#1e5ba8`.
-- Demo-trainers gebruiken nog fictieve `@btv.nl`-adressen (trainers-beheren, trainer-instellingen).
+## Online
+- App: https://clubcomm-nine.vercel.app — Vercel-project `clubcomm` (map `public`). Online zetten: Vercel `create_deployment` (project `clubcomm`, target production, gitSource github `sofianabayahya/Clubcomm`, ref = de werkbranch, zonder teamId).
+- Supabase-project `pkvacwbdgumkffxnxnqk` (Frankfurt). Club-id `dcg`; account van de gebruiker: persoon `p-beheer`. Migraties: bestand in `supabase/migrations/` **en** toepassen met `apply_migration`. Edge Function `melding` (e-mail via Brevo; secrets `BREVO_API_KEY`, `AFZENDER_EMAIL`).
+- E-mail: Brevo (inlogmail via SMTP, meldingen via API). Afzender nu een Gmail-adres; eigen domein staat op Openstaand.
 
-## Fase 2 (afgerond 2026-09-23)
-- JS-fouten opgelost in ouderportaal, overzicht, hjo-dashboard en analytics-hub (Chart.js v4: `horizontalBar` → `bar` + `indexAxis: 'y'`).
-- Frontend verplaatst naar `public/`; onbekende bestanden geven 404 i.p.v. index.html.
-- Naam overal ClubComm; club heet SC Buitenveldert.
-- CDN-versies vastgezet: Chart.js `@4`; qrcodejs via cdnjs (cdn.rawgit.com bestaat niet meer).
+## Testen
+- Lokaal: `npm install && npm start` → http://localhost:5000/?demo (of `cd public && python3 -m http.server 5050`).
+- Zonder netwerk naar Supabase: `supabase/tests/fake-supabase.js` (nagebootste client, code 123456); rechten per rol: `supabase/tests/rls_test.sql`.
+- Playwright staat klaar (Chromium in `/opt/pw-browsers`); testscripts per rol opnemen in het project staat op Openstaand.
 
-## Lokaal draaien
-- Statisch: `cd public && python3 -m http.server 5050` (werkt zonder Node).
-- Volledig: `npm install && npm start` (poort 5000, vereist Node.js).
-
-## Richting V2
-**Besluiten (bouwlijst) staan in `docs/besluiten.md`** — lees die eerst; bij tegenstrijdigheid gaat dat document voor.
-
-Specificaties staan in `~/Desktop/Platform Clubcomm/` (Parent Portal V2, HJO Dashboard V2, Registratie/Auth/Rollen brief).
-Kernprincipes:
-- Eén account per persoon, rollen zijn toewijzingen; meerdere rollen per account met rolwisselaar.
-- Passwordless login (e-mailcode/magic link).
-- Rechten server-side afdwingen (ouder ziet alleen gekoppelde kinderen, trainer alleen eigen teams).
-- Drempels (aanwezigheid, te laat, gele kaarten, afmelddeadline) configureerbaar door HJO per team/teamtype — nooit hardcoden.
-- "ClubComm detecteert, communiceert en documenteert. Mensen beslissen." Geen automatische straffen.
-- `club_id` op alle data (multi-club later).
-- Voorgestelde stack: Next.js + Supabase (Auth + Postgres/RLS), hosting op Vercel.
+## Bekende beperkingen
+- Automatische berichten gaan uit zodra een beheerder/HJO of staflid de app opent (nog niet vanaf de server).
+- Agenda-abonnement werkt pas met een eigen domein (in de echte versie verborgen).
+- Het logo-blauw is lichter dan de app-kleur.

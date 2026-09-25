@@ -1,8 +1,8 @@
 # ClubComm — Controlelijst productie en groei
 
 > **Openstaand — hier kijken bij de vraag "wat zijn de volgende stappen?"**
-> *Vóór de ouders erbij komen:* teamleiders ontvangen → database leegmaken en O12-1 inrichten (trainingen di/do veld 1, vr veld 2, 17:15–18:30; selectie; rollen trainer/coördinator/HJO/beheerder voor de initiatiefnemer; teamleiders profiel Basis) → privacycontact invullen (Regels → Privacy) → toestemming bestuur → teksten voor teamleiders en ouders → testen op echte telefoons.
-> *Later in de pilot:* fouten automatisch vastleggen · Content-Security-Policy · gebruikerstest met 3–5 ouders · welkomstuitleg bij eerste keer inloggen · agenda-koppeling (heeft domein nodig).
+> *Vóór de ouders erbij komen:* teamleiders ontvangen → database leegmaken en O12-1 inrichten (trainingen di/do veld 1, vr veld 2, 17:15–18:30; selectie; rollen trainer/coördinator/HJO/beheerder voor de initiatiefnemer; teamleiders profiel Basis) → privacycontact invullen (Regels → Privacy) → toestemming bestuur (met een nieuwe, korte presentatie voor RKSV DCG) → teksten voor teamleiders en ouders → testen op echte telefoons.
+> *Later in de pilot:* nieuwe handleidingen per rol · fouten automatisch vastleggen · Content-Security-Policy · gebruikerstest met 3–5 ouders · welkomstuitleg bij eerste keer inloggen · agenda-koppeling (heeft domein nodig).
 > *Vóór een tweede club:* merknaam checken (clubcomm.nl/.com/.app zijn bezet) en domein kopen + e-mail vanaf eigen domein · testomgeving, automatische tests (GitHub Actions), uptime-bewaking · Supabase Pro, Vercel Pro · automatische berichten vanaf de server (pg_cron) · pushmeldingen · club-wizard, meerdere clubs per persoon, Sportlink/voetbal.nl-import · verwerkersovereenkomsten, DPIA, bewaartermijnen automatisch · toegankelijkheid (WCAG) · twee beheerders per club, logboek, rate limiting.
 > *Later:* store-app (Capacitor), huiswerk en filmpjes, fondsenwerving, weekbericht.
 
