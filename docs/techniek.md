@@ -45,3 +45,9 @@
 ## Privacy, installeren en back-up (Besluit 37)
 - Migratie `008_privacy_en_backup.sql`: `aanmelden(..., p_akkoord)` weigert zonder akkoord en legt `privacyAkkoord` vast; schema `backup` (tabellen `rij`, `lid`, functie `backup.maak()`), pg_cron-taak `clubcomm-backup` elke zondag 02:00 UTC, 8 weken bewaard. Terugzetten: met SQL uit `backup.rij` (per datum `gemaakt`).
 - `public/manifest.webmanifest`, `public/sw.js` (netwerk eerst, cache alleen als reserve, alleen eigen domein), iconen `assets/icon-192.png`, `icon-512.png`, `icon-maskable-512.png`.
+
+## E-mail vanaf eigen domein (25 september 2026)
+- Afzender `ClubComm <noreply@mijnclubcomm.nl>` (Brevo, domein geverifieerd met brevo-code, DKIM `brevo1/2._domainkey` en DMARC `p=none` bij Hostnet). Ingesteld in Supabase: Authentication → SMTP Settings en Edge Function-secret `AFZENDER_EMAIL`.
+- Er is geen mailbox op noreply@: antwoorden per mail komen nergens aan (de mails zeggen: reageren doe je in de app).
+- Brevo zet in elke mail een afmeldknop (List-Unsubscribe; uitzetten kan alleen bij Brevo Enterprise). Wie erop tikt, komt op de blokkeerlijst en krijgt ook geen inlogcode meer. Deblokkeren: Brevo → Transactional → Contacts/Blocked (of API `DELETE /smtp/blockedContacts/{email}`).
+
