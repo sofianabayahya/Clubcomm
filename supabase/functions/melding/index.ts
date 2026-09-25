@@ -15,7 +15,7 @@ Deno.serve(async (req) => {
   if (!club || !id) return json({ fout: "club en id nodig" }, 400);
 
   const sleutel = Deno.env.get("BREVO_API_KEY"); const afzender = Deno.env.get("AFZENDER_EMAIL");
-  const app = Deno.env.get("APP_URL") ?? "https://clubcomm-nine.vercel.app";
+  const app = Deno.env.get("APP_URL") ?? "https://mijnclubcomm.nl";
   if (!sleutel || !afzender) return json({ overgeslagen: "BREVO_API_KEY of AFZENDER_EMAIL ontbreekt" });
 
   const sb = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);

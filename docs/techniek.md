@@ -1,7 +1,7 @@
 # ClubComm — techniek van de echte versie (sinds 24 september 2026)
 
 ## Onderdelen
-- **App**: `public/` (dezelfde schermen als de demo). Online via Vercel: https://clubcomm-nine.vercel.app (project `clubcomm`, map `public`).
+- **App**: `public/` (dezelfde schermen als de demo). Online via Vercel: https://mijnclubcomm.nl (project `clubcomm`, map `public`; domein bij Hostnet: A-record @ → 76.76.21.21, CNAME www → cname.vercel-dns.com; www stuurt door). Het oude adres https://clubcomm-nine.vercel.app werkt ook.
 - **Database en inloggen**: Supabase-project `ClubComm` (regio Frankfurt, EU). Club-id `dcg` (club DCG).
 - **Demo**: blijft bestaan. Met `?demo` achter het adres draait de app met voorbeelddata op het eigen apparaat.
 
@@ -21,7 +21,7 @@
 - Nieuwe ouder: via de team-uitnodiging (QR/link) aanmelden → de teamleider keurt goed → daarna koppelt het account vanzelf.
 
 ## Nog in te stellen in Supabase (dashboard, door de eigenaar)
-1. **Authentication → URL Configuration**: Site URL `https://clubcomm-nine.vercel.app` en dezelfde bij Redirect URLs.
+1. **Authentication → URL Configuration**: Site URL `https://mijnclubcomm.nl`; bij Redirect URLs `https://mijnclubcomm.nl/**` en `https://clubcomm-nine.vercel.app/**`.
 2. **Authentication → Emails → Magic Link**: zet `{{ .Token }}` in de tekst, zodat de mail ook de code bevat.
 3. **Voor de pilot: eigen e-mailverzender (SMTP)**, bijv. Resend of Brevo. De ingebouwde verzender stuurt maar een paar mails per uur.
 

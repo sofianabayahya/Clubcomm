@@ -113,7 +113,7 @@
     if (L.stap === 'code') return scherm(`<h1>Check je mail</h1><p class="zacht">We hebben een mail gestuurd naar <b>${esc(L.email)}</b>. Tik op de knop in de mail (open hem op dit apparaat), of typ de code over als die in de mail staat.</p>${foutRegel()}
       <form data-submit="liveCode" class="codeform"><label for="lc">Code uit de mail</label><input id="lc" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required placeholder="123456"><button class="knop">Inloggen</button></form>
       <p class="zacht klein">Geen mail? Kijk ook in je spam. <button class="linkknop" data-act="liveNogmaals">Stuur opnieuw</button> · <button class="linkknop" data-act="liveTerug">Ander e-mailadres</button></p>`);
-    return scherm(`<h1>ClubComm</h1><p class="zacht">${esc(L.clubNaam || 'Jeugdvoetbal')}</p>${foutRegel()}
+    return scherm(`<h1>ClubComm</h1><p class="zacht">Altijd in contact met je club</p>${foutRegel()}
       <form data-submit="liveMail" class="codeform"><label for="lm">Je e-mailadres</label><input id="lm" name="email" type="email" autocomplete="email" required placeholder="naam@voorbeeld.nl" value="${esc(L.email)}"><button class="knop">Stuur mij een inlogcode</button></form>
       <p class="zacht klein">Geen wachtwoord nodig. Je blijft ingelogd op dit apparaat.</p>`);
   };
