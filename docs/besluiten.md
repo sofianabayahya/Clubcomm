@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 48 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 49 toegevoegd)
 
 ---
 
@@ -507,6 +507,12 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 49 — HJO: vierde knop Ouders onder Teams
+- Onder **Teams** staan nu vier knoppen: **Teams · Spelers · Staf · Ouders**.
+- **Ouders:** alle ouders met hun kind(eren) en team, met bellen, appen en mailen in één tik. Zoeken op naam van ouder of kind.
+- Filter **Zonder telefoonnummer (aantal)**: zo zie je in één oogopslag wie nog geen nummer heeft. In de lijst staat dan "geen nummer".
+- Tik op een ouder → **Gegevens wijzigen** om naam of telefoonnummer aan te vullen (alleen HJO/clubbeheerder, Besluit 45). Het e-mailadres blijft van de ouder zelf.
 
 ## Besluit 48 — Verversen elke 30 seconden
 - De app haalt de gegevens **elke 30 seconden** opnieuw op zolang hij open en zichtbaar is (was 2 minuten), en meteen bij terugkomen in de app.

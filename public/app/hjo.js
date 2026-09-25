@@ -3,6 +3,8 @@
 (function () {
   const CC = window.CC; const D = CC.date, M = CC.m, h = CC.h, icon = CC.icon, esc = CC.esc;
   const alleTeams = (S) => S.teams.map((t) => t.id);
+  // Knoppen bovenaan Teams (ook gebruikt in hjofilter.js); Ouders erbij in Besluit 49
+  CC.hjoTeamsSeg = () => h.seg('hjoTeams', [['teams', 'Teams'], ['spelers', 'Spelers'], ['mensen', 'Staf'], ['ouders', 'Ouders']], 'teams');
   const hjoIds = (S) => S.people.filter((p) => p.rollen.some((r) => r.rol === 'hjo')).map((p) => p.id);
 
   const aandacht = (S) => {
@@ -49,7 +51,7 @@
       },
       teams(S) {
         const modus = h.segVal('hjoTeams', 'teams');
-        const seg = h.seg('hjoTeams', [['teams', 'Teams'], ['spelers', 'Alle spelers'], ['mensen', 'Staf']], 'teams');
+        const seg = CC.hjoTeamsSeg();
         const per = M.periode(S, 'blok');
         if (modus === 'spelers') {
           const q = (h.segVal('zoekSp', '') || '').toLowerCase();
@@ -57,6 +59,21 @@
           return `${seg}<div class="zoek">${icon('search')}<input type="search" placeholder="Zoek speler of team" value="${esc(q)}" data-input="zoekSp" aria-label="Zoek speler"></div>
             <button class="knop licht vol" data-act="spelerToevoegen">${icon('user-plus')}Speler handmatig toevoegen</button>
             <div class="lijst" id="zoekres">${res.map((pl) => h.rij({ ic: h.avatar(pl.voornaam), titel: esc(M.naam(S, pl)), sub: esc(CC.tn(pl.teamId)), act: 'spelerActies', attrs: `data-id="${pl.id}"` })).join('')}</div><p class="zacht klein">${S.players.filter((p) => p.teamId).length} spelers in de club${res.length === 40 ? ', eerste 40 getoond' : ''}.</p>`;
+        }
+        // Ouders (Besluit 49): alle ouders met hun kind(eren), bellen/appen/mailen, en snel zien wie nog geen telefoonnummer heeft
+        if (modus === 'ouders') {
+          const q = (h.segVal('zoekOuder', '') || '').toLowerCase(); const f = h.segVal('ouderFilter', 'alle');
+          const kids = (p) => S.players.filter((pl) => pl.teamId && (pl.ouders || []).includes(p.id));
+          const alle = S.people.filter((p) => p.rollen.some((r) => r.rol === 'ouder') && kids(p).length);
+          const zonder = alle.filter((p) => !p.tel);
+          const res = (f === 'geenTel' ? zonder : alle)
+            .filter((p) => !q || p.naam.toLowerCase().includes(q) || kids(p).some((pl) => M.naam(S, pl).toLowerCase().includes(q)))
+            .sort((a, b) => a.naam.localeCompare(b.naam));
+          const contact = (p) => `${CC.belKnoppen(p)}<a class="icoonknop" href="mailto:${esc(p.email)}" aria-label="Mail ${esc(p.naam)}">${icon('mail')}</a>`;
+          return `${seg}<div class="zoek">${icon('search')}<input type="search" placeholder="Zoek ouder of kind" value="${esc(q)}" data-input="zoekOuder" aria-label="Zoek ouder"></div>
+            <div class="chips">${[['alle', `Alle ouders (${alle.length})`], ['geenTel', `Zonder telefoonnummer (${zonder.length})`]].map(([k, l]) => `<button class="chipknop ${k === f ? 'aan' : ''}" data-act="seg" data-key="ouderFilter" data-val="${k}">${esc(l)}</button>`).join('')}</div>
+            <p class="zacht klein">Tik op een naam om het telefoonnummer of de naam aan te vullen. Ouders kunnen hun nummer ook zelf invullen in hun profiel.</p>
+            <div class="lijst">${res.map((p) => h.rij({ ic: h.avatar(p.naam), titel: esc(p.naam), sub: kids(p).map((pl) => `${esc(M.naam(S, pl))} · ${esc(CC.tn(pl.teamId))}`).join(' · ') + (p.tel ? '' : ' · <span class="oranje-tekst">geen nummer</span>'), rechts: contact(p), act: 'rollenPersoon', attrs: `data-id="${p.id}"` })).join('') || h.leeg(f === 'geenTel' ? 'Alle ouders hebben een nummer 👍' : 'Niemand gevonden')}</div>`;
         }
         if (modus === 'mensen') {
           const q = (h.segVal('zoekMens', '') || '').toLowerCase(); const f = h.segVal('stafRol', 'alle');
@@ -141,6 +158,7 @@
     CC.save(); CC.closeSheet(); CC.render(); CC.toast(acts.length ? `${acts.length} activiteiten afgelast · ${ontv.length} mensen ingelicht` : 'Op die dag stond niets gepland');
   });
   CC.on('zoekSp', (el) => { CC.ui.seg.zoekSp = el.value; const pos = el.selectionStart; CC.render(); const n = document.querySelector('[data-input="zoekSp"]'); n.focus(); n.setSelectionRange(pos, pos); });
+  CC.on('zoekOuder', (el) => { CC.ui.seg.zoekOuder = el.value; const pos = el.selectionStart; CC.render(); const n = document.querySelector('[data-input="zoekOuder"]'); n.focus(); n.setSelectionRange(pos, pos); });
   CC.on('zoekMens', (el) => { CC.ui.seg.zoekMens = el.value; const pos = el.selectionStart; CC.render(); const n = document.querySelector('[data-input="zoekMens"]'); n.focus(); n.setSelectionRange(pos, pos); });
   CC.on('spelerActies', (el) => {
     const S = CC.S(); const pl = M.speler(S, el.dataset.id);
@@ -285,7 +303,7 @@
       titel: t.naam,
       html: `<div class="cijfers"><div class="cijfer ${z}"><b>${ts.pct ?? '–'}%</b><small>aanwezig</small></div><div class="cijfer"><b>${M.spelers(S, t.id).length}</b><small>spelers</small></div><div class="cijfer"><b>${ts.telaat}×</b><small>te laat</small></div></div>
         ${top.length ? `<p class="klein">Meest genoemde redenen: ${top.map(([r, n]) => `${esc(r.toLowerCase())} (${n})`).join(', ')}</p>` : ''}
-        ${h.sectie('Staf')}<div class="kaartje"><label class="klein-kop">Trainer</label>${kies('trainerId', t.trainerId)}<label class="klein-kop">Teamleider</label>${kies('teamleiderId', t.teamleiderId)}<p class="zacht klein">Kies uit bestaande ouders of staf. Iemand van buiten? Voeg de persoon toe via Teams → Mensen.</p></div>
+        ${h.sectie('Staf')}<div class="kaartje"><label class="klein-kop">Trainer</label>${kies('trainerId', t.trainerId)}<label class="klein-kop">Teamleider</label>${kies('teamleiderId', t.teamleiderId)}<p class="zacht klein">Kies uit bestaande ouders of staf. Iemand van buiten? Voeg de persoon toe via Teams → Staf.</p></div>
         ${h.sectie('Teamtype en regels')}<div class="kaartje"><div class="seg">${['breedte', 'selectie'].map((x) => `<button class="${t.type === x ? 'aan' : ''}" data-act="zetType" data-team="${t.id}" data-val="${x}">${x[0].toUpperCase() + x.slice(1)}</button>`).join('')}</div>
           <form data-submit="afwijkingOk" data-team="${t.id}" class="codeform"><label for="af-d">Afmelden training tot … uur van tevoren</label><input id="af-d" name="dt" type="number" min="0" max="48" value="${afw.deadlineTraining ?? ''}" placeholder="Clubstandaard: ${S.club.inst.deadlineTraining}"><button class="knop licht klein">Afwijking opslaan</button><p class="zacht klein">Leeg = clubstandaard. Zo kan een selectieteam strenger zijn dan een breedteteam.</p></form></div>
         ${CC.materiaalStatus && S.club.modules.materiaal ? `<div class="lijst">${CC.materiaalStatus(S, t.id)}</div>` : ''}
@@ -368,7 +386,7 @@
         return `<form data-submit="labelsOk" class="kaartje codeform"><p class="klein">Hoe noemt jullie club deze rollen?</p><div class="twee"><div><label for="lb-h">Hoofd jeugd</label><input id="lb-h" name="h" value="${esc(c.labels.hjo)}"></div><div><label for="lb-c">Coördinator</label><input id="lb-c" name="c" value="${esc(c.labels.coordinator)}"></div></div><label class="schakel"><span>${esc(c.labels.coordinator)} gebruiken (${esc(c.labels.hjo)}-rechten voor een groep teams)</span><input type="checkbox" name="ca" ${c.coordinatorAan ? 'checked' : ''}><i></i></label><button class="knop licht klein">Opslaan</button></form>
           ${h.sectie('Rollen in gebruik')}<div class="lijst compact">${[['ouder', 'Ouder'], ['trainer', 'Trainer'], ['teamleider', 'Teamleider'], ['hjo', c.labels.hjo], ...(c.coordinatorAan ? [['coordinator', c.labels.coordinator]] : []), ['beheerder', 'Clubbeheerder']].map(([r, l]) => h.rij({ ic: 'user-cog', titel: esc(l), rechts: `<b>${tel(r)}</b>` })).join('')}</div>
           <table class="tabel"><thead><tr><th></th><th>Clubbeheerder</th><th>${esc(c.labels.hjo)}</th></tr></thead><tbody><tr><td>Soort werk</td><td>inrichten (± 1× per seizoen)</td><td>jeugd sturen (wekelijks)</td></tr><tr><td>Wat</td><td>rollen, modules, regels, seizoen, vakanties</td><td>teams, staf, signalen, planning, berichten</td></tr></tbody></table>
-          <p class="zacht klein">Rollen per persoon koppel je als ${esc(c.labels.hjo)} bij Teams → Mensen.</p>`;
+          <p class="zacht klein">Rollen per persoon koppel je als ${esc(c.labels.hjo)} bij Teams → Staf.</p>`;
       },
       modules(S) {
         const m = S.club.modules;

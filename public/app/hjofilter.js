@@ -9,7 +9,7 @@
   const origTeams = CC.rollen.hjo.schermen.teams;
   CC.rollen.hjo.schermen.teams = (S) => {
     if (h.segVal('hjoTeams', 'teams') !== 'teams') return origTeams(S);
-    const seg = h.seg('hjoTeams', [['teams', 'Teams'], ['spelers', 'Alle spelers'], ['mensen', 'Staf']], 'teams');
+    const seg = CC.hjoTeamsSeg();
     const per = M.periode(S, 'blok'); const f = h.segVal('tmF', 'alle'); const so = h.segVal('tmSort', 'naam');
     const rijen = S.teams.map((t) => {
       const ts = M.teamStats(S, t.id, per); const z = M.zone(S, ts.pct, t.id);
