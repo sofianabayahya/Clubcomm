@@ -412,7 +412,7 @@
   // Drie stappen voor de iPhone (ook gebruikt in het welkomstscherm voor meldingen)
   CC.beginStappen = () => {
     const stap = (n, ic, tekst) => `<div class="beginstap"><span class="beginnr">${n}</span><span class="beginic">${icon(ic)}</span><span>${tekst}</span></div>`;
-    return `${stap(1, 'share', 'Tik onderin Safari op <b>Delen</b> (het vierkantje met het pijltje omhoog).')}${stap(2, 'square-plus', 'Scrol een stukje naar beneden en kies <b>Zet op beginscherm</b>.')}${stap(3, 'check', 'Tik rechtsboven op <b>Voeg toe</b>. Open ClubComm voortaan via het icoon.')}
+    return `${stap(1, 'share', 'Tik in Safari op <b>Delen</b> (het vierkantje met het pijltje omhoog). Zie je dat niet? Tik dan eerst op de <b>drie puntjes (•••)</b> en daarna op <b>Deel</b>.')}${stap(2, 'square-plus', 'Scrol een stukje naar beneden en kies <b>Zet op beginscherm</b>. Staat het er niet? Tik eerst op <b>Bekijk meer</b>.')}${stap(3, 'check', 'Tik rechtsboven op <b>Voeg toe</b>. Open ClubComm voortaan via het icoon.')}
       <p class="zacht klein">Een knop die dit voor je doet, staat Apple niet toe. Gebruik je Chrome op de iPhone? Dan zit Delen rechtsboven.</p>`;
   };
   // App op je beginscherm (Besluit 54): Android met één knop als Chrome het aanbiedt; iPhone kan alleen via Delen (regel van Apple)
