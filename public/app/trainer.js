@@ -61,9 +61,14 @@
 
   // ---------- Speeltijd (gedeeld met teamleider, module) ----------
   // opties.alleenSchema: voor de timekeeper (ouder) alleen het wisselschema van deze wedstrijd, zonder seizoenscijfers
+  // Gespeelde wedstrijden (tot 3 dagen terug) waarvan de uitslag nog niet is opgeslagen (Besluit 73)
+  const zonderUitslag = (S, teamId) => S.acts.filter((a) => a.teamId === teamId && M.isWed(a) && !a.afgelast && !a.uitslagKlaar && a.datum >= D.addDays(D.vandaag(), -3)
+    && new Date(`${a.datum}T${a.eind || a.tijd || '23:59'}`) < new Date()).sort((x, y) => x.datum.localeCompare(y.datum));
+  CC.zonderUitslag = zonderUitslag;
   CC.speeltijdHtml = (S, teamId, opties = {}) => {
     const vandaagW = S.acts.filter((a) => a.teamId === teamId && M.isWed(a) && !a.afgelast && a.datum === D.vandaag());
-    const wedstrijden = [...new Set([...vandaagW, ...M.komend(S, teamId, 10)])].filter((a) => M.isWed(a) && !a.afgelast && (!opties.act || a.id === opties.act));
+    const recent = opties.alleenSchema ? [] : zonderUitslag(S, teamId);
+    const wedstrijden = [...new Set([...recent, ...vandaagW, ...M.komend(S, teamId, 10)])].filter((a) => M.isWed(a) && !a.afgelast && (!opties.act || a.id === opties.act));
     const kies = h.segVal('stWed', wedstrijden[0] && wedstrijden[0].id);
     const a = wedstrijden.find((x) => x.id === kies) || wedstrijden[0];
     const t = M.team(S, teamId); const c = CC.categorie(t.cat);
@@ -129,7 +134,7 @@
   // ---------- Scorebord (Besluit 62): thuis en uit, wie scoorde, uitslag naar de ouders ----------
   // Alleen op de wedstrijddag (of als er al gescoord is). De timekeeper en de trainer houden het bij.
   CC.scorebord = (S, a, t) => {
-    if (a.datum !== D.vandaag() && !(a.goals || []).length) return '';
+    if (a.datum !== D.vandaag() && !(a.goals || []).length && !zonderUitslag(S, a.teamId).includes(a)) return '';
     const ons = `${S.club.naam}${t ? ' ' + t.naam : ''}`; const thuisNaam = a.thuis ? ons : (a.tegen || 'Tegenstander'); const uitNaam = a.thuis ? (a.tegen || 'Tegenstander') : ons;
     const st = M.stand(a); const g = a.goals || [];
     const kant = (k, naam, n) => `<div class="sb-kant"><small>${k === 'thuis' ? 'Thuis' : 'Uit'}</small><b>${esc(naam)}</b><span class="sb-stand">${n}</span>${a.uitslagKlaar ? '' : `<button class="knop klein vol" data-act="goal" data-a="${a.id}" data-kant="${k}">${icon('plus')}Doelpunt</button>`}</div>`;
@@ -247,6 +252,7 @@
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Afgedaan');
   });
 
+  CC.on('naarWedstrijd', (el) => { CC.ui.seg.stWed = el.dataset.id; CC.go('speeltijd'); });
   CC.rollen.trainer = {
     context(S) { const t = M.team(S, CC.teamId()); return { titel: t.naam, sub: `Trainer · ${S.club.naam}` }; },
     tabs(S) { const me = CC.me(); return [['home', 'Home', 'house'], ['aanwezigheid', 'Aanwezigheid', 'clipboard-check'], ['berichten', 'Berichten', 'message-circle', M.ongelezen(S, me.id)], ['spelers', 'Spelers', 'users'], S.club.modules.speeltijd && ['speeltijd', 'Speeltijd', 'timer']]; },
@@ -270,6 +276,10 @@
           acties.push(h.rij({ ic: 'clipboard-check', titel: 'Aanwezigheid nog niet ingevuld', sub: `${a.soort === 'activiteit' ? esc(a.naam || 'Activiteit') : 'Training'} ${D.kort(a.datum)} ${a.tijd} · kan nog tot ${D.kort(D.iso(tot))} ${String(tot.getHours()).padStart(2, '0')}:${String(tot.getMinutes()).padStart(2, '0')}`, kleur: 'oranje', act: 'open', attrs: `data-view="opnemen" data-id="${a.id}"` }));
         });
         const mat = CC.materiaalRij && CC.mag('materiaal') && CC.materiaalRij(S, tid); if (mat) acties.push(mat);
+        // Besluit 73: wedstrijddag. Vandaag of morgen een wedstrijd zonder wisselschema; gespeelde wedstrijd zonder opgeslagen uitslag.
+        if (S.club.modules.speeltijd) S.acts.filter((a) => a.teamId === tid && M.isWed(a) && !a.afgelast && (a.datum === D.vandaag() || a.datum === D.addDays(D.vandaag(), 1)) && !S.speeltijd.schema[a.id] && new Date(`${a.datum}T${a.eind || a.tijd}`) > new Date())
+          .forEach((a) => acties.push(h.rij({ ic: 'timer', titel: `Maak het wisselschema voor ${a.datum === D.vandaag() ? 'vandaag' : 'morgen'}`, sub: `${h.actTitel(S, a)} · ${a.tijd}`, act: 'naarWedstrijd', attrs: `data-id="${a.id}"`, kleur: 'oranje' })));
+        zonderUitslag(S, tid).forEach((a) => acties.push(h.rij({ ic: 'flag', titel: 'Uitslag nog opslaan', sub: `${h.actTitel(S, a)} · ${D.kort(a.datum)} · dan krijgen de ouders de uitslag en kloppen de doelpunten`, act: 'naarWedstrijd', attrs: `data-id="${a.id}"`, kleur: 'oranje' })));
         if (CC.beoordRijTrainer) acties.push(...CC.beoordRijTrainer(S, tid));
         // Geen activiteit gepland: wel de acties tonen (bijv. aanmeldingen)
         if (!volgendeT) return h.leeg('Geen activiteiten gepland') + h.actieBlok(acties, 'nieuwe berichten, aanmeldingen of aanwezigheid die nog open staat');

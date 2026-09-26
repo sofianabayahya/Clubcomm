@@ -264,7 +264,8 @@
     const vandaag = D.vandaag();
     S.acts = S.acts.filter((a) => !(a.teamId === t.id && a.soort === 'training' && a.datum >= vandaag && !S.pres[a.id]));
     const inVak = (d) => [...S.club.vakanties, ...S.club.stops].find((v) => d >= v.van && d <= v.tot && !v.trainen);
-    for (let d = vandaag; d <= D.addDays(vandaag, 56); d = D.addDays(d, 1)) {
+    // Tot het einde van het seizoen (was 8 weken; dan liep de planning ongemerkt af)
+    for (let d = vandaag; d <= (S.club.seizoen.eind || D.addDays(vandaag, 56)); d = D.addDays(d, 1)) {
       const dow = D.parse(d).getDay();
       t.rooster.forEach((r) => { if (r.dag === dow && !inVak(d)) S.acts.push({ id: 'a' + Math.random().toString(36).slice(2), teamId: t.id, soort: 'training', datum: d, tijd: r.tijd, eind: r.eind, veld: r.veld, afgelast: false }); });
     }

@@ -508,6 +508,13 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 73 — Home trainer: wedstrijddag; vakanties zichtbaar in de planning
+- **"Maak het wisselschema voor vandaag/morgen"** bij Actie nodig: een (oefen)wedstrijd vandaag of morgen zonder wisselschema (module speeltijd aan), tot de wedstrijd voorbij is. Tik → Speeltijd met die wedstrijd.
+- **"Uitslag nog opslaan"**: een gespeelde wedstrijd (tot 3 dagen terug) waarvan de uitslag niet is opgeslagen. Het scorebord blijft dan beschikbaar, ook als er niet gescoord is. Anders krijgen ouders geen uitslag en kloppen doelpunten en speeltijd niet.
+- **Geen "planning loopt af"-signaal:** de jaarplanning (trainingsrooster minus vakanties) staat voor het hele seizoen klaar. Wijzigt de beheerder het rooster, dan maakt de app de trainingen nu tot het einde van het seizoen aan (was 8 weken; dan liep de planning ongemerkt af).
+- **Vakanties en vrije dagen staan in de planning van de ouder** ("Herfstvakantie · 11 t/m 18 okt · geen training"), zodat een lege week uitgelegd is. De herinnering blijft zoals in Besluit 36 (7 dagen vooraf).
+- Hoe ver vooruit we berichten sturen, blijft zoals besloten in Besluit 36 (Communicatieplan).
+
 ## Besluit 72 — Ontwikkelgegevens bewaren zolang het kind lid is
 - De voorbereiding, het verslag, de notitie en de kijk van de trainer blijven bewaard **zolang het kind lid is**, ook over seizoenen en teams heen (Besluit 71).
 - **Wordt het kind uitgeschreven** (Profiel → Kind uitschrijven), dan worden deze gegevens **meteen verwijderd**: in de app én door de database zelf (migratie 018), ook de delen die de ouder niet kan zien. Een gekozen gesprekstijd komt weer vrij.
