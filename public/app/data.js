@@ -78,6 +78,8 @@
     const duur = l.helften * l.helft;
     const basis = n <= 7 ? { naam: "Mini's", schaal: 'woorden', vaardig: CC.VAARDIGHEDEN.mini, geenGesprek: true } : n <= 10 ? { naam: 'Onderbouw', schaal: 'woorden', vaardig: CC.VAARDIGHEDEN.o8, geenGesprek: true }
       : n <= 12 ? { naam: 'Onderbouw', schaal: 'woorden', vaardig: CC.VAARDIGHEDEN.o11 } : { naam: 'Middenbouw', schaal: 'woorden', vaardig: CC.VAARDIGHEDEN.o13 };
+    // Besluit 69: ontwikkelgesprekken vanaf O12 (overgang van 'baas over de bal' naar 'hoe te spelen')
+    basis.geenGesprek = n < 12;
     return { ...basis, key: l.key, vormKey: l.vormKey, leeftijd: l.label, vorm: l.vorm, opVeld: l.opVeld, duur, helften: l.helften, helft: l.helft, timeout: l.timeout,
       speelduur: l.helften === 2 ? `2 × ${l.helft} minuten` : `${duur} minuten (toernooivorm)`, blokken: 4, blokMin: duur / 4 };
   };

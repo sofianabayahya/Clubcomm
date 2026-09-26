@@ -508,6 +508,10 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 69 — Ontwikkelgesprekken vanaf O12
+- Ontwikkelgesprekken (met de opdracht voor het kind) houden we **vanaf O12**. Onderbouw: baas worden over de bal; middenbouw: hoe te spelen; bovenbouw: hoe te winnen. O12 zit in de overgang naar "hoe te spelen": kinderen worden zich bewuster van wat ze kunnen.
+- Geen instelling per club (houden we simpel). Bij een jonger team meldt de app dit bij het plannen; de trainer beslist zelf of hij toch gesprekken houdt.
+
 ## Besluit 68 — Ontwikkelgesprek: het kind stuurt, de trainer vraagt door; minder werk voor vrijwilligers
 *Herziet Besluit 67 (kijk van de trainer en de vergelijkingstabel).*
 - **Waarom:** trainers zijn vrijwilligers. Een volledige kijk per kind (16 kinderen × 15 vaardigheden = 240 keuzes) houdt niemand vol, en een tabel "jij zegt / ik zeg" maakt van het gesprek weer een beoordeling. Eerst eigenaarschap geven en inzicht geven.
