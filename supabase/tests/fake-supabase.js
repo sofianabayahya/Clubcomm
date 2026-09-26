@@ -49,6 +49,7 @@
     }
     if (naam === 'uitnodiging_info') { const t = db.rows[`dcg|teams|${a.p_team}`]; const c = db.rows['dcg|club|club']; return antw({ club: c && c.data.naam, team: t && t.data.naam }); }
     if (naam === 'aanmelden') { const id = 'm' + Date.now(); db.rows[`dcg|aanm|${id}`] = { club_id: 'dcg', soort: 'aanm', id, scope: 'aanm', team_id: a.p_team, data: { id, teamId: a.p_team, email: db.user.email, ouderNaam: a.p_ouder, kindVoor: a.p_voor, kindAchter: a.p_achter, tel: (a.p_tel || '').replace(/[^0-9+]/g, ''), tijd: new Date().toISOString(), status: 'open' } }; bewaar(); return antw(id); }
+    if (naam === 'push_status') return antw(db.pushAan || []); // Besluit 83 (test: db.pushAan = [persoon-id's])
     if (naam === 'bericht_bij') { const r = db.rows[`dcg|msgs|${a.p_id}`]; if (r) { const d = r.data; const nieuw = (a.p_antw || []).filter((x) => x.van === ik());
       d.antw = [...(d.antw || []), ...nieuw];
       if (nieuw.length) { d.gelezen = [ik()]; d.archief = []; } else if (a.p_gelezen && !d.gelezen.includes(ik())) d.gelezen.push(ik());

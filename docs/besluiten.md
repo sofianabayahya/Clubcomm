@@ -508,6 +508,14 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 83 — Zien wie pushmeldingen aan heeft; de teamleider spreekt ouders aan
+- Het systeem voor berichten blijft zoals het is: nieuws per mail (vangnet voor wie geen pushmeldingen heeft), gesprekken via push. Om zeker te zijn dat ouders berichten lezen, **hameren we op pushmeldingen**.
+- **Teamleider, tabblad Team:** blok "Pushmeldingen": *"12 van 16 gezinnen krijgen meldingen"*, met ingeklapt wie nog niet (kind + ouders). Een gezin telt als bereikt als één ouder meldingen heeft. De teamleider spreekt ze aan (bijv. langs het veld). Informatie, geen taak: niet in "Actie nodig".
+- **Geen teamleider?** Dan ziet de trainer het blok bij Spelers (zoals bij aanmeldingen, Besluit 47).
+- **HJO/beheerder, Inzicht:** per team een balkje "gezinnen met meldingen".
+- **Privacy:** alleen aan/uit, geen toestel of keuzes; alleen voor de staf van het team (databasefunctie `push_status`, migratie 021).
+- "Aan" = ooit aangezet op een telefoon; na een nieuwe telefoon klopt het pas weer als de server een keer een melding probeerde. Een aanwijzing, geen garantie.
+
 ## Besluit 82 — Berichten verdwijnen vanzelf als ze niet meer belangrijk zijn
 Net als de actielijst: is de dag of taak voorbij, dan gaat het bericht **vanzelf naar het Archief** (niet echt gewist, zodat je het met de zoekbalk nog vindt; aan het eind van het seizoen wordt het archief gewist).
 - **Vakantie: geen training** → zodra de vakantie begint. **We trainen weer** → na die eerste training. **Vrije dag** en **noodbericht** → de dag erna. **Start seizoen / wedstrijden beginnen** → na de eerste training of wedstrijd. **Ontwikkelgesprekken** → als de gespreksperiode voorbij is. **Einde seizoen** → na die dag.

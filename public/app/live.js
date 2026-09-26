@@ -30,6 +30,8 @@
     const S = CC.uitRijen(rijen, D.vandaag());
     CC.zetS(S); snapshot(S); L.geladen = Date.now();
     // Besluit 77: draait de server het automatische werk (laatste run < 2 uur geleden)? Dan doet de app het niet zelf.
+    // Besluit 83: wie krijgt pushmeldingen (alleen aan/uit, alleen voor de staf van het team)
+    try { const { data: pa, error: pe } = await sb.rpc('push_status'); CC.pushAan = pe ? null : new Set(pa || []); } catch (e) { CC.pushAan = null; }
     try { const { data: t } = await sb.rpc('automaat_laatst', { p_club: club }); CC.opServer = !!t && Date.now() - new Date(t).getTime() < 2 * 3600e3; } catch (e) { CC.opServer = false; }
     return S;
   };

@@ -134,6 +134,9 @@
           ${CC.beoordInzicht && S.club.modules.beoordeling ? CC.beoordInzicht(S) : ''}
           ${h.sectie('Gelezen berichten per team')}
           <div class="staven">${berichten.sort((a, b) => (a.pct ?? 101) - (b.pct ?? 101)).slice(0, 6).map(({ t, pct }) => `<div class="staaf"><span>${esc(t.naam)}</span><i class="${pct >= 75 ? 'groen' : pct >= 50 ? 'oranje' : 'rood'}" style="--w:${pct || 0}%"></i><b>${pct ?? '–'}%</b></div>`).join('')}</div>
+          ${(() => { const r = CC.pushGezinnen ? S.teams.map((t) => ({ t, g: CC.pushGezinnen(S, t.id) })).filter((x) => x.g && x.g.sp.length) : []; if (!r.length) return '';
+            // Besluit 83: pushmeldingen per team (gezinnen met minstens één ouder met meldingen); de teamleider spreekt ouders aan
+            return `${h.sectie('Pushmeldingen per team')}<div class="staven">${r.map((x) => ({ ...x, pct: Math.round((100 * x.g.aan) / x.g.sp.length) })).sort((a, b) => a.pct - b.pct).map(({ t, g, pct }) => `<div class="staaf"><span>${esc(t.naam)}</span><i class="${pct >= 75 ? 'groen' : pct >= 50 ? 'oranje' : 'rood'}" style="--w:${pct}%"></i><b>${g.aan}/${g.sp.length}</b></div>`).join('')}</div><p class="zacht klein">Aantal gezinnen dat meldingen krijgt. De teamleider ziet wie nog niet, bij Team.</p>`; })()}
           <button class="knop vol" data-act="exportPdf">${icon('file-down')}Exporteren naar PDF</button>`;
       },
       berichten: (S) => CC.berichtenScherm(S, { nieuw: true }),

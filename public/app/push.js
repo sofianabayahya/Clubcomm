@@ -114,6 +114,17 @@
   };
   CC.on('pushLater', () => { try { localStorage.setItem(LATER, String(Date.now() + 30 * 864e5)); } catch (e) { /* */ } CC.render(); });
 
+  // Besluit 83: wie krijgt pushmeldingen? Per gezin (één ouder met meldingen = bereikt). Alleen aan/uit, geen toestel of keuzes.
+  // Echte versie: CC.pushAan (Set met persoon-id's, van de server via push_status). Demo: een vaste, nagebootste verdeling.
+  const pushSet = (S) => { if (CC.pushAan) return CC.pushAan; if (CC.live) return null;
+    return new Set(S.people.filter((p, i) => p.rollen.some((r) => r.rol === 'ouder') && i % 4 !== 1).map((p) => p.id)); };
+  CC.pushGezinnen = (S, tid) => { const set = pushSet(S); if (!set) return null; const M = CC.m;
+    const sp = M.spelers(S, tid); const zonder = sp.filter((pl) => !pl.ouders.some((o) => set.has(o))); return { sp, zonder, aan: sp.length - zonder.length }; };
+  CC.pushBlok = (S, tid) => { const g = CC.pushGezinnen(S, tid); if (!g || !g.sp.length) return ''; const M = CC.m;
+    return `${h.sectie('Pushmeldingen')}<div class="kaartje"><p class="klein"><b>${g.aan} van ${g.sp.length}</b> gezinnen krijgen meldingen.${g.zonder.length ? '' : ' Top, iedereen!'}</p>
+      ${g.zonder.length ? `<details class="uitklap"><summary>Nog zonder meldingen (${g.zonder.length})</summary><div class="lijst compact">${g.zonder.map((pl) => h.rij({ ic: 'bell-off', titel: esc(M.naam(S, pl)), sub: esc(pl.ouders.map((o) => (M.persoon(S, o) || {}).naam).filter(Boolean).join(', ') || 'Nog geen ouder gekoppeld') })).join('')}</div></details>
+      <p class="zacht klein">Vraag het ze even langs het veld: ClubComm openen, op Home staat "Zet pushmeldingen aan". Op een iPhone moet ClubComm eerst op het beginscherm staan. Eén ouder per gezin is genoeg.</p>` : ''}</div>`; };
+
   // Bij elk inloggen: stonden meldingen aan op deze telefoon, dan de telefoon (opnieuw) aanmelden bij de server.
   // Zo klopt de server altijd, ook na een nieuw adres (bijv. na een update van de browser).
   CC.pushVernieuw = async () => {
