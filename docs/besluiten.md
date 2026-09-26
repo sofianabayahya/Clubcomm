@@ -508,6 +508,13 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 84 — Eerst de pilot bij DCG afmaken, daarna een tweede club (SCPB)
+- SCPB heeft gevraagd de app te mogen uitproberen. We maken **eerst de pilot bij DCG volledig af**, inclusief de wedstrijden van fase 2, zodat we niet steeds tussen clubs hoeven te schakelen. Planning: zie Openstaand in `docs/productie-en-groei.md`; SCPB naar verwachting **januari 2027**.
+- **De eerste clubs richt de initiatiefnemer persoonlijk in** (uitleggen, pitchen, samen inrichten). Een stappenplan waarmee clubs het zelf doen, komt pas bij veel clubs.
+- Straks nodig: een rol **boven de clubs** (ClubComm-beheerder: clubs aanmaken, wisselen, helpen inrichten) en één account bij meerdere clubs. In de pilotfase mag die rol meekijken in een club om te helpen; dat komt in de verwerkersovereenkomst met de club.
+- Tot die tijd bouwen we alles wat per club verschilt als **instelling** (niet vast in de app), zodat meerdere clubs later een kleine stap is.
+- Bescherming: merknaam vastleggen en advies van een octrooigemachtigde vóórdat een andere club uitgebreid meekijkt (software is in Europa zelden te patenteren; openbaar maken vóór een aanvraag maakt die onmogelijk).
+
 ## Besluit 83 — Zien wie pushmeldingen aan heeft; de teamleider spreekt ouders aan
 - Het systeem voor berichten blijft zoals het is: nieuws per mail (vangnet voor wie geen pushmeldingen heeft), gesprekken via push. Om zeker te zijn dat ouders berichten lezen, **hameren we op pushmeldingen**.
 - **Teamleider, tabblad Team:** blok "Pushmeldingen": *"12 van 16 gezinnen krijgen meldingen"*, met ingeklapt wie nog niet (kind + ouders). Een gezin telt als bereikt als één ouder meldingen heeft. De teamleider spreekt ze aan (bijv. langs het veld). Informatie, geen taak: niet in "Actie nodig".
