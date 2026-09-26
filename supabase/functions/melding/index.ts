@@ -7,6 +7,7 @@
 // per soort: nood (altijd, ook 's nachts), persoonlijk, aankondiging, herinnering, staf. Nachtrust 21:00–07:30: dan in de
 // wachtrij, 's ochtends verstuurd ({ wachtrij: true }, via pg_cron). E-mail is het vangnet (Besluit 57): alleen naar wie
 // geen pushmelding krijgt (noodberichten altijd), één e-mail per onderwerp, antwoorden nooit per e-mail.
+// Onderaan elke e-mail: "Sneller op de hoogte? Zet meldingen aan in ClubComm." (Besluit 78).
 // Verder: { club, soort: 'afm'|'aanm', rij } = seintje bij afmelding (trainer, alleen op de dag zelf) en aanmelding (staf);
 // { sleutel: true } = sleutelpaar voor push maken (één keer; de geheime helft blijft hier).
 import { createClient } from "jsr:@supabase/supabase-js@2";
@@ -195,6 +196,7 @@ Deno.serve(async (req) => {
     <h2 style="font-size:20px;margin:0 0 12px">${esc(onderwerp)}</h2>
     <p style="font-size:15px;line-height:1.5;white-space:pre-line">${esc(tekst)}</p>
     <p style="margin:24px 0"><a href="${app}/?bericht=${encodeURIComponent(id)}" style="background:#1e5ba8;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;display:inline-block">Open ClubComm</a></p>
+    <p style="font-size:14px;margin:0 0 12px">Sneller op de hoogte? Zet meldingen aan in ClubComm.</p>
     <p style="color:#5b6b7f;font-size:12px">Je krijgt deze e-mail omdat je bij ${esc(clubnaam)} in ClubComm staat. Reageren of afmelden doe je in de app.</p></div>`;
 
   let n = 0; const fouten: string[] = [];
@@ -203,7 +205,7 @@ Deno.serve(async (req) => {
     if (!email || /\.invalid$/i.test(email)) continue;
     const r = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST", headers: { "api-key": sleutel!, "Content-Type": "application/json", accept: "application/json" },
-      body: JSON.stringify({ sender: { name: `${clubnaam} via ClubComm`, email: afzender }, to: [{ email }], subject: onderwerp, htmlContent: html, textContent: `${onderwerp}\n\n${tekst}\n\nOpen ClubComm: ${app}` }),
+      body: JSON.stringify({ sender: { name: `${clubnaam} via ClubComm`, email: afzender }, to: [{ email }], subject: onderwerp, htmlContent: html, textContent: `${onderwerp}\n\n${tekst}\n\nOpen ClubComm: ${app}\n\nSneller op de hoogte? Zet meldingen aan in ClubComm.` }),
     });
     if (r.ok) n++; else fouten.push(`${r.status}`);
   }

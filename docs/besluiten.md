@@ -508,6 +508,11 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 78 — Gelezen via e-mail: niet meten; wel een oproep om meldingen aan te zetten
+- **Onderaan elke e-mail** van ClubComm staat: *"Sneller op de hoogte? Zet meldingen aan in ClubComm."* Met pushmeldingen tikt de ouder op de melding en staat het bericht vanzelf op gelezen.
+- **Niet gedaan:** meten of een e-mail is geopend (onbetrouwbaar door de privacybescherming van de iPhone, en volgen zonder dat de ouder het merkt past niet bij ClubComm) en een "gelezen"-knop in de e-mail (ouders tikken daar niet op).
+- Een bericht dat per e-mail is gelezen, blijft in de app dus "niet gelezen" staan.
+
 ## Besluit 77 — Automatisch werk vanaf de server
 - **Elk kwartier** start de database (pg_cron `clubcomm-automaat`) de serverfunctie **automaat**. Die doet wat eerst pas gebeurde als iemand van de staf de app opende: vaste clubberichten, herinneringen bij activiteiten, uitslag opslaan en versturen (2 uur na afloop), ontwikkelgesprekken indelen, herinneren en afronden, herinnering kiestijd, gesprekken rond afgelaste trainingen.
 - **Dezelfde regels als de app:** de server haalt bij elke run de app-bestanden van mijnclubcomm.nl en voert ze uit in een afgeschermde omgeving zonder scherm, met een klok in Nederlandse tijd. Wie de app aanpast, past dus ook de server aan (één plek voor de regels).
