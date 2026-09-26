@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 63 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 64 toegevoegd)
 
 ---
 
@@ -507,6 +507,10 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 64 — Trainer en teamleider tellen als meehelpen
+- Ouders die **trainer of teamleider** van het team zijn, zien bij Taken niet meer "Je hebt dit seizoen nog niet meegeholpen", maar: *"Jij bent trainer van O12 talententeam. Daarmee doe je al heel veel voor het team, dus hier hoef je niets extra's te doen. Wil je toch eens rijden of een taak oppakken? Dat kan altijd. Dank je wel!"* (plus wat ze eventueel toch deden).
+- In het overzicht **"Wie helpt er mee?"** (teamleider) en de teamcijfers (HJO/coördinator) telt hun gezin als meehelpend, met "Trainer/Teamleider van het team". Ze staan nooit bij "Nog niet geholpen".
 
 ## Besluit 63 — Veiligheid, leesbaarheid en onderhoud (uit de app-analyse van 26-09)
 1. **Club leegmaken / Voorbeelddata laden** alleen bij een nieuwe club (hooguit 3 gekoppelde accounts). Daarna verdwijnen de knoppen, en de database weigert het ook (migratie 014). Terug naar leeg kan alleen via de ontwikkelaar, met back-up vooraf.

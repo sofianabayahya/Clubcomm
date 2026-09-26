@@ -19,23 +19,29 @@
   };
   const tekst = (r) => [r.ritten && `${r.ritten}× gereden`, ...Object.entries(r.taken).map(([s, n]) => `${n}× ${s.toLowerCase()}`)].filter(Boolean).join(', ');
   // Gezinnen = de ouders van een kind (samen geteld)
-  CC.hulpPerGezin = (S, tid) => M.spelers(S, tid).map((pl) => ({ pl, r: bijdrage(S, tid, pl.ouders) }));
+  // Staf van het team (trainer/teamleider) doet al veel: telt als meehelpen, nooit als "nog niet geholpen" (Besluit 64)
+  const stafRol = (S, tid, ids) => { const t = M.team(S, tid) || {};
+    const is = (rol) => ids.some((id) => M.stafVan(S, tid, [rol]).includes(id) || t[rol + 'Id'] === id);
+    return is('trainer') ? 'trainer' : is('teamleider') ? 'teamleider' : null; };
+  CC.hulpPerGezin = (S, tid) => M.spelers(S, tid).map((pl) => ({ pl, r: bijdrage(S, tid, pl.ouders), staf: stafRol(S, tid, pl.ouders) }));
 
   // ---- Ouder ----
   CC.mijnHulp = (S, pl) => {
-    const me = CC.me(); const r = bijdrage(S, pl.teamId, [me.id]);
+    const me = CC.me(); const r = bijdrage(S, pl.teamId, [me.id]); const rol = stafRol(S, pl.teamId, [me.id]);
     const team = CC.hulpPerGezin(S, pl.teamId).reduce((s, x) => s + x.r.totaal, 0);
-    return `<div class="info groen">${icon('hand-helping')}<span>${r.totaal ? `<b>Dit seizoen:</b> ${tekst(r)}. Dank je wel!` : 'Je hebt dit seizoen nog niet meegeholpen. Een taak is zo gedaan, en het team is je er dankbaar voor.'}${r.gepland ? ` Ingepland: ${r.gepland}×.` : ''}${team ? `<br><small>Samen hebben de ouders van ${esc(CC.tn(pl.teamId))} al ${team}× geholpen (taken en rijden).</small>` : ''}</span></div>`;
+    const basis = rol ? `Jij bent <b>${rol}</b> van ${esc(CC.tn(pl.teamId))}. Daarmee doe je al heel veel voor het team, dus hier hoef je niets extra's te doen. Wil je toch eens rijden of een taak oppakken? Dat kan altijd.${r.totaal ? ` Dit seizoen deed je ook nog: ${tekst(r)}.` : ''} Dank je wel!`
+      : r.totaal ? `<b>Dit seizoen:</b> ${tekst(r)}. Dank je wel!` : 'Je hebt dit seizoen nog niet meegeholpen. Een taak is zo gedaan, en het team is je er dankbaar voor.';
+    return `<div class="info groen">${icon('hand-helping')}<span>${basis}${r.gepland ? ` Ingepland: ${r.gepland}×.` : ''}${team ? `<br><small>Samen hebben de ouders van ${esc(CC.tn(pl.teamId))} al ${team}× geholpen (taken en rijden).</small>` : ''}</span></div>`;
   };
 
   // ---- Teamleider ----
   CC.hulpTeamleider = (S, tid) => {
     const g = CC.hulpPerGezin(S, tid).sort((a, b) => b.r.totaal - a.r.totaal);
-    const wel = g.filter((x) => x.r.totaal); const niet = g.filter((x) => !x.r.totaal);
+    const wel = g.filter((x) => x.r.totaal || x.staf); const niet = g.filter((x) => !x.r.totaal && !x.staf);
     const ouders = (pl) => pl.ouders.map((o) => (M.persoon(S, o) || { naam: '' }).naam.split(' ')[0]).join(' en ');
     return `<details class="uitklap"><summary>${icon('hand-helping')}Wie helpt er mee? (${wel.length} van ${g.length} gezinnen)</summary>
       <p class="zacht klein">Taken en rijden dit seizoen, per gezin. Alleen jij ziet dit, zodat je eerlijk kunt verdelen.</p>
-      <div class="lijst compact">${wel.map(({ pl, r }) => h.rij({ ic: h.avatar(pl.voornaam), titel: `${esc(ouders(pl))} <small class="zacht">(${esc(pl.voornaam)})</small>`, sub: esc(tekst(r)) + (r.kanNiet ? ` · ${r.kanNiet}× kan niet` : ''), rechts: `<b>${r.totaal}×</b>` })).join('')}</div>
+      <div class="lijst compact">${wel.map(({ pl, r, staf }) => h.rij({ ic: h.avatar(pl.voornaam), titel: `${esc(ouders(pl))} <small class="zacht">(${esc(pl.voornaam)})</small>`, sub: [staf ? `${staf === 'trainer' ? 'Trainer' : 'Teamleider'} van het team` : '', esc(tekst(r))].filter(Boolean).join(' · ') + (r.kanNiet ? ` · ${r.kanNiet}× kan niet` : ''), rechts: r.totaal ? `<b>${r.totaal}×</b>` : `<span class="chip blauw mini">${staf}</span>` })).join('')}</div>
       ${niet.length ? `<p class="klein"><b>Nog niet geholpen (${niet.length}):</b> ${niet.map(({ pl, r }) => `${esc(ouders(pl))} (${esc(pl.voornaam)})${r.kanNiet ? ` · ${r.kanNiet}× kan niet` : ''}`).join(', ')}</p><p class="zacht klein">Tip: vraag deze ouders persoonlijk, bijv. "Wil jij zaterdag de wastas doen?". Een directe vraag werkt beter dan een groepsoproep. Vaak "kan niet"? Een kort gesprekje helpt meer dan nog een oproep.</p>` : ''}</details>`;
   };
 
@@ -44,7 +50,7 @@
     const g = CC.hulpPerGezin(S, tid); const tot = g.reduce((s, x) => s + x.r.totaal, 0);
     const top = g.map((x) => x.r.totaal).sort((a, b) => b - a).slice(0, 3).reduce((s, n) => s + n, 0);
     const v = D.vandaag(); const tk = S.taken.filter((t) => { const a = M.act(S, t.actId); return a && a.teamId === tid && a.datum >= S.club.seizoen.start && a.datum < v; });
-    return { gezinnen: g.length, helpen: g.filter((x) => x.r.totaal).length, tot, topAandeel: tot ? Math.round((100 * top) / tot) : 0, ingevuld: tk.length ? Math.round((100 * tk.filter((t) => t.personId).length) / tk.length) : null };
+    return { gezinnen: g.length, helpen: g.filter((x) => x.r.totaal || x.staf).length, tot, topAandeel: tot ? Math.round((100 * top) / tot) : 0, ingevuld: tk.length ? Math.round((100 * tk.filter((t) => t.personId).length) / tk.length) : null };
   };
   const origInzicht = CC.rollen.hjo.schermen.inzicht;
   CC.rollen.hjo.schermen.inzicht = (S) => {
