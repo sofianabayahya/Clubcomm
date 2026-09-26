@@ -518,3 +518,4 @@ details.uitklap.stil summary { font-size: 13px; color: var(--zacht); }
 ol.leidraad { margin: 6px 0 0 18px; padding: 0; } ol.leidraad li { margin-bottom: 6px; }
 .vraag { display: flex; gap: 6px; align-items: flex-start; color: var(--blauw-d); margin: 2px 0 8px; } .vraag svg { flex: none; width: 16px; height: 16px; margin-top: 2px; }
 .zelf.plan .niveaus { grid-template-columns: repeat(2, 1fr); }
+.posrij { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; margin: 10px 0; }

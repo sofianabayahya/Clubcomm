@@ -508,6 +508,14 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 71 — Ontwikkeling over de seizoenen heen, keepers, afgelaste training, HJO-signaal
+- **De ontwikkeling gaat mee, ook naar een nieuw seizoen en een nieuw team.** Het gaat om de groei van het kind: waar kom je vandaan, waar sta je nu. Gesprekken worden per seizoen bewaard (moment "2026-m1", "2026-m2", volgend seizoen "2027-m1"). Het kind en de ouder zien bij "Wapen en doelen" alle eerdere gesprekken; de trainer ziet ze op de spelerspagina ("Alle gesprekken"). Bij het eerste gesprek van een nieuw seizoen kijkt de gesprekspagina terug naar het laatste gesprek (ook als dat bij een ander team was), en het kind vult "Hoe ging het met je doelen?" in.
+- **Verhuist een speler naar een ander team**, dan gaan de voorbereiding, het verslag, de notitie en de kijk van de trainer automatisch mee (database, migratie 017): de nieuwe trainer ziet ze, de oude niet meer.
+- **Positie: keeper.** Op de spelerspagina (trainer) kies je **Veldspeler / Keeper**. Keepers (vanaf O12) hebben hun eigen lijst: *Keepen* (vangen en duiken, positie kiezen, 1-tegen-1, hoge ballen) · *Met de bal* (uittrappen en uitgooien, meevoetballen) · *Snel en fit* (reactiesnelheid, wendbaarheid) · *Wie ben jij* (inzet, doorzetten, coachen van je verdediging, omgaan met fouten). In het **wisselschema** gaan dan alleen de vaste keepers op doel (om de beurt); zonder vaste keeper blijft het rouleren. Bij DCG: Xaverio en Rayan.
+- **Afgelaste of verplaatste training:** de gesprekken eromheen gaan niet door. Ouders met een gesprek krijgen bericht ("kies een nieuwe tijd"), de tijden verdwijnen. Gebeurt bij het afgelasten door de staf, of anders zodra de trainer de app opent. Zijn er geen vrije tijden meer, dan ziet de trainer op Home "zet nieuwe tijden klaar".
+- **HJO:** bij Inzicht per team "x/y gesprekken gevoerd" (vanaf O12; niet meer "beoordeeld", want bij het startgesprek hoeft de trainer niets in te vullen). Na de periode (tot 6 weken) op Home een signaal bij teams waar niet alle gesprekken zijn gevoerd.
+- Nog open (bestuur): hoe lang bewaren we verslagen (voorstel: zolang het kind lid is, daarna 2 jaar)? Eigen account voor kinderen vanaf O13 (later).
+
 ## Besluit 70 — Gesprekken plannen rond de training; de trainer is leidend
 *Herziet Besluit 65 (plannen na de training).*
 - **De app plant nooit zelf.** In de periode staat op Home "Plan de startgesprekken" (een signaal); de trainer kiest zelf welke trainingen en wanneer. Hij kan eerst één of twee weken klaarzetten en later meer tijden bijzetten (bijvoorbeeld als een week druk is).

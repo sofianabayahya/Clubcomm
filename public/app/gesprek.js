@@ -20,7 +20,10 @@
   const maakVoorb = (S, pl, mid) => { const o = S.ontwVoorb || (S.ontwVoorb = {}); return o[sl(pl, mid)] || (o[sl(pl, mid)] = leeg.voorb()); };
   const maakVerslag = (S, pl, mid) => { const o = S.ontwVerslag || (S.ontwVerslag = {}); return o[sl(pl, mid)] || (o[sl(pl, mid)] = leeg.verslag()); };
   const maakKijk = (S, pl, mid) => { const x = S.beoord[pl] || (S.beoord[pl] = {}); return x[mid] || (x[mid] = { scores: {}, wapens: [], goed: '', werken: '' }); };
-  const vorigMoment = (S, mid) => { const ms = CC.momenten(S); const i = ms.findIndex((m) => m.id === mid); return i > 0 ? ms[i - 1] : null; };
+  // Alle gespreksmomenten van een kind, ook uit eerdere seizoenen en bij een ander team (Besluit 71), oud → nieuw
+  const momentenVan = (S, pl) => { const ids = new Set(CC.momenten(S).map((m) => m.id)); [S.ontwVoorb, S.ontwVerslag].forEach((o) => Object.keys(o || {}).forEach((k) => { const [p2, mid] = k.split('|'); if (p2 === pl) ids.add(mid); }));
+    return [...ids].sort().map((id) => ({ id, naam: CC.momentNaam(S, id), label: CC.momentNaam(S, id, true) })); };
+  const vorigMoment = (S, pl, mid) => { const l = momentenVan(S, pl).filter((m) => m.id < mid && (voorb(S, pl, m.id) || verslag(S, pl, m.id))); return l[l.length - 1] || null; };
   const gesprekVan = (S, pl, mid) => (S.ontwGesprek || []).find((g) => g.spelerId === pl && g.moment === mid);
   const STATUS = [['', 'Nog niet besproken'], ['bereikt', 'Bereikt'], ['deels', 'Deels'], ['niet', 'Nog niet']];
   const STATUS_KIND = [['bereikt', 'Gelukt'], ['deels', 'Een beetje'], ['niet', 'Nog niet']];
@@ -39,9 +42,9 @@
   // ---------- 1. Opdracht voor het kind (thuis, samen met een ouder) ----------
   CC.views.gesprekVoorb = (S, p) => {
     const pl = M.speler(S, p.id); const mid = p.m; const m = CC.momenten(S).find((x) => x.id === mid); const v = voorb(S, pl.id, mid) || leeg.voorb();
-    const vaardig = CC.vaardigheden(S, pl.teamId); const g = gesprekVan(S, pl.id, mid); const at = `data-id="${pl.id}" data-m="${mid}"`;
+    const vaardig = CC.vaardighedenVan(S, pl); const g = gesprekVan(S, pl.id, mid); const at = `data-id="${pl.id}" data-m="${mid}"`;
     const tekstVeld = (k, label, ph) => `<label class="klein-kop" for="vb-${k}">${label}</label><textarea id="vb-${k}" rows="2" data-input="ogVoorbTekst" ${at} data-k="${k}" placeholder="${ph}">${esc(v[k] || '')}</textarea>`;
-    const vm = vorigMoment(S, mid); const vvs = vm && verslag(S, pl.id, vm.id); const oudeDoelen = vvs && vvs.gehad ? vvs.doelen.filter((d) => d.wat) : [];
+    const vm = vorigMoment(S, pl.id, mid); const vvs = vm && verslag(S, pl.id, vm.id); const oudeDoelen = vvs && vvs.gehad ? vvs.doelen.filter((d) => d.wat) : [];
     const terug = oudeDoelen.length ? `${h.sectie('Hoe ging het met je doelen?')}<div class="kaartje">${oudeDoelen.map((d, i) => `<div class="zelfrij"><span>${esc(d.wat)}</span>${`<span class="niveaus">${STATUS_KIND.map(([k, l]) => `<button type="button" class="${(v.doelTerug || {})[i] === k ? 'aan' : ''}" data-act="ogDoelTerug" ${at} data-i="${i}" data-s="${k}">${l}</button>`).join('')}</span>`}</div>`).join('')}</div>` : '';
     const sterk = vaardig.filter((x) => niv(v, x) === 3); const keuze = sterk.length ? sterk : vaardig; const w = wapensVan(v);
     return { titel: `Voorbereiding ${pl.voornaam}`, sub: g ? `Gesprek ${D.lang(g.datum)} om ${g.tijd}` : `${m ? m.naam : ''}gesprek`,
@@ -93,7 +96,7 @@
   CC.views.gesprekVerslag = (S, p) => {
     const pl = M.speler(S, p.id); const mid = p.m; const m = CC.momenten(S).find((x) => x.id === mid); const at = `data-id="${pl.id}" data-m="${mid}"`;
     const v = voorb(S, pl.id, mid) || leeg.voorb(); const vs = verslag(S, pl.id, mid) || leeg.verslag(); const noti = ((S.ontwNotitie || {})[sl(pl.id, mid)] || {}).tekst || '';
-    const vaardig = CC.vaardigheden(S, pl.teamId); const g = gesprekVan(S, pl.id, mid); const k = kijk(S, pl.id, mid) || { scores: {}, wapens: [] };
+    const vaardig = CC.vaardighedenVan(S, pl); const g = gesprekVan(S, pl.id, mid); const k = kijk(S, pl.id, mid) || { scores: {}, wapens: [] };
     const voorjaar = CC.momenten(S).slice(-1)[0].id === mid; const klaar = kijkKlaar(S, pl.id, mid);
     const veld = (key, label, waarde, ph, rows = 2) => `<label class="klein-kop">${label}</label><textarea rows="${rows}" data-input="ogVeld" ${at} data-k="${key}" placeholder="${ph}">${esc(waarde || '')}</textarea>`;
 
@@ -135,10 +138,10 @@
       ${veld(`doel.${i}.hulp`, 'Wie helpt je, en hoe?', d.hulp, 'Bijv. trainer: extra oefening op vrijdag; thuis: samen in het park', 1)}</div>`).join('');
 
     // Terugkijken naar het vorige gesprek
-    const vm = vorigMoment(S, mid); const vvs = vm && verslag(S, pl.id, vm.id); const vv = vm && voorb(S, pl.id, vm.id); const vk = vm && kijk(S, pl.id, vm.id);
+    const vm = vorigMoment(S, pl.id, mid); const vvs = vm && verslag(S, pl.id, vm.id); const vv = vm && voorb(S, pl.id, vm.id); const vk = vm && kijk(S, pl.id, vm.id);
     const groei = vm ? vaardig.map((x) => { const a = niv(vv, x), a2 = niv(v, x), b = niv(vk, x), b2 = niv(k, x);
       const r = [a && a2 && a !== a2 ? `kind ${KORT_KIND[a]} → ${KORT_KIND[a2]}` : '', b && b2 && b !== b2 ? `trainer ${CC.NIVEAU_TRAINER[b]} → ${CC.NIVEAU_TRAINER[b2]}` : ''].filter(Boolean); return r.length ? `${esc(x)}: ${r.join(', ')}` : ''; }).filter(Boolean) : [];
-    const terug = vm && (vvs || vv) ? `<details class="uitklap blok" open><summary>Terugkijken: ${esc(vm.naam.toLowerCase())}gesprek</summary>
+    const terug = vm && (vvs || vv) ? `<details class="uitklap blok" open><summary>Terugkijken: ${esc(vm.label)}</summary>
       ${vvs && (vvs.wapen || []).length ? `<p class="klein"><b>Wapen toen:</b> ⭐ ${vvs.wapen.map(esc).join(', ')}${vvs.werkpunt ? ` · <b>werkpunt:</b> ${esc(vvs.werkpunt)}` : ''}</p>` : ''}
       ${vv && vv.droom ? `<p class="klein"><b>Droom toen:</b> "${esc(vv.droom)}"</p>` : ''}
       ${vvs && vvs.doelen.some((d) => d.wat) ? `<div class="lijst compact">${vvs.doelen.map((d, i) => (d.wat ? h.rij({ ic: 'flag', titel: esc(d.wat), sub: [(v.doelTerug || {})[i] ? `${esc(pl.voornaam)}: ${(STATUS_KIND.find((s) => s[0] === v.doelTerug[i]) || [])[1] || ''}` : '', d.hulp ? `Hulp: ${esc(d.hulp)}` : ''].filter(Boolean).join(' · '),
@@ -190,7 +193,9 @@
       ${v && (wapensVan(v).length || v.droom) ? `<p class="zacht klein">Uit jullie voorbereiding: ${wapensVan(v).length ? `wapen ⭐ ${wapensVan(v).map(esc).join(', ')}` : ''}${wapensVan(v).length && v.droom ? ' · ' : ''}${v.droom ? `droom "${esc(v.droom)}"` : ''}</p>` : ''}`;
   };
   // Het laatste gesprek dat is gehad (voor Home en de spelerspagina van de ouder)
-  CC.laatsteVerslag = (S, plId) => { const ms = CC.momenten(S).filter((m) => CC.ontwZichtbaar(S, plId, m.id)); const m = ms[ms.length - 1]; return m ? { m, vs: verslag(S, plId, m.id) } : null; };
+  CC.laatsteVerslag = (S, plId) => { const ms = momentenVan(S, plId).filter((m) => CC.ontwZichtbaar(S, plId, m.id)); const m = ms[ms.length - 1]; return m ? { m, vs: verslag(S, plId, m.id) } : null; };
+  // Alle gesprekken van een kind die zijn gehad, nieuwste eerst (ook uit eerdere seizoenen)
+  CC.gesprekkenGehad = (S, plId) => momentenVan(S, plId).filter((m) => CC.ontwZichtbaar(S, plId, m.id)).reverse();
   CC.voorbKlaar = (S, pl, mid) => !!(voorb(S, pl, mid) || {}).klaar;
   CC.kijkKlaar = kijkKlaar;
 

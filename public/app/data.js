@@ -42,13 +42,17 @@
     o11: ['Aannemen', 'Passen', 'Dribbelen en passeren', 'Schieten', 'Vrijlopen', 'Omschakelen', 'Goede keuzes', 'Verdedigen', 'Snelheid', 'Wendbaarheid', 'Uithoudingsvermogen', 'Inzet', 'Doorzetten', 'Samenwerken en coachen', 'Omgaan met fouten'],
   };
   CC.VAARDIGHEDEN.o13 = CC.VAARDIGHEDEN.o11;
+  // Keepers (Besluit 71): een eigen lijst; "Wie ben jij" is gelijk aan die van veldspelers
+  CC.VAARDIGHEDEN.keeper = ['Vangen en duiken', 'Positie kiezen', '1-tegen-1', 'Hoge ballen', 'Uittrappen en uitgooien', 'Meevoetballen', 'Reactiesnelheid', 'Wendbaarheid', 'Inzet', 'Doorzetten', 'Coachen van je verdediging', 'Omgaan met fouten'];
   CC.VAARDIG_BLOK = [
+    ['Keepen', ['Vangen en duiken', 'Positie kiezen', '1-tegen-1', 'Hoge ballen']],
+    ['Met de bal', ['Uittrappen en uitgooien', 'Meevoetballen']],
     ['Met de bal', ['Aannemen', 'Passen', 'Dribbelen en passeren', 'Dribbelen', 'Schieten', 'Balgevoel']],
     ['Slim spelen', ['Vrijlopen', 'Omschakelen', 'Goede keuzes', 'Verdedigen', 'Samenspelen']],
-    ['Snel en fit', ['Snelheid', 'Wendbaarheid', 'Uithoudingsvermogen']],
-    ['Wie ben jij', ['Inzet', 'Doorzetten', 'Samenwerken en coachen', 'Omgaan met fouten', 'Plezier']],
+    ['Snel en fit', ['Snelheid', 'Reactiesnelheid', 'Wendbaarheid', 'Uithoudingsvermogen']],
+    ['Wie ben jij', ['Inzet', 'Doorzetten', 'Samenwerken en coachen', 'Coachen van je verdediging', 'Omgaan met fouten', 'Plezier']],
   ];
-  CC.VAARDIG_UITLEG = { 'Dribbelen en passeren': 'met de bal langs een tegenstander', Vrijlopen: 'zo gaan staan dat je de bal kunt krijgen', Omschakelen: 'meteen door bij balverlies of balwinst',
+  CC.VAARDIG_UITLEG = { 'Positie kiezen': 'op de goede plek in het doel staan', 'Meevoetballen': 'de bal met je voeten goed verwerken', 'Coachen van je verdediging': 'je verdedigers helpen door te praten', 'Dribbelen en passeren': 'met de bal langs een tegenstander', Vrijlopen: 'zo gaan staan dat je de bal kunt krijgen', Omschakelen: 'meteen door bij balverlies of balwinst',
     'Goede keuzes': 'passen, dribbelen of schieten op het goede moment', Wendbaarheid: 'snel draaien en van richting veranderen', Doorzetten: 'niet opgeven, ook als het tegenzit',
     'Samenwerken en coachen': 'helpen en aanmoedigen van teamgenoten', 'Omgaan met fouten': 'na een fout snel weer meedoen' };
   // Drie niveaus (Besluit 67): 3 = sterk, 2 = gaat goed, 1 = wil ik beter in worden. Oude cijfers (1–10) worden omgezet.
@@ -56,7 +60,10 @@
   CC.NIVEAU_KIND = { 3: 'Sterk', 2: 'Gaat goed', 1: 'Wil ik beter in worden' };
   CC.NIVEAU_TRAINER = { 3: 'Sterk', 2: 'Goed', 1: 'Werkpunt' };
   // Groeperen in blokken (eigen toevoegingen van de trainer apart)
-  CC.vaardigBlokken = (lijst) => { const r = CC.VAARDIG_BLOK.map(([n, l]) => [n, lijst.filter((x) => l.includes(x))]); const los = lijst.filter((x) => !CC.VAARDIG_BLOK.some(([, l]) => l.includes(x))); if (los.length) r.push(['Extra van de trainer', los]); return r.filter(([, l]) => l.length); };
+  CC.vaardigBlokken = (lijst) => { const r = [...new Set(CC.VAARDIG_BLOK.map(([n]) => n))].map((n) => [n, lijst.filter((x) => CC.VAARDIG_BLOK.some(([n2, l]) => n2 === n && l.includes(x)))]); const los = lijst.filter((x) => !CC.VAARDIG_BLOK.some(([, l]) => l.includes(x))); if (los.length) r.push(['Extra van de trainer', los]); return r.filter(([, l]) => l.length); };
+  // Vaardigheden van één speler: keepers (vanaf O12) hun eigen lijst, plus wat de trainer voor het team toevoegde
+  CC.vaardighedenVan = (S, pl) => { const c = CC.categorie(CC.m.team(S, pl.teamId).cat); const extra = ((S.teamVaardig || {})[pl.teamId] || {}).extra || [];
+    return pl.positie === 'keeper' && !c.geenGesprek ? [...CC.VAARDIGHEDEN.keeper, ...extra.filter((x) => !CC.VAARDIGHEDEN.keeper.includes(x))] : CC.vaardigheden(S, pl.teamId); };
   // Vaardigheden van een team: de standaard voor de leeftijd plus wat de trainer zelf toevoegde (Besluit 66)
   CC.vaardigheden = (S, tid) => { const t = CC.m.team(S, tid); const c = CC.categorie(t.cat); const extra = ((S.teamVaardig || {})[tid] || {}).extra || []; return [...c.vaardig, ...extra.filter((x) => !c.vaardig.includes(x))]; };
   // Speelduur per leeftijd volgens de KNVB (Besluit 60). helft = minuten per helft; timeout = time-out halverwege elke helft
@@ -336,7 +343,7 @@
 
     // Beoordelingen (fase 1 deels ingevuld)
     const vaardig = CC.categorie('O10').vaardig;
-    o10.slice(0, 7).forEach((pl, k) => { S.beoord[pl.id] = { m1: { scores: Object.fromEntries(vaardig.map((v, j) => [v, 1 + ((k + j) % 3)])), goed: '', werken: '' } }; });
+    o10.slice(0, 7).forEach((pl, k) => { S.beoord[pl.id] = { [`${String(S.club.seizoen.start).slice(0, 4)}-m1`]: { scores: Object.fromEntries(vaardig.map((v, j) => [v, 1 + ((k + j) % 3)])), goed: '', werken: '' } }; });
     S.notities[pO('Jesse').id] = [{ tekst: 'Sterk aan de bal, durft meer te vragen. Mist vaak de tweede training.', tijd: new Date(now - 6 * 864e5).toISOString(), door: mark.id }];
 
     // ---------- Aanmeldingen ----------
@@ -662,9 +669,9 @@
     const min = {}; beschikbaar.forEach((p) => { min[p.id] = S.speeltijd.min[p.id] || 0; });
     // voorrang: laagste percentage (inclusief deze wedstrijd) eerst
     const score = (p) => (min[p.id]) / ((mog[p.id] || 0) + wedMin);
-    // Clubbeleid: geen vaste keeper → elke week een andere speler de hele wedstrijd op doel.
-    const kb = S.speeltijd.keeper || (S.speeltijd.keeper = {});
-    const keeper = [...beschikbaar].sort((x, y) => (kb[x.id] || 0) - (kb[y.id] || 0) || score(x) - score(y) || x.voornaam.localeCompare(y.voornaam))[0];
+    // Geen vaste keeper → elke week een andere speler de hele wedstrijd op doel. Vaste keepers (Besluit 71): alleen zij, om de beurt.
+    const kb = S.speeltijd.keeper || (S.speeltijd.keeper = {}); const vast = beschikbaar.filter((p) => p.positie === 'keeper');
+    const keeper = [...(vast.length ? vast : beschikbaar)].sort((x, y) => (kb[x.id] || 0) - (kb[y.id] || 0) || score(x) - score(y) || x.voornaam.localeCompare(y.voornaam))[0];
     const veld = beschikbaar.filter((p) => p !== keeper);
     // minder speeltijd (alleen als de club dat toestaat): één blok minder dan een gelijke verdeling
     const minderIds = (minder || []).filter((id) => veld.some((p) => p.id === id));

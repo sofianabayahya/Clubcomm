@@ -15,11 +15,17 @@
   };
   // Oude standaard (Winter / Einde seizoen) vervangen door de nieuwe, zolang er nog niets mee gedaan is
   const oudeStandaard = (l) => Array.isArray(l) && l.length === 2 && l[0].naam === 'Winter' && l[1].naam === 'Einde seizoen';
-  CC.momenten = (S) => { if (!S.club.momenten || (oudeStandaard(S.club.momenten) && !Object.keys(S.beoord || {}).length)) S.club.momenten = standaardMomenten(S); return S.club.momenten.map((m) => {
+  // Besluit 71: de gegevens van een gesprek horen bij een seizoen (id "2026-m1"), zodat ze volgend seizoen blijven
+  // bestaan en de groei over de jaren zichtbaar is. basisId ("m1") is de instelling van de club.
+  const seizoenJaar = (S) => String(S.club.seizoen.start).slice(0, 4);
+  CC.momenten = (S) => { if (!S.club.momenten || (oudeStandaard(S.club.momenten) && !Object.keys(S.beoord || {}).length)) S.club.momenten = standaardMomenten(S); const jaar = seizoenJaar(S); return S.club.momenten.map((m) => {
     const van = D.addDays(m.tot, -(m.weken * 7) + 1);
     const vandaag = D.vandaag();
-    return { ...m, van, status: vandaag < van ? 'komt' : vandaag > m.tot ? 'voorbij' : 'open' };
+    return { ...m, basisId: m.id, id: `${jaar}-${m.id}`, seizoen: jaar, van, status: vandaag < van ? 'komt' : vandaag > m.tot ? 'voorbij' : 'open' };
   }); };
+  // Naam van een moment, ook uit een eerder seizoen: "Start 2026/27"
+  CC.momentNaam = (S, id, metSeizoen) => { const [j, b] = String(id).includes('-') ? String(id).split('-') : [seizoenJaar(S), id]; const m = (S.club.momenten || []).find((x) => x.id === b);
+    const naam = m ? m.naam : b === 'm1' ? 'Start' : b === 'm2' ? 'Voorjaar' : b; return metSeizoen ? `${naam} ${j}/${String(Number(j) + 1).slice(2)}` : naam; };
   CC.actiefMoment = (S) => { const ms = CC.momenten(S); return ms.find((m) => m.status === 'open') || ms.find((m) => m.status === 'komt') || ms[ms.length - 1]; };
   const b = (S, plId, mid) => { const x = S.beoord[plId] || (S.beoord[plId] = {}); return x[mid] || (x[mid] = { scores: {}, goed: '', werken: '' }); };
   const heeft = (S, plId, mid) => { const x = S.beoord[plId] && S.beoord[plId][mid]; return !!(x && Object.keys(x.scores).length); };
@@ -230,39 +236,62 @@
   // Ouder en kind: alleen wat samen is afgesproken, per gesprek (nooit de kijk van de trainer; Besluit 67)
   CC.views.beoordelingKind = (S, p) => {
     const pl = M.speler(S, p.id);
-    const ms = CC.momenten(S).filter((m) => CC.ontwZichtbaar(S, pl.id, m.id)).reverse();
+    const ms = CC.gesprekkenGehad(S, pl.id);
     ms.forEach((m) => { (S.beoordGezien || (S.beoordGezien = {}))[pl.id + m.id] = true; }); CC.save();
     if (!ms.length) return { titel: 'Ontwikkeling', html: h.leeg('Hier komen de afspraken uit het ontwikkelgesprek te staan.', 'flag') };
-    return { titel: `Ontwikkeling ${pl.voornaam}`, html: `<p class="zacht klein">Wat ${esc(pl.voornaam)} en de trainer samen hebben afgesproken. Het is geen rapport, maar een plan om verder te groeien.</p>
-      ${ms.map((m) => `<article class="kaartje"><h4>${icon('flag')}${esc(gNaam(m))}</h4>${CC.verslagVoorOuder(S, pl, m.id)}</article>`).join('')}` };
+    return { titel: `Ontwikkeling ${pl.voornaam}`, html: `<p class="zacht klein">Wat ${esc(pl.voornaam)} en de trainer samen hebben afgesproken, ook uit eerdere seizoenen. Het is geen rapport, maar een plan om verder te groeien: waar kom je vandaan, waar sta je nu.</p>
+      ${ms.map((m) => `<article class="kaartje"><h4>${icon('flag')}${esc(m.label)}</h4>${CC.verslagVoorOuder(S, pl, m.id)}</article>`).join('')}` };
   };
 
   // Trainer Home: herinnering in de periode van het moment
   CC.beoordRijTrainer = (S, tid) => {
     const m = CC.momenten(S).find((x) => x.status === 'open'); if (!m || !S.club.modules.beoordeling) return '';
-    const sl = slots(S, tid, m.id);
+    const verplaatst = CC.ogAfgelast(S); if (verplaatst) CC.toast(`${verplaatst} ${verplaatst === 1 ? 'gesprek gaat' : 'gesprekken gaan'} niet door (training afgelast); de ouders kiezen een nieuwe tijd`);
+    const sl = slots(S, tid, m.id); const zonderNu = sl.length ? zonderTijd(S, tid, m.id) : []; const vrijNu = sl.filter((g) => !g.spelerId && g.datum >= D.vandaag());
     // Besluit 68: alleen vóór het voorjaarsgesprek vraagt de app om jouw kijk (wapen en werkpunt per kind)
     const voorjaar = CC.momenten(S).slice(-1)[0].id === m.id; const kijkNog = voorjaar ? M.spelers(S, tid).filter((pl) => !CC.kijkKlaar(S, pl.id, m.id)).length : 0;
     return [kijkNog && sl.some((g) => g.spelerId) && CC.mag('beoordelen') ? h.rij({ ic: 'eye-off', titel: `Jouw kijk vóór de voorjaarsgesprekken: nog ${kijkNog} ${kijkNog === 1 ? 'kind' : 'kinderen'}`, sub: 'Per kind een wapen en een werkpunt · alleen voor de staf', act: 'open', attrs: `data-view="gesprekken" data-m="${m.id}"`, kleur: 'oranje' }) : '',
+      sl.length && zonderNu.length && !vrijNu.length && CC.mag('ontwgesprek') && m.status === 'open' ? h.rij({ ic: 'calendar-plus', titel: `${zonderNu.length} ${zonderNu.length === 1 ? 'kind heeft' : 'kinderen hebben'} geen gesprekstijd en er zijn geen vrije tijden`, sub: 'Zet nieuwe tijden klaar', act: 'open', attrs: `data-view="gesprekken" data-m="${m.id}"`, kleur: 'oranje' }) : '',
       !sl.length && CC.mag('ontwgesprek') ? h.rij({ ic: 'calendar-plus', titel: `Plan de ${gNaam(m, true).toLowerCase()}`, sub: 'Jij kiest de trainingen (vóór of na); ouders kiezen een tijd', act: 'open', attrs: `data-view="gesprekken" data-m="${m.id}"`, kleur: 'oranje' }) : '',
       (() => { const vandaag = sl.filter((g) => g.spelerId && g.datum === D.vandaag()); return vandaag.length ? h.rij({ ic: 'users', titel: `Vandaag: ${vandaag.length} ${vandaag.length === 1 ? 'gesprek' : 'gesprekken'}`, sub: `Vanaf ${vandaag[0].tijd} · tik op een naam voor de gesprekspagina`, act: 'open', attrs: `data-view="gesprekken" data-m="${m.id}"`, kleur: 'blauw' }) : ''; })(),
       (() => { if (!sl.length || !CC.mag('ontwgesprek')) return ''; CC.ogHerinnering(S, tid, m.id); const z = zonderTijd(S, tid, m.id); const dl = kiesTot(S, tid, m.id);
         return z.length && dl && dl < D.vandaag() ? h.rij({ ic: 'users', titel: `${z.length} ${z.length === 1 ? 'kind heeft' : 'kinderen hebben'} nog geen gesprekstijd`, sub: 'De kiestijd is voorbij: verdeel de rest met één tik', act: 'open', attrs: `data-view="gesprekken" data-m="${m.id}"`, kleur: 'oranje' }) : ''; })()].filter(Boolean);
   };
-  // HJO: voortgang per team
+  // HJO (Besluit 71): per team hoeveel ontwikkelgesprekken zijn gevoerd (vanaf O12)
+  const gehadTeam = (S, tid, mid) => { const sp = M.spelers(S, tid); return { gehad: sp.filter((pl) => CC.ontwZichtbaar(S, pl.id, mid)).length, gepland: sp.filter((pl) => slots(S, tid, mid).some((g) => g.spelerId === pl.id)).length, totaal: sp.length }; };
+  const gespreksTeams = (S) => S.teams.filter((t) => !CC.categorie(t.cat).geenGesprek && M.spelers(S, t.id).length);
   CC.beoordInzicht = (S) => {
-    const m = CC.actiefMoment(S);
-    return `${h.sectie(`Beoordelingen · ${esc(m.naam.toLowerCase())} (${D.kort(m.van)} – ${D.kort(m.tot)})`)}<div class="staven">${S.teams.map((t) => { const vg = voortgang(S, t.id, m.id); const pct = vg.totaal ? Math.round((100 * vg.klaar) / vg.totaal) : 0; const g = slots(S, t.id, m.id); return `<div class="staaf"><span>${esc(t.naam)}</span><i class="${pct === 100 ? 'groen' : pct ? 'oranje' : 'rood'}" style="--w:${pct}%"></i><b>${vg.klaar}/${vg.totaal}</b></div>${g.length ? '' : ''}`; }).join('')}</div><p class="zacht klein">Aantal spelers beoordeeld per team. ${m.status === 'komt' ? 'Het moment is nog niet begonnen.' : ''}</p>`;
+    const m = CC.actiefMoment(S); const teams = gespreksTeams(S); if (!teams.length) return '';
+    return `${h.sectie(`Ontwikkelgesprekken · ${esc(m.naam.toLowerCase())} (${D.kort(m.van)} – ${D.kort(m.tot)})`)}<div class="staven">${teams.map((t) => { const x = gehadTeam(S, t.id, m.id); const pct = x.totaal ? Math.round((100 * x.gehad) / x.totaal) : 0;
+      return `<div class="staaf"><span>${esc(t.naam)}</span><i class="${pct === 100 ? 'groen' : m.status === 'voorbij' ? 'rood' : 'oranje'}" style="--w:${pct}%"></i><b>${x.gehad}/${x.totaal}</b></div>`; }).join('')}</div><p class="zacht klein">Gevoerde gesprekken per team (vanaf O12). ${m.status === 'komt' ? 'De periode is nog niet begonnen.' : m.status === 'open' ? 'De periode loopt nog.' : ''}</p>`;
+  };
+  // HJO Home: na de periode een signaal bij teams waar niet alle gesprekken zijn gevoerd (tot 6 weken erna)
+  CC.ogAandacht = (S) => {
+    const m = CC.momenten(S).filter((x) => x.status === 'voorbij' && D.addDays(x.tot, 42) >= D.vandaag()).pop(); if (!m || !S.club.modules.beoordeling) return null;
+    const achter = gespreksTeams(S).map((t) => ({ t, x: gehadTeam(S, t.id, m.id) })).filter(({ x }) => x.gehad < x.totaal); if (!achter.length) return null;
+    return h.rij({ ic: 'users', titel: `${gNaam(m, true)}: ${achter.length} ${achter.length === 1 ? 'team' : 'teams'} niet helemaal gevoerd`, sub: achter.map(({ t, x }) => `${esc(t.naam)} ${x.gehad}/${x.totaal}`).join(' · '), act: 'tab', attrs: 'data-tab="inzicht"', kleur: 'oranje' });
+  };
+  // Afgelaste of verplaatste training (Besluit 71): de gesprekken eromheen gaan niet door. Ouders met een gesprek krijgen
+  // bericht en kiezen een nieuwe tijd; de tijden verdwijnen. Alleen door de staf van het team (die mag de tijden wijzigen).
+  CC.ogAfgelast = (S) => {
+    const me = CC.me(); if (!me) return 0;
+    const weg = (S.ontwGesprek || []).filter((g) => { if (!g.actId || g.datum < D.vandaag() || !M.stafVan(S, g.teamId).includes(me.id)) return false; const a = M.act(S, g.actId); return !a || a.afgelast || a.datum !== g.datum; });
+    if (!weg.length) return 0;
+    weg.filter((g) => g.spelerId).forEach((g) => { const pl = M.speler(S, g.spelerId); if (!pl) return;
+      S.msgs.push({ id: 'b' + Date.now() + pl.id, van: me.id, soort: 'persoonlijk', bereik: `${pl.voornaam} (${CC.tn(pl.teamId)})`, onderwerp: `Gesprek over ${pl.voornaam} gaat niet door`, tekst: `De training van ${D.lang(g.datum)} gaat niet door of is verplaatst. Het gesprek over ${pl.voornaam} om ${g.tijd} gaat daarom ook niet door.\n\nKies in ClubComm een nieuwe tijd (Home). Zijn er geen tijden meer, dan zet de trainer er nieuwe klaar.`, tijd: new Date().toISOString(), ontvangers: pl.ouders, gelezen: [me.id], antw: [], urgent: false, gepland: null }); });
+    S.ontwGesprek = S.ontwGesprek.filter((g) => !weg.includes(g)); CC.save();
+    return weg.filter((g) => g.spelerId).length;
   };
 
   // Demo: gesprekpunten bij Jesse (moment 1, winter)
   const demo = (S) => {
     const jesse = S.players.find((p) => p.voornaam === 'Jesse' && p.teamId === 'O10-1');
-    if (jesse && S.beoord[jesse.id]) { S.beoord[jesse.id].m1.goed = 'Sterk aan de bal, durft de bal te vragen.'; S.beoord[jesse.id].m1.werken = 'Aannemen met links; vaker meedoen op vrijdag.'; }
+    const m1 = CC.momenten(S)[0];
+    if (jesse && S.beoord[jesse.id] && S.beoord[jesse.id][m1.id]) { S.beoord[jesse.id][m1.id].goed = 'Sterk aan de bal, durft de bal te vragen.'; S.beoord[jesse.id][m1.id].werken = 'Aannemen met links; vaker meedoen op vrijdag.'; }
     // O10-1 heeft de gesprekken voor de winter al klaargezet; twee ouders kozen al een tijd
     S.ontwGesprek = S.ontwGesprek || [];
-    const m1 = CC.momenten(S)[0]; const sp = M.spelers(S, 'O10-1'); const dag = D.addDays(m1.tot, -9);
-    for (let i = 0; i < sp.length; i++) S.ontwGesprek.push({ id: 'og-demo' + i, teamId: 'O10-1', moment: 'm1', datum: dag, tijd: CC.plusMin('18:00', i * 10), eind: CC.plusMin('18:00', (i + 1) * 10), plek: 'Kantine', spelerId: null });
+    const sp = M.spelers(S, 'O10-1'); const dag = D.addDays(m1.tot, -9);
+    for (let i = 0; i < sp.length; i++) S.ontwGesprek.push({ id: 'og-demo' + i, teamId: 'O10-1', moment: m1.id, datum: dag, tijd: CC.plusMin('18:00', i * 10), eind: CC.plusMin('18:00', (i + 1) * 10), plek: 'Kantine', spelerId: null });
     sp.filter((pl) => ['Sem', 'Finn'].includes(pl.voornaam)).forEach((pl, i) => { S.ontwGesprek[i * 3].spelerId = pl.id; });
     S.beoordDemo = true;
   };

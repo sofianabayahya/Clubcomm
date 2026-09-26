@@ -48,7 +48,7 @@
       } else res.push({ sjabloon: 'vrijedag', id: 'vrij-' + v.id, datum: v.van, titel: v.naam, vars: { naam: v.naam, datum: D.lang(v.van) } });
     });
     M.blokken(S).forEach((b) => { const w = S.acts.filter((a) => M.isWed(a) && !a.afgelast && a.datum >= b.van && a.datum <= b.tot).sort((x, y) => x.datum.localeCompare(y.datum))[0]; if (w) res.push({ sjabloon: 'wedstrijden', id: 'wed-' + b.nr, datum: w.datum, titel: `Wedstrijden ${b.naam.toLowerCase()}`, vars: { datum: D.lang(w.datum), fase: b.naam } }); });
-    (CC.momenten ? CC.momenten(S) : []).forEach((m) => res.push({ sjabloon: 'beoordeling', id: 'beoordeling-' + m.id, datum: m.van, titel: `Beoordeling ${m.naam.toLowerCase()}`, vars: { moment: m.naam.toLowerCase(), datum: D.lang(m.van), tot: D.lang(m.tot) } }));
+    (CC.momenten ? CC.momenten(S) : []).forEach((m) => res.push({ sjabloon: 'beoordeling', id: 'beoordeling-' + (m.basisId || m.id), datum: m.van, titel: `Beoordeling ${m.naam.toLowerCase()}`, vars: { moment: m.naam.toLowerCase(), datum: D.lang(m.van), tot: D.lang(m.tot) } }));
     // Eerste training van het seizoen; ligt die veel later (club halverwege het seizoen ingericht), dan geldt de startdatum en gaat er geen startbericht meer uit
     const t0 = eersteTraining(D.addDays(c.seizoen.start, -1)); const start = t0 && D.dagen(c.seizoen.start, t0.datum) <= 14 ? t0.datum : c.seizoen.start;
     res.push({ sjabloon: 'start', id: 'start-' + c.seizoen.start, datum: start, titel: 'Start seizoen', vars: { datum: D.lang(start) } });

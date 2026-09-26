@@ -42,6 +42,7 @@
         if (A.lang.length) rijen.push(h.rij({ ic: 'hospital', titel: `${A.lang.length} speler${A.lang.length > 1 ? 's' : ''} langdurig afwezig`, sub: A.lang.map((s) => esc(s.tekst.split(':')[0])).join(', '), act: 'open', attrs: 'data-view="signalen" data-soort="lang"' }));
         if (A.patroon.length) rijen.push(h.rij({ ic: 'repeat', titel: `${A.patroon.length} opvallende patronen`, sub: 'Bijv. steeds op dezelfde dag afwezig', act: 'open', attrs: 'data-view="signalen" data-soort="patroon"' }));
         if (CC.trainerAandacht) rijen.push(...CC.trainerAandacht(S));
+        { const og = CC.ogAandacht && CC.ogAandacht(S); if (og) rijen.push(og); }
         const mat = CC.materiaalAandacht && CC.materiaalAandacht(S); if (mat) rijen.push(mat);
         const af = M.afgedaanRecent(S, S.teams.map((t) => t.id), 7);
         if (af.length) rijen.push(h.rij({ ic: 'check', titel: `${af.length} ${af.length === 1 ? 'signaal' : 'signalen'} afgedaan als "geen actie nodig"`, sub: 'Afgelopen week, door trainers en teamleiders. Ter controle.', act: 'open', attrs: 'data-view="afgedaan"' }));

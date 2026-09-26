@@ -744,6 +744,7 @@
     const info = [...new Set([...hjo, ...M.stafVan(S, tid)])].filter((x) => x && x !== me.id);
     S.msgs.push({ id: 'b' + Date.now() + 1, van: 'systeem', soort: 'melding', bereik: 'Ter informatie', onderwerp: `Planning ${CC.tn(tid)} gewijzigd`, tekst: `${me.naam}: ${tekst} Je hoeft niets te doen.`, tijd: now, ontvangers: info, gelezen: [], antw: [], urgent: false, gepland: null });
     S.wijzigingen.push({ id: 'w' + Date.now(), teamId: tid, door: me.id, tekst, tijd: now });
+    if (CC.ogAfgelast) CC.ogAfgelast(S); // gesprekken rond een afgelaste of verplaatste training (Besluit 71)
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Planning aangepast, ouders zijn ingelicht');
   });
 
@@ -835,8 +836,10 @@
     const gespr = S.gesprekken.filter((g) => g.spelerId === pl.id);
     const sp = M.speeltijdStand ? M.speeltijdStand(S, pl) : null;
     const dp = staf && M.doelpuntenSeizoen ? M.doelpuntenSeizoen(S, pl.id) : 0;
-    const kopSub = [CC.tn(pl.teamId), sp && sp.pct != null ? `${sp.pct}% speeltijd` : '', dp ? `${dp} ${dp === 1 ? 'doelpunt' : 'doelpunten'}` : '', staf && CC.zicht('beoordeling') ? (b ? `beoordeeld (${b.m.naam.toLowerCase()})` : 'nog niet beoordeeld') : ''].filter(Boolean).join(' · ');
+    const kopSub = [CC.tn(pl.teamId), sp && sp.pct != null ? `${sp.pct}% speeltijd` : '', dp ? `${dp} ${dp === 1 ? 'doelpunt' : 'doelpunten'}` : '', staf && CC.zicht('beoordeling') ? (CC.laatsteVerslag && CC.laatsteVerslag(S, pl.id) ? `gesprek gehad (${CC.laatsteVerslag(S, pl.id).m.naam.toLowerCase()})` : '') : ''].filter(Boolean).join(' · ');
     const oudersBlok = staf && ouders.length ? `${h.sectie(ouders.length > 1 ? 'Ouders' : 'Ouder')}<div class="lijst">${ouders.map((o) => CC.contactRij(o)).join('')}</div>` : '';
+    // Positie (Besluit 71): keeper of veldspeler. Bepaalt de vaardigheden in het ontwikkelgesprek en wie op doel staat.
+    const posBlok = staf ? `<div class="zelfrij posrij"><span><b>Positie</b></span><span class="niveaus">${[['', 'Veldspeler'], ['keeper', 'Keeper']].map(([k, l]) => `<button type="button" class="${(pl.positie || '') === k ? 'aan' : ''}" data-act="zetPositie" data-id="${pl.id}" data-v="${k}" aria-pressed="${(pl.positie || '') === k}">${l}</button>`).join('')}</span></div>` : '';
     const langBlok = (kort) => (lang ? `<div class="info">${icon('hospital')}<span><b>Langdurig afwezig</b>${kort ? '' : ` (${esc(lang.reden.toLowerCase())})`} tot ongeveer ${D.kort(lang.tot)}.${!kort && CC.zicht('toelichting') ? ' ' + esc(lang.opm || '') : ''}</span></div>` : '');
     // Teamleider die geen spelerszaken volgt: alleen de volgende activiteit en de ouders
     if (!CC.volgtSpelers(t.id)) {
@@ -845,13 +848,13 @@
     }
     const n = Number(h.segVal('gesch-' + pl.id, 5)); const gesch = st.lijst.slice().reverse();
     const beoBlok = staf && CC.zicht('beoordeling') && (b || CC.mag('beoordelen'))
-      ? `${h.sectie(b ? `Beoordeling · ${esc(b.m.naam.toLowerCase())}` : 'Beoordeling')}${b ? `<div class="scores">${Object.entries(b.x.scores).map(([v, s]) => `<span>${esc(v)} ${CC.scoreTekst(t, s)}</span>`).join('')}</div>` : '<p class="zacht klein">Nog niet beoordeeld.</p>'}${CC.mag('beoordelen') ? `<div class="knoppen"><button class="knop licht klein" data-act="open" data-view="beoordelen">${icon('eye-off')}Jouw kijk</button>${CC.views.gesprekVerslag && CC.actiefMoment ? `<button class="knop licht klein" data-act="open" data-view="gesprekVerslag" data-id="${pl.id}" data-m="${CC.actiefMoment(S).id}">${icon('users')}Gesprekspagina</button>` : ''}</div>` : ''}`
+      ? `${h.sectie(b ? `Ontwikkeling · jouw kijk (${esc(b.m.naam.toLowerCase())}, alleen staf)` : 'Ontwikkeling')}${b ? `<div class="scores">${Object.entries(b.x.scores).map(([v, s]) => `<span>${esc(v)} ${CC.scoreTekst(t, s)}</span>`).join('')}</div>` : '<p class="zacht klein">Nog geen eigen kijk ingevuld (hoeft pas voor het voorjaar).</p>'}${CC.mag('beoordelen') ? `<div class="knoppen"><button class="knop licht klein" data-act="open" data-view="beoordelen">${icon('eye-off')}Jouw kijk</button>${CC.views.gesprekVerslag && CC.actiefMoment ? `<button class="knop licht klein" data-act="open" data-view="gesprekVerslag" data-id="${pl.id}" data-m="${CC.actiefMoment(S).id}">${icon('users')}Gesprekspagina</button>` : ''}${CC.gesprekkenGehad && CC.gesprekkenGehad(S, pl.id).length ? `<button class="knop licht klein" data-act="open" data-view="beoordelingKind" data-id="${pl.id}">${icon('flag')}Alle gesprekken (${CC.gesprekkenGehad(S, pl.id).length})</button>` : ''}</div>` : ''}`
       // Ouder (Besluit 67): nooit de kijk van de trainer, wel wat in het gesprek samen is afgesproken
       : !staf && CC.laatsteVerslag && CC.laatsteVerslag(S, pl.id) ? `${h.sectie('Wapen en doelen')}<div class="kaartje">${CC.verslagVoorOuder(S, pl, CC.laatsteVerslag(S, pl.id).m.id)}</div><button class="linkknop" data-act="open" data-view="beoordelingKind" data-id="${pl.id}">Alle gesprekken</button>` : '';
     const gesprBlok = staf && CC.zicht('gesprekken') ? `${h.sectie('Gesprekken')}${gespr.map((g) => h.rij({ ic: g.soort === 'gesprek' ? 'users' : g.soort === 'geappt' ? 'message-circle' : g.soort === 'geaccepteerd' ? 'circle-check' : 'phone', titel: `${D.kort(g.datum)} · ${CC.gesprekLabel(g)} · ${esc((M.persoon(S, g.door) || { naam: '' }).naam)}`, sub: esc(g.notitie) + (g.afspraak ? `<br><b>Afspraak:</b> ${esc(g.afspraak)}` : '') })).join('') || '<p class="zacht klein">Nog geen gesprekken vastgelegd.</p>'}${CC.zicht('contact') ? `<button class="knop licht klein" data-act="gesprekVastleggen" data-id="${pl.id}">${icon('phone')}Contact vastleggen</button>` : ''}` : '';
     return {
       titel: M.naam(S, pl), sub: kopSub,
-      html: `${oudersBlok}
+      html: `${oudersBlok}${posBlok}
       ${h.seg('spPer', [['blok', 'Deze fase'], ['seizoen', 'Heel seizoen']], 'blok')}
       <div class="cijfers"><div class="cijfer ${z}"><b>${st.pct == null ? '–' : st.pct + '%'}</b><small>aanwezig</small></div><div class="cijfer"><b>${st.telaat}×</b><small>te laat</small></div><div class="cijfer"><b>${h.kaartjes(k) || '–'}</b><small>kaarten seizoen</small></div></div>
       <p class="klein zacht">${h.split(st)}</p>
@@ -864,6 +867,7 @@
       ${Object.keys(st.redenen).length ? `${h.sectie('Redenen van afwezigheid')}<div class="balkjes">${Object.entries(st.redenen).sort((a, b2) => b2[1] - a[1]).map(([r, c]) => `<div class="balkje"><span>${esc(r)}</span><i style="--w:${(100 * c) / st.afwezig}%"></i><b>${c}</b></div>`).join('')}</div>` : ''}`,
     };
   };
+  CC.on('zetPositie', (el) => { const pl = M.speler(S, el.dataset.id); if (el.dataset.v) pl.positie = el.dataset.v; else delete pl.positie; CC.save(); CC.render(); CC.toast(el.dataset.v ? `${pl.voornaam} staat nu als keeper` : `${pl.voornaam} staat nu als veldspeler`); });
   CC.kaartIc = (e) => (e.kaart === 'herinnering' ? 'mail' : `<span class="kaart ${e.kaart}${e.geaccepteerd ? ' vaag' : ''}">${e.tweedeGeel ? '2' : '1'}</span>`);
   CC.kaartTitel = (e) => (e.kaart === 'herinnering' ? 'Vriendelijke herinnering' : e.kaart === 'geel' ? 'Gele kaart' : e.tweedeGeel ? 'Rode kaart (tweede gele)' : 'Rode kaart');
   CC.gesprekLabel = (g) => ({ gesprek: 'Persoonlijk gesprek', geappt: 'Geappt', geaccepteerd: 'Begrijpelijk, geaccepteerd' }[g.soort] || 'Gebeld');

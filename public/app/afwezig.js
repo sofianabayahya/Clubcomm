@@ -94,6 +94,7 @@
     S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'nieuws', bereik: a.teamId, onderwerp: `Training ${D.kort(a.datum)} gaat niet door`, tekst: `De training van ${D.lang(a.datum)} om ${a.tijd} gaat niet door (${reden}). Excuses voor het ongemak.`, tijd: new Date().toISOString(), ontvangers: M.oudersVan(S, a.teamId), gelezen: [], antw: [], urgent: true, gepland: null, vastTot: null });
     melding(S, [...M.stafVan(S, a.teamId), ...hjoIds(S)].filter((x) => x !== me.id), `Afgelast: ${CC.tn(a.teamId)} ${D.kort(a.datum)}`, `${me.naam} heeft de training van ${D.lang(a.datum)} afgelast (${reden}).`);
     S.wijzigingen.push({ id: 'w' + Date.now(), teamId: a.teamId, door: me.id, tekst: `Training ${D.kort(a.datum)} afgelast (${reden})`, tijd: new Date().toISOString() });
+    if (CC.ogAfgelast) CC.ogAfgelast(S); // gesprekken rond deze training gaan niet door (Besluit 71)
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Afgelast; ouders krijgen een pushmelding');
   };
   CC.on('trainingAfgelasten', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.id); (S.trainerLog || []).filter((x) => x.actId === a.id).forEach((x) => { x.afgelast = true; }); afgelasten(S, a, 'geen trainer beschikbaar'); });
