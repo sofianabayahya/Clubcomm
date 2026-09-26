@@ -91,7 +91,7 @@
   const afgelasten = (S, a, reden) => {
     const t = M.team(S, a.teamId); const me = CC.me();
     a.afgelast = true; S.taken = S.taken.filter((x) => !(x.actId === a.id && x.soort === CC.VERVANGER && !x.personId));
-    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'nieuws', bereik: a.teamId, onderwerp: `Training ${D.kort(a.datum)} gaat niet door`, tekst: `De training van ${D.lang(a.datum)} om ${a.tijd} gaat niet door (${reden}). Excuses voor het ongemak.`, tijd: new Date().toISOString(), ontvangers: M.oudersVan(S, a.teamId), gelezen: [], antw: [], urgent: true, gepland: null, vastTot: null });
+    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'nieuws', verloopt: a.datum, bereik: a.teamId, onderwerp: `Training ${D.kort(a.datum)} gaat niet door`, tekst: `De training van ${D.lang(a.datum)} om ${a.tijd} gaat niet door (${reden}). Excuses voor het ongemak.`, tijd: new Date().toISOString(), ontvangers: M.oudersVan(S, a.teamId), gelezen: [], antw: [], urgent: true, gepland: null, vastTot: null });
     melding(S, [...M.stafVan(S, a.teamId), ...hjoIds(S)].filter((x) => x !== me.id), `Afgelast: ${CC.tn(a.teamId)} ${D.kort(a.datum)}`, `${me.naam} heeft de training van ${D.lang(a.datum)} afgelast (${reden}).`);
     S.wijzigingen.push({ id: 'w' + Date.now(), teamId: a.teamId, door: me.id, tekst: `Training ${D.kort(a.datum)} afgelast (${reden})`, tijd: new Date().toISOString() });
     if (CC.ogAfgelast) CC.ogAfgelast(S); // gesprekken rond deze training gaan niet door (Besluit 71)

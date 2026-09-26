@@ -172,7 +172,7 @@
       const tel = {}; (a.goals || []).filter((x) => x.wij && x.spelerId).forEach((x) => { tel[x.spelerId] = (tel[x.spelerId] || 0) + 1; });
       const makers = metMakers && Object.keys(tel).length ? `\n\nDoelpunten: ${Object.entries(tel).map(([id, n]) => `${(M.speler(S, id) || {}).voornaam}${n > 1 ? ` ${n}×` : ''}`).join(', ')}.` : '';
       const ontv = [...new Set([...M.oudersVan(S, a.teamId), ...M.stafVan(S, a.teamId)])].filter((x) => x !== van);
-      S.msgs.push({ id: 'b' + Date.now() + a.id, van, soort: 'nieuws', bereik: a.teamId, onderwerp: `Uitslag: ${thuisNaam} – ${uitNaam} ${st.thuis}-${st.uit}`, tekst: `${thuisNaam} – ${uitNaam}: ${st.thuis}-${st.uit}.${makers}`, tijd: new Date().toISOString(), ontvangers: ontv, gelezen: [], antw: [], urgent: false, gepland: null, mail: false });
+      S.msgs.push({ id: 'b' + Date.now() + a.id, van, soort: 'nieuws', verloopt: D.addDays(a.datum, 1), bereik: a.teamId, onderwerp: `Uitslag: ${thuisNaam} – ${uitNaam} ${st.thuis}-${st.uit}`, tekst: `${thuisNaam} – ${uitNaam}: ${st.thuis}-${st.uit}.${makers}`, tijd: new Date().toISOString(), ontvangers: ontv, gelezen: [], antw: [], urgent: false, gepland: null, mail: false });
       a.uitslagVerstuurd = new Date().toISOString();
     }
   };

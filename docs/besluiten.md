@@ -508,6 +508,12 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 80 — Berichtencentrum overzichtelijk houden
+- **Nieuws over een activiteit vervalt vanzelf:** een herinnering, planningswijziging, afgelasting of uitslag gaat de dag na die activiteit naar het Archief (niet pas na 14 dagen). Vastgezette berichten niet.
+- **Archief per maand:** kopjes per maand, de nieuwste open, oudere ingeklapt.
+- **Zoekbalk in het archief:** zoekt in onderwerp, tekst, antwoorden en namen, meteen tijdens het typen.
+- Later (ideeën): berichten tonen bij de activiteit en bij de speler; vast blok "Belangrijk dit seizoen"; filters voor de staf; weekbericht.
+
 ## Besluit 79 — Berichten: gesprek afronden, automatisch archiveren, ouderportaal zonder staf-berichten
 - **Gesprek afronden:** de knop "Archiveren" heet bij een gesprek **"✓ Gesprek afronden"** (bovenaan in het gesprek). Ieder rondt voor zichzelf af. De ander ziet in het gesprek: *"Sofian heeft het gesprek afgerond."* Stuurt iemand daarna nog iets, dan komt het gesprek bij iedereen terug. Een afgerond gesprek kun je zelf weer openen via het Archief.
 - **"Wacht op antwoord"** alleen als jouw laatste bericht een vraag is (met een vraagteken). Eindig je met een conclusie, dan staat er niets.

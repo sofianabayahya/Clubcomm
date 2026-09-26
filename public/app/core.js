@@ -453,7 +453,8 @@
   const dagenOud = (m) => (Date.now() - new Date(laatstTijd(m))) / 864e5;
   const isStaf = () => CC.rol().rol !== 'ouder';
   const terInfo = (m) => M.terInfo(m);
-  const nieuwsArchief = (m, pid) => M.gearchiveerd(m, pid) || (!CC.isVast(m) && dagenOud(m) > ARCHIEF_DAGEN);
+  // Besluit 80: nieuws over een activiteit (herinnering, wijziging, afgelast, uitslag) vervalt de dag na die activiteit
+  const nieuwsArchief = (m, pid) => M.gearchiveerd(m, pid) || (!CC.isVast(m) && (dagenOud(m) > ARCHIEF_DAGEN || (m.verloopt && m.verloopt < D.vandaag())));
   const kanIntrekken = (m, me) => m.van === me.id && !m.ingetrokken && Date.now() - new Date(m.tijd) < 24 * 3600e3;
   const nieuwst = (a, b) => laatstTijd(b).localeCompare(laatstTijd(a));
 
@@ -563,10 +564,22 @@
   CC.views.archief = (S, p) => {
     const me = CC.me(); const { pers, nws } = perTab(me);
     const ms = (p.tab === 'nieuws' ? nws.filter((m) => nieuwsArchief(m, me.id)) : pers.filter((m) => gespArchief(m, me))).sort(nieuwst);
+    // Besluit 80: per maand (nieuwste open, oudere ingeklapt) en een zoekbalk (onderwerp, tekst, antwoorden, namen)
+    const zoektekst = (m) => [m.onderwerp, m.tekst, ...(m.antw || []).map((a) => a.tekst), pNaam(m.van), ...M.deelnemers(m).map(pNaam), bereikNaam(m)].join(' ').toLowerCase();
+    const rij = (m) => (p.tab === 'nieuws' ? nieuwsRij(m, me) : gesprek(m, me)).replace('<button class="bericht', `<button data-zoek="${esc(zoektekst(m))}" class="bericht`);
+    const maanden = []; ms.forEach((m) => { const d = new Date(laatstTijd(m)); const k = `${d.getFullYear()}-${d.getMonth()}`; let g = maanden.find((x) => x.k === k);
+      if (!g) { g = { k, naam: d.toLocaleDateString('nl-NL', { month: 'long', year: 'numeric' }), ms: [] }; maanden.push(g); } g.ms.push(m); });
     return { titel: p.tab === 'nieuws' ? 'Archief · Nieuws' : 'Archief · Persoonlijk',
-      html: `<p class="zacht klein">${p.tab === 'nieuws' ? `Nieuws gaat na ${ARCHIEF_DAGEN} dagen vanzelf hierheen.` : 'Gesprekken die je afrondde, en gesprekken waarin 7 dagen niets gebeurde. Komt er een nieuw bericht, dan staat het gesprek weer bij Persoonlijk.'} Aan het eind van het seizoen worden oude berichten gewist.</p>
-        ${ms.length ? meer('archief-' + p.tab, ms, (m) => (p.tab === 'nieuws' ? nieuwsRij(m, me) : gesprek(m, me))) : h.leeg('Het archief is leeg', 'archive')}` };
+      html: `<p class="zacht klein">${p.tab === 'nieuws' ? `Nieuws gaat na ${ARCHIEF_DAGEN} dagen vanzelf hierheen, en nieuws over een activiteit de dag erna.` : 'Gesprekken die je afrondde, en gesprekken waarin 7 dagen niets gebeurde. Komt er een nieuw bericht, dan staat het gesprek weer bij Persoonlijk.'} Aan het eind van het seizoen worden oude berichten gewist.</p>
+        ${ms.length ? `<input type="search" class="zoekveld" placeholder="Zoek op woord of naam" aria-label="Zoek in het archief" data-input="archiefZoek">
+        ${maanden.map((g, i) => `<details class="uitklap blok maandblok" data-open="${i === 0 ? 1 : 0}" ${i === 0 ? 'open' : ''}><summary>${esc(g.naam.charAt(0).toUpperCase() + g.naam.slice(1))} <span class="zacht">(${g.ms.length})</span></summary><div class="lijst">${g.ms.map(rij).join('')}</div></details>`).join('')}
+        <p class="zacht klein midden" data-niets hidden>Niets gevonden.</p>` : h.leeg('Het archief is leeg', 'archive')}` };
   };
+  // Zoeken in het archief: meteen filteren zonder het scherm opnieuw te tekenen (zo blijft het toetsenbord open)
+  CC.on('archiefZoek', (el) => { const q = el.value.trim().toLowerCase(); let totaal = 0;
+    document.querySelectorAll('.maandblok').forEach((d) => { let n = 0; d.querySelectorAll('[data-zoek]').forEach((b) => { const ja = !q || b.dataset.zoek.includes(q); b.hidden = !ja; if (ja) n++; });
+      d.hidden = !n; d.open = q ? n > 0 : d.dataset.open === '1'; totaal += n; });
+    const niets = document.querySelector('[data-niets]'); if (niets) niets.hidden = totaal > 0; });
   // Regel voor Home (Besluit 57): gesprekken die op jou wachten
   CC.wachtRij = () => { const me = CC.me(); const n = S.msgs.filter((m) => M.zichtbaar(S, m, me.id) && M.wachtOpMij(m, me.id)).length;
     return n ? h.rij({ ic: 'message-circle', titel: `${n} ${n === 1 ? 'gesprek wacht' : 'gesprekken wachten'} op jou`, sub: 'Een vraag die nog niemand van de staf beantwoordde', act: 'wachtOpen', kleur: 'oranje' }) : ''; };
@@ -757,21 +770,22 @@
   });
   CC.on('wijzigPlanning', (f) => {
     const tid = CC.teamId(); const t = M.team(S, tid); const me = CC.me(); const wat = f.wat.value;
-    let tekst = '';
+    let tekst = ''; let verloopt = null; // Besluit 80: het bericht vervalt na de dag van de activiteit
     if (wat === 'afgelast' || wat === 'verplaats') {
       const a = M.act(S, f.act.value); if (!a) return CC.toast('Kies een training', 'fout');
       if (wat === 'afgelast') { a.afgelast = true; tekst = `Training van ${D.lang(a.datum)} gaat niet door.`; }
       else { const oud = `${D.kort(a.datum)} ${a.tijd}`; a.datum = f.datum.value; a.tijd = f.tijd.value; a.veld = f.veld.value; a.eind = CC.plusMin(a.tijd, 75); tekst = `Training van ${oud} is verplaatst naar ${D.lang(a.datum)} ${a.tijd} op ${a.veld}.`; }
+      verloopt = a.datum;
     } else {
       if (wat === 'activiteit' && !f.naam.value.trim()) return CC.toast('Vul in wat jullie gaan doen', 'fout');
       const a = wat === 'activiteit'
         ? { id: 'a' + Date.now(), teamId: tid, soort: 'activiteit', naam: f.naam.value.trim(), datum: f.datum.value, tijd: f.tijd.value, eind: f.eind.value || CC.plusMin(f.tijd.value, 90), verzamel: f.verzamel.value || '', plaats: f.plaats.value.trim(), adres: f.adres.value.trim(), toelichting: f.toelichting.value.trim(), veld: '', afgelast: false, opgave: f.opgave.checked, opgaveTot: f.opgave.checked ? (f.opgaveTot.value || f.datum.value) : null, herinneringen: [...f.querySelectorAll('[name=hr]:checked')].map((x) => Number(x.value)), herinnerd: [] }
         : { id: 'a' + Date.now(), teamId: tid, soort: wat === 'oefen' ? 'oefen' : 'training', datum: f.datum.value, tijd: f.tijd.value, eind: CC.plusMin(f.tijd.value, wat === 'oefen' ? CC.categorie(t.cat).duur + 15 : 75), veld: f.veld.value, tegen: f.tegen.value, thuis: true, verzamel: f.tijd.value, adres: S.club.sportpark || '', afgelast: false };
-      S.acts.push(a); S.acts.sort((x, y) => (x.datum + x.tijd).localeCompare(y.datum + y.tijd));
+      S.acts.push(a); S.acts.sort((x, y) => (x.datum + x.tijd).localeCompare(y.datum + y.tijd)); verloopt = a.datum;
       tekst = wat === 'activiteit' ? `${a.naam} op ${D.lang(a.datum)} van ${a.tijd} tot ${a.eind}${a.plaats ? ` bij ${a.plaats}` : ''}.${a.verzamel ? ` Verzamelen om ${a.verzamel}.` : ''}${a.toelichting ? ` ${a.toelichting}` : ''}${a.opgave ? ` Geef je kind vóór ${D.lang(a.opgaveTot)} op in ClubComm: ja of nee.` : ' Kan je kind niet? Meld af in ClubComm.'}` : `${wat === 'oefen' ? 'Oefenwedstrijd' : 'Extra training'} op ${D.lang(a.datum)} om ${a.tijd} (${a.veld}).`;
     }
     const now = new Date().toISOString();
-    S.msgs.push({ id: 'b' + Date.now(), van: me.id, vanRol: (CC.rol() || {}).rol, soort: 'nieuws', bereik: tid, onderwerp: wat === 'activiteit' ? `Nieuw: ${f.naam.value.trim()}` : 'Wijziging in de planning', tekst, tijd: now, ontvangers: M.oudersVan(S, tid), gelezen: [], antw: [], urgent: wat !== 'activiteit', gepland: null });
+    S.msgs.push({ id: 'b' + Date.now(), van: me.id, vanRol: (CC.rol() || {}).rol, soort: 'nieuws', verloopt, bereik: tid, onderwerp: wat === 'activiteit' ? `Nieuw: ${f.naam.value.trim()}` : 'Wijziging in de planning', tekst, tijd: now, ontvangers: M.oudersVan(S, tid), gelezen: [], antw: [], urgent: wat !== 'activiteit', gepland: null });
     const hjo = S.people.filter((p) => p.rollen.some((r) => r.rol === 'hjo')).map((p) => p.id);
     const info = [...new Set([...hjo, ...M.stafVan(S, tid)])].filter((x) => x && x !== me.id);
     S.msgs.push({ id: 'b' + Date.now() + 1, van: 'systeem', soort: 'melding', bereik: 'Ter informatie', onderwerp: `Planning ${CC.tn(tid)} gewijzigd`, tekst: `${me.naam}: ${tekst} Je hoeft niets te doen.`, tijd: now, ontvangers: info, gelezen: [], antw: [], urgent: false, gepland: null });

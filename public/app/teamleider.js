@@ -90,7 +90,7 @@
   CC.on('wedstrijdAfgelastOk', (f) => {
     const S = CC.S(); const a = M.act(S, f.dataset.id); const t = M.team(S, a.teamId); const me = CC.me(); const now = new Date().toISOString();
     a.afgelast = true; CC.ui.seg.tlWed = a.id; const tekst = `De wedstrijd van ${D.lang(a.datum)} tegen ${a.tegen} gaat niet door. Reden: ${f.r.value.toLowerCase()}.`;
-    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'nieuws', bereik: a.teamId, onderwerp: 'Wedstrijd afgelast', tekst, tijd: now, ontvangers: M.oudersVan(S, a.teamId), gelezen: [], antw: [], urgent: true, gepland: null });
+    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'nieuws', verloopt: a.datum, bereik: a.teamId, onderwerp: 'Wedstrijd afgelast', tekst, tijd: now, ontvangers: M.oudersVan(S, a.teamId), gelezen: [], antw: [], urgent: true, gepland: null });
     const hjo = S.people.filter((p) => p.rollen.some((r) => r.rol === 'hjo')).map((p) => p.id);
     S.msgs.push({ id: 'b' + Date.now() + 1, van: 'systeem', soort: 'melding', bereik: 'Ter informatie', onderwerp: `${CC.tn(a.teamId)}: wedstrijd afgelast`, tekst: `${me.naam}: ${tekst} Je hoeft niets te doen.`, tijd: now, ontvangers: [...hjo, t.trainerId].filter((x) => x && x !== me.id), gelezen: [], antw: [], urgent: false, gepland: null });
     S.wijzigingen.push({ id: 'w' + Date.now(), teamId: a.teamId, door: me.id, tekst, tijd: now });

@@ -140,7 +140,7 @@
       const ontv = [...new Set(spelers.flatMap((pl) => pl.ouders))].filter((x) => x !== me.id);
       if (!ontv.length) return;
       const tekst = a.opgave ? `Denk je aan de opgave voor ${a.naam} op ${D.lang(a.datum)}? Geef in ClubComm vóór ${D.lang(doel)} door of je kind komt (ja of nee).` : `Herinnering: ${a.naam} op ${D.lang(a.datum)} van ${a.tijd} tot ${a.eind}${a.plaats ? ` bij ${a.plaats}` : ''}.${a.verzamel ? ` Verzamelen om ${a.verzamel}.` : ''}${a.toelichting ? ` ${a.toelichting}` : ''} Kan je kind niet? Meld af in ClubComm.`;
-      S.msgs.push({ id: 'b' + Date.now() + Math.random().toString(36).slice(2, 6), van: admin ? 'systeem' : me.id, soort: 'nieuws', bereik: a.teamId, onderwerp: a.opgave ? `Opgave ${a.naam}: nog even doorgeven` : `Herinnering: ${a.naam}`, tekst, tijd: new Date().toISOString(), gepland: null, ontvangers: ontv, gelezen: [], antw: [], urgent: false, vastTot: null, auto: true, herinnering: true, mail: true });
+      S.msgs.push({ id: 'b' + Date.now() + Math.random().toString(36).slice(2, 6), van: admin ? 'systeem' : me.id, soort: 'nieuws', verloopt: a.datum, bereik: a.teamId, onderwerp: a.opgave ? `Opgave ${a.naam}: nog even doorgeven` : `Herinnering: ${a.naam}`, tekst, tijd: new Date().toISOString(), gepland: null, ontvangers: ontv, gelezen: [], antw: [], urgent: false, vastTot: null, auto: true, herinnering: true, mail: true });
     });
     return veranderd;
   };

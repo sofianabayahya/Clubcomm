@@ -155,7 +155,7 @@
     acts.forEach((a) => { a.afgelast = true; });
     const tIds = [...new Set(acts.map((a) => a.teamId))];
     const ontv = [...new Set(tIds.flatMap((t) => [...M.oudersVan(S, t), ...M.stafVan(S, t)]).filter(Boolean))];
-    S.msgs.push({ id: 'b' + Date.now(), van: CC.me().id, soort: 'nieuws', bereik: tIds.length === S.teams.length ? 'Hele club' : tIds.join(', '), onderwerp: `Afgelast: ${D.lang(f.d.value)}`, tekst: `${f.r.value}. ${f.w.value === 'alles' ? 'Alle trainingen en thuiswedstrijden' : 'Alle trainingen'} van ${D.lang(f.d.value)} gaan niet door.`, tijd: new Date().toISOString(), ontvangers: ontv, gelezen: [], antw: [], urgent: true, gepland: null });
+    S.msgs.push({ id: 'b' + Date.now(), van: CC.me().id, soort: 'nieuws', verloopt: f.d.value, bereik: tIds.length === S.teams.length ? 'Hele club' : tIds.join(', '), onderwerp: `Afgelast: ${D.lang(f.d.value)}`, tekst: `${f.r.value}. ${f.w.value === 'alles' ? 'Alle trainingen en thuiswedstrijden' : 'Alle trainingen'} van ${D.lang(f.d.value)} gaan niet door.`, tijd: new Date().toISOString(), ontvangers: ontv, gelezen: [], antw: [], urgent: true, gepland: null });
     CC.save(); CC.closeSheet(); CC.render(); CC.toast(acts.length ? `${acts.length} activiteiten afgelast · ${ontv.length} mensen ingelicht` : 'Op die dag stond niets gepland');
   });
   CC.on('zoekSp', (el) => { CC.ui.seg.zoekSp = el.value; const pos = el.selectionStart; CC.render(); const n = document.querySelector('[data-input="zoekSp"]'); n.focus(); n.setSelectionRange(pos, pos); });
