@@ -8,7 +8,7 @@
   const leeg = () => ({
     v: 8, gen: '', club: {}, teams: [], people: [], players: [], acts: [], afm: [], pres: {}, lang: [], gesprekken: [], msgs: [],
     vervoer: {}, taken: [], opgave: [], aanm: [], beoord: {}, notities: {}, speeltijd: { min: {}, schema: {}, keeper: {}, mogelijk: {} }, wijzigingen: [],
-    demo: {}, materiaal: {}, mails: [], trainerLog: [], trainerGesprekken: [], ontwGesprek: [], sigSinds: {}, signaalAfgedaan: [],
+    demo: {}, materiaal: {}, mails: [], trainerLog: [], trainerGesprekken: [], ontwGesprek: [], ontwVoorb: {}, ontwVerslag: {}, ontwNotitie: {}, teamVaardig: {}, sigSinds: {}, signaalAfgedaan: [],
     gezienInfo: {}, mijlpaalGezien: {}, autoVerstuurd: {}, beoordGedeeld: {}, beoordGezien: {},
     // voorkomt dat de demo-onderdelen voorbeelddata toevoegen
     beoordDemo: true, hjoHomeDemo: true, hulpDemo: true, vervangDemo: true, live: true,
@@ -46,6 +46,12 @@
     ['materiaal', 'materiaal', 'teamstaf', (k) => ({ team: k })],
     ['gezienInfo', 'gezienInfo', 'eigen', (k) => ({ persoon: k })],
     ['mijlpaalGezien', 'mijlpaalGezien', 'eigen', (k) => ({ persoon: k.split('-')[0] })],
+    // Ontwikkelgesprek (Besluit 66), sleutel speler|moment. Voorbereiding: ouder en kind (en staf) schrijven.
+    // Verslag: alleen de staf schrijft, ouders lezen. Notitie van de trainer: alleen de staf. Extra vaardigheden per team.
+    ['ontwVoorb', 'ontwVoorb', 'speler', (k, v, I) => { const s = k.split('|')[0]; return { team: I.teamVanSpeler(s), speler: s }; }],
+    ['ontwVerslag', 'ontwVerslag', 'spelerlees', (k, v, I) => { const s = k.split('|')[0]; return { team: I.teamVanSpeler(s), speler: s }; }],
+    ['ontwNotitie', 'ontwNotitie', 'notitie', (k, v, I) => { const s = k.split('|')[0]; return { team: I.teamVanSpeler(s), speler: s }; }],
+    ['teamVaardig', 'teamVaardig', 'kind', (k) => ({ team: k })],
     ['beoordGedeeld', 'beoordGedeeld', 'beoord', (k, v, I) => { const s = k.replace(/m\d+$/, ''); return { team: I.teamVanSpeler(s), speler: s }; }],
     ['beoordGezien', 'beoordGezien', 'speler', (k, v, I) => { const s = k.replace(/m\d+$/, ''); return { team: I.teamVanSpeler(s), speler: s }; }],
     ['speeltijdMin', 'speeltijd.min', 'speeltijd', (k, v, I) => ({ team: I.teamVanSpeler(k), speler: k })],

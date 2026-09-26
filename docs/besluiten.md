@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 65 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 66 toegevoegd)
 
 ---
 
@@ -507,6 +507,15 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 66 — Gesprekspagina voor het ontwikkelgesprek
+- **Voorbereiding thuis (ouder + kind, ± 5 minuten):** na het kiezen van een tijd staat op Home "Bereid het gesprek voor". Zelfbeoordeling per vaardigheid op **1–10** met een schuifje (onderbouw: drie smileys), **droom**, wat is **leuk**, wat is **lastig**. Wordt meteen bewaard.
+- **Gesprekspagina (trainer, tijdens het gesprek):** open via het gespreksoverzicht (tik op een naam), de spelerpagina ("Gesprekspagina") of Home ("Vandaag: 6 gesprekken"). Scores van kind en trainer **naast elkaar**; een verschil van 3 of meer krijgt "bespreken". Droom (+ aanvulling trainer), **maximaal 3 doelen** (wat ga je doen · hoe helpt de trainer · hoe helpen ouders), afspraken, **notitie trainer (alleen staf)**, knop "Gesprek gehad". Alles wordt tijdens het typen bewaard.
+- **Terugkijken:** bij het voorjaarsgesprek staan de droom en doelen van het startgesprek erboven, per doel **bereikt / deels / nog niet**, en de groei per vaardigheid (kind en trainer, start → voorjaar).
+- **Ouders zien** een dag na het gesprek (zoals de beoordeling): hun eigen scores, de scores van de trainer, droom, doelen en afspraken. **Niet** de notitie van de trainer (in de database afgeschermd).
+- **Schaal 1–10** vanaf O11 (was 1–5), zodat kind en trainer naast elkaar staan; onderbouw blijft smileys.
+- **Vaardigheden:** "Inzet" erbij (O11+); de trainer kan zelf vaardigheden toevoegen of weghalen (Beoordelen → "Vaardigheden aanpassen"), bijvoorbeeld "Koppen" of "Coachbaarheid". Die komen ook in de voorbereiding.
+- Opslag: voorbereiding (ouder en staf schrijven), verslag (alleen staf schrijft, ouders lezen), notitie (alleen staf), extra vaardigheden per team (staf schrijft, ouders lezen).
 
 ## Besluit 65 — Ontwikkelgesprekken: Start en Voorjaar, plannen na de training
 *Herziet Besluit 23 (momenten en het plannen van gesprekken).*

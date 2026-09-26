@@ -845,7 +845,7 @@
     }
     const n = Number(h.segVal('gesch-' + pl.id, 5)); const gesch = st.lijst.slice().reverse();
     const beoBlok = staf && CC.zicht('beoordeling') && (b || CC.mag('beoordelen'))
-      ? `${h.sectie(b ? `Beoordeling · ${esc(b.m.naam.toLowerCase())}` : 'Beoordeling')}${b ? `<div class="scores">${Object.entries(b.x.scores).map(([v, s]) => `<span>${esc(v)} ${CC.scoreTekst(t, s)}</span>`).join('')}</div>` : '<p class="zacht klein">Nog niet beoordeeld.</p>'}${CC.mag('beoordelen') ? `<button class="knop licht klein" data-act="open" data-view="beoordelen">${icon('star')}Beoordelen</button>` : ''}`
+      ? `${h.sectie(b ? `Beoordeling · ${esc(b.m.naam.toLowerCase())}` : 'Beoordeling')}${b ? `<div class="scores">${Object.entries(b.x.scores).map(([v, s]) => `<span>${esc(v)} ${CC.scoreTekst(t, s)}</span>`).join('')}</div>` : '<p class="zacht klein">Nog niet beoordeeld.</p>'}${CC.mag('beoordelen') ? `<div class="knoppen"><button class="knop licht klein" data-act="open" data-view="beoordelen">${icon('star')}Beoordelen</button>${CC.views.gesprekVerslag && CC.actiefMoment ? `<button class="knop licht klein" data-act="open" data-view="gesprekVerslag" data-id="${pl.id}" data-m="${CC.actiefMoment(S).id}">${icon('users')}Gesprekspagina</button>` : ''}</div>` : ''}`
       : !staf && CC.zicht('beoordeling') && b ? `${h.sectie(`Beoordeling · ${esc(b.m.naam.toLowerCase())}`)}<div class="scores">${Object.entries(b.x.scores).map(([v, s]) => `<span>${esc(v)} ${CC.scoreTekst(t, s)}</span>`).join('')}</div>` : '';
     const gesprBlok = staf && CC.zicht('gesprekken') ? `${h.sectie('Gesprekken')}${gespr.map((g) => h.rij({ ic: g.soort === 'gesprek' ? 'users' : g.soort === 'geappt' ? 'message-circle' : g.soort === 'geaccepteerd' ? 'circle-check' : 'phone', titel: `${D.kort(g.datum)} · ${CC.gesprekLabel(g)} · ${esc((M.persoon(S, g.door) || { naam: '' }).naam)}`, sub: esc(g.notitie) + (g.afspraak ? `<br><b>Afspraak:</b> ${esc(g.afspraak)}` : '') })).join('') || '<p class="zacht klein">Nog geen gesprekken vastgelegd.</p>'}${CC.zicht('contact') ? `<button class="knop licht klein" data-act="gesprekVastleggen" data-id="${pl.id}">${icon('phone')}Contact vastleggen</button>` : ''}` : '';
     return {
@@ -866,7 +866,7 @@
   CC.kaartIc = (e) => (e.kaart === 'herinnering' ? 'mail' : `<span class="kaart ${e.kaart}${e.geaccepteerd ? ' vaag' : ''}">${e.tweedeGeel ? '2' : '1'}</span>`);
   CC.kaartTitel = (e) => (e.kaart === 'herinnering' ? 'Vriendelijke herinnering' : e.kaart === 'geel' ? 'Gele kaart' : e.tweedeGeel ? 'Rode kaart (tweede gele)' : 'Rode kaart');
   CC.gesprekLabel = (g) => ({ gesprek: 'Persoonlijk gesprek', geappt: 'Geappt', geaccepteerd: 'Begrijpelijk, geaccepteerd' }[g.soort] || 'Gebeld');
-  CC.scoreTekst = (t, s) => { const c = CC.categorie(t.cat); if (c.schaal === 'smiley' || c.schaal === 'mini') return ['', '<span class="smiley">😐</span>', '<span class="smiley">🙂</span>', '<span class="smiley">😃</span>'][s] || '–'; return `<b>${s}</b>/5`; };
+  CC.scoreTekst = (t, s) => { const c = CC.categorie(t.cat); if (c.schaal === 'smiley' || c.schaal === 'mini') return ['', '<span class="smiley">😐</span>', '<span class="smiley">🙂</span>', '<span class="smiley">😃</span>'][s] || '–'; return `<b>${s}</b>/${c.schaal === '1-10' ? 10 : 5}`; };
   CC.on('gesprekVastleggen', (el) => {
     const pl = M.speler(S, el.dataset.id); const stap = M.stap(S, pl); const hjo = CC.mag ? CC.mag('gesprek') : CC.rol().rol === 'hjo';
     const std = stap && stap.soort === 'gesprekHjo' ? 'gesprek' : 'gebeld';

@@ -490,3 +490,11 @@ details.uitklap.stil summary { font-size: 13px; color: var(--zacht); }
 .knop.klein { min-height: 40px; }
 .chip-x { padding: 6px; margin: -6px -6px -6px 0; }
 .vinkjes.enkel { grid-template-columns: 1fr; max-height: none; border: 0; padding: 0; margin: 4px 0 8px; }
+
+/* Ontwikkelgesprek (Besluit 66) */
+.zelf .zelfrij { display: grid; grid-template-columns: 1fr 2fr 28px; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--lijn); }
+.zelf .zelfrij:last-child { border-bottom: 0; } .zelf .zelfrij label, .zelf .zelfrij > span:first-child { font-weight: 600; font-size: 14px; }
+.zelf input[type=range] { width: 100%; accent-color: var(--blauw); } .zelf input.onaangeraakt { opacity: .45; }
+.zelf output { font-weight: 800; text-align: right; }
+.tabel.vergelijk td, .tabel.vergelijk th { padding: 6px 8px; } .tabel.vergelijk tr.verschil td { background: var(--oranje-l); }
+.doel h4 { margin: 0 0 4px; } ol.doelen { margin: 4px 0 8px 18px; padding: 0; } ol.doelen li { margin-bottom: 6px; }

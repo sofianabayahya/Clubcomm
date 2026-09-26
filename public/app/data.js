@@ -38,9 +38,11 @@
   CC.VAARDIGHEDEN = {
     mini: ['Plezier', 'Balgevoel'],
     o8: ['Passen', 'Aannemen', 'Dribbelen', 'Schieten', 'Inzet'],
-    o11: ['Passen', 'Aannemen', 'Dribbelen', 'Schieten', 'Positie kiezen', 'Overzicht', 'Samenwerken'],
-    o13: ['Techniek', 'Tactiek', 'Fysiek', 'Mentaal', 'Sociaal'],
+    o11: ['Passen', 'Aannemen', 'Dribbelen', 'Schieten', 'Positie kiezen', 'Overzicht', 'Samenwerken', 'Inzet'],
+    o13: ['Techniek', 'Tactiek', 'Fysiek', 'Mentaal', 'Sociaal', 'Inzet'],
   };
+  // Vaardigheden van een team: de standaard voor de leeftijd plus wat de trainer zelf toevoegde (Besluit 66)
+  CC.vaardigheden = (S, tid) => { const t = CC.m.team(S, tid); const c = CC.categorie(t.cat); const extra = ((S.teamVaardig || {})[tid] || {}).extra || []; return [...c.vaardig, ...extra.filter((x) => !c.vaardig.includes(x))]; };
   // Speelduur per leeftijd volgens de KNVB (Besluit 60). helft = minuten per helft; timeout = time-out halverwege elke helft
   // (O8 t/m O12, max. 2 minuten): een natuurlijk wisselmoment. Mini's (O7): toernooivorm, samen max. 40 minuten.
   // Wisselen per blok (Besluit 39): 4 blokken van een kwart wedstrijd, per leeftijdsgroep door de club aan te passen.
@@ -59,7 +61,7 @@
     const l = CC.LEEFTIJDEN.find((x) => n <= x.tot);
     const duur = l.helften * l.helft;
     const basis = n <= 7 ? { naam: "Mini's", schaal: 'mini', vaardig: CC.VAARDIGHEDEN.mini } : n <= 10 ? { naam: 'Onderbouw', schaal: 'smiley', vaardig: CC.VAARDIGHEDEN.o8 }
-      : n <= 12 ? { naam: 'Onderbouw', schaal: '1-5', vaardig: CC.VAARDIGHEDEN.o11 } : { naam: 'Middenbouw', schaal: '1-5', vaardig: CC.VAARDIGHEDEN.o13 };
+      : n <= 12 ? { naam: 'Onderbouw', schaal: '1-10', vaardig: CC.VAARDIGHEDEN.o11 } : { naam: 'Middenbouw', schaal: '1-10', vaardig: CC.VAARDIGHEDEN.o13 };
     return { ...basis, key: l.key, vormKey: l.vormKey, leeftijd: l.label, vorm: l.vorm, opVeld: l.opVeld, duur, helften: l.helften, helft: l.helft, timeout: l.timeout,
       speelduur: l.helften === 2 ? `2 × ${l.helft} minuten` : `${duur} minuten (toernooivorm)`, blokken: 4, blokMin: duur / 4 };
   };

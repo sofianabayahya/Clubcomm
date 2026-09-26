@@ -44,21 +44,23 @@
     const ms = CC.momenten(S); const mid = h.segVal('beoMoment', CC.actiefMoment(S).id); const m = ms.find((x) => x.id === mid);
     const vorig = ms[ms.findIndex((x) => x.id === mid) - 1];
     const modus = h.segVal('beoModus', 'vaardig');
-    const opties = c.schaal === '1-5' ? [1, 2, 3, 4, 5] : [1, 2, 3];
+    const opties = c.schaal === '1-10' ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] : c.schaal === '1-5' ? [1, 2, 3, 4, 5] : [1, 2, 3];
+    const vaardig = CC.vaardigheden(S, tid);
     const knoppen = (plId, v) => {
       const cur = b(S, plId, mid).scores[v]; const oud = vorig && S.beoord[plId] && S.beoord[plId][vorig.id] && S.beoord[plId][vorig.id].scores[v];
       const pijl = oud && cur ? (cur > oud ? '<span class="groen-tekst" title="beter dan vorig moment">▲</span>' : cur < oud ? '<span class="rood-tekst" title="lager dan vorig moment">▼</span>' : '<span class="zacht">=</span>') : '';
+      if (opties.length > 5) return `<span class="score"><select class="kort" data-change="zetScoreKeuze" data-id="${plId}" data-v="${esc(v)}" data-m="${mid}" aria-label="Score ${esc(v)}"><option value="">–</option>${opties.map((o) => `<option value="${o}" ${cur === o ? 'selected' : ''}>${o}</option>`).join('')}</select>${pijl}</span>`;
       return `<span class="score">${opties.map((o) => `<button class="${cur === o ? 'aan' : ''}" data-act="zetScore" data-id="${plId}" data-v="${esc(v)}" data-s="${o}" data-m="${mid}" aria-label="${o}">${CC.scoreTekst(t, o)}</button>`).join('')}${pijl}</span>`;
     };
     let body;
     if (modus === 'vaardig') {
-      const v = h.segVal('beoV', c.vaardig[0]);
-      body = `<div class="chips">${c.vaardig.map((x) => `<button class="chipknop ${x === v ? 'aan' : ''}" data-act="seg" data-key="beoV" data-val="${esc(x)}">${esc(x)}</button>`).join('')}</div>
+      const v = h.segVal('beoV', vaardig[0]);
+      body = `<div class="chips">${vaardig.map((x) => `<button class="chipknop ${x === v ? 'aan' : ''}" data-act="seg" data-key="beoV" data-val="${esc(x)}">${esc(x)}</button>`).join('')}</div>
         <div class="lijst">${M.spelers(S, tid).map((pl) => `<div class="rij"><span class="rij-tekst"><b>${esc(pl.voornaam)}</b></span>${knoppen(pl.id, v)}</div>`).join('')}</div>`;
     } else {
       const sp = M.spelers(S, tid); const id = h.segVal('beoSp', sp[0].id); const x = b(S, id, mid);
       body = `<select class="kies" data-change="kiesBeoSp" aria-label="Speler">${sp.map((pl) => `<option value="${pl.id}" ${pl.id === id ? 'selected' : ''}>${esc(M.naam(S, pl))}${heeft(S, pl.id, mid) ? ' ✓' : ''}</option>`).join('')}</select>
-        <div class="lijst">${c.vaardig.map((v) => `<div class="rij"><span class="rij-tekst"><b>${esc(v)}</b></span>${knoppen(id, v)}</div>`).join('')}</div>
+        <div class="lijst">${vaardig.map((v) => `<div class="rij"><span class="rij-tekst"><b>${esc(v)}</b></span>${knoppen(id, v)}</div>`).join('')}</div>
         <label class="klein-kop" for="bo-g">Wat gaat goed</label><textarea id="bo-g" rows="2" data-input="beoTekst" data-id="${id}" data-m="${mid}" data-k="goed" placeholder="Bijv. durft de bal te vragen, helpt teamgenoten">${esc(x.goed)}</textarea>
         <label class="klein-kop" for="bo-w">Waar werken we aan</label><textarea id="bo-w" rows="2" data-input="beoTekst" data-id="${id}" data-m="${mid}" data-k="werken" placeholder="Bijv. aannemen met links">${esc(x.werken)}</textarea>
         ${vorig && S.beoord[id] && S.beoord[id][vorig.id] && (S.beoord[id][vorig.id].goed || S.beoord[id][vorig.id].werken) ? `<p class="zacht klein"><b>Vorig moment (${esc(vorig.naam.toLowerCase())}):</b> ${esc(S.beoord[id][vorig.id].goed)} · werkpunt: ${esc(S.beoord[id][vorig.id].werken)}</p>` : ''}
@@ -66,10 +68,11 @@
     }
     const vg = voortgang(S, tid, mid);
     return { titel: 'Beoordelen', html: `${h.seg('beoMoment', ms.map((x) => [x.id, x.naam]), CC.actiefMoment(S).id)}
-      <div class="info">${icon('info')}<span><b>${esc(m.naam)}:</b> ${D.kort(m.van)} – ${D.kort(m.tot)}${m.status === 'komt' ? ' (nog niet begonnen; je mag al starten)' : m.status === 'voorbij' ? ' (voorbij)' : ''}. ${vg.klaar} van ${vg.totaal} spelers beoordeeld. ${esc(c.naam)}, ${esc(c.vorm)}, schaal ${c.schaal === '1-5' ? '1 tot 5' : 'drie smileys'}. De ouder ziet het een dag na het ontwikkelgesprek.</span></div>
+      <div class="info">${icon('info')}<span><b>${esc(m.naam)}:</b> ${D.kort(m.van)} – ${D.kort(m.tot)}${m.status === 'komt' ? ' (nog niet begonnen; je mag al starten)' : m.status === 'voorbij' ? ' (voorbij)' : ''}. ${vg.klaar} van ${vg.totaal} spelers beoordeeld. ${esc(c.naam)}, ${esc(c.vorm)}, schaal ${c.schaal === '1-10' ? '1 tot 10' : c.schaal === '1-5' ? '1 tot 5' : 'drie smileys'}. <button class="linkknop" data-act="vaardigToevoegen">Vaardigheden aanpassen</button> De ouder ziet het een dag na het ontwikkelgesprek.</span></div>
       ${CC.mag('ontwgesprek') ? '' : '<!--'}<div class="lijst">${h.rij({ ic: 'calendar-plus', titel: 'Ontwikkelgesprekken', sub: slots(S, tid, mid).length ? `${slots(S, tid, mid).filter((g) => g.spelerId).length} van ${slots(S, tid, mid).length} tijden gekozen` : 'Nog niet gepland: zet tijden klaar, ouders kiezen zelf', act: 'open', attrs: `data-view="gesprekken" data-m="${mid}"` })}</div>${CC.mag('ontwgesprek') ? '' : '-->'}
       ${h.seg('beoModus', [['vaardig', 'Per vaardigheid'], ['speler', 'Per speler + gesprekpunten']], 'vaardig')}${body}` };
   };
+  CC.on('zetScoreKeuze', (el) => { const S = CC.S(); const x = b(S, el.dataset.id, el.dataset.m); if (el.value) x.scores[el.dataset.v] = Number(el.value); else delete x.scores[el.dataset.v]; CC.save(); CC.render(); });
   CC.on('zetScore', (el) => { const S = CC.S(); b(S, el.dataset.id, el.dataset.m || CC.actiefMoment(S).id).scores[el.dataset.v] = Number(el.dataset.s); CC.save(); CC.render(); });
   CC.on('beoTekst', (el) => { const S = CC.S(); b(S, el.dataset.id, el.dataset.m)[el.dataset.k] = el.value; CC.save(); });
   CC.on('beoDelen', (el) => { const S = CC.S(); (S.beoordGedeeld || (S.beoordGedeeld = {}))[el.dataset.id + el.dataset.m] = true; CC.save(); CC.render(); CC.toast('Gedeeld; de ouders zien de beoordeling'); });
@@ -92,7 +95,7 @@
     const min = Number(h.segVal('ogMin', 10)) || 10; const nodig = zonder.length - vrij.length;
     const perTraining = gekozen.length ? Math.ceil(Math.max(nodig, 0) / gekozen.length) : 0;
     const overzicht = lijst.length ? `${[...new Set(lijst.map((g) => g.datum))].map((d) => `${h.sectie(`${D.lang(d)}`)}<div class="lijst compact">${lijst.filter((g) => g.datum === d).map((g) => { const pl = g.spelerId && M.speler(S, g.spelerId);
-        return h.rij({ ic: 'clock', titel: `${g.tijd}–${g.eind}`, sub: `${esc(g.plek)} · ${pl ? esc(M.naam(S, pl)) : '<span class="oranje-tekst">nog vrij</span>'}`, rechts: pl ? '' : `<select class="kort" data-change="slotToewijzen" data-id="${g.id}" aria-label="Speler koppelen"><option value="">Koppel…</option>${zonder.map((x) => `<option value="${x.id}">${esc(x.voornaam)}</option>`).join('')}</select>` }); }).join('')}</div>`).join('')}` : '';
+        return h.rij({ ic: 'clock', titel: `${g.tijd}–${g.eind}`, sub: `${esc(g.plek)} · ${pl ? `${esc(M.naam(S, pl))}${CC.voorbKlaar && CC.voorbKlaar(S, pl.id, mid) ? ' · voorbereid ✓' : ''}` : '<span class="oranje-tekst">nog vrij</span>'}`, ...(pl ? { act: 'open', attrs: `data-view="gesprekVerslag" data-id="${pl.id}" data-m="${mid}"` } : {}), rechts: pl ? '' : `<select class="kort" data-change="slotToewijzen" data-id="${g.id}" aria-label="Speler koppelen"><option value="">Koppel…</option>${zonder.map((x) => `<option value="${x.id}">${esc(x.voornaam)}</option>`).join('')}</select>` }); }).join('')}</div>`).join('')}` : '';
     const status = lijst.length ? `<div class="info ${zonder.length ? 'oranje' : 'groen'}">${icon(zonder.length ? 'hourglass' : 'circle-check')}<span><b>${sp.length - zonder.length} van ${sp.length}</b> spelers hebben een tijd.${dl ? ` Ouders kiezen tot en met <b>${D.lang(dl)}</b>.` : ''}${zonder.length ? ` Nog niet: ${zonder.map((x) => esc(x.voornaam)).join(', ')}.` : ''}</span></div>
       <div class="knoppen">${zonder.length && vrij.length ? `<button class="knop ${dl && dl < D.vandaag() ? '' : 'licht'} klein" data-act="ogVerdeel" data-m="${mid}">${icon('users')}Verdeel de rest (${Math.min(zonder.length, vrij.length)})</button>` : ''}<button class="knop licht klein" data-act="ogAgendaTrainer" data-m="${mid}">${icon('calendar-plus')}In mijn agenda</button></div>` : '';
     const form = trainingen.length ? `<form data-submit="ogNaTraining" data-m="${mid}" class="kaartje codeform"><h4>${icon('calendar-plus')}${lijst.length ? 'Meer tijden: na de training' : 'Gesprekken na de training'}</h4>
@@ -147,8 +150,8 @@
   // Herinnering 2 dagen voor de uiterste datum, aan ouders die nog niet kozen (gaat uit als de trainer de app opent)
   CC.ogHerinnering = (S, tid, mid) => {
     const dl = kiesTot(S, tid, mid); if (!dl) return; const v = D.vandaag(); if (v < D.addDays(dl, -2) || v > dl) return;
-    const k = `ogh-${tid}-${mid}`; const av = S.autoVerstuurd || (S.autoVerstuurd = {}); if (av[k]) return;
-    const z = zonderTijd(S, tid, mid); av[k] = new Date().toISOString(); if (!z.length) { CC.save(); return; }
+    const l = slots(S, tid, mid); if (l.some((g) => g.herinnerd)) return;
+    const z = zonderTijd(S, tid, mid); const nu = new Date().toISOString(); l.forEach((g) => { g.herinnerd = nu; }); if (!z.length) { CC.save(); return; }
     S.msgs.push({ id: 'b' + Date.now() + 'h', van: CC.me().id, soort: 'persoonlijk', bereik: 'Ouders zonder tijd', onderwerp: 'Nog even een tijd kiezen voor het gesprek', tekst: `Je hebt nog geen tijd gekozen voor het gesprek met de trainer. Kies vóór of op ${D.lang(dl)} een tijd in ClubComm; daarna krijg je een tijd van ons.`, tijd: new Date().toISOString(), ontvangers: [...new Set(z.flatMap((pl) => pl.ouders))], gelezen: [CC.me().id], antw: [], urgent: false, gepland: null, herinnering: true });
     CC.save();
   };
@@ -179,6 +182,7 @@
     const rijen = [];
     const mijn = (S.ontwGesprek || []).find((g) => g.spelerId === pl.id && g.datum >= D.vandaag());
     if (mijn) rijen.push(h.rij({ ic: 'users', titel: `Ontwikkelgesprek ${D.relatief(mijn.datum).toLowerCase()} ${mijn.tijd}`, sub: `${esc(mijn.plek)} · met ${esc(pl.voornaam)} erbij`, act: 'open', attrs: `data-view="gesprekKiezen" data-id="${pl.id}"`, kleur: 'blauw' }));
+    if (mijn && CC.voorbKlaar && !CC.voorbKlaar(S, pl.id, mijn.moment)) rijen.push(h.rij({ ic: 'pencil', titel: `Bereid het gesprek voor met ${esc(pl.voornaam)}`, sub: 'Hoe goed ben je in…, wat is je droom? (5 minuten)', act: 'open', attrs: `data-view="gesprekVoorb" data-id="${pl.id}" data-m="${mijn.moment}"`, kleur: 'oranje' }));
     else if (slots(S, pl.teamId).some((g) => !g.spelerId && g.datum >= D.vandaag())) rijen.push(h.rij({ ic: 'calendar-plus', titel: 'Kies een tijd voor het ontwikkelgesprek', sub: `Met de trainer, samen met ${esc(pl.voornaam)}`, act: 'open', attrs: `data-view="gesprekKiezen" data-id="${pl.id}"`, kleur: 'oranje' }));
     CC.momenten(S).forEach((m) => { if (heeft(S, pl.id, m.id) && CC.beoordZichtbaar(S, pl.id, m.id) && !(S.beoordGezien || {})[pl.id + m.id]) rijen.push(h.rij({ ic: 'star', titel: `Beoordeling ${m.naam.toLowerCase()} van ${esc(pl.voornaam)}`, sub: 'Staat klaar', act: 'open', attrs: `data-view="beoordelingKind" data-id="${pl.id}"`, kleur: 'blauw' })); });
     return rijen;
@@ -188,7 +192,8 @@
     const vrij = slots(S, pl.teamId).filter((g) => !g.spelerId && g.datum >= D.vandaag());
     const ruilen = mijn && new Date(`${mijn.datum}T${mijn.tijd}`) - new Date() > 24 * 3600e3;
     return { titel: 'Ontwikkelgesprek', html: `${mijn ? `<div class="info groen">${icon('circle-check')}<span>Jullie gesprek: <b>${D.lang(mijn.datum)} om ${mijn.tijd}</b>, ${esc(mijn.plek)}. ${esc(pl.voornaam)} is er ook bij. Het staat in je planning.</span></div>
-      <button class="knop vol" data-act="ogAgendaOuder" data-id="${mijn.id}">${icon('calendar-plus')}Zet in je agenda</button>
+      <button class="knop vol" data-act="open" data-view="gesprekVoorb" data-id="${pl.id}" data-m="${mijn.moment}">${icon('pencil')}${CC.voorbKlaar && CC.voorbKlaar(S, pl.id, mijn.moment) ? 'Voorbereiding bekijken' : `Bereid het gesprek voor met ${esc(pl.voornaam)}`}</button>
+      <button class="knop licht vol" data-act="ogAgendaOuder" data-id="${mijn.id}">${icon('calendar-plus')}Zet in je agenda</button>
       ${ruilen ? `<button class="knop licht vol" data-act="gesprekWijzig" data-id="${mijn.id}">Andere tijd kiezen</button>` : '<p class="zacht klein">Ruilen kan tot 24 uur van tevoren. Kun je echt niet? Stuur de trainer een bericht.</p>'}` : ''}
       ${!mijn ? `<p>Kies een tijd voor het gesprek met de trainer over hoe het gaat met ${esc(pl.voornaam)}. Jij en ${esc(pl.voornaam)} zijn er allebei bij.${(() => { const dl = vrij.map((g) => g.kiesTot).filter(Boolean).sort().pop(); return dl ? ` Kies vóór of op <b>${D.lang(dl)}</b>.` : ''; })()}</p><div class="lijst">${vrij.map((g) => h.rij({ ic: 'clock', titel: `${D.lang(g.datum)} ${g.tijd}`, sub: `${esc(g.plek)}${g.actId ? ' · na de training' : ''}`, rechts: `<button class="knop klein" data-act="gesprekKies" data-id="${g.id}" data-s="${pl.id}">Kies</button>` })).join('') || h.leeg('Alle tijden zijn vergeven; de trainer neemt contact op.', 'calendar')}</div>` : ''}` };
   };
@@ -206,7 +211,7 @@
     return { titel: `Beoordeling ${pl.voornaam}`, html: `<p class="zacht klein">${esc(c.naam)}, ${esc(c.vorm)}. Een beoordeling is een momentopname, bedoeld om ${esc(pl.voornaam)} verder te helpen.</p>
       ${ms.map((m, i) => { const x = S.beoord[pl.id][m.id]; const vorig = i > 0 ? S.beoord[pl.id][ms[i - 1].id] : null;
         return `<article class="kaartje"><h4>${icon('star')}${esc(m.naam)}</h4><div class="scores">${Object.entries(x.scores).map(([v, s]) => { const o = vorig && vorig.scores[v]; return `<span>${esc(v)} ${CC.scoreTekst(t, s)}${o ? (s > o ? ' <span class="groen-tekst">▲</span>' : s < o ? ' <span class="rood-tekst">▼</span>' : '') : ''}</span>`; }).join('')}</div>
-          ${x.goed ? `<p><b>Wat gaat goed:</b> ${esc(x.goed)}</p>` : ''}${x.werken ? `<p><b>Waar werken we aan:</b> ${esc(x.werken)}</p>` : ''}</article>`; }).join('')}` };
+          ${x.goed ? `<p><b>Wat gaat goed:</b> ${esc(x.goed)}</p>` : ''}${x.werken ? `<p><b>Waar werken we aan:</b> ${esc(x.werken)}</p>` : ''}${CC.verslagVoorOuder ? CC.verslagVoorOuder(S, pl, m.id) : ''}</article>`; }).join('')}` };
   };
 
   // Trainer Home: herinnering in de periode van het moment
@@ -215,6 +220,7 @@
     const vg = voortgang(S, tid, m.id); const sl = slots(S, tid, m.id);
     return [vg.klaar < vg.totaal && CC.mag('beoordelen') ? h.rij({ ic: 'star', titel: `Beoordelingen ${m.naam.toLowerCase()}: ${vg.klaar} van ${vg.totaal}`, sub: `Graag klaar vóór ${D.kort(m.tot)}`, act: 'open', attrs: 'data-view="beoordelen"', kleur: 'oranje' }) : '',
       !sl.length && CC.mag('ontwgesprek') ? h.rij({ ic: 'calendar-plus', titel: `Plan de ${gNaam(m, true).toLowerCase()}`, sub: 'Na de training; ouders kiezen zelf een tijd', act: 'open', attrs: `data-view="gesprekken" data-m="${m.id}"`, kleur: 'oranje' }) : '',
+      (() => { const vandaag = sl.filter((g) => g.spelerId && g.datum === D.vandaag()); return vandaag.length ? h.rij({ ic: 'users', titel: `Vandaag: ${vandaag.length} ${vandaag.length === 1 ? 'gesprek' : 'gesprekken'}`, sub: `Vanaf ${vandaag[0].tijd} · tik op een naam voor de gesprekspagina`, act: 'open', attrs: `data-view="gesprekken" data-m="${m.id}"`, kleur: 'blauw' }) : ''; })(),
       (() => { if (!sl.length || !CC.mag('ontwgesprek')) return ''; CC.ogHerinnering(S, tid, m.id); const z = zonderTijd(S, tid, m.id); const dl = kiesTot(S, tid, m.id);
         return z.length && dl && dl < D.vandaag() ? h.rij({ ic: 'users', titel: `${z.length} ${z.length === 1 ? 'kind heeft' : 'kinderen hebben'} nog geen gesprekstijd`, sub: 'De kiestijd is voorbij: verdeel de rest met één tik', act: 'open', attrs: `data-view="gesprekken" data-m="${m.id}"`, kleur: 'oranje' }) : ''; })()].filter(Boolean);
   };
