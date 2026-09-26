@@ -180,11 +180,11 @@
     CC.save(); CC.closeSheet(); CC.render(); CC.toast(`${n} ${n === 1 ? 'kind' : 'kinderen'} ingedeeld; de ouders krijgen bericht`); });
   // Herinnering 2 dagen voor de uiterste datum, aan ouders die nog niet kozen (gaat uit als de trainer de app opent)
   CC.ogHerinnering = (S, tid, mid) => {
-    const dl = kiesTot(S, tid, mid); if (!dl) return; const v = D.vandaag(); if (v < D.addDays(dl, -2) || v > dl) return;
-    const l = slots(S, tid, mid); if (l.some((g) => g.herinnerd)) return;
-    const z = zonderTijd(S, tid, mid); const nu = new Date().toISOString(); l.forEach((g) => { g.herinnerd = nu; }); if (!z.length) { CC.save(); return; }
+    const dl = kiesTot(S, tid, mid); if (!dl) return false; const v = D.vandaag(); if (v < D.addDays(dl, -2) || v > dl) return false;
+    const l = slots(S, tid, mid); if (l.some((g) => g.herinnerd)) return false;
+    const z = zonderTijd(S, tid, mid); const nu = new Date().toISOString(); l.forEach((g) => { g.herinnerd = nu; }); if (!z.length) { CC.save(); return true; }
     S.msgs.push({ id: 'b' + Date.now() + 'h', van: CC.me().id, soort: 'persoonlijk', bereik: 'Ouders zonder tijd', onderwerp: 'Nog even een tijd kiezen voor het gesprek', tekst: `Je hebt nog geen tijd gekozen voor het gesprek met de trainer. Kies vóór of op ${D.lang(dl)} een tijd in ClubComm; daarna krijg je een tijd van ons.`, tijd: new Date().toISOString(), ontvangers: [...new Set(z.flatMap((pl) => pl.ouders))], gelezen: [CC.me().id], antw: [], urgent: false, gepland: null, herinnering: true });
-    CC.save();
+    CC.save(); return true;
   };
 
   // ---------- Agenda-afspraak (.ics) ----------
@@ -247,7 +247,6 @@
   // Trainer Home: herinnering in de periode van het moment
   CC.beoordRijTrainer = (S, tid) => {
     const m = CC.momenten(S).find((x) => x.status === 'open'); if (!m || !S.club.modules.beoordeling) return '';
-    const verplaatst = CC.ogAfgelast(S); if (verplaatst) CC.toast(`${verplaatst} ${verplaatst === 1 ? 'gesprek gaat' : 'gesprekken gaan'} niet door (training afgelast); de ouders kiezen een nieuwe tijd`);
     const sl = slots(S, tid, m.id); const zonderNu = sl.length ? zonderTijd(S, tid, m.id) : []; const vrijNu = sl.filter((g) => !g.spelerId && g.datum >= D.vandaag());
     // Besluit 68: alleen vóór het voorjaarsgesprek vraagt de app om jouw kijk (wapen en werkpunt per kind)
     const voorjaar = CC.momenten(S).slice(-1)[0].id === m.id; const kijkNog = voorjaar ? M.spelers(S, tid).filter((pl) => !CC.kijkKlaar(S, pl.id, m.id)).length : 0;
@@ -255,7 +254,7 @@
       sl.length && zonderNu.length && !vrijNu.length && CC.mag('ontwgesprek') && m.status === 'open' ? h.rij({ ic: 'calendar-plus', titel: `${zonderNu.length} ${zonderNu.length === 1 ? 'kind heeft' : 'kinderen hebben'} geen gesprekstijd en er zijn geen vrije tijden`, sub: 'Zet nieuwe tijden klaar', act: 'open', attrs: `data-view="gesprekken" data-m="${m.id}"`, kleur: 'oranje' }) : '',
       !sl.length && CC.mag('ontwgesprek') ? h.rij({ ic: 'calendar-plus', titel: `Plan de ${gNaam(m, true).toLowerCase()}`, sub: 'Jij kiest de trainingen (vóór of na); ouders kiezen een tijd', act: 'open', attrs: `data-view="gesprekken" data-m="${m.id}"`, kleur: 'oranje' }) : '',
       (() => { const vandaag = sl.filter((g) => g.spelerId && g.datum === D.vandaag()); return vandaag.length ? h.rij({ ic: 'users', titel: `Vandaag: ${vandaag.length} ${vandaag.length === 1 ? 'gesprek' : 'gesprekken'}`, sub: `Vanaf ${vandaag[0].tijd} · tik op een naam voor de gesprekspagina`, act: 'open', attrs: `data-view="gesprekken" data-m="${m.id}"`, kleur: 'blauw' }) : ''; })(),
-      (() => { if (!sl.length || !CC.mag('ontwgesprek')) return ''; CC.ogHerinnering(S, tid, m.id); const z = zonderTijd(S, tid, m.id); const dl = kiesTot(S, tid, m.id);
+      (() => { if (!sl.length || !CC.mag('ontwgesprek')) return ''; const z = zonderTijd(S, tid, m.id); const dl = kiesTot(S, tid, m.id);
         return z.length && dl && dl < D.vandaag() ? h.rij({ ic: 'users', titel: `${z.length} ${z.length === 1 ? 'kind heeft' : 'kinderen hebben'} nog geen gesprekstijd`, sub: 'De kiestijd is voorbij: verdeel de rest met één tik', act: 'open', attrs: `data-view="gesprekken" data-m="${m.id}"`, kleur: 'oranje' }) : ''; })()].filter(Boolean);
   };
   // HJO (Besluit 71): per team hoeveel ontwikkelgesprekken zijn gevoerd (vanaf O12)
@@ -278,6 +277,7 @@
     const teams = [...new Set((S.ontwGesprek || []).map((g) => g.teamId))].filter((tid) => M.stafVan(S, tid).includes(me.id));
     teams.forEach((tid) => CC.momenten(S).forEach((m) => {
       const sl = slots(S, tid, m.id); if (!sl.length) return; const dl = kiesTot(S, tid, m.id);
+      if (CC.ogHerinnering(S, tid, m.id)) veranderd = true;
       if (dl && dl < v && !sl.some((g) => g.autoVerdeeld) && verdeel(S, tid, m.id, me.id)) { sl.forEach((g) => { g.autoVerdeeld = true; }); veranderd = true; }
       sl.filter((g) => g.spelerId && !g.voorbHerinnerd && g.datum >= v && D.addDays(g.datum, -2) <= v && !CC.voorbKlaar(S, g.spelerId, m.id)).forEach((g) => {
         const pl = M.speler(S, g.spelerId); if (!pl) return; g.voorbHerinnerd = new Date().toISOString(); veranderd = true;
@@ -294,7 +294,7 @@
     weg.filter((g) => g.spelerId).forEach((g) => { const pl = M.speler(S, g.spelerId); if (!pl) return;
       S.msgs.push({ id: 'b' + Date.now() + pl.id, van: me.id, soort: 'persoonlijk', bereik: `${pl.voornaam} (${CC.tn(pl.teamId)})`, onderwerp: `Gesprek over ${pl.voornaam} gaat niet door`, tekst: `De training van ${D.lang(g.datum)} gaat niet door of is verplaatst. Het gesprek over ${pl.voornaam} om ${g.tijd} gaat daarom ook niet door.\n\nKies in ClubComm een nieuwe tijd (Home). Zijn er geen tijden meer, dan zet de trainer er nieuwe klaar.`, tijd: new Date().toISOString(), ontvangers: pl.ouders, gelezen: [me.id], antw: [], urgent: false, gepland: null }); });
     S.ontwGesprek = S.ontwGesprek.filter((g) => !weg.includes(g)); CC.save();
-    return weg.filter((g) => g.spelerId).length;
+    return weg.length;
   };
 
   // Demo: gesprekpunten bij Jesse (moment 1, winter)

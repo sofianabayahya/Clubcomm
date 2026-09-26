@@ -29,6 +29,8 @@
     const rijen = await alleRijen();
     const S = CC.uitRijen(rijen, D.vandaag());
     CC.zetS(S); snapshot(S); L.geladen = Date.now();
+    // Besluit 77: draait de server het automatische werk (laatste run < 2 uur geleden)? Dan doet de app het niet zelf.
+    try { const { data: t } = await sb.rpc('automaat_laatst', { p_club: club }); CC.opServer = !!t && Date.now() - new Date(t).getTime() < 2 * 3600e3; } catch (e) { CC.opServer = false; }
     return S;
   };
 

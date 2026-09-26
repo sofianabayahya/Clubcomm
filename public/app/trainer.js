@@ -178,10 +178,10 @@
   };
   CC.on('uitslagOk', (f) => { const S = CC.S(); const a = M.act(S, f.dataset.a); uitslagOpslaan(S, a, f.stuur.checked, f.makers.checked, CC.me().id);
     CC.save(); CC.closeSheet(); CC.render(); CC.toast(f.stuur.checked ? 'Uitslag opgeslagen en naar de ouders gestuurd' : 'Uitslag opgeslagen'); });
-  // Besluit 76: aan het eind van de wedstrijddag slaat de app de uitslag zelf op (en stuurt hem, volgens de clubinstelling),
+  // Besluit 76/77: 2 uur na afloop van de wedstrijd slaat de app de uitslag zelf op (en stuurt hem, volgens de clubinstelling),
   // als er doelpunten zijn bijgehouden. Zonder doelpunten blijft "Uitslag nog opslaan" op Home staan (0-0 of niet bijgehouden?).
   CC.uitslagAuto = (S) => { const me = CC.me(); if (!me) return false; let n = 0;
-    S.acts.filter((a) => M.isWed(a) && !a.afgelast && !a.uitslagKlaar && (a.goals || []).length && a.datum < D.vandaag() && M.stafVan(S, a.teamId).includes(me.id))
+    S.acts.filter((a) => M.isWed(a) && !a.afgelast && !a.uitslagKlaar && (a.goals || []).length && new Date(`${a.datum}T${a.eind || a.tijd}`).getTime() + 2 * 3600e3 < Date.now() && M.stafVan(S, a.teamId).includes(me.id))
       .forEach((a) => { const u = M.uitslagInst(S, a.teamId); uitslagOpslaan(S, a, u.naarOuders, u.makers, me.id); a.uitslagAuto = true; n++; });
     return n > 0; };
   CC.on('uitslagHeropen', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.a); a.uitslagKlaar = false; CC.save(); CC.render(); });

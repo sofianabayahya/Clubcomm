@@ -77,8 +77,14 @@
   // Automatisch versturen, zodra iemand met clubrechten de app opent (in versie 2 doet de server dit elke ochtend).
   // Vallen er meerdere tegelijk, dan worden ze gebundeld tot één bericht.
   let laatst = 0;
+  // Besluit 77: draait de server (elk kwartier), dan doet de app dit niet zelf (anders dubbel). Valt de server uit
+  // (langer dan 2 uur niets gedaan), dan neemt de app het weer over zodra iemand van de staf hem opent.
   const autoRun = () => {
-    const S = CC.S(); if (!S || !CC.me() || Date.now() - laatst < 60e3) return; laatst = Date.now();
+    const S = CC.S(); if (!S || !CC.me() || CC.opServer || Date.now() - laatst < 60e3) return; laatst = Date.now();
+    if (CC.automaatClub(S) | CC.automaatTeam(S)) CC.save();
+  };
+  // Vaste clubberichten en herinneringen bij activiteiten, voor wie clubrechten heeft (ook gebruikt door de server)
+  CC.automaatClub = (S) => {
     let veranderd = false;
     if (magClub()) {
       const auto = aanDeBeurt(S).filter((z) => z.sj.auto);
@@ -86,10 +92,16 @@
       else if (auto.length > 1) { verstuur(S, auto, 'Goed om te weten', auto.map((z) => `${vul(z.sj.onderwerp, z.vars)}\n${vul(z.sj.tekst, z.vars)}`).join('\n\n'), 'systeem'); veranderd = true; }
     }
     if (CC.activiteitHerinneringen && CC.activiteitHerinneringen(S)) veranderd = true;
-    // Besluit 76: ook de uitslag en de ontwikkelgesprekken regelt de app zelf, zonder extra tik
+    return veranderd;
+  };
+  // Per team, voor wie staf is (Besluit 76): uitslag, ontwikkelgesprekken (indelen, herinneren, afronden, kiestijd),
+  // gesprekken rond afgelaste trainingen (ook gebruikt door de server)
+  CC.automaatTeam = (S) => {
+    let veranderd = false;
     if (CC.uitslagAuto && CC.uitslagAuto(S)) veranderd = true;
     if (CC.ogAuto && CC.ogAuto(S)) veranderd = true;
-    if (veranderd) CC.save();
+    if (CC.ogAfgelast && CC.ogAfgelast(S)) veranderd = true;
+    return veranderd;
   };
   const origRender = CC.render;
   CC.render = () => { try { autoRun(); } catch (e) { console.error(e); } return origRender(); };

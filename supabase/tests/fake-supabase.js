@@ -57,6 +57,7 @@
       bewaar(); } return antw(null); }
     if (naam === 'club_vullen') { a.p_rijen.forEach((r) => { if (r.soort === 'club' || (['people', 'contact'].includes(r.soort) && r.id === ik())) return; db.rows[`dcg|${r.soort}|${r.id}`] = { ...r, club_id: 'dcg' }; }); bewaar(); return antw(a.p_rijen.length); }
     if (naam === 'club_leegmaken') { let n = 0; Object.entries(db.rows).forEach(([k, r]) => { if (r.soort !== 'club' && !(['people', 'contact'].includes(r.soort) && r.id === ik())) { delete db.rows[k]; n++; } }); bewaar(); return antw(n); }
+    if (naam === 'automaat_laatst') return antw(db.automaat || null);
     if (naam === 'fout_melden') { (db.fouten = db.fouten || []).push(a.p_bericht); bewaar(); return antw(null); }
     if (naam === 'fouten_lijst') return antw((db.fouten || []).map((b) => ({ bericht: b, aantal: 1, tijd: new Date().toISOString() })));
     // Pushmeldingen (Besluit 53)
