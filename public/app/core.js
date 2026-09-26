@@ -280,7 +280,7 @@
     <h3>Waarvoor?</h3><p>Alleen om trainingen, wedstrijden en activiteiten te regelen en de spelers goed te begeleiden. Nooit voor reclame, en we verkopen niets.</p>
     <h3>Wie ziet wat?</h3><ul><li>Jij ziet alleen je eigen kind.</li><li>De trainer en teamleider zien hun eigen team, volgens de taken die de club hun geeft. De jeugdcoördinator en het hoofd jeugdopleiding alleen als het bij hun taak hoort.</li><li>Andere ouders van het team zien alleen de voornaam van je kind (bijvoorbeeld bij vervoer of taken). Nooit afmeldredenen, kaarten of jouw contactgegevens.</li></ul>
     <h3>Waar staan de gegevens?</h3><p>In de Europese Unie: de database en het inloggen bij Supabase (Frankfurt, Duitsland), de e-mails via Brevo (Frankrijk). Vercel levert alleen de app zelf, zonder persoonsgegevens. De verbinding is altijd versleuteld.</p>
-    <h3>Hoe lang?</h3><p>Zolang je kind bij de club in ClubComm staat. Details over aanwezigheid, kaarten en gesprekken worden verwijderd na de teamindeling van het volgende seizoen. Schrijf je je kind uit of verwijder je je account, dan worden de gegevens gewist; in de wekelijkse back-up staan ze nog hooguit 8 weken.</p>
+    <h3>Hoe lang?</h3><p>Zolang je kind bij de club in ClubComm staat. Details over aanwezigheid, kaarten en contactmomenten worden verwijderd na de teamindeling van het volgende seizoen. De ontwikkelgesprekken (voorbereiding, wapen, doelen en afspraken) blijven bewaard zolang je kind lid is, ook in een volgend seizoen of een ander team, zodat je kind kan zien hoe het groeit. Schrijf je je kind uit of verwijder je je account, dan worden de gegevens gewist; in de wekelijkse back-up staan ze nog hooguit 8 weken.</p>
     <h3>Cookies</h3><p>Geen reclame- of volgcookies. ClubComm onthoudt alleen op je telefoon dat je bent ingelogd.</p>
     <h3>Jouw rechten</h3><p>Je mag je gegevens inzien, laten aanpassen of laten verwijderen, en bezwaar maken. Neem daarvoor contact op met ${contact}. Ben je het er niet mee eens hoe de club met je gegevens omgaat, dan kun je een klacht indienen bij de Autoriteit Persoonsgegevens.</p></div>`; };
   CC.on('privacy', () => CC.sheet('Privacyverklaring', CC.privacyHtml(CC.me() ? S.club : CC.privacyClub || S.club), { groot: true }));
@@ -358,6 +358,10 @@
     meldStaf(team, `${pl.voornaam} is uitgeschreven`, `${pl.voornaam} ${pl.achternaam} is uitgeschreven uit ${team}. Reden: ${reden}. Je hoeft niets te doen; ${pl.voornaam} staat niet meer in de teamlijst.`);
     S.afm = S.afm.filter((f) => !(f.spelerId === pl.id && (M.act(S, f.actId) || {}).datum >= D.vandaag()));
     Object.values(S.vervoer).forEach((v) => { delete v.plek[pl.id]; if (v.vraag) delete v.vraag[pl.id]; });
+    // Besluit 72: ontwikkelgegevens bewaren we zolang het kind lid is; bij uitschrijven weg (de database ruimt ook op)
+    ['ontwVoorb', 'ontwVerslag', 'ontwNotitie'].forEach((k) => { Object.keys(S[k] || {}).forEach((x) => { if (x.split('|')[0] === pl.id) delete S[k][x]; }); });
+    delete S.beoord[pl.id]; Object.keys(S.beoordGezien || {}).forEach((x) => { if (x.replace(/(\d{4}-)?m\d+$/, '') === pl.id) delete S.beoordGezien[x]; });
+    (S.ontwGesprek || []).forEach((g) => { if (g.spelerId === pl.id) g.spelerId = null; });
     pl.teamId = null; pl.uitgeschreven = { datum: D.vandaag(), reden }; pl.voornaam = 'Oud-lid'; pl.achternaam = ''; pl.ouders = [];
   };
   CC.on('uitschrijfSheet', () => {
