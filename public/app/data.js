@@ -608,7 +608,8 @@
   M.laatste = (m) => ((m.antw || []).length ? m.antw[m.antw.length - 1] : { van: m.van, tekst: m.tekst, tijd: m.tijd });
   M.gearchiveerd = (m, pid) => (m.archief || []).includes(pid);
   M.zichtbaar = (S, m, pid) => (M.deelnemers(m).includes(pid) || M.vastVoor(S, m, pid)) && (!m.gepland || new Date(m.gepland) <= new Date());
-  M.isOngelezen = (S, m, pid) => !m.ingetrokken && M.deelnemers(m).includes(pid) && M.zichtbaar(S, m, pid) && !(m.gelezen || []).includes(pid) && M.laatste(m).van !== pid;
+  // Besluit 82: nieuws dat al vanzelf in het archief staat, telt niet meer als ongelezen (geen rode teller zonder nieuw bericht)
+  M.isOngelezen = (S, m, pid) => !m.ingetrokken && !(CC.nieuwsVerlopen && CC.nieuwsVerlopen(m, pid)) && M.deelnemers(m).includes(pid) && M.zichtbaar(S, m, pid) && !(m.gelezen || []).includes(pid) && M.laatste(m).van !== pid;
   // Meldingen ter informatie (niet urgent, geen pushmelding) tellen niet mee als "nieuw bericht": informatie is geen taak
   M.terInfo = (m) => m.soort === 'melding' && !m.urgent && !m.push;
   M.ongelezen = (S, pid, soort) => S.msgs.filter((m) => M.isOngelezen(S, m, pid) && !M.terInfo(m) && (!soort || m.soort === soort)).length;

@@ -516,6 +516,7 @@ Net als de actielijst: is de dag of taak voorbij, dan gaat het bericht **vanzelf
 - Gesprekken met een open vraag blijven staan tot ze beantwoord of afgerond zijn (Besluit 79).
 - In de laatste 3 dagen staat onder het bericht in kleine grijze letters: *"Dit bericht verdwijnt over 3 dagen naar het archief"* (of "morgen").
 - Geldt voor nieuwe berichten; wat al verstuurd is, gaat zoals eerst na 14 dagen naar het archief.
+- **De rode teller** telt alleen berichten die je ook echt in de lijst ziet: nieuws dat al vanzelf in het archief staat, telt niet meer mee als ongelezen.
 
 ## Besluit 81 — Lijsten tonen eerst wat nu speelt
 Vaste regel voor alle portalen: een lijst die in het seizoen groeit, toont eerst wat nu speelt; de rest staat ingeklapt ("Toon alles") of per maand.

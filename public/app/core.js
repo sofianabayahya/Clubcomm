@@ -461,6 +461,7 @@
   const terInfo = (m) => M.terInfo(m);
   // Besluit 80: nieuws over een activiteit (herinnering, wijziging, afgelast, uitslag) vervalt de dag na die activiteit
   const nieuwsArchief = (m, pid) => M.gearchiveerd(m, pid) || (!CC.isVast(m) && (dagenOud(m) > ARCHIEF_DAGEN || (m.verloopt && m.verloopt < D.vandaag())));
+  CC.nieuwsVerlopen = (m, pid) => m.soort !== 'persoonlijk' && nieuwsArchief(m, pid);
   const kanIntrekken = (m, me) => m.van === me.id && !m.ingetrokken && Date.now() - new Date(m.tijd) < 24 * 3600e3;
   const nieuwst = (a, b) => laatstTijd(b).localeCompare(laatstTijd(a));
 
