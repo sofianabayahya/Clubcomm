@@ -851,9 +851,15 @@
       <button class="knop vol">Afmelden</button></form>
       <p class="zacht klein">De trainer en teamleider zien je afmelding direct. Langer weg? <button class="linkknop" data-act="periodeSheet" data-id="${pl.id}">Meld een hele periode af</button></p>`);
   });
+  // Besluit 85: rijdt het kind met iemand anders mee, dan hoort die chauffeur dat meteen (persoonlijk bericht, dus ook een pushmelding)
+  CC.ritVervalt = (S, a, pl, waarom) => { const v = S.vervoer[a.id]; const ch = v && v.plek[pl.id]; const me = CC.me();
+    if (!ch || ch === me.id || pl.ouders.includes(ch) || !M.persoon(S, ch)) return;
+    S.msgs.push({ id: 'b' + Date.now() + pl.id + a.id, van: me.id, vanRol: (CC.rol() || {}).rol, soort: 'persoonlijk', bereik: M.persoon(S, ch).naam, onderwerp: `${pl.voornaam} rijdt ${D.kort(a.datum)} niet mee`,
+      tekst: `${pl.voornaam} rijdt ${D.lang(a.datum)} niet met je mee naar ${h.actTitel(S, a).replace(/<[^>]*>/g, '')}: ${waarom}. Je hoeft ${pl.voornaam} dus niet op te halen.`, tijd: new Date().toISOString(), gepland: null, ontvangers: [ch], gelezen: [], antw: [], urgent: false }); };
   CC.on('bevestigAfmelden', (f) => {
     const a = M.act(S, f.dataset.act2); const pl = M.speler(S, f.dataset.speler);
     S.afm.push({ id: 'f' + Date.now(), spelerId: pl.id, actId: a.id, reden: f.reden.value, opm: f.opm.value, tijd: new Date().toISOString(), door: CC.me().id });
+    if (M.isWed(a) || a.soort === 'activiteit') CC.ritVervalt(S, a, pl, `${pl.voornaam} is afgemeld`);
     const v = S.vervoer[a.id]; if (v) { delete v.plek[pl.id]; if (v.vraag) delete v.vraag[pl.id]; }
     CC.save(); CC.closeSheet(); CC.render(); CC.toast(`${pl.voornaam} is afgemeld`);
   });

@@ -21,7 +21,7 @@
     const acts = M.acts(S, pl.teamId, van, tot).filter((a) => !a.afgelast && new Date() < D.start(a) && !M.afm(S, pl.id, a.id));
     if (!acts.length) return CC.toast('In deze periode staat niets gepland', 'fout');
     const nu = new Date().toISOString();
-    acts.forEach((a) => { S.afm.push({ id: 'f' + Date.now() + a.id, spelerId: pl.id, actId: a.id, reden: f.reden.value, opm: f.opm.value, tijd: nu, door: CC.me().id, periode: { van, tot } }); const v = S.vervoer[a.id]; if (v) delete v.plek[pl.id]; });
+    acts.forEach((a) => { S.afm.push({ id: 'f' + Date.now() + a.id, spelerId: pl.id, actId: a.id, reden: f.reden.value, opm: f.opm.value, tijd: nu, door: CC.me().id, periode: { van, tot } }); CC.ritVervalt(S, a, pl, `${pl.voornaam} is afgemeld`); const v = S.vervoer[a.id]; if (v) delete v.plek[pl.id]; });
     const laat = acts.filter((a) => new Date() > M.deadline(S, a)).length;
     const t = M.team(S, pl.teamId);
     const basis = `${M.naam(S, pl)} is afgemeld van ${D.lang(van)} tot en met ${D.lang(tot)} (${f.reden.value.toLowerCase()}): ${acts.length} ${acts.length === 1 ? 'activiteit' : 'activiteiten'}.`;

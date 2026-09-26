@@ -1,6 +1,6 @@
 // ClubComm — Edge Function "automaat" (Besluit 77). Elk kwartier aangeroepen door de database (pg_cron).
 // Doet wat anders pas gebeurt als iemand van de staf de app opent: vaste clubberichten, herinneringen bij activiteiten,
-// uitslag opslaan en versturen, ontwikkelgesprekken indelen/herinneren/afronden, gesprekken bij afgelaste trainingen.
+// uitslag opslaan en versturen (met aanwezigheid en speeltijd, Besluit 85), ontwikkelgesprekken indelen/herinneren/afronden, gesprekken bij afgelaste trainingen.
 // Gebruikt DEZELFDE regels als de app: de bestanden worden bij elke run van de website gehaald (één plek voor de regels).
 // Nachtrust: tussen 21:00 en 07:30 (Nederlandse tijd) doet de functie niets; wat dan aan de beurt is, gaat om 07:30.
 // { proef: true } = alleen uitrekenen en laten zien, niets opslaan; { altijd: true } = ook tijdens de nachtrust.

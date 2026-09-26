@@ -50,7 +50,8 @@ export const maakMotor = (bronnen, echtNu) => {
 };
 
 // Eén club doorrekenen. rijen = alle rijen van de club. Geeft de rijen terug die de server moet opslaan of weghalen.
-const MAG_SCHRIJVEN = new Set(['msgs', 'acts', 'ontwGesprek', 'ontwVerslag', 'autoVerstuurd']);
+// Besluit 85: ook aanwezigheid en speeltijd van een gespeelde wedstrijd (vastleggen na afloop)
+const MAG_SCHRIJVEN = new Set(['msgs', 'acts', 'ontwGesprek', 'ontwVerslag', 'autoVerstuurd', 'pres', 'speeltijdMin', 'speeltijdMogelijk', 'speeltijdKeeper', 'speeltijdSchema']);
 export const draaiClub = (CC, rijen, club) => {
   const D = CC.date, M = CC.m;
   const S = CC.uitRijen(rijen, D.vandaag()); CC.zetS(S); CC.opServer = false;

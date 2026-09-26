@@ -508,6 +508,13 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 85 — Wedstrijddag: alles wordt vastgelegd, niemand valt tussen wal en schip
+Uit de generale repetitie van 26-09 (zie `pilotlog.md`):
+- **Eén eindknop.** "Einde wedstrijd: uitslag opslaan" legt meteen ook vast: de **speeltijd** uit het wisselschema (wie toch niet kwam, telt niet mee) en de **aanwezigheid** (wie niet afmeldde = aanwezig; de trainer kan het aanpassen bij Aanwezigheid). De aparte knop "Wedstrijd klaar: bevestigen" is weg.
+- **De server doet het ook:** 2 uur na afloop legt de automaat aanwezigheid en speeltijd vast, ook als er geen doelpunten zijn bijgehouden (de uitslag blijft dan open staan, want 0-0 of niet bijgehouden weet de app niet).
+- **Afmelding na het wisselschema:** op de wedstrijddag (en de dag ervoor) staat bij de trainer in "Actie nodig": *"Wisselschema klopt niet meer: Emre komt niet"*. De timekeeper ziet een oranje regel: *"Let op: Emre komt niet meer. Vraag de trainer het schema aan te passen."*
+- **Vervoer:** wordt een kind afgemeld dat met iemand anders meerijdt, dan krijgt die chauffeur een persoonlijk bericht (*"Emre rijdt za 3 okt niet mee"*). Zegt de chauffeur de rit af, dan krijgt de ouder van het kind een bericht.
+
 ## Besluit 84 — Eerst de pilot bij DCG afmaken, daarna een tweede club (SCPB)
 - SCPB heeft gevraagd de app te mogen uitproberen. We maken **eerst de pilot bij DCG volledig af**, inclusief de wedstrijden van fase 2, zodat we niet steeds tussen clubs hoeven te schakelen. Planning: zie Openstaand in `docs/productie-en-groei.md`; SCPB naar verwachting **januari 2027**.
 - **De eerste clubs richt de initiatiefnemer persoonlijk in** (uitleggen, pitchen, samen inrichten). Een stappenplan waarmee clubs het zelf doen, komt pas bij veel clubs.

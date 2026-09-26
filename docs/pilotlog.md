@@ -3,6 +3,17 @@
 Wat we tijdens de pilot vinden, met de oorzaak en het patroon erachter. Doel: dezelfde soort fout niet twee keer maken.
 Besluiten staan in `besluiten.md`; dit is het logboek van fouten. Nieuwste bovenaan.
 
+## 26 september 2026 (generale repetitie wedstrijddag)
+
+Hele wedstrijddag nagespeeld met de echte DCG-instellingen (wo t/m ma, teamleider, trainer, drie ouders, klok loopt mee).
+
+| Wat we zagen | Oorzaak | Opgelost | Patroon |
+|---|---|---|---|
+| Speeltijd telde alleen mee na een tweede knop op het laatste blok ("Wedstrijd klaar: bevestigen"); alleen uitslag opslaan (of de server) → minuten weg | Twee eindknoppen, speeltijd hing aan het doorklikken van alle blokken | Uitslag opslaan legt ook speeltijd en aanwezigheid vast; de server doet het 2 uur na afloop (Besluit 85) | **B. Opslaan niet zeker** |
+| Kind afgemeld op de ochtend zelf, maar stond nog in het wisselschema; alleen zichtbaar in het tabblad Speeltijd | Waarschuwing zat alleen in het schema-scherm | Regel in "Actie nodig" bij de trainer; oranje regel bij de timekeeper (Besluit 85) | **D. Eén persoon per rol** (timekeeper ≠ trainer) |
+| Chauffeur hoorde niet dat het kind dat met hem meereed, afgemeld was | Afmelden haalde het kind stil uit de auto | Chauffeur krijgt een persoonlijk bericht (en omgekeerd: ouder hoort het als de chauffeur afzegt) (Besluit 85) | **E. Buiten de app** (iemand rijdt voor niets) |
+| Aanwezigheid bij wedstrijden werd nooit ingevuld of herinnerd | Herinnering alleen voor trainingen | Na de uitslag automatisch ingevuld (wie niet afmeldde = aanwezig), trainer kan aanpassen (Besluit 85) | **A. Momentopname** |
+
 ## 25 september 2026 (eerste dag met echte ouders)
 
 | Wat de gebruiker zag | Oorzaak | Opgelost | Patroon |

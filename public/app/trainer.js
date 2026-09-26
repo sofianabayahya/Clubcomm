@@ -25,7 +25,7 @@
       const reden = a.afgelast ? 'Deze activiteit is afgelast.' : a.datum > D.vandaag() ? 'Aanwezigheid opnemen kan vanaf de dag zelf.' : `Invullen en corrigeren kon tot ${opnemenUur()} uur na de start.`;
       return `<div class="info">${icon('info')}<span>${reden}</span></div><div class="lijst compact">${sp.map((pl) => h.rij({ ic: h.avatar(pl.voornaam), titel: esc(M.naam(S, pl)), rechts: h.chip(M.status(S, pl, a)) })).join('')}</div>`;
     }
-    return `<p class="zacht klein">Iedereen staat op aanwezig. Tik op een naam: aanwezig → te laat → afwezig.</p>
+    return `${opgeslagen && opgeslagen.auto ? `<div class="info">${icon('info')}<span>Na de wedstrijd automatisch ingevuld: wie niet afmeldde, staat op aanwezig. Klopt iets niet? Tik op de naam en sla op.</span></div>` : ''}<p class="zacht klein">Iedereen staat op aanwezig. Tik op een naam: aanwezig → te laat → afwezig.</p>
       <div class="opnemen">${sp.map((pl) => {
         const st = M.status(S, pl, a); const v = d[pl.id];
         const sub = st.code === 'afgemeld' ? `Afgemeld: ${esc(st.afm.reden)}` : st.code === 'langdurig' ? 'Langdurig afwezig' : '';
@@ -125,7 +125,7 @@
         ${cur > 0 ? `<div class="wissel"><div><small>Erin</small>${erin.map((x) => `<span class="chip groen">${esc(naam(x))}</span>`).join('') || '–'}</div><div><small>Eruit</small>${eruit.map((x) => `<span class="chip grijs">${esc(naam(x))}</span>`).join('') || '–'}</div></div>` : ''}
         ${(sch.minder || []).length ? `<p class="klein zacht">Blok minder (besluit trainer): ${sch.minder.map(naam).map(esc).join(', ')}</p>` : ''}<p><b>Keeper:</b> ${esc(naam(sch.keepers[cur]))}</p><p><b>In het veld:</b> ${inNu.filter((x) => x !== sch.keepers[cur]).map(naam).map(esc).join(', ')}</p><p class="zacht"><b>Wissel:</b> ${bank.map((p) => esc(p.voornaam)).join(', ') || 'niemand'}</p></div>
         ${cur < sch.blokken.length - 1 ? `<p class="klein zacht">Volgende wissel: minuut ${M.minTekst(vanaf(cur + 1))}</p>` : ''}${aanpassen}
-        ${cur < sch.blokken.length - 1 ? `<button class="knop groot vol" data-act="volgendBlok" data-id="${a.id}">${icon('skip-forward')}Volgend blok</button>` : `<button class="knop groot vol" data-act="bevestigSchema" data-id="${a.id}">${icon('circle-check')}Wedstrijd klaar: bevestigen</button>`}
+        ${cur < sch.blokken.length - 1 ? `<button class="knop groot vol" data-act="volgendBlok" data-id="${a.id}">${icon('skip-forward')}Volgend blok</button>` : (a.uitslagKlaar ? `<button class="knop groot vol" data-act="bevestigSchema" data-id="${a.id}">${icon('circle-check')}Speeltijd vastleggen</button>` : `<button class="knop groot vol" data-act="uitslagKlaar" data-a="${a.id}">${icon('flag')}Einde wedstrijd: uitslag opslaan</button>`)}
         <button class="linkknop" data-act="nieuwSchema" data-id="${a.id}">Schema opnieuw maken</button>`;
     } else body = `<div class="info groen">${icon('circle-check')}<span>Speeltijd van deze wedstrijd is verwerkt in de seizoenstotalen.</span></div>`;
     return `${wedstrijden.length > 1 ? `<label class="klein-kop" for="stw">Wedstrijd</label><select id="stw" class="kies" data-change="kiesStWed">${wedstrijden.map((w) => `<option value="${w.id}" ${w.id === a.id ? 'selected' : ''}>${D.kort(w.datum)} · ${h.actTitel(S, w)}</option>`).join('')}</select>` : ''}
@@ -164,9 +164,25 @@
     CC.sheet('Uitslag opslaan', `<form data-submit="uitslagOk" data-a="${a.id}" class="codeform"><p class="groot-cijfer">${st.thuis} – ${st.uit}</p>
       <label class="vink"><input type="checkbox" name="stuur" ${u.naarOuders ? 'checked' : ''}><span><b>Stuur de uitslag naar de ouders</b><br><small class="zacht">${u.naarOuders ? 'Standaard aan voor dit team.' : 'Standaard uit: de KNVB publiceert bij O7–O10 geen uitslagen.'}</small></span></label>
       <label class="vink"><input type="checkbox" name="makers" ${u.makers ? 'checked' : ''}><span>Noem wie er scoorden</span></label>
+      <p class="zacht klein">De aanwezigheid en de speeltijd uit het wisselschema legt de app meteen vast (wie toch niet kwam, telt niet mee). Aanpassen kan bij Aanwezigheid.</p>
       <button class="knop vol">${icon('circle-check')}Opslaan</button></form>`); });
+  // Besluit 85: na de wedstrijd legt de app zelf vast (één keer): de aanwezigheid (wie niet afmeldde was er; de trainer kan
+  // het nog aanpassen) en de speeltijd uit het wisselschema, zonder wie toch niet kwam. Zo telt elke wedstrijd mee.
+  const komtNog = (S, a, id) => { const pl = M.speler(S, id); return !!pl && ['verwacht', 'aanwezig', 'telaat'].includes(M.status(S, pl, a).code); };
+  // Besluit 85: wie staat in het wisselschema maar komt toch niet (afgemeld na het maken)? Alleen zolang de wedstrijd nog niet begon.
+  CC.schemaWeg = (S, a) => { const sch = S.speeltijd.schema[a.id]; if (!sch || sch.gestart || sch.bevestigd) return [];
+    return (sch.spelers || [...new Set(sch.blokken.flat())]).filter((id) => !komtNog(S, a, id)).map((id) => M.speler(S, id)).filter(Boolean); };
+  const wedstrijdVastleggen = (S, a, door) => {
+    if (!S.pres[a.id]) { const s = {}; M.spelers(S, a.teamId).forEach((pl) => { s[pl.id] = ['afgemeld', 'langdurig', 'open'].includes(M.status(S, pl, a).code) ? 'x' : 'a'; });
+      S.pres[a.id] = { s, door, tijd: new Date().toISOString(), auto: true }; }
+    const sch = S.speeltijd.schema[a.id]; if (!sch || sch.bevestigd) return;
+    const kb = S.speeltijd.keeper || (S.speeltijd.keeper = {}); if (sch.keepers[0] && komtNog(S, a, sch.keepers[0])) kb[sch.keepers[0]] = (kb[sch.keepers[0]] || 0) + 1;
+    const len = M.schemaLengtes(sch); sch.blokken.forEach((b, i) => b.forEach((id) => { if (komtNog(S, a, id)) S.speeltijd.min[id] = (S.speeltijd.min[id] || 0) + len[i]; }));
+    const mog = S.speeltijd.mogelijk || (S.speeltijd.mogelijk = {}); (sch.spelers || [...new Set(sch.blokken.flat())]).filter((id) => komtNog(S, a, id)).forEach((id) => { mog[id] = (mog[id] || 0) + (sch.wedMin || len.reduce((x, y) => x + y, 0)); });
+    sch.bevestigd = true; };
+  CC.wedstrijdVastleggen = wedstrijdVastleggen;
   const uitslagOpslaan = (S, a, stuur, metMakers, van) => { const t = M.team(S, a.teamId); const st = M.stand(a);
-    a.uitslag = `${st.thuis}-${st.uit}`; a.uitslagKlaar = true;
+    a.uitslag = `${st.thuis}-${st.uit}`; a.uitslagKlaar = true; wedstrijdVastleggen(S, a, van);
     if (stuur) {
       const ons = `${S.club.naam} ${t.naam}`; const thuisNaam = a.thuis ? ons : (a.tegen || 'Tegenstander'); const uitNaam = a.thuis ? (a.tegen || 'Tegenstander') : ons;
       const tel = {}; (a.goals || []).filter((x) => x.wij && x.spelerId).forEach((x) => { tel[x.spelerId] = (tel[x.spelerId] || 0) + 1; });
@@ -183,6 +199,9 @@
   CC.uitslagAuto = (S) => { const me = CC.me(); if (!me) return false; let n = 0;
     S.acts.filter((a) => M.isWed(a) && !a.afgelast && !a.uitslagKlaar && (a.goals || []).length && new Date(`${a.datum}T${a.eind || a.tijd}`).getTime() + 2 * 3600e3 < Date.now() && M.stafVan(S, a.teamId).includes(me.id))
       .forEach((a) => { const u = M.uitslagInst(S, a.teamId); uitslagOpslaan(S, a, u.naarOuders, u.makers, me.id); a.uitslagAuto = true; n++; });
+    // Besluit 85: zonder doelpunten blijft de uitslag open, maar aanwezigheid en speeltijd worden wel vastgelegd
+    S.acts.filter((a) => M.isWed(a) && !a.afgelast && new Date(`${a.datum}T${a.eind || a.tijd}`).getTime() + 2 * 3600e3 < Date.now() && a.datum >= D.addDays(D.vandaag(), -3) && M.stafVan(S, a.teamId).includes(me.id)
+      && (!S.pres[a.id] || (S.speeltijd.schema[a.id] && !S.speeltijd.schema[a.id].bevestigd))).forEach((a) => { wedstrijdVastleggen(S, a, me.id); n++; });
     return n > 0; };
   CC.on('uitslagHeropen', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.a); a.uitslagKlaar = false; CC.save(); CC.render(); });
   CC.on('kiesStWed', (el) => { CC.ui.seg.stWed = el.value; CC.render(); });
@@ -194,7 +213,7 @@
   CC.on('stKeeper', (el) => { const S = CC.S(); const sch = S.speeltijd.schema[el.dataset.a]; const oud = sch.keepers[0]; const nw = el.value; if (!nw || nw === oud) return; const ruil = (x) => (x === oud ? nw : x === nw ? oud : x); sch.blokken = sch.blokken.map((b) => b.map(ruil)); sch.keepers = sch.keepers.map(() => nw); sch.aangepast = true; CC.save(); CC.render(); });
   CC.on('nieuwSchema', (el) => { const S = CC.S(); delete S.speeltijd.schema[el.dataset.id]; CC.save(); CC.render(); });
   CC.on('volgendBlok', (el) => { const S = CC.S(); const sch = S.speeltijd.schema[el.dataset.id]; sch.huidig++; sch.gestart = true; CC.save(); CC.render(); });
-  CC.on('bevestigSchema', (el) => { const S = CC.S(); const sch = S.speeltijd.schema[el.dataset.id]; const kb = S.speeltijd.keeper || (S.speeltijd.keeper = {}); if (sch.keepers[0]) kb[sch.keepers[0]] = (kb[sch.keepers[0]] || 0) + 1; const len = M.schemaLengtes(sch); sch.blokken.forEach((b, i) => b.forEach((id) => { S.speeltijd.min[id] = (S.speeltijd.min[id] || 0) + len[i]; })); const mog = S.speeltijd.mogelijk || (S.speeltijd.mogelijk = {}); (sch.spelers || [...new Set(sch.blokken.flat())]).forEach((id) => { mog[id] = (mog[id] || 0) + (sch.wedMin || len.reduce((s, x) => s + x, 0)); }); sch.bevestigd = true; CC.save(); CC.render(); CC.toast('Speeltijd bijgewerkt'); });
+  CC.on('bevestigSchema', (el) => { const S = CC.S(); wedstrijdVastleggen(S, M.act(S, el.dataset.id), CC.me().id); CC.save(); CC.render(); CC.toast('Speeltijd bijgewerkt'); });
 
   // Beoordelen: zie beoordeling.js (Besluit 23)
 
@@ -286,6 +305,9 @@
         // Besluit 81: wat vandaag of morgen moet (wedstrijddag) staat bovenaan
         if (S.club.modules.speeltijd) S.acts.filter((a) => a.teamId === tid && M.isWed(a) && !a.afgelast && (a.datum === D.vandaag() || a.datum === D.addDays(D.vandaag(), 1)) && !S.speeltijd.schema[a.id] && new Date(`${a.datum}T${a.eind || a.tijd}`) > new Date())
           .forEach((a) => acties.push(h.rij({ ic: 'timer', titel: `Maak het wisselschema voor ${a.datum === D.vandaag() ? 'vandaag' : 'morgen'}`, sub: `${h.actTitel(S, a)} · ${a.tijd}`, act: 'naarWedstrijd', attrs: `data-id="${a.id}"`, kleur: 'oranje' })));
+        // Besluit 85: afmelding na het maken van het wisselschema
+        S.acts.filter((a) => a.teamId === tid && M.isWed(a) && !a.afgelast && (a.datum === D.vandaag() || a.datum === D.addDays(D.vandaag(), 1))).forEach((a) => { const weg = CC.schemaWeg(S, a);
+          if (weg.length) acties.push(h.rij({ ic: 'triangle-alert', titel: 'Wisselschema klopt niet meer', sub: `${weg.map((pl) => esc(pl.voornaam)).join(', ')} ${weg.length === 1 ? 'komt' : 'komen'} niet · ${h.actTitel(S, a)} ${a.datum === D.vandaag() ? 'vandaag' : 'morgen'}`, act: 'naarWedstrijd', attrs: `data-id="${a.id}"`, kleur: 'oranje' })); });
         zonderUitslag(S, tid).forEach((a) => acties.push(h.rij({ ic: 'flag', titel: 'Uitslag nog opslaan', sub: `${h.actTitel(S, a)} · ${D.kort(a.datum)} · dan krijgen de ouders de uitslag en kloppen de doelpunten`, act: 'naarWedstrijd', attrs: `data-id="${a.id}"`, kleur: 'oranje' })));
         acties.push(...CC.signaalRegels(S, tid, true));
         // Herinnering: training van een eerdere dag waarvan de aanwezigheid nog niet is ingevuld, zolang het nog kan.

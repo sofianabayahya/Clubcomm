@@ -61,6 +61,7 @@
 
 ## Automatisch werk vanaf de server (Besluit 77)
 - Edge Function `automaat` (`supabase/functions/automaat`: `index.ts` + `motor.mjs`), verify_jwt uit; alleen te starten met het geheim uit `automaat_geheim` (header `x-cc-geheim`).
+- Mag schrijven (Besluit 85): nieuwe berichten, activiteiten, ontwikkelgesprekken, `autoVerstuurd`, en na een wedstrijd `pres` en `speeltijd*`. Na een wijziging in `motor.mjs` de functie opnieuw publiceren (met `deno.json` en import_map_path `deno.json`).
 - pg_cron `clubcomm-automaat` elk kwartier. Nachtrust 21:00–07:30 (Nederlandse tijd) in de functie zelf.
 - `motor.mjs` laadt `public/app/*.js` (van https://mijnclubcomm.nl/app/) in een omgeving zonder scherm en met een Nederlandse klok, zet de gegevens van de club klaar (`CC.uitRijen`), draait `CC.automaatClub` (als beheerder) en per team `CC.automaatTeam` (als trainer), en schrijft alleen de verschillen weg (berichten, activiteiten, gesprekstijden, verslagen, verstuurd-lijst).
 - De app vraagt bij het laden `automaat_laatst` op; gelukte run < 2 uur geleden → `CC.opServer` en de app doet het niet zelf.
