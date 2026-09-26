@@ -296,7 +296,7 @@
     const ontv = beheer.length ? beheer : S.people.filter((p) => p.rollen.some((x) => x.rol === 'hjo')).map((p) => p.id).filter((x) => x !== me.id);
     const context = `\n\n— Rol: ${r.rol}${r.teamId ? ' ' + r.teamId : ''} · scherm: ${ui.view ? ui.view.naam : ui.tab} · ${navigator.userAgent.replace(/\s*\(KHTML.*$/, '').slice(0, 120)}`;
     if (!ontv.length) { CC.closeSheet(); return CC.toast('Dank je! (er is nog geen beheerder om het naartoe te sturen)'); }
-    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'persoonlijk', bereik: 'Feedback', onderwerp: `Feedback: ${f.s.value.toLowerCase()}`, tekst: f.t.value + context, tijd: new Date().toISOString(), ontvangers: ontv, gelezen: [me.id], antw: [], urgent: false, gepland: null, mail: true });
+    S.msgs.push({ id: 'b' + Date.now(), van: me.id, vanRol: (CC.rol() || {}).rol, soort: 'persoonlijk', bereik: 'Feedback', onderwerp: `Feedback: ${f.s.value.toLowerCase()}`, tekst: f.t.value + context, tijd: new Date().toISOString(), ontvangers: ontv, gelezen: [me.id], antw: [], urgent: false, gepland: null, mail: true });
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Dank je wel! We kijken ernaar.');
   });
 
@@ -337,7 +337,7 @@
     const me = CC.me(); const ontv = S.people.filter((p) => p.id !== me.id && p.rollen.some((r) => r.rol === 'beheerder')).map((p) => p.id);
     if (!ontv.length) { CC.closeSheet(); return CC.toast('Er is nog geen clubbeheerder. Vraag het de trainer of teamleider.', 'fout'); }
     const kids = CC.kinderen().map((k) => `${k.voornaam} (${CC.tn(k.teamId)})`).join(', ');
-    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'persoonlijk', bereik: 'Clubbeheer', onderwerp: `Verzoek: account van ${me.naam} verwijderen`, tekst: `${me.naam} (${me.email}) vraagt om het account te verwijderen.${kids ? ` Kinderen: ${kids}.` : ''}\n\nVerwijder de persoon via HJO → Teams → Ouders of Staf, en laat het weten als het gedaan is.`, tijd: new Date().toISOString(), ontvangers: ontv, gelezen: [me.id], antw: [], urgent: false, gepland: null, mail: true });
+    S.msgs.push({ id: 'b' + Date.now(), van: me.id, vanRol: (CC.rol() || {}).rol, soort: 'persoonlijk', bereik: 'Clubbeheer', onderwerp: `Verzoek: account van ${me.naam} verwijderen`, tekst: `${me.naam} (${me.email}) vraagt om het account te verwijderen.${kids ? ` Kinderen: ${kids}.` : ''}\n\nVerwijder de persoon via HJO → Teams → Ouders of Staf, en laat het weten als het gedaan is.`, tijd: new Date().toISOString(), ontvangers: ontv, gelezen: [me.id], antw: [], urgent: false, gepland: null, mail: true });
     CC.save(); CC.closeSheet(); CC.toast('Verzoek verstuurd naar de clubbeheerder');
   });
   CC.on('wisselRol', (el) => CC.wisselRol(Number(el.dataset.idx)));
@@ -457,12 +457,37 @@
   const kanIntrekken = (m, me) => m.van === me.id && !m.ingetrokken && Date.now() - new Date(m.tijd) < 24 * 3600e3;
   const nieuwst = (a, b) => laatstTijd(b).localeCompare(laatstTijd(a));
 
+  // Besluit 79: in de ouderrol alleen berichten over je kind. Wat je als trainer/beheerder stuurt of ontvangt (welkomst-
+  // berichten, vragen van andere ouders, meldingen ter informatie) staat alleen in je stafrol.
+  const ouderRol = () => (CC.rol() || {}).rol === 'ouder';
+  const ouderStaf = () => { const s = new Set(); CC.kinderen().forEach((k) => M.stafVan(S, k.teamId).forEach((x) => s.add(x)));
+    S.people.filter((p) => p.rollen.some((r) => ['hjo', 'beheerder', 'coordinator'].includes(r.rol))).forEach((p) => s.add(p.id)); return s; };
+  CC.voorRol = (m, me, staf) => {
+    if (!ouderRol()) return true;
+    if (m.van === me.id && m.vanRol) return m.vanRol === 'ouder';
+    if (m.van !== me.id && m.vanRol === 'ouder' && m.soort === 'persoonlijk') return false; // een ouder die jou als staf iets vraagt
+    staf = staf || ouderStaf();
+    if (m.soort === 'persoonlijk') {
+      if (m.van === me.id) return m.ontvangers.length > 0 && m.ontvangers.every((x) => staf.has(x));
+      return m.van === 'systeem' || staf.has(m.van);
+    }
+    if (m.van === me.id) return false;
+    return !M.terInfo(m);
+  };
+  // Ongelezen voor de rol waarin je nu werkt (voor het getal bij Berichten)
+  CC.ongelezenRol = (S2) => { const me = CC.me(); const staf = ouderRol() ? ouderStaf() : null; return S2.msgs.filter((m) => M.isOngelezen(S2, m, me.id) && !M.terInfo(m) && CC.voorRol(m, me, staf)).length; };
   // Alle berichten per tabblad voor deze persoon
   const perTab = (me) => {
-    const pers = S.msgs.filter((m) => m.soort === 'persoonlijk' && M.zichtbaar(S, m, me.id));
-    const nws = S.msgs.filter((m) => m.soort !== 'persoonlijk' && (m.van === me.id || M.zichtbaar(S, m, me.id)));
+    const staf = ouderRol() ? ouderStaf() : null;
+    const pers = S.msgs.filter((m) => m.soort === 'persoonlijk' && M.zichtbaar(S, m, me.id) && CC.voorRol(m, me, staf));
+    const nws = S.msgs.filter((m) => m.soort !== 'persoonlijk' && (m.van === me.id || M.zichtbaar(S, m, me.id)) && CC.voorRol(m, me, staf));
     return { pers, nws };
   };
+  // Besluit 79: een gesprek gaat vanzelf naar het archief na 7 dagen zonder nieuw bericht, behalve als het op jou wacht,
+  // je het nog niet las of jouw laatste bericht een vraag is. Een nieuw bericht haalt het terug.
+  const AUTO_DAGEN = 7;
+  const vraagOpen = (m, me) => { const l = M.laatste(m); return l.van === me.id && /\?/.test(String(l.tekst || '')); };
+  const gespArchief = (m, me) => M.gearchiveerd(m, me.id) || (!M.isOngelezen(S, m, me.id) && !M.wachtOpMij(m, me.id) && !vraagOpen(m, me) && dagenOud(m) > AUTO_DAGEN);
   // Beperk een lijst tot 10, met "Toon meer"
   const meer = (sleutel, ms, render) => {
     const n = Number(h.segVal('meer-' + sleutel, 10));
@@ -475,7 +500,7 @@
     const me = CC.me(); const staf = isStaf();
     const tab = h.segVal('berichten', 'persoonlijk');
     const { pers, nws } = perTab(me);
-    const actiefPers = pers.filter((m) => !M.gearchiveerd(m, me.id));
+    const actiefPers = pers.filter((m) => !gespArchief(m, me));
     const actiefNws = nws.filter((m) => !nieuwsArchief(m, me.id));
     const n = (ms) => ms.filter((m) => M.isOngelezen(S, m, me.id) && !terInfo(m)).length;
     const knop = staf && opties.nieuw ? `<button class="knop vol" data-act="nieuwBericht">${icon('plus')}Nieuw bericht</button>`
@@ -516,8 +541,8 @@
     const collega = m.van !== me.id && m.ontvangers.includes(l.van) && l.van !== me.id;
     const gezien = l.van === me.id && (m.gelezen || []).some((x) => x !== me.id);
     const regel = m.ingetrokken ? `<i>Ingetrokken door ${esc(pNaam(m.ingetrokken.door))}</i>` : `${l.van === me.id ? `<span class="vinkje ${gezien ? 'gelezen' : ''}">${gezien ? '✓✓' : '✓'}</span> Jij` : esc(voornaam(l.van))}: ${esc(String(l.tekst || '').split('\n')[0])}`;
-    // Status (Besluit 59): "Wacht op jou" (staf, de ander heeft het laatste woord) of "Wacht op antwoord" (jij hebt het laatste woord in een echt gesprek)
-    const wachtAntw = !m.ingetrokken && l.van === me.id && m.van !== 'systeem' && (m.antw.length > 0 || (m.van === me.id && !isStaf()));
+    // Status (Besluit 59/79): "Wacht op jou" (staf, de ander heeft het laatste woord) of "Wacht op antwoord" (jouw laatste bericht is een vraag)
+    const wachtAntw = !m.ingetrokken && vraagOpen(m, me) && m.van !== 'systeem' && (m.antw.length > 0 || (m.van === me.id && !isStaf()));
     return `<button class="bericht ${ong ? 'nieuw' : ''} ${m.ingetrokken ? 'ingetrokken' : ''}" data-act="open" data-view="bericht" data-id="${m.id}">
       ${m.van === me.id ? h.avatar(anderen.length === 1 ? pNaam(anderen[0]) : (bereikNaam(m) || '?')) : afzenderIc(m, pNaam(m.van))}
       <span class="b-tekst"><b>${isStaf() && M.wachtOpMij(m, me.id) ? '<span class="chip oranje mini">Wacht op jou</span> ' : wachtAntw ? '<span class="chip grijs mini">Wacht op antwoord</span> ' : ''}${esc(m.onderwerp)}</b><small>${esc(met)}${collega ? ` · beantwoord door ${esc(voornaam(l.van))}` : ''}</small><span class="b-voorbeeld">${regel}</span></span>
@@ -537,9 +562,9 @@
   // Archief: nieuws ouder dan 14 dagen en wat je zelf archiveerde
   CC.views.archief = (S, p) => {
     const me = CC.me(); const { pers, nws } = perTab(me);
-    const ms = (p.tab === 'nieuws' ? nws.filter((m) => nieuwsArchief(m, me.id)) : pers.filter((m) => M.gearchiveerd(m, me.id))).sort(nieuwst);
+    const ms = (p.tab === 'nieuws' ? nws.filter((m) => nieuwsArchief(m, me.id)) : pers.filter((m) => gespArchief(m, me))).sort(nieuwst);
     return { titel: p.tab === 'nieuws' ? 'Archief · Nieuws' : 'Archief · Persoonlijk',
-      html: `<p class="zacht klein">${p.tab === 'nieuws' ? `Nieuws gaat na ${ARCHIEF_DAGEN} dagen vanzelf hierheen.` : 'Gesprekken die je archiveerde. Komt er een nieuw antwoord, dan staat het gesprek weer bij Persoonlijk.'} Aan het eind van het seizoen worden oude berichten gewist.</p>
+      html: `<p class="zacht klein">${p.tab === 'nieuws' ? `Nieuws gaat na ${ARCHIEF_DAGEN} dagen vanzelf hierheen.` : 'Gesprekken die je afrondde, en gesprekken waarin 7 dagen niets gebeurde. Komt er een nieuw bericht, dan staat het gesprek weer bij Persoonlijk.'} Aan het eind van het seizoen worden oude berichten gewist.</p>
         ${ms.length ? meer('archief-' + p.tab, ms, (m) => (p.tab === 'nieuws' ? nieuwsRij(m, me) : gesprek(m, me))) : h.leeg('Het archief is leeg', 'archive')}` };
   };
   // Regel voor Home (Besluit 57): gesprekken die op jou wachten
@@ -557,14 +582,14 @@
     if (!m) return { titel: 'Bericht', html: h.leeg('Dit bericht bestaat niet meer', 'message-circle') };
     if (M.isOngelezen(S, m, me.id)) { m.gelezen.push(me.id); CC.save(); }
     const eigen = m.van === me.id; const pers = m.soort === 'persoonlijk';
-    const arch = pers ? M.gearchiveerd(m, me.id) : nieuwsArchief(m, me.id);
+    const arch = pers ? gespArchief(m, me) : nieuwsArchief(m, me.id);
     const gelezenLijst = eigen && !pers ? `<details class="uitklap"><summary>Gelezen door ${m.gelezen.filter((x) => x !== me.id).length} van ${m.ontvangers.length}</summary><p class="zacht klein">${m.ontvangers.map((id) => { const pp = M.persoon(S, id); return pp ? `${m.gelezen.includes(id) ? '✓' : '·'} ${esc(pp.naam)}` : ''; }).slice(0, 40).join('<br>')}</p></details>` : '';
     // Gesprek: onder je eigen laatste bericht wie het gelezen heeft (zoals WhatsApp)
     const l = M.laatste(m);
     const gezienDoor = pers && l.van === me.id ? m.gelezen.filter((x) => x !== me.id).map(voornaam) : [];
     const gezien = pers && l.van === me.id ? `<p class="zacht klein rechts">${gezienDoor.length ? `${icon('check')}Gelezen door ${esc(gezienDoor.join(', '))}` : 'Nog niet gelezen'}</p>` : '';
     const acties = [
-      pers || !CC.isVast(m) ? (arch && (pers || M.gearchiveerd(m, me.id)) ? `<button class="knop licht klein" data-act="archiefUit" data-id="${m.id}">${icon('archive-restore')}Terugzetten</button>` : !arch ? `<button class="knop licht klein" data-act="archiveer" data-id="${m.id}">${icon('archive')}Archiveren</button>` : '') : '',
+      pers || !CC.isVast(m) ? (arch && M.gearchiveerd(m, me.id) ? `<button class="knop licht klein" data-act="archiefUit" data-id="${m.id}">${icon('archive-restore')}${pers ? 'Weer openen' : 'Terugzetten'}</button>` : !arch ? `<button class="knop licht klein" data-act="archiveer" data-id="${m.id}">${pers ? `${icon('check')}Gesprek afronden` : `${icon('archive')}Archiveren`}</button>` : '') : '',
       kanIntrekken(m, me) ? `<button class="knop licht klein rood-tekst" data-act="berichtIntrekken" data-id="${m.id}">${icon('undo-2')}Intrekken</button>` : '',
     ].filter(Boolean).join('');
     if (m.ingetrokken) return { titel: pers ? 'Gesprek' : 'Nieuws', html: `<article class="kaartje"><h2>${esc(m.onderwerp)}</h2><p class="zacht"><i>Dit bericht is ingetrokken door ${esc(pNaam(m.ingetrokken.door))} (${D.tijdstip(m.ingetrokken.tijd)}).</i></p>${acties ? `<div class="knoppen">${acties}</div>` : ''}</article>` };
@@ -593,10 +618,13 @@
       }).join('');
       const l2 = alle[alle.length - 1];
       const status = l2.van === me.id ? `<p class="zacht klein rechts">${gelezenDoor.length ? `Gelezen door ${esc(gelezenDoor.map(voornaam).join(', '))}` : 'Nog niet gelezen'}</p>` : '';
+      // Besluit 79: wie het gesprek afrondde (de lijst wordt leeg bij een nieuw bericht)
+      const afgerond = (m.archief || []).filter((x) => x !== me.id && anderen.includes(x));
+      const afrondRegel = afgerond.length ? `<p class="zacht klein midden">${icon('check')}${esc(afgerond.map(voornaam).join(' en '))} ${afgerond.length === 1 ? 'heeft' : 'hebben'} het gesprek afgerond.</p>` : '';
       return {
         titel: 'Gesprek',
         html: `<article class="kaartje gesprek-kop"><h2>${esc(m.onderwerp)}</h2><small class="zacht">Met ${esc(anderen.map(pNaam).join(', ') || bereikNaam(m))}${m.urgent ? ' · <span class="chip rood mini">Urgent</span>' : ''}</small>${acties ? `<div class="knoppen">${acties}</div>` : ''}</article>
-          <div class="bubbels">${ballonnen}</div>${status}
+          <div class="bubbels">${ballonnen}</div>${status}${afrondRegel}
           ${m.van !== 'systeem' ? `<form class="reageer" data-submit="reageer" data-id="${m.id}"><textarea name="t" rows="1" placeholder="Reageer… (Enter = nieuwe regel)" required aria-label="Reactie" data-input="groei"></textarea><button class="icoonknop blauw" aria-label="Versturen">${icon('send')}</button></form>` : ''}`,
       };
     }
@@ -615,7 +643,7 @@
           : !pers ? `${vraagOver}<p class="zacht klein midden">Nieuws is alleen-lezen${vraagOver ? '; een vraag wordt een persoonlijk gesprek met de afzender' : ''}.</p>` : ''}`,
     };
   };
-  CC.on('archiveer', (el) => { const m = S.msgs.find((x) => x.id === el.dataset.id); const me = CC.me(); m.archief = [...new Set([...(m.archief || []), me.id])]; if (!m.gelezen.includes(me.id)) m.gelezen.push(me.id); CC.save(); CC.terug(); CC.toast('Gearchiveerd'); });
+  CC.on('archiveer', (el) => { const m = S.msgs.find((x) => x.id === el.dataset.id); const me = CC.me(); m.archief = [...new Set([...(m.archief || []), me.id])]; if (!m.gelezen.includes(me.id)) m.gelezen.push(me.id); CC.save(); CC.terug(); CC.toast(m.soort === 'persoonlijk' ? 'Gesprek afgerond. Stuurt de ander nog iets, dan komt het terug.' : 'Gearchiveerd'); });
   CC.on('archiefUit', (el) => { const m = S.msgs.find((x) => x.id === el.dataset.id); const me = CC.me(); m.archief = (m.archief || []).filter((x) => x !== me.id); CC.save(); CC.render(); CC.toast('Teruggezet'); });
   // Intrekken (alleen de afzender, binnen 24 uur): ontvangers zien "ingetrokken door …"; een verstuurde push of e-mail kan niet terug
   CC.on('berichtIntrekken', (el) => CC.sheet('Bericht intrekken?', `<p>Ontvangers zien daarna alleen: <i>"Dit bericht is ingetrokken door ${esc(CC.me().naam)}"</i>.</p><p class="zacht klein">Een pushmelding of e-mail die al is verstuurd, kan niet meer terug. Stuur zo nodig een nieuw bericht met de juiste informatie.</p>
@@ -626,7 +654,7 @@
     CC.sheet(`Vraag aan ${esc(pNaam(m.van))}`, `<form data-submit="vraagOverOk" data-id="${m.id}" class="codeform"><label for="vo-o">Onderwerp</label><input id="vo-o" name="o" required maxlength="80" value="${esc(('Vraag over: ' + m.onderwerp).slice(0, 80))}">
       <label for="vo-t">Je vraag</label><textarea id="vo-t" name="t" rows="4" required></textarea><button class="knop vol">${icon('send')}Versturen</button><p class="zacht klein">Alleen ${esc(pNaam(m.van))} ziet dit.</p></form>`); });
   CC.on('vraagOverOk', (f) => { const m = S.msgs.find((x) => x.id === f.dataset.id); const me = CC.me();
-    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'persoonlijk', bereik: pNaam(m.van), onderwerp: f.o.value.trim(), tekst: f.t.value.trim(), tijd: new Date().toISOString(), ontvangers: [m.van], gelezen: [me.id], antw: [], urgent: false, gepland: null, vastTot: null });
+    S.msgs.push({ id: 'b' + Date.now(), van: me.id, vanRol: (CC.rol() || {}).rol, soort: 'persoonlijk', bereik: pNaam(m.van), onderwerp: f.o.value.trim(), tekst: f.t.value.trim(), tijd: new Date().toISOString(), ontvangers: [m.van], gelezen: [me.id], antw: [], urgent: false, gepland: null, vastTot: null });
     CC.save(); CC.closeSheet(); CC.ui.seg.berichten = 'persoonlijk'; CC.render(); CC.toast(`Verstuurd naar ${pNaam(m.van)}`); });
   // Maximaal 2 vastgezette berichten per bereik: het oudste gaat eruit
   CC.zetVast = (m, dagen) => {
@@ -651,7 +679,7 @@
     const me = CC.me(); const pl = M.speler(S, f.k.value); const t = M.team(S, pl.teamId);
     const ontv = M.stafVan(S, t.id).filter((x) => x !== me.id);
     if (!ontv.length) return CC.toast('Dit team heeft nog geen trainer of teamleider', 'fout');
-    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'persoonlijk', bereik: `${pl.voornaam} (${CC.tn(pl.teamId)})`, onderwerp: f.o.value.trim(), tekst: f.t.value.trim(), tijd: new Date().toISOString(), ontvangers: [...new Set(ontv)], gelezen: [me.id], antw: [], urgent: false, gepland: null, vastTot: null });
+    S.msgs.push({ id: 'b' + Date.now(), van: me.id, vanRol: (CC.rol() || {}).rol, soort: 'persoonlijk', bereik: `${pl.voornaam} (${CC.tn(pl.teamId)})`, onderwerp: f.o.value.trim(), tekst: f.t.value.trim(), tijd: new Date().toISOString(), ontvangers: [...new Set(ontv)], gelezen: [me.id], antw: [], urgent: false, gepland: null, vastTot: null });
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Verstuurd naar de trainer en teamleider');
   });
   // Reactievak groeit mee met de tekst; Enter = nieuwe regel, versturen met de blauwe knop (Besluit 58)
@@ -743,7 +771,7 @@
       tekst = wat === 'activiteit' ? `${a.naam} op ${D.lang(a.datum)} van ${a.tijd} tot ${a.eind}${a.plaats ? ` bij ${a.plaats}` : ''}.${a.verzamel ? ` Verzamelen om ${a.verzamel}.` : ''}${a.toelichting ? ` ${a.toelichting}` : ''}${a.opgave ? ` Geef je kind vóór ${D.lang(a.opgaveTot)} op in ClubComm: ja of nee.` : ' Kan je kind niet? Meld af in ClubComm.'}` : `${wat === 'oefen' ? 'Oefenwedstrijd' : 'Extra training'} op ${D.lang(a.datum)} om ${a.tijd} (${a.veld}).`;
     }
     const now = new Date().toISOString();
-    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'nieuws', bereik: tid, onderwerp: wat === 'activiteit' ? `Nieuw: ${f.naam.value.trim()}` : 'Wijziging in de planning', tekst, tijd: now, ontvangers: M.oudersVan(S, tid), gelezen: [], antw: [], urgent: wat !== 'activiteit', gepland: null });
+    S.msgs.push({ id: 'b' + Date.now(), van: me.id, vanRol: (CC.rol() || {}).rol, soort: 'nieuws', bereik: tid, onderwerp: wat === 'activiteit' ? `Nieuw: ${f.naam.value.trim()}` : 'Wijziging in de planning', tekst, tijd: now, ontvangers: M.oudersVan(S, tid), gelezen: [], antw: [], urgent: wat !== 'activiteit', gepland: null });
     const hjo = S.people.filter((p) => p.rollen.some((r) => r.rol === 'hjo')).map((p) => p.id);
     const info = [...new Set([...hjo, ...M.stafVan(S, tid)])].filter((x) => x && x !== me.id);
     S.msgs.push({ id: 'b' + Date.now() + 1, van: 'systeem', soort: 'melding', bereik: 'Ter informatie', onderwerp: `Planning ${CC.tn(tid)} gewijzigd`, tekst: `${me.naam}: ${tekst} Je hoeft niets te doen.`, tijd: now, ontvangers: info, gelezen: [], antw: [], urgent: false, gepland: null });

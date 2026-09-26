@@ -508,6 +508,12 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 79 — Berichten: gesprek afronden, automatisch archiveren, ouderportaal zonder staf-berichten
+- **Gesprek afronden:** de knop "Archiveren" heet bij een gesprek **"✓ Gesprek afronden"** (bovenaan in het gesprek). Ieder rondt voor zichzelf af. De ander ziet in het gesprek: *"Sofian heeft het gesprek afgerond."* Stuurt iemand daarna nog iets, dan komt het gesprek bij iedereen terug. Een afgerond gesprek kun je zelf weer openen via het Archief.
+- **"Wacht op antwoord"** alleen als jouw laatste bericht een vraag is (met een vraagteken). Eindig je met een conclusie, dan staat er niets.
+- **Automatisch archiveren:** een gesprek gaat na **7 dagen** zonder nieuw bericht vanzelf naar het Archief, behalve als het op jou wacht, je het nog niet las of je laatste bericht een vraag is. Nieuws blijft na 14 dagen naar het Archief gaan.
+- **Ouderportaal zonder staf-berichten:** wie ouder én staf is, ziet in de **ouderrol** alleen berichten over het eigen kind: van trainer, teamleider of club, de eigen vragen aan de staf, en nieuws van team en club. Wat je als trainer of beheerder stuurt of ontvangt (welkomstberichten, vragen van andere ouders, meldingen ter informatie) staat alleen in je stafrol. Nieuwe berichten onthouden in welke rol ze zijn verstuurd.
+
 ## Besluit 78 — Gelezen via e-mail: niet meten; wel een oproep om meldingen aan te zetten
 - **Onderaan elke e-mail** van ClubComm staat: *"Sneller op de hoogte? Zet meldingen aan in ClubComm."* Met pushmeldingen tikt de ouder op de melding en staat het bericht vanzelf op gelezen.
 - **Niet gedaan:** meten of een e-mail is geopend (onbetrouwbaar door de privacybescherming van de iPhone, en volgen zonder dat de ouder het merkt past niet bij ClubComm) en een "gelezen"-knop in de e-mail (ouders tikken daar niet op).
