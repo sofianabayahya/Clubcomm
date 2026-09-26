@@ -12,7 +12,7 @@
     { id: 'terug', naam: 'Na de vakantie: we trainen weer', wanneer: 'de eerste training na een vakantie', schema: [2], onderwerp: 'We trainen weer vanaf [datum]', tekst: 'De [vakantie] is voorbij: vanaf [datum] trainen we weer. Kan je kind nog niet? Meld het even af in ClubComm.' },
     { id: 'vrijedag', naam: 'Vrije dag of club dicht', wanneer: 'de vrije dag (bijv. Goede Vrijdag)', schema: [7], onderwerp: '[naam]: geen training', tekst: 'Op [datum] is er geen training ([naam]).' },
     { id: 'wedstrijden', naam: 'De wedstrijden beginnen', wanneer: 'de eerste wedstrijd van een fase', schema: [7], onderwerp: 'De wedstrijden beginnen weer', tekst: 'Vanaf [datum] spelen we weer wedstrijden. Het programma staat in ClubComm bij Planning. Kan je kind een keer niet? Meld het op tijd af.' },
-    { id: 'beoordeling', naam: 'Beoordelingen en ontwikkelgesprekken', wanneer: 'de start van het beoordelingsmoment', schema: [7], onderwerp: 'Ontwikkelgesprekken [moment]', tekst: 'Van [datum] tot [tot] beoordelen de trainers de spelers en houden ze een ontwikkelgesprek met ouder en kind. Je krijgt van de trainer een bericht om een tijd te kiezen.' },
+    { id: 'beoordeling', naam: 'Ontwikkelgesprekken', wanneer: 'de start van het beoordelingsmoment', schema: [7], onderwerp: 'Ontwikkelgesprekken [moment]', tekst: 'Van [datum] tot [tot] houden de trainers een kort ontwikkelgesprek met ouder en kind (15 minuten, rond de training). Je krijgt een bericht om een tijd te kiezen, en daarna een korte opdracht voor je kind: waar ben je sterk in, wat is je wapen, wat wil je leren?' },
     { id: 'eind', naam: 'Einde van het seizoen', wanneer: 'de laatste dag van het seizoen', schema: [14], onderwerp: 'Het seizoen loopt af', tekst: 'Op [datum] sluiten we het seizoen af. Bedankt voor alle hulp, het rijden en het meedenken dit jaar!' },
   ];
   // Noodberichten: altijd urgent; waar nodig worden de activiteiten van die dag afgelast
@@ -30,6 +30,8 @@
     const weg = l.findIndex((x) => x.id === 'fase'); if (weg >= 0) l.splice(weg, 1);
     STANDAARD.forEach((x) => { if (!l.find((y) => y.id === x.id)) l.push({ ...x, schema: [...x.schema], aan: true, auto: true, mail: true }); });
     l.forEach((x) => { if (x.mail == null) x.mail = true; });
+    // Besluit 74: verouderde standaardtekst over ontwikkelgesprekken bijwerken (alleen als de club hem niet zelf veranderde)
+    l.forEach((x) => { if (x.id === 'beoordeling' && /beoordelen de trainers de spelers/.test(x.tekst || '')) { const st = STANDAARD.find((y) => y.id === 'beoordeling'); x.tekst = st.tekst; x.naam = st.naam; } });
     return l;
   };
   const status = (S) => S.autoVerstuurd || (S.autoVerstuurd = {});

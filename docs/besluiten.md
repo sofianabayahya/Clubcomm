@@ -508,6 +508,12 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 74 — Communicatieplan DCG: vakantie 7 dagen; klaargezette berichten ook op de trainer-Home
+- **Vakantie-herinnering: 7 dagen vooraf** (was bij DCG 3 dagen), zoals de standaard van Besluit 36.
+- **Klaargezette berichten** ("x berichten klaar om te versturen") staan ook op de **Home van de trainer** als die ook clubberichten mag sturen (bij DCG: de initiatiefnemer is trainer én beheerder). Anders blijft een vakantiebericht ongemerkt liggen.
+- **Tekst ontwikkelgesprekken bijgewerkt** (niet meer "de trainers beoordelen de spelers"): "Van [datum] tot [tot] houden de trainers een kort ontwikkelgesprek met ouder en kind (15 minuten, rond de training). Je krijgt een bericht om een tijd te kiezen, en daarna een korte opdracht voor je kind…". Clubs met de oude standaardtekst krijgen de nieuwe automatisch.
+- **Werkafspraak:** Claude zoekt zelf naar verouderde teksten, gaten en fouten, legt ze voor en bouwt na akkoord.
+
 ## Besluit 73 — Home trainer: wedstrijddag; vakanties zichtbaar in de planning
 - **"Maak het wisselschema voor vandaag/morgen"** bij Actie nodig: een (oefen)wedstrijd vandaag of morgen zonder wisselschema (module speeltijd aan), tot de wedstrijd voorbij is. Tik → Speeltijd met die wedstrijd.
 - **"Uitslag nog opslaan"**: een gespeelde wedstrijd (tot 3 dagen terug) waarvan de uitslag niet is opgeslagen. Het scorebord blijft dan beschikbaar, ook als er niet gescoord is. Anders krijgen ouders geen uitslag en kloppen doelpunten en speeltijd niet.

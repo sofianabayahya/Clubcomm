@@ -281,6 +281,8 @@
           .forEach((a) => acties.push(h.rij({ ic: 'timer', titel: `Maak het wisselschema voor ${a.datum === D.vandaag() ? 'vandaag' : 'morgen'}`, sub: `${h.actTitel(S, a)} · ${a.tijd}`, act: 'naarWedstrijd', attrs: `data-id="${a.id}"`, kleur: 'oranje' })));
         zonderUitslag(S, tid).forEach((a) => acties.push(h.rij({ ic: 'flag', titel: 'Uitslag nog opslaan', sub: `${h.actTitel(S, a)} · ${D.kort(a.datum)} · dan krijgen de ouders de uitslag en kloppen de doelpunten`, act: 'naarWedstrijd', attrs: `data-id="${a.id}"`, kleur: 'oranje' })));
         if (CC.beoordRijTrainer) acties.push(...CC.beoordRijTrainer(S, tid));
+        // Besluit 74: wie ook clubberichten mag sturen (bijv. trainer én beheerder), ziet klaargezette berichten ook hier
+        if (CC.autoBerichtRijen) acties.push(...CC.autoBerichtRijen(S));
         // Geen activiteit gepland: wel de acties tonen (bijv. aanmeldingen)
         if (!volgendeT) return h.leeg('Geen activiteiten gepland') + h.actieBlok(acties, 'nieuwe berichten, aanmeldingen of aanwezigheid die nog open staat');
         return `<article class="kaartje hoofd">
