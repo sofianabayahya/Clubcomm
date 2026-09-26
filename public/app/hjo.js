@@ -120,7 +120,7 @@
         const kleuren = { Ziek: '#8B5CF6', Blessure: '#EF4444', 'School/huiswerk': '#0EA5E9', Vakantie: '#14B8A6', Familie: '#F59E0B', 'Andere sport': '#EC4899', Overig: '#94A3B8', 'Niet afgemeld': '#111827' };
         const kleur = (r) => kleuren[r] || '#64748B';
         const berichten = S.teams.map((t) => { const ms = S.msgs.filter((m) => m.soort === 'nieuws' && m.ontvangers.length && (!m.gepland || new Date(m.gepland) <= new Date()) && (m.bereik === t.id || m.bereik === 'Hele club')); const o = new Set(M.oudersVan(S, t.id)); let tot = 0, gel = 0; ms.forEach((m) => { m.ontvangers.forEach((p) => { if (o.has(p)) { tot++; if (m.gelezen.includes(p)) gel++; } }); }); return { t, pct: tot ? Math.round((100 * gel) / tot) : null }; });
-        return `${h.seg('inzPer', [['blok', 'Deze fase'], ['seizoen', 'Heel seizoen']], 'blok')}
+        return `${h.seg('inzPer', [['blok', h.faseLabel(S)], ['seizoen', 'Heel seizoen']], 'blok')}
           ${h.sectie('1. Waar gaat het goed of mis?')}
           <div class="staven">${rij.map(({ t, s }) => { const z = M.zone(S, s.pct, t.id); return `<button class="staaf" data-act="open" data-view="team" data-team="${t.id}"><span>${esc(t.naam)}</span><i class="${z}" style="--w:${s.pct || 0}%"></i><b>${s.pct ?? '–'}%</b></button>`; }).join('')}</div>
           <p class="zacht klein">Laagste bovenaan. Groen/oranje/rood volgens de zones per teamtype (breedte ${S.club.inst.zones.breedte.groen}/${S.club.inst.zones.breedte.oranje}, selectie ${S.club.inst.zones.selectie.groen}/${S.club.inst.zones.selectie.oranje}).</p>
@@ -305,14 +305,17 @@
   CC.views.team = (S, p) => {
     const t = M.team(S, p.team); const per = M.periode(S, 'blok'); const ts = M.teamStats(S, t.id, per); const z = M.zone(S, ts.pct, t.id);
     const kandidaten = S.people.filter((x) => x.rollen.some((r) => r.rol !== 'ouder') || M.oudersVan(S, t.id).includes(x.id));
-    const kies = (veld, cur) => `<select class="kies" data-change="zetStaf" data-team="${t.id}" data-veld="${veld}" aria-label="${veld}"><option value="">– Niemand –</option>${kandidaten.map((x) => `<option value="${x.id}" ${x.id === cur ? 'selected' : ''}>${esc(x.naam)}</option>`).join('')}</select>`;
+    // Alle trainers en teamleiders van het team, met erbij zetten en weghalen (een team kan er meer hebben, Besluit 44/86)
+    const stafBlok = (rol) => { const ids = M.stafVan(S, t.id, [rol]); const meer = rol === 'trainer' ? 'Trainers' : 'Teamleiders';
+      return `<label class="klein-kop">${ids.length > 1 ? meer : rol === 'trainer' ? 'Trainer' : 'Teamleider'}</label><div class="lijst compact">${ids.map((id) => h.rij({ ic: h.avatar((M.persoon(S, id) || {}).naam || '?'), titel: esc((M.persoon(S, id) || {}).naam || 'Onbekend'), rechts: `<button class="linkknop rood-tekst" data-act="stafWeg" data-team="${t.id}" data-rol="${rol}" data-id="${id}">Weghalen</button>` })).join('') || `<p class="zacht klein">Nog geen ${rol}.</p>`}</div>
+        <select class="kies" data-change="stafErbij" data-team="${t.id}" data-rol="${rol}" aria-label="${rol} erbij"><option value="">+ ${rol === 'trainer' ? 'Trainer' : 'Teamleider'} erbij…</option>${kandidaten.filter((x) => !ids.includes(x.id)).map((x) => `<option value="${x.id}">${esc(x.naam)}</option>`).join('')}</select>`; };
     const top = Object.entries(ts.redenen).sort((a, b) => b[1] - a[1]).slice(0, 3);
     const afw = t.afwijking || {};
     return {
       titel: t.naam,
       html: `<div class="cijfers"><div class="cijfer ${z}"><b>${ts.pct ?? '–'}%</b><small>aanwezig</small></div><div class="cijfer"><b>${M.spelers(S, t.id).length}</b><small>spelers</small></div><div class="cijfer"><b>${ts.telaat}×</b><small>te laat</small></div></div>
         ${top.length ? `<p class="klein">Meest genoemde redenen: ${top.map(([r, n]) => `${esc(r.toLowerCase())} (${n})`).join(', ')}</p>` : ''}
-        ${h.sectie('Staf')}<div class="kaartje"><label class="klein-kop">Trainer</label>${kies('trainerId', t.trainerId)}<label class="klein-kop">Teamleider</label>${kies('teamleiderId', t.teamleiderId)}<p class="zacht klein">Kies uit bestaande ouders of staf. Iemand van buiten? Voeg de persoon toe via Teams → Staf.</p></div>
+        ${h.sectie('Staf')}<div class="kaartje">${stafBlok('trainer')}${stafBlok('teamleider')}<p class="zacht klein">Een team kan meer trainers en teamleiders hebben; ze zien en doen allemaal hetzelfde. Kies uit bestaande ouders of staf. Iemand van buiten? Voeg de persoon toe via Teams → Staf.</p></div>
         ${h.sectie('Teamtype en regels')}<div class="kaartje"><div class="seg">${['breedte', 'selectie'].map((x) => `<button class="${t.type === x ? 'aan' : ''}" data-act="zetType" data-team="${t.id}" data-val="${x}">${x[0].toUpperCase() + x.slice(1)}</button>`).join('')}</div>
           <form data-submit="afwijkingOk" data-team="${t.id}" class="codeform"><label for="af-d">Afmelden training tot … uur van tevoren</label><input id="af-d" name="dt" type="number" min="0" max="48" value="${afw.deadlineTraining ?? ''}" placeholder="Clubstandaard: ${S.club.inst.deadlineTraining}"><button class="knop licht klein">Afwijking opslaan</button><p class="zacht klein">Leeg = clubstandaard. Zo kan een selectieteam strenger zijn dan een breedteteam.</p></form></div>
         ${CC.materiaalStatus && S.club.modules.materiaal ? `<div class="lijst">${CC.materiaalStatus(S, t.id)}</div>` : ''}
@@ -322,13 +325,15 @@
         ${h.sectie('Ouders uitnodigen')}${CC.uitnodigBlok(t.id)}`,
     };
   };
-  CC.on('zetStaf', (el) => {
-    const S = CC.S(); const t = M.team(S, el.dataset.team); const veld = el.dataset.veld; const rol = veld === 'trainerId' ? 'trainer' : 'teamleider';
-    const oud = t[veld] && M.persoon(S, t[veld]); if (oud) oud.rollen = oud.rollen.filter((r) => !(r.rol === rol && r.teamId === t.id));
-    t[veld] = el.value || null;
-    if (el.value) { const p = M.persoon(S, el.value); if (!p.rollen.some((r) => r.rol === rol && r.teamId === t.id)) p.rollen.push({ rol, teamId: t.id }); }
-    CC.save(); CC.render(); CC.toast(el.value ? `${M.persoon(S, el.value).naam} is ${rol} van ${t.naam}` : `${t.naam} heeft geen ${rol} meer`);
-  });
+  CC.on('stafErbij', (el) => { if (!el.value) return; const S = CC.S(); const t = M.team(S, el.dataset.team); const rol = el.dataset.rol; const veld = rol === 'trainer' ? 'trainerId' : 'teamleiderId'; const p = M.persoon(S, el.value);
+    if (!p.rollen.some((r) => r.rol === rol && r.teamId === t.id)) p.rollen.push({ rol, teamId: t.id }); if (!t[veld]) t[veld] = p.id;
+    CC.save(); CC.render(); CC.toast(`${p.naam} is nu ook ${rol} van ${t.naam}`); });
+  CC.on('stafWeg', (el) => { const S = CC.S(); const t = M.team(S, el.dataset.team); const p = M.persoon(S, el.dataset.id);
+    CC.sheet(`${el.dataset.rol === 'trainer' ? 'Trainer' : 'Teamleider'} weghalen?`, `<p><b>${esc(p ? p.naam : 'Deze persoon')}</b> is dan geen ${el.dataset.rol} meer van ${esc(t.naam)}.</p><div class="knoppen kolom"><button class="knop rood" data-act="stafWegOk" data-team="${t.id}" data-rol="${el.dataset.rol}" data-id="${el.dataset.id}">Ja, weghalen</button><button class="knop licht" data-act="sluit">Annuleren</button></div>`); });
+  CC.on('stafWegOk', (el) => { const S = CC.S(); const t = M.team(S, el.dataset.team); const rol = el.dataset.rol; const veld = rol === 'trainer' ? 'trainerId' : 'teamleiderId'; const p = M.persoon(S, el.dataset.id);
+    if (p) p.rollen = p.rollen.filter((r) => !(r.rol === rol && r.teamId === t.id));
+    if (t[veld] === el.dataset.id) t[veld] = M.stafVan(S, t.id, [rol]).find((x) => x !== el.dataset.id) || null;
+    CC.save(); CC.closeSheet(); CC.render(); CC.toast(`${p ? p.naam.split(' ')[0] : 'Deze persoon'} is geen ${rol} meer van ${t.naam}`); });
   CC.on('zetType', (el) => { const S = CC.S(); M.team(S, el.dataset.team).type = el.dataset.val; CC.save(); CC.render(); });
   CC.on('afwijkingOk', (f) => { const S = CC.S(); const t = M.team(S, f.dataset.team); if (f.dt.value === '') delete t.afwijking.deadlineTraining; else t.afwijking.deadlineTraining = Number(f.dt.value); CC.save(); CC.render(); CC.toast('Opgeslagen'); });
 

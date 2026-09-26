@@ -36,7 +36,7 @@
     const t = CC.trainerTeller(S, p);
     return blok(S, p, t.gegeven, (m) => `${m} trainingen gegeven dit seizoen!`, [
       t.gegeven && `Je gaf dit seizoen al ${t.gegeven} ${t.gegeven === 1 ? 'training' : 'trainingen'}. Fantastisch!`,
-      t.pct != null && t.pct >= 80 && `Je team was deze fase ${t.pct}% aanwezig. Ze komen graag!`,
+      t.pct != null && t.pct >= 80 && `Je team was in ${M.blok(S, D.vandaag()).naam.toLowerCase()} ${t.pct}% aanwezig. Ze komen graag!`,
       t.opgenomen >= 3 && `Je nam al ${t.opgenomen}× de aanwezigheid op. Daar heeft de hele club wat aan.`,
       t.spelers && t.beo === t.spelers && `Alle ${t.spelers} spelers beoordeeld. Top!`,
     ]);

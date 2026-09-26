@@ -113,6 +113,8 @@
     perMaand: (items, klas = 'lijst compact') => { const g = []; items.forEach((x) => { const d = new Date(x.tijd); const k = `${d.getFullYear()}-${d.getMonth()}`; let m = g.find((y) => y.k === k);
       if (!m) { m = { k, naam: d.toLocaleDateString('nl-NL', { month: 'long', year: 'numeric' }), r: [] }; g.push(m); } m.r.push(x.html); });
       return g.map((m) => `<details class="uitklap blok maandblok"><summary>${esc(m.naam.charAt(0).toUpperCase() + m.naam.slice(1))} <span class="zacht">(${m.r.length})</span></summary><div class="${klas}">${m.r.join('')}</div></details>`).join(''); },
+    // Besluit 86: de fase met datums in plaats van "deze fase", bijv. "Fase 1 · 19 aug – 30 okt"
+    faseLabel: (S) => { const b = CC.m.blok(S, CC.date.vandaag()); const k = (x) => { const d = CC.date.parse(x); return `${d.getDate()} ${CC.date.MAAND[d.getMonth()]}`; }; return `${b.naam} · ${k(b.van)} – ${k(b.tot)}`; },
     sectie: (titel, rechts = '') => `<div class="sectie-kop"><h3>${titel}</h3>${rechts}</div>`,
     actTitel(S, a) {
       if (a.soort === 'training') return 'Training';
@@ -919,7 +921,14 @@
       const v = M.komend(S, t.id, 6).find((x) => !x.afgelast);
       return { titel: M.naam(S, pl), sub: kopSub, html: `${v ? `<p class="klein">${D.relatief(v.datum)} · ${h.actTitel(S, v)}: ${h.chip(M.status(S, pl, v))}</p>` : ''}${langBlok(true)}${oudersBlok}` };
     }
-    const n = Number(h.segVal('gesch-' + pl.id, 5)); const gesch = st.lijst.slice().reverse();
+    // Besluit 86: alleen de uitzonderingen (afgemeld, te laat, niet afgemeld, langdurig). "Aanwezig" is de norm en vult de lijst niet.
+    // Kaarten staan als label bij de activiteit waar ze bij horen; de redenen in één zin erboven.
+    const kaartVan = {}; k.ev.forEach((e) => { (kaartVan[e.act.id] || (kaartVan[e.act.id] = [])).push(e); });
+    const kaartChip = (e) => { const tt = CC.kaartTitel(e).replace(/<[^>]*>/g, ''); return `<span class="chip ${/rode/i.test(tt) ? 'rood' : /gele/i.test(tt) ? 'geel' : 'grijs'} mini">${esc(tt)}${e.geaccepteerd ? ' · geaccepteerd' : ''}</span>`; };
+    const uitz = st.lijst.slice().reverse().filter(({ st: s }) => s.code !== 'aanwezig');
+    const redenTekst = Object.entries(st.redenen).sort((a, b2) => b2[1] - a[1]).map(([r, c]) => `${c}× ${esc(r.toLowerCase())}`).join(', ');
+    const uitzBlok = `${h.sectie('Uitzonderingen')}<p class="klein zacht">${st.totaal ? `${st.aanwezig} van de ${st.totaal} keer er${redenTekst ? ` · ${redenTekst}` : ''}${st.telaat ? ` · ${st.telaat}× te laat` : ''}` : 'Nog geen aanwezigheid bijgehouden.'}</p>
+      ${uitz.length ? h.eerst(uitz.map(({ act, st: s }) => h.rij({ ic: h.datumBlok(act), titel: h.actTitel(S, act), sub: [s.afm && s.afm.opm && CC.zicht('toelichting') ? esc(s.afm.opm) : '', (s.laat ? '<span class="chip geel mini">te laat afgemeld</span>' : '') + (kaartVan[act.id] || []).map(kaartChip).join(' ')].filter(Boolean).join('<br>'), rechts: h.chip(s) })), 5) : st.totaal ? `<p class="klein">${icon('circle-check')} Altijd aanwezig. Top!</p>` : ''}`;
     const beoBlok = staf && CC.zicht('beoordeling') && (b || CC.mag('beoordelen'))
       ? `${h.sectie(b ? `Ontwikkeling · jouw kijk (${esc(b.m.naam.toLowerCase())}, alleen staf)` : 'Ontwikkeling')}${b ? `<div class="scores">${Object.entries(b.x.scores).map(([v, s]) => `<span>${esc(v)} ${CC.scoreTekst(t, s)}</span>`).join('')}</div>` : '<p class="zacht klein">Nog geen eigen kijk ingevuld (hoeft pas voor het voorjaar).</p>'}${CC.mag('beoordelen') ? `<div class="knoppen"><button class="knop licht klein" data-act="open" data-view="beoordelen">${icon('eye-off')}Jouw kijk</button>${CC.views.gesprekVerslag && CC.actiefMoment ? `<button class="knop licht klein" data-act="open" data-view="gesprekVerslag" data-id="${pl.id}" data-m="${CC.actiefMoment(S).id}">${icon('users')}Gesprekspagina</button>` : ''}${CC.gesprekkenGehad && CC.gesprekkenGehad(S, pl.id).length ? `<button class="knop licht klein" data-act="open" data-view="beoordelingKind" data-id="${pl.id}">${icon('flag')}Alle gesprekken (${CC.gesprekkenGehad(S, pl.id).length})</button>` : ''}</div>` : ''}`
       // Ouder (Besluit 67): nooit de kijk van de trainer, wel wat in het gesprek samen is afgesproken
@@ -928,16 +937,13 @@
     return {
       titel: M.naam(S, pl), sub: kopSub,
       html: `${oudersBlok}${posBlok}
-      ${h.seg('spPer', [['blok', 'Deze fase'], ['seizoen', 'Heel seizoen']], 'blok')}
+      ${h.seg('spPer', [['blok', h.faseLabel(S)], ['seizoen', 'Heel seizoen']], 'blok')}
       <div class="cijfers"><div class="cijfer ${z}"><b>${st.pct == null ? '–' : st.pct + '%'}</b><small>aanwezig</small></div><div class="cijfer"><b>${st.telaat}×</b><small>te laat</small></div><div class="cijfer"><b>${h.kaartjes(k) || '–'}</b><small>kaarten seizoen</small></div></div>
       <p class="klein zacht">${h.split(st)}</p>
       ${langBlok(false)}
       ${beoBlok}
       ${gesprBlok}
-      ${h.sectie('Geschiedenis')}<div class="lijst compact">${gesch.slice(0, n).map(({ act, st: s }) => h.rij({ ic: h.datumBlok(act), titel: h.actTitel(S, act), sub: s.afm && s.afm.opm && CC.zicht('toelichting') ? esc(s.afm.opm) : '', rechts: h.chip(s) + (s.laat ? '<span class="chip geel mini">te laat afgemeld</span>' : '') })).join('') || h.leeg('Nog geen activiteiten')}</div>
-      ${gesch.length > n ? `<button class="linkknop vol" data-act="seg" data-key="gesch-${pl.id}" data-val="${n + 10}">Toon meer (${gesch.length - n})</button>` : ''}
-      ${k.ev.length ? `${h.sectie('Afmelden: herinneringen en kaarten dit seizoen')}${h.eerst(k.ev.slice().reverse().map((e) => h.rij({ ic: CC.kaartIc(e), titel: CC.kaartTitel(e), sub: `${D.kort(e.act.datum)} · ${e.wat.toLowerCase()}${e.geaccepteerd ? ' · <b>geaccepteerd</b>' : ''}` })))}` : ''}
-      ${Object.keys(st.redenen).length ? `${h.sectie('Redenen van afwezigheid')}<div class="balkjes">${Object.entries(st.redenen).sort((a, b2) => b2[1] - a[1]).map(([r, c]) => `<div class="balkje"><span>${esc(r)}</span><i style="--w:${(100 * c) / st.afwezig}%"></i><b>${c}</b></div>`).join('')}</div>` : ''}`,
+      ${uitzBlok}`,
     };
   };
   CC.on('zetPositie', (el) => { const pl = M.speler(S, el.dataset.id); if (el.dataset.v) pl.positie = el.dataset.v; else delete pl.positie; CC.save(); CC.render(); CC.toast(el.dataset.v ? `${pl.voornaam} staat nu als keeper` : `${pl.voornaam} staat nu als veldspeler`); });

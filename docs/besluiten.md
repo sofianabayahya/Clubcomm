@@ -508,6 +508,13 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 86 — Trainersportaal: elk scherm één taak; alle teamleiders zichtbaar
+- **Spelers = wie is dit kind:** op naam, zonder cijfers. Per kind: keeper, of het de volgende keer niet komt, en de stand van het ontwikkelgesprek.
+- **Aanwezigheid → Overzicht = de cijfers (de enige plek):** teamcijfer met de norm van het teamtype (selectie 90%, breedte 80%, zoals vastgelegd), dan **"Vraagt aandacht"** (onder de norm, kaarten of langdurig afwezig); de rest van het team ingeklapt. Ook zo op de teampagina van de HJO.
+- **Spelerpagina:** "Geschiedenis" wordt **"Uitzonderingen"**: alleen afgemeld, te laat, niet afgemeld en langdurig ("aanwezig" is de norm). Erboven één zin: *"13 van de 17 keer er · 2× ziek, 1× familie"*. Kaarten staan als label bij de activiteit; de aparte kaartenlijst en de grafiek met redenen zijn weg.
+- **"Deze fase" wordt "Fase 1 · 19 aug – 30 okt"** (uit de clubinstellingen). Percentages beginnen per fase opnieuw; kaarten tellen per seizoen.
+- **Staf op de teampagina (HJO):** alle trainers en alle teamleiders van een team staan in een lijst, met "Weghalen" en "+ Teamleider erbij". Voorheen zag je maar één teamleider (bij DCG: Inge ontbrak, terwijl ze wel teamleider is).
+
 ## Besluit 85 — Wedstrijddag: alles wordt vastgelegd, niemand valt tussen wal en schip
 Uit de generale repetitie van 26-09 (zie `pilotlog.md`):
 - **Eén eindknop.** "Einde wedstrijd: uitslag opslaan" legt meteen ook vast: de **speeltijd** uit het wisselschema (wie toch niet kwam, telt niet mee) en de **aanwezigheid** (wie niet afmeldde = aanwezig; de trainer kan het aanpassen bij Aanwezigheid). De aparte knop "Wedstrijd klaar: bevestigen" is weg.
