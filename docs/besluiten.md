@@ -508,6 +508,15 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 70 — Gesprekken plannen rond de training; de trainer is leidend
+*Herziet Besluit 65 (plannen na de training).*
+- **De app plant nooit zelf.** In de periode staat op Home "Plan de startgesprekken" (een signaal); de trainer kiest zelf welke trainingen en wanneer. Hij kan eerst één of twee weken klaarzetten en later meer tijden bijzetten (bijvoorbeeld als een week druk is).
+- **Per training twee keuzes:** gesprekken **vóór** de training (klaar 45 minuten voor de start, want dan zet de trainer de training uit) en/of **na** de training (15 minuten na afloop, na het opruimen). Standaard **2 vóór en 2 na, 15 minuten per gesprek**. Bij DCG (training 17:15–18:30): 16:00 en 16:15, en 18:45 en 19:00. Aantallen, minuten, klaarzetten en opruimen zijn aan te passen (onthouden op de telefoon van de trainer).
+- **Alle gekozen tijden worden klaargezet**, niet alleen zoveel als nodig: ouders hebben keuze (bij DCG: 6 trainingen × 4 = 24 tijden voor 16 kinderen). Tijden die er al staan, komen er niet dubbel bij.
+- **Kiesdatum:** standaard 5 dagen vanaf vandaag (niet later dan 3 dagen voor de laatste gekozen training, niet eerder dan over 2 dagen). Tot dan kiezen ouders elke vrije tijd; daarna "Verdeel de rest".
+- **"Vrije tijden weghalen"** na de kiesdatum (of als iedereen een tijd heeft), met bevestiging.
+- Het bericht "Kies een tijd" gaat alleen naar ouders van kinderen die nog geen tijd hebben (niet opnieuw naar wie al koos).
+
 ## Besluit 69 — Ontwikkelgesprekken vanaf O12
 - Ontwikkelgesprekken (met de opdracht voor het kind) houden we **vanaf O12**. Onderbouw: baas worden over de bal; middenbouw: hoe te spelen; bovenbouw: hoe te winnen. O12 zit in de overgang naar "hoe te spelen": kinderen worden zich bewuster van wat ze kunnen.
 - Geen instelling per club (houden we simpel). Bij een jonger team meldt de app dit bij het plannen; de trainer beslist zelf of hij toch gesprekken houdt.
