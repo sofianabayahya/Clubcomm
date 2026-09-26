@@ -86,6 +86,9 @@
       else if (auto.length > 1) { verstuur(S, auto, 'Goed om te weten', auto.map((z) => `${vul(z.sj.onderwerp, z.vars)}\n${vul(z.sj.tekst, z.vars)}`).join('\n\n'), 'systeem'); veranderd = true; }
     }
     if (CC.activiteitHerinneringen && CC.activiteitHerinneringen(S)) veranderd = true;
+    // Besluit 76: ook de uitslag en de ontwikkelgesprekken regelt de app zelf, zonder extra tik
+    if (CC.uitslagAuto && CC.uitslagAuto(S)) veranderd = true;
+    if (CC.ogAuto && CC.ogAuto(S)) veranderd = true;
     if (veranderd) CC.save();
   };
   const origRender = CC.render;

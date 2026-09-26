@@ -165,7 +165,7 @@
         ${voorjaar ? '' : kijkBlok}
         ${h.sectie('Notitie trainer')}<textarea rows="2" data-input="ogNotitie" ${at} placeholder="Alleen voor de staf">${esc(noti)}</textarea>
         <button class="knop ${vs.gehad ? 'licht' : ''} vol" data-act="ogGehad" ${at}>${icon('circle-check')}${vs.gehad ? 'Gesprek gehad ✓ (tik om terug te zetten)' : 'Gesprek gehad'}</button>
-        <p class="zacht klein">Alles wordt meteen bewaard. Na "Gesprek gehad" ziet de ouder het wapen, het werkpunt, de doelen, "wat neem je mee" en de afspraken. Jouw kijk en de notitie ziet alleen de staf.</p>` };
+        <p class="zacht klein">Alles wordt meteen bewaard. Na "Gesprek gehad" (of vanzelf na afloop, als er een doel of wapen is ingevuld) ziet de ouder het wapen, het werkpunt, de doelen, "wat neem je mee" en de afspraken. Jouw kijk en de notitie ziet alleen de staf.</p>` };
   };
   CC.on('ogKijk', (el) => { const S = CC.S(); maakKijk(S, el.dataset.id, el.dataset.m).scores[el.dataset.v] = Number(el.dataset.s); zetKnop(el); CC.save(); });
   CC.on('ogKijkWerk', (el) => { const S = CC.S(); const k = maakKijk(S, el.dataset.id, el.dataset.m); k.werkpunt = k.werkpunt === el.dataset.v ? '' : el.dataset.v; CC.save(); CC.render(); });
@@ -178,8 +178,15 @@
   CC.on('ogNotitie', (el) => { const S = CC.S(); const o = S.ontwNotitie || (S.ontwNotitie = {}); o[sl(el.dataset.id, el.dataset.m)] = { tekst: el.value, door: CC.me().id, tijd: new Date().toISOString() }; CC.save(); });
   CC.on('ogDoelErbij', (el) => { const S = CC.S(); const vs = maakVerslag(S, el.dataset.id, el.dataset.m); while (vs.doelen.length < 3) vs.doelen.push({ wat: '', hulp: '' }); CC.save(); CC.render(); });
   CC.on('ogDoelStatus', (el) => { const S = CC.S(); const vs = maakVerslag(S, el.dataset.id, el.dataset.m); const d = vs.doelen[Number(el.dataset.i)]; if (d) d.status = el.value; CC.save(); CC.toast('Bewaard'); });
-  CC.on('ogGehad', (el) => { const S = CC.S(); const vs = maakVerslag(S, el.dataset.id, el.dataset.m); vs.gehad = !vs.gehad; vs.gehadOp = vs.gehad ? D.vandaag() : null; delete (CC.ui.ogKlok || {})[sl(el.dataset.id, el.dataset.m)]; CC.save(); CC.render();
+  CC.on('ogGehad', (el) => { const S = CC.S(); const vs = maakVerslag(S, el.dataset.id, el.dataset.m); vs.gehad = !vs.gehad; vs.gehadOp = vs.gehad ? D.vandaag() : null; if (!vs.gehad) vs.nietAuto = true; delete (CC.ui.ogKlok || {})[sl(el.dataset.id, el.dataset.m)]; CC.save(); CC.render();
     CC.toast(vs.gehad ? 'Genoteerd: de ouder ziet nu de afspraken' : 'Teruggezet'); });
+
+  // Besluit 76: na afloop van de gesprekstijd telt een gesprek met een ingevuld doel of wapen vanzelf als gehad
+  // (tenzij de trainer het zelf terugzette). "Gesprek gehad" aantikken kan nog steeds.
+  CC.ogAutoGehad = (S, sl) => { let n = 0; const nu = new Date();
+    sl.filter((g) => g.spelerId && new Date(`${g.datum}T${g.eind}`) < nu).forEach((g) => { const vs = verslag(S, g.spelerId, g.moment);
+      if (vs && !vs.gehad && !vs.nietAuto && ((vs.doelen || []).some((d) => d.wat) || (vs.wapen || []).length)) { vs.gehad = true; vs.gehadOp = g.datum; vs.auto = true; n++; } });
+    return n > 0; };
 
   // ---------- 3. Voor ouder en kind: wat er samen is afgesproken (nooit de kijk van de trainer) ----------
   CC.ontwZichtbaar = (S, pl, mid) => !!(verslag(S, pl, mid) || {}).gehad;

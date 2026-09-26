@@ -508,6 +508,15 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 76 — Minder handelingen: wat de app zelf doet, en wat bewust een mens blijft doen
+*Uit de analyse van handelingen van vrijwilligers (26-09).*
+- **Uitslag:** aan het eind van de wedstrijddag slaat de app de uitslag zelf op en stuurt hem naar de ouders (volgens de clubinstelling), als er doelpunten zijn bijgehouden. Zonder doelpunten blijft "Uitslag nog opslaan" op Home (0-0 of niet bijgehouden). Wie scoorde, volgt de clubinstelling.
+- **Ontwikkelgesprekken:** na de kiesdatum deelt de app zelf de rest in (ouders krijgen bericht en kunnen ruilen); 2 dagen vóór elk gesprek een herinnering aan wie de opdracht nog niet invulde; na afloop telt een gesprek met een ingevuld doel of wapen vanzelf als gehad (de trainer kan het terugzetten). De knoppen blijven als reserve.
+- **Wisselschema:** de trainer maakt het (bij voorkeur de avond ervoor; herinnering op Home). **De timekeeper (ouder) ziet het pas op de wedstrijddag.**
+- **Speelduur bij een nieuwe (oefen)wedstrijd** volgens de KNVB-leeftijd + 15 minuten (was 1 uur).
+- **Bewust niet automatisch:** taken toewijzen (niet elke ouder kan elke taak), vervoer indelen (we weten niet wie met de auto of fiets komt), teams doorschuiven naar een nieuw seizoen (teams worden opnieuw ingedeeld). Tenue: niet nodig in de onderbouw. Sportlink-koppeling bij aanmelden: later.
+- Alles gebeurt nu zodra iemand van de staf de app opent; vanaf de server staat op Openstaand.
+
 ## Besluit 75 — Vaste clubberichten volledig automatisch; zo min mogelijk handelingen voor vrijwilligers
 - **Vaste berichten die voor de hele club gelijk zijn** (vakantie, vrije dag, start en einde seizoen, wedstrijden beginnen, ontwikkelgesprekken) gaan **automatisch**: bij niemand een taak, ook niet bij de HJO of de trainers. De beheerder stelt de teksten één keer per seizoen in; "klaarzetten" blijft een keuze, niet de standaard. Bij DCG nu alle zeven automatisch.
 - **Berichten over het eigen team** (planning gewijzigd, activiteit, ontwikkelgesprekken, opgave) gaan mee met de handeling van de trainer of teamleider; geen losse taak.

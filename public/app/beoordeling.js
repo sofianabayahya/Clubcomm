@@ -116,7 +116,7 @@
           <div class="twee"><div><label for="og-kl">Klaarzetten (min)</label><input id="og-kl" type="number" min="0" max="90" value="${inst.klaar}" data-change="ogInst" data-k="klaar"></div><div><label for="og-op">Opruimen (min)</label><input id="og-op" type="number" min="0" max="60" value="${inst.opruim}" data-change="ogInst" data-k="opruim"></div></div>
           <label for="og-u">Minuten per gesprek</label><input id="og-u" type="number" min="5" max="30" value="${inst.u}" data-change="ogInst" data-k="u"></details>
         <label for="og-p">Waar</label><input id="og-p" name="p" value="${esc(h.segVal('ogPlek', 'Kantine'))}">
-        <label for="og-k">Ouders kiezen tot en met</label><input id="og-k" name="k" type="date" required value="${kiesTotStandaard}"><p class="zacht klein">Tot die datum kiezen ouders zelf een vrije tijd. Wie dan nog niet koos, deel je in met "Verdeel de rest".</p>
+        <label for="og-k">Ouders kiezen tot en met</label><input id="og-k" name="k" type="date" required value="${kiesTotStandaard}"><p class="zacht klein">Tot die datum kiezen ouders zelf een vrije tijd. Wie dan nog niet koos, krijgt automatisch een vrije tijd (de ouders krijgen bericht en kunnen ruilen).</p>
         <p class="klein ${gekozen.length ? '' : 'zacht'}">${!gekozen.length ? `Nog ${Math.max(nodig, 0)} ${nodig === 1 ? 'kind' : 'kinderen'} zonder tijd. Tik trainingen aan.` : `<b>${capaciteit} tijden</b> voor ${Math.max(nodig, 0)} ${nodig === 1 ? 'kind' : 'kinderen'} zonder tijd.${capaciteit < nodig ? ` <span class="oranje-tekst">Nog ${nodig - capaciteit} te weinig; zet later meer tijden bij.</span>` : capaciteit > nodig ? ' Genoeg keuze voor de ouders.' : ''}`}</p>
         <button class="knop vol" ${gekozen.length ? '' : 'disabled'}>Klaarzetten en ouders vragen</button></form>` : '<p class="zacht klein">Er staan geen trainingen in deze periode. Kies hieronder een andere tijd.</p>';
     const anders = `<details class="uitklap"><summary>${icon('calendar')}Andere tijd (bijv. een aparte avond)</summary><form data-submit="slotsMaken" data-m="${mid}" class="codeform">
@@ -174,8 +174,9 @@
   CC.on('ogVerdeel', (el) => { const S = CC.S(); const tid = CC.teamId(); const mid = el.dataset.m; const z = zonderTijd(S, tid, mid); const v = slots(S, tid, mid).filter((g) => !g.spelerId && g.datum >= D.vandaag());
     CC.sheet('De rest verdelen', `<p><b>${Math.min(z.length, v.length)}</b> ${z.length === 1 ? 'kind krijgt' : 'kinderen krijgen'} een vrije tijd. De ouders krijgen een bericht en kunnen tot 24 uur vooraf ruilen.</p>${z.length > v.length ? `<p class="klein oranje-tekst">Er zijn ${z.length - v.length} tijden te weinig. Zet daarna nog tijden klaar.</p>` : ''}
       <div class="knoppen kolom"><button class="knop" data-act="ogVerdeelOk" data-m="${mid}">Verdelen</button><button class="knop licht" data-act="sluit">Annuleren</button></div>`); });
-  CC.on('ogVerdeelOk', (el) => { const S = CC.S(); const tid = CC.teamId(); const mid = el.dataset.m; const z = zonderTijd(S, tid, mid); const v = slots(S, tid, mid).filter((g) => !g.spelerId && g.datum >= D.vandaag()); let n = 0;
-    z.forEach((pl, i) => { const g = v[i]; if (!g) return; g.spelerId = pl.id; reservering(S, g, pl, CC.me().id); n++; });
+  const verdeel = (S, tid, mid, door) => { const z = zonderTijd(S, tid, mid); const v = slots(S, tid, mid).filter((g) => !g.spelerId && g.datum >= D.vandaag()); let n = 0;
+    z.forEach((pl, i) => { const g = v[i]; if (!g) return; g.spelerId = pl.id; reservering(S, g, pl, door); n++; }); return n; };
+  CC.on('ogVerdeelOk', (el) => { const S = CC.S(); const n = verdeel(S, CC.teamId(), el.dataset.m, CC.me().id);
     CC.save(); CC.closeSheet(); CC.render(); CC.toast(`${n} ${n === 1 ? 'kind' : 'kinderen'} ingedeeld; de ouders krijgen bericht`); });
   // Herinnering 2 dagen voor de uiterste datum, aan ouders die nog niet kozen (gaat uit als de trainer de app opent)
   CC.ogHerinnering = (S, tid, mid) => {
@@ -271,6 +272,19 @@
     const achter = gespreksTeams(S).map((t) => ({ t, x: gehadTeam(S, t.id, m.id) })).filter(({ x }) => x.gehad < x.totaal); if (!achter.length) return null;
     return h.rij({ ic: 'users', titel: `${gNaam(m, true)}: ${achter.length} ${achter.length === 1 ? 'team' : 'teams'} niet helemaal gevoerd`, sub: achter.map(({ t, x }) => `${esc(t.naam)} ${x.gehad}/${x.totaal}`).join(' · '), act: 'tab', attrs: 'data-tab="inzicht"', kleur: 'oranje' });
   };
+  // Besluit 76: zonder extra tik voor de trainer. Na de kiesdatum deelt de app de rest in; 2 dagen voor elk gesprek een
+  // herinnering aan wie de opdracht nog niet invulde; na afloop telt een gesprek met ingevulde doelen als gehad (gesprek.js).
+  CC.ogAuto = (S) => { const me = CC.me(); if (!me || !S.club.modules.beoordeling) return false; let veranderd = false; const v = D.vandaag();
+    const teams = [...new Set((S.ontwGesprek || []).map((g) => g.teamId))].filter((tid) => M.stafVan(S, tid).includes(me.id));
+    teams.forEach((tid) => CC.momenten(S).forEach((m) => {
+      const sl = slots(S, tid, m.id); if (!sl.length) return; const dl = kiesTot(S, tid, m.id);
+      if (dl && dl < v && !sl.some((g) => g.autoVerdeeld) && verdeel(S, tid, m.id, me.id)) { sl.forEach((g) => { g.autoVerdeeld = true; }); veranderd = true; }
+      sl.filter((g) => g.spelerId && !g.voorbHerinnerd && g.datum >= v && D.addDays(g.datum, -2) <= v && !CC.voorbKlaar(S, g.spelerId, m.id)).forEach((g) => {
+        const pl = M.speler(S, g.spelerId); if (!pl) return; g.voorbHerinnerd = new Date().toISOString(); veranderd = true;
+        S.msgs.push({ id: 'b' + Date.now() + pl.id, van: me.id, soort: 'persoonlijk', bereik: `${pl.voornaam} (${CC.tn(pl.teamId)})`, onderwerp: `Voorbereiding gesprek ${pl.voornaam}`, tekst: `Het gesprek over ${pl.voornaam} is ${D.lang(g.datum)} om ${g.tijd}. Willen jullie de korte opdracht in ClubComm nog samen invullen? Het duurt ongeveer 10 minuten (Home → Bereid het gesprek voor).`, tijd: new Date().toISOString(), ontvangers: pl.ouders, gelezen: [me.id], antw: [], urgent: false, gepland: null, herinnering: true }); });
+      if (CC.ogAutoGehad && CC.ogAutoGehad(S, sl)) veranderd = true;
+    }));
+    return veranderd; };
   // Afgelaste of verplaatste training (Besluit 71): de gesprekken eromheen gaan niet door. Ouders met een gesprek krijgen
   // bericht en kiezen een nieuwe tijd; de tijden verdwijnen. Alleen door de staf van het team (die mag de tijden wijzigen).
   CC.ogAfgelast = (S) => {

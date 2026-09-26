@@ -165,17 +165,25 @@
       <label class="vink"><input type="checkbox" name="stuur" ${u.naarOuders ? 'checked' : ''}><span><b>Stuur de uitslag naar de ouders</b><br><small class="zacht">${u.naarOuders ? 'Standaard aan voor dit team.' : 'Standaard uit: de KNVB publiceert bij O7–O10 geen uitslagen.'}</small></span></label>
       <label class="vink"><input type="checkbox" name="makers" ${u.makers ? 'checked' : ''}><span>Noem wie er scoorden</span></label>
       <button class="knop vol">${icon('circle-check')}Opslaan</button></form>`); });
-  CC.on('uitslagOk', (f) => { const S = CC.S(); const a = M.act(S, f.dataset.a); const me = CC.me(); const t = M.team(S, a.teamId); const st = M.stand(a);
+  const uitslagOpslaan = (S, a, stuur, metMakers, van) => { const t = M.team(S, a.teamId); const st = M.stand(a);
     a.uitslag = `${st.thuis}-${st.uit}`; a.uitslagKlaar = true;
-    if (f.stuur.checked) {
+    if (stuur) {
       const ons = `${S.club.naam} ${t.naam}`; const thuisNaam = a.thuis ? ons : (a.tegen || 'Tegenstander'); const uitNaam = a.thuis ? (a.tegen || 'Tegenstander') : ons;
       const tel = {}; (a.goals || []).filter((x) => x.wij && x.spelerId).forEach((x) => { tel[x.spelerId] = (tel[x.spelerId] || 0) + 1; });
-      const makers = f.makers.checked && Object.keys(tel).length ? `\n\nDoelpunten: ${Object.entries(tel).map(([id, n]) => `${(M.speler(S, id) || {}).voornaam}${n > 1 ? ` ${n}×` : ''}`).join(', ')}.` : '';
-      const ontv = [...new Set([...M.oudersVan(S, a.teamId), ...M.stafVan(S, a.teamId)])].filter((x) => x !== me.id);
-      S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'nieuws', bereik: a.teamId, onderwerp: `Uitslag: ${thuisNaam} – ${uitNaam} ${st.thuis}-${st.uit}`, tekst: `${thuisNaam} – ${uitNaam}: ${st.thuis}-${st.uit}.${makers}`, tijd: new Date().toISOString(), ontvangers: ontv, gelezen: [], antw: [], urgent: false, gepland: null, mail: false });
+      const makers = metMakers && Object.keys(tel).length ? `\n\nDoelpunten: ${Object.entries(tel).map(([id, n]) => `${(M.speler(S, id) || {}).voornaam}${n > 1 ? ` ${n}×` : ''}`).join(', ')}.` : '';
+      const ontv = [...new Set([...M.oudersVan(S, a.teamId), ...M.stafVan(S, a.teamId)])].filter((x) => x !== van);
+      S.msgs.push({ id: 'b' + Date.now() + a.id, van, soort: 'nieuws', bereik: a.teamId, onderwerp: `Uitslag: ${thuisNaam} – ${uitNaam} ${st.thuis}-${st.uit}`, tekst: `${thuisNaam} – ${uitNaam}: ${st.thuis}-${st.uit}.${makers}`, tijd: new Date().toISOString(), ontvangers: ontv, gelezen: [], antw: [], urgent: false, gepland: null, mail: false });
       a.uitslagVerstuurd = new Date().toISOString();
     }
+  };
+  CC.on('uitslagOk', (f) => { const S = CC.S(); const a = M.act(S, f.dataset.a); uitslagOpslaan(S, a, f.stuur.checked, f.makers.checked, CC.me().id);
     CC.save(); CC.closeSheet(); CC.render(); CC.toast(f.stuur.checked ? 'Uitslag opgeslagen en naar de ouders gestuurd' : 'Uitslag opgeslagen'); });
+  // Besluit 76: aan het eind van de wedstrijddag slaat de app de uitslag zelf op (en stuurt hem, volgens de clubinstelling),
+  // als er doelpunten zijn bijgehouden. Zonder doelpunten blijft "Uitslag nog opslaan" op Home staan (0-0 of niet bijgehouden?).
+  CC.uitslagAuto = (S) => { const me = CC.me(); if (!me) return false; let n = 0;
+    S.acts.filter((a) => M.isWed(a) && !a.afgelast && !a.uitslagKlaar && (a.goals || []).length && a.datum < D.vandaag() && M.stafVan(S, a.teamId).includes(me.id))
+      .forEach((a) => { const u = M.uitslagInst(S, a.teamId); uitslagOpslaan(S, a, u.naarOuders, u.makers, me.id); a.uitslagAuto = true; n++; });
+    return n > 0; };
   CC.on('uitslagHeropen', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.a); a.uitslagKlaar = false; CC.save(); CC.render(); });
   CC.on('kiesStWed', (el) => { CC.ui.seg.stWed = el.value; CC.render(); });
   CC.on('minderBlok', (el) => { const k = `minder_${el.dataset.a}`; const l = (CC.ui.seg[k] || '').split(',').filter(Boolean); const i = l.indexOf(el.dataset.s); if (i >= 0) l.splice(i, 1); else l.push(el.dataset.s); CC.ui.seg[k] = l.join(','); CC.render(); });

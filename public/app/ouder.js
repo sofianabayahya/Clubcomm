@@ -212,7 +212,7 @@
     const training = !M.isWed(a);
     return { titel: training ? 'Training geven' : tk && !coach ? 'Timekeeper' : 'Trainer-coach', html: `<div class="info">${icon('info')}<span>Je hebt tijdelijk toegang, alleen voor deze ${training ? 'training' : 'wedstrijd'}.</span></div>
       <div class="kaart-kop los">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${training ? `${a.tijd}–${a.eind} · ${esc(a.veld || '')}` : `Verzamelen ${a.verzamel} · aftrap ${a.tijd}`}</small></div></div>
-      ${coach ? `${h.sectie('Aanwezigheid')}${CC.opnemenHtml(S, a)}` : ''}${!training && tk && S.club.modules.speeltijd ? `${h.sectie('Wisselschema')}${CC.speeltijdHtml(S, a.teamId, { alleenSchema: true, act: a.id })}` : ''}` };
+      ${coach ? `${h.sectie('Aanwezigheid')}${CC.opnemenHtml(S, a)}` : ''}${!training && tk && S.club.modules.speeltijd ? `${h.sectie('Wisselschema')}${a.datum === D.vandaag() ? CC.speeltijdHtml(S, a.teamId, { alleenSchema: true, act: a.id }) : '<p class="zacht klein">Het wisselschema van de trainer zie je op de wedstrijddag hier.</p>'}` : ''}` };
   };
   CC.on('taakAf', (el) => { const S = CC.S(); const t = S.taken.find((x) => x.id === el.dataset.id); const a = M.act(S, t.actId); if (t.soort === CC.VERVANGER && a.vervangerId === t.personId) a.vervangerId = null; t.personId = null; CC.save(); CC.render(); CC.toast('Afgemeld voor deze taak; de teamleider krijgt bericht'); });
 })();
