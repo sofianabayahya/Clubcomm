@@ -80,9 +80,11 @@
   });
 
   // ---------- Navigatie ----------
-  CC.go = (tab) => { ui.tab = tab; ui.view = null; ui.stack = []; CC.render(); window.scrollTo(0, 0); };
+  // Naar een andere pagina vanuit een venster (sheet): eerst het venster sluiten, anders ligt het over de nieuwe pagina heen
+  const sluitVenster = () => { const sh = document.getElementById('sheet'); if (sh && !sh.hidden) CC.closeSheet(); };
+  CC.go = (tab) => { sluitVenster(); ui.tab = tab; ui.view = null; ui.stack = []; CC.render(); window.scrollTo(0, 0); };
   // Een gesprek opent onderaan, bij het nieuwste bericht en het reactievak (zoals WhatsApp)
-  CC.open = (view, params = {}) => { ui.stack.push(ui.view); ui.view = { naam: view, ...params }; CC.render(); window.scrollTo(0, view === 'bericht' && document.querySelector('.reageer') ? document.body.scrollHeight : 0); };
+  CC.open = (view, params = {}) => { sluitVenster(); ui.stack.push(ui.view); ui.view = { naam: view, ...params }; CC.render(); window.scrollTo(0, view === 'bericht' && document.querySelector('.reageer') ? document.body.scrollHeight : 0); };
   CC.terug = () => { ui.view = ui.stack.pop() || null; CC.render(); };
   CC.on('tab', (el) => CC.go(el.dataset.tab));
   CC.on('open', (el) => CC.open(el.dataset.view, { ...el.dataset }));
