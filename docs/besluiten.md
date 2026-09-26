@@ -508,6 +508,15 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 68 — Ontwikkelgesprek: het kind stuurt, de trainer vraagt door; minder werk voor vrijwilligers
+*Herziet Besluit 67 (kijk van de trainer en de vergelijkingstabel).*
+- **Waarom:** trainers zijn vrijwilligers. Een volledige kijk per kind (16 kinderen × 15 vaardigheden = 240 keuzes) houdt niemand vol, en een tabel "jij zegt / ik zeg" maakt van het gesprek weer een beoordeling. Eerst eigenaarschap geven en inzicht geven.
+- **Kind vult thuis in (vooraf)**, samen met een ouder: drie woorden per vaardigheid + wapen, zoals in Besluit 67. Niet samen in het gesprek invullen: dat kost 4–5 van de 12 minuten. Niet ingevuld? Dan stelt de trainer de vragen in het gesprek (de pagina geeft ze).
+- **Startgesprek: de trainer hoeft vooraf niets in te vullen.** "Jouw kijk" staat onderaan, ingeklapt, "mag, hoeft niet".
+- **Voorjaarsgesprek: de trainer geeft zijn kijk**, kort: per kind **een wapen (1–2) en een werkpunt**. De lijst per vaardigheid kan (ingeklapt, "uitgebreid"), maar hoeft niet. Home en het gespreksoverzicht tonen "Jouw kijk vóór de voorjaarsgesprekken: nog x kinderen". Alleen voor de staf (zoals Besluit 67).
+- **In het gesprek: sturen door te vragen, niet door te oordelen.** Geen vergelijkingstabel meer. De pagina toont wat het kind zegt (wapen, sterk, beter worden; "gaat goed" ingeklapt) met vragen om door te vragen: *"Wanneer zie je dat in de wedstrijd? Vertel eens een moment."* en *"Wanneer lukt het wel, en wanneer niet?"*. Ziet de trainer iets anders (zijn wapen is voor het kind geen sterk punt, of zijn werkpunt vindt het kind sterk), dan staat er een blok **"Vraag door (alleen voor jou)"** met een passende vraag.
+- Samen afgesproken (wapen, werkpunt, twee doelen, wat neem je mee, afspraken) en de zichtbaarheid voor de ouder blijven zoals in Besluit 67.
+
 ## Besluit 67 — Ontwikkelgesprek: het kind is eigenaar, woorden in plaats van cijfers, de kijk van de trainer blijft bij de staf
 *Herziet Besluit 66 (schaal, zichtbaarheid) en Besluit 23 (ouders zien de beoordeling). Onderzoek: KNVB (ontwikkelgesprekken, formulier O11–O13), Ajax-TIPS, Butler 1988 (cijfers versus opmerkingen), Horn & Weiss (zelfinschatting 10–12 jaar), sterkte-gericht coachen, zelfdeterminatietheorie.*
 - **Waarom:** vanaf O11 leert een kind bewust; zelf kiezen geeft eigenaarschap. Een cijfer voelt als een rapport, remt de motivatie en nodigt uit tot vergelijken met teamgenoten (extra gevoelig in een selectieteam). De KNVB gebruikt voor O11–O13 geen cijfers, maar eigen woorden.

@@ -1,10 +1,11 @@
-// ClubComm — Ontwikkelgesprek (Besluit 66, vernieuwd in Besluit 67)
+// ClubComm — Ontwikkelgesprek (Besluit 66, vernieuwd in Besluit 67 en 68)
 // Drie stukken, drie plekken, elk met eigen rechten:
 // 1. Opdracht voor het kind (ontwVoorb, scope speler): het kind vult thuis in, de ouder helpt lezen. Per vaardigheid
 //    sterk / gaat goed / wil ik beter in worden, een wapen (1–2) met "wanneer zie je dat?", trots, droom, leuk, lastig,
 //    en in het voorjaar: hoe ging het met je doelen? Ouder en staf zien dit.
-// 2. Kijk van de trainer (beoord, scope beoord): zelfde lijst, apart en vooraf ingevuld. Alleen voor de staf
-//    (migratie 016); ouder en kind zien dit nooit. De antwoorden van het kind blijven verborgen tot de trainer klaar is.
+// 2. Kijk van de trainer (beoord, scope beoord): kort, wapen en werkpunt (lijst per vaardigheid ingeklapt). Startgesprek:
+//    optioneel, het kind is aan zet. Voorjaar: vooraf invullen (Besluit 68). Alleen voor de staf (migratie 016).
+//    In het gesprek stuurt de trainer door te vragen: bij verschil geeft de app een vraag om door te vragen.
 // 3. Samen (ontwVerslag, scope spelerlees): wat in het gesprek is afgesproken: wapen, werkpunt, twee doelen,
 //    "wat neem je mee?" en afspraken. De staf schrijft; de ouder ziet het zodra de trainer "Gesprek gehad" aantikt.
 // Plus de notitie van de trainer (ontwNotitie, scope notitie): alleen de staf.
@@ -25,8 +26,8 @@
   const STATUS_KIND = [['bereikt', 'Gelukt'], ['deels', 'Een beetje'], ['niet', 'Nog niet']];
   const KORT_KIND = { 3: 'Sterk', 2: 'Gaat goed', 1: 'Beter worden' };
   const MAX_WAPEN = 2;
-  // Klaar = elke vaardigheid ingevuld én een wapen gekozen
-  const kijkKlaar = (S, pl, mid) => { const k = kijk(S, pl, mid); const l = CC.vaardigheden(S, M.speler(S, pl).teamId); return !!(k && l.every((x) => k.scores[x]) && wapensVan(k).length); };
+  // Kijk klaar (Besluit 68) = wapen én werkpunt gekozen; de lijst per vaardigheid is extra
+  const kijkKlaar = (S, pl, mid) => { const k = kijk(S, pl, mid); return !!(k && wapensVan(k).length && k.werkpunt); };
   const niv = (o, x) => CC.niveau(o && o.scores ? o.scores[x] : o && o.zelf ? o.zelf[x] : null);
   const wapensVan = (o) => (o && Array.isArray(o.wapens) ? o.wapens : []);
   const vaardigNaam = (x) => `${esc(x)}${CC.VAARDIG_UITLEG[x] ? `<small class="zacht">${esc(CC.VAARDIG_UITLEG[x])}</small>` : ''}`;
@@ -69,7 +70,7 @@
   const FASEN = [
     [0, 'Welkom', '"Dit is geen rapport. We kijken samen hoe het gaat en wat jij wilt leren." Praat vooral met het kind.'],
     [1, 'Kind aan het woord', 'Waar ben je trots op? Wat is leuk, wat wil je leren? Laat het kind praten (80%), jij vraagt door.'],
-    [4, 'Wapen en werkpunt', 'Begin met het wapen: "Wanneer zie je dat?" Dan één verschil: "Jij zegt …, ik zie … Vertel eens?"'],
+    [4, 'Wapen en werkpunt', 'Begin met het wapen: "Wanneer zie je dat in de wedstrijd?" Dan het werkpunt: "Wanneer lukt het wel, wanneer niet?" Stuur door te vragen, niet door te oordelen.'],
     [7, 'Twee doelen', 'Doel 1 maakt het wapen scherper, doel 2 gaat over het werkpunt. Het kind verwoordt: wat, hoe vaak, tot wanneer, wie helpt?'],
     [10, 'Ouder en afronden', '"Wilt u iets aanvullen?" Dan het kind: "Wat neem je mee?"'],
     [12, 'Wisselen', 'Tijd om af te ronden: tik op Gesprek gehad, vul je notitie aan. De volgende ouder komt eraan.'],
@@ -93,25 +94,37 @@
     const pl = M.speler(S, p.id); const mid = p.m; const m = CC.momenten(S).find((x) => x.id === mid); const at = `data-id="${pl.id}" data-m="${mid}"`;
     const v = voorb(S, pl.id, mid) || leeg.voorb(); const vs = verslag(S, pl.id, mid) || leeg.verslag(); const noti = ((S.ontwNotitie || {})[sl(pl.id, mid)] || {}).tekst || '';
     const vaardig = CC.vaardigheden(S, pl.teamId); const g = gesprekVan(S, pl.id, mid); const k = kijk(S, pl.id, mid) || { scores: {}, wapens: [] };
-    const klaar = kijkKlaar(S, pl.id, mid); const toon = klaar || (CC.ui.seg || {})[`ogToon-${pl.id}`];
+    const voorjaar = CC.momenten(S).slice(-1)[0].id === mid; const klaar = kijkKlaar(S, pl.id, mid);
     const veld = (key, label, waarde, ph, rows = 2) => `<label class="klein-kop">${label}</label><textarea rows="${rows}" data-input="ogVeld" ${at} data-k="${key}" placeholder="${ph}">${esc(waarde || '')}</textarea>`;
 
-    // Jouw kijk (vooraf): alleen voor de staf
-    const kijkBlok = `<details class="uitklap blok" ${klaar ? '' : 'open'}><summary>${icon('eye-off')}Jouw kijk vooraf ${klaar ? '✓' : `(${Object.keys(k.scores).filter((x) => vaardig.includes(x)).length} van ${vaardig.length})`}</summary>
-      <p class="zacht klein">Vul dit in vóór het gesprek, zonder naar de antwoorden van ${esc(pl.voornaam)} te kijken. Alleen de staf ziet dit, ouder en kind niet.</p>
-      ${CC.vaardigBlokken(vaardig).map(([naam, l]) => `<div class="kaartje zelf"><h4>${esc(naam)}</h4>${l.map((x) => `<div class="zelfrij"><span>${esc(x)}</span>${niveauKnoppen('ogKijk', `${at} data-v="${esc(x)}"`, niv(k, x), CC.NIVEAU_TRAINER)}</div>`).join('')}</div>`).join('')}
-      <p class="klein"><b>Wapen volgens jou ⭐ (1–${MAX_WAPEN}):</b></p><div class="chips">${vaardig.map((x) => `<button type="button" class="chipknop ${wapensVan(k).includes(x) ? 'aan' : ''}" data-act="ogKijkWapen" ${at} data-v="${esc(x)}">${wapensVan(k).includes(x) ? '⭐ ' : ''}${esc(x)}</button>`).join('')}</div></details>`;
+    // Jouw kijk (Besluit 68): kort, alleen wapen en werkpunt. Startgesprek: optioneel. Voorjaar: vooraf invullen.
+    // De lijst per vaardigheid is er ook, maar ingeklapt. Alleen voor de staf.
+    const kijkChips = (act, gekozen, ster) => `<div class="chips">${vaardig.map((x) => `<button type="button" class="chipknop ${gekozen.includes(x) ? 'aan' : ''}" data-act="${act}" ${at} data-v="${esc(x)}">${ster && gekozen.includes(x) ? '⭐ ' : ''}${esc(x)}</button>`).join('')}</div>`;
+    const kijkBlok = `<details class="uitklap blok" ${voorjaar && !klaar ? 'open' : ''}><summary>${icon('eye-off')}Jouw kijk${voorjaar ? (klaar ? ' ✓' : ' (vóór het gesprek)') : ' (mag, hoeft niet)'}</summary>
+      <p class="zacht klein">${voorjaar ? 'Kies vóór het voorjaarsgesprek per kind een wapen en een werkpunt.' : 'Bij het startgesprek hoef je vooraf niets in te vullen; het kind is aan zet.'} Alleen de staf ziet dit, ouder en kind niet.</p>
+      <p class="klein-kop">Wapen volgens jou ⭐ (1–${MAX_WAPEN})</p>${kijkChips('ogKijkWapen', wapensVan(k), true)}
+      <p class="klein-kop">Werkpunt volgens jou</p>${kijkChips('ogKijkWerk', k.werkpunt ? [k.werkpunt] : [], false)}
+      <details class="uitklap"><summary>Uitgebreid: per vaardigheid</summary>
+      ${CC.vaardigBlokken(vaardig).map(([naam, l]) => `<div class="kaartje zelf"><h4>${esc(naam)}</h4>${l.map((x) => `<div class="zelfrij"><span>${esc(x)}</span>${niveauKnoppen('ogKijk', `${at} data-v="${esc(x)}"`, niv(k, x), CC.NIVEAU_TRAINER)}</div>`).join('')}</div>`).join('')}</details></details>`;
 
-    // Naast elkaar: kind en trainer (verschil van twee stappen of een ander wapen = bespreken)
-    const cel = (n, wapen, labels) => `${wapen ? '⭐ ' : ''}${n ? `<span class="niveau n${n}">${labels[n]}</span>` : '<span class="zacht">–</span>'}`;
-    const vergelijk = !toon ? `<div class="info">${icon('eye-off')}<span>De antwoorden van ${esc(pl.voornaam)} zie je als je eigen kijk klaar is. Zo laat je je niet beïnvloeden. <button class="linkknop" data-act="seg" data-key="ogToon-${pl.id}" data-val="1">Toch nu tonen</button></span></div>`
-      : `<div class="tabelvak"><table class="tabel vergelijk"><thead><tr><th>Vaardigheid</th><th>${esc(pl.voornaam)}</th><th>Trainer</th></tr></thead><tbody>${vaardig.map((x) => {
-        const a = niv(v, x), b = niv(k, x); const wa = wapensVan(v).includes(x), wb = wapensVan(k).includes(x); const verschil = (a && b && Math.abs(a - b) >= 2) || (wa !== wb && (wa || wb));
-        return `<tr class="${verschil ? 'verschil' : ''}"><td>${esc(x)}${verschil ? ' <span class="chip oranje mini">bespreken</span>' : ''}</td><td>${cel(a, wa, KORT_KIND)}</td><td>${cel(b, wb, CC.NIVEAU_TRAINER)}</td></tr>`; }).join('')}</tbody></table></div>
-        ${v.wapenWanneer ? `<p class="klein"><b>Wapen in de wedstrijd, volgens ${esc(pl.voornaam)}:</b> "${esc(v.wapenWanneer)}"</p>` : ''}`;
+    // Wat zegt het kind: gegroepeerd, met vragen om door te vragen (Besluit 68: sturen door te vragen, niet door te oordelen)
+    const groep = (n) => vaardig.filter((x) => niv(v, x) === n);
+    const regel = (label, l) => (l.length ? `<p class="klein"><b>${label}:</b> ${l.map(esc).join(', ')}</p>` : '');
+    const vraag = (t) => `<p class="klein vraag">${icon('message-circle')}<span>${t}</span></p>`;
+    const doorvragen = [];
+    wapensVan(k).forEach((x) => { if (!wapensVan(v).includes(x) && niv(v, x) !== 3) doorvragen.push(`Jij ziet <b>${esc(x)}</b> als wapen, ${esc(pl.voornaam)} zegt "${esc(KORT_KIND[niv(v, x)] || 'niets')}". Vraag: <i>"Hoe gaat ${esc(x.toLowerCase())} in de wedstrijd? Vertel eens een moment."</i>`); });
+    if (k.werkpunt && niv(v, k.werkpunt) === 3) doorvragen.push(`Jij ziet <b>${esc(k.werkpunt)}</b> als werkpunt, ${esc(pl.voornaam)} zegt "Sterk". Vraag: <i>"Wanneer lukt ${esc(k.werkpunt.toLowerCase())} wel, en wanneer niet?"</i>`);
+    const ingevuld = Object.keys(v.zelf || {}).length || wapensVan(v).length;
+    const watKind = ingevuld ? `<div class="kaartje">
+        ${wapensVan(v).length ? `<p><b>Wapen ⭐</b> ${wapensVan(v).map(esc).join(', ')}${v.wapenWanneer ? `<br><small>"${esc(v.wapenWanneer)}"</small>` : ''}</p>${vraag('"Wanneer zie je dat in de wedstrijd? Vertel eens een moment."')}` : ''}
+        ${regel('Sterk', groep(3).filter((x) => !wapensVan(v).includes(x)))}
+        ${regel('Beter worden', groep(1))}${groep(1).length ? vraag('"Wanneer lukt het wel, en wanneer niet? Wat zou je helpen?"') : ''}
+        <details class="uitklap"><summary>Gaat goed (${groep(2).length})</summary><p class="klein">${groep(2).map(esc).join(', ') || '–'}</p></details></div>`
+      : `<div class="kaartje">${vraag('"Waar ben je echt goed in? Wanneer zie je dat in de wedstrijd?"')}${vraag('"Wat wil je graag beter kunnen? Wanneer lukt het nog niet?"')}</div>`;
+    const doorBlok = doorvragen.length ? `<div class="info">${icon('eye-off')}<span><b>Vraag door (alleen voor jou)</b><br>${doorvragen.join('<br>')}</span></div>` : '';
     // Kandidaten: wat kind of trainer sterk/wapen vindt (wapen), of als werkpunt ziet (werkpunt); de rest achter "Toon alle"
     const alle = (CC.ui.seg || {})[`ogAlle-${pl.id}`];
-    const kandidaat = (act, x) => (act === 'ogSamenWapen' ? niv(v, x) === 3 || niv(k, x) === 3 || wapensVan(v).includes(x) || wapensVan(k).includes(x) : niv(v, x) === 1 || niv(k, x) === 1);
+    const kandidaat = (act, x) => (act === 'ogSamenWapen' ? niv(v, x) === 3 || niv(k, x) === 3 || wapensVan(v).includes(x) || wapensVan(k).includes(x) : niv(v, x) === 1 || niv(k, x) === 1 || k.werkpunt === x);
     const samenChips = (act, gekozen) => { const l = alle ? vaardig : vaardig.filter((x) => kandidaat(act, x) || gekozen.includes(x)); return `<div class="chips">${(l.length ? l : vaardig).map((x) => `<button type="button" class="chipknop ${gekozen.includes(x) ? 'aan' : ''}" data-act="${act}" ${at} data-v="${esc(x)}">${act === 'ogSamenWapen' && gekozen.includes(x) ? '⭐ ' : ''}${esc(x)}</button>`).join('')}${!alle && l.length && l.length < vaardig.length ? `<button type="button" class="linkknop" data-act="seg" data-key="ogAlle-${pl.id}" data-val="1">Toon alle</button>` : ''}</div>`; };
 
     // Doelen: 1 = wapen scherper maken, 2 = werkpunt, 3 alleen als het echt nodig is
@@ -135,24 +148,26 @@
     return { titel: `Gesprek ${pl.voornaam}`, sub: `${m.naam}${g ? ` · ${D.kort(g.datum)} ${g.tijd}` : ''} · ${CC.tn(pl.teamId)}`,
       html: `${klokHtml(sl(pl.id, mid))}
         ${v.klaar ? '' : `<div class="info oranje">${icon('info')}<span>${esc(pl.voornaam)} heeft de voorbereiding ${Object.keys(v.zelf).length ? 'nog niet helemaal' : 'nog niet'} ingevuld. Je kunt de vragen in het gesprek stellen.</span></div>`}
-        ${kijkBlok}
+        ${voorjaar ? kijkBlok : ''}
         ${terug}
         ${h.sectie(`1 · ${esc(pl.voornaam)} aan het woord`)}
         <div class="kaartje">${[['trots', 'Trots op'], ['leuk', 'Leukst'], ['lastig', 'Wil beter leren'], ['droom', 'Droom']].map(([key, l]) => `<p class="klein"><b>${l}:</b> ${v[key] ? `"${esc(v[key])}"` : '<span class="zacht">–</span>'}</p>`).join('')}</div>
-        ${h.sectie('2 · Wapen en werkpunt')}${vergelijk}
+        ${h.sectie(`2 · Wat zegt ${esc(pl.voornaam)}?`)}${watKind}${doorBlok}
         <p class="klein-kop">Ons wapen (samen gekozen)</p>${samenChips('ogSamenWapen', vs.wapen || [])}
         <p class="klein-kop">Ons werkpunt</p>${samenChips('ogSamenWerk', vs.werkpunt ? [vs.werkpunt] : [])}
         ${h.sectie('3 · Twee doelen')}${doelBlok}${doelen.length < 3 ? `<button class="linkknop" data-act="ogDoelErbij" ${at}>${icon('plus')}Derde doel (alleen als het echt nodig is)</button>` : ''}
         ${h.sectie('4 · Afronden')}
         ${veld('meenemen', `Wat neem je mee? (in de woorden van ${esc(pl.voornaam)})`, vs.meenemen, 'Bijv. ik ga vaker de bal vragen, want dan kan ik mijn actie maken')}
         ${veld('afspraken', 'Afspraken (ook wat de ouder aanvult)', vs.afspraken, 'Bijv. in maart kijken we samen hoe het gaat')}
+        ${voorjaar ? '' : kijkBlok}
         ${h.sectie('Notitie trainer')}<textarea rows="2" data-input="ogNotitie" ${at} placeholder="Alleen voor de staf">${esc(noti)}</textarea>
         <button class="knop ${vs.gehad ? 'licht' : ''} vol" data-act="ogGehad" ${at}>${icon('circle-check')}${vs.gehad ? 'Gesprek gehad ✓ (tik om terug te zetten)' : 'Gesprek gehad'}</button>
         <p class="zacht klein">Alles wordt meteen bewaard. Na "Gesprek gehad" ziet de ouder het wapen, het werkpunt, de doelen, "wat neem je mee" en de afspraken. Jouw kijk en de notitie ziet alleen de staf.</p>` };
   };
-  CC.on('ogKijk', (el) => { const S = CC.S(); const was = kijkKlaar(S, el.dataset.id, el.dataset.m); maakKijk(S, el.dataset.id, el.dataset.m).scores[el.dataset.v] = Number(el.dataset.s); zetKnop(el); CC.save(); if (!was && kijkKlaar(S, el.dataset.id, el.dataset.m)) { CC.render(); CC.toast('Je kijk is klaar; nu zie je de antwoorden naast elkaar'); } });
+  CC.on('ogKijk', (el) => { const S = CC.S(); maakKijk(S, el.dataset.id, el.dataset.m).scores[el.dataset.v] = Number(el.dataset.s); zetKnop(el); CC.save(); });
+  CC.on('ogKijkWerk', (el) => { const S = CC.S(); const k = maakKijk(S, el.dataset.id, el.dataset.m); k.werkpunt = k.werkpunt === el.dataset.v ? '' : el.dataset.v; CC.save(); CC.render(); });
   const wissel = (lijst, x, max) => { const i = lijst.indexOf(x); if (i >= 0) { lijst.splice(i, 1); return true; } if (lijst.length >= max) { CC.toast(`Hooguit ${max}. Tik eerst een ander weg.`, 'fout'); return false; } lijst.push(x); return true; };
-  CC.on('ogKijkWapen', (el) => { const S = CC.S(); const was = kijkKlaar(S, el.dataset.id, el.dataset.m); const k = maakKijk(S, el.dataset.id, el.dataset.m); if (!Array.isArray(k.wapens)) k.wapens = []; if (wissel(k.wapens, el.dataset.v, MAX_WAPEN)) { CC.save(); CC.render(); if (!was && kijkKlaar(S, el.dataset.id, el.dataset.m)) CC.toast('Je kijk is klaar; nu zie je de antwoorden naast elkaar'); } });
+  CC.on('ogKijkWapen', (el) => { const S = CC.S(); const k = maakKijk(S, el.dataset.id, el.dataset.m); if (!Array.isArray(k.wapens)) k.wapens = []; if (wissel(k.wapens, el.dataset.v, MAX_WAPEN)) { CC.save(); CC.render(); } });
   CC.on('ogSamenWapen', (el) => { const S = CC.S(); const vs = maakVerslag(S, el.dataset.id, el.dataset.m); if (!Array.isArray(vs.wapen)) vs.wapen = []; if (wissel(vs.wapen, el.dataset.v, MAX_WAPEN)) { vs.bijgewerkt = new Date().toISOString(); CC.save(); CC.render(); } });
   CC.on('ogSamenWerk', (el) => { const S = CC.S(); const vs = maakVerslag(S, el.dataset.id, el.dataset.m); vs.werkpunt = vs.werkpunt === el.dataset.v ? '' : el.dataset.v; vs.bijgewerkt = new Date().toISOString(); CC.save(); CC.render(); });
   CC.on('ogVeld', (el) => { const S = CC.S(); const vs = maakVerslag(S, el.dataset.id, el.dataset.m); if (el.dataset.k.startsWith('doel.')) { const [, i, key] = el.dataset.k.split('.'); while (vs.doelen.length <= Number(i)) vs.doelen.push({ wat: '', hulp: '' }); vs.doelen[Number(i)][key] = el.value; } else vs[el.dataset.k] = el.value;
