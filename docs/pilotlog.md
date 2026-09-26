@@ -7,6 +7,8 @@ Besluiten staan in `besluiten.md`; dit is het logboek van fouten. Nieuwste boven
 
 | Wat de gebruiker zag | Oorzaak | Opgelost | Patroon |
 |---|---|---|---|
+| (zelf gevonden) Trainer/teamleider kon "Niet alles is opgeslagen" zien zonder iets fout te doen | App vulde standaard-clubinstellingen aan bij het tekenen; alleen beheerder mag die opslaan | Clubinstellingen alleen door beheerder opgeslagen, anders stil overslaan (Besluit 63) | **D. Eén persoon, meer rollen** / **A. Momentopname** |
+| (zelf gevonden) "Club leegmaken" nog één tik (plus typen) weg in de echte club | Testknop uit de opstartfase bleef staan | Alleen bij nieuwe club; database weigert het ook (Besluit 63) | **C. Demo/opstart verbergt het** |
 | (zelf gevonden) Speelduur klopte niet voor O8–O9 (50 i.p.v. 40 min) en vanaf O13 (steeds 70 min) | Speelduur hing aan de spelvorm, niet aan de leeftijd | Per leeftijd volgens de KNVB (Besluit 60) | **C. Demo verbergt het** (demo had alleen O10/O12) |
 | Lange reactie verdween achter de knoppenbalk onderin | Reactievak rekende niet met de hogere balk op iPhones met streep onderin | In een gesprek geen knoppenbalk; vak onderaan en schuift mee (Besluit 58) | **E. Buiten de app** (toestel) |
 | (zelf gevonden) Afzender kon een net binnengekomen antwoord overschrijven bij opslaan | Afzender schreef het hele bericht opnieuw weg | Antwoorden/gelezen/archief altijd via `bericht_bij` (Besluit 57) | **B. Opslaan niet zeker** |

@@ -1,4 +1,6 @@
 {
+  "buildCommand": "node versie-maken.js",
+  "outputDirectory": ".",
   "cleanUrls": true,
   "headers": [
     {
@@ -51,6 +53,15 @@
         {
           "key": "Content-Type",
           "value": "application/manifest+json"
+        }
+      ]
+    },
+    {
+      "source": "/versie.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
         }
       ]
     }

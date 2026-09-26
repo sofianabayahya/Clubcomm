@@ -43,6 +43,9 @@
       const nu = CC.naarRijen(CC.S(), club); const nieuw = []; const berichten = [];
       nu.forEach((r, k) => {
         const j = JSON.stringify(r); if (L.snap.get(k) === j || L.geweigerd.get(k) === j) return;
+        // Clubinstellingen: alleen HJO/beheerder mag die opslaan. Vult de app bij iemand anders standaardwaarden aan
+        // (bijv. bij het tekenen van een scherm), dan niet proberen en geen melding "niet opgeslagen" (Besluit 63).
+        if (r.soort === 'club' && !(CC.me() && CC.me().rollen.some((x) => ['hjo', 'beheerder'].includes(x.rol)))) { L.geweigerd.set(k, j); return; }
         // Bestaande berichten: gelezen, antwoorden en archief veilig samenvoegen via de database (Besluit 57), zodat een
         // antwoord van een ander nooit wordt overschreven. Alleen de afzender mag daarnaast de rest wijzigen (vastzetten, intrekken).
         if (r.soort === 'msgs' && L.snap.has(k)) {
@@ -88,9 +91,15 @@
   // Is alles opgeslagen? (dan mogen we veilig verversen)
   const allesOpgeslagen = () => {
     if (L.bezig) return false; const nu = CC.naarRijen(CC.S(), club); let ok = true;
-    nu.forEach((r, k) => { if (!ok) return; const j = JSON.stringify(r); if (L.snap.get(k) !== j && L.geweigerd.get(k) !== j) ok = false; });
+    const admin = CC.me() && CC.me().rollen.some((x) => ['hjo', 'beheerder'].includes(x.rol));
+    nu.forEach((r, k) => { if (!ok || (r.soort === 'club' && !admin)) return; const j = JSON.stringify(r); if (L.snap.get(k) !== j && L.geweigerd.get(k) !== j) ok = false; });
     return ok && [...L.snap.keys()].every((k) => nu.has(k));
   };
+  CC.allesOpgeslagen = () => allesOpgeslagen();
+  // Voor onderzoek: welke regels verschillen van wat er opgeslagen is?
+  CC.opslagVerschil = () => { const nu = CC.naarRijen(CC.S(), club); const uit = [];
+    nu.forEach((r, k) => { const j = JSON.stringify(r); if (L.snap.get(k) !== j && L.geweigerd.get(k) !== j) uit.push(['anders', k, L.snap.get(k), j]); });
+    [...L.snap.keys()].forEach((k) => { if (!nu.has(k)) uit.push(['weg', k]); }); return { bezig: L.bezig, uit }; };
   // Verversen (Besluit 48): bij terugkomen in de app en elke 30 seconden zolang de app open en zichtbaar is,
   // maar niet als iemand aan het typen is of een venster open heeft. Alleen opnieuw tekenen als er echt iets veranderd is.
   const ververs = async (dwing) => {
@@ -244,10 +253,12 @@
   });
   const origBeheerHome = CC.rollen.beheerder.schermen.home;
   CC.rollen.beheerder.schermen.home = (S) => origBeheerHome(S) + `${h.sectie('Gegevens')}<div class="lijst">
-    ${h.rij({ ic: 'file-down', titel: 'Back-up downloaden', sub: 'Automatisch: elke zondag op de server (8 weken). Download af en toe zelf een kopie.', act: 'liveBackup' })}</div>
-    ${h.sectie('Testen')}<div class="lijst">
+    ${h.rij({ ic: 'file-down', titel: 'Back-up downloaden', sub: 'Automatisch: elke zondag op de server (8 weken). Download af en toe zelf een kopie.', act: 'liveBackup' })}
+    ${h.rij({ ic: 'circle-alert', titel: 'Foutmeldingen', sub: 'Wat er bij gebruikers misging (automatisch vastgelegd)', act: 'foutenOpen' })}</div>
+    ${S.people.length <= 3 ? `${h.sectie('Testen')}<div class="lijst">
     ${h.rij({ ic: 'upload', titel: 'Voorbeelddata laden', sub: S.teams.length ? `${S.teams.length} teams in de club` : 'De club is nog leeg', act: 'liveVullen' })}
-    ${h.rij({ ic: 'trash-2', titel: 'Club leegmaken', sub: 'Voor de start met echte gegevens', act: 'liveLeeg', kleur: 'rood' })}</div>`;
+    ${h.rij({ ic: 'trash-2', titel: 'Club leegmaken', sub: 'Voor de start met echte gegevens', act: 'liveLeeg', kleur: 'rood' })}</div>` : ''}`;
+  // Testen (voorbeelddata, leegmaken) alleen bij een nieuwe, (bijna) lege club; zodra er echte mensen zijn, weg (Besluit 63)
 
   // ---------- Starten ----------
   const origStart = CC.start;

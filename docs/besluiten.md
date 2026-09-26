@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 62 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 63 toegevoegd)
 
 ---
 
@@ -507,6 +507,13 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 63 — Veiligheid, leesbaarheid en onderhoud (uit de app-analyse van 26-09)
+1. **Club leegmaken / Voorbeelddata laden** alleen bij een nieuwe club (hooguit 3 gekoppelde accounts). Daarna verdwijnen de knoppen, en de database weigert het ook (migratie 014). Terug naar leeg kan alleen via de ontwikkelaar, met back-up vooraf.
+2. **Contrast en grootte:** app-blauw #0869c2, groen #137333, oranje #a84d08 (alle ≥ 4,5 contrast, ook witte tekst op knoppen); het logo-blauw #0d88f9 blijft voor het logo en de kleur van de statusbalk. Tekst minimaal 12 px. Tekstknoppen krijgen een groter tikvlak; kleine knoppen minimaal 40 px hoog.
+3. **Zelf verversen bij een nieuwe versie:** bij elke publicatie maakt Vercel `versie.json` (commit). Komt iemand terug in de app en staat er een nieuwere versie, dan slaat de app eerst alles op en herlaadt dan, nooit tijdens typen of met een venster open. Afsluiten van de app is niet meer nodig.
+4. **Foutregistratie:** fouten bij gebruikers komen automatisch in Supabase (tabel `fout`, 60 dagen bewaard; alleen technische gegevens, geen berichtinhoud). Beheerder → Home → **Foutmeldingen** (laatste 30 dagen, gegroepeerd). Migratie 015.
+5. **Gevonden bij het testen:** de app vulde bij het tekenen van sommige schermen standaardinstellingen van de club aan. Bij een trainer of teamleider (die de club niet mag wijzigen) kon dat de melding "Niet alles is opgeslagen" geven en het verversen één keer overslaan. Nu slaat alleen de HJO/beheerder clubinstellingen op; bij anderen stil overgeslagen.
 
 ## Besluit 62 — Scorebord en uitslag
 - **Waar:** bij de wedstrijd zelf, bovenaan het wisselschema (Speeltijd), alleen op de wedstrijddag. De timekeeper (ouder met die taak) en de trainer houden het bij; geen apart kopje.
