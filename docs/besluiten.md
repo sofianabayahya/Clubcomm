@@ -508,6 +508,15 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 82 — Berichten verdwijnen vanzelf als ze niet meer belangrijk zijn
+Net als de actielijst: is de dag of taak voorbij, dan gaat het bericht **vanzelf naar het Archief** (niet echt gewist, zodat je het met de zoekbalk nog vindt; aan het eind van het seizoen wordt het archief gewist).
+- **Vakantie: geen training** → zodra de vakantie begint. **We trainen weer** → na die eerste training. **Vrije dag** en **noodbericht** → de dag erna. **Start seizoen / wedstrijden beginnen** → na de eerste training of wedstrijd. **Ontwikkelgesprekken** → als de gespreksperiode voorbij is. **Einde seizoen** → na die dag.
+- Herinnering, wijziging, afgelasting, uitslag: de dag na de activiteit (Besluit 80). Gewoon clubnieuws: na 14 dagen; vastgezet nieuws blijft staan.
+- **Welkomstbericht** (bij goedkeuren van een aanmelding of een nieuwe rol) → 3 dagen nadat je het las, zolang niemand erop reageerde. Daarvoor onthoudt de app nu **wanneer** iemand een bericht las (migratie 020).
+- Gesprekken met een open vraag blijven staan tot ze beantwoord of afgerond zijn (Besluit 79).
+- In de laatste 3 dagen staat onder het bericht in kleine grijze letters: *"Dit bericht verdwijnt over 3 dagen naar het archief"* (of "morgen").
+- Geldt voor nieuwe berichten; wat al verstuurd is, gaat zoals eerst na 14 dagen naar het archief.
+
 ## Besluit 81 — Lijsten tonen eerst wat nu speelt
 Vaste regel voor alle portalen: een lijst die in het seizoen groeit, toont eerst wat nu speelt; de rest staat ingeklapt ("Toon alles") of per maand.
 - **Trainer, Home:** wat vandaag of morgen moet (wisselschema, uitslag) staat bovenaan "Actie nodig". Meer dan één training zonder aanwezigheid → **één regel** "Aanwezigheid nog invullen (3 trainingen)" die een lijstje opent.

@@ -51,7 +51,7 @@
         // Bestaande berichten: gelezen, antwoorden en archief veilig samenvoegen via de database (Besluit 57), zodat een
         // antwoord van een ander nooit wordt overschreven. Alleen de afzender mag daarnaast de rest wijzigen (vastzetten, intrekken).
         if (r.soort === 'msgs' && L.snap.has(k)) {
-          const oud = JSON.parse(L.snap.get(k)).data; const zonder = (d) => JSON.stringify({ ...d, gelezen: 0, antw: 0, archief: 0 });
+          const oud = JSON.parse(L.snap.get(k)).data; const zonder = (d) => JSON.stringify({ ...d, gelezen: 0, gelezenOp: 0, antw: 0, archief: 0 });
           if (r.data.van !== L.pid || zonder(oud) === zonder(r.data)) { berichten.push({ k, j, r, oud }); return; }
         }
         nieuw.push({ k, j, r });

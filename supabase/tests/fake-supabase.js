@@ -52,6 +52,7 @@
     if (naam === 'bericht_bij') { const r = db.rows[`dcg|msgs|${a.p_id}`]; if (r) { const d = r.data; const nieuw = (a.p_antw || []).filter((x) => x.van === ik());
       d.antw = [...(d.antw || []), ...nieuw];
       if (nieuw.length) { d.gelezen = [ik()]; d.archief = []; } else if (a.p_gelezen && !d.gelezen.includes(ik())) d.gelezen.push(ik());
+      if ((a.p_gelezen || nieuw.length) && !(d.gelezenOp || {})[ik()]) d.gelezenOp = { ...(d.gelezenOp || {}), [ik()]: new Date().toISOString() }; // Besluit 82
       if (!nieuw.length && a.p_archief === true) d.archief = [...new Set([...(d.archief || []), ik()])];
       if (!nieuw.length && a.p_archief === false) d.archief = (d.archief || []).filter((x) => x !== ik());
       bewaar(); } return antw(null); }

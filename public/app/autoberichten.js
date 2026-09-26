@@ -45,12 +45,12 @@
     [...(c.vakanties || []), ...(c.stops || [])].filter((v) => !v.trainen && v.van >= c.seizoen.start && v.van <= c.seizoen.eind).forEach((v) => {
       if (D.dagen(v.van, v.tot) >= 3) {
         const t = eersteTraining(v.tot);
-        res.push({ sjabloon: 'vakantie', id: 'vakantie-' + v.id, datum: v.van, titel: v.naam, vars: { vakantie: v.naam.toLowerCase(), datum: D.lang(v.van), tot: D.lang(v.tot), terug: D.lang(t ? t.datum : D.addDays(v.tot, 1)) } });
+        res.push({ sjabloon: 'vakantie', id: 'vakantie-' + v.id, datum: v.van, verval: D.addDays(v.van, -1), titel: v.naam, vars: { vakantie: v.naam.toLowerCase(), datum: D.lang(v.van), tot: D.lang(v.tot), terug: D.lang(t ? t.datum : D.addDays(v.tot, 1)) } });
         if (t) res.push({ sjabloon: 'terug', id: 'terug-' + v.id, datum: t.datum, titel: `Terug na de ${v.naam.toLowerCase()}`, vars: { vakantie: v.naam.toLowerCase(), datum: D.lang(t.datum) } });
       } else res.push({ sjabloon: 'vrijedag', id: 'vrij-' + v.id, datum: v.van, titel: v.naam, vars: { naam: v.naam, datum: D.lang(v.van) } });
     });
     M.blokken(S).forEach((b) => { const w = S.acts.filter((a) => M.isWed(a) && !a.afgelast && a.datum >= b.van && a.datum <= b.tot).sort((x, y) => x.datum.localeCompare(y.datum))[0]; if (w) res.push({ sjabloon: 'wedstrijden', id: 'wed-' + b.nr, datum: w.datum, titel: `Wedstrijden ${b.naam.toLowerCase()}`, vars: { datum: D.lang(w.datum), fase: b.naam } }); });
-    (CC.momenten ? CC.momenten(S) : []).forEach((m) => res.push({ sjabloon: 'beoordeling', id: 'beoordeling-' + (m.basisId || m.id), datum: m.van, titel: `Beoordeling ${m.naam.toLowerCase()}`, vars: { moment: m.naam.toLowerCase(), datum: D.lang(m.van), tot: D.lang(m.tot) } }));
+    (CC.momenten ? CC.momenten(S) : []).forEach((m) => res.push({ sjabloon: 'beoordeling', id: 'beoordeling-' + (m.basisId || m.id), datum: m.van, verval: m.tot, titel: `Beoordeling ${m.naam.toLowerCase()}`, vars: { moment: m.naam.toLowerCase(), datum: D.lang(m.van), tot: D.lang(m.tot) } }));
     // Eerste training van het seizoen; ligt die veel later (club halverwege het seizoen ingericht), dan geldt de startdatum en gaat er geen startbericht meer uit
     const t0 = eersteTraining(D.addDays(c.seizoen.start, -1)); const start = t0 && D.dagen(c.seizoen.start, t0.datum) <= 14 ? t0.datum : c.seizoen.start;
     res.push({ sjabloon: 'start', id: 'start-' + c.seizoen.start, datum: start, titel: 'Start seizoen', vars: { datum: D.lang(start) } });
@@ -68,7 +68,9 @@
   };
   const clubOntvangers = (S, van) => S.people.map((p) => p.id).filter((x) => x !== van);
   const verstuur = (S, zs, onderwerp, tekst, van, urgent) => {
-    S.msgs.push({ id: 'b' + Date.now() + Math.random().toString(36).slice(2, 6), van, soort: 'nieuws', bereik: 'Hele club', onderwerp, tekst, tijd: new Date().toISOString(), gepland: null, ontvangers: clubOntvangers(S, van), gelezen: [], antw: [], urgent: !!urgent, vastTot: null, auto: van === 'systeem', herinnering: true, mail: zs.some((z) => z.sj.mail !== false) });
+    // Besluit 82: het bericht verdwijnt vanzelf naar het archief als het moment voorbij is (vakantie: zodra die begint)
+    const verloopt = zs.map((z) => z.verval || z.datum).filter(Boolean).sort().pop() || null;
+    S.msgs.push({ id: 'b' + Date.now() + Math.random().toString(36).slice(2, 6), van, soort: 'nieuws', verloopt, bereik: 'Hele club', onderwerp, tekst, tijd: new Date().toISOString(), gepland: null, ontvangers: clubOntvangers(S, van), gelezen: [], antw: [], urgent: !!urgent, vastTot: null, auto: van === 'systeem', herinnering: true, mail: zs.some((z) => z.sj.mail !== false) });
     zs.forEach((z) => { status(S)[z.zid] = { tijd: new Date().toISOString(), door: van }; });
   };
   const magClub = () => (CC.me() && CC.me().rollen || []).some((r) => r.rol === 'beheerder' || CC.mag('clubbericht', r.rol));
@@ -211,7 +213,7 @@
     const acts = n.afgelast ? S.acts.filter((a) => a.datum === f.d.value && teams.includes(a.teamId) && !a.afgelast && (n.afgelast === 'alles' || !M.isWed(a) || a.thuis)) : [];
     acts.forEach((a) => { a.afgelast = true; });
     const ontv = [...new Set(teams.flatMap((t) => [...M.oudersVan(S, t), ...M.stafVan(S, t)]).concat(S.people.filter((p) => p.rollen.some((r) => ['hjo', 'coordinator'].includes(r.rol))).map((p) => p.id)).filter((x) => x && x !== CC.me().id))];
-    S.msgs.push({ id: 'b' + Date.now(), van: CC.me().id, soort: 'nieuws', bereik: teams.length === S.teams.length ? 'Hele club' : teams.join(', '), onderwerp: f.o.value, tekst: f.t.value, tijd: new Date().toISOString(), ontvangers: ontv, gelezen: [], antw: [], urgent: true, gepland: null });
+    S.msgs.push({ id: 'b' + Date.now(), van: CC.me().id, soort: 'nieuws', verloopt: f.d.value || null, bereik: teams.length === S.teams.length ? 'Hele club' : teams.join(', '), onderwerp: f.o.value, tekst: f.t.value, tijd: new Date().toISOString(), ontvangers: ontv, gelezen: [], antw: [], urgent: true, gepland: null });
     CC.save(); CC.closeSheet(); CC.render(); CC.toast(`${acts.length ? `${acts.length} activiteiten afgelast · ` : ''}${ontv.length} mensen ingelicht`);
   });
 

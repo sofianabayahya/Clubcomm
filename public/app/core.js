@@ -494,7 +494,21 @@
   // je het nog niet las of jouw laatste bericht een vraag is. Een nieuw bericht haalt het terug.
   const AUTO_DAGEN = 7;
   const vraagOpen = (m, me) => { const l = M.laatste(m); return l.van === me.id && /\?/.test(String(l.tekst || '')); };
-  const gespArchief = (m, me) => M.gearchiveerd(m, me.id) || (!M.isOngelezen(S, m, me.id) && !M.wachtOpMij(m, me.id) && !vraagOpen(m, me) && dagenOud(m) > AUTO_DAGEN);
+  // Besluit 82: een welkomstbericht (zonder antwoorden) gaat 3 dagen nadat je het las vanzelf naar het archief
+  const WELKOM_DAGEN = 3;
+  const welkomTot = (m, pid) => (m.welkom && !(m.antw || []).length && (m.gelezenOp || {})[pid] ? new Date(m.gelezenOp[pid]).getTime() + WELKOM_DAGEN * 864e5 : null);
+  // Lezen: onthoud ook wanneer (Besluit 82)
+  const leesMarkeer = (m, pid) => { m.gelezen.push(pid); m.gelezenOp = { ...(m.gelezenOp || {}), [pid]: new Date().toISOString() }; };
+  // Besluit 82: wanneer gaat dit bericht vanzelf naar het archief? (null = niet vanzelf)
+  const verdwijntOp = (m, me) => {
+    if (m.soort === 'persoonlijk') return welkomTot(m, me.id);
+    if (CC.isVast(m)) return null;
+    const t = [new Date(laatstTijd(m)).getTime() + ARCHIEF_DAGEN * 864e5]; if (m.verloopt) t.push(D.parse(D.addDays(m.verloopt, 1)).getTime());
+    return Math.min(...t); };
+  const verdwijntRegel = (m, me, arch) => { const t = !arch && verdwijntOp(m, me); if (!t) return '';
+    const n = D.dagen(D.vandaag(), D.iso(new Date(t))); if (n > 3) return '';
+    return `<p class="zacht klein midden">${icon('archive')}${n <= 0 ? 'Dit bericht gaat vandaag naar het archief' : n === 1 ? 'Dit bericht verdwijnt morgen naar het archief' : `Dit bericht verdwijnt over ${n} dagen naar het archief`}</p>`; };
+  const gespArchief = (m, me) => M.gearchiveerd(m, me.id) || (welkomTot(m, me.id) != null && welkomTot(m, me.id) < Date.now()) || (!M.isOngelezen(S, m, me.id) && !M.wachtOpMij(m, me.id) && !vraagOpen(m, me) && dagenOud(m) > AUTO_DAGEN);
   // Beperk een lijst tot 10, met "Toon meer"
   const meer = (sleutel, ms, render) => {
     const n = Number(h.segVal('meer-' + sleutel, 10));
@@ -592,14 +606,14 @@
   CC.on('wachtOpen', () => { CC.ui.seg.berichten = 'persoonlijk'; CC.go('berichten'); });
   CC.on('allesGelezen', (el) => {
     const me = CC.me(); const { pers, nws } = perTab(me);
-    (el.dataset.tab === 'nieuws' ? nws : pers).forEach((m) => { if (M.isOngelezen(S, m, me.id)) m.gelezen.push(me.id); });
+    (el.dataset.tab === 'nieuws' ? nws : pers).forEach((m) => { if (M.isOngelezen(S, m, me.id)) leesMarkeer(m, me.id); });
     CC.save(); CC.render(); CC.toast('Alles gelezen');
   });
 
   CC.views.bericht = (S, p) => {
     const m = S.msgs.find((x) => x.id === p.id); const me = CC.me();
     if (!m) return { titel: 'Bericht', html: h.leeg('Dit bericht bestaat niet meer', 'message-circle') };
-    if (M.isOngelezen(S, m, me.id)) { m.gelezen.push(me.id); CC.save(); }
+    if (M.isOngelezen(S, m, me.id)) { leesMarkeer(m, me.id); CC.save(); }
     const eigen = m.van === me.id; const pers = m.soort === 'persoonlijk';
     const arch = pers ? gespArchief(m, me) : nieuwsArchief(m, me.id);
     const gelezenLijst = eigen && !pers ? `<details class="uitklap"><summary>Gelezen door ${m.gelezen.filter((x) => x !== me.id).length} van ${m.ontvangers.length}</summary><p class="zacht klein">${m.ontvangers.map((id) => { const pp = M.persoon(S, id); return pp ? `${m.gelezen.includes(id) ? '✓' : '·'} ${esc(pp.naam)}` : ''; }).slice(0, 40).join('<br>')}</p></details>` : '';
@@ -643,7 +657,7 @@
       return {
         titel: 'Gesprek',
         html: `<article class="kaartje gesprek-kop"><h2>${esc(m.onderwerp)}</h2><small class="zacht">Met ${esc(anderen.map(pNaam).join(', ') || bereikNaam(m))}${m.urgent ? ' · <span class="chip rood mini">Urgent</span>' : ''}</small>${acties ? `<div class="knoppen">${acties}</div>` : ''}</article>
-          <div class="bubbels">${ballonnen}</div>${status}${afrondRegel}
+          <div class="bubbels">${ballonnen}</div>${status}${afrondRegel}${verdwijntRegel(m, me, arch)}
           ${m.van !== 'systeem' ? `<form class="reageer" data-submit="reageer" data-id="${m.id}"><textarea name="t" rows="1" placeholder="Reageer… (Enter = nieuwe regel)" required aria-label="Reactie" data-input="groei"></textarea><button class="icoonknop blauw" aria-label="Versturen">${icon('send')}</button></form>` : ''}`,
       };
     }
@@ -659,7 +673,7 @@
         ${m.antw.map((a) => `<div class="antwoord ${a.van === me.id ? 'mijn' : ''}"><small>${esc(pNaam(a.van))} · ${D.tijdstip(a.tijd)}</small><p>${esc(a.tekst).replace(/\n/g, '<br>')}</p></div>`).join('')}
         ${pers && m.antw.length ? gezien : ''}
         ${pers && m.van !== 'systeem' ? `<form class="reageer" data-submit="reageer" data-id="${m.id}"><textarea name="t" rows="1" placeholder="Reageer… (Enter = nieuwe regel)" required aria-label="Reactie" data-input="groei"></textarea><button class="icoonknop blauw" aria-label="Versturen">${icon('send')}</button></form>`
-          : !pers ? `${vraagOver}<p class="zacht klein midden">Nieuws is alleen-lezen${vraagOver ? '; een vraag wordt een persoonlijk gesprek met de afzender' : ''}.</p>` : ''}`,
+          : !pers ? `${verdwijntRegel(m, me, arch)}${vraagOver}<p class="zacht klein midden">Nieuws is alleen-lezen${vraagOver ? '; een vraag wordt een persoonlijk gesprek met de afzender' : ''}.</p>` : ''}`,
     };
   };
   CC.on('archiveer', (el) => { const m = S.msgs.find((x) => x.id === el.dataset.id); const me = CC.me(); m.archief = [...new Set([...(m.archief || []), me.id])]; if (!m.gelezen.includes(me.id)) m.gelezen.push(me.id); CC.save(); CC.terug(); CC.toast(m.soort === 'persoonlijk' ? 'Gesprek afgerond. Stuurt de ander nog iets, dan komt het terug.' : 'Gearchiveerd'); });
