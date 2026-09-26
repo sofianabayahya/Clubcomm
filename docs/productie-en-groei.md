@@ -7,7 +7,7 @@
 > *Privacy:* ~~bewaartermijn ontwikkelverslagen~~ ✅ zolang het kind lid is (Besluit 72; nog opnemen in de privacyverklaring) · later eigen account voor kinderen vanaf O13 (speler zelf centraal).
 > *Later in de pilot:* ~~nieuwe handleidingen per rol~~ ✅ 25-09 (bestuur, teamleider, ouders, trainer; eerst als handleiding sturen, presenteren als dat niet werkt) · ~~fouten automatisch vastleggen~~ ✅ (Besluit 63) · Content-Security-Policy · gebruikerstest met 3–5 ouders · welkomstuitleg bij eerste keer inloggen · agenda-koppeling (heeft domein nodig).
 > *Vóór een tweede club:* merknaam checken (clubcomm.nl/.com/.app zijn bezet; mijnclubcomm.nl ✅) · inlogmail via een dienst zonder afmeldknop (of Brevo Enterprise) · testomgeving, automatische tests (GitHub Actions), uptime-bewaking · Supabase Pro, Vercel Pro · automatische berichten vanaf de server (pg_cron, = pushmeldingen stap 2) · ~~pushmeldingen stap 1~~ ✅ 25-09 (Besluit 53) · live verversen met Supabase Realtime en alleen wijzigingen ophalen (Besluit 48; nu elke 30 s) · club-wizard, meerdere clubs per persoon, Sportlink/voetbal.nl-import · verwerkersovereenkomsten, DPIA, bewaartermijnen automatisch, account verwijderen automatisch vanaf de server (nu verzoek aan beheerder, Besluit 54) · toegankelijkheid (WCAG) · twee beheerders per club, logboek, rate limiting.
-> *Later:* store-app (Capacitor), huiswerk en filmpjes, fondsenwerving, weekbericht.
+> *Later:* uitzondering per team bij een vakantie ("wij trainen toch", Besluit 75) · store-app (Capacitor), huiswerk en filmpjes, fondsenwerving, weekbericht.
 
 *Opgesteld 25 september 2026, na de beveiligingscontrole. Denk als appontwikkelaar: wat moet er nog gebeuren voor de pilot, voor een tweede club, en voor de lange termijn?*
 

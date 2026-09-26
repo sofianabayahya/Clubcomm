@@ -508,6 +508,12 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 75 — Vaste clubberichten volledig automatisch; zo min mogelijk handelingen voor vrijwilligers
+- **Vaste berichten die voor de hele club gelijk zijn** (vakantie, vrije dag, start en einde seizoen, wedstrijden beginnen, ontwikkelgesprekken) gaan **automatisch**: bij niemand een taak, ook niet bij de HJO of de trainers. De beheerder stelt de teksten één keer per seizoen in; "klaarzetten" blijft een keuze, niet de standaard. Bij DCG nu alle zeven automatisch.
+- **Berichten over het eigen team** (planning gewijzigd, activiteit, ontwikkelgesprekken, opgave) gaan mee met de handeling van de trainer of teamleider; geen losse taak.
+- **Vuistregel voor alles:** wat de app zelf kan doen, doet de app, zonder extra tik. Een mens beslist alleen waar een oordeel nodig is.
+- Later: uitzondering per team bij een vakantie ("wij trainen toch").
+
 ## Besluit 74 — Communicatieplan DCG: vakantie 7 dagen; klaargezette berichten ook op de trainer-Home
 - **Vakantie-herinnering: 7 dagen vooraf** (was bij DCG 3 dagen), zoals de standaard van Besluit 36.
 - **Klaargezette berichten** ("x berichten klaar om te versturen") staan ook op de **Home van de trainer** als die ook clubberichten mag sturen (bij DCG: de initiatiefnemer is trainer én beheerder). Anders blijft een vakantiebericht ongemerkt liggen.
