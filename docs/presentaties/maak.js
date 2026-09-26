@@ -366,7 +366,7 @@ async function trainer() {
       ['FaCalendarDays', 'Planning', 'Training verplaatsen, extra training of oefenwedstrijd. Ouders krijgen direct bericht.'],
       ['FaStopwatch', 'Eerlijk wisselen', 'De app maakt een wisselschema; jij past het aan.'],
       ['FaComments', 'Berichten', 'Aan het team of één ouder, met zien wie het gelezen heeft.'],
-      ['FaStar', 'Ontwikkeling', 'Beoordelen en ontwikkelgesprekken op vaste momenten in het seizoen.'],
+      ['FaStar', 'Ontwikkeling', 'Ontwikkelgesprekken vanaf O12: het kind kiest zelf zijn wapen en doelen.'],
     ], kol: 3,
   });
   await stappen(pres, v, {
@@ -441,8 +441,8 @@ async function trainer() {
   await kaarten(pres, v, {
     label: 'Door het seizoen', titel: 'Wat komt er nog?', kol: 2,
     items: [
-      ['FaStar', 'Beoordelen', 'Twee keer per seizoen, passend bij de leeftijd. Ouders zien alleen hun eigen kind.'],
-      ['FaHandshake', 'Ontwikkelgesprek', 'Na het beoordelen plan je een gesprek met ouder en kind. Ouders kiezen zelf een tijd.'],
+      ['FaStar', 'Ontwikkelgesprek', 'Start en voorjaar, 15 minuten rond de training. Jij zet tijden klaar, ouders kiezen zelf.'],
+      ['FaHandshake', 'Kind aan zet', 'Thuis vult het kind een opdracht in (sterk, wapen, beter worden). In het gesprek vraag jij door; samen kies je 2 doelen.'],
       ['FaBoxOpen', 'Materiaal', 'Bij de start controleer en teken je voor ballen, hesjes en de EHBO-tas.'],
       ['FaUserClock', 'Zelf afwezig?', 'Meld het in de app. Dan kan de club op tijd een vervanger regelen.'],
     ],

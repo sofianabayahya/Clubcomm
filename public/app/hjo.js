@@ -398,7 +398,7 @@
         const m = S.club.modules;
         const rij = (k, titel, sub, uit) => `<label class="rij schakel ${uit ? 'uit' : ''}"><span class="rij-tekst"><b>${titel}</b><small>${sub}</small></span><input type="checkbox" ${m[k] ? 'checked' : ''} ${uit ? 'disabled' : ''} data-change="module" data-k="${k}"><i></i></label>`;
         return `<p class="zacht">Zet onderdelen aan of uit voor de hele club. Knoppen van uitgezette modules verdwijnen uit de app.</p><div class="lijst">
-          ${rij('vervoer', 'Vervoer', 'Rijden en meerijden bij uitwedstrijden')}${rij('taken', 'Taken', 'Spelbegeleider, coach, bardienst, wastas')}${rij('speeltijd', 'Speeltijd', 'Eerlijk wisselschema bij wedstrijden')}${rij('beoordeling', 'Beoordelingen', 'Volgens KNVB-leeftijdscategorie')}${rij('materiaal', 'Materiaal', 'Checklist per team bij de start van het seizoen')}${rij('beloningen', 'Beloningen', 'Later: punten voor meehelpen', true)}</div>
+          ${rij('vervoer', 'Vervoer', 'Rijden en meerijden bij uitwedstrijden')}${rij('taken', 'Taken', 'Spelbegeleider, coach, bardienst, wastas')}${rij('speeltijd', 'Speeltijd', 'Eerlijk wisselschema bij wedstrijden')}${rij('beoordeling', 'Ontwikkelgesprekken', 'Vanaf O12, twee keer per seizoen')}${rij('materiaal', 'Materiaal', 'Checklist per team bij de start van het seizoen')}${rij('beloningen', 'Beloningen', 'Later: punten voor meehelpen', true)}</div>
           ${m.materiaal ? h.rij({ ic: 'sliders-horizontal', titel: 'Materiaal instellen', sub: 'Checklist en wie de meldingen krijgt', act: 'open', attrs: 'data-view="materiaalInst"' }) : ''}`;
       },
     },
