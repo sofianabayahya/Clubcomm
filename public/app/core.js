@@ -799,13 +799,13 @@
     if (wat === 'afgelast' || wat === 'verplaats') {
       const a = M.act(S, f.act.value); if (!a) return CC.toast('Kies een training', 'fout');
       if (wat === 'afgelast') { a.afgelast = true; tekst = `Training van ${D.lang(a.datum)} gaat niet door.`; }
-      else { const oud = `${D.kort(a.datum)} ${a.tijd}`; a.datum = f.datum.value; a.tijd = f.tijd.value; a.veld = f.veld.value; a.eind = CC.plusMin(a.tijd, 75); tekst = `Training van ${oud} is verplaatst naar ${D.lang(a.datum)} ${a.tijd} op ${a.veld}.`; }
+      else { const oud = `${D.kort(a.datum)} ${a.tijd}`; if (!a.origDatum) a.origDatum = a.datum; a.verplaatst = true; a.datum = f.datum.value; a.tijd = f.tijd.value; a.veld = f.veld.value; a.eind = CC.plusMin(a.tijd, 75); tekst = `Training van ${oud} is verplaatst naar ${D.lang(a.datum)} ${a.tijd} op ${a.veld}.`; }
       verloopt = a.datum;
     } else {
       if (wat === 'activiteit' && !f.naam.value.trim()) return CC.toast('Vul in wat jullie gaan doen', 'fout');
       const a = wat === 'activiteit'
         ? { id: 'a' + Date.now(), teamId: tid, soort: 'activiteit', naam: f.naam.value.trim(), datum: f.datum.value, tijd: f.tijd.value, eind: f.eind.value || CC.plusMin(f.tijd.value, 90), verzamel: f.verzamel.value || '', plaats: f.plaats.value.trim(), adres: f.adres.value.trim(), toelichting: f.toelichting.value.trim(), veld: '', afgelast: false, opgave: f.opgave.checked, opgaveTot: f.opgave.checked ? (f.opgaveTot.value || f.datum.value) : null, herinneringen: [...f.querySelectorAll('[name=hr]:checked')].map((x) => Number(x.value)), herinnerd: [] }
-        : { id: 'a' + Date.now(), teamId: tid, soort: wat === 'oefen' ? 'oefen' : 'training', datum: f.datum.value, tijd: f.tijd.value, eind: CC.plusMin(f.tijd.value, wat === 'oefen' ? CC.categorie(t.cat).duur + 15 : 75), veld: f.veld.value, tegen: f.tegen.value, thuis: true, verzamel: f.tijd.value, adres: S.club.sportpark || '', afgelast: false };
+        : { id: 'a' + Date.now(), teamId: tid, soort: wat === 'oefen' ? 'oefen' : 'training', extra: true, datum: f.datum.value, tijd: f.tijd.value, eind: CC.plusMin(f.tijd.value, wat === 'oefen' ? CC.categorie(t.cat).duur + 15 : 75), veld: f.veld.value, tegen: f.tegen.value, thuis: true, verzamel: f.tijd.value, adres: S.club.sportpark || '', afgelast: false };
       S.acts.push(a); S.acts.sort((x, y) => (x.datum + x.tijd).localeCompare(y.datum + y.tijd)); verloopt = a.datum;
       tekst = wat === 'activiteit' ? `${a.naam} op ${D.lang(a.datum)} van ${a.tijd} tot ${a.eind}${a.plaats ? ` bij ${a.plaats}` : ''}.${a.verzamel ? ` Verzamelen om ${a.verzamel}.` : ''}${a.toelichting ? ` ${a.toelichting}` : ''}${a.opgave ? ` Geef je kind vóór ${D.lang(a.opgaveTot)} op in ClubComm: ja of nee.` : ' Kan je kind niet? Meld af in ClubComm.'}` : `${wat === 'oefen' ? 'Oefenwedstrijd' : 'Extra training'} op ${D.lang(a.datum)} om ${a.tijd} (${a.veld}).`;
     }

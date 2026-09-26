@@ -9,6 +9,7 @@ Hele wedstrijddag nagespeeld met de echte DCG-instellingen (wo t/m ma, teamleide
 
 | Wat we zagen | Oorzaak | Opgelost | Patroon |
 |---|---|---|---|
+| (zelf gevonden) Rooster opslaan gooide alle komende trainingen weg en maakte ze opnieuw: afmeldingen, afgelaste, verplaatste en extra trainingen gingen verloren; één tijd en veld voor alle dagen | Rooster werd altijd opnieuw opgebouwd, zonder te kijken wat er al aan hing | Bijwerken met behoud, per dag eigen tijd/veld, ingangsdatum, eerst vragen bij afmeldingen (Besluit 87) | **B. Opslaan niet zeker** / **A. Momentopname** |
 | HJO: na "Bekijken" in het venster van een speler bleef het venster over de spelerpagina liggen | Naar een andere pagina gaan sloot een open venster niet | Elke paginawissel sluit eerst een open venster (26-09) | **C. Demo verbergt het** (nooit vanuit een venster doorgeklikt) |
 | Speeltijd telde alleen mee na een tweede knop op het laatste blok ("Wedstrijd klaar: bevestigen"); alleen uitslag opslaan (of de server) → minuten weg | Twee eindknoppen, speeltijd hing aan het doorklikken van alle blokken | Uitslag opslaan legt ook speeltijd en aanwezigheid vast; de server doet het 2 uur na afloop (Besluit 85) | **B. Opslaan niet zeker** |
 | Kind afgemeld op de ochtend zelf, maar stond nog in het wisselschema; alleen zichtbaar in het tabblad Speeltijd | Waarschuwing zat alleen in het schema-scherm | Regel in "Actie nodig" bij de trainer; oranje regel bij de timekeeper (Besluit 85) | **D. Eén persoon per rol** (timekeeper ≠ trainer) |

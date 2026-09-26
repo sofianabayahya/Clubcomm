@@ -508,6 +508,13 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 87 — Trainingsrooster: per dag eigen tijd en veld, ingangsdatum, veilig bijwerken
+- **Per dag:** in "Rooster wijzigen" (Planning → Weekrooster en veldindeling, of de teampagina) staat per dag een eigen van, tot en veld. Vink je een dag aan, dan neemt die de tijd en het veld van de vorige dag over.
+- **Vanaf:** een ingangsdatum (standaard morgen; bij een eerste rooster vandaag). Trainingen daarvoor blijven zoals ze zijn.
+- **Veilig bijwerken (was: alles weggooien en opnieuw maken):** trainingen uit het rooster krijgen alleen de nieuwe tijd/veld, met behoud van afmeldingen en afgelast. Afgelaste, verplaatste en zelf toegevoegde trainingen (Planning aanpassen) blijven met rust; een verplaatste training komt ook niet terug op de oude dag. Valt een dag weg terwijl er al afmeldingen op staan, dan vraagt de app eerst.
+- **Bericht aan de ouders** (aan te vinken, standaard aan): *"Nieuw trainingsrooster vanaf …"* met het nieuwe rooster, alleen als het team al een rooster had.
+- Geldt ook voor "Rooster voor meerdere teams" en de Excel-import.
+
 ## Besluit 86 — Trainersportaal: elk scherm één taak; alle teamleiders zichtbaar
 - **Spelers = wie is dit kind:** op naam, zonder cijfers. Per kind: keeper, of het de volgende keer niet komt, en de stand van het ontwikkelgesprek.
 - **Aanwezigheid → Overzicht = de cijfers (de enige plek):** teamcijfer met de norm van het teamtype (selectie 90%, breedte 80%, zoals vastgelegd), dan **"Vraagt aandacht"** (onder de norm, kaarten of langdurig afwezig); de rest van het team ingeklapt. Ook zo op de teampagina van de HJO.

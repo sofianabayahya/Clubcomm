@@ -266,26 +266,69 @@
 
   // Rooster
   const dagKnoppen = (gekozen = []) => `<fieldset class="dagen"><legend>Dagen</legend>${[1, 2, 3, 4, 5, 6].map((d) => `<label><input type="checkbox" name="dag" value="${d}" ${gekozen.includes(d) ? 'checked' : ''}><span>${D.DAG_KORT[d]}</span></label>`).join('')}</fieldset>`;
-  CC.on('bulkRooster', () => { const S = CC.S(); CC.sheet('Rooster voor meerdere teams', `<form data-submit="bulkRoosterOk" class="codeform"><fieldset class="vinkjes"><legend>Teams</legend>${S.teams.map((t) => `<label><input type="checkbox" name="teams" value="${t.id}"> ${t.naam}</label>`).join('')}</fieldset>${dagKnoppen([3, 5])}<div class="twee"><div><label for="br-t">Van</label><input id="br-t" name="tijd" type="time" value="17:30"></div><div><label for="br-e">Tot</label><input id="br-e" name="eind" type="time" value="18:45"></div></div><label for="br-v">Veld</label><select id="br-v" name="veld">${[1, 2, 3, 4].map((v) => `<option>Veld ${v}</option>`).join('')}<option>Halve veld 1A</option><option>Halve veld 1B</option></select><button class="knop">Toepassen</button><p class="zacht klein">Het systeem maakt alle trainingen tot het einde van het seizoen aan en slaat de vakanties over.</p></form>`, { groot: true }); });
-  const hergenereer = (S, t) => {
-    const vandaag = D.vandaag();
-    S.acts = S.acts.filter((a) => !(a.teamId === t.id && a.soort === 'training' && a.datum >= vandaag && !S.pres[a.id]));
-    const inVak = (d) => [...S.club.vakanties, ...S.club.stops].find((v) => d >= v.van && d <= v.tot && !v.trainen);
-    // Tot het einde van het seizoen (was 8 weken; dan liep de planning ongemerkt af)
-    for (let d = vandaag; d <= (S.club.seizoen.eind || D.addDays(vandaag, 56)); d = D.addDays(d, 1)) {
-      const dow = D.parse(d).getDay();
-      t.rooster.forEach((r) => { if (r.dag === dow && !inVak(d)) S.acts.push({ id: 'a' + Math.random().toString(36).slice(2), teamId: t.id, soort: 'training', datum: d, tijd: r.tijd, eind: r.eind, veld: r.veld, afgelast: false }); });
-    }
-    S.acts.sort((a, b) => (a.datum + a.tijd).localeCompare(b.datum + b.tijd));
+  CC.on('bulkRooster', () => { const S = CC.S(); CC.sheet('Rooster voor meerdere teams', `<form data-submit="bulkRoosterOk" class="codeform"><fieldset class="vinkjes"><legend>Teams</legend>${S.teams.map((t) => `<label><input type="checkbox" name="teams" value="${t.id}"> ${t.naam}</label>`).join('')}</fieldset>${dagKnoppen([3, 5])}<div class="twee"><div><label for="br-t">Van</label><input id="br-t" name="tijd" type="time" value="17:30"></div><div><label for="br-e">Tot</label><input id="br-e" name="eind" type="time" value="18:45"></div></div><label for="br-v">Veld</label><select id="br-v" name="veld">${[1, 2, 3, 4].map((v) => `<option>Veld ${v}</option>`).join('')}<option>Halve veld 1A</option><option>Halve veld 1B</option></select>${vanafVeld(S, D.vandaag())}<button class="knop">Toepassen</button><p class="zacht klein">Het systeem maakt alle trainingen tot het einde van het seizoen aan en slaat de vakanties over. Afgelaste, verplaatste en extra trainingen blijven zoals ze zijn.</p></form>`, { groot: true }); });
+  // Besluit 87: rooster veilig bijwerken in plaats van alle komende trainingen weggooien en opnieuw maken.
+  // Trainingen uit het rooster krijgen alleen de nieuwe tijd/veld (afmeldingen en afgelast blijven), afgelaste, verplaatste en
+  // zelf toegevoegde trainingen blijven met rust, en pas vanaf de ingangsdatum. Eerst een plan (zonder iets te veranderen).
+  const inVakantie = (S, d) => [...(S.club.vakanties || []), ...(S.club.stops || [])].some((v) => d >= v.van && d <= v.tot && !v.trainen);
+  const roosterPlan = (S, t, nieuw, vanaf) => {
+    const oud = t.rooster || []; const dow = (d) => D.parse(d).getDay();
+    const uitRooster = (a) => a.teamId === t.id && a.soort === 'training' && a.datum >= vanaf && !S.pres[a.id] && !a.extra && !a.verplaatst
+      && (a.rooster || oud.some((r) => r.dag === dow(a.datum) && r.tijd === a.tijd && r.veld === a.veld));
+    const lijst = S.acts.filter(uitRooster); const wijzig = []; const weg = [];
+    lijst.forEach((a) => { const r = nieuw.find((x) => x.dag === dow(a.datum)); if (!r) weg.push(a); else if (r.tijd !== a.tijd || r.eind !== a.eind || r.veld !== a.veld || !a.rooster) wijzig.push({ a, r }); });
+    const bezet = new Set(lijst.filter((a) => !weg.includes(a)).map((a) => a.datum));
+    const verplaatstVan = new Set(S.acts.filter((a) => a.teamId === t.id && a.origDatum).map((a) => a.origDatum));
+    const erbij = []; const eind = S.club.seizoen.eind || D.addDays(vanaf, 56);
+    for (let d = vanaf; d <= eind; d = D.addDays(d, 1)) { const r = nieuw.find((x) => x.dag === dow(d)); if (r && !inVakantie(S, d) && !bezet.has(d) && !verplaatstVan.has(d)) erbij.push({ datum: d, r }); }
+    return { t, nieuw, wijzig, weg, erbij, metAfm: weg.filter((a) => S.afm.some((f) => f.actId === a.id)), hadRooster: oud.length > 0 };
   };
+  const roosterToepassen = (S, plan) => {
+    const { t } = plan;
+    plan.wijzig.forEach(({ a, r }) => Object.assign(a, { tijd: r.tijd, eind: r.eind, veld: r.veld, rooster: true }));
+    const wegIds = new Set(plan.weg.map((a) => a.id)); S.acts = S.acts.filter((a) => !wegIds.has(a.id));
+    plan.erbij.forEach(({ datum, r }) => S.acts.push({ id: 'a' + Math.random().toString(36).slice(2), teamId: t.id, soort: 'training', datum, tijd: r.tijd, eind: r.eind, veld: r.veld, afgelast: false, rooster: true }));
+    t.rooster = plan.nieuw; S.acts.sort((a, b) => (a.datum + a.tijd).localeCompare(b.datum + b.tijd));
+  };
+  const roosterTekst = (r) => `${D.DAG[r.dag]} ${r.tijd}–${r.eind}, ${r.veld}`;
+  // Uitvoeren (ook voor meerdere teams en de Excel-import). Staan er afmeldingen op trainingen die wegvallen, dan eerst vragen.
+  let roosterWacht = null;
+  const roosterUitvoeren = (S, items, vanaf, bericht, bevestigd) => {
+    const plannen = items.map(({ t, nieuw }) => roosterPlan(S, t, nieuw, vanaf)); const metAfm = plannen.flatMap((x) => x.metAfm);
+    if (metAfm.length && !bevestigd) { roosterWacht = { items: items.map((x) => ({ tid: x.t.id, nieuw: x.nieuw })), vanaf, bericht };
+      return CC.sheet('Afmeldingen op trainingen die wegvallen', `<p>Op <b>${metAfm.length} ${metAfm.length === 1 ? 'training' : 'trainingen'}</b> die uit het rooster ${metAfm.length === 1 ? 'verdwijnt' : 'verdwijnen'}, hebben ouders al afgemeld (${metAfm.slice(0, 4).map((a) => `${esc(CC.tn(a.teamId))} ${D.kort(a.datum)}`).join(', ')}${metAfm.length > 4 ? ', …' : ''}).</p><p class="zacht klein">Weghalen betekent dat die afmeldingen ook verdwijnen. De ouders krijgen het nieuwe rooster in een bericht.</p>
+        <div class="knoppen kolom"><button class="knop rood" data-act="roosterBevestig">Toch weghalen en opslaan</button><button class="knop licht" data-act="sluit">Terug</button></div>`); }
+    const me = CC.me(); let n = 0;
+    plannen.forEach((plan) => { const veranderd = plan.wijzig.length + plan.weg.length + plan.erbij.length; roosterToepassen(S, plan); n += veranderd;
+      const ouders = M.oudersVan(S, plan.t.id);
+      if (bericht && plan.hadRooster && veranderd && ouders.length) S.msgs.push({ id: 'b' + Date.now() + plan.t.id, van: me.id, vanRol: (CC.rol() || {}).rol, soort: 'nieuws', bereik: plan.t.id, onderwerp: `Nieuw trainingsrooster vanaf ${D.lang(vanaf)}`,
+        tekst: `Vanaf ${D.lang(vanaf)} traint ${plan.t.naam}:\n${plan.nieuw.map(roosterTekst).map((x) => '• ' + x).join('\n')}\n\nDe planning in ClubComm is al bijgewerkt.`, tijd: new Date().toISOString(), gepland: null, ontvangers: [...new Set([...ouders, ...M.stafVan(S, plan.t.id)])].filter((x) => x !== me.id), gelezen: [], antw: [], urgent: false }); });
+    roosterWacht = null; CC.save(); CC.closeSheet(); CC.render(); CC.toast(`Rooster opgeslagen${items.length > 1 ? ` voor ${items.length} teams` : ''} · ${n} ${n === 1 ? 'training' : 'trainingen'} bijgewerkt`);
+  };
+  CC.on('roosterBevestig', () => { const S = CC.S(); const w = roosterWacht; if (!w) return CC.closeSheet(); roosterUitvoeren(S, w.items.map((x) => ({ t: M.team(S, x.tid), nieuw: x.nieuw })), w.vanaf, w.bericht, true); });
+  const vanafVeld = (S, standaard) => `<label for="rv-van">Vanaf</label><input id="rv-van" name="vanaf" type="date" min="${D.vandaag()}" max="${S.club.seizoen.eind}" value="${standaard}" required>
+    <label class="vink"><input type="checkbox" name="bericht" checked><span>Stuur de ouders een bericht met het nieuwe rooster <small class="zacht">(alleen als er al een rooster was)</small></span></label>`;
+  const leesVanaf = (f) => (f.vanaf.value && f.vanaf.value > D.vandaag() ? f.vanaf.value : D.vandaag());
   CC.on('bulkRoosterOk', (f) => {
     const S = CC.S(); const teams = [...f.querySelectorAll('[name=teams]:checked')].map((x) => x.value); const dagen = [...f.querySelectorAll('[name=dag]:checked')].map((x) => Number(x.value));
     if (!teams.length || !dagen.length) return CC.toast('Kies teams en dagen', 'fout');
-    teams.forEach((id) => { const t = M.team(S, id); t.rooster = dagen.map((d) => ({ dag: d, tijd: f.tijd.value, eind: f.eind.value, veld: f.veld.value })); hergenereer(S, t); });
-    CC.save(); CC.closeSheet(); CC.render(); CC.toast(`Rooster ingesteld voor ${teams.length} teams; trainingen aangemaakt`);
+    roosterUitvoeren(S, teams.map((id) => ({ t: M.team(S, id), nieuw: dagen.map((d) => ({ dag: d, tijd: f.tijd.value, eind: f.eind.value, veld: f.veld.value })) })), leesVanaf(f), f.bericht.checked);
   });
-  CC.on('roosterTeam', (el) => { const S = CC.S(); const t = M.team(S, el.dataset.team); const r = t.rooster[0] || { tijd: '17:30', eind: '18:45', veld: 'Veld 1' }; CC.sheet(`Rooster ${t.naam}`, `<form data-submit="roosterTeamOk" data-team="${t.id}" class="codeform">${dagKnoppen(t.rooster.map((x) => x.dag))}<div class="twee"><div><label for="rt-t">Van</label><input id="rt-t" name="tijd" type="time" value="${r.tijd}"></div><div><label for="rt-e">Tot</label><input id="rt-e" name="eind" type="time" value="${r.eind}"></div></div><label for="rt-v">Veld</label><input id="rt-v" name="veld" value="${esc(r.veld)}"><button class="knop">Opslaan</button></form>`); });
-  CC.on('roosterTeamOk', (f) => { const S = CC.S(); const t = M.team(S, f.dataset.team); t.rooster = [...f.querySelectorAll('[name=dag]:checked')].map((x) => ({ dag: Number(x.value), tijd: f.tijd.value, eind: f.eind.value, veld: f.veld.value })); hergenereer(S, t); CC.save(); CC.closeSheet(); CC.render(); CC.toast('Rooster opgeslagen'); });
+  // Besluit 87: per dag een eigen tijd en veld. Vink je een dag aan, dan neemt die de tijd en het veld van de vorige dag over.
+  CC.on('roosterTeam', (el) => { const S = CC.S(); const t = M.team(S, el.dataset.team); const eerste = t.rooster[0] || { tijd: '17:30', eind: '18:45', veld: 'Veld 1' };
+    const rij = (d) => { const r = t.rooster.find((x) => x.dag === d); const w = r || eerste;
+      return `<div class="roosterdag"><label class="vink"><input type="checkbox" name="aan-${d}" ${r ? 'checked' : ''} data-change="roosterDagAan" data-d="${d}"><span><b>${D.DAG[d][0].toUpperCase() + D.DAG[d].slice(1)}</b></span></label>
+        <div class="twee drie" data-dagvelden="${d}" ${r ? '' : 'hidden'}><div><label for="rt-t${d}">Van</label><input id="rt-t${d}" name="van-${d}" type="time" value="${w.tijd}"></div><div><label for="rt-e${d}">Tot</label><input id="rt-e${d}" name="tot-${d}" type="time" value="${w.eind}"></div><div><label for="rt-v${d}">Veld</label><input id="rt-v${d}" name="veld-${d}" value="${esc(w.veld)}"></div></div></div>`; };
+    CC.sheet(`Rooster ${t.naam}`, `<form data-submit="roosterTeamOk" data-team="${t.id}" class="codeform">${[1, 2, 3, 4, 5, 6, 0].map(rij).join('')}
+      ${vanafVeld(S, t.rooster.length ? D.addDays(D.vandaag(), 1) : D.vandaag())}<button class="knop vol">Opslaan</button>
+      <p class="zacht klein">Trainingen die al gepland staan, krijgen de nieuwe tijd of het nieuwe veld; afmeldingen blijven staan. Afgelaste, verplaatste en extra trainingen blijven zoals ze zijn. Eén keer iets anders? Gebruik dan "Planning aanpassen".</p></form>`, { groot: true }); });
+  CC.on('roosterDagAan', (el) => { const d = el.dataset.d; const vak = document.querySelector(`[data-dagvelden="${d}"]`); if (!vak) return; vak.hidden = !el.checked;
+    if (el.checked) { const vorige = [...document.querySelectorAll('[data-dagvelden]')].filter((x) => !x.hidden && x !== vak).pop();
+      if (vorige) ['van', 'tot', 'veld'].forEach((k) => { const bron = vorige.querySelector(`[name^="${k}-"]`); const doel = vak.querySelector(`[name^="${k}-"]`); if (bron && doel) doel.value = bron.value; }); } });
+  CC.on('roosterTeamOk', (f) => { const S = CC.S(); const t = M.team(S, f.dataset.team);
+    const nieuw = [1, 2, 3, 4, 5, 6, 0].filter((d) => f[`aan-${d}`].checked).map((d) => ({ dag: d, tijd: f[`van-${d}`].value, eind: f[`tot-${d}`].value, veld: f[`veld-${d}`].value.trim() || 'Veld 1' }));
+    if (nieuw.some((r) => !r.tijd || !r.eind || r.eind <= r.tijd)) return CC.toast('Controleer de tijden: "tot" moet na "van" liggen', 'fout');
+    roosterUitvoeren(S, [{ t, nieuw }], leesVanaf(f), f.bericht.checked); });
   CC.on('excelImport', () => CC.sheet('Importeren uit Excel', `<p>Heb je de veldindeling al in Excel? Sla het blad op als <b>CSV</b> met deze kolommen:</p>
     <pre class="code">team;dag;van;tot;veld\nO10-1;woensdag;17:30;18:45;Veld 2\nO10-1;vrijdag;17:30;18:45;Veld 2\nO12-2;dinsdag;18:00;19:15;Veld 3</pre>
     <label class="knop licht vol bestand">${icon('upload')}CSV-bestand kiezen<input type="file" accept=".csv,text/csv" data-change="csvGekozen" hidden></label>
@@ -295,8 +338,8 @@
     r.onload = () => {
       const S = CC.S(); const dagen = D.DAG; const per = {}; let fout = 0;
       r.result.split(/\r?\n/).slice(1).filter((l) => l.trim()).forEach((l) => { const [team, dag, van, tot, veld] = l.split(/[;,]/).map((x) => x.trim()); const d = dagen.indexOf((dag || '').toLowerCase()); if (!M.team(S, team) || d < 0) { fout++; return; } (per[team] = per[team] || []).push({ dag: d, tijd: van, eind: tot, veld }); });
-      Object.entries(per).forEach(([team, rooster]) => { const t = M.team(S, team); t.rooster = rooster; hergenereer(S, t); });
-      CC.save(); CC.closeSheet(); CC.render(); CC.toast(`${Object.keys(per).length} teams geïmporteerd${fout ? `, ${fout} regels overgeslagen` : ''}`, fout ? 'fout' : '');
+      if (fout) CC.toast(`${fout} regels overgeslagen (onbekend team of dag)`, 'fout');
+      roosterUitvoeren(S, Object.entries(per).map(([team, nieuw]) => ({ t: M.team(S, team), nieuw })), D.addDays(D.vandaag(), 1), true);
     };
     r.readAsText(file);
   });
