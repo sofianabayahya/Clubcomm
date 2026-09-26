@@ -508,6 +508,14 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 81 — Lijsten tonen eerst wat nu speelt
+Vaste regel voor alle portalen: een lijst die in het seizoen groeit, toont eerst wat nu speelt; de rest staat ingeklapt ("Toon alles") of per maand.
+- **Trainer, Home:** wat vandaag of morgen moet (wisselschema, uitslag) staat bovenaan "Actie nodig". Meer dan één training zonder aanwezigheid → **één regel** "Aanwezigheid nog invullen (3 trainingen)" die een lijstje opent.
+- **HJO/beheerder, Planning → Uitzonderingen door trainers:** de laatste 14 dagen open, oudere wijzigingen per maand ingeklapt.
+- **Speler (trainer) en Aanwezigheid en kaarten (ouder):** gesprekken/contact, kaarten en afmeldgeschiedenis tonen de laatste 3 met "Toon alles (n)". Boven de afmeldgeschiedenis één regel samenvatting, bijv. "11× afgemeld, meestal: ziek." (informatie, geen taak).
+- **Ontwikkelgesprekken (trainer):** eerst de komende gesprekken; dagen die al geweest zijn staan ingeklapt onder "Geweest (n gesprekken)".
+- Later (op Openstaand): Inzicht, Regels en Rollen opdelen in ingeklapte blokken; "Afgedaan" bij signalen van de trainer alleen de laatste 30 dagen; tabblad Team van de teamleider.
+
 ## Besluit 80 — Berichtencentrum overzichtelijk houden
 - **Nieuws over een activiteit vervalt vanzelf:** een herinnering, planningswijziging, afgelasting of uitslag gaat de dag na die activiteit naar het Archief (niet pas na 14 dagen). Vastgezette berichten niet.
 - **Archief per maand:** kopjes per maand, de nieuwste open, oudere ingeklapt.

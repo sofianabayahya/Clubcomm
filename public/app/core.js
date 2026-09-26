@@ -107,6 +107,12 @@
     stip: (zone) => `<span class="stip ${zone}" aria-label="${zone}"></span>`,
     avatar: (naam, cls = '') => `<span class="avatar ${cls}">${esc(initialen(naam))}</span>`,
     leeg: (tekst, ic = 'circle-check') => `<div class="leeg">${icon(ic)}<p>${tekst}</p></div>`,
+    // Besluit 81: lange lijsten tonen eerst wat nu speelt (de eerste n), de rest ingeklapt onder "Toon alles"
+    eerst: (rijen, n = 3, klas = 'lijst compact') => `<div class="${klas}">${rijen.slice(0, n).join('')}</div>${rijen.length > n ? `<details class="uitklap"><summary>Toon alles (${rijen.length})</summary><div class="${klas}">${rijen.slice(n).join('')}</div></details>` : ''}`,
+    // Besluit 81: per maand ingeklapt (nieuwste eerst); items = [{ tijd, html }]
+    perMaand: (items, klas = 'lijst compact') => { const g = []; items.forEach((x) => { const d = new Date(x.tijd); const k = `${d.getFullYear()}-${d.getMonth()}`; let m = g.find((y) => y.k === k);
+      if (!m) { m = { k, naam: d.toLocaleDateString('nl-NL', { month: 'long', year: 'numeric' }), r: [] }; g.push(m); } m.r.push(x.html); });
+      return g.map((m) => `<details class="uitklap blok maandblok"><summary>${esc(m.naam.charAt(0).toUpperCase() + m.naam.slice(1))} <span class="zacht">(${m.r.length})</span></summary><div class="${klas}">${m.r.join('')}</div></details>`).join(''); },
     sectie: (titel, rechts = '') => `<div class="sectie-kop"><h3>${titel}</h3>${rechts}</div>`,
     actTitel(S, a) {
       if (a.soort === 'training') return 'Training';
@@ -879,7 +885,7 @@
     const rol = CC.rol().rol; const staf = rol !== 'ouder';
     const ouders = pl.ouders.map((o) => M.persoon(S, o)).filter(Boolean);
     const b = CC.beoordLaatste && CC.beoordLaatste(S, pl.id);
-    const gespr = S.gesprekken.filter((g) => g.spelerId === pl.id);
+    const gespr = S.gesprekken.filter((g) => g.spelerId === pl.id).sort((a, b) => String(b.datum).localeCompare(String(a.datum))); // nieuwste eerst (Besluit 81)
     const sp = M.speeltijdStand ? M.speeltijdStand(S, pl) : null;
     const dp = staf && M.doelpuntenSeizoen ? M.doelpuntenSeizoen(S, pl.id) : 0;
     const kopSub = [CC.tn(pl.teamId), sp && sp.pct != null ? `${sp.pct}% speeltijd` : '', dp ? `${dp} ${dp === 1 ? 'doelpunt' : 'doelpunten'}` : '', staf && CC.zicht('beoordeling') ? (CC.laatsteVerslag && CC.laatsteVerslag(S, pl.id) ? `gesprek gehad (${CC.laatsteVerslag(S, pl.id).m.naam.toLowerCase()})` : '') : ''].filter(Boolean).join(' · ');
@@ -897,7 +903,7 @@
       ? `${h.sectie(b ? `Ontwikkeling · jouw kijk (${esc(b.m.naam.toLowerCase())}, alleen staf)` : 'Ontwikkeling')}${b ? `<div class="scores">${Object.entries(b.x.scores).map(([v, s]) => `<span>${esc(v)} ${CC.scoreTekst(t, s)}</span>`).join('')}</div>` : '<p class="zacht klein">Nog geen eigen kijk ingevuld (hoeft pas voor het voorjaar).</p>'}${CC.mag('beoordelen') ? `<div class="knoppen"><button class="knop licht klein" data-act="open" data-view="beoordelen">${icon('eye-off')}Jouw kijk</button>${CC.views.gesprekVerslag && CC.actiefMoment ? `<button class="knop licht klein" data-act="open" data-view="gesprekVerslag" data-id="${pl.id}" data-m="${CC.actiefMoment(S).id}">${icon('users')}Gesprekspagina</button>` : ''}${CC.gesprekkenGehad && CC.gesprekkenGehad(S, pl.id).length ? `<button class="knop licht klein" data-act="open" data-view="beoordelingKind" data-id="${pl.id}">${icon('flag')}Alle gesprekken (${CC.gesprekkenGehad(S, pl.id).length})</button>` : ''}</div>` : ''}`
       // Ouder (Besluit 67): nooit de kijk van de trainer, wel wat in het gesprek samen is afgesproken
       : !staf && CC.laatsteVerslag && CC.laatsteVerslag(S, pl.id) ? `${h.sectie('Wapen en doelen')}<div class="kaartje">${CC.verslagVoorOuder(S, pl, CC.laatsteVerslag(S, pl.id).m.id)}</div><button class="linkknop" data-act="open" data-view="beoordelingKind" data-id="${pl.id}">Alle gesprekken</button>` : '';
-    const gesprBlok = staf && CC.zicht('gesprekken') ? `${h.sectie('Gesprekken')}${gespr.map((g) => h.rij({ ic: g.soort === 'gesprek' ? 'users' : g.soort === 'geappt' ? 'message-circle' : g.soort === 'geaccepteerd' ? 'circle-check' : 'phone', titel: `${D.kort(g.datum)} · ${CC.gesprekLabel(g)} · ${esc((M.persoon(S, g.door) || { naam: '' }).naam)}`, sub: esc(g.notitie) + (g.afspraak ? `<br><b>Afspraak:</b> ${esc(g.afspraak)}` : '') })).join('') || '<p class="zacht klein">Nog geen gesprekken vastgelegd.</p>'}${CC.zicht('contact') ? `<button class="knop licht klein" data-act="gesprekVastleggen" data-id="${pl.id}">${icon('phone')}Contact vastleggen</button>` : ''}` : '';
+    const gesprBlok = staf && CC.zicht('gesprekken') ? `${h.sectie('Gesprekken')}${gespr.length ? h.eerst(gespr.map((g) => h.rij({ ic: g.soort === 'gesprek' ? 'users' : g.soort === 'geappt' ? 'message-circle' : g.soort === 'geaccepteerd' ? 'circle-check' : 'phone', titel: `${D.kort(g.datum)} · ${CC.gesprekLabel(g)} · ${esc((M.persoon(S, g.door) || { naam: '' }).naam)}`, sub: esc(g.notitie) + (g.afspraak ? `<br><b>Afspraak:</b> ${esc(g.afspraak)}` : '') })), 3, 'lijst') : '<p class="zacht klein">Nog geen gesprekken vastgelegd.</p>'}${CC.zicht('contact') ? `<button class="knop licht klein" data-act="gesprekVastleggen" data-id="${pl.id}">${icon('phone')}Contact vastleggen</button>` : ''}` : '';
     return {
       titel: M.naam(S, pl), sub: kopSub,
       html: `${oudersBlok}${posBlok}
@@ -909,7 +915,7 @@
       ${gesprBlok}
       ${h.sectie('Geschiedenis')}<div class="lijst compact">${gesch.slice(0, n).map(({ act, st: s }) => h.rij({ ic: h.datumBlok(act), titel: h.actTitel(S, act), sub: s.afm && s.afm.opm && CC.zicht('toelichting') ? esc(s.afm.opm) : '', rechts: h.chip(s) + (s.laat ? '<span class="chip geel mini">te laat afgemeld</span>' : '') })).join('') || h.leeg('Nog geen activiteiten')}</div>
       ${gesch.length > n ? `<button class="linkknop vol" data-act="seg" data-key="gesch-${pl.id}" data-val="${n + 10}">Toon meer (${gesch.length - n})</button>` : ''}
-      ${k.ev.length ? `${h.sectie('Afmelden: herinneringen en kaarten dit seizoen')}<div class="lijst compact">${k.ev.slice().reverse().map((e) => h.rij({ ic: CC.kaartIc(e), titel: CC.kaartTitel(e), sub: `${D.kort(e.act.datum)} · ${e.wat.toLowerCase()}${e.geaccepteerd ? ' · <b>geaccepteerd</b>' : ''}` })).join('')}</div>` : ''}
+      ${k.ev.length ? `${h.sectie('Afmelden: herinneringen en kaarten dit seizoen')}${h.eerst(k.ev.slice().reverse().map((e) => h.rij({ ic: CC.kaartIc(e), titel: CC.kaartTitel(e), sub: `${D.kort(e.act.datum)} · ${e.wat.toLowerCase()}${e.geaccepteerd ? ' · <b>geaccepteerd</b>' : ''}` })))}` : ''}
       ${Object.keys(st.redenen).length ? `${h.sectie('Redenen van afwezigheid')}<div class="balkjes">${Object.entries(st.redenen).sort((a, b2) => b2[1] - a[1]).map(([r, c]) => `<div class="balkje"><span>${esc(r)}</span><i style="--w:${(100 * c) / st.afwezig}%"></i><b>${c}</b></div>`).join('')}</div>` : ''}`,
     };
   };

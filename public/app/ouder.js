@@ -123,6 +123,10 @@
   CC.on('taakKanToch', (el) => { const S = CC.S(); const t = S.taken.find((x) => x.id === el.dataset.id); t.kanNiet = (t.kanNiet || []).filter((x) => x !== CC.me().id); CC.save(); CC.render(); });
 
   // Overzicht voor de ouder: aanwezigheid en kaarten per fase of seizoen (dezelfde cijfers als de HJO ziet)
+  // Besluit 81: één regel samenvatting boven de afmeldgeschiedenis (informatie, geen taak)
+  const samenvatting = (hist) => { const tel = {}; hist.forEach(({ f }) => { tel[f.reden] = (tel[f.reden] || 0) + 1; });
+    const [reden, n] = Object.entries(tel).sort((x, y) => y[1] - x[1])[0];
+    return `${hist.length}× afgemeld${hist.length > 1 && n > 1 ? `, meestal: ${esc(reden.toLowerCase())}` : ''}.`; };
   CC.views.kindOverzicht = (S, p) => {
     const pl = M.speler(S, p.id); const soort = h.segVal('kindPer', 'blok'); const per = M.periode(S, soort);
     const st = M.stats(S, pl, per); const z = M.zone(S, st.pct, pl.teamId);
@@ -131,10 +135,10 @@
     return { titel: 'Aanwezigheid en kaarten', html: `${h.seg('kindPer', [['blok', `Deze fase (${M.blok(S, D.vandaag()).naam.toLowerCase()})`], ['seizoen', 'Heel seizoen']], 'blok')}
       <div class="cijfers"><div class="cijfer ${z}"><b>${st.pct == null ? '–' : st.pct + '%'}</b><small>aanwezig</small></div><div class="cijfer"><b>${st.pctTr == null ? '–' : st.pctTr + '%'}</b><small>trainingen (${st.tr.aan}/${st.tr.tot})</small></div><div class="cijfer"><b>${st.pctWed == null ? '–' : st.pctWed + '%'}</b><small>wedstrijden (${st.wed.aan}/${st.wed.tot})</small></div></div>
       <p class="zacht klein">${st.aanwezig} van de ${st.totaal} keer aanwezig (te laat telt als aanwezig). Alleen activiteiten die al geweest zijn en waarbij de aanwezigheid is opgenomen; afgelaste trainingen tellen niet mee.</p>
-      ${h.sectie('Afmelden: kaarten dit seizoen')}${k.ev.length ? `<div class="lijst compact">${k.ev.slice().reverse().map((e) => h.rij({ ic: CC.kaartIc(e), titel: CC.kaartTitel(e), sub: `${D.kort(e.act.datum)} · ${e.wat.toLowerCase()}${e.geaccepteerd ? ' · geaccepteerd door de trainer' : ''}` })).join('')}</div>` : '<p class="zacht klein">Geen herinneringen of kaarten. Top!</p>'}
+      ${h.sectie('Afmelden: kaarten dit seizoen')}${k.ev.length ? h.eerst(k.ev.slice().reverse().map((e) => h.rij({ ic: CC.kaartIc(e), titel: CC.kaartTitel(e), sub: `${D.kort(e.act.datum)} · ${e.wat.toLowerCase()}${e.geaccepteerd ? ' · geaccepteerd door de trainer' : ''}` }))) : '<p class="zacht klein">Geen herinneringen of kaarten. Top!</p>'}
       <p class="zacht klein">${k.herinneringen < k.max ? `Nog ${k.max - k.herinneringen === 1 ? 'één vriendelijke herinnering' : `${k.max - k.herinneringen} vriendelijke herinneringen`} dit seizoen; daarna volgt een kaart.` : 'De vriendelijke herinneringen van dit seizoen zijn gebruikt; hierna volgt bij te laat afmelden een gele kaart, bij niet afmelden een rode.'}${stap ? ` <b>Volgende stap: ${stap.soort === 'bellen' ? `de ${CC.wie('bellen', pl.teamId)} neemt contact met je op` : stap.soort === 'gesprekHjo' ? `een persoonlijk gesprek met de ${CC.wie('gesprek', pl.teamId)}` : 'de club bespreekt het vervolg'}.</b>` : ''} ${st.telaat ? `Te laat gekomen: ${st.telaat}× (geen kaart).` : ''}</p>
       <div class="knoppen"><button class="linkknop" data-act="uitlegKaarten">Wat betekenen de kaarten?</button><button class="linkknop" data-act="open" data-view="beoordelingKind" data-id="${pl.id}">Wapen en doelen</button></div>
-      ${h.sectie('Afmeldgeschiedenis')}<div class="lijst compact">${hist.map(({ f, a }) => h.rij({ ic: h.reden(f.reden), titel: `${D.kort(a.datum)} · ${h.actTitel(S, a)}`, sub: `Reden: ${esc(f.reden)}${f.opm ? ' · ' + esc(f.opm) : ''}`, rechts: M.teLaatAfgemeld(S, f, a) ? '<span class="chip geel mini">te laat afgemeld</span>' : '<span class="chip groen mini">op tijd afgemeld</span>' })).join('') || '<p class="zacht klein">Geen afmeldingen in deze periode.</p>'}</div>` };
+      ${h.sectie('Afmeldgeschiedenis')}${hist.length ? `<p class="zacht klein">${samenvatting(hist)}</p>${h.eerst(hist.map(({ f, a }) => h.rij({ ic: h.reden(f.reden), titel: `${D.kort(a.datum)} · ${h.actTitel(S, a)}`, sub: `Reden: ${esc(f.reden)}${f.opm ? ' · ' + esc(f.opm) : ''}`, rechts: M.teLaatAfgemeld(S, f, a) ? '<span class="chip geel mini">te laat afgemeld</span>' : '<span class="chip groen mini">op tijd afgemeld</span>' })))}` : '<p class="zacht klein">Geen afmeldingen in deze periode.</p>'}` };
   };
 
   // Activiteitkaart met afmeldknop (Home)

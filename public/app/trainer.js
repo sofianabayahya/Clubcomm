@@ -241,6 +241,12 @@
     const namen = [...new Set(rest.map((s) => s.tekst.split(':')[0].split(' ')[0]))];
     return [...gesprek.map((s) => CC.stapRij(S, s)), rest.length ? h.rij({ ic: 'triangle-alert', titel: `${namen.length} ${namen.length === 1 ? 'speler vraagt' : 'spelers vragen'} aandacht`, sub: namen.join(', '), kleur: 'oranje', act: 'open', attrs: `data-view="teamSignalen" data-team="${tid}"` }) : ''].filter(Boolean);
   };
+  // Besluit 81: trainingen waarvan de aanwezigheid nog open staat (zolang invullen nog kan), oudste eerst
+  const openAanwezig = (S, tid) => S.acts.filter((a) => a.teamId === tid && !M.isWed(a) && a.datum < D.vandaag() && !a.afgelast && !a.vervangerId && !S.pres[a.id] && kanOpnemen(a));
+  const aanwezigRij = (a) => { const tot = CC.opnemenTot(a);
+    return h.rij({ ic: 'clipboard-check', titel: 'Aanwezigheid nog niet ingevuld', sub: `${a.soort === 'activiteit' ? esc(a.naam || 'Activiteit') : 'Training'} ${D.kort(a.datum)} ${a.tijd} · kan nog tot ${D.kort(D.iso(tot))} ${String(tot.getHours()).padStart(2, '0')}:${String(tot.getMinutes()).padStart(2, '0')}`, kleur: 'oranje', act: 'open', attrs: `data-view="opnemen" data-id="${a.id}"` }); };
+  CC.views.aanwezigOpen = (S, p) => { const open = openAanwezig(S, p.team);
+    return { titel: 'Aanwezigheid invullen', html: `<p class="zacht klein">Vul in wie er was. Een training verdwijnt uit dit lijstje zodra je hem opslaat, of als invullen niet meer kan.</p><div class="lijst">${open.map(aanwezigRij).join('') || h.leeg('Alles is ingevuld')}</div>` }; };
   CC.views.teamSignalen = (S, p) => {
     const sig = M.signalen(S, [p.team], false);
     const af = M.afgedaanRecent(S, [p.team]);
@@ -277,17 +283,17 @@
         { const open = S.aanm.filter((x) => x.teamId === tid && x.status === 'open'); const lang = open.filter((x) => Date.now() - new Date(x.tijd) > 24 * 3600e3);
           if (!t.teamleiderId && open.length) acties.push(h.rij({ ic: 'user-check', titel: `${open.length} aanmelding${open.length > 1 ? 'en' : ''} goedkeuren`, sub: 'Dit team heeft geen teamleider, dus jij keurt goed', act: 'open', attrs: 'data-view="aanmeldingen"', kleur: 'oranje' }));
           else if (lang.length) acties.push(h.rij({ ic: 'user-check', titel: `${lang.length} aanmelding${lang.length > 1 ? 'en wachten' : ' wacht'} al een dag`, sub: 'De teamleider heeft nog niet goedgekeurd. Jij kunt het ook doen.', act: 'open', attrs: 'data-view="aanmeldingen"', kleur: 'oranje' })); }
-        acties.push(...CC.signaalRegels(S, tid, true));
-        // Herinnering: training van een eerdere dag waarvan de aanwezigheid nog niet is ingevuld, zolang het nog kan
-        S.acts.filter((a) => a.teamId === tid && !M.isWed(a) && a.datum < D.vandaag() && !a.afgelast && !a.vervangerId && !S.pres[a.id] && kanOpnemen(a)).forEach((a) => {
-          const tot = CC.opnemenTot(a);
-          acties.push(h.rij({ ic: 'clipboard-check', titel: 'Aanwezigheid nog niet ingevuld', sub: `${a.soort === 'activiteit' ? esc(a.naam || 'Activiteit') : 'Training'} ${D.kort(a.datum)} ${a.tijd} · kan nog tot ${D.kort(D.iso(tot))} ${String(tot.getHours()).padStart(2, '0')}:${String(tot.getMinutes()).padStart(2, '0')}`, kleur: 'oranje', act: 'open', attrs: `data-view="opnemen" data-id="${a.id}"` }));
-        });
-        const mat = CC.materiaalRij && CC.mag('materiaal') && CC.materiaalRij(S, tid); if (mat) acties.push(mat);
-        // Besluit 73: wedstrijddag. Vandaag of morgen een wedstrijd zonder wisselschema; gespeelde wedstrijd zonder opgeslagen uitslag.
+        // Besluit 81: wat vandaag of morgen moet (wedstrijddag) staat bovenaan
         if (S.club.modules.speeltijd) S.acts.filter((a) => a.teamId === tid && M.isWed(a) && !a.afgelast && (a.datum === D.vandaag() || a.datum === D.addDays(D.vandaag(), 1)) && !S.speeltijd.schema[a.id] && new Date(`${a.datum}T${a.eind || a.tijd}`) > new Date())
           .forEach((a) => acties.push(h.rij({ ic: 'timer', titel: `Maak het wisselschema voor ${a.datum === D.vandaag() ? 'vandaag' : 'morgen'}`, sub: `${h.actTitel(S, a)} · ${a.tijd}`, act: 'naarWedstrijd', attrs: `data-id="${a.id}"`, kleur: 'oranje' })));
         zonderUitslag(S, tid).forEach((a) => acties.push(h.rij({ ic: 'flag', titel: 'Uitslag nog opslaan', sub: `${h.actTitel(S, a)} · ${D.kort(a.datum)} · dan krijgen de ouders de uitslag en kloppen de doelpunten`, act: 'naarWedstrijd', attrs: `data-id="${a.id}"`, kleur: 'oranje' })));
+        acties.push(...CC.signaalRegels(S, tid, true));
+        // Herinnering: training van een eerdere dag waarvan de aanwezigheid nog niet is ingevuld, zolang het nog kan.
+        // Besluit 81: meer dan één? Dan één regel met het aantal, die een lijstje opent.
+        { const open = openAanwezig(S, tid);
+          if (open.length === 1) acties.push(aanwezigRij(open[0]));
+          else if (open.length > 1) acties.push(h.rij({ ic: 'clipboard-check', titel: `Aanwezigheid nog invullen (${open.length} trainingen)`, sub: open.map((a) => D.kort(a.datum)).join(', '), kleur: 'oranje', act: 'open', attrs: `data-view="aanwezigOpen" data-team="${tid}"` })); }
+        const mat = CC.materiaalRij && CC.mag('materiaal') && CC.materiaalRij(S, tid); if (mat) acties.push(mat);
         if (CC.beoordRijTrainer) acties.push(...CC.beoordRijTrainer(S, tid));
         // Besluit 74: wie ook clubberichten mag sturen (bijv. trainer én beheerder), ziet klaargezette berichten ook hier
         if (CC.autoBerichtRijen) acties.push(...CC.autoBerichtRijen(S));

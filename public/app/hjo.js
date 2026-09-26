@@ -108,7 +108,11 @@
           ${h.sectie('Weekrooster en veldindeling')}
           <div class="lijst compact">${S.teams.map((t) => h.rij({ ic: 'shield', titel: esc(t.naam), sub: t.rooster.map((r) => `${D.DAG_KORT[r.dag]} ${r.tijd} ${esc(r.veld)}`).join(' · ') || 'Nog geen rooster', act: 'roosterTeam', attrs: `data-team="${t.id}"` })).join('')}</div>
           ${h.sectie('Uitzonderingen door trainers')}
-          <div class="lijst compact">${S.wijzigingen.slice().reverse().map((w) => h.rij({ ic: 'calendar-x', titel: `${esc(CC.tn(w.teamId))} · ${esc(w.tekst)}`, sub: `${esc((M.persoon(S, w.door) || {}).naam || '')} · ${D.tijdstip(w.tijd)}` })).join('') || '<p class="zacht klein">Geen wijzigingen.</p>'}</div>`;
+          ${(() => { // Besluit 81: de laatste 14 dagen open, oudere wijzigingen per maand ingeklapt
+            const rij = (w) => h.rij({ ic: 'calendar-x', titel: `${esc(CC.tn(w.teamId))} · ${esc(w.tekst)}`, sub: `${esc((M.persoon(S, w.door) || {}).naam || '')} · ${D.tijdstip(w.tijd)}` });
+            const alle = S.wijzigingen.slice().sort((a, b) => String(b.tijd).localeCompare(String(a.tijd))); const grens = Date.now() - 14 * 864e5;
+            const recent = alle.filter((w) => new Date(w.tijd) >= grens); const oud = alle.filter((w) => new Date(w.tijd) < grens);
+            return `<div class="lijst compact">${recent.map(rij).join('') || '<p class="zacht klein">Geen wijzigingen in de afgelopen 14 dagen.</p>'}</div>${oud.length ? `<p class="zacht klein">Eerder</p>${h.perMaand(oud.map((w) => ({ tijd: w.tijd, html: rij(w) })))}` : ''}`; })()}`;
       },
       inzicht(S) {
         const perSoort = h.segVal('inzPer', 'blok'); const per = M.periode(S, perSoort);
