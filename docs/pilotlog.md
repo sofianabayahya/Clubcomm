@@ -26,6 +26,7 @@ Besluiten staan in `besluiten.md`; dit is het logboek van fouten. Nieuwste boven
 | Overal "O12-1" in plaats van "O12 talententeam" (zelf gevonden, ± 40 plekken) | Teamcode en teamnaam waren in de demo gelijk | Overal de naam; code alleen intern (`M.tn`) | **C. Demo verbergt het** |
 | Oude berichten niet zichtbaar voor nieuwe ouders | Ontvangers liggen vast bij versturen | Vastgezet nieuws ook voor nieuwkomers (Besluit 41) | **A. Momentopname** |
 | Code niet ontvangen (Hotmail) | Nieuwe afzender → map Ongewenste e-mail | Tip op het codescherm | **E. Buiten de app** |
+| (26-09) Moeder dacht dat ze was aangemeld en wachtte op goedkeuring; wij zagen niets | Code (Hotmail) nooit ingevuld: de aanmelding staat dan nog alleen op haar telefoon en wordt pas na de code verstuurd | Codescherm zegt nu: "Je aanmelding is nog niet verstuurd"; ouder: Ongewenste e-mail bekijken of "Stuur opnieuw" | **E. Buiten de app** |
 | Na inloggen via de mail knop: app op beginscherm niet ingelogd | iPhone: beginscherm-app en Safari delen geen inlog | Vanaf beginscherm alleen de code overtypen; later knop helemaal uit de mail (Besluit 52) | **E. Buiten de app** |
 | Knop over e-mailadres heen | Lange woorden zonder spatie breken niet af | Afbreken toegestaan | **F. Echte gegevens zijn langer/rommeliger** |
 | Voornaam "Amin " met spatie; e-mail met hoofdletters | Invoer niet opgeschoond | Trimmen, e-mail kleine letters | **F. Echte gegevens zijn rommeliger** |
