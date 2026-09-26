@@ -508,6 +508,16 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 77 — Automatisch werk vanaf de server
+- **Elk kwartier** start de database (pg_cron `clubcomm-automaat`) de serverfunctie **automaat**. Die doet wat eerst pas gebeurde als iemand van de staf de app opende: vaste clubberichten, herinneringen bij activiteiten, uitslag opslaan en versturen (2 uur na afloop), ontwikkelgesprekken indelen, herinneren en afronden, herinnering kiestijd, gesprekken rond afgelaste trainingen.
+- **Dezelfde regels als de app:** de server haalt bij elke run de app-bestanden van mijnclubcomm.nl en voert ze uit in een afgeschermde omgeving zonder scherm, met een klok in Nederlandse tijd. Wie de app aanpast, past dus ook de server aan (één plek voor de regels).
+- **Nachtrust 21:00–07:30:** dan doet de server niets; wat aan de beurt is, gaat om 07:30.
+- **Veilig:** alleen de database mag de functie starten (geheim in een tabel die alleen de server leest). De server schrijft alleen berichten (nieuwe), activiteiten, gesprekstijden, verslagen en de lijst verstuurde berichten; nooit bestaande berichten.
+- **Namens wie:** clubberichten als "systeem"; teamzaken namens de trainer van het team (of anders de teamleider), zoals in de app.
+- **Geen dubbel werk:** de app doet het automatische werk niet meer zelf zolang de server in de laatste 2 uur heeft gedraaid; valt de server uit, dan neemt de app het weer over.
+- **Logboek** (14 dagen) in de tabel `automaat_log`. Proefrun mogelijk (`{ "proef": true }`): alleen uitrekenen, niets opslaan.
+- Kosten: € 0 (gratis pakket Supabase).
+
 ## Besluit 76 — Minder handelingen: wat de app zelf doet, en wat bewust een mens blijft doen
 *Uit de analyse van handelingen van vrijwilligers (26-09).*
 - **Uitslag:** aan het eind van de wedstrijddag slaat de app de uitslag zelf op en stuurt hem naar de ouders (volgens de clubinstelling), als er doelpunten zijn bijgehouden. Zonder doelpunten blijft "Uitslag nog opslaan" op Home (0-0 of niet bijgehouden). Wie scoorde, volgt de clubinstelling.

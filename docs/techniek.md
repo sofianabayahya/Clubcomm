@@ -14,7 +14,7 @@
   - contactgegevens (e-mail, telefoon) apart: staf ziet alleen die van ouders uit de eigen teams.
 - Extra bewaking: niemand kan zichzelf rollen geven; berichten van een ander kun je alleen als gelezen markeren of beantwoorden; ouders kunnen trainingen niet verplaatsen.
 - Test: `supabase/tests/rls_test.sql` (draait per rol wat iemand ziet en wat geweigerd wordt).
-- Migraties: `supabase/migrations/001…018` (009: vastgezet nieuws leesbaar voor nieuwe ouders van het team; 010: telefoonnummer bij aanmelden; 011: geen dubbele aanmelding voor hetzelfde kind; 012: pushmeldingen; 013: berichten als gesprekken, archief; 014: leegmaken alleen bij nieuwe club; 015: foutregistratie; 016: kijk van de trainer (beoordeling) alleen voor de staf; 017: ontwikkelgegevens verhuizen mee met de speler; 018: en verdwijnen bij uitschrijven).
+- Migraties: `supabase/migrations/001…019` (009: vastgezet nieuws leesbaar voor nieuwe ouders van het team; 010: telefoonnummer bij aanmelden; 011: geen dubbele aanmelding voor hetzelfde kind; 012: pushmeldingen; 013: berichten als gesprekken, archief; 014: leegmaken alleen bij nieuwe club; 015: foutregistratie; 016: kijk van de trainer (beoordeling) alleen voor de staf; 017: ontwikkelgegevens verhuizen mee met de speler; 018: en verdwijnen bij uitschrijven; 019: automatisch werk vanaf de server).
 
 ## Inloggen
 - Met een e-mailcode van 6 cijfers (geen wachtwoord, geen knop in de mail: Besluit 52). Na inloggen koppelt de database het account aan de persoon met hetzelfde e-mailadres.
@@ -57,3 +57,12 @@
 - Sleutelpaar (VAPID): één keer gemaakt door de functie (`{ "sleutel": true }`), staat in `push_sleutel` (RLS zonder policies); de app krijgt alleen de publieke helft via `push_sleutel()`.
 - Nachtrust 21:00–07:30: niet-urgente push in `push_wachtrij`; pg_cron-taak `clubcomm-push-ochtend` (elke 15 min 05:00–07:59 UTC) verstuurt vanaf 07:30 Nederlandse tijd.
 - Verlopen telefoons (404/410 van de pushdienst) worden automatisch opgeruimd.
+
+
+## Automatisch werk vanaf de server (Besluit 77)
+- Edge Function `automaat` (`supabase/functions/automaat`: `index.ts` + `motor.mjs`), verify_jwt uit; alleen te starten met het geheim uit `automaat_geheim` (header `x-cc-geheim`).
+- pg_cron `clubcomm-automaat` elk kwartier. Nachtrust 21:00–07:30 (Nederlandse tijd) in de functie zelf.
+- `motor.mjs` laadt `public/app/*.js` (van https://mijnclubcomm.nl/app/) in een omgeving zonder scherm en met een Nederlandse klok, zet de gegevens van de club klaar (`CC.uitRijen`), draait `CC.automaatClub` (als beheerder) en per team `CC.automaatTeam` (als trainer), en schrijft alleen de verschillen weg (berichten, activiteiten, gesprekstijden, verslagen, verstuurd-lijst).
+- De app vraagt bij het laden `automaat_laatst` op; gelukte run < 2 uur geleden → `CC.opServer` en de app doet het niet zelf.
+- Testen zonder op te slaan: `select net.http_post(url := '.../functions/v1/automaat', body := '{"proef": true, "altijd": true}', headers := jsonb_build_object('x-cc-geheim', (select geheim from automaat_geheim)))` en het antwoord in `net._http_response`.
+- Lokaal testen: `TZ=UTC node` met `motor.mjs` en de bestanden uit `public/app`.
