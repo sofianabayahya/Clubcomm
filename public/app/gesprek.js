@@ -1,99 +1,183 @@
-// ClubComm — Ontwikkelgesprek: voorbereiding, gesprekspagina en terugkijken (Besluit 66)
-// 1. Voorbereiding (ouder + kind, thuis): zelfbeoordeling per vaardigheid (1–10, onderbouw drie smileys), droom,
-//    wat is leuk, wat is lastig. Opgeslagen per speler en moment (ontwVoorb).
-// 2. Gesprekspagina (trainer, tijdens het gesprek): scores van kind en trainer naast elkaar (groot verschil uitgelicht),
-//    droom, max. 3 doelen (wat ga je doen, hoe helpt de trainer, hoe helpen ouders), afspraken, notitie (alleen staf).
-//    Alles wordt meteen opgeslagen tijdens het typen (ontwVerslag, ontwNotitie, beoord).
-// 3. Terugkijken: bij het volgende gesprek de droom en doelen van toen, per doel bereikt / deels / nog niet, en de groei.
-// Ouders zien het verslag (zonder notitie) een dag na het gesprek, net als de beoordeling (Besluit 23).
+// ClubComm — Ontwikkelgesprek (Besluit 66, vernieuwd in Besluit 67)
+// Drie stukken, drie plekken, elk met eigen rechten:
+// 1. Opdracht voor het kind (ontwVoorb, scope speler): het kind vult thuis in, de ouder helpt lezen. Per vaardigheid
+//    sterk / gaat goed / wil ik beter in worden, een wapen (1–2) met "wanneer zie je dat?", trots, droom, leuk, lastig,
+//    en in het voorjaar: hoe ging het met je doelen? Ouder en staf zien dit.
+// 2. Kijk van de trainer (beoord, scope beoord): zelfde lijst, apart en vooraf ingevuld. Alleen voor de staf
+//    (migratie 016); ouder en kind zien dit nooit. De antwoorden van het kind blijven verborgen tot de trainer klaar is.
+// 3. Samen (ontwVerslag, scope spelerlees): wat in het gesprek is afgesproken: wapen, werkpunt, twee doelen,
+//    "wat neem je mee?" en afspraken. De staf schrijft; de ouder ziet het zodra de trainer "Gesprek gehad" aantikt.
+// Plus de notitie van de trainer (ontwNotitie, scope notitie): alleen de staf.
+// Gesprek van 15 minuten: 12 minuten praten + 3 minuten wisselen, met een klok en leidraad op de gesprekspagina.
 (function () {
   const CC = window.CC; const D = CC.date, M = CC.m, h = CC.h, icon = CC.icon, esc = CC.esc;
   const sl = (pl, mid) => `${pl}|${mid}`;
-  const leeg = { voorb: () => ({ zelf: {}, droom: '', leuk: '', lastig: '' }), verslag: () => ({ droom: '', doelen: [], afspraken: '', gehad: false }) };
+  const leeg = { voorb: () => ({ zelf: {}, wapens: [], wapenWanneer: '', trots: '', droom: '', leuk: '', lastig: '', doelTerug: {} }), verslag: () => ({ wapen: [], werkpunt: '', doelen: [], meenemen: '', afspraken: '', gehad: false }) };
   const voorb = (S, pl, mid) => (S.ontwVoorb || {})[sl(pl, mid)] || null;
   const verslag = (S, pl, mid) => (S.ontwVerslag || {})[sl(pl, mid)] || null;
+  const kijk = (S, pl, mid) => (S.beoord[pl] || {})[mid] || null;
   const maakVoorb = (S, pl, mid) => { const o = S.ontwVoorb || (S.ontwVoorb = {}); return o[sl(pl, mid)] || (o[sl(pl, mid)] = leeg.voorb()); };
   const maakVerslag = (S, pl, mid) => { const o = S.ontwVerslag || (S.ontwVerslag = {}); return o[sl(pl, mid)] || (o[sl(pl, mid)] = leeg.verslag()); };
-  const tienSchaal = (S, pl) => CC.categorie(M.team(S, M.speler(S, pl).teamId).cat).schaal === '1-10';
-  const smiley = (n) => ['', '😐', '🙂', '😃'][n] || '–';
-  const zelfTekst = (S, pl, n) => (n == null ? '–' : tienSchaal(S, pl) ? `<b>${n}</b>` : smiley(n));
+  const maakKijk = (S, pl, mid) => { const x = S.beoord[pl] || (S.beoord[pl] = {}); return x[mid] || (x[mid] = { scores: {}, wapens: [], goed: '', werken: '' }); };
   const vorigMoment = (S, mid) => { const ms = CC.momenten(S); const i = ms.findIndex((m) => m.id === mid); return i > 0 ? ms[i - 1] : null; };
   const gesprekVan = (S, pl, mid) => (S.ontwGesprek || []).find((g) => g.spelerId === pl && g.moment === mid);
   const STATUS = [['', 'Nog niet besproken'], ['bereikt', 'Bereikt'], ['deels', 'Deels'], ['niet', 'Nog niet']];
+  const STATUS_KIND = [['bereikt', 'Gelukt'], ['deels', 'Een beetje'], ['niet', 'Nog niet']];
+  const KORT_KIND = { 3: 'Sterk', 2: 'Gaat goed', 1: 'Beter worden' };
+  const MAX_WAPEN = 2;
+  // Klaar = elke vaardigheid ingevuld én een wapen gekozen
+  const kijkKlaar = (S, pl, mid) => { const k = kijk(S, pl, mid); const l = CC.vaardigheden(S, M.speler(S, pl).teamId); return !!(k && l.every((x) => k.scores[x]) && wapensVan(k).length); };
+  const niv = (o, x) => CC.niveau(o && o.scores ? o.scores[x] : o && o.zelf ? o.zelf[x] : null);
+  const wapensVan = (o) => (o && Array.isArray(o.wapens) ? o.wapens : []);
+  const vaardigNaam = (x) => `${esc(x)}${CC.VAARDIG_UITLEG[x] ? `<small class="zacht">${esc(CC.VAARDIG_UITLEG[x])}</small>` : ''}`;
 
-  // ---------- 1. Voorbereiding (ouder + kind) ----------
+  // Drie knoppen per vaardigheid (kind of trainer). Wordt meteen in de pagina bijgewerkt, zonder te verspringen.
+  const niveauKnoppen = (act, attrs, cur, labels) => `<span class="niveaus" role="group">${[3, 2, 1].map((n) => `<button type="button" class="n${n} ${cur === n ? 'aan' : ''}" data-act="${act}" ${attrs} data-s="${n}" aria-pressed="${cur === n}">${labels[n]}</button>`).join('')}</span>`;
+  const zetKnop = (el) => { el.parentNode.querySelectorAll('button').forEach((b) => { const aan = b === el; b.classList.toggle('aan', aan); b.setAttribute('aria-pressed', String(aan)); }); };
+
+  // ---------- 1. Opdracht voor het kind (thuis, samen met een ouder) ----------
   CC.views.gesprekVoorb = (S, p) => {
     const pl = M.speler(S, p.id); const mid = p.m; const m = CC.momenten(S).find((x) => x.id === mid); const v = voorb(S, pl.id, mid) || leeg.voorb();
-    const tien = tienSchaal(S, pl.id); const vaardig = CC.vaardigheden(S, pl.teamId); const g = gesprekVan(S, pl.id, mid);
-    const rij = (x) => tien
-      ? `<div class="zelfrij"><label for="z-${esc(x)}">${esc(x)}</label><input id="z-${esc(x)}" type="range" min="1" max="10" step="1" value="${v.zelf[x] || 5}" data-input="ogZelf" data-id="${pl.id}" data-m="${mid}" data-v="${esc(x)}" class="${v.zelf[x] ? '' : 'onaangeraakt'}"><output>${v.zelf[x] || '–'}</output></div>`
-      : `<div class="zelfrij"><span>${esc(x)}</span><span class="score">${[1, 2, 3].map((n) => `<button type="button" class="${v.zelf[x] === n ? 'aan' : ''}" data-act="ogZelfSmiley" data-id="${pl.id}" data-m="${mid}" data-v="${esc(x)}" data-s="${n}">${smiley(n)}</button>`).join('')}</span></div>`;
-    const tekstVeld = (k, label, ph) => `<label class="klein-kop" for="vb-${k}">${label}</label><textarea id="vb-${k}" rows="2" data-input="ogVoorbTekst" data-id="${pl.id}" data-m="${mid}" data-k="${k}" placeholder="${ph}">${esc(v[k] || '')}</textarea>`;
+    const vaardig = CC.vaardigheden(S, pl.teamId); const g = gesprekVan(S, pl.id, mid); const at = `data-id="${pl.id}" data-m="${mid}"`;
+    const tekstVeld = (k, label, ph) => `<label class="klein-kop" for="vb-${k}">${label}</label><textarea id="vb-${k}" rows="2" data-input="ogVoorbTekst" ${at} data-k="${k}" placeholder="${ph}">${esc(v[k] || '')}</textarea>`;
+    const vm = vorigMoment(S, mid); const vvs = vm && verslag(S, pl.id, vm.id); const oudeDoelen = vvs && vvs.gehad ? vvs.doelen.filter((d) => d.wat) : [];
+    const terug = oudeDoelen.length ? `${h.sectie('Hoe ging het met je doelen?')}<div class="kaartje">${oudeDoelen.map((d, i) => `<div class="zelfrij"><span>${esc(d.wat)}</span>${`<span class="niveaus">${STATUS_KIND.map(([k, l]) => `<button type="button" class="${(v.doelTerug || {})[i] === k ? 'aan' : ''}" data-act="ogDoelTerug" ${at} data-i="${i}" data-s="${k}">${l}</button>`).join('')}</span>`}</div>`).join('')}</div>` : '';
+    const sterk = vaardig.filter((x) => niv(v, x) === 3); const keuze = sterk.length ? sterk : vaardig; const w = wapensVan(v);
     return { titel: `Voorbereiding ${pl.voornaam}`, sub: g ? `Gesprek ${D.lang(g.datum)} om ${g.tijd}` : `${m ? m.naam : ''}gesprek`,
-      html: `<div class="info">${icon('info')}<span>Vul dit samen met ${esc(pl.voornaam)} in, het duurt ongeveer 5 minuten. De trainer bespreekt het in het gesprek. Alles wordt meteen bewaard.</span></div>
-        ${h.sectie(tien ? `Hoe goed ben je in… (1 = nog lastig, 10 = heel goed)` : 'Hoe vind je dat het gaat?')}<div class="kaartje zelf">${vaardig.map(rij).join('')}</div>
+      html: `<div class="info">${icon('info')}<span>Dit is de opdracht voor <b>${esc(pl.voornaam)}</b> (ongeveer 10 minuten). Laat ${esc(pl.voornaam)} zelf kiezen en in eigen woorden schrijven; jij helpt met lezen. Er is geen goed of fout. De trainer vult apart zijn eigen kijk in; in het gesprek leggen jullie het naast elkaar. Alles wordt meteen bewaard.</span></div>
+        ${tekstVeld('trots', 'Waar ben je trots op bij het voetballen?', 'Bijv. mijn eerste doelpunt met links')}
+        ${terug}
+        ${h.sectie('Hoe gaat het met…')}<p class="zacht klein">Kies bij elke vaardigheid: <b>Sterk</b>, <b>Gaat goed</b> of <b>Beter worden</b> (dat wil ik beter leren).</p>
+        ${CC.vaardigBlokken(vaardig).map(([naam, l]) => `<div class="kaartje zelf"><h4>${esc(naam)}</h4>${l.map((x) => `<div class="zelfrij"><span>${vaardigNaam(x)}</span>${niveauKnoppen('ogZelf', `${at} data-v="${esc(x)}"`, niv(v, x), KORT_KIND)}</div>`).join('')}</div>`).join('')}
+        ${h.sectie('Wat is je wapen? ⭐')}<p class="zacht klein">Je wapen is waar je écht goed in bent, waar tegenstanders last van hebben. Kies er 1, hooguit ${MAX_WAPEN}.${sterk.length ? '' : ' (Tip: kies eerst hierboven wat je sterk vindt.)'}</p>
+        <div class="chips wapenkeuze">${keuze.map((x) => `<button type="button" class="chipknop ${w.includes(x) ? 'aan' : ''}" data-act="ogWapen" ${at} data-v="${esc(x)}">${w.includes(x) ? '⭐ ' : ''}${esc(x)}</button>`).join('')}</div>
+        ${tekstVeld('wapenWanneer', 'Wanneer zie je je wapen in een wedstrijd?', 'Bijv. als ik op links sta en er ruimte is, ga ik er altijd langs')}
+        ${h.sectie('Nog drie vragen')}
         ${tekstVeld('droom', 'Wat is je droom?', 'Bijv. ooit in het eerste van de club spelen')}
         ${tekstVeld('leuk', 'Wat vind je het leukst aan voetbal?', 'Bijv. scoren, samenspelen')}
-        ${tekstVeld('lastig', 'Wat vind je nog lastig?', 'Bijv. koppen, mijn linkerbeen')}
-        <button class="knop vol" data-act="ogVoorbKlaar" data-id="${pl.id}" data-m="${mid}">${icon('check')}Klaar</button>` };
+        ${tekstVeld('lastig', 'Wat wil je graag beter leren?', 'Bijv. koppen, mijn linkerbeen')}
+        <button class="knop vol" data-act="ogVoorbKlaar" ${at}>${icon('check')}${v.klaar ? 'Bewaard' : 'Klaar'}</button>` };
   };
-  CC.on('ogZelf', (el) => { const S = CC.S(); const v = maakVoorb(S, el.dataset.id, el.dataset.m); v.zelf[el.dataset.v] = Number(el.value); el.classList.remove('onaangeraakt'); const o = el.parentNode.querySelector('output'); if (o) o.textContent = el.value; CC.save(); });
-  CC.on('ogZelfSmiley', (el) => { const S = CC.S(); maakVoorb(S, el.dataset.id, el.dataset.m).zelf[el.dataset.v] = Number(el.dataset.s); CC.save(); CC.render(); });
+  CC.on('ogZelf', (el) => { const S = CC.S(); maakVoorb(S, el.dataset.id, el.dataset.m).zelf[el.dataset.v] = Number(el.dataset.s); zetKnop(el); CC.save(); });
+  CC.on('ogWapen', (el) => { const S = CC.S(); const v = maakVoorb(S, el.dataset.id, el.dataset.m); if (!Array.isArray(v.wapens)) v.wapens = []; const x = el.dataset.v; const i = v.wapens.indexOf(x);
+    if (i >= 0) v.wapens.splice(i, 1); else { if (v.wapens.length >= MAX_WAPEN) return CC.toast(`Kies er hooguit ${MAX_WAPEN}. Tik eerst een ander weg.`, 'fout'); v.wapens.push(x); } CC.save(); CC.render(); });
+  CC.on('ogDoelTerug', (el) => { const S = CC.S(); const v = maakVoorb(S, el.dataset.id, el.dataset.m); (v.doelTerug || (v.doelTerug = {}))[el.dataset.i] = el.dataset.s; zetKnop(el); CC.save(); });
   CC.on('ogVoorbTekst', (el) => { const S = CC.S(); maakVoorb(S, el.dataset.id, el.dataset.m)[el.dataset.k] = el.value; CC.save(); });
-  CC.on('ogVoorbKlaar', (el) => { const S = CC.S(); const v = maakVoorb(S, el.dataset.id, el.dataset.m); v.klaar = new Date().toISOString(); CC.save(); CC.terug(); CC.toast('Dank je wel! De trainer kijkt ernaar in het gesprek.'); });
+  CC.on('ogVoorbKlaar', (el) => { const S = CC.S(); const v = maakVoorb(S, el.dataset.id, el.dataset.m); v.klaar = v.klaar || new Date().toISOString(); CC.save(); CC.terug(); CC.toast('Dank je wel! De trainer kijkt ernaar in het gesprek.'); });
+
+  // ---------- Klok en leidraad (15 minuten: 12 praten + 3 wisselen) ----------
+  const FASEN = [
+    [0, 'Welkom', '"Dit is geen rapport. We kijken samen hoe het gaat en wat jij wilt leren." Praat vooral met het kind.'],
+    [1, 'Kind aan het woord', 'Waar ben je trots op? Wat is leuk, wat wil je leren? Laat het kind praten (80%), jij vraagt door.'],
+    [4, 'Wapen en werkpunt', 'Begin met het wapen: "Wanneer zie je dat?" Dan één verschil: "Jij zegt …, ik zie … Vertel eens?"'],
+    [7, 'Twee doelen', 'Doel 1 maakt het wapen scherper, doel 2 gaat over het werkpunt. Het kind verwoordt: wat, hoe vaak, tot wanneer, wie helpt?'],
+    [10, 'Ouder en afronden', '"Wilt u iets aanvullen?" Dan het kind: "Wat neem je mee?"'],
+    [12, 'Wisselen', 'Tijd om af te ronden: tik op Gesprek gehad, vul je notitie aan. De volgende ouder komt eraan.'],
+  ];
+  const klokStart = () => CC.ui.ogKlok || (CC.ui.ogKlok = {});
+  const faseNu = (min) => FASEN.reduce((a, f) => (min >= f[0] ? f : a), FASEN[0]);
+  const klokHtml = (key) => {
+    const st = klokStart()[key];
+    if (!st) return `<div class="ogklok uit"><button class="knop vol" data-act="ogStart" data-k="${esc(key)}">${icon('timer')}Start gesprek (15 minuten)</button>
+      <details class="uitklap"><summary>Leidraad</summary><ol class="leidraad">${FASEN.map(([m, n, t]) => `<li><b>${m}–${(FASEN.find((f) => f[0] > m) || [15])[0]} min · ${n}</b><br><small>${esc(t)}</small></li>`).join('')}</ol></details></div>`;
+    return `<div class="ogklok" data-start="${st}" role="status" aria-live="polite">${klokBinnen(st)}</div>`;
+  };
+  const klokBinnen = (st) => { const s = Math.max(0, Math.floor((Date.now() - st) / 1000)); const min = Math.floor(s / 60); const f = faseNu(min);
+    return `<div class="ogklok-kop ${min >= 12 ? 'laat' : ''}"><b>${min}:${String(s % 60).padStart(2, '0')}</b><span>${esc(f[1])}</span><button class="linkknop" data-act="ogStop">Stop</button></div><p class="klein">${esc(f[2])}</p>`; };
+  setInterval(() => { document.querySelectorAll('.ogklok[data-start]').forEach((el) => { el.innerHTML = klokBinnen(Number(el.dataset.start)); }); }, 5000);
+  CC.on('ogStart', (el) => { klokStart()[el.dataset.k] = Date.now(); CC.render(); });
+  CC.on('ogStop', () => { CC.ui.ogKlok = {}; CC.render(); });
 
   // ---------- 2. Gesprekspagina (trainer) ----------
   CC.views.gesprekVerslag = (S, p) => {
-    const pl = M.speler(S, p.id); const t = M.team(S, pl.teamId); const mid = p.m; const m = CC.momenten(S).find((x) => x.id === mid);
+    const pl = M.speler(S, p.id); const mid = p.m; const m = CC.momenten(S).find((x) => x.id === mid); const at = `data-id="${pl.id}" data-m="${mid}"`;
     const v = voorb(S, pl.id, mid) || leeg.voorb(); const vs = verslag(S, pl.id, mid) || leeg.verslag(); const noti = ((S.ontwNotitie || {})[sl(pl.id, mid)] || {}).tekst || '';
-    const tien = tienSchaal(S, pl.id); const vaardig = CC.vaardigheden(S, pl.teamId); const g = gesprekVan(S, pl.id, mid);
-    const bo = (S.beoord[pl.id] || {})[mid] || { scores: {} };
-    const opties = tien ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] : [1, 2, 3];
-    const scores = `<div class="tabelvak"><table class="tabel vergelijk"><thead><tr><th>Vaardigheid</th><th>${esc(pl.voornaam)}</th><th>Trainer</th></tr></thead><tbody>${vaardig.map((x) => {
-      const k = v.zelf[x]; const tr = bo.scores[x]; const verschil = tien && k && tr && Math.abs(k - tr) >= 3;
-      return `<tr class="${verschil ? 'verschil' : ''}"><td>${esc(x)}${verschil ? ` <span class="chip oranje mini">bespreken</span>` : ''}</td><td class="midden">${zelfTekst(S, pl.id, k)}</td><td><select class="kort" data-change="ogTrScore" data-id="${pl.id}" data-m="${mid}" data-v="${esc(x)}" aria-label="Score trainer ${esc(x)}"><option value="">–</option>${opties.map((o) => `<option value="${o}" ${tr === o ? 'selected' : ''}>${tien ? o : smiley(o)}</option>`).join('')}</select></td></tr>`; }).join('')}</tbody></table></div>`;
-    const doelen = vs.doelen.length ? vs.doelen : [{ wat: '', trainer: '', ouders: '' }];
-    const veld = (k, label, waarde, ph, rows = 2) => `<label class="klein-kop">${label}</label><textarea rows="${rows}" data-input="ogVeld" data-id="${pl.id}" data-m="${mid}" data-k="${k}" placeholder="${ph}">${esc(waarde || '')}</textarea>`;
-    const doelBlok = doelen.map((d, i) => `<div class="kaartje doel"><h4>${icon('flag')}Doel ${i + 1}</h4>
-      ${veld(`doel.${i}.wat`, 'Wat ga je doen?', d.wat, 'Bijv. elke week 10 minuten tegen de muur met links')}
-      <div class="twee"><div>${veld(`doel.${i}.trainer`, 'Hoe helpt de trainer?', d.trainer, 'Bijv. extra oefening op vrijdag', 1)}</div><div>${veld(`doel.${i}.ouders`, 'Hoe helpen ouders?', d.ouders, 'Bijv. samen oefenen in het park', 1)}</div></div></div>`).join('');
+    const vaardig = CC.vaardigheden(S, pl.teamId); const g = gesprekVan(S, pl.id, mid); const k = kijk(S, pl.id, mid) || { scores: {}, wapens: [] };
+    const klaar = kijkKlaar(S, pl.id, mid); const toon = klaar || (CC.ui.seg || {})[`ogToon-${pl.id}`];
+    const veld = (key, label, waarde, ph, rows = 2) => `<label class="klein-kop">${label}</label><textarea rows="${rows}" data-input="ogVeld" ${at} data-k="${key}" placeholder="${ph}">${esc(waarde || '')}</textarea>`;
+
+    // Jouw kijk (vooraf): alleen voor de staf
+    const kijkBlok = `<details class="uitklap blok" ${klaar ? '' : 'open'}><summary>${icon('eye-off')}Jouw kijk vooraf ${klaar ? '✓' : `(${Object.keys(k.scores).filter((x) => vaardig.includes(x)).length} van ${vaardig.length})`}</summary>
+      <p class="zacht klein">Vul dit in vóór het gesprek, zonder naar de antwoorden van ${esc(pl.voornaam)} te kijken. Alleen de staf ziet dit, ouder en kind niet.</p>
+      ${CC.vaardigBlokken(vaardig).map(([naam, l]) => `<div class="kaartje zelf"><h4>${esc(naam)}</h4>${l.map((x) => `<div class="zelfrij"><span>${esc(x)}</span>${niveauKnoppen('ogKijk', `${at} data-v="${esc(x)}"`, niv(k, x), CC.NIVEAU_TRAINER)}</div>`).join('')}</div>`).join('')}
+      <p class="klein"><b>Wapen volgens jou ⭐ (1–${MAX_WAPEN}):</b></p><div class="chips">${vaardig.map((x) => `<button type="button" class="chipknop ${wapensVan(k).includes(x) ? 'aan' : ''}" data-act="ogKijkWapen" ${at} data-v="${esc(x)}">${wapensVan(k).includes(x) ? '⭐ ' : ''}${esc(x)}</button>`).join('')}</div></details>`;
+
+    // Naast elkaar: kind en trainer (verschil van twee stappen of een ander wapen = bespreken)
+    const cel = (n, wapen, labels) => `${wapen ? '⭐ ' : ''}${n ? `<span class="niveau n${n}">${labels[n]}</span>` : '<span class="zacht">–</span>'}`;
+    const vergelijk = !toon ? `<div class="info">${icon('eye-off')}<span>De antwoorden van ${esc(pl.voornaam)} zie je als je eigen kijk klaar is. Zo laat je je niet beïnvloeden. <button class="linkknop" data-act="seg" data-key="ogToon-${pl.id}" data-val="1">Toch nu tonen</button></span></div>`
+      : `<div class="tabelvak"><table class="tabel vergelijk"><thead><tr><th>Vaardigheid</th><th>${esc(pl.voornaam)}</th><th>Trainer</th></tr></thead><tbody>${vaardig.map((x) => {
+        const a = niv(v, x), b = niv(k, x); const wa = wapensVan(v).includes(x), wb = wapensVan(k).includes(x); const verschil = (a && b && Math.abs(a - b) >= 2) || (wa !== wb && (wa || wb));
+        return `<tr class="${verschil ? 'verschil' : ''}"><td>${esc(x)}${verschil ? ' <span class="chip oranje mini">bespreken</span>' : ''}</td><td>${cel(a, wa, KORT_KIND)}</td><td>${cel(b, wb, CC.NIVEAU_TRAINER)}</td></tr>`; }).join('')}</tbody></table></div>
+        ${v.wapenWanneer ? `<p class="klein"><b>Wapen in de wedstrijd, volgens ${esc(pl.voornaam)}:</b> "${esc(v.wapenWanneer)}"</p>` : ''}`;
+    // Kandidaten: wat kind of trainer sterk/wapen vindt (wapen), of als werkpunt ziet (werkpunt); de rest achter "Toon alle"
+    const alle = (CC.ui.seg || {})[`ogAlle-${pl.id}`];
+    const kandidaat = (act, x) => (act === 'ogSamenWapen' ? niv(v, x) === 3 || niv(k, x) === 3 || wapensVan(v).includes(x) || wapensVan(k).includes(x) : niv(v, x) === 1 || niv(k, x) === 1);
+    const samenChips = (act, gekozen) => { const l = alle ? vaardig : vaardig.filter((x) => kandidaat(act, x) || gekozen.includes(x)); return `<div class="chips">${(l.length ? l : vaardig).map((x) => `<button type="button" class="chipknop ${gekozen.includes(x) ? 'aan' : ''}" data-act="${act}" ${at} data-v="${esc(x)}">${act === 'ogSamenWapen' && gekozen.includes(x) ? '⭐ ' : ''}${esc(x)}</button>`).join('')}${!alle && l.length && l.length < vaardig.length ? `<button type="button" class="linkknop" data-act="seg" data-key="ogAlle-${pl.id}" data-val="1">Toon alle</button>` : ''}</div>`; };
+
+    // Doelen: 1 = wapen scherper maken, 2 = werkpunt, 3 alleen als het echt nodig is
+    const doelen = vs.doelen.length >= 2 ? vs.doelen : [...vs.doelen, ...[{}, {}].slice(vs.doelen.length)];
+    const doelKop = (i) => (i === 0 ? `Doel 1 · wapen scherper maken${vs.wapen.length ? ` (${vs.wapen.map(esc).join(', ')})` : ''}` : i === 1 ? `Doel 2 · werkpunt${vs.werkpunt ? ` (${esc(vs.werkpunt)})` : ''}` : `Doel ${i + 1}`);
+    const doelBlok = doelen.map((d, i) => `<div class="kaartje doel"><h4>${icon('flag')}${doelKop(i)}</h4>
+      ${veld(`doel.${i}.wat`, `Wat ga je doen? (in de woorden van ${esc(pl.voornaam)})`, d.wat, i === 0 ? 'Wat, hoe vaak, tot wanneer? Bijv. in elke wedstrijd 3 keer de actie maken als ik ruimte heb' : 'Wat, hoe vaak, tot wanneer? Bijv. tot de winterstop elke training 10 keer aannemen met links')}
+      ${veld(`doel.${i}.hulp`, 'Wie helpt je, en hoe?', d.hulp, 'Bijv. trainer: extra oefening op vrijdag; thuis: samen in het park', 1)}</div>`).join('');
+
     // Terugkijken naar het vorige gesprek
-    const vm = vorigMoment(S, mid); const vvs = vm && verslag(S, pl.id, vm.id); const vv = vm && voorb(S, pl.id, vm.id); const vbo = vm && (S.beoord[pl.id] || {})[vm.id];
-    const terug = vm && (vvs || vv || vbo) ? `<details class="uitklap blok" open><summary>Terugkijken: ${esc(vm.naam.toLowerCase())}gesprek</summary>
-      ${(vvs && vvs.droom) || (vv && vv.droom) ? `<p><b>Droom toen:</b> ${esc((vv && vv.droom) || '')}${vvs && vvs.droom ? ` · ${esc(vvs.droom)}` : ''}</p>` : ''}
-      ${vvs && vvs.doelen.length ? `<div class="lijst compact">${vvs.doelen.map((d, i) => h.rij({ ic: 'flag', titel: esc(d.wat || `Doel ${i + 1}`), sub: [d.trainer && `Trainer: ${esc(d.trainer)}`, d.ouders && `Ouders: ${esc(d.ouders)}`].filter(Boolean).join(' · '),
-        rechts: `<select class="kort" data-change="ogDoelStatus" data-id="${pl.id}" data-m="${vm.id}" data-i="${i}" aria-label="Is dit doel bereikt?">${STATUS.map(([k, l]) => `<option value="${k}" ${(d.status || '') === k ? 'selected' : ''}>${l}</option>`).join('')}</select>` })).join('')}</div>` : ''}
-      ${vbo || vv ? `<p class="klein"><b>Groei:</b> ${vaardig.map((x) => { const a = vv && vv.zelf[x], b2 = v.zelf[x], c = vbo && vbo.scores[x], d = bo.scores[x]; return (a || c) ? `${esc(x)} ${a || b2 ? `kind ${a || '–'}→${b2 || '–'}` : ''}${(a || b2) && (c || d) ? ', ' : ''}${c || d ? `trainer ${c || '–'}→${d || '–'}` : ''}` : ''; }).filter(Boolean).join(' · ') || 'nog geen cijfers van toen'}</p>` : ''}</details>` : '';
+    const vm = vorigMoment(S, mid); const vvs = vm && verslag(S, pl.id, vm.id); const vv = vm && voorb(S, pl.id, vm.id); const vk = vm && kijk(S, pl.id, vm.id);
+    const groei = vm ? vaardig.map((x) => { const a = niv(vv, x), a2 = niv(v, x), b = niv(vk, x), b2 = niv(k, x);
+      const r = [a && a2 && a !== a2 ? `kind ${KORT_KIND[a]} → ${KORT_KIND[a2]}` : '', b && b2 && b !== b2 ? `trainer ${CC.NIVEAU_TRAINER[b]} → ${CC.NIVEAU_TRAINER[b2]}` : ''].filter(Boolean); return r.length ? `${esc(x)}: ${r.join(', ')}` : ''; }).filter(Boolean) : [];
+    const terug = vm && (vvs || vv) ? `<details class="uitklap blok" open><summary>Terugkijken: ${esc(vm.naam.toLowerCase())}gesprek</summary>
+      ${vvs && (vvs.wapen || []).length ? `<p class="klein"><b>Wapen toen:</b> ⭐ ${vvs.wapen.map(esc).join(', ')}${vvs.werkpunt ? ` · <b>werkpunt:</b> ${esc(vvs.werkpunt)}` : ''}</p>` : ''}
+      ${vv && vv.droom ? `<p class="klein"><b>Droom toen:</b> "${esc(vv.droom)}"</p>` : ''}
+      ${vvs && vvs.doelen.some((d) => d.wat) ? `<div class="lijst compact">${vvs.doelen.map((d, i) => (d.wat ? h.rij({ ic: 'flag', titel: esc(d.wat), sub: [(v.doelTerug || {})[i] ? `${esc(pl.voornaam)}: ${(STATUS_KIND.find((s) => s[0] === v.doelTerug[i]) || [])[1] || ''}` : '', d.hulp ? `Hulp: ${esc(d.hulp)}` : ''].filter(Boolean).join(' · '),
+        rechts: `<select class="kort" data-change="ogDoelStatus" data-id="${pl.id}" data-m="${vm.id}" data-i="${i}" aria-label="Is dit doel bereikt?">${STATUS.map(([s, l]) => `<option value="${s}" ${(d.status || '') === s ? 'selected' : ''}>${l}</option>`).join('')}</select>` }) : '')).join('')}</div>` : ''}
+      ${groei.length ? `<p class="klein"><b>Groei:</b> ${groei.join(' · ')}</p>` : ''}</details>` : '';
+
     return { titel: `Gesprek ${pl.voornaam}`, sub: `${m.naam}${g ? ` · ${D.kort(g.datum)} ${g.tijd}` : ''} · ${CC.tn(pl.teamId)}`,
-      html: `${v.klaar ? '' : `<div class="info oranje">${icon('info')}<span>${esc(pl.voornaam)} heeft de voorbereiding ${Object.keys(v.zelf).length ? 'nog niet helemaal' : 'nog niet'} ingevuld. Je kunt het samen in het gesprek doen.</span></div>`}
+      html: `${klokHtml(sl(pl.id, mid))}
+        ${v.klaar ? '' : `<div class="info oranje">${icon('info')}<span>${esc(pl.voornaam)} heeft de voorbereiding ${Object.keys(v.zelf).length ? 'nog niet helemaal' : 'nog niet'} ingevuld. Je kunt de vragen in het gesprek stellen.</span></div>`}
+        ${kijkBlok}
         ${terug}
-        ${h.sectie(tien ? 'Scores (1–10): kind en trainer' : 'Hoe gaat het: kind en trainer')}${scores}
-        ${h.sectie('Droom')}<p>${v.droom ? `"${esc(v.droom)}"` : '<span class="zacht">Nog niet ingevuld.</span>'}</p>${v.leuk || v.lastig ? `<p class="klein">${v.leuk ? `<b>Leuk:</b> ${esc(v.leuk)}` : ''}${v.leuk && v.lastig ? '<br>' : ''}${v.lastig ? `<b>Lastig:</b> ${esc(v.lastig)}` : ''}</p>` : ''}
-        ${veld('droom', 'Aanvulling op de droom (trainer)', vs.droom, 'Bijv. wat heb je nodig om daar te komen?')}
-        ${h.sectie('Doelen voor de komende periode')}${doelBlok}${doelen.length < 3 ? `<button class="linkknop" data-act="ogDoelErbij" data-id="${pl.id}" data-m="${mid}">${icon('plus')}Doel toevoegen</button>` : ''}
-        ${h.sectie('Afspraken')}${veld('afspraken', 'Wat spreken we af?', vs.afspraken, 'Bijv. we kijken in maart samen hoe het gaat', 2)}
-        ${h.sectie('Notitie trainer')}<textarea rows="2" data-input="ogNotitie" data-id="${pl.id}" data-m="${mid}" placeholder="Alleen voor de staf, niet voor ouders">${esc(noti)}</textarea><p class="zacht klein">Deze notitie zien alleen trainer, teamleider en jeugdleiding.</p>
-        <button class="knop ${vs.gehad ? 'licht' : ''} vol" data-act="ogGehad" data-id="${pl.id}" data-m="${mid}">${icon('circle-check')}${vs.gehad ? 'Gesprek gehad ✓ (tik om terug te zetten)' : 'Gesprek gehad'}</button>
-        <p class="zacht klein">Alles wordt meteen bewaard. Ouder en ${esc(pl.voornaam)} zien de scores, doelen en afspraken een dag na het gesprek (niet de notitie).</p>` };
+        ${h.sectie(`1 · ${esc(pl.voornaam)} aan het woord`)}
+        <div class="kaartje">${[['trots', 'Trots op'], ['leuk', 'Leukst'], ['lastig', 'Wil beter leren'], ['droom', 'Droom']].map(([key, l]) => `<p class="klein"><b>${l}:</b> ${v[key] ? `"${esc(v[key])}"` : '<span class="zacht">–</span>'}</p>`).join('')}</div>
+        ${h.sectie('2 · Wapen en werkpunt')}${vergelijk}
+        <p class="klein-kop">Ons wapen (samen gekozen)</p>${samenChips('ogSamenWapen', vs.wapen || [])}
+        <p class="klein-kop">Ons werkpunt</p>${samenChips('ogSamenWerk', vs.werkpunt ? [vs.werkpunt] : [])}
+        ${h.sectie('3 · Twee doelen')}${doelBlok}${doelen.length < 3 ? `<button class="linkknop" data-act="ogDoelErbij" ${at}>${icon('plus')}Derde doel (alleen als het echt nodig is)</button>` : ''}
+        ${h.sectie('4 · Afronden')}
+        ${veld('meenemen', `Wat neem je mee? (in de woorden van ${esc(pl.voornaam)})`, vs.meenemen, 'Bijv. ik ga vaker de bal vragen, want dan kan ik mijn actie maken')}
+        ${veld('afspraken', 'Afspraken (ook wat de ouder aanvult)', vs.afspraken, 'Bijv. in maart kijken we samen hoe het gaat')}
+        ${h.sectie('Notitie trainer')}<textarea rows="2" data-input="ogNotitie" ${at} placeholder="Alleen voor de staf">${esc(noti)}</textarea>
+        <button class="knop ${vs.gehad ? 'licht' : ''} vol" data-act="ogGehad" ${at}>${icon('circle-check')}${vs.gehad ? 'Gesprek gehad ✓ (tik om terug te zetten)' : 'Gesprek gehad'}</button>
+        <p class="zacht klein">Alles wordt meteen bewaard. Na "Gesprek gehad" ziet de ouder het wapen, het werkpunt, de doelen, "wat neem je mee" en de afspraken. Jouw kijk en de notitie ziet alleen de staf.</p>` };
   };
-  CC.on('ogVeld', (el) => { const S = CC.S(); const vs = maakVerslag(S, el.dataset.id, el.dataset.m); if (el.dataset.k.startsWith('doel.')) { const [, i, k] = el.dataset.k.split('.'); while (vs.doelen.length <= Number(i)) vs.doelen.push({ wat: '', trainer: '', ouders: '' }); vs.doelen[Number(i)][k] = el.value; } else vs[el.dataset.k] = el.value;
+  CC.on('ogKijk', (el) => { const S = CC.S(); const was = kijkKlaar(S, el.dataset.id, el.dataset.m); maakKijk(S, el.dataset.id, el.dataset.m).scores[el.dataset.v] = Number(el.dataset.s); zetKnop(el); CC.save(); if (!was && kijkKlaar(S, el.dataset.id, el.dataset.m)) { CC.render(); CC.toast('Je kijk is klaar; nu zie je de antwoorden naast elkaar'); } });
+  const wissel = (lijst, x, max) => { const i = lijst.indexOf(x); if (i >= 0) { lijst.splice(i, 1); return true; } if (lijst.length >= max) { CC.toast(`Hooguit ${max}. Tik eerst een ander weg.`, 'fout'); return false; } lijst.push(x); return true; };
+  CC.on('ogKijkWapen', (el) => { const S = CC.S(); const was = kijkKlaar(S, el.dataset.id, el.dataset.m); const k = maakKijk(S, el.dataset.id, el.dataset.m); if (!Array.isArray(k.wapens)) k.wapens = []; if (wissel(k.wapens, el.dataset.v, MAX_WAPEN)) { CC.save(); CC.render(); if (!was && kijkKlaar(S, el.dataset.id, el.dataset.m)) CC.toast('Je kijk is klaar; nu zie je de antwoorden naast elkaar'); } });
+  CC.on('ogSamenWapen', (el) => { const S = CC.S(); const vs = maakVerslag(S, el.dataset.id, el.dataset.m); if (!Array.isArray(vs.wapen)) vs.wapen = []; if (wissel(vs.wapen, el.dataset.v, MAX_WAPEN)) { vs.bijgewerkt = new Date().toISOString(); CC.save(); CC.render(); } });
+  CC.on('ogSamenWerk', (el) => { const S = CC.S(); const vs = maakVerslag(S, el.dataset.id, el.dataset.m); vs.werkpunt = vs.werkpunt === el.dataset.v ? '' : el.dataset.v; vs.bijgewerkt = new Date().toISOString(); CC.save(); CC.render(); });
+  CC.on('ogVeld', (el) => { const S = CC.S(); const vs = maakVerslag(S, el.dataset.id, el.dataset.m); if (el.dataset.k.startsWith('doel.')) { const [, i, key] = el.dataset.k.split('.'); while (vs.doelen.length <= Number(i)) vs.doelen.push({ wat: '', hulp: '' }); vs.doelen[Number(i)][key] = el.value; } else vs[el.dataset.k] = el.value;
     vs.bijgewerkt = new Date().toISOString(); CC.save(); });
   CC.on('ogNotitie', (el) => { const S = CC.S(); const o = S.ontwNotitie || (S.ontwNotitie = {}); o[sl(el.dataset.id, el.dataset.m)] = { tekst: el.value, door: CC.me().id, tijd: new Date().toISOString() }; CC.save(); });
-  CC.on('ogTrScore', (el) => { const S = CC.S(); const x = S.beoord[el.dataset.id] || (S.beoord[el.dataset.id] = {}); const b = x[el.dataset.m] || (x[el.dataset.m] = { scores: {}, goed: '', werken: '' }); if (el.value) b.scores[el.dataset.v] = Number(el.value); else delete b.scores[el.dataset.v]; CC.save(); CC.render(); });
-  CC.on('ogDoelErbij', (el) => { const S = CC.S(); const vs = maakVerslag(S, el.dataset.id, el.dataset.m); if (!vs.doelen.length) vs.doelen.push({ wat: '', trainer: '', ouders: '' }); if (vs.doelen.length < 3) vs.doelen.push({ wat: '', trainer: '', ouders: '' }); CC.save(); CC.render(); });
+  CC.on('ogDoelErbij', (el) => { const S = CC.S(); const vs = maakVerslag(S, el.dataset.id, el.dataset.m); while (vs.doelen.length < 3) vs.doelen.push({ wat: '', hulp: '' }); CC.save(); CC.render(); });
   CC.on('ogDoelStatus', (el) => { const S = CC.S(); const vs = maakVerslag(S, el.dataset.id, el.dataset.m); const d = vs.doelen[Number(el.dataset.i)]; if (d) d.status = el.value; CC.save(); CC.toast('Bewaard'); });
-  CC.on('ogGehad', (el) => { const S = CC.S(); const vs = maakVerslag(S, el.dataset.id, el.dataset.m); vs.gehad = !vs.gehad; vs.gehadOp = vs.gehad ? D.vandaag() : null; CC.save(); CC.render(); CC.toast(vs.gehad ? 'Genoteerd: gesprek gehad' : 'Teruggezet'); });
+  CC.on('ogGehad', (el) => { const S = CC.S(); const vs = maakVerslag(S, el.dataset.id, el.dataset.m); vs.gehad = !vs.gehad; vs.gehadOp = vs.gehad ? D.vandaag() : null; delete (CC.ui.ogKlok || {})[sl(el.dataset.id, el.dataset.m)]; CC.save(); CC.render();
+    CC.toast(vs.gehad ? 'Genoteerd: de ouder ziet nu de afspraken' : 'Teruggezet'); });
 
-  // ---------- 3. Voor de ouder: wat er is afgesproken (samen met de beoordeling) ----------
+  // ---------- 3. Voor ouder en kind: wat er samen is afgesproken (nooit de kijk van de trainer) ----------
+  CC.ontwZichtbaar = (S, pl, mid) => !!(verslag(S, pl, mid) || {}).gehad;
   CC.verslagVoorOuder = (S, pl, mid) => {
-    const v = voorb(S, pl.id, mid); const vs = verslag(S, pl.id, mid); if (!v && !vs) return '';
-    const doelen = vs ? vs.doelen.filter((d) => d.wat) : [];
-    return `${v && Object.keys(v.zelf).length ? `<p class="klein"><b>Jullie eigen scores:</b> ${Object.entries(v.zelf).map(([x, n]) => `${esc(x)} ${zelfTekst(S, pl.id, n)}`).join(' · ')}</p>` : ''}
-      ${v && v.droom ? `<p><b>Droom:</b> "${esc(v.droom)}"${vs && vs.droom ? ` · ${esc(vs.droom)}` : ''}</p>` : ''}
-      ${doelen.length ? `<p><b>Doelen:</b></p><ol class="doelen">${doelen.map((d) => `<li>${esc(d.wat)}${d.trainer ? `<br><small>Trainer: ${esc(d.trainer)}</small>` : ''}${d.ouders ? `<br><small>Thuis: ${esc(d.ouders)}</small>` : ''}${d.status ? ` <span class="chip ${d.status === 'bereikt' ? 'groen' : d.status === 'deels' ? 'oranje' : 'grijs'} mini">${{ bereikt: 'bereikt', deels: 'deels', niet: 'nog niet' }[d.status]}</span>` : ''}</li>`).join('')}</ol>` : ''}
-      ${vs && vs.afspraken ? `<p><b>Afspraken:</b> ${esc(vs.afspraken).replace(/\n/g, '<br>')}</p>` : ''}`;
+    const v = voorb(S, pl.id, mid); const vs = verslag(S, pl.id, mid); if (!vs || !vs.gehad) return '';
+    const doelen = vs.doelen.filter((d) => d.wat);
+    return `${(vs.wapen || []).length ? `<p><b>Wapen:</b> ⭐ ${vs.wapen.map(esc).join(', ')}</p>` : ''}${vs.werkpunt ? `<p><b>Werkpunt:</b> ${esc(vs.werkpunt)}</p>` : ''}
+      ${doelen.length ? `<p><b>Doelen:</b></p><ol class="doelen">${doelen.map((d) => `<li>${esc(d.wat)}${d.hulp ? `<br><small>Hulp: ${esc(d.hulp)}</small>` : ''}${d.status ? ` <span class="chip ${d.status === 'bereikt' ? 'groen' : d.status === 'deels' ? 'oranje' : 'grijs'} mini">${{ bereikt: 'bereikt', deels: 'deels', niet: 'nog niet' }[d.status]}</span>` : ''}</li>`).join('')}</ol>` : ''}
+      ${vs.meenemen ? `<p><b>Wat ${esc(pl.voornaam)} meeneemt:</b> "${esc(vs.meenemen)}"</p>` : ''}
+      ${vs.afspraken ? `<p><b>Afspraken:</b> ${esc(vs.afspraken).replace(/\n/g, '<br>')}</p>` : ''}
+      ${v && (wapensVan(v).length || v.droom) ? `<p class="zacht klein">Uit jullie voorbereiding: ${wapensVan(v).length ? `wapen ⭐ ${wapensVan(v).map(esc).join(', ')}` : ''}${wapensVan(v).length && v.droom ? ' · ' : ''}${v.droom ? `droom "${esc(v.droom)}"` : ''}</p>` : ''}`;
   };
+  // Het laatste gesprek dat is gehad (voor Home en de spelerspagina van de ouder)
+  CC.laatsteVerslag = (S, plId) => { const ms = CC.momenten(S).filter((m) => CC.ontwZichtbaar(S, plId, m.id)); const m = ms[ms.length - 1]; return m ? { m, vs: verslag(S, plId, m.id) } : null; };
   CC.voorbKlaar = (S, pl, mid) => !!(voorb(S, pl, mid) || {}).klaar;
+  CC.kijkKlaar = kijkKlaar;
 
   // ---------- Vaardigheden toevoegen (trainer) ----------
   CC.on('vaardigToevoegen', () => { const S = CC.S(); const tid = CC.teamId(); const c = CC.categorie(M.team(S, tid).cat); const extra = ((S.teamVaardig || {})[tid] || {}).extra || [];

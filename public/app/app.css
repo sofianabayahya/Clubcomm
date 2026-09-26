@@ -492,9 +492,27 @@ details.uitklap.stil summary { font-size: 13px; color: var(--zacht); }
 .vinkjes.enkel { grid-template-columns: 1fr; max-height: none; border: 0; padding: 0; margin: 4px 0 8px; }
 
 /* Ontwikkelgesprek (Besluit 66) */
-.zelf .zelfrij { display: grid; grid-template-columns: 1fr 2fr 28px; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--lijn); }
+.zelf .zelfrij, .kaartje > .zelfrij { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--lijn); }
+.zelf h4 { margin: 0 0 2px; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--zacht); }
+.zelfrij small { display: block; font-weight: 400; font-size: 12px; }
 .zelf .zelfrij:last-child { border-bottom: 0; } .zelf .zelfrij label, .zelf .zelfrij > span:first-child { font-weight: 600; font-size: 14px; }
 .zelf input[type=range] { width: 100%; accent-color: var(--blauw); } .zelf input.onaangeraakt { opacity: .45; }
 .zelf output { font-weight: 800; text-align: right; }
 .tabel.vergelijk td, .tabel.vergelijk th { padding: 6px 8px; } .tabel.vergelijk tr.verschil td { background: var(--oranje-l); }
 .doel h4 { margin: 0 0 4px; } ol.doelen { margin: 4px 0 8px 18px; padding: 0; } ol.doelen li { margin-bottom: 6px; }
+
+/* Besluit 67: drie woorden in plaats van cijfers, wapen, klok en leidraad */
+.niveaus { display: inline-flex; gap: 4px; flex-wrap: nowrap; }
+.zelf .zelfrij { grid-template-columns: 1fr; gap: 6px; } .zelf .niveaus { display: grid; grid-template-columns: repeat(3, 1fr); } /* naam boven, drie gelijke knoppen eronder */
+.niveaus button { min-height: 40px; min-width: 44px; padding: 6px 8px; border: 1px solid var(--lijn); background: var(--vlak); border-radius: 10px; font-size: 13px; font-weight: 600; color: var(--inkt); line-height: 1.1; }
+.niveaus button.aan { background: var(--blauw); border-color: var(--blauw); color: #fff; } /* kleur alleen voor aandacht: overal hetzelfde blauw */
+@media (max-width: 380px) { .niveaus button { font-size: 12px; padding: 6px 6px; } }
+.niveau { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--vlak2); }
+.niveau.n3 { font-weight: 800; }
+.chips.wapenkeuze .chipknop.aan { font-weight: 700; }
+.ogklok { position: sticky; top: 58px; z-index: 5; background: var(--vlak); border: 1px solid var(--lijn); border-radius: var(--r); padding: 10px 14px; margin-bottom: 12px; box-shadow: var(--schaduw); }
+.ogklok.uit { position: static; box-shadow: none; }
+.ogklok p { margin: 4px 0 0; }
+.ogklok-kop { display: flex; align-items: center; gap: 10px; } .ogklok-kop b { font-size: 22px; font-variant-numeric: tabular-nums; } .ogklok-kop span { flex: 1; font-weight: 700; }
+.ogklok-kop.laat b, .ogklok-kop.laat span { color: var(--oranje); }
+ol.leidraad { margin: 6px 0 0 18px; padding: 0; } ol.leidraad li { margin-bottom: 6px; }

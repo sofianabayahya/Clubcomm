@@ -508,6 +508,25 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 67 — Ontwikkelgesprek: het kind is eigenaar, woorden in plaats van cijfers, de kijk van de trainer blijft bij de staf
+*Herziet Besluit 66 (schaal, zichtbaarheid) en Besluit 23 (ouders zien de beoordeling). Onderzoek: KNVB (ontwikkelgesprekken, formulier O11–O13), Ajax-TIPS, Butler 1988 (cijfers versus opmerkingen), Horn & Weiss (zelfinschatting 10–12 jaar), sterkte-gericht coachen, zelfdeterminatietheorie.*
+- **Waarom:** vanaf O11 leert een kind bewust; zelf kiezen geeft eigenaarschap. Een cijfer voelt als een rapport, remt de motivatie en nodigt uit tot vergelijken met teamgenoten (extra gevoelig in een selectieteam). De KNVB gebruikt voor O11–O13 geen cijfers, maar eigen woorden.
+- **Drie woorden in plaats van 1–10:** kind: *Sterk · Gaat goed · Beter worden*; trainer: *Sterk · Goed · Werkpunt*. Plus een **wapen ⭐** (1, hooguit 2): waar het kind écht goed in is, met de vraag *"Wanneer zie je dat in een wedstrijd?"*. Geldt voor alle leeftijden (de smileys vervallen). Oude cijfers worden automatisch omgezet (8–10 sterk, 6–7 goed, lager werkpunt).
+- **Vaardigheden vanaf O11 in vier blokken (in kindertaal):** *Met de bal* (aannemen, passen, dribbelen en passeren, schieten) · *Slim spelen* (vrijlopen, omschakelen, goede keuzes, verdedigen) · *Snel en fit* (snelheid, wendbaarheid, uithoudingsvermogen) · *Wie ben jij* (inzet, doorzetten, samenwerken en coachen, omgaan met fouten). Met een korte uitleg bij lastige woorden. De trainer kan er zelf aan toevoegen.
+- **Drie stukken, drie plekken, eigen rechten:**
+  | Wat | Wie vult in | Wie ziet het | Opslag |
+  |---|---|---|---|
+  | **Opdracht voor het kind** (trots, per vaardigheid, wapen, droom, leuk, wat wil je leren; in het voorjaar: hoe ging het met je doelen?) | het kind, thuis; de ouder helpt lezen maar kiest niet | kind/ouder en staf | voorbereiding (scope speler) |
+  | **Kijk van de trainer** (per vaardigheid + wapen, eigen gesprekpunten) | de trainer, **vooraf en apart** | **alleen de staf** (ook in de database afgeschermd, migratie 016) | beoordeling (scope beoord) |
+  | **Samen afgesproken** (wapen, werkpunt, 2 doelen, "wat neem je mee?", afspraken) | de trainer typt tijdens het gesprek, in de woorden van het kind | ouder en kind, zodra de trainer **"Gesprek gehad"** aantikt | verslag (scope spelerlees) |
+  | Notitie trainer | de trainer | alleen de staf | notitie |
+- **Niet laten beïnvloeden:** op de gesprekspagina blijven de antwoorden van het kind verborgen tot de eigen kijk van de trainer klaar is (alle vaardigheden + wapen). "Toch nu tonen" kan. Daarna naast elkaar; **"bespreken"** bij twee stappen verschil (sterk ↔ werkpunt) of een ander wapen.
+- **Gesprek van 15 minuten** (12 praten + 3 wisselen), standaard bij het plannen. Knop **"Start gesprek"** met klok en leidraad: 0–1 welkom · 1–4 kind aan het woord · 4–7 wapen en werkpunt · 7–10 twee doelen · 10–12 ouder en afronden · 12–15 wisselen (klok wordt oranje). De pagina volgt dezelfde volgorde.
+- **Doelen:** doel 1 = **wapen scherper maken**, doel 2 = **werkpunt**; per doel "Wat ga je doen? (wat, hoe vaak, tot wanneer)" en "Wie helpt je, en hoe?". Een derde doel alleen als het echt nodig is.
+- **Communicatie:** het bericht "Kies een tijd" vertelt meteen over de opdracht voor het kind (10 minuten). Na het kiezen staat "Bereid het gesprek voor" op Home van de ouder. De trainer ziet "x van y kinderen voorbereid" met een knop **Herinner** (de trainer beslist) en "Jouw kijk vooraf: nog x kinderen" (op Home zodra er gesprekken gepland zijn). Na "Gesprek gehad" ziet de ouder op Home **"Afspraken uit het gesprek"**; wapen en doelen staan daarna ook op de pagina van het kind.
+- **O8–O10:** volgens de KNVB nog geen individuele gesprekken; de app meldt dat bij het plannen, de trainer beslist.
+- Vervalt: ouders zien de scores van de trainer een dag na het gesprek; "Nu al delen met de ouders"; de schaal 1–10 en de smileys.
+
 ## Besluit 66 — Gesprekspagina voor het ontwikkelgesprek
 - **Voorbereiding thuis (ouder + kind, ± 5 minuten):** na het kiezen van een tijd staat op Home "Bereid het gesprek voor". Zelfbeoordeling per vaardigheid op **1–10** met een schuifje (onderbouw: drie smileys), **droom**, wat is **leuk**, wat is **lastig**. Wordt meteen bewaard.
 - **Gesprekspagina (trainer, tijdens het gesprek):** open via het gespreksoverzicht (tik op een naam), de spelerpagina ("Gesprekspagina") of Home ("Vandaag: 6 gesprekken"). Scores van kind en trainer **naast elkaar**; een verschil van 3 of meer krijgt "bespreken". Droom (+ aanvulling trainer), **maximaal 3 doelen** (wat ga je doen · hoe helpt de trainer · hoe helpen ouders), afspraken, **notitie trainer (alleen staf)**, knop "Gesprek gehad". Alles wordt tijdens het typen bewaard.

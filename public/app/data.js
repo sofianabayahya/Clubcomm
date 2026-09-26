@@ -35,12 +35,28 @@
   CC.VASTE_TAKEN = { pupillen: ['Trainer-coach', 'Timekeeper', 'Spelbegeleider'], junioren: ['Trainer-coach', 'Vlagger', 'Scheidsrechter'] };
   CC.ALLEEN_THUIS = ['Spelbegeleider', 'Scheidsrechter'];
   CC.vasteTakenVoor = (S, team) => { const n = parseInt(String((team || {}).cat || '').replace(/\D/g, ''), 10) || 0; const v = S.club.vasteTaken || CC.VASTE_TAKEN; return Array.isArray(v) ? v : v[n >= 13 ? 'junioren' : 'pupillen']; };
+  // Besluit 67: vanaf O11 vier blokken (in de geest van TIPS), in kindertaal. Geen cijfers maar drie woorden + wapen.
   CC.VAARDIGHEDEN = {
     mini: ['Plezier', 'Balgevoel'],
-    o8: ['Passen', 'Aannemen', 'Dribbelen', 'Schieten', 'Inzet'],
-    o11: ['Passen', 'Aannemen', 'Dribbelen', 'Schieten', 'Positie kiezen', 'Overzicht', 'Samenwerken', 'Inzet'],
-    o13: ['Techniek', 'Tactiek', 'Fysiek', 'Mentaal', 'Sociaal', 'Inzet'],
+    o8: ['Passen', 'Aannemen', 'Dribbelen', 'Schieten', 'Samenspelen', 'Inzet'],
+    o11: ['Aannemen', 'Passen', 'Dribbelen en passeren', 'Schieten', 'Vrijlopen', 'Omschakelen', 'Goede keuzes', 'Verdedigen', 'Snelheid', 'Wendbaarheid', 'Uithoudingsvermogen', 'Inzet', 'Doorzetten', 'Samenwerken en coachen', 'Omgaan met fouten'],
   };
+  CC.VAARDIGHEDEN.o13 = CC.VAARDIGHEDEN.o11;
+  CC.VAARDIG_BLOK = [
+    ['Met de bal', ['Aannemen', 'Passen', 'Dribbelen en passeren', 'Dribbelen', 'Schieten', 'Balgevoel']],
+    ['Slim spelen', ['Vrijlopen', 'Omschakelen', 'Goede keuzes', 'Verdedigen', 'Samenspelen']],
+    ['Snel en fit', ['Snelheid', 'Wendbaarheid', 'Uithoudingsvermogen']],
+    ['Wie ben jij', ['Inzet', 'Doorzetten', 'Samenwerken en coachen', 'Omgaan met fouten', 'Plezier']],
+  ];
+  CC.VAARDIG_UITLEG = { 'Dribbelen en passeren': 'met de bal langs een tegenstander', Vrijlopen: 'zo gaan staan dat je de bal kunt krijgen', Omschakelen: 'meteen door bij balverlies of balwinst',
+    'Goede keuzes': 'passen, dribbelen of schieten op het goede moment', Wendbaarheid: 'snel draaien en van richting veranderen', Doorzetten: 'niet opgeven, ook als het tegenzit',
+    'Samenwerken en coachen': 'helpen en aanmoedigen van teamgenoten', 'Omgaan met fouten': 'na een fout snel weer meedoen' };
+  // Drie niveaus (Besluit 67): 3 = sterk, 2 = gaat goed, 1 = wil ik beter in worden. Oude cijfers (1–10) worden omgezet.
+  CC.niveau = (n) => (n == null || n === '' ? null : n > 3 ? (n >= 8 ? 3 : n >= 6 ? 2 : 1) : Number(n));
+  CC.NIVEAU_KIND = { 3: 'Sterk', 2: 'Gaat goed', 1: 'Wil ik beter in worden' };
+  CC.NIVEAU_TRAINER = { 3: 'Sterk', 2: 'Goed', 1: 'Werkpunt' };
+  // Groeperen in blokken (eigen toevoegingen van de trainer apart)
+  CC.vaardigBlokken = (lijst) => { const r = CC.VAARDIG_BLOK.map(([n, l]) => [n, lijst.filter((x) => l.includes(x))]); const los = lijst.filter((x) => !CC.VAARDIG_BLOK.some(([, l]) => l.includes(x))); if (los.length) r.push(['Extra van de trainer', los]); return r.filter(([, l]) => l.length); };
   // Vaardigheden van een team: de standaard voor de leeftijd plus wat de trainer zelf toevoegde (Besluit 66)
   CC.vaardigheden = (S, tid) => { const t = CC.m.team(S, tid); const c = CC.categorie(t.cat); const extra = ((S.teamVaardig || {})[tid] || {}).extra || []; return [...c.vaardig, ...extra.filter((x) => !c.vaardig.includes(x))]; };
   // Speelduur per leeftijd volgens de KNVB (Besluit 60). helft = minuten per helft; timeout = time-out halverwege elke helft
@@ -60,8 +76,8 @@
     const n = parseInt(String(cat).replace(/\D/g, ''), 10) || 12;
     const l = CC.LEEFTIJDEN.find((x) => n <= x.tot);
     const duur = l.helften * l.helft;
-    const basis = n <= 7 ? { naam: "Mini's", schaal: 'mini', vaardig: CC.VAARDIGHEDEN.mini } : n <= 10 ? { naam: 'Onderbouw', schaal: 'smiley', vaardig: CC.VAARDIGHEDEN.o8 }
-      : n <= 12 ? { naam: 'Onderbouw', schaal: '1-10', vaardig: CC.VAARDIGHEDEN.o11 } : { naam: 'Middenbouw', schaal: '1-10', vaardig: CC.VAARDIGHEDEN.o13 };
+    const basis = n <= 7 ? { naam: "Mini's", schaal: 'woorden', vaardig: CC.VAARDIGHEDEN.mini, geenGesprek: true } : n <= 10 ? { naam: 'Onderbouw', schaal: 'woorden', vaardig: CC.VAARDIGHEDEN.o8, geenGesprek: true }
+      : n <= 12 ? { naam: 'Onderbouw', schaal: 'woorden', vaardig: CC.VAARDIGHEDEN.o11 } : { naam: 'Middenbouw', schaal: 'woorden', vaardig: CC.VAARDIGHEDEN.o13 };
     return { ...basis, key: l.key, vormKey: l.vormKey, leeftijd: l.label, vorm: l.vorm, opVeld: l.opVeld, duur, helften: l.helften, helft: l.helft, timeout: l.timeout,
       speelduur: l.helften === 2 ? `2 × ${l.helft} minuten` : `${duur} minuten (toernooivorm)`, blokken: 4, blokMin: duur / 4 };
   };
