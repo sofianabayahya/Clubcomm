@@ -489,3 +489,4 @@ details.uitklap.stil summary { font-size: 13px; color: var(--zacht); }
 .linkknop.vol { margin: 0; }
 .knop.klein { min-height: 40px; }
 .chip-x { padding: 6px; margin: -6px -6px -6px 0; }
+.vinkjes.enkel { grid-template-columns: 1fr; max-height: none; border: 0; padding: 0; margin: 4px 0 8px; }

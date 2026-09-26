@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 64 toegevoegd)
+Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 65 toegevoegd)
 
 ---
 
@@ -508,6 +508,15 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 65 — Ontwikkelgesprekken: Start en Voorjaar, plannen na de training
+*Herziet Besluit 23 (momenten en het plannen van gesprekken).*
+- **Twee momenten:** **Start** (binnen 8 weken na de start van het seizoen en vóór de herfstvakantie; bij DCG 20 sep – 10 okt) en **Voorjaar** (maart, vóór de indeling voor volgend seizoen). Niet vier: met 17 kinderen × 10 minuten kost elke ronde bijna 3 uur. Tussendoor praten kan altijd via "Contact vastleggen". De clubbeheerder kan de data aanpassen.
+- **Waar:** vaste plek bij Spelers → Beoordelen → Ontwikkelgesprekken. Alleen in de periode staat "Plan de startgesprekken" op Home; daarna verdwijnt het.
+- **Plannen na de training:** de trainer tikt 1–3 trainingen aan; de app rekent uit hoeveel tijden nodig zijn en zet na elke training de gesprekken klaar (bijv. 6 × 10 minuten vanaf het einde van de training). "Andere tijd" (aparte avond) kan ook, ingeklapt.
+- **Ouders:** bericht + pushmelding + "Kies een tijd" op Home, met een **uiterste datum**. **Herinnering** 2 dagen ervoor aan wie nog niet koos. Daarna **"Verdeel de rest"**: de trainer bevestigt, de ouders krijgen "We hebben … voor jullie gereserveerd". **Ruilen tot 24 uur vooraf**; de trainer krijgt een melding als een tijd vrijkomt.
+- **Agenda:** knop **"Zet in je agenda"** (ouder: het eigen gesprek) en **"In mijn agenda"** (trainer: één afspraak per avond met de namen en tijden). Met een herinnering 2 uur vooraf. Het automatische agenda-abonnement volgt later.
+- Nog niet: herinnering de dag ervoor vanaf de server (komt met de automatische berichten vanaf de server).
+
 ## Besluit 64 — Trainer en teamleider tellen als meehelpen
 - Ouders die **trainer of teamleider** van het team zijn, zien bij Taken niet meer "Je hebt dit seizoen nog niet meegeholpen", maar: *"Jij bent trainer van O12 talententeam. Daarmee doe je al heel veel voor het team, dus hier hoef je niets extra's te doen. Wil je toch eens rijden of een taak oppakken? Dat kan altijd. Dank je wel!"* (plus wat ze eventueel toch deden).
 - In het overzicht **"Wie helpt er mee?"** (teamleider) en de teamcijfers (HJO/coördinator) telt hun gezin als meehelpend, met "Trainer/Teamleider van het team". Ze staan nooit bij "Nog niet geholpen".
@@ -1001,7 +1010,7 @@ Toegepast (24 sep 2026):
 ## Besluit 23 — Beoordelingsmomenten en ontwikkelgesprekken
 *Besloten 23 september 2026.*
 
-- **Twee momenten per seizoen:** *Winter* (eind fase 2, vóór de kerstvakantie) en *Einde seizoen* (eind fase 4). Elk moment heeft een periode van 3 weken waarin de trainer beoordeelt. De trainer mag eerder beginnen.
+- **Twee momenten per seizoen:** ~~*Winter* en *Einde seizoen*~~ → *Start* (oktober) en *Voorjaar* (maart), zie Besluit 65. Elk moment heeft een periode van 3 weken waarin de trainer beoordeelt. De trainer mag eerder beginnen.
 - **De trainer beoordeelt** per vaardigheid of per speler, op de schaal van de KNVB-leeftijdscategorie (smileys in de onderbouw). Per speler schrijft hij twee korte gesprekpunten op: *wat gaat goed* en *waar werken we aan*.
 - Bij het tweede moment ziet de trainer de score van de winter ernaast (▲ beter, ▼ lager, = gelijk), zodat de groei zichtbaar is.
 - **Ontwikkelgesprek:** de trainer voert het gesprek. **Ouder en kind zijn er altijd samen bij.** De trainer zet tijden klaar (datum, begintijd, minuten per gesprek, plek) en de ouders krijgen een bericht. Ouders kiezen zelf een tijd; de trainer kan ook zelf een speler aan een tijd koppelen.
