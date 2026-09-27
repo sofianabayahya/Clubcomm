@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 25 september 2026 (Besluit 30 t/m 66 toegevoegd)
+Laatst bijgewerkt: 27 september 2026 (t/m Besluit 87)
 
 ---
 
@@ -587,7 +587,7 @@ Vaste regel voor alle portalen: een lijst die in het seizoen groeit, toont eerst
 - **Namens wie:** clubberichten als "systeem"; teamzaken namens de trainer van het team (of anders de teamleider), zoals in de app.
 - **Geen dubbel werk:** de app doet het automatische werk niet meer zelf zolang de server in de laatste 2 uur heeft gedraaid; valt de server uit, dan neemt de app het weer over.
 - **Logboek** (14 dagen) in de tabel `automaat_log`. Proefrun mogelijk (`{ "proef": true }`): alleen uitrekenen, niets opslaan.
-- Kosten: € 0 (gratis pakket Supabase).
+- Kosten: € 0 extra (valt binnen het Supabase-abonnement).
 
 ## Besluit 76 — Minder handelingen: wat de app zelf doet, en wat bewust een mens blijft doen
 *Uit de analyse van handelingen van vrijwilligers (26-09).*
@@ -596,7 +596,7 @@ Vaste regel voor alle portalen: een lijst die in het seizoen groeit, toont eerst
 - **Wisselschema:** de trainer maakt het (bij voorkeur de avond ervoor; herinnering op Home). **De timekeeper (ouder) ziet het pas op de wedstrijddag.**
 - **Speelduur bij een nieuwe (oefen)wedstrijd** volgens de KNVB-leeftijd + 15 minuten (was 1 uur).
 - **Bewust niet automatisch:** taken toewijzen (niet elke ouder kan elke taak), vervoer indelen (we weten niet wie met de auto of fiets komt), teams doorschuiven naar een nieuw seizoen (teams worden opnieuw ingedeeld). Tenue: niet nodig in de onderbouw. Sportlink-koppeling bij aanmelden: later.
-- Alles gebeurt nu zodra iemand van de staf de app opent; vanaf de server staat op Openstaand.
+- ~~Alles gebeurt nu zodra iemand van de staf de app opent; vanaf de server staat op Openstaand.~~ Sinds 26-09 doet de server dit elk kwartier vanzelf (Besluit 77).
 
 ## Besluit 75 — Vaste clubberichten volledig automatisch; zo min mogelijk handelingen voor vrijwilligers
 - **Vaste berichten die voor de hele club gelijk zijn** (vakantie, vrije dag, start en einde seizoen, wedstrijden beginnen, ontwikkelgesprekken) gaan **automatisch**: bij niemand een taak, ook niet bij de HJO of de trainers. De beheerder stelt de teksten één keer per seizoen in; "klaarzetten" blijft een keuze, niet de standaard. Bij DCG nu alle zeven automatisch.

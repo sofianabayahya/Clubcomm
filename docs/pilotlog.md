@@ -57,7 +57,6 @@ Hele wedstrijddag nagespeeld met de echte DCG-instellingen (wo t/m ma, teamleide
 
 ## Bekende risico's (nog niet opgelost)
 - **Verversen:** nu elke 30 seconden en bij terugkomen in de app (Besluit 48). Echt direct (binnen 1 s) kan later met Supabase Realtime.
-- **Automatische berichten** gaan uit als een beheerder/staflid de app opent, niet vanzelf vanaf de server.
 - **Tegelijk wijzigen** van dezelfde regel: de laatste wint (zelden, maar mogelijk bij twee teamleiders). Voor berichten opgelost (Besluit 57).
 - **Brevo-afmeldknop** in elke mail: wie tikt, krijgt geen inlogcode meer (deblokkeren in Brevo).
-- **Wedstrijden** staan er nog niet in; vaste taken en wisselschema pas testen bij de eerste (oefen)wedstrijd.
+- **Wedstrijden** zijn op 26-09 nagespeeld (generale repetitie, Besluit 85), maar nog niet in het echt gebruikt; vaste taken, wisselschema en timekeeper nog een keer oefenen bij de eerste (oefen)wedstrijd.
