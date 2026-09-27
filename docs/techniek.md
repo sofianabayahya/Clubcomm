@@ -67,3 +67,8 @@
 - De app vraagt bij het laden `automaat_laatst` op; gelukte run < 2 uur geleden → `CC.opServer` en de app doet het niet zelf.
 - Testen zonder op te slaan: `select net.http_post(url := '.../functions/v1/automaat', body := '{"proef": true, "altijd": true}', headers := jsonb_build_object('x-cc-geheim', (select geheim from automaat_geheim)))` en het antwoord in `net._http_response`.
 - Lokaal testen: `TZ=UTC node` met `motor.mjs` en de bestanden uit `public/app`.
+
+## Tests en bewaking (Besluit 88)
+- **Tests:** `npm test` = `tests/automaat.test.mjs` (servermotor op demo en kleine club, verschillende tijden) + Playwright `tests/app.spec.js` (elk demo-account en de kleine club met nagebootste database: elke rol, elk tabblad, elke keuzeknop; rooster instellen; afmelden en opslaan). De kleine club staat in `tests/kleine-club.js`. GitHub Actions (`.github/workflows/tests.yml`) draait dit bij elke push naar `main` en `claude/**` en bij elke pull request.
+- Een test faalt bij een JavaScript-fout, een console-fout, "Er ging iets mis", of "undefined", "NaN", "null", "[object Object]", "Invalid Date" op het scherm.
+- **Bewaking:** `GET https://pkvacwbdgumkffxnxnqk.supabase.co/rest/v1/rpc/gezondheid?apikey=<publishable key uit public/app/config.js>` geeft `"ok"` (of `"ok (nachtrust)"`), anders HTTP 400 met de reden (automaat > 35 min niet gedraaid of laatste ronde met fout). UptimeRobot: monitor 1 = https://mijnclubcomm.nl, monitor 2 = dit adres, elke 5 minuten, mail naar de beheerder.

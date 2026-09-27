@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 27 september 2026 (t/m Besluit 87)
+Laatst bijgewerkt: 27 september 2026 (t/m Besluit 88)
 
 ---
 
@@ -507,6 +507,15 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 88 — Vangnet: automatische tests en bewaking
+*Voorstel 27-09, akkoord gebruiker. Doel: in oktober veilig blijven aanpassen vóór de wedstrijden van fase 2.*
+- **Automatische tests in het project** (map `tests/`), bij elke wijziging vanzelf op GitHub (GitHub Actions, "Tests"). Rood = niet samenvoegen met `main` (en dus niet online zetten).
+  - **Automaat:** de regels van de server (Besluit 77) laden en draaien zonder fouten, op de demo én op een kleine club zoals DCG.
+  - **Doorklikken per rol:** elk account, elke rol, elk tabblad en elke keuzeknop; geen foutmeldingen en geen "undefined" of "NaN" op het scherm. In de demo én in een nagebootste echte club (teamnaam ≠ teamcode, weinig spelers, geen telefoonnummers, eerst leeg).
+  - **Belangrijke handelingen:** rooster instellen (Besluit 87), afmelden door een ouder en dat het wordt opgeslagen.
+  - Lokaal draaien: `npm test`.
+- **Bewaking:** een gratis dienst (UptimeRobot) kijkt elke 5 minuten of mijnclubcomm.nl werkt én of de automaat het laatste half uur heeft gedraaid (databasefunctie `gezondheid`, migratie 022; tijdens de nachtrust altijd goed). Zo niet, dan krijgt de beheerder een mail.
 
 ## Besluit 87 — Trainingsrooster: per dag eigen tijd en veld, ingangsdatum, veilig bijwerken
 - **Per dag:** in "Rooster wijzigen" (Planning → Weekrooster en veldindeling, of de teampagina) staat per dag een eigen van, tot en veld. Vink je een dag aan, dan neemt die de tijd en het veld van de vorige dag over.

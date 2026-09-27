@@ -15,7 +15,7 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
 ## Waar staat wat
 | Bestand | Inhoud |
 |---|---|
-| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 87). |
+| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 88). |
 | `docs/pilotlog.md` | **Fouten uit de pilot met oorzaak en patroon** (momentopname, opslaan, demo verbergt het, één persoon per rol, buiten de app, rommelige gegevens). Bij elke wijziging langs deze patronen lopen. |
 | `docs/productie-en-groei.md` | Controlelijst, **Openstaand**, meerdere clubs, app of website, kosten. |
 | `docs/techniek.md` | Opbouw van de echte versie (Supabase, Vercel, Brevo, migraties, e-mail, back-up). |
@@ -40,7 +40,8 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
 - Lokaal: `npm install && npm start` → http://localhost:5000/?demo (of `cd public && python3 -m http.server 5050`).
 - Zonder netwerk naar Supabase: `supabase/tests/fake-supabase.js` (nagebootste client, code 123456); rechten per rol: `supabase/tests/rls_test.sql`.
 - **Altijd ook de echte, bijna lege club testen** (teamnaam ≠ teamcode, weinig spelers, geen telefoonnummers), niet alleen de demo.
-- Playwright staat klaar (Chromium in `/opt/pw-browsers`); testscripts per rol opnemen in het project staat op Openstaand.
+- **Automatische tests (Besluit 88):** `npm test` (map `tests/`: servermotor + elke rol doorklikken in demo én kleine nagebootste club + afmelden/rooster). Draaien ook vanzelf op GitHub (Actions "Tests"); **rood = niet samenvoegen met main**. Nieuwe functie of gevonden fout → test erbij. Lokaal met Chromium uit `/opt/pw-browsers` (niet `playwright install`).
+- **Bewaking:** UptimeRobot op mijnclubcomm.nl en op `rpc/gezondheid` (automaat laatste 35 min gedraaid; migratie 022).
 
 ## Bekende beperkingen
 - Automatisch werk (berichten, uitslag, gesprekken) doet de server elk kwartier (Edge Function `automaat`, Besluit 77) met dezelfde regels als de app; nachtrust 21:00–07:30. Wijzig je regels in `public/app/*.js`, dan draait de server na publicatie mee. Logboek: tabel `automaat_log`.
