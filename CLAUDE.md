@@ -33,7 +33,7 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
 ## Online
 - App: https://mijnclubcomm.nl (domein bij Hostnet, DNS naar Vercel; oud adres clubcomm-nine.vercel.app werkt ook) — Vercel-project `clubcomm` (map `public`). Online zetten: Vercel `create_deployment` (project `clubcomm`, target production, gitSource github `sofianabayahya/Clubcomm`, ref = de werkbranch, zonder teamId).
 - Supabase-project `pkvacwbdgumkffxnxnqk` (Frankfurt). Club-id `dcg`; account van de gebruiker: persoon `p-beheer`. Migraties: bestand in `supabase/migrations/` **en** toepassen met `apply_migration`. Eenmalige datawijzigingen: bestand in `supabase/scripts/` en uitvoeren met `execute_sql`. Edge Functions `melding` (e-mail via Brevo én pushmeldingen) en `automaat` (elk kwartier het automatische werk; `supabase/functions/automaat`, secrets `BREVO_API_KEY`, `AFZENDER_EMAIL`; push-sleutelpaar staat in tabel `push_sleutel`, alleen voor de server).
-- E-mail: Brevo (inlogmail via SMTP, meldingen via API). Afzender nu een Gmail-adres; eigen domein staat op Openstaand.
+- E-mail: Brevo (inlogmail via SMTP, meldingen via API; gratis plan, 300 mails per dag). Afzender `noreply@mijnclubcomm.nl` ("ClubComm"). Claude kan via de Brevo-koppeling contacten en afzenders nakijken (o.a. of een adres op de blokkeerlijst staat), maar niet de bezorging van losse mails.
 
 ## Testen
 - Lokaal: `npm install && npm start` → http://localhost:5000/?demo (of `cd public && python3 -m http.server 5050`).
