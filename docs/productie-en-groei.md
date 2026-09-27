@@ -9,7 +9,7 @@
 > *Later in de pilot:* ~~nieuwe handleidingen per rol~~ ✅ 25-09 (bestuur, teamleider, ouders, trainer; eerst als handleiding sturen, presenteren als dat niet werkt) · ~~fouten automatisch vastleggen~~ ✅ (Besluit 63) · Content-Security-Policy · gebruikerstest met 3–5 ouders · welkomstuitleg bij eerste keer inloggen · agenda-koppeling (heeft domein nodig).
 > *Koppelingen (27-09):* **Sportlink Club.Dataservice** (wedstrijdprogramma, teams en spelers automatisch ophalen; DCG vraagt de sleutel aan bij wie Sportlink beheert, de sleutel komt in het Supabase-dashboard, nooit in de chat; liefst vóór fase 2, uiterlijk vóór SCPB) · **bewaking** van mijnclubcomm.nl en de automaat (bijv. UptimeRobot, gratis: seintje als iets eruit ligt) · Brevo-koppeling voor Claude (bezorging en blokkeerlijst zelf kunnen nakijken).
 > *Website over ClubComm (27-09, na de pilot):* informatiewebsite op een **eigen, ander domein** (domeinnaam kiest de initiatiefnemer; de app blijft op mijnclubcomm.nl, dus niets verhuist). Advies: Claude bouwt hem in dit project (zelfde huisstijl, schermafbeeldingen automatisch uit de demo, € 0 extra hosting op Vercel); alternatief als de initiatiefnemer zelf wil slepen en klikken: Framer. Inhoud: wat ClubComm doet per rol, voordelen voor de club, privacy, contact/aanvraag.
-> *Vóór een tweede club:* merknaam checken (clubcomm.nl/.com/.app zijn bezet; mijnclubcomm.nl ✅) · inlogmail via een dienst zonder afmeldknop (of Brevo Enterprise) · testomgeving, automatische tests (GitHub Actions), uptime-bewaking · Supabase Pro, Vercel Pro · ~~automatische berichten vanaf de server~~ ✅ 26-09 (Besluit 77) · ~~pushmeldingen stap 1~~ ✅ 25-09 (Besluit 53) · live verversen met Supabase Realtime en alleen wijzigingen ophalen (Besluit 48; nu elke 30 s) · club-wizard, meerdere clubs per persoon, Sportlink/voetbal.nl-import · verwerkersovereenkomsten, DPIA, bewaartermijnen automatisch, account verwijderen automatisch vanaf de server (nu verzoek aan beheerder, Besluit 54) · toegankelijkheid (WCAG) · twee beheerders per club, logboek, rate limiting.
+> *Vóór een tweede club:* merknaam checken (clubcomm.nl/.com/.app zijn bezet; mijnclubcomm.nl ✅) · inlogmail via een dienst zonder afmeldknop (of Brevo Enterprise) · testomgeving, automatische tests (GitHub Actions), uptime-bewaking · ~~Supabase Pro~~ ✅ 25-09 · Vercel Pro · ~~automatische berichten vanaf de server~~ ✅ 26-09 (Besluit 77) · ~~pushmeldingen stap 1~~ ✅ 25-09 (Besluit 53) · live verversen met Supabase Realtime en alleen wijzigingen ophalen (Besluit 48; nu elke 30 s) · club-wizard, meerdere clubs per persoon, Sportlink/voetbal.nl-import · verwerkersovereenkomsten, DPIA, bewaartermijnen automatisch, account verwijderen automatisch vanaf de server (nu verzoek aan beheerder, Besluit 54) · toegankelijkheid (WCAG) · twee beheerders per club, logboek, rate limiting.
 > *Later:* berichtencentrum: berichten bij de activiteit en bij de speler, blok "Belangrijk dit seizoen", filters voor de staf (Besluit 80) · taken verdelen die de app vanzelf leert (open taak 4 dagen vooraf → gericht vragen met "Ja / Deze keer niet / Dit kan ik niet", overzicht per gezin voor oudergesprekken; voorstel 26-09, voorlopig niet nodig) · uitzondering per team bij een vakantie ("wij trainen toch", Besluit 75) · store-app (Capacitor), huiswerk en filmpjes, fondsenwerving, weekbericht.
 
 *Opgesteld 25 september 2026, na de beveiligingscontrole. Denk als appontwikkelaar: wat moet er nog gebeuren voor de pilot, voor een tweede club, en voor de lange termijn?*
@@ -30,7 +30,7 @@ Legenda: ✅ gedaan · ⚠️ nodig vóór of tijdens de pilot · 🔜 nodig vó
 | Testen op echte telefoons (iPhone/Safari en Android/Chrome) | ⚠️ | In week 1 met jou en de teamleiders; ook op een trage verbinding. |
 | Een lege club (zonder voorbeelddata) | ✅ 25-09 | Alle schermen van alle rollen doorgelopen met de echte, lege club; drie fouten gevonden en opgelost (Besluit 38). |
 | Twee mensen tegelijk (bijv. twee teamleiders) | ⚠️ | Opslaan per rij voorkomt de meeste botsingen; in de pilot extra op letten. |
-| Foutmeldingen opvangen | 🔜 (later in de pilot) | Nu zie je een fout alleen op het scherm van de gebruiker. Fouten automatisch laten vastleggen (tabel in Supabase of een dienst als Sentry). |
+| Foutmeldingen opvangen | ✅ 26-09 | Fouten bij gebruikers komen automatisch in Supabase (tabel `fout`); beheerder → Home → Foutmeldingen (Besluit 63). |
 | Feedbackknop in de app | ✅ 25-09 | "Er klopt iets niet / idee" → komt bij jou binnen. Belangrijk om van de pilot te leren. |
 
 ### Gebruiksvriendelijkheid
@@ -70,7 +70,7 @@ Legenda: ✅ gedaan · ⚠️ nodig vóór of tijdens de pilot · 🔜 nodig vó
 | Supabase pauzeert na 7 dagen zonder gebruik | ✅ 25-09 | Opgelost met Supabase Pro. |
 | Bewaking of de site werkt (uptime) | 🔜 | Gratis dienst (bijv. UptimeRobot) die je mailt als de app plat ligt. |
 | Aparte testomgeving (niet in de echte database testen) | 🔜 | Tweede Supabase-project + Vercel-preview. Nu testen we in de echte database. |
-| Automatische berichten vanaf de server | 🔜 | Nu gaan ze uit zodra een beheerder of staflid de app opent; later elke ochtend vanzelf (pg_cron). |
+| Automatische berichten vanaf de server | ✅ 26-09 | Elk kwartier vanzelf via de serverfunctie `automaat` (pg_cron), nachtrust 21:00–07:30; logboek in `automaat_log` (Besluit 77). |
 
 ### Privacy (AVG) — extra belangrijk omdat het om kinderen gaat
 | Punt | Status | Toelichting |
@@ -140,7 +140,7 @@ Legenda: ✅ gedaan · ⚠️ nodig vóór of tijdens de pilot · 🔜 nodig vó
 **Na de pilot, vóór de tweede club**
 - Domeinnaam (naam eerst checken bij het merkenregister) + e-mail vanaf het eigen domein.
 - Testomgeving, automatische tests, uptime-bewaking.
-- Supabase Pro en Vercel Pro; automatische berichten vanaf de server; pushmeldingen.
+- Vercel Pro (Supabase Pro ✅ 25-09, automatische berichten vanaf de server ✅ 26-09, pushmeldingen ✅ 25-09).
 - Club-wizard, meerdere clubs per persoon, Sportlink-import.
 - Verwerkersovereenkomst, DPIA, bewaartermijnen.
 
