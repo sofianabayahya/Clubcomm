@@ -5,12 +5,16 @@
   "description": "ClubComm — communicatie en organisatie voor jeugdvoetbal",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node --test tests/automaat.test.mjs && playwright test"
   },
   "dependencies": {
     "express": "^4.18.2"
   },
   "engines": {
     "node": ">=18"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1"
   }
 }
