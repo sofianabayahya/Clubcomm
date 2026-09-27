@@ -1,0 +1,10 @@
+<!-- ClubComm — inlogmail (Besluit 52): alleen de code, geen knop.
+     Plakken in Supabase → Authentication → Emails bij ZOWEL "Magic Link" ALS "Confirm signup".
+     Onderwerp (Subject): Je inlogcode voor ClubComm: {{ .Token }} -->
+<div style="font-family: Arial, Helvetica, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px; color: #1a2433;">
+  <h2 style="margin: 0 0 12px; font-size: 20px;">Je inlogcode voor ClubComm</h2>
+  <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.5;">Typ deze code over in de app:</p>
+  <p style="margin: 0 0 20px; font-size: 34px; font-weight: bold; letter-spacing: 6px; background: #eef5ff; border-radius: 12px; padding: 16px; text-align: center;">{{ .Token }}</p>
+  <p style="margin: 0 0 8px; font-size: 13px; line-height: 1.5; color: #5b6778;">De code werkt een uur en alleen de nieuwste code werkt. Heb je niet zelf om een code gevraagd? Dan kun je deze mail negeren.</p>
+  <p style="margin: 16px 0 0; font-size: 13px; color: #5b6778;">ClubComm · Altijd in contact met je club</p>
+</div>

@@ -1,31 +1,47 @@
-# ClubComm (voorheen BTV Connect)
+# ClubComm
 
-Communicatie- en managementplatform voor jeugdvoetbal (pilotclub: SC Buitenveldert).
-Gemigreerd uit Replit op 2026-09-22. Taal van de UI: Nederlands.
+Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoer, berichten, kaarten, speeltijd.
+**Pilot:** RKSV DCG (Amsterdam, Sportpark Ookmeer), team **O12 talententeam** (code `O12-1`, selectie), 16 spelers (een 17e twijfelt nog). Database sinds 25-09 leeg op dit team na (Besluit 38). De gebruiker (Sofian) is trainer, ouder (zijn kind speelt in het team) en clubbeheerder, met twee teamleiders. Wedstrijden vanaf fase 2 (za 31 okt 2026).
 
-## Huidige staat (prototype)
-- 23 statische HTML-pagina's in de root, gedeelde `script.js`, `style.css`, `api-client.js`.
-- `server.js` (Express) heeft alleen mock-endpoints: `/api/health`, `/api/auth/login`, `/api/auth/register`, `/api/attendance/absence`.
-- Geen database: alle data staat in `localStorage` en is hardcoded demo-data.
-- Login in `index.html`/`script.js` is fake: rol wordt afgeleid uit het e-mailadres.
-- Pagina-overzicht en rollen: zie `APP_BLUEPRINT.md`.
+## Werkafspraken met de gebruiker
+- De gebruiker is beginner: altijd **eenvoudig Nederlands**, één stap tegelijk, uitleg waar je klikt.
+- Nieuwe keuze → vastleggen als **besluit** in `docs/besluiten.md` → bouwen → testen → committen en pushen → online zetten.
+- Vraagt de gebruiker **"wat zijn de volgende stappen?"**: kijk in `docs/productie-en-groei.md` → blok **Openstaand** en houd dat blok bij.
+- **Eigenaarschap:** zoek zelf actief naar verouderde teksten, gaten en fouten (zoals een tekst die niet meer klopt met een nieuwer besluit). Leg ze eerst voor aan de gebruiker en bouw pas na akkoord; kleine, duidelijke fouten mag je in dezelfde ronde meenemen en melden.
+- Vraag nooit om geheime sleutels in de chat (Brevo, Supabase service key); de gebruiker zet ze zelf in het dashboard.
+- Vuistregels voor elk scherm (Besluit 30 en 34): actie eerst, wat bij elkaar hoort in één blok, elke actie één vaste plek, kleur alleen voor aandacht, **informatie is geen taak**, "ClubComm signaleert, mensen beslissen".
 
-## Bekende problemen
-- JS-fouten: `ouderportaal.html` (syntax `}`), `overzicht.html` (`twoWeekPlanningData` dubbel gedeclareerd), `hjo-dashboard.html` (invalid token), `analytics-hub.html` (script error).
-- `express.static('.')` serveert de hele projectmap, inclusief `server.js`.
-- Naamgeving wisselt tussen "BTV Connect" en "ClubComm"; doel is ClubComm.
+## Waar staat wat
+| Bestand | Inhoud |
+|---|---|
+| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 87). |
+| `docs/pilotlog.md` | **Fouten uit de pilot met oorzaak en patroon** (momentopname, opslaan, demo verbergt het, één persoon per rol, buiten de app, rommelige gegevens). Bij elke wijziging langs deze patronen lopen. |
+| `docs/productie-en-groei.md` | Controlelijst, **Openstaand**, meerdere clubs, app of website, kosten. |
+| `docs/techniek.md` | Opbouw van de echte versie (Supabase, Vercel, Brevo, migraties, e-mail, back-up). |
+| `docs/presentaties/` | PowerPoints per rol (bestuur, teamleider, ouders, trainer): handleiding én presentatie. Opnieuw maken: `shots*.js` (schermafbeeldingen uit de demo) en `maak.js`. |
+| `docs/onderzoek/` | Achtergrond: analyse clubproblemen, vergelijking Teamy en VeldPlanner, **app-analyse 26-09** (rapportcijfers en prioriteiten). Voorstellen, geen besluiten. |
 
-## Lokaal draaien
-- Statisch: `python3 -m http.server 5050` (werkt zonder Node).
-- Volledig: `npm install && npm start` (poort 5000, vereist Node.js).
+## De app
+- `public/index.html` + `public/app/*.js`: één webapp voor de telefoon (vanilla JS, geen build), installeerbaar (manifest + `sw.js`).
+  - `data.js`: demodata + rekenregels (aanwezigheid, kaarten per seizoen, zones, signalen, speeltijd, vaste taken). `opslag.js`: app-gegevens ↔ databaserijen. `core.js`: inloggen, kop, profiel, berichten, afmelden, planning aanpassen, privacy, feedback.
+  - Schermen per rol: `ouder.js`, `trainer.js`, `teamleider.js`, `hjo.js` (ook clubbeheerder), `hjohome.js`; coördinator via `taken.js` (ook taken per rol en profielen).
+  - `adres.js`: adres aanvullen via PDOK (velden met `data-adres`). `push.js`: pushmeldingen aanzetten en keuzes (Besluit 53); tonen in `sw.js`. `onderhoud.js`: foutregistratie en zelf verversen bij een nieuwe versie (`versie.json`, gemaakt door `versie-maken.js` bij elke publicatie; Besluit 63).
+  - Modules: `autoberichten.js` (Communicatieplan, noodberichten, herinneringen activiteiten), `afwezig.js`, `trainerafw.js`, `beoordeling.js` (+ `gesprek.js`: voorbereiding en gesprekspagina ontwikkelgesprek), `materiaal.js`, `meehelpen.js`, `waardering.js`, `hjofilter.js`, `agenda.js`.
+  - `live.js`: echte versie (Supabase: inloggen met e-mailcode, laden, automatisch opslaan, beheer).
+- **Demo:** `/?demo` (of zonder `config.js`). Accounts: Sanne (ouder), Mark (trainer + ouder), Linda (teamleider + ouder), Peter (HJO + beheerder), Esther (coördinator). Demodata heet nog "SC Buitenveldert" en staat in localStorage.
 
-## Richting V2
-Specificaties staan in `~/Desktop/Platform Clubcomm/` (Parent Portal V2, HJO Dashboard V2, Registratie/Auth/Rollen brief).
-Kernprincipes:
-- Eén account per persoon, rollen zijn toewijzingen; meerdere rollen per account met rolwisselaar.
-- Passwordless login (e-mailcode/magic link).
-- Rechten server-side afdwingen (ouder ziet alleen gekoppelde kinderen, trainer alleen eigen teams).
-- Drempels (aanwezigheid, te laat, gele kaarten, afmelddeadline) configureerbaar door HJO per team/teamtype — nooit hardcoden.
-- "ClubComm detecteert, communiceert en documenteert. Mensen beslissen." Geen automatische straffen.
-- `club_id` op alle data (multi-club later).
-- Voorgestelde stack: Next.js + Supabase (Auth + Postgres/RLS), hosting op Vercel.
+## Online
+- App: https://mijnclubcomm.nl (domein bij Hostnet, DNS naar Vercel; oud adres clubcomm-nine.vercel.app werkt ook) — Vercel-project `clubcomm` (map `public`). Online zetten: Vercel `create_deployment` (project `clubcomm`, target production, gitSource github `sofianabayahya/Clubcomm`, ref = de werkbranch, zonder teamId).
+- Supabase-project `pkvacwbdgumkffxnxnqk` (Frankfurt). Club-id `dcg`; account van de gebruiker: persoon `p-beheer`. Migraties: bestand in `supabase/migrations/` **en** toepassen met `apply_migration`. Eenmalige datawijzigingen: bestand in `supabase/scripts/` en uitvoeren met `execute_sql`. Edge Functions `melding` (e-mail via Brevo én pushmeldingen) en `automaat` (elk kwartier het automatische werk; `supabase/functions/automaat`, secrets `BREVO_API_KEY`, `AFZENDER_EMAIL`; push-sleutelpaar staat in tabel `push_sleutel`, alleen voor de server).
+- E-mail: Brevo (inlogmail via SMTP, meldingen via API; gratis plan, 300 mails per dag). Afzender `noreply@mijnclubcomm.nl` ("ClubComm"). Claude kan via de Brevo-koppeling contacten en afzenders nakijken (o.a. of een adres op de blokkeerlijst staat), maar niet de bezorging van losse mails.
+
+## Testen
+- Lokaal: `npm install && npm start` → http://localhost:5000/?demo (of `cd public && python3 -m http.server 5050`).
+- Zonder netwerk naar Supabase: `supabase/tests/fake-supabase.js` (nagebootste client, code 123456); rechten per rol: `supabase/tests/rls_test.sql`.
+- **Altijd ook de echte, bijna lege club testen** (teamnaam ≠ teamcode, weinig spelers, geen telefoonnummers), niet alleen de demo.
+- Playwright staat klaar (Chromium in `/opt/pw-browsers`); testscripts per rol opnemen in het project staat op Openstaand.
+
+## Bekende beperkingen
+- Automatisch werk (berichten, uitslag, gesprekken) doet de server elk kwartier (Edge Function `automaat`, Besluit 77) met dezelfde regels als de app; nachtrust 21:00–07:30. Wijzig je regels in `public/app/*.js`, dan draait de server na publicatie mee. Logboek: tabel `automaat_log`.
+- Agenda-abonnement werkt pas met een eigen domein (in de echte versie verborgen).
+- Het logo-blauw (#0d88f9) is lichter dan de app-kleur (#0869c2, gekozen voor contrast).

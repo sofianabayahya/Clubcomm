@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0d88f9">
+  <title>ClubComm</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="ClubComm">
+  <link rel="stylesheet" href="app/app.css">
+</head>
+<body>
+  <!-- ClubComm (ontwerp volgens docs/besluiten.md). -->
+  <div id="app"></div>
+  <div id="sheet" hidden></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app/vendor/icons.js"></script>
+  <script src="app/vendor/qrcode.js"></script>
+  <script src="app/vendor/supabase.js"></script>
+  <script src="app/config.js"></script>
+  <script src="app/data.js"></script>
+  <script src="app/opslag.js"></script>
+  <script src="app/core.js"></script>
+  <script src="app/ouder.js"></script>
+  <script src="app/trainer.js"></script>
+  <script src="app/teamleider.js"></script>
+  <script src="app/hjo.js"></script>
+  <script src="app/materiaal.js"></script>
+  <script src="app/agenda.js"></script>
+  <script src="app/afwezig.js"></script>
+  <script src="app/trainerafw.js"></script>
+  <script src="app/beoordeling.js"></script>
+  <script src="app/gesprek.js"></script>
+  <script src="app/taken.js"></script>
+  <script src="app/hjohome.js"></script>
+  <script src="app/autoberichten.js"></script>
+  <script src="app/meehelpen.js"></script>
+  <script src="app/waardering.js"></script>
+  <script src="app/hjofilter.js"></script>
+  <script src="app/adres.js"></script>
+  <script src="app/push.js"></script>
+  <script src="app/live.js"></script>
+  <script src="app/onderhoud.js"></script>
+  <script>
+    CC.start();
+    // Installeerbaar (Besluit 37): service worker registreren en de installatievraag van Android bewaren voor Profiel → App op je beginscherm
+    if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('/sw.js').catch(() => {});
+    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); CC.installPrompt = e; });
+  </script>
+</body>
+</html>

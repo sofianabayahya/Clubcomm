@@ -1,0 +1,63 @@
+# ClubComm — Pilotlog (fouten en lessen)
+
+Wat we tijdens de pilot vinden, met de oorzaak en het patroon erachter. Doel: dezelfde soort fout niet twee keer maken.
+Besluiten staan in `besluiten.md`; dit is het logboek van fouten. Nieuwste bovenaan.
+
+## 26 september 2026 (generale repetitie wedstrijddag)
+
+Hele wedstrijddag nagespeeld met de echte DCG-instellingen (wo t/m ma, teamleider, trainer, drie ouders, klok loopt mee).
+
+| Wat we zagen | Oorzaak | Opgelost | Patroon |
+|---|---|---|---|
+| (zelf gevonden) Rooster opslaan gooide alle komende trainingen weg en maakte ze opnieuw: afmeldingen, afgelaste, verplaatste en extra trainingen gingen verloren; één tijd en veld voor alle dagen | Rooster werd altijd opnieuw opgebouwd, zonder te kijken wat er al aan hing | Bijwerken met behoud, per dag eigen tijd/veld, ingangsdatum, eerst vragen bij afmeldingen (Besluit 87) | **B. Opslaan niet zeker** / **A. Momentopname** |
+| HJO: na "Bekijken" in het venster van een speler bleef het venster over de spelerpagina liggen | Naar een andere pagina gaan sloot een open venster niet | Elke paginawissel sluit eerst een open venster (26-09) | **C. Demo verbergt het** (nooit vanuit een venster doorgeklikt) |
+| Speeltijd telde alleen mee na een tweede knop op het laatste blok ("Wedstrijd klaar: bevestigen"); alleen uitslag opslaan (of de server) → minuten weg | Twee eindknoppen, speeltijd hing aan het doorklikken van alle blokken | Uitslag opslaan legt ook speeltijd en aanwezigheid vast; de server doet het 2 uur na afloop (Besluit 85) | **B. Opslaan niet zeker** |
+| Kind afgemeld op de ochtend zelf, maar stond nog in het wisselschema; alleen zichtbaar in het tabblad Speeltijd | Waarschuwing zat alleen in het schema-scherm | Regel in "Actie nodig" bij de trainer; oranje regel bij de timekeeper (Besluit 85) | **D. Eén persoon per rol** (timekeeper ≠ trainer) |
+| Chauffeur hoorde niet dat het kind dat met hem meereed, afgemeld was | Afmelden haalde het kind stil uit de auto | Chauffeur krijgt een persoonlijk bericht (en omgekeerd: ouder hoort het als de chauffeur afzegt) (Besluit 85) | **E. Buiten de app** (iemand rijdt voor niets) |
+| Aanwezigheid bij wedstrijden werd nooit ingevuld of herinnerd | Herinnering alleen voor trainingen | Na de uitslag automatisch ingevuld (wie niet afmeldde = aanwezig), trainer kan aanpassen (Besluit 85) | **A. Momentopname** |
+
+## 25 september 2026 (eerste dag met echte ouders)
+
+| Wat de gebruiker zag | Oorzaak | Opgelost | Patroon |
+|---|---|---|---|
+| (zelf gevonden) Trainer/teamleider kon "Niet alles is opgeslagen" zien zonder iets fout te doen | App vulde standaard-clubinstellingen aan bij het tekenen; alleen beheerder mag die opslaan | Clubinstellingen alleen door beheerder opgeslagen, anders stil overslaan (Besluit 63) | **D. Eén persoon, meer rollen** / **A. Momentopname** |
+| (zelf gevonden) "Club leegmaken" nog één tik (plus typen) weg in de echte club | Testknop uit de opstartfase bleef staan | Alleen bij nieuwe club; database weigert het ook (Besluit 63) | **C. Demo/opstart verbergt het** |
+| (zelf gevonden) Speelduur klopte niet voor O8–O9 (50 i.p.v. 40 min) en vanaf O13 (steeds 70 min) | Speelduur hing aan de spelvorm, niet aan de leeftijd | Per leeftijd volgens de KNVB (Besluit 60) | **C. Demo verbergt het** (demo had alleen O10/O12) |
+| Lange reactie verdween achter de knoppenbalk onderin | Reactievak rekende niet met de hogere balk op iPhones met streep onderin | In een gesprek geen knoppenbalk; vak onderaan en schuift mee (Besluit 58) | **E. Buiten de app** (toestel) |
+| (zelf gevonden) Afzender kon een net binnengekomen antwoord overschrijven bij opslaan | Afzender schreef het hele bericht opnieuw weg | Antwoorden/gelezen/archief altijd via `bericht_bij` (Besluit 57) | **B. Opslaan niet zeker** |
+| Bij elk antwoord in een gesprek een nieuwe e-mail | E-mail per bericht én per antwoord | Eén e-mail per onderwerp, alleen zonder push (Besluit 57) | — |
+| Demo-knoppen (ander demo-account, demo opnieuw, account verwijderen) stonden in het echte profiel | Profiel was gebouwd voor de demo; "account verwijderen" werkte in het echt maar half | Alleen in de demo; echt: verzoek aan beheerder (Besluit 54) | **C. Demo verbergt het** |
+| (zelf gevonden) Trainer zonder geplande activiteit zag ook geen acties (bijv. aanmeldingen) | Home stopte meteen bij "Geen activiteiten gepland" | Acties worden altijd getoond | **C. Demo verbergt het** |
+| Ouder meldde hetzelfde kind twee keer aan (Tahsin, 15 min ertussen) | Aanmelden controleerde niet of er al een aanvraag was | Database voegt dubbele samen (Besluit 51); duplicaat verwijderd | **A. Momentopname / F. Echt gedrag** |
+| Materiaalbericht stond in de inbox van de trainer zelf | Bericht kwam van 'systeem' naar alle HJO's, en de trainer is ook HJO | Bericht is van de trainer (Verstuurd), niet naar jezelf (Besluit 50) | **D. Eén persoon, meer rollen** |
+| Nieuw goedgekeurde speler stond op "afwezig" in Aanwezigheid (Jack) | Het concept van de aanwezigheidslijst werd één keer gemaakt en niet bijgewerkt | Lijst werkt zich bij; alleen eigen tikken blijven | **A. Momentopname** |
+| (zelf gevonden) Wisselschema blijft staan als een kind na het maken afmeldt | Schema bevat de spelers van het moment van maken | Waarschuwing + knop "Maak het schema opnieuw" | **A. Momentopname** |
+| Afmelding van een ouder kwam nooit aan | Opslaan wachtte 0,4 s; iPhone stopt de app bij wegvegen | Meteen opslaan als de app naar de achtergrond gaat | **B. Opslaan niet zeker** |
+| Nep-telefoonnummer 0612345678 bij goedgekeurde ouders | Voorbeeldwaarde uit de demo bleef in de echte versie | Leeg; ouder vult zelf in (ook bij aanmelden) | **C. Demo-waarden in echt gebruik** |
+| Trainer zag aanmeldingen niet meer | Met teamleider gingen ze alleen naar de teamleider | Altijd zichtbaar onder Spelers (Besluit 47) | **D. Eén persoon per rol aangenomen** |
+| Tweede teamleider zou de eerste uit de berichten duwen | Team kende maar één trainer/teamleider | Alle staf van het team krijgt de berichten (Besluit 44) | **D. Eén persoon per rol aangenomen** |
+| Overal "O12-1" in plaats van "O12 talententeam" (zelf gevonden, ± 40 plekken) | Teamcode en teamnaam waren in de demo gelijk | Overal de naam; code alleen intern (`M.tn`) | **C. Demo verbergt het** |
+| Oude berichten niet zichtbaar voor nieuwe ouders | Ontvangers liggen vast bij versturen | Vastgezet nieuws ook voor nieuwkomers (Besluit 41) | **A. Momentopname** |
+| Code niet ontvangen (Hotmail) | Nieuwe afzender → map Ongewenste e-mail | Tip op het codescherm | **E. Buiten de app** |
+| (26-09) Moeder dacht dat ze was aangemeld en wachtte op goedkeuring; wij zagen niets | Code (Hotmail) nooit ingevuld: de aanmelding staat dan nog alleen op haar telefoon en wordt pas na de code verstuurd | Codescherm zegt nu: "Je aanmelding is nog niet verstuurd"; ouder: Ongewenste e-mail bekijken of "Stuur opnieuw" | **E. Buiten de app** |
+| (zelf gevonden, 26-09) Rooster wijzigen maakte maar 8 weken trainingen aan | Vaste termijn in plaats van het einde van het seizoen | Tot het einde van het seizoen (Besluit 73) | **A. Momentopname** |
+| Na inloggen via de mail knop: app op beginscherm niet ingelogd | iPhone: beginscherm-app en Safari delen geen inlog | Vanaf beginscherm alleen de code overtypen; later knop helemaal uit de mail (Besluit 52) | **E. Buiten de app** |
+| Knop over e-mailadres heen | Lange woorden zonder spatie breken niet af | Afbreken toegestaan | **F. Echte gegevens zijn langer/rommeliger** |
+| Voornaam "Amin " met spatie; e-mail met hoofdletters | Invoer niet opgeschoond | Trimmen, e-mail kleine letters | **F. Echte gegevens zijn rommeliger** |
+| Rol meteen opgeslagen zonder bevestiging | Geen controle-stap | Eerst "Klopt dit?" (Besluit 44) | — |
+| Lege club: HJO-Home liep vast, "undefined%", verkeerd startbericht | Schermen alleen getest met volle demo | Lege-club-test toegevoegd | **C. Demo verbergt het** |
+
+## De patronen (waar we bij elke wijziging op letten)
+- **A. Momentopname:** iets wordt één keer gemaakt (lijst, schema, ontvangers) terwijl de werkelijkheid doorloopt. Vraag: *wat als er intussen iets verandert?*
+- **B. Opslaan niet zeker:** telefoon sluit apps hard. Belangrijke acties meteen versturen en laten zien dat het gelukt is.
+- **C. Demo verbergt het:** de demo is vol, netjes en heeft code = naam. Altijd ook testen met de echte, (bijna) lege club.
+- **D. Eén persoon per rol:** een team kan meer trainers, teamleiders, ouders per kind hebben. Nooit "de" trainer aannemen.
+- **E. Buiten de app:** e-mail, spamfilters, iPhone-gedrag. Uitleg op het scherm waar het misgaat.
+- **F. Echte gegevens:** lange e-mailadressen, spaties, hoofdletters, geen telefoonnummer.
+
+## Bekende risico's (nog niet opgelost)
+- **Verversen:** nu elke 30 seconden en bij terugkomen in de app (Besluit 48). Echt direct (binnen 1 s) kan later met Supabase Realtime.
+- **Automatische berichten** gaan uit als een beheerder/staflid de app opent, niet vanzelf vanaf de server.
+- **Tegelijk wijzigen** van dezelfde regel: de laatste wint (zelden, maar mogelijk bij twee teamleiders). Voor berichten opgelost (Besluit 57).
+- **Brevo-afmeldknop** in elke mail: wie tikt, krijgt geen inlogcode meer (deblokkeren in Brevo).
+- **Wedstrijden** staan er nog niet in; vaste taken en wisselschema pas testen bij de eerste (oefen)wedstrijd.
