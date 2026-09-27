@@ -6,6 +6,7 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
 ## Werkafspraken met de gebruiker
 - De gebruiker is beginner: altijd **eenvoudig Nederlands**, één stap tegelijk, uitleg waar je klikt.
 - Nieuwe keuze → vastleggen als **besluit** in `docs/besluiten.md` → bouwen → testen → committen en pushen → online zetten.
+- **Hoofdversie (main) altijd bijwerken:** na elke afgeronde ronde de werkbranch via een pull request samenvoegen met `main` (de gebruiker wil dat `main` op GitHub altijd de actuele stand is). Daarna de werkbranch opnieuw laten beginnen vanaf `main`.
 - Vraagt de gebruiker **"wat zijn de volgende stappen?"**: kijk in `docs/productie-en-groei.md` → blok **Openstaand** en houd dat blok bij.
 - **Eigenaarschap:** zoek zelf actief naar verouderde teksten, gaten en fouten (zoals een tekst die niet meer klopt met een nieuwer besluit). Leg ze eerst voor aan de gebruiker en bouw pas na akkoord; kleine, duidelijke fouten mag je in dezelfde ronde meenemen en melden.
 - Vraag nooit om geheime sleutels in de chat (Brevo, Supabase service key); de gebruiker zet ze zelf in het dashboard.
