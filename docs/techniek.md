@@ -3,7 +3,7 @@
 ## Onderdelen
 - **App**: `public/` (dezelfde schermen als de demo). Online via Vercel: https://mijnclubcomm.nl (project `clubcomm`, map `public`; domein bij Hostnet: A-record @ → 76.76.21.21, CNAME www → cname.vercel-dns.com; www stuurt door). Het oude adres https://clubcomm-nine.vercel.app werkt ook.
 - **Database en inloggen**: Supabase-project `ClubComm` (regio Frankfurt, EU). Club-id `dcg` (club DCG).
-- **Demo**: blijft bestaan. Met `?demo` achter het adres draait de app met voorbeelddata op het eigen apparaat.
+- **Demo**: online alleen `mijnclubcomm.nl/demo`, op uitnodiging (Besluit 89). Met `?demo` achter het adres draait de demo alleen nog op de eigen computer (localhost).
 
 ## Hoe de gegevens zijn opgeslagen
 - Eén tabel `rij`: per regel een soort (bijv. `afm`, `players`, `msgs`), een id, de gegevens (`data`) en koppelvelden (team, speler, persoon, activiteit).
@@ -74,6 +74,6 @@
 - **Bewaking:** `GET https://pkvacwbdgumkffxnxnqk.supabase.co/rest/v1/rpc/gezondheid?apikey=<publishable key uit public/app/config.js>` geeft `"ok"` (of `"ok (nachtrust)"`), anders HTTP 400 met de reden (automaat > 35 min niet gedraaid of laatste ronde met fout). UptimeRobot: monitor 1 = https://mijnclubcomm.nl, monitor 2 = dit adres, elke 5 minuten, mail naar de beheerder.
 
 ## Demo voor besturen (Besluit 89)
-- `mijnclubcomm.nl/demo` (Vercel: rewrite naar `index.html`, `noindex`). `live.js` start op `/demo` (of lokaal met `?demo`) de demo in plaats van de echte versie; `demo.js` doet de toegang en de rondleiding.
+- `mijnclubcomm.nl/demo` (bij elke publicatie maakt `versie-maken.js` `demo.html` als kopie van `index.html`; door `cleanUrls` is dat `/demo`; header `noindex`. Een rewrite naar `/index.html` gaf een 404 in combinatie met `cleanUrls`). `live.js` start op `/demo` (of lokaal met `?demo`) de demo in plaats van de echte versie; `demo.js` doet de toegang en de rondleiding.
 - Toegang: `rpc/demo_uitgenodigd(p_email)` (vóór het versturen van de code) en `rpc/demo_toegang()` (na inloggen), tabel `demo_toegang` (migratie 023). Beheer van de lijst met `execute_sql`, zie `supabase/scripts/2026-09-28_demo_toegang_beheerder.sql`.
 - Wie in de demo inlogt, heeft een gewoon Supabase-account zonder club; in de echte app ziet die "Nog niet gekoppeld".
