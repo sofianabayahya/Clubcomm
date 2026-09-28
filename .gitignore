@@ -4,3 +4,4 @@ node_modules/
 public/versie.json
 test-results/
 playwright-report/
+public/demo.html
