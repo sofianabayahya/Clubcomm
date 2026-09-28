@@ -72,3 +72,8 @@
 - **Tests:** `npm test` = `tests/automaat.test.mjs` (servermotor op demo en kleine club, verschillende tijden) + Playwright `tests/app.spec.js` (elk demo-account en de kleine club met nagebootste database: elke rol, elk tabblad, elke keuzeknop; rooster instellen; afmelden en opslaan). De kleine club staat in `tests/kleine-club.js`. GitHub Actions (`.github/workflows/tests.yml`) draait dit bij elke push naar `main` en `claude/**` en bij elke pull request.
 - Een test faalt bij een JavaScript-fout, een console-fout, "Er ging iets mis", of "undefined", "NaN", "null", "[object Object]", "Invalid Date" op het scherm.
 - **Bewaking:** `GET https://pkvacwbdgumkffxnxnqk.supabase.co/rest/v1/rpc/gezondheid?apikey=<publishable key uit public/app/config.js>` geeft `"ok"` (of `"ok (nachtrust)"`), anders HTTP 400 met de reden (automaat > 35 min niet gedraaid of laatste ronde met fout). UptimeRobot: monitor 1 = https://mijnclubcomm.nl, monitor 2 = dit adres, elke 5 minuten, mail naar de beheerder.
+
+## Demo voor besturen (Besluit 89)
+- `mijnclubcomm.nl/demo` (Vercel: rewrite naar `index.html`, `noindex`). `live.js` start op `/demo` (of lokaal met `?demo`) de demo in plaats van de echte versie; `demo.js` doet de toegang en de rondleiding.
+- Toegang: `rpc/demo_uitgenodigd(p_email)` (vóór het versturen van de code) en `rpc/demo_toegang()` (na inloggen), tabel `demo_toegang` (migratie 023). Beheer van de lijst met `execute_sql`, zie `supabase/scripts/2026-09-28_demo_toegang_beheerder.sql`.
+- Wie in de demo inlogt, heeft een gewoon Supabase-account zonder club; in de echte app ziet die "Nog niet gekoppeld".

@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
 
-Laatst bijgewerkt: 27 september 2026 (t/m Besluit 88)
+Laatst bijgewerkt: 28 september 2026 (t/m Besluit 89)
 
 ---
 
@@ -507,6 +507,16 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 89 — Demo met rondleiding voor besturen, alleen op uitnodiging
+*28-09. SCPB en AS80 vroegen om een demo; de initiatiefnemer laat besturen (vooral voorzitters) zien wat elke rol doet.*
+- **Adres:** `mijnclubcomm.nl/demo`. **Alleen op uitnodiging:** inloggen zoals in de echte app (e-mail + code); alleen adressen op de toegangslijst (tabel `demo_toegang`, migratie 023) krijgen een code. Anderen zien "Alleen op uitnodiging". Toevoegen of weghalen: zie `supabase/scripts/2026-09-28_demo_toegang_beheerder.sql`.
+- **De oude open demo (`?demo`) is dicht** op de echte website; alleen op de eigen computer werkt hij nog (automatische tests, schermafbeeldingen voor de handleidingen).
+- **Alleen verzonnen gegevens:** democlub "VV De Voorbeeldclub", verzonnen tegenstanders en sportparken. De demo draait in de browser en schrijft nooit naar de database.
+- **Rondleiding voor de laptop:** links de app op telefoonbreedte, rechts een vast uitlegpaneel (± 40%) met "Je kijkt nu als" (kleur per rol), stap x van n, titel en uitleg in grote letters, Vorige/Volgende en alle stappen per hoofdstuk (klik = springen). Een **gele rand** omlijnt het besproken onderdeel; niets wordt afgedekt of donker gemaakt. Pijltjes of een presentatieklikker: vorige/volgende; Esc: vrij rondkijken, knop "Rondleiding" opent hem weer. Op een smal scherm staat de uitleg onderin.
+- **Volgorde: één week rond een wedstrijd** (15 stappen): start → ouder (home, afmelden in 3 tikken, vervoer) → trainer (home, aanwezigheid, wedstrijddag) → teamleider (taken, team bereiken) → wat vanzelf gaat (berichten) → club/HJO (te doen, inzicht) → beheer (regels, modules) → afsluiting (privacy, samen inrichten). De coördinator komt niet apart aan bod.
+- **Elke stap zet zelf de juiste stand klaar** (rol, scherm, venster), ook na vrij rondklikken of terugspringen. Een automatische test loopt alle stappen af en controleert dat de gele rand het onderdeel vindt (Besluit 88).
+- De code van de app is, zoals bij elke website, openbaar te downloaden; de toegangslijst houdt de demo uit het zicht, niet de code geheim. Vóór de link wordt rondgestuurd: merkaanvraag (BOIP) en gesprek Octrooicentrum (Openstaand).
 
 ## Besluit 88 — Vangnet: automatische tests en bewaking
 *Voorstel 27-09, akkoord gebruiker. Doel: in oktober veilig blijven aanpassen vóór de wedstrijden van fase 2.*

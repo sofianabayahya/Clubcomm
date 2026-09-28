@@ -1,8 +1,11 @@
 // ClubComm — live-versie: inloggen met een e-mailcode, gegevens uit de database, automatisch opslaan.
-// Alleen actief als config.js is ingevuld en supabase.js geladen is; met ?demo in de adres­balk draait de demo.
+// Alleen actief als config.js is ingevuld en supabase.js geladen is. De demo (Besluit 89) draait op /demo, achter een
+// toegangslijst (demo.js); ?demo werkt alleen nog op de eigen computer (tests, schermafbeeldingen), niet online.
 (function () {
   const CC = window.CC; const cfg = window.CC_CONFIG; const h = CC.h, icon = CC.icon, esc = CC.esc, D = CC.date;
-  const demo = /[?&]demo\b/.test(location.search);
+  const lokaal = /^(localhost|127\.0\.0\.1|0\.0\.0\.0)$/.test(location.hostname);
+  CC.demoPad = /^\/demo\/?$/.test(location.pathname);
+  const demo = CC.demoPad || (lokaal && /[?&]demo\b/.test(location.search));
   if (!cfg || !cfg.url || !window.supabase || demo) { CC.live = false; return; }
   CC.live = true;
 
@@ -228,7 +231,7 @@
     // De voorbeeld-HJO wordt jij; voorbeeldadressen kunnen geen mail ontvangen (.invalid)
     let json = JSON.stringify(S).split(`"${peter.id}"`).join(`"${ik.id}"`);
     // Voorbeeldadres van het sportpark vervangen door dat van de eigen club
-    const club0 = CC.S().club; if (club0.sportpark) json = json.split('Sportpark Buitenveldert, De Boelelaan 50, Amsterdam').join(club0.sportpark);
+    const club0 = CC.S().club; if (club0.sportpark) json = json.split('Sportpark De Voorbeeld, Voorbeeldlaan 1, Voorbeeldstad').join(club0.sportpark);
     const T = JSON.parse(json); T.people.forEach((p) => { if (p.id !== ik.id) p.email = p.email.replace(/@.*$/, '@demo.invalid'); });
     T.club = CC.S().club;
     const rijen = [...CC.naarRijen(T, club).values()].filter((r) => r.soort !== 'club');

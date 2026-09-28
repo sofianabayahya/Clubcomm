@@ -1,7 +1,7 @@
 // ClubComm tests — elke rol doorklikken en de belangrijkste handelingen (Besluit 88).
 // Demo (volle club) én een nagebootste echte, kleine club (teamnaam ≠ teamcode, weinig spelers, geen telefoonnummers).
 const { test, expect } = require('@playwright/test');
-const { volgFouten, controleer, doorklik, nepDatabase, inloggen, nepDb } = require('./hulp');
+const { volgFouten, controleer, doorklik, nepDatabase, inloggen, nepDb, NEP_SUPABASE } = require('./hulp');
 
 test.describe('Demo', () => {
   for (const wie of ['sanne', 'mark', 'linda', 'peter']) {
@@ -65,5 +65,35 @@ test.describe('Kleine club (echte versie, nagebootste database)', () => {
     await page.locator('#sheet form[data-submit="bevestigAfmelden"] button.knop').first().click();
     await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'afm' && r.data.spelerId === 's2').length, { message: 'afmelding opgeslagen in de database' }).toBe(1);
     await controleer(page, fouten, 'ouder na afmelden');
+  });
+});
+
+test.describe('Demo voor besturen (/demo, Besluit 89)', () => {
+  test('alleen op uitnodiging, en elke stap van de rondleiding klopt', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.setViewportSize({ width: 1366, height: 768 });
+    await page.route('**/app/vendor/supabase.js', (r) => r.fulfill({ contentType: 'application/javascript', body: NEP_SUPABASE }));
+    await page.goto('/demo'); await page.evaluate(() => { localStorage.clear(); sessionStorage.clear(); }); await page.goto('/demo');
+    // Niet op de lijst: geen code, geen demo
+    await page.fill('#dm', 'onbekend@test.nl'); await page.locator('#dm').press('Enter');
+    await expect(page.locator('#app h1')).toHaveText('Alleen op uitnodiging');
+    await expect(page.locator('#rondleiding')).toHaveCount(0);
+    // Wel op de lijst: code, dan de rondleiding
+    await page.locator('[data-act="demoPoortUit"]').click();
+    await page.fill('#dm', 'admin@test.nl'); await page.locator('#dm').press('Enter');
+    await page.fill('#dc', '123456'); await page.locator('#dc').press('Enter');
+    await expect(page.locator('#rondleiding .rl-titel')).toBeVisible();
+    const stappen = await page.evaluate(() => CC.demoStappen.map((s) => ({ titel: s.titel, doel: !!s.doel })));
+    for (let i = 0; i < stappen.length; i++) {
+      await page.locator(`#rondleiding [data-act="rlGa"][data-i="${i}"]`).click();
+      await expect(page.locator('#rondleiding .rl-titel')).toHaveText(stappen[i].titel);
+      if (stappen[i].doel) await expect(page.locator('#rl-rand'), `stap ${i + 1}: gele rand`).toBeVisible();
+      await controleer(page, fouten, `rondleiding stap ${i + 1}`);
+    }
+    // Esc: vrij rondkijken; knop Rondleiding opent hem weer
+    await page.keyboard.press('Escape');
+    await expect(page.locator('#rondleiding')).toBeHidden();
+    await page.locator('#rl-open').click();
+    await expect(page.locator('#rondleiding')).toBeVisible();
   });
 });

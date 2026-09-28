@@ -67,4 +67,4 @@ const inloggen = async (page, email) => {
 };
 const nepDb = (page) => page.evaluate(() => JSON.parse(sessionStorage.getItem('fake-sb-db')));
 
-module.exports = { volgFouten, controleer, doorklik, nepDatabase, inloggen, nepDb };
+module.exports = { volgFouten, controleer, doorklik, nepDatabase, inloggen, nepDb, NEP_SUPABASE };

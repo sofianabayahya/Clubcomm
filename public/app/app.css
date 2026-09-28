@@ -524,3 +524,49 @@ ol.leidraad { margin: 6px 0 0 18px; padding: 0; } ol.leidraad li { margin-bottom
 .zelf.plan .niveaus { grid-template-columns: repeat(2, 1fr); }
 .posrij { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; margin: 10px 0; }
 .zoekveld { width: 100%; margin: 4px 0 10px; } .maandblok summary .zacht { font-weight: 400; }
+
+/* ---------- Demo met rondleiding (Besluit 89): laptop = app links op telefoonbreedte, uitleg rechts ---------- */
+body.rl { --paneel: clamp(380px, 40vw, 600px); --app-b: 430px; padding-right: var(--paneel); background: #dde5ee; }
+body.rl #app { max-width: var(--app-b); box-shadow: 0 0 0 1px rgba(11, 37, 69, .08), 0 12px 40px rgba(11, 37, 69, .18); }
+body.rl .nav, body.rl .toast { left: calc((100vw - var(--paneel)) / 2); max-width: var(--app-b); }
+body.rl #sheet { right: var(--paneel); }
+body.rl .sheet { max-width: var(--app-b); }
+#rondleiding { position: fixed; top: 0; right: 0; bottom: 0; width: var(--paneel, 420px); z-index: 70; overflow-y: auto; background: var(--vlak); border-left: 1px solid var(--lijn);
+  padding: 20px 28px 28px; display: flex; flex-direction: column; gap: 14px; font-size: 18px; line-height: 1.5; }
+#rondleiding[hidden] { display: none; }
+.rl-kop { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.rl-merk { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--blauw); }
+.rl-klein { font-size: 14px; background: none; border: 1px solid var(--lijn); border-radius: 999px; padding: 6px 12px; cursor: pointer; color: var(--zacht); min-height: 36px; }
+.rl-rol { display: flex; flex-direction: column; padding: 10px 14px; border-radius: var(--r-s); border-left: 6px solid var(--rk); background: var(--rl); }
+.rl-rol small { font-size: 13px; color: var(--zacht); }
+.rl-rol b { font-size: 20px; color: var(--rk); }
+.rol-ouder { --rk: #137333; --rl: #e7f6ec; } .rol-trainer { --rk: #0869c2; --rl: #e7f2fe; } .rol-teamleider { --rk: #7c3aed; --rl: #f1ebfe; }
+.rol-hjo { --rk: #0b2545; --rl: #e8edf4; } .rol-beheerder { --rk: #a84d08; --rl: #fdf1e1; }
+.rl-voortgang { height: 6px; border-radius: 3px; background: var(--lijn); overflow: hidden; }
+.rl-voortgang i { display: block; height: 100%; background: var(--blauw); }
+.rl-teller { margin: 0; font-size: 14px; color: var(--zacht); }
+.rl-titel { margin: 0; font-size: 30px; line-height: 1.15; text-wrap: balance; }
+.rl-tekst p, .rl-tekst ul { margin: 0 0 10px; } .rl-tekst ul { padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+.rl-knoppen { display: flex; gap: 10px; } .rl-knoppen .knop { flex: 1; min-height: 48px; font-size: 17px; }
+.rl-knoppen .knop[disabled] { opacity: .4; cursor: default; }
+.rl-lijst { position: relative; flex: 1 1 0; min-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--lijn); padding-top: 12px; }
+.rl-hfd h3 { margin: 0 0 2px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--zacht); }
+.rl-hfd button { display: flex; gap: 10px; width: 100%; text-align: left; background: none; border: 0; border-radius: 8px; padding: 6px 8px; font-size: 15px; cursor: pointer; color: var(--inkt); min-height: 36px; align-items: center; }
+.rl-hfd button span { flex: none; width: 22px; color: var(--zacht); font-variant-numeric: tabular-nums; }
+.rl-hfd button:hover { background: var(--vlak2); } .rl-hfd button.aan { background: var(--blauw-l); font-weight: 700; }
+.rl-hulp { margin: 0; font-size: 13px; color: var(--zacht); }
+.rl-uit { align-self: flex-start; font-size: 13px; }
+#rl-rand { position: fixed; z-index: 65; pointer-events: none; border: 4px solid #f5b400; border-radius: 14px; box-shadow: 0 0 0 6px rgba(245, 180, 0, .25); transition: top .2s, left .2s, width .2s, height .2s; }
+#rl-rand[hidden] { display: none; }
+#rl-open { position: fixed; top: 12px; right: 16px; z-index: 70; box-shadow: var(--schaduw); }
+#rl-open[hidden] { display: none; }
+@media (prefers-reduced-motion: reduce) { #rl-rand { transition: none; } }
+/* Smal scherm (telefoon, tablet staand): uitleg als paneel onderin; de app blijft erboven bruikbaar */
+@media (max-width: 899px) {
+  body.rl { padding-right: 0; padding-bottom: 46vh; }
+  body.rl .nav { left: 50%; bottom: 46vh; }
+  body.rl .toast { left: 50%; }
+  body.rl #sheet { right: 0; bottom: 46vh; }
+  #rondleiding { top: auto; left: 0; width: 100%; height: 46vh; border-left: 0; border-top: 1px solid var(--lijn); padding: 14px 16px; font-size: 16px; }
+  .rl-titel { font-size: 22px; }
+}
