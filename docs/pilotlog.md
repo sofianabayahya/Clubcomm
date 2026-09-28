@@ -3,6 +3,12 @@
 Wat we tijdens de pilot vinden, met de oorzaak en het patroon erachter. Doel: dezelfde soort fout niet twee keer maken.
 Besluiten staan in `besluiten.md`; dit is het logboek van fouten. Nieuwste bovenaan.
 
+## 28 september 2026 (demo voor besturen)
+
+| Wat de gebruiker zag | Oorzaak | Opgelost | Patroon |
+|---|---|---|---|
+| `mijnclubcomm.nl/demo` gaf online "404", terwijl het lokaal werkte | Doorverwijzing (rewrite) naar `/index.html` botst op Vercel met `cleanUrls`; lokaal draait een andere server (Express) en Claude kan de online site niet openen | Bij publicatie een echt bestand `demo.html` maken (Besluit 89) | **G. Lokaal ≠ online:** nieuwe adressen en Vercel-instellingen altijd na publicatie laten controleren door de gebruiker, en zeggen dat Claude het online niet kon zien |
+
 ## 26 september 2026 (generale repetitie wedstrijddag)
 
 Hele wedstrijddag nagespeeld met de echte DCG-instellingen (wo t/m ma, teamleider, trainer, drie ouders, klok loopt mee).
@@ -54,6 +60,7 @@ Hele wedstrijddag nagespeeld met de echte DCG-instellingen (wo t/m ma, teamleide
 - **D. Eén persoon per rol:** een team kan meer trainers, teamleiders, ouders per kind hebben. Nooit "de" trainer aannemen.
 - **E. Buiten de app:** e-mail, spamfilters, iPhone-gedrag. Uitleg op het scherm waar het misgaat.
 - **F. Echte gegevens:** lange e-mailadressen, spaties, hoofdletters, geen telefoonnummer.
+- **G. Lokaal ≠ online:** de testserver is niet Vercel. Nieuwe adressen, doorverwijzingen en headers pas "klaar" noemen als ze online bekeken zijn.
 
 ## Bekende risico's (nog niet opgelost)
 - **Verversen:** nu elke 30 seconden en bij terugkomen in de app (Besluit 48). Echt direct (binnen 1 s) kan later met Supabase Realtime.
