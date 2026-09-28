@@ -98,7 +98,7 @@ Een Sportlink-export bevat: voornaam, achternaam, geboortedatum, **bondsnummer**
 
 ## Besluit 3 — Taal
 
-- ClubComm wordt **Nederlands en Engels** (veel expat-ouders rond Buitenveldert).
+- ClubComm wordt **Nederlands en Engels** (veel clubs hebben expat-ouders).
 - **Taalknop op de inlogpagina** en een taalinstelling in het profiel.
 - **Niet in het huidige prototype** (te veel werk in pagina's die we opnieuw bouwen), **wel vanaf dag één in versie 2**: alle teksten in een apart taalbestand.
 
@@ -1174,7 +1174,7 @@ Toegepast (24 sep 2026):
   - *Altijd (niet uit te zetten):* aanwezigheid, afmeldingen, kaarten en signalen van de eigen teams zien
 - **Signalen en teksten volgen de taakverdeling.** Een voorgesteld gesprek komt bij wie die taak heeft; in de uitleg aan ouders staat wie contact opneemt ("de trainer of coördinator").
 - **Er valt nooit iets tussen wal en schip:** heeft een team geen coördinator (of gebruikt de club geen coördinatoren), dan gaan de taken van de coördinator vanzelf naar de HJO. Heeft een taak geen enkele rol, dan waarschuwt het scherm.
-- **Pilot:** de pilotclub (SC Buitenveldert) levert haar eigen basis aan; dat wordt de beginstand. Tot die tijd staat er een voorstel in (terug te zetten met "Terug naar het voorstel").
+- **Pilot:** de pilotclub levert haar eigen basis aan; dat wordt de beginstand. Tot die tijd staat er een voorstel in (terug te zetten met "Terug naar het voorstel").
 - In versie 2 dwingt de server de rechten af (Supabase RLS).
 
 ## Besluit 24 — Wie ziet wat (per rol)
@@ -1300,7 +1300,7 @@ Net als bij spelers: ClubComm registreert en signaleert, de HJO beslist.
 
 ## Besluit 15 — Fases en opschaling
 
-Gebaseerd op de jaarplanning onderbouw 2026/27 (toen nog van SC Buitenveldert; de pilotclub is nu RKSV DCG).
+Gebaseerd op een jaarplanning onderbouw 2026/27 (de pilotclub is RKSV DCG).
 
 ### Fases
 - Het seizoen volgt de **4 competitiefases**: fase 1 vanaf wo 19 aug 2026, fase 2 vanaf za 31 okt, fase 3 vanaf wo 20 jan 2027, fase 4 vanaf vr 2 apr (laatste training 4 jun, laatste wedstrijd 5 jun 2027).
@@ -1408,5 +1408,5 @@ De oude handleidingen per rol (23 sep) zijn verwijderd: ze klopten niet meer met
 - **Jaarplanning importeren:** de jaarplanning (trainingen, wedstrijden, oefenwedstrijden "zelf organiseren", teamuitje, zaalvoetbal, vrije dagen) kan het startpunt zijn voor de planning in ClubComm.
 - **Analyse clubproblemen** (`docs/onderzoek/analyse-clubproblemen.md`): voorstellen voor wat ontbreekt (o.a. afmelden namens ouder, bereikbaarheid per ouder, VCP/gedragscode, "mijn kind twijfelt"). Nog niet besloten. Adoptie door ouders ziet de gebruiker niet als risico (mail + push, uitleg, coulante start).
 
-- **Presentatie** voor het bestuur van RKSV DCG (de oude presentatie voor SC Buitenveldert is verwijderd) en eventueel een rollenbeschrijving.
+- **Presentatie** voor het bestuur van RKSV DCG (een oudere presentatie is verwijderd) en eventueel een rollenbeschrijving.
 - **Huisstijl:** één set icoontjes in één stijl (Lucide, in het prototype); kleur alleen met betekenis (groen = goed, oranje = aandacht, rood = probleem); verder rustig met het logo-blauw `#0D88F9` als hoofdkleur. **Besloten:** de app is altijd licht (witte achtergrond), ook als de telefoon op donkere modus staat.
