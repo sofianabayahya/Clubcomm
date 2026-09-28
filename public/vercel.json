@@ -21,6 +21,19 @@
       ]
     },
     {
+      "source": "/demo",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
       "source": "/",
       "headers": [
         {
@@ -64,6 +77,13 @@
           "value": "no-store"
         }
       ]
+    }
+  ],
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/demo",
+      "destination": "/index.html"
     }
   ]
 }

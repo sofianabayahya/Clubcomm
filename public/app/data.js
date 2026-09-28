@@ -98,7 +98,8 @@
   const MEIDEN = ['Emma', 'Julia', 'Mila', 'Tess', 'Sophie', 'Zoë', 'Nora', 'Sara', 'Yara', 'Lina', 'Fleur', 'Lotte', 'Isa', 'Evi', 'Noor', 'Saar', 'Anna', 'Liv'];
   const ACHTERNAMEN = ['de Jong', 'Jansen', 'de Vries', 'van den Berg', 'van Dijk', 'Bakker', 'Visser', 'Smit', 'Meijer', 'de Boer', 'Mulder', 'de Groot', 'Bos', 'Vos', 'Peters', 'Hendriks', 'van Leeuwen', 'Dekker', 'Brouwer', 'de Wit', 'Dijkstra', 'Smits', 'El Idrissi', 'Yilmaz', 'Kaya', 'Boukhari', 'Pinas', 'Wong', 'Kramer', 'Schouten', 'van Vliet', 'Postma'];
   const OUDERNAMEN = ['Sanne', 'Mark', 'Linda', 'Peter', 'Anouk', 'Jeroen', 'Marieke', 'Rob', 'Fatima', 'Kees', 'Esther', 'Bas', 'Nadia', 'Tom', 'Iris', 'Hasan', 'Eva', 'Michiel', 'Samira', 'Joost', 'Lisa', 'Dennis', 'Petra', 'Ahmed', 'Karin', 'Wouter', 'Mirjam', 'Rik', 'Laura', 'Erik'];
-  const TEGENSTANDERS = ['SV Nieuwe Meer', 'FC Amstelland', 'VV Zuidas', 'AVV Bosbaan', 'SC Oeverpad', 'RKV Amstelhoek', 'FC Slotervaart-Oost', 'VV De Kwakel-Noord', 'SV Diemen-Zuid', 'AFC Rivierenbuurt'];
+  // Verzonnen clubs (de demo wordt aan andere clubs getoond: geen echte namen)
+  const TEGENSTANDERS = ['SV De Molenwiek', 'FC Waterkant', 'VV Polderwind', 'SV De Kraanvogels', 'FC Lindeboom', 'VV Oosterweide', 'SC Rietkraag', 'VV De Zeven Sloten', 'SV Duinzicht-Oost', 'FC Zonnehoek'];
 
   // Pilot = onderbouw (Besluit 16): mini's t/m O12
   const TEAMS = [
@@ -127,7 +128,7 @@
     const S = {
       v: 8, gen: today,
       club: {
-        id: 'scb', naam: 'SC Buitenveldert', regio: 'Noord',
+        id: 'scb', naam: 'VV De Voorbeeldclub', regio: 'Noord',
         seizoen: { start: '2026-08-19', eind: '2027-06-05' },
         vakanties: CC.VAKANTIES_NOORD.map((v) => ({ ...v })),
         stops: [{ id: 'goedevrijdag', naam: 'Goede Vrijdag (club dicht)', van: '2027-03-26', tot: '2027-03-26', trainen: false }],
@@ -228,7 +229,7 @@
           const tegen = TEGENSTANDERS[(ti + S.acts.length) % TEGENSTANDERS.length];
           S.acts.push({
             id: id('a'), teamId: t.id, soort: 'wedstrijd', datum: d, tijd, eind: `${pad(h + 1)}:${pad(m)}`, thuis, tegen: `${tegen} ${t.cat}-${1 + (ti % 2)}`,
-            veld: thuis ? `Veld ${1 + (ti % 4)}` : '', adres: thuis ? 'Sportpark Buitenveldert, De Boelelaan 50, Amsterdam' : `${tegen.replace(/^(SV|FC|VV|AVV|SC|RKV|AFC) /, 'Sportpark ')}, Amstelveen`,
+            veld: thuis ? `Veld ${1 + (ti % 4)}` : '', adres: thuis ? 'Sportpark De Voorbeeld, Voorbeeldlaan 1, Voorbeeldstad' : `${tegen.replace(/^(SV|FC|VV|AVV|SC|RKV|AFC) /, 'Sportpark ')}, Voorbeeldstad`,
             verzamel: `${pad(Math.floor(vz / 60))}:${pad(vz % 60)}`, tenue: thuis ? 'Thuistenue (wit/blauw)' : 'Uittenue (blauw)', begeleiderId: null, uitslag: null,
           });
           thuis = !thuis;
@@ -307,7 +308,7 @@
     const wedstrijden = komend.filter((a) => a.soort === 'wedstrijd');
     // zorg dat de eerste wedstrijd een uitwedstrijd is (vervoer)
     if (wedstrijden[0] && wedstrijden[0].thuis) {
-      wedstrijden.forEach((w) => { w.thuis = !w.thuis; w.veld = w.thuis ? 'Veld 2' : ''; w.adres = w.thuis ? 'Sportpark Buitenveldert, De Boelelaan 50, Amsterdam' : 'Sportpark Nieuwe Meer, Amstelveen'; w.tenue = w.thuis ? 'Thuistenue (wit/blauw)' : 'Uittenue (blauw)'; const [h, m] = w.tijd.split(':').map(Number); const vz = w.thuis ? h * 60 + m - 30 : h * 60 + m - 60; w.verzamel = `${pad(Math.floor(vz / 60))}:${pad(vz % 60)}`; });
+      wedstrijden.forEach((w) => { w.thuis = !w.thuis; w.veld = w.thuis ? 'Veld 2' : ''; w.adres = w.thuis ? 'Sportpark De Voorbeeld, Voorbeeldlaan 1, Voorbeeldstad' : 'Sportpark De Molenwiek, Molendorp'; w.tenue = w.thuis ? 'Thuistenue (wit/blauw)' : 'Uittenue (blauw)'; const [h, m] = w.tijd.split(':').map(Number); const vz = w.thuis ? h * 60 + m - 30 : h * 60 + m - 60; w.verzamel = `${pad(Math.floor(vz / 60))}:${pad(vz % 60)}`; });
     }
     const w1 = wedstrijden[0], w2 = wedstrijden[1];
     if (eersteTraining) afmMaken(pO('Noah'), eersteTraining, 'Blessure', 30);
