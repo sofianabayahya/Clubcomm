@@ -26,7 +26,7 @@
   // Demodata (wordt aangeroepen vanuit CC.generate via hook)
   CC.materiaalDemo = (S) => {
     S.club.modules.materiaal = true;
-    S.club.materiaal = { wie: 'Secretaris', mail: 'secretaris@scbuitenveldert.nl', lijst: CC.MATERIAAL.map((x) => ({ ...x, voor: [...x.voor] })) };
+    S.club.materiaal = { wie: 'Secretaris', mail: 'secretaris@voorbeeldclub.invalid', lijst: CC.MATERIAAL.map((x) => ({ ...x, voor: [...x.voor] })) };
     S.materiaal = {}; S.mails = [];
     const ingediend = new Date(Date.now() - 20 * 864e5).toISOString();
     S.teams.forEach((t) => {
