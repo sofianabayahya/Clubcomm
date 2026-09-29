@@ -581,7 +581,120 @@ async function bestuur() {
   await pres.writeFile({ fileName: path.join(OUT, 'ClubComm-bestuur.pptx') });
 }
 
+// ======================================================================
+// KENNISMAKING VOOR EEN ANDERE CLUB (Besluit 89): node maak.js clubs "SCPB"
+// Contactgegevens niet in de code: CONTACT_NAAM, CONTACT_MAIL (en eventueel CONTACT_TEL) meegeven bij het maken.
+// Schermafbeeldingen uit de demo met verzonnen gegevens: shots-clubs.js. Uitvoer in uit/ (niet in git).
+// ======================================================================
+async function clubs() {
+  const naar = process.argv[3] || 'uw club';
+  const pres = nieuw(`ClubComm voor ${naar}`); const v = `ClubComm · kennismaking ${naar} · oktober 2026`;
+  let s = await titelDia(pres, { titel: `ClubComm voor ${naar}`, sub: 'Afmelden, planning en communicatie rond het jeugdvoetbal op één plek.', regel: 'Kennismaking · oktober 2026', beeld: 'club-ou-home',
+    punten: [['FaHandPointer', 'Ouders melden af met één tik'], ['FaUsers', 'Iedere rol ziet precies wat hij nodig heeft'], ['FaChartLine', 'Het bestuur ziet waar het schuurt']] });
+  s = await kaarten(pres, v, {
+    label: 'Waarom', titel: 'Wat elke club herkent', intro: 'Wat we bij bijna elke amateurclub zien, week in week uit.',
+    items: [
+      ['FaUserXmark', 'Niet afgemeld', 'Kinderen komen niet, zonder bericht. De trainer weet pas op het veld wie er is.', ORANGE],
+      ['FaComments', 'Alles via WhatsApp', 'Afmeldingen, vervoer en taken in drukke groepen. Informatie raakt zoek.', ORANGE],
+      ['FaPeopleGroup', 'Steeds dezelfde ouders', 'Een paar gezinnen doen het meeste werk; anderen worden nooit gevraagd.', ORANGE],
+      ['FaBrain', 'Opvolging zit in hoofden', 'Wie belt als een kind vaak ontbreekt? Afspraken worden nergens vastgelegd.', ORANGE],
+    ],
+  });
+  s = await kaarten(pres, v, {
+    label: 'Wat is ClubComm', titel: 'Eén app voor de hele jeugdafdeling', intro: 'Op de telefoon, zonder wachtwoord. Voor ouders, trainers, teamleiders en het bestuur.', kol: 3,
+    items: [
+      ['FaBell', 'Signaleren', 'Wie is vaak afwezig, wie meldt te laat af, welke taken blijven open, welk team zit zonder staf.'],
+      ['FaComments', 'Communiceren', 'Afmelden met één tik, berichten per team. Herinneringen en vaste clubberichten gaan vanzelf.'],
+      ['FaFolderOpen', 'Vastleggen', 'Aanwezigheid, speeltijd, gesprekken en afspraken op één plek, ook als een trainer wisselt.'],
+    ],
+    noot: 'ClubComm signaleert, mensen beslissen. Geen automatische straffen: de club stelt de regels in, trainers en teamleiders beslissen.',
+  });
+  // Vier telefoons: elke rol
+  s = pres.addSlide(); s.background = { color: WHITE };
+  kop(s, { label: 'Zo ziet het eruit', titel: 'Voor elke rol een eigen scherm' }, 11.9);
+  [['club-ou-home', 'Ouder', 'Afmelden, vervoer, taken'], ['club-tr-aanwezigheid', 'Trainer', 'Aanwezigheid in één minuut'], ['club-tl-wedstrijd', 'Teamleider', 'Wie komt, wie doet wat'], ['club-hjo-home', 'Bestuur en HJO', 'Wat vraagt aandacht in de club']].forEach(([b, rol, sub], i) => {
+    const x = 0.95 + i * 3.05;
+    s.addShape('roundRect', { x, y: 1.7, w: 2.3, h: 4.5, rectRadius: 0.26, fill: { color: NAVY } });
+    s.addImage({ path: BEELD(b), x: x + 0.09, y: 1.79, w: 2.12, h: 4.24 });
+    s.addText([{ text: rol, options: { bold: true, color: NAVY, fontSize: 17, breakLine: true } }, { text: sub, options: { color: MUTED, fontSize: 13 } }], { x: x - 0.1, y: 6.3, w: 2.5, h: 0.75, fontFace: FONT, margin: 0, align: 'center', valign: 'top', isTextBox: true });
+  });
+  voet(s, v);
+  s = await stappen(pres, v, {
+    label: 'Eén week rond een wedstrijd', titel: 'Alles sluit op elkaar aan', beeld: 'club-tl-wedstrijd',
+    stappen: [
+      ['Maandag: een ouder meldt af', 'In drie tikken, met een reden. Trainer en teamleider zien het meteen.'],
+      ['Dinsdag: de trainer vult de aanwezigheid in', 'Cijfers, kaarten en signalen rekent de app zelf uit.'],
+      ['Donderdag: de teamleider regelt de wedstrijd', 'Vervoer en taken. Blijft een taak open, dan krijgen de ouders vanzelf een oproep.'],
+      ['Zaterdag: wisselschema en scorebord', 'Eerlijke speeltijd volgens de KNVB; een ouder houdt als timekeeper de score bij.'],
+      ['Na afloop: alles ligt vast', 'Uitslag, speeltijd en aanwezigheid. De ouders krijgen de uitslag vanzelf.'],
+    ],
+  });
+  s = await stappen(pres, v, {
+    label: 'Voor het bestuur en de HJO', titel: 'Overzicht zonder rond te bellen', beeld: 'club-hjo-home',
+    stappen: [
+      ['Te doen', 'Een trainer kan niet, een team zit zonder staf, een aanmelding ligt te lang stil: het staat op één plek, met één tik op te lossen.'],
+      ['Inzicht', 'Aanwezigheid per team en leeftijdsgroep, tegen de norm van de club (bijvoorbeeld selectie 90%, breedte 80%).'],
+      ['De club bepaalt de regels', 'Afmeldtermijn, kaarten, speeltijd, automatische berichten: alles is een instelling. Onderdelen zet de club aan of uit.'],
+      ['Communicatieplan', 'Vaste clubberichten door het seizoen (start, vakanties, wedstrijden) gaan vanzelf, op het juiste moment.'],
+    ],
+    tip: 'Het automatische werk doet de server elk kwartier, ook als niemand de app open heeft. Vrijwilligers hoeven minder na te lopen.',
+  });
+  // In gebruik bij DCG
+  s = pres.addSlide(); s.background = { color: WHITE };
+  kop(s, { label: 'In gebruik', titel: 'Sinds september 2026 bij RKSV DCG', intro: 'Amsterdam, Sportpark Ookmeer. Pilot met het O12 talententeam.' }, 11.9);
+  [['16', 'spelers', 'met hun ouders in de app'], ['21', 'accounts', 'ouders, trainer en teamleiders'], ['15 min', 'automatisch', 'berichten, uitslag en herinneringen'], ['31 okt', 'wedstrijden', 'competitie fase 2 met ClubComm']].forEach(([n, a, b], i) => {
+    const x = 0.7 + i * 3.05;
+    s.addShape('roundRect', { x, y: 2.85, w: 2.8, h: 2.2, rectRadius: 0.12, fill: { color: TINT } });
+    s.addText(n, { x, y: 2.95, w: 2.8, h: 1.1, fontSize: 48, bold: true, color: BLUE, align: 'center', fontFace: FONT, margin: 0, isTextBox: true });
+    s.addText([{ text: a, options: { bold: true, color: NAVY, breakLine: true } }, { text: b, options: { color: MUTED, fontSize: 13 } }], { x: x + 0.1, y: 4.05, w: 2.6, h: 0.9, fontSize: 16, align: 'center', fontFace: FONT, margin: 0, isTextBox: true });
+  });
+  s.addText('Wat we in de pilot leren, verwerken we meteen in de app. In december kijken we terug met trainers, teamleiders en ouders.', { x: 0.7, y: 5.5, w: 11.9, h: 0.8, fontSize: 16, color: INK, fontFace: FONT, margin: 0, valign: 'top', isTextBox: true });
+  voet(s, v);
+  // Privacy: twee kolommen
+  s = pres.addSlide(); s.background = { color: WHITE };
+  kop(s, { label: 'Privacy en veiligheid', titel: 'Gegevens van kinderen: zorgvuldig en in Europa' }, 11.9);
+  const kolom = async (x, kopje, ic, kleur, regels) => {
+    s.addShape('roundRect', { x, y: 1.95, w: 5.8, h: 4.85, rectRadius: 0.12, fill: { color: SOFT } });
+    s.addShape('ellipse', { x: x + 0.3, y: 2.2, w: 0.6, h: 0.6, fill: { color: kleur } });
+    s.addImage({ data: await icon(ic, WHITE), x: x + 0.45, y: 2.35, w: 0.3, h: 0.3 });
+    s.addText(kopje, { x: x + 1.1, y: 2.2, w: 4.5, h: 0.6, fontSize: 19, bold: true, color: NAVY, valign: 'middle', fontFace: FONT, margin: 0, isTextBox: true });
+    s.addText(regels.map((r, i) => ({ text: r, options: { bullet: true, breakLine: i < regels.length - 1 } })), { x: x + 0.35, y: 3.0, w: 5.2, h: 3.65, fontSize: 14, color: INK, fontFace: FONT, margin: 0, valign: 'top', paraSpaceAfter: 6, isTextBox: true });
+  };
+  await kolom(0.7, 'Zo is het geregeld', 'FaCircleCheck', '16A34A', [
+    'Opslag in de EU (Frankfurt); e-mail via een Europese dienst',
+    'Wie wat mag zien, controleert de database zelf: ouders alleen hun eigen kind, staf alleen het eigen team',
+    'Inloggen zonder wachtwoord, met een code per e-mail',
+    'Privacyverklaring in de app; aanmelden alleen met akkoord van de ouder',
+    'Geen medische gegevens: bij afmelden alleen een reden, zoals "ziek" of "blessure"',
+    'Elke dag een back-up; een account verwijderen kan op verzoek',
+  ]);
+  await kolom(6.8, 'Samen vóór de start', 'FaListCheck', BLUE, [
+    'Verwerkersovereenkomst: de club is verantwoordelijk voor de gegevens, ClubComm verwerkt ze in opdracht',
+    'Een contactpersoon voor privacyvragen van ouders',
+    'Afspraken over bewaartermijnen',
+    'Risicoanalyse (DPIA), omdat het om kinderen gaat',
+  ]);
+  voet(s, v);
+  s = await stappen(pres, v, {
+    label: 'Zo starten we', titel: 'Samen inrichten, klein beginnen', beeld: 'club-beh-regels',
+    stappen: [
+      ['Kennismaking en rondleiding', 'We lopen samen door de app, met een voorbeeldclub.'],
+      ['Samen inrichten', 'Teams, trainingstijden, regels (afmeldtermijn, kaarten) en rollen. De initiatiefnemer helpt persoonlijk.'],
+      ['Pilot vanaf januari 2027', 'Met één of meer teams. Ouders melden zich aan via een link of QR-code; per rol is er een korte handleiding.'],
+      ['Evaluatie', 'Met trainers, teamleiders en ouders. Daarna besluit het bestuur over de hele jeugdafdeling.'],
+    ],
+    tip: 'De pilot is gratis tot de zomer van 2027. Daarna een vaste prijs per club per jaar; die stellen we samen vast.',
+  });
+  const regels = [['FaUser', `${process.env.CONTACT_NAAM || 'Initiatiefnemer ClubComm'} · initiatiefnemer ClubComm`]];
+  if (process.env.CONTACT_MAIL) regels.push(['FaEnvelope', process.env.CONTACT_MAIL]);
+  if (process.env.CONTACT_TEL) regels.push(['FaPhone', process.env.CONTACT_TEL]);
+  regels.push(['FaMobileScreen', 'Rondleiding door de app op afspraak (mijnclubcomm.nl/demo, op uitnodiging)']);
+  await slotDia(pres, { titel: 'Kennismaken? Graag.', regels });
+  const map = path.join(OUT, 'uit'); require('fs').mkdirSync(map, { recursive: true });
+  await pres.writeFile({ fileName: path.join(map, `ClubComm-${naar.replace(/[^\w-]+/g, '-')}.pptx`) });
+}
+
 (async () => {
   const welke = process.argv[2];
-  for (const [n, f] of Object.entries({ bestuur, teamleider, ouders, trainer })) if (!welke || welke === n) { await f(); console.log('klaar:', n); }
+  for (const [n, f] of Object.entries({ bestuur, teamleider, ouders, trainer, clubs })) if (welke ? welke === n : n !== 'clubs') { await f(); console.log('klaar:', n); }
 })();
