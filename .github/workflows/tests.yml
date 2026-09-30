@@ -2,8 +2,8 @@
 name: Tests
 on:
   push:
-    branches: [main, 'claude/**']
-  pull_request:
+    branches: [main]
+  pull_request: # werkbranches: alleen via de pull request (één run, één mail bij een fout)
 jobs:
   tests:
     runs-on: ubuntu-latest
