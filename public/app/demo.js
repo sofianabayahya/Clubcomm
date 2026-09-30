@@ -70,6 +70,8 @@
   const sectie = (titel) => () => { const k = [...document.querySelectorAll('#app .sectie-kop')].find((x) => x.innerText.trim().toLowerCase().startsWith(titel.toLowerCase())); return k ? [k, k.nextElementSibling].filter(Boolean) : []; };
   const el = (sel) => () => { const e = document.querySelector(sel); return e ? [e] : []; };
   const rijMet = (tekst) => () => { const e = [...document.querySelectorAll('#app .rij')].find((x) => x.innerText.includes(tekst)); return e ? [e] : []; };
+  // Het eerste doel dat iets vindt (de demo rekent vanaf vandaag; niet elke dag staat er hetzelfde)
+  const eerste = (...fns) => () => { for (const f of fns) { const r = f(); if (r.length) return r; } return []; };
 
   const ROL = { ouder: 'Ouder', trainer: 'Trainer', teamleider: 'Teamleider', hjo: 'Hoofd jeugdopleiding', beheerder: 'Clubbeheerder' };
   const STAPPEN = [
@@ -84,7 +86,7 @@
       zet: () => { als('sanne', 'ouder'); klik('#app button[data-act="afmelden"]'); }, doel: el('#sheet .sheet') },
     { hfd: 'Ouder', wie: 'sanne', rol: 'ouder', titel: 'Vervoer: wie rijdt er?',
       tekst: '<p>Voor een uitwedstrijd zien ouders wie nog vervoer zoekt, en met één tik bieden ze een plek aan.</p><p>Meldt een kind zich af dat zou meerijden, dan krijgt de chauffeur vanzelf bericht.</p>',
-      zet: () => als('sanne', 'ouder', 'vervoer'), doel: rijMet('zoekt vervoer') },
+      zet: () => als('sanne', 'ouder', 'vervoer'), doel: eerste(rijMet('zoekt vervoer'), el('#app button[data-act="plekZoeken"]'), el('#app main > *')) },
     { hfd: 'Trainer', wie: 'mark', rol: 'trainer', titel: 'De trainer weet wie er komt',
       tekst: '<p>Mark is trainer. Op zijn Home: wie er niet komt en waarom, of een uitslag nog moet worden opgeslagen, en welke spelers aandacht vragen.</p><p><b>ClubComm signaleert, mensen beslissen.</b> Bij een speler die vaak niet afmeldt, stelt de app voor de ouders te bellen. De trainer beslist.</p>',
       zet: () => als('mark', 'trainer'), doel: sectie('Actie nodig') },
@@ -93,7 +95,10 @@
       zet: () => { als('mark', 'trainer', 'aanwezigheid'); segKlik('Opnemen'); }, doel: el('#app .opnemen') },
     { hfd: 'Trainer', wie: 'mark', rol: 'trainer', titel: 'Wedstrijddag: schema, score en speeltijd',
       tekst: '<p>De trainer maakt met één tik een wisselschema, met de speelduur volgens de KNVB voor de leeftijd. Wie het minst speelde, krijgt voorrang. De timekeeper, een ouder, ziet het schema op de wedstrijddag.</p><p>Langs de lijn houdt de timekeeper de doelpunten bij. Na <b>Einde wedstrijd</b> liggen uitslag, speeltijd en aanwezigheid vast. Vergeet de trainer het, dan doet de server het 2 uur na afloop.</p>',
-      zet: () => als('mark', 'trainer', 'speeltijd'), doel: () => { const b = document.querySelector('#app button[data-act="uitslagKlaar"]'); const k = b && (b.closest('.kaart') || b.parentElement); return k ? [k] : []; } },
+      zet: () => als('mark', 'trainer', 'speeltijd'), doel: () => { // Scorebord als er een wedstrijd loopt of net gespeeld is; anders het wisselschema (hangt af van de dag van de week)
+        const b = document.querySelector('#app button[data-act="uitslagKlaar"]') || document.querySelector('#app button[data-act="maakSchema"]');
+        const k = b && (b.closest('.kaart') || b.parentElement); if (k) return [k];
+        return sectie('Speeltijd dit seizoen')(); } },
     { hfd: 'Teamleider', wie: 'linda', rol: 'teamleider', titel: 'De wedstrijd: wie doet wat?',
       tekst: '<p>Linda is teamleider. Ze ziet wie er komt en welke taken nog open staan: trainer-coach, timekeeper, fotograaf, wastas.</p><p>Met <b>Oproep delen</b> vraagt ze in de teamgroep om hulp. Wie zich opgeeft, staat meteen ingedeeld.</p>',
       zet: () => als('linda', 'teamleider', 'wedstrijd'), doel: sectie('Taken') },
