@@ -322,7 +322,7 @@
         // Geen activiteit gepland: wel de acties tonen (bijv. aanmeldingen)
         if (!volgendeT) return h.leeg('Geen activiteiten gepland') + h.actieBlok(acties, 'nieuwe berichten, aanmeldingen of aanwezigheid die nog open staat');
         return `<article class="kaartje hoofd">
-            <small>${D.relatief(volgendeT.datum)}${volgendeT.soort !== 'training' ? '' : ''}</small><h2>${h.actTitel(S, volgendeT)}</h2><p class="zacht">${h.actSub(S, volgendeT)}</p>
+            <small>${D.relatief(volgendeT.datum)}${volgendeT.soort !== 'training' ? '' : ''}</small><h2>${h.actTitel(S, volgendeT)}</h2><p class="zacht">${h.actSub(S, volgendeT)}</p>${!volgendeT.afgelast && volgendeT.adres && (volgendeT.soort === 'activiteit' || (M.isWed(volgendeT) && !volgendeT.thuis)) ? `<div class="knoppen">${h.adresRegel(volgendeT.adres)}</div>` : ''}
             <div class="verwacht"><b>${sp.length - af.length}</b><span>van ${sp.length} verwacht</span></div>
             ${af.length ? `<div class="lijst compact">${af.map((x) => h.rij({ ic: h.reden(x.st.afm ? x.st.afm.reden : 'Blessure'), titel: esc(M.naam(S, x.pl)), sub: x.st.code === 'langdurig' ? `Langdurig afwezig (${esc(x.st.lang.reden.toLowerCase())})` : `${esc(x.st.afm.reden)}${x.st.afm.opm ? ' · ' + esc(x.st.afm.opm) : ''}` })).join('')}</div>` : '<p class="zacht">Iedereen komt.</p>'}
             ${vandaag ? (S.pres[vandaag.id] ? `<button class="knop licht vol" data-act="open" data-view="opnemen" data-id="${vandaag.id}">${icon('circle-check')}Aanwezigheid opgeslagen · aanpassen</button>` : `<button class="knop groot vol" data-act="open" data-view="opnemen" data-id="${vandaag.id}">${icon('clipboard-check')}Aanwezigheid opnemen</button>`) : ''}
@@ -334,13 +334,14 @@
         const tid = CC.teamId(); const modus = h.segVal('aanwModus', 'opnemen');
         if (modus === 'overzicht') return h.seg('aanwModus', [['opnemen', 'Opnemen'], ['overzicht', 'Overzicht']], 'opnemen') + CC.overzichtHtml(S, tid);
         const ma = (() => { const d = D.parse(D.vandaag()); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return D.iso(d); })();
-        const acts = M.acts(S, tid, D.addDays(ma, -7), D.addDays(ma, 13));
+        // Besluit 91: alleen dagen die nog iets vragen: vandaag en later, en eerdere dagen zolang je de aanwezigheid nog kunt invullen
+        const acts = M.acts(S, tid, D.addDays(ma, -7), D.addDays(ma, 13)).filter((a) => a.datum >= D.vandaag() || kanOpnemen(a));
         const standaard = (acts.find((a) => a.datum === D.vandaag()) || acts.filter((a) => a.datum <= D.vandaag()).pop() || acts[0]);
         const kies = h.segVal('aanwAct', standaard && standaard.id);
         const a = acts.find((x) => x.id === kies) || standaard;
         return `${h.seg('aanwModus', [['opnemen', 'Opnemen'], ['overzicht', 'Overzicht']], 'opnemen')}
           <div class="weekstrook" role="tablist">${acts.map((x) => { const d = D.parse(x.datum); return `<button role="tab" aria-selected="${x.id === a.id}" class="${x.id === a.id ? 'aan' : ''} ${x.afgelast ? 'afg' : ''} ${x.datum === D.vandaag() ? 'vandaag' : ''} ${S.pres[x.id] ? 'gedaan' : ''}" data-act="seg" data-key="aanwAct" data-val="${x.id}"><small>${D.DAG_KORT[d.getDay()]}</small><b>${d.getDate()}</b><small>${x.soort === 'training' ? 'T' : 'W'}</small></button>`; }).join('')}</div>
-          ${a ? `<div class="kaart-kop los">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${h.actSub(S, a)}</small></div></div>${CC.opnemenHtml(S, a)}${CC.kanNietBlok && D.start(a) > new Date() ? CC.kanNietBlok(S, a) : ''}` : ''}
+          ${a ? `<div class="kaart-kop los">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${h.actSub(S, a)}</small></div></div>${!a.afgelast && a.adres && (a.soort === 'activiteit' || (M.isWed(a) && !a.thuis)) ? `<div class="knoppen">${h.adresRegel(a.adres)}</div>` : ''}${CC.opnemenHtml(S, a)}${CC.kanNietBlok && D.start(a) > new Date() ? CC.kanNietBlok(S, a) : ''}` : ''}
           ${CC.mag('planning') ? `<button class="knop licht vol" data-act="planningAanpassen">${icon('calendar-plus')}Planning aanpassen of iets toevoegen (activiteit, oefenwedstrijd)</button>` : ''}`;
       },
       berichten: (S) => CC.berichtenScherm(S, { nieuw: true }),

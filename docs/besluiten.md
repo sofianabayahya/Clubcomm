@@ -508,6 +508,10 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 91 — Aanwezigheid: alleen dagen die nog iets vragen, met adres
+- De dagenbalk in **Aanwezigheid → Opnemen** toont alleen vandaag en later, en eerdere dagen **zolang de aanwezigheid nog in te vullen is** (standaard tot 48 uur na de start). Dagen die niet meer kunnen, verdwijnen; terugkijken kan bij Overzicht en op de spelerpagina.
+- Bij een activiteit of uitwedstrijd staat onder de titel het **adres met routeknop**, ook op de Home van de trainer (Besluit 90).
+
 ## Besluit 90 — Adres en verzamelpunt zichtbaar waar de ouder kijkt
 Aanleiding: een ouder vroeg waar ze moesten verzamelen voor de strandtraining; het adres stond wel in de app, maar alleen op de detailpagina.
 - **Op het kaartje** (Home en Planning) van een activiteit of uitwedstrijd staat het adres met een speldje; tikken opent de route.
