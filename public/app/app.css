@@ -108,6 +108,11 @@ p { margin: .4em 0; }
 .act-tekst small { font-size: 13px; color: var(--zacht); }
 .act-voet { display: flex; align-items: center; gap: 8px; padding: 0 14px 10px 72px; flex-wrap: wrap; min-height: 36px; }
 .act-voet .knop { margin-left: auto; }
+.act-adres { display: flex; align-items: center; gap: 6px; padding: 2px 14px 6px 72px; font-size: 13px; color: var(--blauw); text-decoration: none; }
+.act-adres svg { width: 15px; height: 15px; flex: none; }
+.act-adres span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.act-adres small { margin-left: auto; font-weight: 600; flex: none; }
+.knoppen .act-adres { padding: 6px 0; }
 
 /* Chips en kaarten */
 .chip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; }

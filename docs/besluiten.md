@@ -508,6 +508,13 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 90 — Adres en verzamelpunt zichtbaar waar de ouder kijkt
+Aanleiding: een ouder vroeg waar ze moesten verzamelen voor de strandtraining; het adres stond wel in de app, maar alleen op de detailpagina.
+- **Op het kaartje** (Home en Planning) van een activiteit of uitwedstrijd staat het adres met een speldje; tikken opent de route.
+- **In de berichten** (aankondiging, herinnering, aanpassing) staat het verzamelen en het adres ("Adres: …", telefoons maken dat vaak zelf aantikbaar); in de app staat onder zo'n bericht ook de routeknop.
+- **Nieuw veld "Verzamelpunt"** (mag leeg), bij een activiteit en bij een wedstrijd (teamleider): *"Verzamelen 09:45 bij de trap naast paviljoen Zuid"*.
+- **Activiteit aanpassen:** een geplande activiteit kan de trainer of teamleider nu aanpassen (verzamelen, verzamelpunt, plaats, adres, toelichting), met een bericht aan de ouders (aan te vinken).
+
 ## Besluit 89 — Demo met rondleiding voor besturen, alleen op uitnodiging
 *28-09. SCPB en AS80 vroegen om een demo; de initiatiefnemer laat besturen (vooral voorzitters) zien wat elke rol doet.*
 - **Adres:** `mijnclubcomm.nl/demo`. **Alleen op uitnodiging:** inloggen zoals in de echte app (e-mail + code); alleen adressen op de toegangslijst (tabel `demo_toegang`, migratie 023) krijgen een code. Anderen zien "Alleen op uitnodiging". Toevoegen of weghalen: zie `supabase/scripts/2026-09-28_demo_toegang_beheerder.sql`.
