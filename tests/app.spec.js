@@ -68,6 +68,28 @@ test.describe('Kleine club (echte versie, nagebootste database)', () => {
   });
 });
 
+// De demo rekent vanaf "vandaag": de rondleiding moet op elke dag van de week kloppen (fout gevonden op een woensdag)
+test.describe('Rondleiding op elke dag van de week', () => {
+  for (const dag of ['2026-10-05T16:00', '2026-10-06T16:00', '2026-10-07T16:00', '2026-10-08T16:00', '2026-10-09T20:00', '2026-10-10T09:45', '2026-10-10T16:00', '2026-10-11T12:00']) {
+    test(`elke stap vindt zijn onderdeel · ${dag}`, async ({ page }) => {
+      const fouten = volgFouten(page);
+      await page.clock.install({ time: new Date(`${dag}:00+02:00`) });
+      await page.setViewportSize({ width: 1366, height: 768 });
+      await page.route('**/app/vendor/supabase.js', (r) => r.fulfill({ contentType: 'application/javascript', body: NEP_SUPABASE }));
+      await page.goto('/demo'); await page.evaluate(() => { localStorage.clear(); sessionStorage.clear(); }); await page.goto('/demo');
+      await page.fill('#dm', 'admin@test.nl'); await page.locator('#dm').press('Enter');
+      await page.fill('#dc', '123456'); await page.locator('#dc').press('Enter');
+      await expect(page.locator('#rondleiding .rl-titel')).toBeVisible();
+      const stappen = await page.evaluate(() => CC.demoStappen.map((s) => !!s.doel));
+      for (let i = 0; i < stappen.length; i++) {
+        await page.locator(`#rondleiding [data-act="rlGa"][data-i="${i}"]`).click();
+        if (stappen[i]) await expect(page.locator('#rl-rand'), `${dag} stap ${i + 1}: gele rand`).toBeVisible();
+      }
+      expect(fouten, dag).toEqual([]);
+    });
+  }
+});
+
 test.describe('Demo voor besturen (/demo, Besluit 89)', () => {
   test('alleen op uitnodiging, en elke stap van de rondleiding klopt', async ({ page }) => {
     const fouten = volgFouten(page);

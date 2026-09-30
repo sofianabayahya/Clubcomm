@@ -3,6 +3,12 @@
 Wat we tijdens de pilot vinden, met de oorzaak en het patroon erachter. Doel: dezelfde soort fout niet twee keer maken.
 Besluiten staan in `besluiten.md`; dit is het logboek van fouten. Nieuwste bovenaan.
 
+## 30 september 2026 (rondleiding op elke dag)
+
+| Wat we zagen | Oorzaak | Opgelost | Patroon |
+|---|---|---|---|
+| (zelf gevonden, automatische test) Stap 7 van de rondleiding (scorebord) had op woensdag t/m vrijdag geen gele rand; stap 4 (vervoer) op zaterdag na de wedstrijd ook niet | De demo rekent vanaf vandaag: niet elke dag is er een wedstrijd zonder uitslag of een kind dat vervoer zoekt | Elke stap heeft een terugvaloptie (wisselschema, knop "Ik zoek vervoer"); test loopt de rondleiding op 8 momenten in de week door | **A. Momentopname** (de demo op het moment van testen is niet de demo op de dag van een presentatie) |
+
 ## 28 september 2026 (demo voor besturen)
 
 | Wat de gebruiker zag | Oorzaak | Opgelost | Patroon |
