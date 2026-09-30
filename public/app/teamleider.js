@@ -56,6 +56,7 @@
           <form class="kaartje codeform" data-submit="wedstrijdInfo" data-id="${a.id}">
             <div class="kaart-kop">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${D.relatief(a.datum)} · aftrap ${a.tijd}</small></div></div>
             <div class="twee"><div><label for="wi-v">Verzamelen</label><input id="wi-v" name="verzamel" type="time" value="${a.verzamel}"></div>${gespeeld ? `<div><label for="wi-u">Uitslag</label><input id="wi-u" name="uitslag" placeholder="bijv. 3-2" value="${esc(a.uitslag || '')}"></div>` : ''}</div>
+            <label for="wi-vp">Verzamelpunt (mag leeg)</label><input id="wi-vp" name="verzamelpunt" value="${esc(a.verzamelpunt || '')}" placeholder="${a.thuis ? 'Bijv. bij kleedkamer 3' : 'Bijv. parkeerplaats bij de kantine'}">
             ${a.thuis ? `<p class="klein zacht">Thuis · ${esc(a.veld || '')}</p>` : `<label for="wi-a">Adres</label><input id="wi-a" name="adres" value="${esc(a.adres || '')}" data-adres autocomplete="off" placeholder="Begin te typen: straat of plaats">`}
             <div class="knoppen"><button class="knop licht">Opslaan</button>${a.thuis ? '' : h.route(a.adres)}<button type="button" class="knop licht" data-act="deelWedstrijd" data-id="${a.id}">${icon('share-2')}Delen</button></div></form>
           ${h.sectie(`Komen: ${sp.length - af.length} van ${sp.length}`)}
@@ -86,7 +87,7 @@
   CC.views.speeltijd = (S, p) => ({ titel: 'Speeltijd', html: CC.speeltijdHtml(S, p.team) });
 
   CC.on('kiesTlWed', (el) => { CC.ui.seg.tlWed = el.value; CC.render(); });
-  CC.on('wedstrijdInfo', (f) => { const S = CC.S(); const a = M.act(S, f.dataset.id); a.verzamel = f.verzamel.value; if (f.adres) a.adres = f.adres.value; if (f.uitslag) a.uitslag = f.uitslag.value; CC.save(); CC.render(); CC.toast('Opgeslagen; ouders zien het direct'); });
+  CC.on('wedstrijdInfo', (f) => { const S = CC.S(); const a = M.act(S, f.dataset.id); a.verzamel = f.verzamel.value; if (f.verzamelpunt) a.verzamelpunt = f.verzamelpunt.value.trim(); if (f.adres) a.adres = f.adres.value; if (f.uitslag) a.uitslag = f.uitslag.value; CC.save(); CC.render(); CC.toast('Opgeslagen; ouders zien het direct'); });
   CC.on('wedstrijdAfgelast', (el) => CC.sheet('Wedstrijd afgelast', `<form data-submit="wedstrijdAfgelastOk" data-id="${el.dataset.id}" class="codeform"><label for="wa-r">Waarom?</label><select id="wa-r" name="r"><option>De tegenstander heeft afgezegd</option><option>Het veld is afgekeurd</option><option>Te weinig spelers</option><option>Anders</option></select><button class="knop rood vol">${icon('ban')}Afgelasten en ouders inlichten</button><p class="zacht klein">Alle ouders van het team krijgen direct een melding. Trainer en ${esc(CC.S().club.labels.hjo)} krijgen een melding ter informatie.</p></form>`));
   CC.on('wedstrijdAfgelastOk', (f) => {
     const S = CC.S(); const a = M.act(S, f.dataset.id); const t = M.team(S, a.teamId); const me = CC.me(); const now = new Date().toISOString();
