@@ -40,3 +40,10 @@ Bij meerdere clubs ongeveer **€ 70 per maand (± € 850 per jaar)**: Supabase
 2. Korting voor pilotclubs: hoeveel en hoe lang.
 3. Wat er gebeurt na de gratis pilot als een club niet doorgaat: gegevens exporteren en verwijderen (hoort ook in de verwerkersovereenkomst).
 4. Betalen: factuur per jaar, of automatisch (bijvoorbeeld Mollie) zodra er meer clubs zijn.
+
+## Verder doordacht (30-09)
+- **Nu is ClubComm vooral voor de onderbouw** (O6 t/m O12: afmelden, vervoer, taken, eerlijke speeltijd). Tel voor de staffel daarom de **onderbouwteams**, niet alle teams: dan is klein/middel/groot eerlijker.
+- **De bovenbouw later als uitbreiding** met eigen prijs (bijv. trainingen vastleggen, seizoensevaluatie met rapport).
+- **Hulp hoort in de prijs.** Ruwe schatting: in het begin van het seizoen 1–2 uur per club per week, later minder. Bij ± 10 clubs is dat één dag per week: dan iemand erbij, of vaste hulpvormen (helppagina, vaste vragenuren, de clubbeheerder als eerste aanspreekpunt).
+- **Mogelijke pakketten:** *Basis* (onderbouw, club richt zelf in met handleidingen) · *Club* (+ persoonlijk inrichten, overzicht HJO, ontwikkelgesprekken, snelle hulp) · later *Plus* (bovenbouw). Elk met klein/middel/groot.
+- **Advies:** nog geen bedragen vastzetten. In de pilot tot de zomer meten: uren hulp per club, en wat het de club oplevert (tijd die teamleiders besparen, % afmeldingen via de app). Met die cijfers is een prijs uit te leggen.
