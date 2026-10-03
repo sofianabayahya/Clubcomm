@@ -56,7 +56,7 @@
           <form class="kaartje codeform" data-submit="wedstrijdInfo" data-id="${a.id}">
             <div class="kaart-kop">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${D.relatief(a.datum)} · aftrap ${a.tijd}</small></div></div>
             <div class="twee"><div><label for="wi-v">Verzamelen</label><input id="wi-v" name="verzamel" type="time" value="${a.verzamel}"></div>${gespeeld ? `<div><label for="wi-u">Uitslag</label><input id="wi-u" name="uitslag" placeholder="bijv. 3-2" value="${esc(a.uitslag || '')}"></div>` : ''}</div>
-            <label for="wi-vp">Verzamelpunt (mag leeg)</label><input id="wi-vp" name="verzamelpunt" value="${esc(a.verzamelpunt || '')}" placeholder="${a.thuis ? 'Bijv. bij kleedkamer 3' : 'Bijv. parkeerplaats bij de kantine'}">
+            <label for="wi-vp">Verzamelpunt (mag leeg)</label><input id="wi-vp" name="verzamelpunt" value="${esc(a.verzamelpunt || '')}" placeholder="${a.thuis ? 'Bijv. kleedkamer 3' : 'Bijv. de parkeerplaats bij de kantine'}">
             ${a.thuis ? `<p class="klein zacht">Thuis · ${esc(a.veld || '')}</p>` : `<label for="wi-a">Adres</label><input id="wi-a" name="adres" value="${esc(a.adres || '')}" data-adres autocomplete="off" placeholder="Begin te typen: straat of plaats">`}
             <div class="knoppen"><button class="knop licht">Opslaan</button>${a.thuis ? '' : h.route(a.adres)}<button type="button" class="knop licht" data-act="deelWedstrijd" data-id="${a.id}">${icon('share-2')}Delen</button></div></form>
           ${h.sectie(`Komen: ${sp.length - af.length} van ${sp.length}`)}

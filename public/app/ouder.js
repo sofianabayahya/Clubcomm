@@ -9,7 +9,7 @@
   const zoektPlek = (S, pl) => {
     if (!S.club.modules.vervoer) return null;
     const me = CC.me();
-    const a = M.komend(S, pl.teamId, 6).find((x) => x.soort === 'wedstrijd' && !x.thuis && !x.afgelast);
+    const a = M.komend(S, pl.teamId, 6).find((x) => M.isWed(x) && !x.thuis && !x.afgelast);
     if (!a || a.datum > D.addDays(D.vandaag(), homeDagen(S)) || M.status(S, pl, a).code !== 'verwacht') return null;
     const wie = M.plekZoekers(S, a).filter((x) => !x.ouders.includes(me.id));
     return wie.length ? { a, wie } : null;
@@ -78,7 +78,7 @@
       },
       vervoer(S) {
         const pl = CC.kind(); const me = CC.me();
-        const uit = M.komend(S, pl.teamId, 12).filter((a) => a.soort === 'wedstrijd' && !a.thuis && !a.afgelast).slice(0, 3);
+        const uit = M.komend(S, pl.teamId, 12).filter((a) => M.isWed(a) && !a.thuis && !a.afgelast).slice(0, 3);
         if (!uit.length) return h.leeg('Geen uitwedstrijden de komende tijd. Bij thuiswedstrijden is geen vervoer nodig.', 'car');
         return `<p class="zacht klein">Je brengt ${esc(pl.voornaam)} zelf naar uitwedstrijden. Lukt het een keer niet? Laat het hier weten; de andere ouders van het team zien je vraag.</p>
           ${uit.map((a) => {
@@ -177,12 +177,13 @@
       meer = `${h.sectie(a.opgave ? `Opgave: ${sp.length - af.length} komen · ${af.length - nOpen} niet · ${nOpen} nog geen antwoord` : `Verwacht: ${sp.length - af.length} van ${sp.length}`)}<div class="lijst compact">${af.map((x) => h.rij({ ic: h.avatar(x.pl.voornaam), titel: esc(M.naam(S, x.pl)), rechts: h.chip(x.st), sub: x.st.afm && x.st.afm.opm && CC.zicht('toelichting') ? esc(x.st.afm.opm) : '' })).join('') || '<p class="zacht klein">Iedereen komt.</p>'}</div>
         ${rol === 'trainer' && CC.kanNietBlok ? CC.kanNietBlok(S, a) : ''}
         ${['trainer', 'teamleider'].includes(rol) && a.soort === 'activiteit' && !a.afgelast && a.datum >= D.vandaag() ? `<button class="knop licht vol" data-act="activiteitAanpassen" data-id="${a.id}">${icon('pencil')}Activiteit aanpassen</button>` : ''}
+        ${['trainer', 'teamleider'].includes(rol) && a.soort === 'oefen' && !a.afgelast && a.datum >= D.vandaag() ? `<button class="knop licht vol" data-act="oefenAanpassen" data-id="${a.id}">${icon('pencil')}Oefenwedstrijd aanpassen</button>` : ''}
         ${['trainer', 'teamleider'].includes(rol) && CC.mag('planning') && a.soort === 'training' && !a.afgelast ? `<button class="knop licht vol" data-act="wijzigDeze" data-id="${a.id}">${icon('pencil')}Deze training aanpassen</button>` : ''}`;
     }
     return {
       titel: a.soort === 'training' ? 'Training' : a.soort === 'activiteit' ? 'Activiteit' : a.soort === 'oefen' ? 'Oefenwedstrijd' : 'Wedstrijd',
       html: `<article class="kaartje"><div class="kaart-kop">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${D.lang(a.datum)} · ${esc(t.naam)}</small></div></div>
-        ${a.soort === 'activiteit' && a.toelichting ? `<p>${esc(a.toelichting)}</p>` : ''}<dl class="gegevens">${a.soort === 'activiteit' ? `${a.verzamel || a.verzamelpunt ? `<dt>Verzamelen</dt><dd>${a.verzamel || ''}${a.verzamelpunt ? `${a.verzamel ? ', ' : ''}bij ${esc(a.verzamelpunt)}` : ''}</dd>` : ''}<dt>Tijd</dt><dd>${a.tijd}–${a.eind}</dd>${a.plaats ? `<dt>Waar</dt><dd>${esc(a.plaats)}</dd>` : ''}` : a.soort === 'training' ? `<dt>Tijd</dt><dd>${a.tijd}–${a.eind}</dd><dt>Veld</dt><dd>${esc(a.veld)}</dd>` : `<dt>Verzamelen</dt><dd>${a.verzamel}${a.verzamelpunt ? `, bij ${esc(a.verzamelpunt)}` : ''}</dd><dt>Aftrap</dt><dd>${a.tijd}</dd>${a.veld ? `<dt>Veld</dt><dd>${esc(a.veld)}</dd>` : ''}${a.uitslag && M.uitslagInst(S, a.teamId).naarOuders ? `<dt>Uitslag</dt><dd>${esc(a.uitslag)}</dd>` : ''}`}<dt>Afmelden</dt><dd>tot ${M.deadlineTekst(S, a)}</dd></dl>
+        ${a.soort === 'activiteit' && a.toelichting ? `<p>${esc(a.toelichting)}</p>` : ''}<dl class="gegevens">${a.soort === 'activiteit' ? `${a.verzamel || a.verzamelpunt ? `<dt>Verzamelen</dt><dd>${a.verzamel || ''}${CC.vpunt(a) ? `${a.verzamel ? ', ' : ''}bij ${esc(CC.vpunt(a))}` : ''}</dd>` : ''}<dt>Tijd</dt><dd>${a.tijd}–${a.eind}</dd>${a.plaats ? `<dt>Waar</dt><dd>${esc(a.plaats)}</dd>` : ''}` : a.soort === 'training' ? `<dt>Tijd</dt><dd>${a.tijd}–${a.eind}</dd><dt>Veld</dt><dd>${esc(a.veld)}</dd>` : `<dt>Verzamelen</dt><dd>${a.verzamel}${CC.vpunt(a) ? `, bij ${esc(CC.vpunt(a))}` : ''}</dd><dt>Aftrap</dt><dd>${a.tijd}</dd>${a.veld ? `<dt>Veld</dt><dd>${esc(a.veld)}</dd>` : ''}${a.uitslag && M.uitslagInst(S, a.teamId).naarOuders ? `<dt>Uitslag</dt><dd>${esc(a.uitslag)}</dd>` : ''}`}<dt>Afmelden</dt><dd>tot ${M.deadlineTekst(S, a)}</dd></dl>
         ${a.afgelast ? `<div class="info rood">${icon('ban')}<span>Deze activiteit is afgelast.</span></div>` : ''}${kaart}</article>${meer}`,
     };
   };
@@ -191,12 +192,29 @@
   CC.on('activiteitAanpassen', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.id);
     CC.sheet(`${esc(a.naam || 'Activiteit')} aanpassen`, `<form data-submit="activiteitAanpassenOk" data-id="${a.id}" class="codeform">
       <div class="twee"><div><label for="aa-vz">Verzamelen</label><input id="aa-vz" name="verzamel" type="time" value="${esc(a.verzamel || '')}"></div><div><label for="aa-t">Begint om</label><input id="aa-t" name="tijd" type="time" value="${esc(a.tijd)}"></div></div>
-      <label for="aa-vp">Verzamelpunt (mag leeg)</label><input id="aa-vp" name="verzamelpunt" value="${esc(a.verzamelpunt || '')}" placeholder="Bijv. bij de trap naast paviljoen Zuid">
+      <label for="aa-vp">Verzamelpunt (mag leeg)</label><input id="aa-vp" name="verzamelpunt" value="${esc(a.verzamelpunt || '')}" placeholder="Bijv. de trap naast paviljoen Zuid">
       <label for="aa-p">Waar?</label><input id="aa-p" name="plaats" value="${esc(a.plaats || '')}">
       <label for="aa-ad">Adres (voor de routeknop)</label><input id="aa-ad" name="adres" value="${esc(a.adres || '')}" data-adres autocomplete="off">
       <label for="aa-tl">Toelichting (mag leeg)</label><input id="aa-tl" name="toelichting" value="${esc(a.toelichting || '')}">
       <label class="vink"><input type="checkbox" name="bericht" checked><span>Stuur de ouders een bericht met de aanpassing</span></label>
       <button class="knop vol">Opslaan</button></form>`); });
+  // Besluit 92: oefenwedstrijd aanpassen (tegenstander, thuis/uit, aftrap, verzamelen, verzamelpunt, veld of adres)
+  CC.on('oefenAanpassen', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.id); const uit = a.thuis === false;
+    CC.sheet('Oefenwedstrijd aanpassen', `<form data-submit="oefenAanpassenOk" data-id="${a.id}" class="codeform">
+      <label for="oa-t">Tegenstander</label><input id="oa-t" name="tegen" value="${esc(a.tegen || '')}">
+      <fieldset class="vinkjes rij-vinkjes"><legend>Waar spelen we?</legend><label><input type="radio" name="oefThuis" value="1" ${uit ? '' : 'checked'} data-change="oefAanpThuis"> Thuis</label><label><input type="radio" name="oefThuis" value="0" ${uit ? 'checked' : ''} data-change="oefAanpThuis"> Uit</label></fieldset>
+      <div class="twee"><div><label for="oa-a">Aftrap</label><input id="oa-a" name="tijd" type="time" value="${esc(a.tijd)}"></div><div><label for="oa-vz">Verzamelen</label><input id="oa-vz" name="verzamel" type="time" value="${esc(a.verzamel || '')}"></div></div>
+      <label for="oa-vp">Verzamelpunt (mag leeg)</label><input id="oa-vp" name="verzamelpunt" value="${esc(a.verzamelpunt || '')}" placeholder="Bijv. de kantine">
+      <div id="oa-veld" ${uit ? 'hidden' : ''}><label for="oa-v">Veld</label><input id="oa-v" name="veld" value="${esc(a.veld || '')}"></div>
+      <div id="oa-adres" ${uit ? '' : 'hidden'}><label for="oa-ad">Adres van de tegenstander</label><input id="oa-ad" name="adres" value="${esc(uit ? a.adres || '' : '')}" data-adres autocomplete="off"></div>
+      <label class="vink"><input type="checkbox" name="bericht" checked><span>Stuur de ouders een bericht met de aanpassing</span></label>
+      <button class="knop vol">Opslaan</button></form>`); });
+  CC.on('oefAanpThuis', (el) => { const f = el.form; const uit = f.oefThuis.value === '0'; f.querySelector('#oa-veld').hidden = uit; f.querySelector('#oa-adres').hidden = !uit; });
+  CC.on('oefenAanpassenOk', (f) => { const S = CC.S(); const a = M.act(S, f.dataset.id); const me = CC.me(); const thuis = f.oefThuis.value !== '0'; const t = M.team(S, a.teamId);
+    Object.assign(a, { tegen: f.tegen.value.trim(), thuis, tijd: f.tijd.value || a.tijd, eind: CC.plusMin(f.tijd.value || a.tijd, CC.categorie(t.cat).duur + 15), verzamel: f.verzamel.value || CC.plusMin(f.tijd.value || a.tijd, thuis ? -30 : -60), verzamelpunt: f.verzamelpunt.value.trim(), veld: thuis ? f.veld.value.trim() : '', adres: thuis ? (S.club.sportpark || '') : f.adres.value.trim() });
+    if (f.bericht.checked) { const ontv = [...new Set([...M.oudersVan(S, a.teamId), ...M.stafVan(S, a.teamId)])].filter((x) => x !== me.id);
+      S.msgs.push({ id: 'b' + Date.now(), van: me.id, vanRol: (CC.rol() || {}).rol, soort: 'nieuws', verloopt: a.datum, actId: a.id, bereik: a.teamId, onderwerp: `Aangepast: oefenwedstrijd ${D.kort(a.datum)}`, tekst: CC.oefenTekst(a), tijd: new Date().toISOString(), gepland: null, ontvangers: ontv, gelezen: [], antw: [], urgent: false }); }
+    CC.save(); CC.closeSheet(); CC.render(); CC.toast(f.bericht.checked ? 'Opgeslagen en de ouders zijn ingelicht' : 'Opgeslagen'); });
   CC.on('activiteitAanpassenOk', (f) => { const S = CC.S(); const a = M.act(S, f.dataset.id); const me = CC.me();
     Object.assign(a, { verzamel: f.verzamel.value || '', tijd: f.tijd.value || a.tijd, verzamelpunt: f.verzamelpunt.value.trim(), plaats: f.plaats.value.trim(), adres: f.adres.value.trim(), toelichting: f.toelichting.value.trim() });
     if (f.bericht.checked) { const ontv = [...new Set([...M.oudersVan(S, a.teamId), ...M.stafVan(S, a.teamId)])].filter((x) => x !== me.id);

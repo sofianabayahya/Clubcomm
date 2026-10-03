@@ -94,6 +94,7 @@
   CC.rollen = {}; CC.views = {};
 
   // ---------- Gedeelde bouwstenen ----------
+  CC.vpunt = (a) => String(a.verzamelpunt || '').trim().replace(/^bij\s+/i, '');
   CC.h = {
     seg(key, opties, standaard) {
       const cur = ui.seg[key] || standaard;
@@ -121,7 +122,7 @@
     actTitel(S, a) {
       if (a.soort === 'training') return 'Training';
       if (a.soort === 'activiteit') return esc(a.naam || 'Activiteit');
-      if (a.soort === 'oefen') return `Oefenwedstrijd${a.tegen ? ' · ' + esc(a.tegen) : ''}`;
+      if (a.soort === 'oefen') return `Oefenwedstrijd${a.tegen ? ` · ${a.thuis === false ? 'uit bij ' : ''}${esc(a.tegen)}` : a.thuis === false ? ' · uit' : ''}`;
       return `${a.thuis ? 'Thuis' : 'Uit'} · ${esc(a.tegen)}`;
     },
     actSub(S, a) {
@@ -159,8 +160,8 @@
     // Routeknop (Besluit 33): opent de route in kaarten, vanaf waar je bent
     // Besluit 90: adres met speldje, tikken = route (op het kaartje van een activiteit of uitwedstrijd)
     adresRegel: (adres) => (adres ? `<a class="act-adres" href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(adres)}" target="_blank" rel="noopener">${icon('map-pin')}<span>${esc(adres)}</span><small>Route</small></a>` : ''),
-    // "Verzamelen 09:45 bij de trap naast paviljoen Zuid"
-    verzamelTekst: (a) => (a.verzamel ? `Verzamelen ${a.verzamel}${a.verzamelpunt ? ` bij ${esc(a.verzamelpunt)}` : ''}` : a.verzamelpunt ? `Verzamelen bij ${esc(a.verzamelpunt)}` : ''),
+    // "Verzamelen 09:45 bij de trap naast paviljoen Zuid" (typt iemand zelf "bij …", dan niet dubbel)
+    verzamelTekst: (a) => { const vp = CC.vpunt(a); return a.verzamel ? `Verzamelen ${a.verzamel}${vp ? ` bij ${esc(vp)}` : ''}` : vp ? `Verzamelen bij ${esc(vp)}` : ''; },
     route: (adres, klein) => (adres ? `<a class="knop licht${klein ? ' klein' : ''}" href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(adres)}" target="_blank" rel="noopener">${icon('navigation')}Route</a>` : ''),
     // Aanwezigheid apart: trainingen en wedstrijden (Besluit 34)
     split: (st) => `Trainingen ${st.pctTr == null ? '–' : st.pctTr + '%'} · wedstrijden ${st.pctWed == null ? '–' : st.pctWed + '%'}`,
@@ -781,8 +782,12 @@
       <div id="w-bestaand"><label for="w-act">Welke training?</label><select id="w-act" name="act">${komend.filter((a) => a.soort === 'training').map((a) => `<option value="${a.id}" ${a.id === actId ? 'selected' : ''}>${D.kort(a.datum)} · ${a.tijd} · ${esc(a.veld)}</option>`).join('')}</select></div>
       <div id="w-nieuw"><label for="w-dat">Datum</label><input id="w-dat" name="datum" type="date" value="${D.addDays(D.vandaag(), 1)}">
       <div class="twee"><div><label for="w-tijd">Tijd</label><input id="w-tijd" name="tijd" type="time" value="17:30"></div><div><label for="w-veld">Veld</label><input id="w-veld" name="veld" value="Veld 2"></div></div>
-      <div id="w-tegen" hidden><label for="w-t">Tegenstander</label><input id="w-t" name="tegen" placeholder="Bijv. FC Waterkant O10-3"></div>
-      <div id="w-activ" hidden><label for="w-n">Wat gaan we doen?</label><input id="w-n" name="naam" placeholder="Bijv. Pleintjesvoetbal"><div class="twee"><div><label for="w-vz">Verzamelen (mag leeg)</label><input id="w-vz" name="verzamel" type="time"></div><div><label for="w-e">Tot</label><input id="w-e" name="eind" type="time"></div></div><label for="w-vp">Verzamelpunt (mag leeg)</label><input id="w-vp" name="verzamelpunt" placeholder="Bijv. bij de trap naast paviljoen Zuid"><label for="w-p">Waar?</label><input id="w-p" name="plaats" placeholder="Bijv. Cruyff Court Osdorp"><label for="w-ad">Adres (voor de routeknop, mag leeg)</label><input id="w-ad" name="adres" placeholder="Begin te typen, bijv. Louis de Visserplein" data-adres autocomplete="off"><label for="w-tl">Toelichting (mag leeg)</label><input id="w-tl" name="toelichting" placeholder="Bijv. neem gymschoenen en een bidon mee">
+      <div id="w-tegen" hidden><label for="w-t">Tegenstander</label><input id="w-t" name="tegen" placeholder="Bijv. FC Waterkant O10-3">
+        <fieldset class="vinkjes rij-vinkjes"><legend>Waar spelen we?</legend><label><input type="radio" name="oefThuis" value="1" checked data-change="wijzigOefThuis"> Thuis</label><label><input type="radio" name="oefThuis" value="0" data-change="wijzigOefThuis"> Uit</label></fieldset>
+        <div class="twee"><div><label for="w-ovz">Verzamelen</label><input id="w-ovz" name="oefVz" type="time"></div><div><label for="w-ovp">Verzamelpunt (mag leeg)</label><input id="w-ovp" name="oefVp" placeholder="Bijv. de kantine"></div></div>
+        <p class="zacht klein">Verzamelen leeg = een half uur voor de aftrap (thuis) of een uur (uit).</p>
+        <div id="w-oefadres" hidden><label for="w-oad">Adres van de tegenstander (voor de routeknop)</label><input id="w-oad" name="oefAdres" placeholder="Begin te typen: straat of sportpark" data-adres autocomplete="off"></div></div>
+      <div id="w-activ" hidden><label for="w-n">Wat gaan we doen?</label><input id="w-n" name="naam" placeholder="Bijv. Pleintjesvoetbal"><div class="twee"><div><label for="w-vz">Verzamelen (mag leeg)</label><input id="w-vz" name="verzamel" type="time"></div><div><label for="w-e">Tot</label><input id="w-e" name="eind" type="time"></div></div><label for="w-vp">Verzamelpunt (mag leeg)</label><input id="w-vp" name="verzamelpunt" placeholder="Bijv. de trap naast paviljoen Zuid"><label for="w-p">Waar?</label><input id="w-p" name="plaats" placeholder="Bijv. Cruyff Court Osdorp"><label for="w-ad">Adres (voor de routeknop, mag leeg)</label><input id="w-ad" name="adres" placeholder="Begin te typen, bijv. Louis de Visserplein" data-adres autocomplete="off"><label for="w-tl">Toelichting (mag leeg)</label><input id="w-tl" name="toelichting" placeholder="Bijv. neem gymschoenen en een bidon mee">
       <label class="vink"><input type="checkbox" name="opgave" data-change="wijzigOpgave"> Opgave nodig (ouders geven ja of nee door, bijv. voor een reservering)</label>
       <div id="w-opg" hidden><label for="w-ot">Opgeven tot</label><input id="w-ot" name="opgaveTot" type="date"></div>
       <fieldset class="vinkjes rij-vinkjes"><legend>Herinneringen (bij opgave alleen aan wie nog niet reageerde)</legend>${[14, 7, 3, 2, 1].map((d) => `<label><input type="checkbox" name="hr" value="${d}" ${[7, 2].includes(d) ? 'checked' : ''}> ${d} ${d === 1 ? 'dag' : 'dagen'} voor</label>`).join('')}</fieldset></div></div>
@@ -795,10 +800,14 @@
     f.querySelector('#w-bestaand').hidden = !(v === 'verplaats' || v === 'afgelast');
     f.querySelector('#w-nieuw').hidden = v === 'afgelast';
     f.querySelector('#w-tegen').hidden = v !== 'oefen';
-    f.querySelector('#w-activ').hidden = v !== 'activiteit'; f.querySelector('#w-veld').closest('div').hidden = v === 'activiteit';
+    f.querySelector('#w-activ').hidden = v !== 'activiteit'; f.querySelector('#w-veld').closest('div').hidden = v === 'activiteit' || (v === 'oefen' && f.oefThuis.value === '0');
+    f.querySelector('label[for="w-tijd"]').textContent = v === 'oefen' ? 'Aftrap' : 'Tijd';
   });
+  // Besluit 92: oefenwedstrijd thuis of uit; uit = adres, geen veld
+  CC.on('wijzigOefThuis', (el) => { const f = el.form; const uit = f.oefThuis.value === '0'; f.querySelector('#w-oefadres').hidden = !uit; f.querySelector('#w-veld').closest('div').hidden = uit; });
   // Besluit 90: waar en wanneer verzamelen, en het adres, in berichten (platte tekst)
-  CC.actWaar = (a) => `${a.verzamel || a.verzamelpunt ? ` Verzamelen${a.verzamel ? ` om ${a.verzamel}` : ''}${a.verzamelpunt ? ` bij ${a.verzamelpunt}` : ''}.` : ''}${a.adres ? `\nAdres: ${a.adres}` + '\n' : ''}`;
+  CC.actWaar = (a) => `${a.verzamel || a.verzamelpunt ? ` Verzamelen${a.verzamel ? ` om ${a.verzamel}` : ''}${CC.vpunt(a) ? ` bij ${CC.vpunt(a)}` : ''}.` : ''}${a.adres ? `\nAdres: ${a.adres}` + '\n' : ''}`;
+  CC.oefenTekst = (a) => `Oefenwedstrijd ${a.thuis === false ? 'uit' : 'thuis'}${a.tegen ? ` tegen ${a.tegen}` : ''} op ${D.lang(a.datum)}, aftrap ${a.tijd}${a.thuis !== false && a.veld ? ` (${a.veld})` : ''}.${CC.actWaar(a.thuis === false ? a : { ...a, adres: '' })} Kan je kind niet? Meld af in ClubComm.`;
   CC.on('wijzigPlanning', (f) => {
     const tid = CC.teamId(); const t = M.team(S, tid); const me = CC.me(); const wat = f.wat.value;
     let tekst = ''; let verloopt = null; let actId = null; // Besluit 80: het bericht vervalt na de dag van de activiteit
@@ -811,12 +820,15 @@
       if (wat === 'activiteit' && !f.naam.value.trim()) return CC.toast('Vul in wat jullie gaan doen', 'fout');
       const a = wat === 'activiteit'
         ? { id: 'a' + Date.now(), teamId: tid, soort: 'activiteit', naam: f.naam.value.trim(), datum: f.datum.value, tijd: f.tijd.value, eind: f.eind.value || CC.plusMin(f.tijd.value, 90), verzamel: f.verzamel.value || '', verzamelpunt: f.verzamelpunt.value.trim(), plaats: f.plaats.value.trim(), adres: f.adres.value.trim(), toelichting: f.toelichting.value.trim(), veld: '', afgelast: false, opgave: f.opgave.checked, opgaveTot: f.opgave.checked ? (f.opgaveTot.value || f.datum.value) : null, herinneringen: [...f.querySelectorAll('[name=hr]:checked')].map((x) => Number(x.value)), herinnerd: [] }
-        : { id: 'a' + Date.now(), teamId: tid, soort: wat === 'oefen' ? 'oefen' : 'training', extra: true, datum: f.datum.value, tijd: f.tijd.value, eind: CC.plusMin(f.tijd.value, wat === 'oefen' ? CC.categorie(t.cat).duur + 15 : 75), veld: f.veld.value, tegen: f.tegen.value, thuis: true, verzamel: f.tijd.value, adres: S.club.sportpark || '', afgelast: false };
+        : wat === 'oefen' ? (() => { const thuis = f.oefThuis.value !== '0'; // Besluit 92
+          return { id: 'a' + Date.now(), teamId: tid, soort: 'oefen', extra: true, datum: f.datum.value, tijd: f.tijd.value, eind: CC.plusMin(f.tijd.value, CC.categorie(t.cat).duur + 15), veld: thuis ? f.veld.value : '', tegen: f.tegen.value.trim(), thuis,
+            verzamel: f.oefVz.value || CC.plusMin(f.tijd.value, thuis ? -30 : -60), verzamelpunt: f.oefVp.value.trim(), adres: thuis ? (S.club.sportpark || '') : f.oefAdres.value.trim(), afgelast: false }; })()
+        : { id: 'a' + Date.now(), teamId: tid, soort: 'training', extra: true, datum: f.datum.value, tijd: f.tijd.value, eind: CC.plusMin(f.tijd.value, 75), veld: f.veld.value, tegen: f.tegen.value, thuis: true, verzamel: f.tijd.value, adres: S.club.sportpark || '', afgelast: false };
       S.acts.push(a); S.acts.sort((x, y) => (x.datum + x.tijd).localeCompare(y.datum + y.tijd)); verloopt = a.datum; actId = a.id;
-      tekst = wat === 'activiteit' ? `${a.naam} op ${D.lang(a.datum)} van ${a.tijd} tot ${a.eind}${a.plaats ? ` bij ${a.plaats}` : ''}.${CC.actWaar(a)}${a.toelichting ? ` ${a.toelichting}` : ''}${a.opgave ? ` Geef je kind vóór ${D.lang(a.opgaveTot)} op in ClubComm: ja of nee.` : ' Kan je kind niet? Meld af in ClubComm.'}` : `${wat === 'oefen' ? 'Oefenwedstrijd' : 'Extra training'} op ${D.lang(a.datum)} om ${a.tijd} (${a.veld}).`;
+      tekst = wat === 'activiteit' ? `${a.naam} op ${D.lang(a.datum)} van ${a.tijd} tot ${a.eind}${a.plaats ? ` bij ${a.plaats}` : ''}.${CC.actWaar(a)}${a.toelichting ? ` ${a.toelichting}` : ''}${a.opgave ? ` Geef je kind vóór ${D.lang(a.opgaveTot)} op in ClubComm: ja of nee.` : ' Kan je kind niet? Meld af in ClubComm.'}` : wat === 'oefen' ? CC.oefenTekst(a) : `Extra training op ${D.lang(a.datum)} om ${a.tijd} (${a.veld}).`;
     }
     const now = new Date().toISOString();
-    S.msgs.push({ id: 'b' + Date.now(), van: me.id, vanRol: (CC.rol() || {}).rol, soort: 'nieuws', verloopt, actId, bereik: tid, onderwerp: wat === 'activiteit' ? `Nieuw: ${f.naam.value.trim()}` : 'Wijziging in de planning', tekst, tijd: now, ontvangers: M.oudersVan(S, tid), gelezen: [], antw: [], urgent: wat !== 'activiteit', gepland: null });
+    S.msgs.push({ id: 'b' + Date.now(), van: me.id, vanRol: (CC.rol() || {}).rol, soort: 'nieuws', verloopt, actId, bereik: tid, onderwerp: wat === 'activiteit' ? `Nieuw: ${f.naam.value.trim()}` : wat === 'oefen' ? `Oefenwedstrijd ${D.kort(f.datum.value)}${f.tegen.value.trim() ? ` tegen ${f.tegen.value.trim()}` : ''}` : 'Wijziging in de planning', tekst, tijd: now, ontvangers: M.oudersVan(S, tid), gelezen: [], antw: [], urgent: ['afgelast', 'verplaats'].includes(wat) || (wat !== 'activiteit' && !!verloopt && verloopt <= D.addDays(D.vandaag(), 1)) /* Besluit 92: urgent alleen bij afgelasten/verplaatsen of iets voor vandaag of morgen */, gepland: null });
     const hjo = S.people.filter((p) => p.rollen.some((r) => r.rol === 'hjo')).map((p) => p.id);
     const info = [...new Set([...hjo, ...M.stafVan(S, tid)])].filter((x) => x && x !== me.id);
     S.msgs.push({ id: 'b' + Date.now() + 1, van: 'systeem', soort: 'melding', bereik: 'Ter informatie', onderwerp: `Planning ${CC.tn(tid)} gewijzigd`, tekst: `${me.naam}: ${tekst} Je hoeft niets te doen.`, tijd: now, ontvangers: info, gelezen: [], antw: [], urgent: false, gepland: null });
