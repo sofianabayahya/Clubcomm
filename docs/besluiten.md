@@ -508,6 +508,13 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 92 — Oefenwedstrijd: thuis of uit, verzamelen, verzamelpunt en adres
+- Bij **Planning aanpassen → Oefenwedstrijd toevoegen** kies je **thuis of uit**, een **verzameltijd** (leeg = half uur voor de aftrap thuis, een uur uit), een **verzamelpunt** en bij uit het **adres** van de tegenstander (met adres aanvullen). Bij uit geen veld.
+- De ouder ziet het in de weekplanning op het kaartje (*"Oefenwedstrijd · uit bij SCPB"*, verzamelen bij …, adres met routeknop), in het bericht, en een uit-oefenwedstrijd staat ook bij **Vervoer**.
+- **Oefenwedstrijd aanpassen** op de pagina van de wedstrijd (trainer of teamleider), met bericht aan de ouders.
+- Berichten over de planning zijn alleen nog **urgent** bij afgelasten of verplaatsen, of als het om vandaag of morgen gaat (een oefenwedstrijd over een week is niet urgent).
+- Typt iemand bij het verzamelpunt zelf "bij …", dan zet de app er niet nog een keer "bij" voor.
+
 ## Besluit 91 — Aanwezigheid: alleen dagen die nog iets vragen, met adres
 - De dagenbalk in **Aanwezigheid → Opnemen** toont alleen vandaag en later, en eerdere dagen **zolang de aanwezigheid nog in te vullen is** (standaard tot 48 uur na de start). Dagen die niet meer kunnen, verdwijnen; terugkijken kan bij Overzicht en op de spelerpagina.
 - Bij een activiteit of uitwedstrijd staat onder de titel het **adres met routeknop**, ook op de Home van de trainer (Besluit 90).

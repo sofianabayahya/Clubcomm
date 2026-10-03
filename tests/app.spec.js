@@ -66,6 +66,33 @@ test.describe('Kleine club (echte versie, nagebootste database)', () => {
     await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'afm' && r.data.spelerId === 's2').length, { message: 'afmelding opgeslagen in de database' }).toBe(1);
     await controleer(page, fouten, 'ouder na afmelden');
   });
+
+  // Besluit 92: oefenwedstrijd uit, met verzamelen, verzamelpunt en adres; ouder ziet het op het kaartje, in het bericht en bij Vervoer
+  test('trainer plant een oefenwedstrijd uit; ouder ziet adres en vervoer', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await nepDatabase(page);
+    await inloggen(page, 'admin@test.nl');
+    await page.evaluate(() => { CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer')); CC.wijzigingSheet(); });
+    await page.locator('#w-wat').selectOption('oefen');
+    const datum = await page.evaluate(() => CC.date.addDays(CC.date.vandaag(), 7));
+    await page.locator('#w-dat').fill(datum); await page.locator('#w-tijd').fill('10:00'); await page.locator('#w-t').fill('SCPB');
+    await page.locator('#sheet input[name="oefThuis"][value="0"]').check();
+    await expect(page.locator('#w-oad')).toBeVisible();
+    await page.locator('#w-ovz').fill('09:00'); await page.locator('#w-ovp').fill('bij de kantine'); await page.locator('#w-oad').fill('Teststraat 1, Amsterdam');
+    await page.locator('#sheet form[data-submit="wijzigPlanning"] button.knop').click();
+    await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'acts' && r.data.soort === 'oefen' && r.data.thuis === false && r.data.adres === 'Teststraat 1, Amsterdam').length, { message: 'oefenwedstrijd uit opgeslagen' }).toBe(1);
+    const bericht = await page.evaluate(() => CC.S().msgs.find((m) => /Oefenwedstrijd/.test(m.onderwerp)));
+    expect(bericht.tekst).toContain('Verzamelen om 09:00 bij de kantine.'); // ook als iemand zelf "bij …" typt
+    expect(bericht.tekst).toContain('Adres: Teststraat 1, Amsterdam');
+    expect(bericht.urgent).toBe(false);
+    await page.evaluate(() => CC.logout());
+    await inloggen(page, 'amin@test.nl');
+    await page.evaluate(() => CC.wisselRol(0));
+    await expect(page.locator('#app .act:has-text("uit bij SCPB") .act-adres')).toContainText('Teststraat 1');
+    await page.locator('nav.nav button[data-tab="vervoer"]').click();
+    await expect(page.locator('#app')).toContainText('uit bij SCPB');
+    await controleer(page, fouten, 'oefenwedstrijd uit');
+  });
 });
 
 // De demo rekent vanaf "vandaag": de rondleiding moet op elke dag van de week kloppen (fout gevonden op een woensdag)
