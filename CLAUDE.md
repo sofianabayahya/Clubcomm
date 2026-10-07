@@ -15,7 +15,7 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
 ## Waar staat wat
 | Bestand | Inhoud |
 |---|---|
-| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 92). |
+| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 93). |
 | `docs/pilotlog.md` | **Fouten uit de pilot met oorzaak en patroon** (momentopname, opslaan, demo verbergt het, één persoon per rol, buiten de app, rommelige gegevens). Bij elke wijziging langs deze patronen lopen. |
 | `docs/productie-en-groei.md` | Controlelijst, **Openstaand**, meerdere clubs, app of website, kosten. |
 | `docs/techniek.md` | Opbouw van de echte versie (Supabase, Vercel, Brevo, migraties, e-mail, back-up). |
@@ -28,6 +28,7 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
   - Schermen per rol: `ouder.js`, `trainer.js`, `teamleider.js`, `hjo.js` (ook clubbeheerder), `hjohome.js`; coördinator via `taken.js` (ook taken per rol en profielen).
   - `adres.js`: adres aanvullen via PDOK (velden met `data-adres`). `push.js`: pushmeldingen aanzetten en keuzes (Besluit 53); tonen in `sw.js`. `onderhoud.js`: foutregistratie en zelf verversen bij een nieuwe versie (`versie.json`, gemaakt door `versie-maken.js` bij elke publicatie; Besluit 63).
   - Modules: `autoberichten.js` (Communicatieplan, noodberichten, herinneringen activiteiten), `afwezig.js`, `trainerafw.js`, `beoordeling.js` (+ `gesprek.js`: voorbereiding en gesprekspagina ontwikkelgesprek), `materiaal.js`, `meehelpen.js`, `waardering.js`, `hjofilter.js`, `agenda.js`.
+  - `evaluatie.html` (los, `/evaluatie`): evaluatieformulier praktijkbegeleiding coach, gegevens alleen op het toestel, PDF via printen (Besluit 93).
   - `live.js`: echte versie (Supabase: inloggen met e-mailcode, laden, automatisch opslaan, beheer).
 - **Demo:** online alleen `mijnclubcomm.nl/demo` met rondleiding voor besturen, **alleen op uitnodiging** (`demo.js`, tabel `demo_toegang`, Besluit 89). `?demo` werkt alleen nog lokaal (tests, schermafbeeldingen). Accounts: Sanne (ouder), Mark (trainer + ouder), Linda (teamleider + ouder), Peter (HJO + beheerder), Esther (coördinator). Democlub "VV De Voorbeeldclub", alleen verzonnen namen (geen echte clubs of adressen gebruiken!); staat in localStorage. Nieuwe of gewijzigde schermen: kijk of de rondleiding (`STAPPEN` in `demo.js`) nog klopt.
 

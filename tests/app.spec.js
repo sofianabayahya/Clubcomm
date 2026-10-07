@@ -146,3 +146,25 @@ test.describe('Demo voor besturen (/demo, Besluit 89)', () => {
     await expect(page.locator('#rondleiding')).toBeVisible();
   });
 });
+
+// Besluit 93: evaluatieformulier coach (losse pagina, alleen op het toestel, PDF via printen)
+test('evaluatie: notitie bij de juiste stap, ontwikkelpunt verplicht, bewaard op het toestel', async ({ page }) => {
+  const fouten = volgFouten(page);
+  const meldingen = []; page.on('dialog', async (d) => { meldingen.push(d.message()); await d.accept(); });
+  await page.goto('/evaluatie');
+  await page.locator('#v-leerdoel').fill('Bewust stil blijven');
+  await page.locator('[data-act="label"][data-k="stil"]').click();
+  await page.locator('#nieuwe-notitie').fill("28' laat de spelers zelf zoeken");
+  await page.locator('#nieuwe-notitie').press('Enter');
+  await expect(page.locator('.stap').nth(1).locator('.ref')).toContainText('laat de spelers zelf zoeken');
+  await page.evaluate(() => { window.print = () => { window.__geprint = true; }; });
+  await page.locator('[data-act="pdf"]').click();
+  expect(meldingen.pop()).toContain('ontwikkelpunt');
+  await page.locator('#v-punt').fill('Eerst kijken, dan coachen.');
+  await page.locator('[data-act="pdf"]').click();
+  expect(await page.evaluate(() => window.__geprint)).toBe(true);
+  await expect(page.locator('#afdruk')).toContainText('Eerst kijken, dan coachen.');
+  await page.reload();
+  await expect(page.locator('#v-punt')).toHaveValue('Eerst kijken, dan coachen.');
+  await controleer(page, fouten, 'evaluatie');
+});

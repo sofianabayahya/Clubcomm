@@ -7,6 +7,7 @@ const app = express();
 const PUBLIC_DIR = path.join(__dirname, 'public');
 app.use(express.static(PUBLIC_DIR));
 app.get(['/', '/demo', '/demo/'], (req, res) => res.sendFile(path.join(PUBLIC_DIR, 'index.html'))); // /demo: Besluit 89
+app.get(['/evaluatie', '/evaluatie/'], (req, res) => res.sendFile(path.join(PUBLIC_DIR, 'evaluatie.html'))); // Besluit 93
 app.use((req, res) => res.status(404).send('Niet gevonden'));
 
 const PORT = process.env.PORT || 5000;

@@ -508,6 +508,15 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 93 — Evaluatieformulier praktijkbegeleiding coach (testcase, mijnclubcomm.nl/evaluatie)
+Testcase: de initiatiefnemer begeleidt als HO (KNVB-opleiding) een coach van een andere club. Losse pagina, geen onderdeel van de app en geen login.
+- **Opbouw volgens de bijeenkomst:** gegevens · afspraak uit het voorgesprek (leerdoel, focus HO, feedbackmoment) · **observatie** in drie delen (1e helft laatste 20 min, rust/kleedkamer, 2e helft eerste 20 min): snel notities tikken, tijd erbij, met labels (bewust stil, te snel gecoacht, effect op spelers, voetbalprobleem) · **evaluatiegesprek** in 6 stappen, met je eigen notities bij de juiste stap · **één concreet ontwikkelpunt** (verplicht voor de PDF) · **reflectie trainer** (4 vragen, mag later; lege vragen krijgen schrijflijnen in de PDF).
+- **Geen zelfbeoordeling** van de coach (geen tijd in de bijeenkomst). Wel een optionele HO-schaal op het leerdoel: nog niet · soms · meestal · bewust en vaak. Geen algemeen rapportcijfer.
+- **PDF / printen:** één nette A4 (2 pagina's).
+- **Rode draad:** bij een nieuwe evaluatie staat het vorige ontwikkelpunt bovenaan als "vorige afspraak"; eerdere evaluaties terug te vinden.
+- **Privacy:** alles blijft alleen op het toestel (geen server, geen namen in de code), pagina niet vindbaar in zoekmachines. De PDF is het bewaarexemplaar.
+- Werkt het, dan kan het later een module in ClubComm worden (trainers begeleiden, bijv. door een TC of HJO).
+
 ## Besluit 92 — Oefenwedstrijd: thuis of uit, verzamelen, verzamelpunt en adres
 - Bij **Planning aanpassen → Oefenwedstrijd toevoegen** kies je **thuis of uit**, een **verzameltijd** (leeg = half uur voor de aftrap thuis, een uur uit), een **verzamelpunt** en bij uit het **adres** van de tegenstander (met adres aanvullen). Bij uit geen veld.
 - De ouder ziet het in de weekplanning op het kaartje (*"Oefenwedstrijd · uit bij SCPB"*, verzamelen bij …, adres met routeknop), in het bericht, en een uit-oefenwedstrijd staat ook bij **Vervoer**.
