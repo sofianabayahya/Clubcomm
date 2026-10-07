@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0869c2">
+  <title>Evaluatie coach · ClubComm</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <!-- ClubComm — evaluatieformulier praktijkbegeleiding coach (Besluit 93). Losse pagina, geen login.
+       Alles blijft op dit toestel (localStorage); de PDF (printen) is het bewaarexemplaar. -->
+  <style>
+    :root { --blauw: #0869c2; --inkt: #0b2545; --zacht: #5b6b7f; --lijn: #dde3ea; --vlak: #fff; --achter: #f4f6f9; --groen: #1b7f4b; --oranje: #b45309; --r: 14px; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: var(--achter); color: var(--inkt); font-size: 16px; line-height: 1.45; }
+    header.kop { background: var(--blauw); color: #fff; padding: 14px 16px; position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 10px; }
+    header.kop img { width: 32px; height: 32px; border-radius: 8px; background: #fff; }
+    header.kop b { font-size: 17px; display: block; }
+    header.kop small { opacity: .85; }
+    main { max-width: 760px; margin: 0 auto; padding: 14px 16px 120px; }
+    section.blok { background: var(--vlak); border-radius: var(--r); box-shadow: 0 1px 3px rgba(11,37,69,.08); padding: 14px 16px; margin: 12px 0; }
+    h2 { font-size: 17px; margin: 0 0 4px; }
+    h3 { font-size: 15px; margin: 14px 0 2px; }
+    .hulp { color: var(--zacht); font-size: 14px; margin: 0 0 8px; }
+    label { display: block; font-size: 13px; font-weight: 600; color: var(--zacht); margin: 10px 0 4px; }
+    input, textarea, select { width: 100%; font: inherit; color: inherit; border: 1px solid var(--lijn); border-radius: 10px; padding: 10px 12px; background: #fff; }
+    textarea { min-height: 84px; resize: vertical; }
+    input:focus, textarea:focus { outline: 3px solid rgba(8,105,194,.25); border-color: var(--blauw); }
+    .twee { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+    .knop { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 0; border-radius: 12px; padding: 11px 16px; font: inherit; font-weight: 600; background: var(--blauw); color: #fff; cursor: pointer; }
+    .knop.licht { background: #e8f1fb; color: var(--blauw); }
+    .knop.klein { padding: 7px 12px; font-size: 14px; }
+    .knop.rood { background: #fde8e8; color: #b42318; }
+    .knoppen { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .fasen { display: flex; gap: 6px; margin: 8px 0; }
+    .fasen button { flex: 1; border: 1px solid var(--lijn); background: #fff; border-radius: 10px; padding: 8px 4px; font: inherit; font-size: 13px; font-weight: 600; color: var(--inkt); cursor: pointer; }
+    .fasen button.aan { background: var(--blauw); border-color: var(--blauw); color: #fff; }
+    .labels { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+    .labels button { border: 1px solid var(--lijn); background: #fff; border-radius: 999px; padding: 5px 10px; font: inherit; font-size: 13px; color: var(--inkt); cursor: pointer; }
+    .labels button.aan { background: #e8f1fb; border-color: var(--blauw); color: var(--blauw); font-weight: 600; }
+    .noteer { display: flex; gap: 8px; }
+    .noteer input { flex: 1; }
+    ul.notities { list-style: none; padding: 0; margin: 10px 0 0; }
+    ul.notities li { border-top: 1px solid var(--lijn); padding: 8px 0; display: flex; gap: 8px; align-items: flex-start; font-size: 15px; }
+    ul.notities li .tijd { color: var(--zacht); font-size: 13px; min-width: 44px; padding-top: 1px; }
+    ul.notities li .tekst { flex: 1; }
+    ul.notities li .tag { display: inline-block; font-size: 11px; background: #e8f1fb; color: var(--blauw); border-radius: 999px; padding: 1px 7px; margin-left: 4px; }
+    ul.notities li button { border: 0; background: none; color: var(--zacht); font-size: 18px; cursor: pointer; padding: 0 4px; }
+    .leeg { color: var(--zacht); font-size: 14px; margin: 8px 0 0; }
+    .afspraak { background: #f0f6fd; border-radius: 10px; padding: 8px 12px; font-size: 14px; margin: 6px 0 4px; }
+    .ref { background: #f7f8fa; border-left: 3px solid var(--lijn); padding: 6px 10px; font-size: 13px; color: var(--zacht); margin: 0 0 8px; border-radius: 0 8px 8px 0; }
+    .ref b { color: var(--inkt); }
+    .stap { display: grid; grid-template-columns: 28px 1fr; gap: 8px; margin-top: 16px; }
+    .stap .nr { width: 28px; height: 28px; border-radius: 50%; background: var(--blauw); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 14px; }
+    .stap h3 { margin: 3px 0 2px; }
+    .punt { border: 2px solid var(--blauw); border-radius: 12px; padding: 10px 12px; margin-top: 12px; background: #f0f6fd; }
+    .punt label { color: var(--blauw); margin-top: 0; }
+    .schaal { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .schaal button { border: 1px solid var(--lijn); background: #fff; border-radius: 10px; padding: 9px 4px; font: inherit; font-size: 13px; cursor: pointer; color: var(--inkt); }
+    .schaal button.aan { background: var(--blauw); border-color: var(--blauw); color: #fff; font-weight: 600; }
+    .melding { font-size: 13px; color: var(--zacht); text-align: center; margin: 14px 0 0; }
+    .voet { position: fixed; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,.96); border-top: 1px solid var(--lijn); padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); display: flex; gap: 8px; justify-content: center; z-index: 5; }
+    .voet .knop { flex: 1; max-width: 260px; }
+    .fout { color: #b42318; font-size: 14px; margin-top: 6px; }
+    .lijst-eerder button { display: block; width: 100%; text-align: left; border: 0; border-top: 1px solid var(--lijn); background: none; padding: 10px 0; font: inherit; color: var(--inkt); cursor: pointer; }
+    .lijst-eerder button small { display: block; color: var(--zacht); }
+    #afdruk { display: none; }
+    @media (max-width: 420px) { .twee { grid-template-columns: 1fr; } }
+
+    /* Afdruk / PDF: één nette A4, zonder knoppen en invulvelden */
+    @media print {
+      @page { size: A4; margin: 16mm 15mm; }
+      body { background: #fff; font-size: 11pt; }
+      header.kop, main, .voet { display: none !important; }
+      #afdruk { display: block; color: #000; }
+      #afdruk h1 { font-size: 17pt; margin: 0 0 2pt; color: var(--blauw); }
+      #afdruk .sub { color: #444; margin: 0 0 10pt; }
+      #afdruk table.gegevens { border-collapse: collapse; width: 100%; margin-bottom: 8pt; font-size: 10pt; }
+      #afdruk table.gegevens td { padding: 2pt 6pt 2pt 0; vertical-align: top; }
+      #afdruk table.gegevens td:first-child { color: #555; width: 34%; }
+      #afdruk h2 { font-size: 12.5pt; margin: 12pt 0 4pt; color: var(--blauw); border-bottom: 1px solid #ccd; padding-bottom: 2pt; }
+      #afdruk h3 { font-size: 11pt; margin: 8pt 0 2pt; }
+      #afdruk p { margin: 0 0 4pt; white-space: pre-wrap; }
+      #afdruk .vraag { color: #555; font-size: 9.5pt; margin: 0 0 2pt; }
+      #afdruk .regels { border-bottom: 1px solid #bbb; height: 16pt; }
+      #afdruk .kader { border: 1.5pt solid var(--blauw); padding: 6pt 8pt; margin-top: 6pt; }
+      #afdruk ul { margin: 0 0 4pt; padding-left: 14pt; }
+      #afdruk li { margin: 0 0 2pt; }
+      #afdruk .p-blok, #afdruk .kader { break-inside: avoid; }
+      #afdruk .voetregel { color: #777; font-size: 8.5pt; margin-top: 14pt; }
+    }
+  </style>
+</head>
+<body>
+  <header class="kop"><img src="assets/clubcomm-icon.png" alt=""><div><b>Evaluatie coach</b><small>Praktijkbegeleiding · alleen op dit toestel</small></div></header>
+  <main id="formulier"></main>
+  <div class="voet"><button class="knop licht" type="button" data-act="eerder">Eerdere</button><button class="knop" type="button" data-act="pdf">PDF / printen</button></div>
+  <div id="afdruk"></div>
+
+<script>
+(function () {
+  'use strict';
+  const OPSLAG = 'clubcomm-evaluaties-v1';
+  const FASEN = [['h1', '1e helft · laatste 20 min'], ['rust', 'Rust · kleedkamer'], ['h2', '2e helft · eerste 20 min']];
+  // Labels bij een notitie: zo staan je waarnemingen straks bij de juiste stap van het gesprek
+  const LABELS = [['stil', 'Bewust stil', 2], ['snel', 'Te snel gecoacht', 2], ['effect', 'Effect op spelers', 3], ['voetbal', 'Voetbalprobleem', 4]];
+  const STAPPEN = [
+    { k: 's1', t: 'Terug naar het leerdoel', v: 'Wat wilde je vandaag persoonlijk ontwikkelen?' },
+    { k: 's2', t: 'Zelfanalyse trainer', v: 'Wat ging goed? Wanneer lukte het om bewust stil te zijn? Wanneer coachte je toch te snel?', labels: ['stil', 'snel'] },
+    { k: 's3', t: 'Effect op spelers', v: 'Wat gebeurde er met de spelers wanneer jij minder, directer of anders coachte?', labels: ['effect'] },
+    { k: 's4', t: 'Voetbalinhoud', v: 'Kwam het gekozen voetbalprobleem terug? Wat zagen we bij het waarnemen, begrijpen en kiezen van spelers?', labels: ['voetbal'] },
+    { k: 's5', t: 'Feedback HO', v: 'Wat heb ik gezien in jouw coachgedrag? Welke momenten ondersteunen jouw eigen analyse?', alle: true },
+    { k: 's6', t: 'Volgende stap', v: 'Wat wil je de volgende training of wedstrijd bewust opnieuw proberen?' },
+  ];
+  const REFLECTIE = [
+    ['r1', 'Wat heb ik geleerd over mijn eigen coachgedrag?'],
+    ['r2', 'Welk effect had mijn handelen op de spelers?'],
+    ['r3', 'Wat wil ik de volgende keer anders of opnieuw doen?'],
+    ['r4', 'Welke concrete afspraak neem ik mee naar mijn volgende training of wedstrijd?'],
+  ];
+  const SCHAAL = ['nog niet', 'soms', 'meestal', 'bewust en vaak'];
+
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const vandaag = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+  const nuTijd = () => { const d = new Date(); return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`; };
+  const datumLang = (s) => { if (!s) return ''; const d = new Date(`${s}T12:00:00`); return d.toLocaleDateString('nl-NL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); };
+
+  // Opslag: alleen op dit toestel. Kan in een privévenster mislukken; dan werkt de pagina gewoon, maar onthoudt niets.
+  const lees = () => { try { return JSON.parse(localStorage.getItem(OPSLAG)) || { lijst: [], huidig: null }; } catch (e) { return { lijst: [], huidig: null }; } };
+  let st = lees();
+  const bewaar = () => { try { localStorage.setItem(OPSLAG, JSON.stringify(st)); } catch (e) { /* niet bewaard */ } };
+  const nieuw = (vorige) => ({ id: 'e' + Date.now(), gemaakt: new Date().toISOString(), coach: vorige ? vorige.coach : '', team: vorige ? vorige.team : '', ho: vorige ? vorige.ho : '', bijeenkomst: vorige && Number(vorige.bijeenkomst) ? String(Number(vorige.bijeenkomst) + 1) : '3',
+    datum: vandaag(), tegenstander: '', leerdoel: '', focus: '', feedbackmoment: '', notities: [], s1: '', s2: '', s3: '', s4: '', s5: '', s6: '', punt: '', schaal: '', r1: '', r2: '', r3: '', r4: '', vorigPunt: vorige ? vorige.punt : '' });
+  const huidig = () => { let e = st.lijst.find((x) => x.id === st.huidig); if (!e) { e = nieuw(st.lijst[st.lijst.length - 1]); st.lijst.push(e); st.huidig = e.id; bewaar(); } return e; };
+  let fase = 'h1'; let gekozenLabels = [];
+
+  const veld = (k, label, opts = {}) => { const e = huidig(); const id = 'v-' + k;
+    return `<label for="${id}">${label}</label>${opts.lang ? `<textarea id="${id}" data-veld="${k}" placeholder="${esc(opts.ph || '')}">${esc(e[k])}</textarea>` : `<input id="${id}" data-veld="${k}" type="${opts.type || 'text'}" value="${esc(e[k])}" placeholder="${esc(opts.ph || '')}">`}`; };
+
+  const notitieLijst = (filter) => { const e = huidig(); const n = e.notities.filter(filter);
+    return n.map((x) => `<li><span class="tijd">${esc(x.tijd)}</span><span class="tekst">${esc(x.tekst)}${(x.labels || []).map((l) => `<span class="tag">${esc((LABELS.find((y) => y[0] === l) || [, l])[1])}</span>`).join('')}</span><button type="button" data-act="weg" data-id="${x.id}" aria-label="Notitie weghalen">×</button></li>`).join(''); };
+
+  const render = () => {
+    const e = huidig();
+    const inFase = e.notities.filter((x) => x.fase === fase);
+    document.getElementById('formulier').innerHTML = `
+      ${e.vorigPunt ? `<section class="blok"><h2>Vorige afspraak</h2><p class="hulp">Begin het gesprek met de vraag of dit gelukt is.</p><div class="afspraak">${esc(e.vorigPunt)}</div></section>` : ''}
+      <section class="blok"><h2>Gegevens</h2>
+        <div class="twee"><div>${veld('coach', 'Naam coach')}</div><div>${veld('team', 'Team')}</div></div>
+        <div class="twee"><div>${veld('datum', 'Datum', { type: 'date' })}</div><div>${veld('tegenstander', 'Tegenstander')}</div></div>
+        <div class="twee"><div>${veld('bijeenkomst', 'Bijeenkomst', { type: 'number' })}</div><div>${veld('ho', 'HO (praktijkbegeleider)')}</div></div>
+      </section>
+      <section class="blok"><h2>Afspraak uit het voorgesprek</h2><p class="hulp">Het leerdoel staat straks boven stap 1, zodat het gesprek daarop terugkomt.</p>
+        ${veld('leerdoel', 'Persoonlijk leerdoel coach', { lang: true, ph: 'Wat wil de coach in deze wedstrijd oefenen in zijn eigen handelen?' })}
+        ${veld('focus', 'Focus van de HO tijdens de observatie', { lang: true })}
+        ${veld('feedbackmoment', 'Afgesproken feedbackmoment(en)', { ph: 'Bijv. kort in de rust, uitgebreid na afloop' })}
+      </section>
+      <section class="blok"><h2>Observatie</h2><p class="hulp">Tik wat je ziet, met eventueel een label. De tijd komt er vanzelf bij. In het gesprek staan je notities bij de juiste stap.</p>
+        <div class="fasen" role="tablist">${FASEN.map(([k, l]) => `<button type="button" role="tab" class="${k === fase ? 'aan' : ''}" data-act="fase" data-k="${k}">${l} <span>(${e.notities.filter((x) => x.fase === k).length})</span></button>`).join('')}</div>
+        <div class="labels">${LABELS.map(([k, l]) => `<button type="button" class="${gekozenLabels.includes(k) ? 'aan' : ''}" data-act="label" data-k="${k}">${l}</button>`).join('')}</div>
+        <form class="noteer" data-act="noteer"><input id="nieuwe-notitie" placeholder="Bijv. 34' laat de 6 zelf de oplossing zoeken" autocomplete="off" enterkeyhint="done"><button class="knop" type="submit">Noteer</button></form>
+        ${inFase.length ? `<ul class="notities">${notitieLijst((x) => x.fase === fase)}</ul>` : '<p class="leeg">Nog geen notities in dit deel.</p>'}
+      </section>
+      <section class="blok"><h2>Evaluatiegesprek</h2><p class="hulp">Samen met de coach (en de docenten). Jij schrijft mee.</p>
+        ${e.leerdoel ? `<div class="afspraak"><b>Leerdoel:</b> ${esc(e.leerdoel)}</div>` : ''}
+        ${STAPPEN.map((s, i) => { const ref = s.alle ? e.notities : e.notities.filter((x) => (x.labels || []).some((l) => (s.labels || []).includes(l)));
+          return `<div class="stap"><span class="nr">${i + 1}</span><div><h3>${s.t}</h3><p class="hulp">${s.v}</p>
+            ${ref.length && !s.alle ? `<div class="ref"><b>Jouw notities:</b> ${ref.map((x) => `${esc(x.tijd)} ${esc(x.tekst)}`).join(' · ')}</div>` : ''}
+            ${s.alle && e.notities.length ? `<div class="ref"><b>Al je notities (${e.notities.length})</b> staan hierboven bij Observatie en komen in de PDF.</div>` : ''}
+            <textarea data-veld="${s.k}" aria-label="${s.t}">${esc(e[s.k])}</textarea>
+            ${s.k === 's6' ? `<div class="punt"><label for="v-punt">Eén concreet ontwikkelpunt</label><input id="v-punt" data-veld="punt" value="${esc(e.punt)}" maxlength="160" placeholder="Eén zin. Niet vijf punten, één."><p class="hulp" style="margin:6px 0 0">Dit komt bij de volgende evaluatie bovenaan als "vorige afspraak".</p></div>` : ''}
+          </div></div>`; }).join('')}
+        <h3 style="margin-top:18px">Hoe zag jij het leerdoel terug? <small class="hulp">(mag leeg)</small></h3>
+        <div class="schaal">${SCHAAL.map((w) => `<button type="button" class="${e.schaal === w ? 'aan' : ''}" data-act="schaal" data-w="${w}">${w}</button>`).join('')}</div>
+      </section>
+      <section class="blok"><h2>Reflectie trainer</h2><p class="hulp">Schrijft de coach zelf, kort. Mag ook later: lege vragen komen in de PDF met schrijflijnen.</p>
+        ${REFLECTIE.map(([k, v]) => veld(k, v, { lang: true })).join('')}
+      </section>
+      <section class="blok"><h2>Deze evaluatie</h2>
+        <div class="knoppen"><button class="knop licht" type="button" data-act="nieuwe">Nieuwe evaluatie</button><button class="knop rood klein" type="button" data-act="wissen">Deze evaluatie wissen</button></div>
+        <p class="melding" id="opgeslagen">Wordt vanzelf bewaard, alleen op dit toestel. Maak een PDF om het te bewaren of te delen.</p>
+      </section>`;
+  };
+
+  // Invoer: meteen bewaren (zonder alles opnieuw te tekenen, zodat je door kunt typen)
+  document.addEventListener('input', (ev) => { const k = ev.target.dataset && ev.target.dataset.veld; if (!k) return; huidig()[k] = ev.target.value; bewaar(); });
+  document.addEventListener('submit', (ev) => { ev.preventDefault(); if (ev.target.dataset.act !== 'noteer') return; const i = document.getElementById('nieuwe-notitie'); const t = i.value.trim(); if (!t) return;
+    huidig().notities.push({ id: 'n' + Date.now(), fase, tijd: nuTijd(), tekst: t, labels: [...gekozenLabels] }); gekozenLabels = []; bewaar(); render(); const n = document.getElementById('nieuwe-notitie'); if (n) n.focus(); });
+  document.addEventListener('click', (ev) => { const b = ev.target.closest('[data-act]'); if (!b || b.tagName === 'FORM') return; const a = b.dataset.act; const e = huidig();
+    if (a === 'fase') { fase = b.dataset.k; render(); }
+    else if (a === 'label') { const k = b.dataset.k; gekozenLabels = gekozenLabels.includes(k) ? gekozenLabels.filter((x) => x !== k) : [...gekozenLabels, k]; const v = document.getElementById('nieuwe-notitie').value; render(); document.getElementById('nieuwe-notitie').value = v; }
+    else if (a === 'weg') { e.notities = e.notities.filter((x) => x.id !== b.dataset.id); bewaar(); render(); }
+    else if (a === 'schaal') { e.schaal = e.schaal === b.dataset.w ? '' : b.dataset.w; bewaar(); render(); }
+    else if (a === 'pdf') { if (!e.punt.trim()) { alert('Vul eerst bij stap 6 het ene concrete ontwikkelpunt in.'); const p = document.getElementById('v-punt'); if (p) { p.scrollIntoView({ block: 'center' }); p.focus(); } return; } maakAfdruk(); window.print(); }
+    else if (a === 'nieuwe') { if (!confirm('Een nieuwe evaluatie beginnen? Deze blijft bewaard bij "Eerdere".')) return; const n = nieuw(e); st.lijst.push(n); st.huidig = n.id; fase = 'h1'; bewaar(); render(); window.scrollTo(0, 0); }
+    else if (a === 'wissen') { if (!confirm('Deze evaluatie helemaal wissen? Dat kan niet ongedaan worden.')) return; st.lijst = st.lijst.filter((x) => x.id !== e.id); st.huidig = null; bewaar(); render(); window.scrollTo(0, 0); }
+    else if (a === 'eerder') { toonEerder(); }
+    else if (a === 'open') { st.huidig = b.dataset.id; bewaar(); render(); window.scrollTo(0, 0); }
+  });
+
+  const toonEerder = () => { const lijst = st.lijst.slice().reverse();
+    document.getElementById('formulier').innerHTML = `<section class="blok"><h2>Eerdere evaluaties</h2><div class="lijst-eerder">${lijst.map((x) => `<button type="button" data-act="open" data-id="${x.id}"><b>${esc(x.coach || 'Coach')} · bijeenkomst ${esc(x.bijeenkomst || '?')}</b><small>${esc(datumLang(x.datum))}${x.tegenstander ? ' · tegen ' + esc(x.tegenstander) : ''}${x.punt ? ' · ' + esc(x.punt) : ''}</small></button>`).join('') || '<p class="leeg">Nog niets.</p>'}</div>
+      <div class="knoppen"><button class="knop licht" type="button" data-act="open" data-id="${st.huidig}">Terug</button></div></section>`; window.scrollTo(0, 0); };
+
+  // De afdruk (PDF): leesbare tekst, lege vragen met schrijflijnen
+  const tekstOfLijnen = (s, n = 3) => (String(s || '').trim() ? `<p>${esc(s)}</p>` : Array.from({ length: n }, () => '<div class="regels"></div>').join(''));
+  const maakAfdruk = () => { const e = huidig();
+    const notities = (k) => e.notities.filter((x) => x.fase === k);
+    document.getElementById('afdruk').innerHTML = `
+      <h1>Evaluatie coach</h1><p class="sub">Praktijkbegeleiding${e.bijeenkomst ? ` · bijeenkomst ${esc(e.bijeenkomst)}` : ''}</p>
+      <table class="gegevens"><tr><td>Coach</td><td>${esc(e.coach)}</td></tr><tr><td>Team</td><td>${esc(e.team)}</td></tr><tr><td>Datum</td><td>${esc(datumLang(e.datum))}</td></tr><tr><td>Tegenstander</td><td>${esc(e.tegenstander)}</td></tr><tr><td>HO</td><td>${esc(e.ho)}</td></tr></table>
+      ${e.vorigPunt ? `<h2>Vorige afspraak</h2><p>${esc(e.vorigPunt)}</p>` : ''}
+      <h2>Afspraak uit het voorgesprek</h2>
+      <h3>Persoonlijk leerdoel coach</h3>${tekstOfLijnen(e.leerdoel, 2)}
+      <h3>Focus van de HO</h3>${tekstOfLijnen(e.focus, 2)}
+      <h3>Feedbackmoment(en)</h3>${tekstOfLijnen(e.feedbackmoment, 1)}
+      ${e.notities.length ? `<h2>Observatie</h2>${FASEN.map(([k, l]) => notities(k).length ? `<h3>${l}</h3><ul>${notities(k).map((x) => `<li>${esc(x.tijd)} · ${esc(x.tekst)}${(x.labels || []).length ? ` <i>(${x.labels.map((l2) => (LABELS.find((y) => y[0] === l2) || [, l2])[1].toLowerCase()).join(', ')})</i>` : ''}</li>`).join('')}</ul>` : '').join('')}` : ''}
+      <h2>Evaluatiegesprek</h2>
+      ${STAPPEN.map((s, i) => `<div class="p-blok"><h3>${i + 1}. ${s.t}</h3><p class="vraag">${s.v}</p>${tekstOfLijnen(e[s.k], 2)}</div>`).join('')}
+      <div class="kader"><h3 style="margin-top:0">Eén concreet ontwikkelpunt</h3><p>${esc(e.punt)}</p></div>
+      ${e.schaal ? `<p style="margin-top:6pt"><b>Leerdoel teruggezien (HO):</b> ${esc(e.schaal)}</p>` : ''}
+      <h2>Reflectie trainer</h2>
+      ${REFLECTIE.map(([k, v]) => `<div class="p-blok"><h3>${v}</h3>${tekstOfLijnen(e[k], 3)}</div>`).join('')}
+      <p class="voetregel">Gemaakt met ClubComm · ${esc(new Date().toLocaleDateString('nl-NL'))}</p>`;
+    document.title = `Evaluatie ${e.coach || 'coach'} ${e.datum || ''}`.trim(); };
+  window.addEventListener('beforeprint', maakAfdruk);
+  window.addEventListener('afterprint', () => { document.title = 'Evaluatie coach · ClubComm'; });
+
+  render();
+})();
+</script>
+</body>
+</html>

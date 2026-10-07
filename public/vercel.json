@@ -34,6 +34,19 @@
       ]
     },
     {
+      "source": "/evaluatie",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
       "source": "/",
       "headers": [
         {
