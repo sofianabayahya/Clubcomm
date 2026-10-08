@@ -114,19 +114,19 @@
   const FASEN = [['h1', '1e helft · laatste 20 min'], ['rust', 'Rust · kleedkamer'], ['h2', '2e helft · eerste 20 min']];
   // Alleen objectieve soorten coachgedrag (wat hij zegt of doet); het oordeel ("te snel", "bewust stil") hoort in het gesprek
   const SOORTEN = ['Vraag', 'Directief', 'Correctie', 'Compliment'];
+  // Volgorde van het gesprek (8-10): eerst het gevoel, dan het leerdoel (staat erboven, niet nog eens vragen)
   const STAPPEN = [
-    { k: 's1', t: 'Terug naar het leerdoel', v: 'Wat wilde je vandaag persoonlijk ontwikkelen?' },
-    { k: 's2', t: 'Zelfanalyse trainer', v: 'Wat ging goed? Wanneer lukte het om bewust stil te zijn? Wanneer coachte je toch te snel?', telling: true },
-    { k: 's3', t: 'Effect op spelers', v: 'Wat gebeurde er met de spelers wanneer jij minder, directer of anders coachte?', spelers: true },
-    { k: 's4', t: 'Voetbalinhoud', v: 'Kwam het gekozen voetbalprobleem terug? Wat zagen we bij het waarnemen, begrijpen en kiezen van spelers?' },
-    { k: 's5', t: 'Feedback HO', v: 'Wat heb ik gezien in jouw coachgedrag? Welke momenten ondersteunen jouw eigen analyse?', alle: true, telling: true },
-    { k: 's6', t: 'Volgende stap', v: 'Wat wil je de volgende training of wedstrijd bewust opnieuw proberen?' },
+    { k: 's1', t: 'Eerste gevoel', v: 'Hoe kijk je terug op je eigen coachen vandaag? Wat is je eerste gevoel?' },
+    { k: 's2', t: 'Leerdoel', v: 'In hoeverre is het gelukt? Wanneer wel, wanneer niet? Wat veranderde er na de rust?', toon: 'leerdoel', telling: true },
+    { k: 's3', t: 'Effect op spelers', v: 'Wat deden de spelers wanneer jij een vraag stelde, directief coachte of corrigeerde?', spelers: true },
+    { k: 's4', t: 'Voetbalinhoud', v: 'Zagen we het gewenste spelersgedrag terug? Wat zagen we bij het waarnemen, begrijpen en kiezen van spelers?', toon: 'voetbal' },
+    { k: 's5', t: 'Feedback HO', v: 'Wat heb ik gezien in jouw coachgedrag? Welke momenten bevestigen jouw analyse, en waar zag ik iets anders?', alle: true, telling: true },
+    { k: 's6', t: 'Volgende stap', v: 'Wat ga je de volgende training of wedstrijd bewust doen?' },
   ];
   const REFLECTIE = [
     ['r1', 'Wat heb ik geleerd over mijn eigen coachgedrag?'],
     ['r2', 'Welk effect had mijn handelen op de spelers?'],
-    ['r3', 'Wat wil ik de volgende keer anders of opnieuw doen?'],
-    ['r4', 'Welke concrete afspraak neem ik mee naar mijn volgende training of wedstrijd?'],
+    ['r3', 'In welke situatie ga ik mijn ontwikkelpunt de volgende keer toepassen?'],
   ];
   const SCHAAL = ['nog niet', 'soms', 'meestal', 'bewust en vaak'];
 
@@ -140,7 +140,7 @@
   let st = lees();
   const bewaar = () => { try { localStorage.setItem(OPSLAG, JSON.stringify(st)); } catch (e) { /* niet bewaard */ } };
   const nieuw = (vorige) => ({ id: 'e' + Date.now(), gemaakt: new Date().toISOString(), coach: vorige ? vorige.coach : '', team: vorige ? vorige.team : '', ho: vorige ? vorige.ho : '', bijeenkomst: vorige && Number(vorige.bijeenkomst) ? String(Number(vorige.bijeenkomst) + 1) : '3',
-    datum: vandaag(), tegenstander: '', leerdoel: '', focus: '', feedbackmoment: '', notities: [], s1: '', s2: '', s3: '', s4: '', s5: '', s6: '', punt: '', schaal: '', r1: '', r2: '', r3: '', r4: '', vorigPunt: vorige ? vorige.punt : '' });
+    datum: vandaag(), tegenstander: '', leerdoel: '', voetbalprobleem: '', signalen: '', focus: '', begeleiding: '', feedbackmoment: '', notities: [], s1: '', s2: '', s3: '', s4: '', s5: '', s6: '', punt: '', schaal: '', r1: '', r2: '', r3: '', r4: '', vorigPunt: vorige ? vorige.punt : '' });
   const huidig = () => { let e = st.lijst.find((x) => x.id === st.huidig); if (!e) { e = nieuw(st.lijst[st.lijst.length - 1]); st.lijst.push(e); st.huidig = e.id; bewaar(); } return e; };
   let fase = 'h1'; let gekozenSoort = '';
 
@@ -165,8 +165,10 @@
         <div class="twee"><div>${veld('datum', 'Datum', { type: 'date' })}</div><div>${veld('tegenstander', 'Tegenstander')}</div></div>
         <div class="twee"><div>${veld('bijeenkomst', 'Bijeenkomst', { type: 'number' })}</div><div>${veld('ho', 'HO (praktijkbegeleider)')}</div></div>
       </section>
-      <section class="blok"><h2>Afspraak uit het voorgesprek</h2><p class="hulp">Het leerdoel staat straks boven stap 1, zodat het gesprek daarop terugkomt.</p>
+      <section class="blok"><h2>Afspraak uit het voorgesprek</h2><p class="hulp">Het leerdoel en het voetbalprobleem staan straks bij de juiste stap van het gesprek.</p>
         ${veld('leerdoel', 'Persoonlijk leerdoel coach', { lang: true, ph: 'Wat wil de coach in deze wedstrijd oefenen in zijn eigen handelen?' })}
+        ${veld('voetbalprobleem', 'Voetbalprobleem', { lang: true, ph: 'Welk concreet voetbalprobleem staat centraal?' })}
+        ${veld('signalen', 'Gewenst spelersgedrag (2 à 3 signalen)', { lang: true, ph: 'Waaraan zie je dat het doel wordt bereikt?' })}
         ${veld('focus', 'Focus van de HO tijdens de observatie', { lang: true })}
         ${veld('feedbackmoment', 'Afgesproken feedbackmoment(en)', { ph: 'Bijv. kort in de rust, uitgebreid na afloop' })}
       </section>
@@ -179,10 +181,12 @@
           <button class="knop" type="submit">Noteer</button></form>
         ${inFase.length ? `${telling(inFase) ? `<p class="telling"><b>Telling dit deel:</b> ${telling(inFase)}</p>` : ''}<ul class="notities">${notitieLijst((x) => x.fase === fase)}</ul>` : '<p class="leeg">Nog geen momenten in dit deel.</p>'}
       </section>
-      <section class="blok"><h2>Evaluatiegesprek</h2><p class="hulp">Samen met de coach (en de docenten). Jij schrijft mee.</p>
-        ${e.leerdoel ? `<div class="afspraak"><b>Leerdoel:</b> ${esc(e.leerdoel)}</div>` : ''}
+      <section class="blok"><h2>Evaluatiegesprek</h2><p class="hulp">Samen met de coach.</p>
         ${STAPPEN.map((s, i) => { const ref = s.spelers ? e.notities.filter((x) => x.spelers) : [];
-          return `<div class="stap"><span class="nr">${i + 1}</span><div><h3>${s.t}</h3><p class="hulp">${s.v}</p>
+          return `<div class="stap"><span class="nr">${i + 1}</span><div><h3>${s.t}</h3>
+            ${s.toon === 'leerdoel' && e.leerdoel ? `<div class="afspraak"><b>Leerdoel:</b> ${esc(e.leerdoel)}</div>` : ''}
+            ${s.toon === 'voetbal' && (e.voetbalprobleem || e.signalen) ? `<div class="afspraak">${e.voetbalprobleem ? `<b>Voetbalprobleem:</b> ${esc(e.voetbalprobleem)}` : ''}${e.voetbalprobleem && e.signalen ? '<br>' : ''}${e.signalen ? `<b>Gewenst spelersgedrag:</b> ${esc(e.signalen)}` : ''}</div>` : ''}
+            <p class="hulp">${s.v}</p>
             ${s.telling && tellingPerDeel(e) ? `<div class="ref"><b>Telling coachgedrag</b><br>${tellingPerDeel(e)}</div>` : ''}
             ${ref.length ? `<div class="ref"><b>Wat de spelers deden:</b> ${ref.map((x) => `${esc(minTekst(x))} ${x.soort ? esc(x.soort.toLowerCase()) + ': ' : ''}${esc(coachTekst(x))} → ${esc(x.spelers)}`).join(' · ')}</div>` : ''}
             ${s.alle && e.notities.length ? `<div class="ref">Al je momenten (${e.notities.length}) staan bij Observatie en komen in de PDF.</div>` : ''}
@@ -191,6 +195,7 @@
           </div></div>`; }).join('')}
         <h3 style="margin-top:18px">Hoe zag jij het leerdoel terug? <small class="hulp">(mag leeg)</small></h3>
         <div class="schaal">${SCHAAL.map((w) => `<button type="button" class="${e.schaal === w ? 'aan' : ''}" data-act="schaal" data-w="${w}">${w}</button>`).join('')}</div>
+        ${veld('begeleiding', 'Wat had je meer of anders van mij nodig? (feedback op de begeleiding, mag leeg)', { lang: true })}
       </section>
       <section class="blok"><h2>Reflectie trainer</h2><p class="hulp">Schrijft de coach zelf, kort. Mag ook later: lege vragen komen in de PDF met schrijflijnen.</p>
         ${REFLECTIE.map(([k, v]) => veld(k, v, { lang: true })).join('')}
@@ -231,6 +236,8 @@
       ${e.vorigPunt ? `<h2>Vorige afspraak</h2><p>${esc(e.vorigPunt)}</p>` : ''}
       <h2>Afspraak uit het voorgesprek</h2>
       <h3>Persoonlijk leerdoel coach</h3>${tekstOfLijnen(e.leerdoel, 2)}
+      <h3>Voetbalprobleem</h3>${tekstOfLijnen(e.voetbalprobleem, 2)}
+      <h3>Gewenst spelersgedrag</h3>${tekstOfLijnen(e.signalen, 2)}
       <h3>Focus van de HO</h3>${tekstOfLijnen(e.focus, 2)}
       <h3>Feedbackmoment(en)</h3>${tekstOfLijnen(e.feedbackmoment, 1)}
       ${e.notities.length ? `<h2>Observatie</h2>${FASEN.map(([k, l]) => notities(k).length ? `<h3>${l}</h3>${telling(notities(k)) ? `<p class="vraag">Telling: ${telling(notities(k))}</p>` : ''}<table class="obs"><tr><th style="width:9%">Min.</th><th style="width:14%">Soort</th><th>Coach zegt of doet</th><th style="width:34%">Spelers doen daarna</th></tr>${notities(k).map((x) => `<tr><td>${esc(minTekst(x))}</td><td>${esc(x.soort || '')}</td><td>${esc(coachTekst(x))}</td><td>${esc(x.spelers || '')}</td></tr>`).join('')}</table>` : '').join('')}` : ''}
@@ -238,6 +245,7 @@
       ${STAPPEN.map((s, i) => `<div class="p-blok"><h3>${i + 1}. ${s.t}</h3><p class="vraag">${s.v}</p>${tekstOfLijnen(e[s.k], 2)}</div>`).join('')}
       <div class="kader"><h3 style="margin-top:0">Eén concreet ontwikkelpunt</h3><p>${esc(e.punt)}</p></div>
       ${e.schaal ? `<p style="margin-top:6pt"><b>Leerdoel teruggezien (HO):</b> ${esc(e.schaal)}</p>` : ''}
+      ${String(e.begeleiding || '').trim() ? `<h3>Wat had de coach meer of anders van de HO nodig?</h3><p>${esc(e.begeleiding)}</p>` : ''}
       <h2>Reflectie trainer</h2>
       ${REFLECTIE.map(([k, v]) => `<div class="p-blok"><h3>${v}</h3>${tekstOfLijnen(e[k], 3)}</div>`).join('')}
       <p class="voetregel">Gemaakt met ClubComm · ${esc(new Date().toLocaleDateString('nl-NL'))}</p>`;
