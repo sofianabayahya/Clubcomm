@@ -153,10 +153,15 @@ test('evaluatie: notitie bij de juiste stap, ontwikkelpunt verplicht, bewaard op
   const meldingen = []; page.on('dialog', async (d) => { meldingen.push(d.message()); await d.accept(); });
   await page.goto('/evaluatie');
   await page.locator('#v-leerdoel').fill('Bewust stil blijven');
-  await page.locator('[data-act="label"][data-k="stil"]').click();
-  await page.locator('#nieuwe-notitie').fill("28' laat de spelers zelf zoeken");
-  await page.locator('#nieuwe-notitie').press('Enter');
-  await expect(page.locator('.stap').nth(1).locator('.ref')).toContainText('laat de spelers zelf zoeken');
+  // Een moment: minuut, soort (objectief), wat de coach zegt, wat de spelers doen
+  await page.locator('#n-min').fill('28');
+  await page.locator('[data-act="soort"][data-w="Directief"]').click();
+  await page.locator('#n-coach').fill('"Druk zetten, 6!"');
+  await page.locator('#n-spelers').fill('6 sprint naar voren');
+  await page.locator('form.noteer button.knop').click();
+  await expect(page.locator('.telling')).toContainText('Directief 1');
+  await expect(page.locator('.stap').nth(1).locator('.ref')).toContainText('Directief 1');
+  await expect(page.locator('.stap').nth(2).locator('.ref')).toContainText('6 sprint naar voren');
   await page.evaluate(() => { window.print = () => { window.__geprint = true; }; });
   await page.locator('[data-act="pdf"]').click();
   expect(meldingen.pop()).toContain('ontwikkelpunt');
