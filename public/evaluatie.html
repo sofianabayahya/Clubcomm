@@ -98,6 +98,13 @@
       #afdruk table.obs th, #afdruk table.obs td { border: 1px solid #ccd; padding: 2pt 4pt; text-align: left; vertical-align: top; }
       #afdruk table.obs th { background: #f0f4fa; }
       #afdruk .voetregel { color: #777; font-size: 8.5pt; margin-top: 14pt; }
+      #afdruk table.obs.leeg td { height: 30pt; }
+      #afdruk table.obs.leeg.kort td { height: 26pt; }
+      #afdruk table.obs .soort { font-size: 8pt; color: #555; white-space: nowrap; letter-spacing: 1pt; }
+      #afdruk .nieuwe-pagina { break-before: page; }
+      #afdruk table.turf { border-collapse: collapse; width: 100%; font-size: 9.5pt; margin: 2pt 0 6pt; }
+      #afdruk table.turf th, #afdruk table.turf td { border: 1px solid #ccd; padding: 3pt 4pt; text-align: left; height: 18pt; }
+      #afdruk table.turf th { background: #f0f4fa; }
     }
   </style>
 </head>
@@ -174,6 +181,7 @@
       </section>
       <section class="blok"><h2>Observatie</h2><p class="hulp">Noteer wat de coach zegt of doet (zo letterlijk mogelijk) en wat de spelers daarna doen. Geen oordeel; dat komt in het gesprek.</p>
         <div class="fasen" role="tablist">${FASEN.map(([k, l]) => `<button type="button" role="tab" class="${k === fase ? 'aan' : ''}" data-act="fase" data-k="${k}">${l} <span>(${e.notities.filter((x) => x.fase === k).length})</span></button>`).join('')}</div>
+        <p class="hulp"><button class="knop licht klein" type="button" data-act="papier">Observatieformulier (papier)</button> Leeg formulier om te printen of als PDF te delen.</p>
         <form class="noteer" data-act="noteer">
           <div class="kopregel"><input id="n-min" type="number" inputmode="numeric" min="0" max="130" placeholder="Min." aria-label="Minuut"><div class="labels">${SOORTEN.map((w) => `<button type="button" class="${gekozenSoort === w ? 'aan' : ''}" data-act="soort" data-w="${w}">${w}</button>`).join('')}</div></div>
           <textarea id="n-coach" placeholder="Coach zegt of doet, bijv. &quot;Druk zetten, 6!&quot;" aria-label="Coach zegt of doet"></textarea>
@@ -218,6 +226,7 @@
     else if (a === 'pdf') { if (!e.punt.trim()) { alert('Vul eerst bij stap 6 het ene concrete ontwikkelpunt in.'); const p = document.getElementById('v-punt'); if (p) { p.scrollIntoView({ block: 'center' }); p.focus(); } return; } maakAfdruk(); window.print(); }
     else if (a === 'nieuwe') { if (!confirm('Een nieuwe evaluatie beginnen? Deze blijft bewaard bij "Eerdere".')) return; const n = nieuw(e); st.lijst.push(n); st.huidig = n.id; fase = 'h1'; bewaar(); render(); window.scrollTo(0, 0); }
     else if (a === 'wissen') { if (!confirm('Deze evaluatie helemaal wissen? Dat kan niet ongedaan worden.')) return; st.lijst = st.lijst.filter((x) => x.id !== e.id); st.huidig = null; bewaar(); render(); window.scrollTo(0, 0); }
+    else if (a === 'papier') { afdrukSoort = 'papier'; maakPapier(); window.print(); }
     else if (a === 'eerder') { toonEerder(); }
     else if (a === 'open') { st.huidig = b.dataset.id; bewaar(); render(); window.scrollTo(0, 0); }
   });
@@ -250,8 +259,30 @@
       ${REFLECTIE.map(([k, v]) => `<div class="p-blok"><h3>${v}</h3>${tekstOfLijnen(e[k], 3)}</div>`).join('')}
       <p class="voetregel">Gemaakt met ClubComm · ${esc(new Date().toLocaleDateString('nl-NL'))}</p>`;
     document.title = `Evaluatie ${e.coach || 'coach'} ${e.datum || ''}`.trim(); };
-  window.addEventListener('beforeprint', maakAfdruk);
-  window.addEventListener('afterprint', () => { document.title = 'Evaluatie coach · ClubComm'; });
+  // Observatieformulier op papier: leeg, met leerdoel en signalen als die in het voorgesprek staan
+  const regelsVan = (s) => String(s || '').split(/\n+/).map((x) => x.replace(/^[\s•*\-\d.)]+/, '').trim()).filter(Boolean);
+  const maakPapier = () => { const e = huidig(); const signalen = regelsVan(e.signalen);
+    const kol = '<tr><th style="width:8%">Min.</th><th style="width:13%">Soort</th><th>Coach zegt of doet</th><th style="width:34%">Spelers doen daarna</th></tr>';
+    const rijen = (n) => Array.from({ length: n }, () => '<tr><td></td><td class="soort">V D C Co</td><td></td><td></td></tr>').join('');
+    const turf = `<table class="turf"><tr>${SOORTEN.map((w) => `<th>${w}</th>`).join('')}</tr><tr>${SOORTEN.map(() => '<td></td>').join('')}</tr></table>`;
+    const gegeven = (l, v) => `<tr><td>${l}</td><td>${v ? esc(v) : '<div class="regels"></div>'}</td></tr>`;
+    document.getElementById('afdruk').innerHTML = `
+      <h1>Observatieformulier coach</h1><p class="sub">Praktijkbegeleiding${e.bijeenkomst ? ` · bijeenkomst ${esc(e.bijeenkomst)}` : ''}</p>
+      <table class="gegevens">${gegeven('Coach', e.coach)}${gegeven('Team', e.team)}${gegeven('Datum', e.datum && (e.leerdoel || e.tegenstander) ? datumLang(e.datum) : '')}${gegeven('Tegenstander', e.tegenstander)}</table>
+      <h3>Persoonlijk leerdoel coach</h3>${tekstOfLijnen(e.leerdoel, 2)}
+      <p class="vraag" style="margin-top:6pt">Noteer per moment de minuut, omcirkel de soort (<b>V</b>raag, <b>D</b>irectief, <b>C</b>orrectie, <b>Co</b>mpliment), schrijf zo letterlijk mogelijk wat de coach zegt of doet en wat de spelers daarna doen. Geen oordeel: dat komt in het gesprek.</p>
+      <h2>1e helft · laatste 20 min</h2><table class="obs leeg">${kol}${rijen(10)}</table>
+      <h3>Telling 1e helft</h3>${turf}
+      <h2 class="nieuwe-pagina">Rust · kleedkamer</h2><table class="obs leeg kort">${kol}${rijen(4)}</table>
+      <h2>2e helft · eerste 20 min</h2><table class="obs leeg">${kol}${rijen(9)}</table>
+      <h3>Telling 2e helft</h3>${turf}
+      <h2>Gewenst spelersgedrag</h2><p class="vraag">Turf hoe vaak je het wel en niet zag.</p>
+      <table class="turf"><tr><th style="width:52%">Signaal</th><th>1e helft wel</th><th>niet</th><th>2e helft wel</th><th>niet</th></tr>${(signalen.length ? signalen : ['', '', '']).map((x) => `<tr><td>${esc(x)}</td><td></td><td></td><td></td><td></td></tr>`).join('')}</table>
+      <p class="voetregel">Gemaakt met ClubComm · mijnclubcomm.nl/evaluatie</p>`;
+    document.title = `Observatieformulier ${e.coach || 'coach'}`.trim(); };
+  let afdrukSoort = 'evaluatie';
+  window.addEventListener('beforeprint', () => { if (afdrukSoort === 'papier') maakPapier(); else maakAfdruk(); });
+  window.addEventListener('afterprint', () => { afdrukSoort = 'evaluatie'; document.title = 'Evaluatie coach · ClubComm'; });
 
   render();
 })();
