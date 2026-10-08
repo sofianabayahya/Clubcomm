@@ -173,3 +173,19 @@ test('evaluatie: notitie bij de juiste stap, ontwikkelpunt verplicht, bewaard op
   await expect(page.locator('#v-punt')).toHaveValue('Eerst kijken, dan coachen.');
   await controleer(page, fouten, 'evaluatie');
 });
+
+// Observatieformulier op papier: leeg te printen (ook zonder ontwikkelpunt), signalen uit het voorgesprek als turfregels
+test('evaluatie: leeg observatieformulier op papier', async ({ page }) => {
+  const fouten = volgFouten(page);
+  await page.goto('/evaluatie');
+  await page.evaluate(() => { window.print = () => { window.__geprint = true; }; });
+  await page.locator('[data-act="papier"]').click();
+  expect(await page.evaluate(() => window.__geprint)).toBe(true);
+  await expect(page.locator('#afdruk')).toContainText('Observatieformulier coach');
+  await expect(page.locator('#afdruk table.obs.leeg')).toHaveCount(3);
+  await page.locator('#v-signalen').fill('1. Spelers kijken voordat ze de bal ontvangen\n2. Middenvelders maken zich aanspeelbaar');
+  await page.locator('[data-act="papier"]').click();
+  await expect(page.locator('#afdruk table.turf').last()).toContainText('Middenvelders maken zich aanspeelbaar');
+  await expect(page.locator('#afdruk table.turf').last()).not.toContainText('1.');
+  await controleer(page, fouten, 'evaluatie papier');
+});
