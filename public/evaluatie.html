@@ -38,12 +38,18 @@
     .labels { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
     .labels button { border: 1px solid var(--lijn); background: #fff; border-radius: 999px; padding: 5px 10px; font: inherit; font-size: 13px; color: var(--inkt); cursor: pointer; }
     .labels button.aan { background: #e8f1fb; border-color: var(--blauw); color: var(--blauw); font-weight: 600; }
-    .noteer { display: flex; gap: 8px; }
-    .noteer input { flex: 1; }
+    .noteer { display: grid; gap: 8px; }
+    .noteer .kopregel { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .noteer .kopregel input { width: 76px; flex: none; }
+    .noteer .labels { margin: 0; }
+    .noteer textarea { min-height: 56px; }
+    .telling { font-size: 13px; color: var(--zacht); margin: 8px 0 0; }
+    .telling b { color: var(--inkt); }
     ul.notities { list-style: none; padding: 0; margin: 10px 0 0; }
     ul.notities li { border-top: 1px solid var(--lijn); padding: 8px 0; display: flex; gap: 8px; align-items: flex-start; font-size: 15px; }
     ul.notities li .tijd { color: var(--zacht); font-size: 13px; min-width: 44px; padding-top: 1px; }
     ul.notities li .tekst { flex: 1; }
+    ul.notities li .spelers { display: block; color: var(--zacht); font-size: 14px; margin-top: 2px; }
     ul.notities li .tag { display: inline-block; font-size: 11px; background: #e8f1fb; color: var(--blauw); border-radius: 999px; padding: 1px 7px; margin-left: 4px; }
     ul.notities li button { border: 0; background: none; color: var(--zacht); font-size: 18px; cursor: pointer; padding: 0 4px; }
     .leeg { color: var(--zacht); font-size: 14px; margin: 8px 0 0; }
@@ -79,6 +85,7 @@
       #afdruk table.gegevens td { padding: 2pt 6pt 2pt 0; vertical-align: top; }
       #afdruk table.gegevens td:first-child { color: #555; width: 34%; }
       #afdruk h2 { font-size: 12.5pt; margin: 12pt 0 4pt; color: var(--blauw); border-bottom: 1px solid #ccd; padding-bottom: 2pt; }
+      #afdruk h2, #afdruk h3 { break-after: avoid; }
       #afdruk h3 { font-size: 11pt; margin: 8pt 0 2pt; }
       #afdruk p { margin: 0 0 4pt; white-space: pre-wrap; }
       #afdruk .vraag { color: #555; font-size: 9.5pt; margin: 0 0 2pt; }
@@ -87,6 +94,9 @@
       #afdruk ul { margin: 0 0 4pt; padding-left: 14pt; }
       #afdruk li { margin: 0 0 2pt; }
       #afdruk .p-blok, #afdruk .kader { break-inside: avoid; }
+      #afdruk table.obs { border-collapse: collapse; width: 100%; font-size: 9.5pt; margin: 2pt 0 6pt; }
+      #afdruk table.obs th, #afdruk table.obs td { border: 1px solid #ccd; padding: 2pt 4pt; text-align: left; vertical-align: top; }
+      #afdruk table.obs th { background: #f0f4fa; }
       #afdruk .voetregel { color: #777; font-size: 8.5pt; margin-top: 14pt; }
     }
   </style>
@@ -102,14 +112,14 @@
   'use strict';
   const OPSLAG = 'clubcomm-evaluaties-v1';
   const FASEN = [['h1', '1e helft · laatste 20 min'], ['rust', 'Rust · kleedkamer'], ['h2', '2e helft · eerste 20 min']];
-  // Labels bij een notitie: zo staan je waarnemingen straks bij de juiste stap van het gesprek
-  const LABELS = [['stil', 'Bewust stil', 2], ['snel', 'Te snel gecoacht', 2], ['effect', 'Effect op spelers', 3], ['voetbal', 'Voetbalprobleem', 4]];
+  // Alleen objectieve soorten coachgedrag (wat hij zegt of doet); het oordeel ("te snel", "bewust stil") hoort in het gesprek
+  const SOORTEN = ['Vraag', 'Directief', 'Correctie', 'Compliment'];
   const STAPPEN = [
     { k: 's1', t: 'Terug naar het leerdoel', v: 'Wat wilde je vandaag persoonlijk ontwikkelen?' },
-    { k: 's2', t: 'Zelfanalyse trainer', v: 'Wat ging goed? Wanneer lukte het om bewust stil te zijn? Wanneer coachte je toch te snel?', labels: ['stil', 'snel'] },
-    { k: 's3', t: 'Effect op spelers', v: 'Wat gebeurde er met de spelers wanneer jij minder, directer of anders coachte?', labels: ['effect'] },
-    { k: 's4', t: 'Voetbalinhoud', v: 'Kwam het gekozen voetbalprobleem terug? Wat zagen we bij het waarnemen, begrijpen en kiezen van spelers?', labels: ['voetbal'] },
-    { k: 's5', t: 'Feedback HO', v: 'Wat heb ik gezien in jouw coachgedrag? Welke momenten ondersteunen jouw eigen analyse?', alle: true },
+    { k: 's2', t: 'Zelfanalyse trainer', v: 'Wat ging goed? Wanneer lukte het om bewust stil te zijn? Wanneer coachte je toch te snel?', telling: true },
+    { k: 's3', t: 'Effect op spelers', v: 'Wat gebeurde er met de spelers wanneer jij minder, directer of anders coachte?', spelers: true },
+    { k: 's4', t: 'Voetbalinhoud', v: 'Kwam het gekozen voetbalprobleem terug? Wat zagen we bij het waarnemen, begrijpen en kiezen van spelers?' },
+    { k: 's5', t: 'Feedback HO', v: 'Wat heb ik gezien in jouw coachgedrag? Welke momenten ondersteunen jouw eigen analyse?', alle: true, telling: true },
     { k: 's6', t: 'Volgende stap', v: 'Wat wil je de volgende training of wedstrijd bewust opnieuw proberen?' },
   ];
   const REFLECTIE = [
@@ -132,13 +142,18 @@
   const nieuw = (vorige) => ({ id: 'e' + Date.now(), gemaakt: new Date().toISOString(), coach: vorige ? vorige.coach : '', team: vorige ? vorige.team : '', ho: vorige ? vorige.ho : '', bijeenkomst: vorige && Number(vorige.bijeenkomst) ? String(Number(vorige.bijeenkomst) + 1) : '3',
     datum: vandaag(), tegenstander: '', leerdoel: '', focus: '', feedbackmoment: '', notities: [], s1: '', s2: '', s3: '', s4: '', s5: '', s6: '', punt: '', schaal: '', r1: '', r2: '', r3: '', r4: '', vorigPunt: vorige ? vorige.punt : '' });
   const huidig = () => { let e = st.lijst.find((x) => x.id === st.huidig); if (!e) { e = nieuw(st.lijst[st.lijst.length - 1]); st.lijst.push(e); st.huidig = e.id; bewaar(); } return e; };
-  let fase = 'h1'; let gekozenLabels = [];
+  let fase = 'h1'; let gekozenSoort = '';
 
   const veld = (k, label, opts = {}) => { const e = huidig(); const id = 'v-' + k;
     return `<label for="${id}">${label}</label>${opts.lang ? `<textarea id="${id}" data-veld="${k}" placeholder="${esc(opts.ph || '')}">${esc(e[k])}</textarea>` : `<input id="${id}" data-veld="${k}" type="${opts.type || 'text'}" value="${esc(e[k])}" placeholder="${esc(opts.ph || '')}">`}`; };
 
-  const notitieLijst = (filter) => { const e = huidig(); const n = e.notities.filter(filter);
-    return n.map((x) => `<li><span class="tijd">${esc(x.tijd)}</span><span class="tekst">${esc(x.tekst)}${(x.labels || []).map((l) => `<span class="tag">${esc((LABELS.find((y) => y[0] === l) || [, l])[1])}</span>`).join('')}</span><button type="button" data-act="weg" data-id="${x.id}" aria-label="Notitie weghalen">×</button></li>`).join(''); };
+  // Een moment: minuut · soort · wat de coach zegt of doet · wat de spelers daarna doen (oudere notities: tijd + tekst)
+  const coachTekst = (x) => x.coach != null ? x.coach : x.tekst;
+  const minTekst = (x) => (x.min ? `${x.min}'` : x.coach == null ? x.tijd || '' : ''); // rust: geen minuut
+  const notitieLijst = (filter) => { const e = huidig();
+    return e.notities.filter(filter).map((x) => `<li><span class="tijd">${esc(minTekst(x))}</span><span class="tekst">${x.soort ? `<span class="tag">${esc(x.soort)}</span> ` : ''}${esc(coachTekst(x))}${x.spelers ? `<span class="spelers">→ ${esc(x.spelers)}</span>` : ''}</span><button type="button" data-act="weg" data-id="${x.id}" aria-label="Moment weghalen">×</button></li>`).join(''); };
+  const telling = (lijst) => SOORTEN.map((w) => [w, lijst.filter((x) => x.soort === w).length]).filter(([, n]) => n).map(([w, n]) => `${w} ${n}`).join(' · ');
+  const tellingPerDeel = (e) => FASEN.map(([k, l]) => { const t = telling(e.notities.filter((x) => x.fase === k)); return t ? `<b>${l.split(' · ')[0]}:</b> ${t}` : ''; }).filter(Boolean).join('<br>');
 
   const render = () => {
     const e = huidig();
@@ -155,18 +170,22 @@
         ${veld('focus', 'Focus van de HO tijdens de observatie', { lang: true })}
         ${veld('feedbackmoment', 'Afgesproken feedbackmoment(en)', { ph: 'Bijv. kort in de rust, uitgebreid na afloop' })}
       </section>
-      <section class="blok"><h2>Observatie</h2><p class="hulp">Tik wat je ziet, met eventueel een label. De tijd komt er vanzelf bij. In het gesprek staan je notities bij de juiste stap.</p>
+      <section class="blok"><h2>Observatie</h2><p class="hulp">Noteer wat de coach zegt of doet (zo letterlijk mogelijk) en wat de spelers daarna doen. Geen oordeel; dat komt in het gesprek.</p>
         <div class="fasen" role="tablist">${FASEN.map(([k, l]) => `<button type="button" role="tab" class="${k === fase ? 'aan' : ''}" data-act="fase" data-k="${k}">${l} <span>(${e.notities.filter((x) => x.fase === k).length})</span></button>`).join('')}</div>
-        <div class="labels">${LABELS.map(([k, l]) => `<button type="button" class="${gekozenLabels.includes(k) ? 'aan' : ''}" data-act="label" data-k="${k}">${l}</button>`).join('')}</div>
-        <form class="noteer" data-act="noteer"><input id="nieuwe-notitie" placeholder="Bijv. 34' laat de 6 zelf de oplossing zoeken" autocomplete="off" enterkeyhint="done"><button class="knop" type="submit">Noteer</button></form>
-        ${inFase.length ? `<ul class="notities">${notitieLijst((x) => x.fase === fase)}</ul>` : '<p class="leeg">Nog geen notities in dit deel.</p>'}
+        <form class="noteer" data-act="noteer">
+          <div class="kopregel"><input id="n-min" type="number" inputmode="numeric" min="0" max="130" placeholder="Min." aria-label="Minuut"><div class="labels">${SOORTEN.map((w) => `<button type="button" class="${gekozenSoort === w ? 'aan' : ''}" data-act="soort" data-w="${w}">${w}</button>`).join('')}</div></div>
+          <textarea id="n-coach" placeholder="Coach zegt of doet, bijv. &quot;Druk zetten, 6!&quot;" aria-label="Coach zegt of doet"></textarea>
+          <input id="n-spelers" placeholder="Spelers doen daarna (mag leeg)" autocomplete="off" aria-label="Spelers doen daarna">
+          <button class="knop" type="submit">Noteer</button></form>
+        ${inFase.length ? `${telling(inFase) ? `<p class="telling"><b>Telling dit deel:</b> ${telling(inFase)}</p>` : ''}<ul class="notities">${notitieLijst((x) => x.fase === fase)}</ul>` : '<p class="leeg">Nog geen momenten in dit deel.</p>'}
       </section>
       <section class="blok"><h2>Evaluatiegesprek</h2><p class="hulp">Samen met de coach (en de docenten). Jij schrijft mee.</p>
         ${e.leerdoel ? `<div class="afspraak"><b>Leerdoel:</b> ${esc(e.leerdoel)}</div>` : ''}
-        ${STAPPEN.map((s, i) => { const ref = s.alle ? e.notities : e.notities.filter((x) => (x.labels || []).some((l) => (s.labels || []).includes(l)));
+        ${STAPPEN.map((s, i) => { const ref = s.spelers ? e.notities.filter((x) => x.spelers) : [];
           return `<div class="stap"><span class="nr">${i + 1}</span><div><h3>${s.t}</h3><p class="hulp">${s.v}</p>
-            ${ref.length && !s.alle ? `<div class="ref"><b>Jouw notities:</b> ${ref.map((x) => `${esc(x.tijd)} ${esc(x.tekst)}`).join(' · ')}</div>` : ''}
-            ${s.alle && e.notities.length ? `<div class="ref"><b>Al je notities (${e.notities.length})</b> staan hierboven bij Observatie en komen in de PDF.</div>` : ''}
+            ${s.telling && tellingPerDeel(e) ? `<div class="ref"><b>Telling coachgedrag</b><br>${tellingPerDeel(e)}</div>` : ''}
+            ${ref.length ? `<div class="ref"><b>Wat de spelers deden:</b> ${ref.map((x) => `${esc(minTekst(x))} ${x.soort ? esc(x.soort.toLowerCase()) + ': ' : ''}${esc(coachTekst(x))} → ${esc(x.spelers)}`).join(' · ')}</div>` : ''}
+            ${s.alle && e.notities.length ? `<div class="ref">Al je momenten (${e.notities.length}) staan bij Observatie en komen in de PDF.</div>` : ''}
             <textarea data-veld="${s.k}" aria-label="${s.t}">${esc(e[s.k])}</textarea>
             ${s.k === 's6' ? `<div class="punt"><label for="v-punt">Eén concreet ontwikkelpunt</label><input id="v-punt" data-veld="punt" value="${esc(e.punt)}" maxlength="160" placeholder="Eén zin. Niet vijf punten, één."><p class="hulp" style="margin:6px 0 0">Dit komt bij de volgende evaluatie bovenaan als "vorige afspraak".</p></div>` : ''}
           </div></div>`; }).join('')}
@@ -183,11 +202,12 @@
 
   // Invoer: meteen bewaren (zonder alles opnieuw te tekenen, zodat je door kunt typen)
   document.addEventListener('input', (ev) => { const k = ev.target.dataset && ev.target.dataset.veld; if (!k) return; huidig()[k] = ev.target.value; bewaar(); });
-  document.addEventListener('submit', (ev) => { ev.preventDefault(); if (ev.target.dataset.act !== 'noteer') return; const i = document.getElementById('nieuwe-notitie'); const t = i.value.trim(); if (!t) return;
-    huidig().notities.push({ id: 'n' + Date.now(), fase, tijd: nuTijd(), tekst: t, labels: [...gekozenLabels] }); gekozenLabels = []; bewaar(); render(); const n = document.getElementById('nieuwe-notitie'); if (n) n.focus(); });
+  document.addEventListener('submit', (ev) => { ev.preventDefault(); if (ev.target.dataset.act !== 'noteer') return; const g = (id) => document.getElementById(id).value.trim();
+    if (!g('n-coach')) { document.getElementById('n-coach').focus(); return; }
+    huidig().notities.push({ id: 'n' + Date.now(), fase, min: g('n-min'), soort: gekozenSoort, coach: g('n-coach'), spelers: g('n-spelers'), tijd: nuTijd() }); gekozenSoort = ''; bewaar(); render(); const n = document.getElementById('n-min'); if (n) n.focus(); });
   document.addEventListener('click', (ev) => { const b = ev.target.closest('[data-act]'); if (!b || b.tagName === 'FORM') return; const a = b.dataset.act; const e = huidig();
     if (a === 'fase') { fase = b.dataset.k; render(); }
-    else if (a === 'label') { const k = b.dataset.k; gekozenLabels = gekozenLabels.includes(k) ? gekozenLabels.filter((x) => x !== k) : [...gekozenLabels, k]; const v = document.getElementById('nieuwe-notitie').value; render(); document.getElementById('nieuwe-notitie').value = v; }
+    else if (a === 'soort') { gekozenSoort = gekozenSoort === b.dataset.w ? '' : b.dataset.w; const w = ['n-min', 'n-coach', 'n-spelers'].map((id) => document.getElementById(id).value); render(); ['n-min', 'n-coach', 'n-spelers'].forEach((id, k) => { document.getElementById(id).value = w[k]; }); }
     else if (a === 'weg') { e.notities = e.notities.filter((x) => x.id !== b.dataset.id); bewaar(); render(); }
     else if (a === 'schaal') { e.schaal = e.schaal === b.dataset.w ? '' : b.dataset.w; bewaar(); render(); }
     else if (a === 'pdf') { if (!e.punt.trim()) { alert('Vul eerst bij stap 6 het ene concrete ontwikkelpunt in.'); const p = document.getElementById('v-punt'); if (p) { p.scrollIntoView({ block: 'center' }); p.focus(); } return; } maakAfdruk(); window.print(); }
@@ -213,7 +233,7 @@
       <h3>Persoonlijk leerdoel coach</h3>${tekstOfLijnen(e.leerdoel, 2)}
       <h3>Focus van de HO</h3>${tekstOfLijnen(e.focus, 2)}
       <h3>Feedbackmoment(en)</h3>${tekstOfLijnen(e.feedbackmoment, 1)}
-      ${e.notities.length ? `<h2>Observatie</h2>${FASEN.map(([k, l]) => notities(k).length ? `<h3>${l}</h3><ul>${notities(k).map((x) => `<li>${esc(x.tijd)} · ${esc(x.tekst)}${(x.labels || []).length ? ` <i>(${x.labels.map((l2) => (LABELS.find((y) => y[0] === l2) || [, l2])[1].toLowerCase()).join(', ')})</i>` : ''}</li>`).join('')}</ul>` : '').join('')}` : ''}
+      ${e.notities.length ? `<h2>Observatie</h2>${FASEN.map(([k, l]) => notities(k).length ? `<h3>${l}</h3>${telling(notities(k)) ? `<p class="vraag">Telling: ${telling(notities(k))}</p>` : ''}<table class="obs"><tr><th style="width:9%">Min.</th><th style="width:14%">Soort</th><th>Coach zegt of doet</th><th style="width:34%">Spelers doen daarna</th></tr>${notities(k).map((x) => `<tr><td>${esc(minTekst(x))}</td><td>${esc(x.soort || '')}</td><td>${esc(coachTekst(x))}</td><td>${esc(x.spelers || '')}</td></tr>`).join('')}</table>` : '').join('')}` : ''}
       <h2>Evaluatiegesprek</h2>
       ${STAPPEN.map((s, i) => `<div class="p-blok"><h3>${i + 1}. ${s.t}</h3><p class="vraag">${s.v}</p>${tekstOfLijnen(e[s.k], 2)}</div>`).join('')}
       <div class="kader"><h3 style="margin-top:0">Eén concreet ontwikkelpunt</h3><p>${esc(e.punt)}</p></div>
