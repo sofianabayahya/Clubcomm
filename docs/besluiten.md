@@ -642,6 +642,9 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Tabbladen HO:** *Home · Trainers · Teams · Inzicht · Berichten*. Planning is organisatie (coördinator); zonder coördinator staat Planning als knop in Teams. Tabblad Trainers: *Traject · Alle trainers · Scholing (later)*.
 - **De trainer** ziet in zijn profiel *Mijn ontwikkeling* (traject, eigen vragenlijsten, verslagen, reflectie; niet de notities van de HO) en krijgt alleen een melding als hij iets moet doen.
 - **Thema's en periodisering van de club:** nog niet. De club (de HO) werkt eerst haar visie en periodisering uit; daarna komt het in de app (Later / ideeën).
+- **Kennismaking trainer (vragenlijst voor alle trainers, aanvulling 10-10):** "We willen je graag beter leren kennen." Geboortejaar (jonge trainers, VOG vanaf 18) · ervaring (sinds wanneer, leeftijden, breedte/selectie) · KNVB-diploma's (de coördinator controleert) · tijd en beschikbaarheid ("wisselend door studie, werk of gezin?", vrij veld, niet verplicht; **geen vragen naar kinderen of school**: vraag naar het gevolg, niet de reden) · **ambitie** (plezier · ontwikkelen · opleiding · doorgroeien) · waar wil je beter in worden, wat heb je van de club nodig. Eén uitnodiging bij de start, elk seizoen "klopt dit nog?", geen herinneringen. HO/TC en de trainer zien alles; de coördinator alleen tijd en diploma's; de teamleider niets. **Ambitie bepaalt het aanbod:** "plezier" krijgt geen traject en geen signalen. De **clubbeheerder kan de vragen aanpassen.**
+- **Observatie zonder schaal (aanvulling 10-10):** geen 1–5. De KNVB-onderdelen zijn **aandachtspunten**: doelstelling past (beleid, team, leerdoel) · veilige leersituatie · beïnvloedt de leersituatie · pedagogisch passend · **organisatie en leertijd** (training). Tijdens de observatie koppel je een moment met één tik aan een aandachtspunt; in het gesprek staat per punt *wat je zag*. Groei tonen we als feiten ("vragen: okt 3×, mrt 9×") plus de woordenschaal op het leerdoel (nog niet · soms · meestal · bewust en vaak).
+- **Leertijd-klok bij een training (optioneel, aanvulling 10-10):** knoppen *Spelen · Uitleg · Wisselen*; na afloop per voetbalvorm en totaal: effectieve leertijd %, uitleg %, wisselen %, langste uitleg, snelste overgang. Gebaseerd op de gouden trainingsprincipes (visie op leren voetballen, KNVB).
 - **Bouwvolgorde:** (1) tabblad Trainers, traject, dossier, werkdruk · (2) begeleidingsmoment met de vijf fasen (het evaluatieformulier verhuist; `/evaluatie` blijft los) · (3) Mijn ontwikkeling · (4) later: periodisering, scholing, rol technisch coördinator.
 
 ## Besluit 98 — Verantwoordelijkheid: iedere rol doet zijn eigen werk, de laag erboven is het vangnet
@@ -1704,6 +1707,8 @@ Bewust niet gedaan, met de reden. Komt een van deze toch terug, zeg dan dat het 
 | Google Maps voor adressen | Betaalaccount en wat je typt gaat naar Google | 43 |
 | Berichten verwijderen door ontvangers | Archiveren is veiliger | 57 |
 | Zelfbeoordeling van de coach en een rapportcijfer in de evaluatie | Geen tijd in de bijeenkomst; geen cijfer | 93 |
+| Schaal 1–5 op de KNVB-stellingen bij de observatie van een trainer | Voelt als beoordelen; we willen ontwikkelen en bewust maken met wat je zag | 99 |
+| Privévragen aan trainers (kinderen, school) | Vraag naar het gevolg (beschikbaarheid), niet de reden (AVG, niet pushend) | 99 |
 | Teamleider registreert of de trainer kwam, of praat met hem | Niet bevoegd, geen expertise, schaadt de band | 95 |
 | De HO krijgt meldingen over organisatie (vakantie, clubberichten) | De HO is mentor: hij zoekt zelf op | 95 |
 
