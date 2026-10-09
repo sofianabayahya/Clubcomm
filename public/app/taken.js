@@ -6,23 +6,24 @@
   const CC = window.CC; const M = CC.m, h = CC.h, icon = CC.icon, esc = CC.esc;
   const ROLLEN = ['trainer', 'teamleider', 'coordinator', 'hjo'];
 
-  // [trainer, teamleider, coördinator, HJO] — voorstel; de pilotclub geeft haar eigen basis
+  // [trainer, teamleider, coördinator, HJO] — standaard volgens Besluit 95: organisatie bij de coördinator, trainers bij de HO.
+  // Zonder coördinator doet de HO de coördinatortaken (terugval in CC.mag).
   CC.TAKEN = [
-    { groep: 'Planning en team', k: 'planning', titel: 'Planning aanpassen', sub: 'Training verplaatsen, extra training, oefenwedstrijd', std: [1, 0, 0, 1] },
-    { groep: 'Planning en team', k: 'clubbericht', titel: 'Bericht aan de hele club en afgelasten', sub: 'Clubbrede berichten, alles afgelasten', std: [0, 0, 0, 1] },
-    { groep: 'Planning en team', k: 'staf', titel: 'Teams zonder staf oplossen', sub: 'Trainer of teamleider zoeken en koppelen', std: [0, 0, 0, 1] },
-    { groep: 'Planning en team', k: 'aanmeldingen48', titel: 'Aanmeldingen die blijven liggen', sub: 'Langer dan 48 uur niet goedgekeurd', std: [0, 0, 1, 0] },
-    { groep: 'Spelers opvolgen', k: 'afdoen', titel: 'Spelers opvolgen en signalen afdoen', sub: 'Aanwezigheid, kaarten en signalen zien; "Gezien, geen actie nodig"', std: [1, 0, 1, 1] },
-    { groep: 'Spelers opvolgen', k: 'langdurig', titel: 'Langdurig afwezig melden', sub: 'Na een gesprek met de ouder', std: [1, 0, 1, 1] },
+    { groep: 'Organisatie', k: 'planning', titel: 'Planning aanpassen', sub: 'Training verplaatsen, extra training, oefenwedstrijd', std: [1, 0, 1, 0] },
+    { groep: 'Organisatie', k: 'clubbericht', titel: 'Clubberichten en afgelasten', sub: 'Berichten aan de club, noodbericht, afgelasten', std: [0, 0, 1, 0] },
+    { groep: 'Organisatie', k: 'staf', titel: 'Teams zonder staf oplossen', sub: 'Trainer of teamleider zoeken en koppelen', std: [0, 0, 1, 0] },
+    { groep: 'Organisatie', k: 'aanmeldingen48', titel: 'Aanmeldingen die blijven liggen', sub: 'Langer dan 48 uur niet goedgekeurd', std: [0, 0, 1, 0] },
+    { groep: 'Spelers opvolgen', k: 'afdoen', titel: 'Spelers opvolgen en signalen afdoen', sub: 'Aanwezigheid, kaarten en signalen zien; "Gezien, geen actie nodig"', std: [1, 0, 1, 0] },
+    { groep: 'Spelers opvolgen', k: 'langdurig', titel: 'Langdurig afwezig melden', sub: 'Na een gesprek met de ouder', std: [1, 0, 1, 0] },
     { groep: 'Spelers opvolgen', k: 'bellen', titel: 'Bellen of appen bij de drempel', sub: 'Stap 3 van de opschaling', std: [1, 0, 1, 0] },
     { groep: 'Spelers opvolgen', k: 'gesprek', titel: 'Persoonlijk gesprek met ouders', sub: 'Stap 4: als het na het bellen doorgaat', std: [0, 0, 1, 0] },
     { groep: 'Spelers opvolgen', k: 'clubbesluit', titel: 'Clubbesluit voorbereiden', sub: 'Stap 5, samen met het bestuur', std: [0, 0, 0, 1] },
     { groep: 'Ontwikkeling', k: 'beoordelen', titel: 'Spelers beoordelen', sub: 'Winter en einde seizoen', std: [1, 0, 0, 0] },
     { groep: 'Ontwikkeling', k: 'ontwgesprek', titel: 'Ontwikkelgesprekken plannen en voeren', sub: 'Met ouder en kind', std: [1, 0, 0, 0] },
-    { groep: 'Trainers', k: 'trainerNiet', titel: 'Registreren dat de trainer niet kwam', sub: 'Bij de laatste trainingen', std: [0, 0, 0, 0] },
-    { groep: 'Trainers', k: 'trainersVolgen', titel: 'Trainers begeleiden en opvolgen', sub: 'O.a. gesprek bij vaak afmelden', std: [0, 0, 1, 0] },
+    { groep: 'Trainers (voetballijn)', k: 'trainerNiet', titel: 'Registreren dat de trainer niet kwam', sub: 'Bij de laatste trainingen', std: [0, 0, 0, 0] },
+    { groep: 'Trainers (voetballijn)', k: 'trainersVolgen', titel: 'Trainers volgen en gesprekken', sub: 'Afgemeld, te laat, niet gekomen; gesprek met de trainer', std: [0, 0, 0, 1] },
     { groep: 'Materiaal', k: 'materiaal', titel: 'Materiaal controleren', sub: 'Checklist aan het begin van het seizoen', std: [1, 0, 0, 0] },
-    { groep: 'Wat zie je', k: 'toelichting', titel: 'Toelichting bij afmelden', sub: 'Wat de ouder erbij typt, bijv. "enkelblessure"', std: [1, 0, 1, 1] },
+    { groep: 'Wat zie je', k: 'toelichting', titel: 'Toelichting bij afmelden', sub: 'Wat de ouder erbij typt, bijv. "enkelblessure"', std: [1, 0, 1, 0] },
     { groep: 'Wat zie je', k: 'beoordelingZien', titel: 'Beoordelingen van spelers', sub: 'Scores en gesprekpunten', std: [1, 0, 1, 1] },
     { groep: 'Wat zie je', k: 'notities', titel: 'Gespreksnotities en afspraken', sub: 'Gebeld, geappt, persoonlijk gesprek', std: [1, 0, 1, 1] },
   ];
@@ -71,7 +72,7 @@
     teamleider: [
       { id: 'basis', naam: 'Basis', sub: 'Wedstrijden en taken, wie helpt mee, uitnodigen en aanmelden, berichten, contact met ouders', taken: [] },
       { id: 'plus', naam: 'Plus', sub: '+ spelers opvolgen: aanwezigheid, kaarten, signalen, bellen bij rood, langdurig afwezig', taken: T_PLUS },
-      { id: 'coord', naam: 'Coördinerend', sub: '+ planning aanpassen, persoonlijke gesprekken, notities, trainer registreren', taken: [...T_PLUS, 'planning', 'gesprek', 'notities', 'trainerNiet'] },
+      { id: 'coord', naam: 'Coördinerend', sub: '+ planning aanpassen, persoonlijke gesprekken, notities', taken: [...T_PLUS, 'planning', 'gesprek', 'notities'] },
     ],
     trainer: [
       { id: 'basis', naam: 'Basis', sub: 'Aanwezigheid, spelers opvolgen, bellen bij rood, materiaal', taken: TR_BASIS },

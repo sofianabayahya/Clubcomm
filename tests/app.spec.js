@@ -32,6 +32,24 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'na afmelden');
   });
 
+  // Besluit 95: organisatie bij de coördinator, trainers bij de HO; zonder coördinator doet de HO het (terugval)
+  test('taken: coördinator organiseert, HO volgt trainers, terugval zonder coördinator', async ({ page }) => {
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(3).click();
+    await page.locator('[data-act="magischeLink"]').click();
+    const r = await page.evaluate(() => {
+      const S = CC.S(); const met = S.teams.find((t) => CC.coordinatorVoor(S, t.id)).id; const zonder = S.teams.find((t) => !CC.coordinatorVoor(S, t.id)).id;
+      return {
+        coordClub: CC.mag('clubbericht', 'coordinator'), coordStaf: CC.mag('staf', 'coordinator'), coordTrainers: CC.mag('trainersVolgen', 'coordinator'),
+        hoTrainers: CC.mag('trainersVolgen', 'hjo', met), hoAfdoenMet: CC.mag('afdoen', 'hjo', met), hoAfdoenZonder: CC.mag('afdoen', 'hjo', zonder),
+        hoToelMet: CC.mag('toelichting', 'hjo', met), tlTrainerNiet: CC.PROFIELEN.teamleider.some((p) => p.taken.includes('trainerNiet')),
+      };
+    });
+    expect(r).toEqual({ coordClub: true, coordStaf: true, coordTrainers: false, hoTrainers: true, hoAfdoenMet: false, hoAfdoenZonder: true, hoToelMet: false, tlTrainerNiet: false });
+  });
+
   // Training afgelasten met een eigen toelichting: één bericht aan de ouders
   test('trainer gelast een training af met toelichting', async ({ page }) => {
     const fouten = volgFouten(page);

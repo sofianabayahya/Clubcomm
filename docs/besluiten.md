@@ -508,6 +508,19 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 95 — Twee lijnen: voetbal (HO) en organisatie (coördinator)
+*Besloten 10 oktober 2026. Uitwerking en bronnen: `docs/onderzoek/taken-per-rol.md`. Vult Besluit 12, 21, 25 en 34 aan.*
+- **Voetballijn:** de HO (= HJO, naam per club) maakt de trainers beter. Hij is een **mentor die in rapporten kijkt**: hij blijft geïnformeerd, zoekt zelf op en krijgt geen stroom meldingen over organisatie. De **trainer valt onder de HO**.
+- **Technisch coördinator** (optioneel, per bouw): ondersteunt de HO en kan ook observaties en gesprekken met trainers doen. Komt in een latere stap.
+- **Organisatielijn:** de **coördinator** coördineert: rooster, staf, aanmeldingen, afgelasten, clubberichten, communicatieplan, vervangers. Het beste is **één coördinator per bouw** (onder-, midden-, bovenbouw). De **teamleider valt onder de coördinator** en is de eerste lijn naar de ouders.
+- **De teamleider beoordeelt de trainer niet**: hij registreert niet of de trainer kwam en voert geen gesprek met hem. Merkt een ouder dat de trainer er niet is, dan geeft de teamleider dat alleen door.
+- **Eigenaar en terugval per taak:** geen coördinator, dan doet de HO het (ook clubberichten). Geen HO, dan wijst de clubbeheerder iemand aan. De club kan alles aanpassen.
+- **Clubbeheerder** zorgt dat de app werkt; de **ClubComm-manager** richt de app met hem in en leert het hem aan (stappenplan in het voorstel).
+- **Gesprekken met trainers** (HO of technisch coördinator): standaard per seizoen **2 observaties bij een training en 2 bij een wedstrijd**, elk met een nagesprek, plus een **voortgangsgesprek rond februari** (gaan club en trainer door?). De club kan het aantal aanpassen. **Teamindeling:** HO samen met de trainer.
+- **Trainer niet gekomen:** de app signaleert ("geen aanwezigheid opgenomen"), de coördinator of de HO bevestigt, het gesprek voert de HO.
+- **Bouwvolgorde:** (1) nieuwe standaard per taak · (2) Home van de HO en rapport Trainers per lichting en team, in- en uitklapbaar · (3) signaal "geen aanwezigheid opgenomen" · (4) module Trainers begeleiden · (5) technisch coördinator, aanwijzen bij een ontbrekende HO, oefenstof en bijeenkomsten.
+- **Stap 1 (10 oktober), nieuwe standaard:** naar de coördinator: planning aanpassen (naast de trainer), clubberichten en afgelasten, teams zonder staf, signalen afdoen en langdurig afwezig (naast de trainer), toelichting bij afmelden. Naar de HO: trainers volgen en gesprekken. De teamleider-profielen bevatten "trainer niet gekomen" niet meer. Zonder coördinator doet de HO dit alles via de terugval, zoals nu bij DCG.
+
 ## Besluit 94 — Training afgelasten met eigen toelichting
 Aanleiding: de trainer wilde een training afzeggen met een eigen uitleg (blessures, ziekte, rust voor het voetbalkamp); dat kon alleen met een tweede, los bericht.
 - Bij **Planning aanpassen → Training afgelasten** staat een veld **"Toelichting voor de ouders (mag leeg)"**. Die tekst komt onder de vaste zin (*"Training van … gaat niet door."*) in **hetzelfde bericht**: ouders krijgen één urgente melding.
