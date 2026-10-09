@@ -471,4 +471,29 @@
   });
   CC.on('labelsOk', (f) => { const S = CC.S(); S.club.labels = { hjo: f.h.value || 'HJO', coordinator: f.c.value || 'Coördinator' }; S.club.coordinatorAan = f.ca.checked; S.club.ingericht.rollen = true; CC.save(); CC.render(); CC.toast('Opgeslagen'); });
   CC.on('module', (el) => { const S = CC.S(); S.club.modules[el.dataset.k] = el.checked; S.club.ingericht.modules = true; CC.save(); CC.render(); CC.toast(`${el.dataset.k[0].toUpperCase() + el.dataset.k.slice(1)} ${el.checked ? 'aan' : 'uit'}`); });
+
+  // ---------- Besluit 97: bouwen als vaste indeling van de club (de clubbeheerder past ze aan) ----------
+  CC.BOUWEN_STD = [{ naam: "Mini's", van: 6, tot: 7 }, { naam: 'Onderbouw', van: 8, tot: 12 }, { naam: 'Middenbouw', van: 13, tot: 15 }, { naam: 'Bovenbouw', van: 16, tot: 19 }];
+  CC.bouwen = (S) => (Array.isArray(S.club.bouwen) && S.club.bouwen.length ? S.club.bouwen : CC.BOUWEN_STD);
+  const leeftijd = (t) => parseInt(String((t || {}).cat || (t || {}).id || '').replace(/^\D*(\d+).*$/, '$1'), 10) || 0;
+  CC.bouwVan = (S, t) => CC.bouwen(S).find((b) => leeftijd(t) >= b.van && leeftijd(t) <= b.tot) || { naam: 'Overig', van: 0, tot: 0 };
+  // Bouwen met teams, in volgorde (lege bouwen niet tonen)
+  CC.bouwenMetTeams = (S, teams = S.teams) => { const lijst = [...CC.bouwen(S), { naam: 'Overig', van: 0, tot: 0 }];
+    return lijst.map((b) => ({ ...b, teams: teams.filter((t) => CC.bouwVan(S, t).naam === b.naam) })).filter((b) => b.teams.length); };
+  const leeftijden = Array.from({ length: 14 }, (_, i) => i + 6);
+  const origRollenBeh = CC.rollen.beheerder.schermen.rollen;
+  CC.rollen.beheerder.schermen.rollen = (S) => origRollenBeh(S) + `${h.sectie('Indeling in bouwen')}<form data-submit="bouwenOk" class="kaartje codeform"><p class="zacht klein">Elke rol gebruikt dezelfde indeling: de ${esc(S.club.labels.hjo)} kiest erop, een coördinator of technisch coördinator werkt per bouw. Standaard volgens de KNVB.</p>
+    ${CC.bouwen(S).map((b, i) => `<div class="drie-velden"><div><label for="bw-n${i}">Naam</label><input id="bw-n${i}" name="n${i}" value="${esc(b.naam)}"></div><div><label for="bw-v${i}">Van</label><select id="bw-v${i}" name="v${i}">${leeftijden.map((n) => `<option value="${n}" ${n === b.van ? 'selected' : ''}>O${n}</option>`).join('')}</select></div><div><label for="bw-t${i}">Tot en met</label><select id="bw-t${i}" name="t${i}">${leeftijden.map((n) => `<option value="${n}" ${n === b.tot ? 'selected' : ''}>O${n}</option>`).join('')}</select></div></div>`).join('')}
+    <input type="hidden" name="aantal" value="${CC.bouwen(S).length}">
+    <div class="knoppen"><button class="knop">Opslaan</button><button class="knop licht" type="button" data-act="bouwErbij">${icon('plus')}Bouw erbij</button><button class="knop licht" type="button" data-act="bouwStd">Terug naar de KNVB-standaard</button></div></form>`;
+  CC.on('bouwenOk', (f) => {
+    const S = CC.S(); const n = Number(f.aantal.value);
+    const lijst = Array.from({ length: n }, (_, i) => ({ naam: f['n' + i].value.trim(), van: Number(f['v' + i].value), tot: Number(f['t' + i].value) })).filter((b) => b.naam);
+    if (lijst.some((b) => b.van > b.tot)) return CC.toast('"Van" moet vóór "tot en met" liggen', 'fout');
+    const dubbel = lijst.some((a, i) => lijst.some((b, j) => i !== j && a.van <= b.tot && b.van <= a.tot));
+    if (dubbel) return CC.toast('Twee bouwen overlappen; elke lichting hoort bij één bouw', 'fout');
+    S.club.bouwen = lijst.sort((a, b) => a.van - b.van); CC.save(); CC.render(); CC.toast('Indeling in bouwen opgeslagen');
+  });
+  CC.on('bouwErbij', () => { const S = CC.S(); const b = CC.bouwen(S).slice(); const laatste = b[b.length - 1] || { tot: 5 }; const v = Math.min(19, laatste.tot + 1); S.club.bouwen = [...b, { naam: 'Nieuwe bouw', van: v, tot: v }]; CC.render(); });
+  CC.on('bouwStd', () => { const S = CC.S(); S.club.bouwen = CC.BOUWEN_STD.map((b) => ({ ...b })); CC.save(); CC.render(); CC.toast('KNVB-standaard teruggezet'); });
 })();

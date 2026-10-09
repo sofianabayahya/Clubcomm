@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 96; principe 10)
+Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 97; principe 10)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -17,10 +17,11 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 96; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 97 | Bouwen, werkgebied en focus, signalen die ertoe doen, trainersdossier | ✅ geldt |  |
 | 96 | Eén aanspreekpunt: de clubbeheerder (van de club) en de ClubComm-adviseur (van ons) | ✅ geldt |  |
-| 95 | Twee lijnen: voetbal (HO) en organisatie (coördinator) | ◐ deels herzien | door 96 (clubbeheerder en ClubComm-adviseur) |
+| 95 | Twee lijnen: voetbal (HO) en organisatie (coördinator) | ◐ deels herzien | door 96 (clubbeheerder en ClubComm-adviseur), 97 (bouwen, focus, dossier; nieuwe bouwvolgorde) |
 | 94 | Training afgelasten met eigen toelichting | ◐ deels herzien | door 95 (de HJO-knop Afgelasten ligt nu bij de coördinator) |
-| 93 | Evaluatieformulier praktijkbegeleiding coach (testcase, mijnclubcomm.nl/evaluatie) | ◐ deels herzien | door 95 (wordt later de module Trainers begeleiden in de app) |
+| 93 | Evaluatieformulier praktijkbegeleiding coach (testcase, mijnclubcomm.nl/evaluatie) | ◐ deels herzien | door 95 (wordt later de module Trainers begeleiden in de app), 97 (in het trainersdossier) |
 | 92 | Oefenwedstrijd: thuis of uit, verzamelen, verzamelpunt en adres | ✅ geldt |  |
 | 91 | Aanwezigheid: alleen dagen die nog iets vragen, met adres | ✅ geldt |  |
 | 90 | Adres en verzamelpunt zichtbaar waar de ouder kijkt | ✅ geldt |  |
@@ -60,7 +61,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 96; principe 10)
 | 56 | Meldingen blijven komen na uitloggen | ✅ geldt |  |
 | 55 | Meldingen: meteen vragen bij de eerste keer | ✅ geldt |  |
 | 54 | Profiel opgeschoond | ✅ geldt |  |
-| 53 | Pushmeldingen (stap 1) | ◐ deels herzien | door 57 (e-mail als vangnet), 77 (herinneringen vanaf de server) |
+| 53 | Pushmeldingen (stap 1) | ◐ deels herzien | door 57 (e-mail als vangnet), 77 (herinneringen vanaf de server), 97 (push bij bevestigd trainer niet gekomen) |
 | 52 | Inloggen alleen met de code, geen knop in de mail | ✅ geldt |  |
 | 51 | Geen dubbele aanmelding voor hetzelfde kind | ✅ geldt |  |
 | 50 | Actie nodig altijd zichtbaar, materiaalbericht bij Verstuurd, geen filters bij spelers | ✅ geldt |  |
@@ -88,11 +89,11 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 96; principe 10)
 | 28 | Wie helpt er mee? (taken en rijden) | ◐ deels herzien | door 33 (Wie helpt er mee staat bij Team), 64 (staf telt als meehelpen) |
 | 27 | Wanneer verdwijnt een actie? | ◐ deels herzien | door 34 (geen Gezien-knoppen) |
 | 26 | Home van HJO en coördinator: te doen en ter informatie | ◐ deels herzien | door 34 (geen losse spelers, geen Gezien-knoppen), 36 (vaste berichten), 75 (automatisch), 95 (HO-Home alleen trainers) |
-| 25 | Taken per rol (de club bepaalt) | ◐ deels herzien | door 95 (nieuwe standaard, eigenaar en terugval) |
+| 25 | Taken per rol (de club bepaalt) | ◐ deels herzien | door 95 (nieuwe standaard, eigenaar en terugval), 97 (werkgebied per bouw) |
 | 24 | Wie ziet wat (per rol) | ✖ vervangen | door 25 (Wat zie je in de takenlijst) |
 | 23 | Beoordelingsmomenten en ontwikkelgesprekken | ◐ deels herzien | door 65 (Start en Voorjaar), 67/68 (woorden in plaats van cijfers, het kind stuurt), 70 (plannen rond de training) |
 | 22 | Signalen afdoen | ◐ deels herzien | door 34 (geen Gezien-knoppen bij ter informatie), 95 (afgedane signalen controleert de coördinator) |
-| 21 | Afwezigheid van trainers signaleren | ◐ deels herzien | door 54 (telling niet meer in het profiel), 95 (niet gekomen: niet door de teamleider; de app signaleert, coördinator of HO bevestigt) |
+| 21 | Afwezigheid van trainers signaleren | ◐ deels herzien | door 54 (telling niet meer in het profiel), 95 (niet gekomen: niet door de teamleider; de app signaleert, coördinator of HO bevestigt), 97 (pushmelding aan HO/TC bij bevestigd niet gekomen) |
 | 20 | Periode afmelden en "trainer kan niet" | ◐ deels herzien | door 95 (vervanger zoeken: coördinator, de teamleider helpt met ouders) |
 | 19 | Clubberichten, urgent en vastzetten | ◐ deels herzien | door 30 (vastgezet niet op Home), 95 (clubberichten: coördinator) |
 | 18 | Agenda-abonnement | ✅ geldt |  |
@@ -101,7 +102,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 96; principe 10)
 | 15 | Fases en opschaling | ◐ deels herzien | door 32 (kaarten per seizoen), 25/95 (stap 3 trainer of coördinator, stap 4 coördinator, stap 5 HO) |
 | 14 | Uitschrijven en account verwijderen | ◐ deels herzien | door 72 (ontwikkelgegevens meteen gewist) |
 | 13 | Planning: weekrooster in plaats van losse trainingen | ◐ deels herzien | door 87 (rooster per dag, veilig bijwerken), 95 (rooster en afgelasten: coördinator) |
-| 12 | Rollen en clubbeheerder | ◐ deels herzien | door 25 (taken per rol), 95 (twee lijnen), 96 (clubbeheerder is het enige aanspreekpunt, ClubComm-adviseur) |
+| 12 | Rollen en clubbeheerder | ◐ deels herzien | door 25 (taken per rol), 95 (twee lijnen), 96 (clubbeheerder is het enige aanspreekpunt, ClubComm-adviseur), 97 (bouwen in plaats van groepen) |
 | 11 | HJO-portaal | ◐ deels herzien | door 26 (Home), 30 (snelknoppen weg), 95 (organisatie naar de coördinator) |
 | 10 | Aanwezigheidsnorm en zones | ◐ deels herzien | door 33 (teamleider volgt spelers standaard niet), 34 (HJO geen losse spelers), 61 (langdurig meldt de ouder), 95 (team in de zone: coördinator, HO kijkt mee) |
 | 9 | Teamleiderportaal | ◐ deels herzien | door 31 (vervoer), 33 (vier knoppen, Regelen in Wedstrijd) |
@@ -578,7 +579,7 @@ Drie vragen, van club → team → speler:
 - **Aanvulling (23 september 2026): teams filteren en sorteren, Inzicht per groep.** Teams-tab: filters alle · oranje/rood · zonder staf · open aanmeldingen · per groep van de coördinator (O6–O9, O10–O12) · selectie; sorteren op naam, aanwezigheid laagste eerst, meeste signalen, minste gezinnen die meehelpen. Inzicht: bovenaan een keuze "Hele club" of een groep, zodat de HJO met de coördinator naar diens teams kan kijken. Op teamniveau; een clubbrede lijst van rode spelers komt er bewust niet (Besluit 26).
 
 ## Besluit 12 — Rollen en clubbeheerder
-> **◐ Deels herzien door Besluit 25 (taken per rol), 95 (twee lijnen), 96 (clubbeheerder is het enige aanspreekpunt, ClubComm-adviseur)** (zie Register).
+> **◐ Deels herzien door Besluit 25 (taken per rol), 95 (twee lijnen), 96 (clubbeheerder is het enige aanspreekpunt, ClubComm-adviseur), 97 (bouwen in plaats van groepen)** (zie Register).
 
 ### Rollen
 **Ouder · Trainer · Teamleider · Coördinator (optioneel) · HJO · Clubbeheerder**
@@ -630,6 +631,18 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 97 — Bouwen, werkgebied en focus, signalen die ertoe doen, trainersdossier
+*Besloten 10 oktober 2026. Analyse: `docs/onderzoek/ho-werkgebied-en-signalen.md`. Vult Besluit 12, 21, 25, 53, 93 en 95 aan.*
+- **Bouwen als vaste indeling van de club**, los van coördinatoren. Standaard (KNVB): Mini's O6–O7 · Onderbouw O8–O12 · Middenbouw O13–O15 · Bovenbouw O16–O19. De **clubbeheerder past de indeling aan** (Rollen → Indeling in bouwen). Alle rollen gebruiken dezelfde indeling; overzichten hebben drie lagen: club → bouw → team of trainer.
+- **Werkgebied** (stelt de clubbeheerder in bij de rol: bijvoorbeeld TC bovenbouw) bepaalt je signalen. **Focus** (kies je zelf met chips bovenaan, de app onthoudt het op je telefoon) bepaalt alleen wat je ziet. Signalen buiten je focus staan als één regel: *"2 signalen buiten je focus"*. Zo kan de HO focussen zonder iets te missen.
+- **Signalen alleen als het ertoe doet:** een afwijking over een periode, nooit een losse gebeurtenis (team twee fases onder de norm, begeleiding loopt achter, nieuwe trainer na 4 weken zonder kennismaking, open ontwikkelpunt). Gebundeld vanaf 3, verdwijnt als het is opgelost, geen pushmelding voor HO/TC.
+- **Uitzondering pushmelding:** een **bevestigde** "trainer niet gekomen" geeft één pushmelding aan wie die trainer begeleidt: de TC van die bouw, anders de HO.
+- **Trainersdossier** per trainer: kop (team, bouw, sinds, **KNVB-diploma, VOG**), begeleiding dit seizoen (leerdoel, ontwikkelpunt, stand: 2 observaties training en 2 wedstrijd, voortgangsgesprek in februari), tijdlijn (observaties met het **evaluatieformulier**, gesprekken, contact, afmeldingen). Zichtbaar voor HO en TC van die bouw, en **de trainer ziet zijn eigen dossier** (voor zijn ontwikkeling), behalve persoonlijke notities van de HO. Bewaartermijn na vertrek nog vast te stellen.
+- **Volglijst:** de HO of TC zet trainers op "volgen" (bijvoorbeeld nieuwe trainers); die staan bovenaan zijn rapport.
+- **Werkdruk zichtbaar:** "22 trainers in je werkgebied · 88 observaties · 14 gedaan".
+- **Gebouwd 10-10 (stap 1 en 2):** clubbeheerder → Rollen → *Indeling in bouwen* (naam, van, tot en met; overlap wordt geweigerd; terug naar de KNVB-standaard). HO: chips *Alles · Mini's · Onderbouw · …* op Home en in het rapport (alleen bouwen met teams; onthouden op de telefoon); Te doen en Deze week volgen de focus, signalen buiten de focus staan als één regel; rapport Trainers per bouw met teams, trainers en gemiddelde aanwezigheid in de kop.
+- **Bouwvolgorde (vervangt die van Besluit 95):** (1) bouwen als clubindeling · (2) focus voor de HO, rapport Trainers per bouw · (3) trainer niet gekomen (app signaleert, coördinator of HO bevestigt, push) · (4) trainersdossier en module Trainers begeleiden met het evaluatieformulier, volglijst, werkdruk · (5) rol technisch coördinator met werkgebied · (6) de nieuwe signalen, stap voor stap.
+
 ## Besluit 96 — Eén aanspreekpunt: de clubbeheerder (van de club) en de ClubComm-adviseur (van ons)
 *Besloten 10 oktober 2026. Vult Besluit 12 en 95 aan.*
 - **Clubbeheerder:** **één persoon per club** die aan de knoppen van ClubComm draait (rollen, taken, modules, regels, seizoen). Dat kan de voorzitter zijn, een coördinator of de verenigingsmanager; vaak een dubbele rol. Hij is het **enige aanspreekpunt** van de club voor ClubComm, zodat er altijd één communicatielijn is.
@@ -638,7 +651,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - Niet gekozen: "clubmanager" (botst met bestaande functies bij clubs en lijkt te veel op onze eigen naam) en "ClubComm-manager" of "ClubComm-coach" (botst met de taak trainer-coach).
 
 ## Besluit 95 — Twee lijnen: voetbal (HO) en organisatie (coördinator)
-> **◐ Deels herzien door Besluit 96 (clubbeheerder en ClubComm-adviseur)** (zie Register).
+> **◐ Deels herzien door Besluit 96 (clubbeheerder en ClubComm-adviseur), 97 (bouwen, focus, dossier; nieuwe bouwvolgorde)** (zie Register).
 *Besloten 10 oktober 2026. Uitwerking en bronnen: `docs/onderzoek/taken-per-rol.md`. Vult Besluit 12, 21, 25 en 34 aan.*
 - **Voetballijn:** de HO (= HJO, naam per club) maakt de trainers beter. Hij is een **mentor die in rapporten kijkt**: hij blijft geïnformeerd, zoekt zelf op en krijgt geen stroom meldingen over organisatie. De **trainer valt onder de HO**.
 - **Technisch coördinator** (optioneel, per bouw): ondersteunt de HO en kan ook observaties en gesprekken met trainers doen. Komt in een latere stap.
@@ -660,7 +673,7 @@ Aanleiding: de trainer wilde een training afzeggen met een eigen uitleg (blessur
 - De HJO-knop **Afgelasten** blijft voor de hele club (velden afgekeurd, onweer); een teamkeuze doet de trainer of teamleider.
 
 ## Besluit 93 — Evaluatieformulier praktijkbegeleiding coach (testcase, mijnclubcomm.nl/evaluatie)
-> **◐ Deels herzien door Besluit 95 (wordt later de module Trainers begeleiden in de app)** (zie Register).
+> **◐ Deels herzien door Besluit 95 (wordt later de module Trainers begeleiden in de app), 97 (in het trainersdossier)** (zie Register).
 Testcase: de initiatiefnemer begeleidt als HO (KNVB-opleiding) een coach van een andere club. Losse pagina, geen onderdeel van de app en geen login.
 - **Opbouw volgens de bijeenkomst:** gegevens · afspraak uit het voorgesprek (leerdoel, focus HO, feedbackmoment) · **observatie** in drie delen (1e helft laatste 20 min, rust/kleedkamer, 2e helft eerste 20 min): snel notities tikken, tijd erbij, met labels (bewust stil, te snel gecoacht, effect op spelers, voetbalprobleem) · **evaluatiegesprek** in 6 stappen, met je eigen notities bij de juiste stap · **één concreet ontwikkelpunt** (verplicht voor de PDF) · **reflectie trainer** (4 vragen, mag later; lege vragen krijgen schrijflijnen in de PDF).
 - **Observatie objectief (8-10):** per moment minuut · soort (**Vraag, Directief, Correctie, Compliment**) · wat de coach zegt of doet (zo letterlijk mogelijk) · wat de spelers daarna doen. Geen oordelende labels meer ("bewust stil", "te snel gecoacht"): dat oordeel hoort in het gesprek. Telling per deel staat bij stap 2 en 5, "wat de spelers deden" bij stap 3; in de PDF als tabel. Kloktijd en "alleen op dit toestel" niet meer zichtbaar.
@@ -998,7 +1011,7 @@ Vaste regel voor alle portalen: een lijst die in het seizoen groeit, toont eerst
 - **Account laten verwijderen** (onder Uitschrijven): in de echte versie een verzoek aan de clubbeheerder (persoonlijk bericht + e-mail), die het binnen een week afhandelt. Later automatisch vanaf de server.
 
 ## Besluit 53 — Pushmeldingen (stap 1)
-> **◐ Deels herzien door Besluit 57 (e-mail als vangnet), 77 (herinneringen vanaf de server)** (zie Register).
+> **◐ Deels herzien door Besluit 57 (e-mail als vangnet), 77 (herinneringen vanaf de server), 97 (push bij bevestigd trainer niet gekomen)** (zie Register).
 **Vuistregel: een pushmelding alleen als je iets moet weten of doen. Ter informatie en statistieken nooit.** Te veel meldingen = mensen zetten ze uit, en dan mis je ook de belangrijke.
 
 | Soort | Voorbeelden | Push | E-mail | Waarom |
@@ -1361,7 +1374,7 @@ Toegepast (24 sep 2026):
 - **Vaste berichten bij de jaarplanning** (Planning → Vaste berichten): vóór elke vakantie, bij een nieuwe fase, bij de beoordelingsmomenten, bij de start en het einde van het seizoen. De datums komen uit de jaarplanning. Standaard zet ClubComm het bericht **klaar** bij *Te doen*; de HJO kijkt het na en verstuurt het met één tik, of slaat het over. Per bericht kan ook "automatisch". Het gaat om zo'n 8–10 berichten per seizoen (geen ochtendbericht of weekoverzicht).
 
 ## Besluit 25 — Taken per rol (de club bepaalt)
-> **◐ Deels herzien door Besluit 95 (nieuwe standaard, eigenaar en terugval)** (zie Register).
+> **◐ Deels herzien door Besluit 95 (nieuwe standaard, eigenaar en terugval), 97 (werkgebied per bouw)** (zie Register).
 *Besloten 23 september 2026. Vervangt Besluit 24 (wie ziet wat) en vult Besluit 12 aan.*
 
 - **Rollen zijn vaste bouwstenen met een bereik:** trainer en teamleider (één team), **coördinator** (een groep teams, bijv. O10–O12), HJO (hele club), clubbeheerder (inrichten). Ouders zien altijd alleen hun eigen kind.
@@ -1429,7 +1442,7 @@ Toegepast (24 sep 2026):
 ---
 
 ## Besluit 21 — Afwezigheid van trainers signaleren
-> **◐ Deels herzien door Besluit 54 (telling niet meer in het profiel), 95 (niet gekomen: niet door de teamleider; de app signaleert, coördinator of HO bevestigt)** (zie Register).
+> **◐ Deels herzien door Besluit 54 (telling niet meer in het profiel), 95 (niet gekomen: niet door de teamleider; de app signaleert, coördinator of HO bevestigt), 97 (pushmelding aan HO/TC bij bevestigd niet gekomen)** (zie Register).
 
 Net als bij spelers: ClubComm registreert en signaleert, de HJO beslist.
 

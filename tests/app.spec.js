@@ -77,6 +77,37 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'coördinator Home');
   });
 
+  // Besluit 97: focus per bouw (signalen buiten je focus blijven zichtbaar als één regel) en bouwen instellen door de clubbeheerder
+  test('bouwen: focus voor de HO en indeling door de clubbeheerder', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(3).click();
+    await page.locator('[data-act="magischeLink"]').click();
+    await page.evaluate(() => CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'hjo')));
+    await page.locator('#app [data-act="seg"][data-key="hoFocus"][data-val="Mini\'s"]').click();
+    await expect(page.locator('#app')).toContainText('buiten je focus');
+    expect(await page.evaluate(() => localStorage.getItem('clubcomm-focus'))).toBe("Mini's");
+    await page.locator('#app [data-view="trainersRapport"]').first().click();
+    expect(await page.locator('details.uitklap').count()).toBe(1);
+    await controleer(page, fouten, 'HO focus');
+    // Clubbeheerder: onderbouw splitsen in O8–O10 en O11–O12
+    await page.evaluate(() => CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'beheerder')));
+    await page.locator('nav.nav button[data-tab="rollen"]').click();
+    await page.locator('[data-act="bouwErbij"]').click();
+    await page.locator('#bw-t1').selectOption('10');
+    await page.locator('#bw-n4').fill('Onderbouw 2'); await page.locator('#bw-v4').selectOption('11'); await page.locator('#bw-t4').selectOption('12');
+    await page.locator('form[data-submit="bouwenOk"] button.knop').first().click();
+    const bw = await page.evaluate(() => CC.S().club.bouwen.map((b) => `${b.naam}:${b.van}-${b.tot}`).join(','));
+    expect(bw).toBe("Mini's:6-7,Onderbouw:8-10,Onderbouw 2:11-12,Middenbouw:13-15,Bovenbouw:16-19");
+    // Overlap wordt geweigerd
+    await page.locator('#bw-t1').selectOption('11');
+    await page.locator('form[data-submit="bouwenOk"] button.knop').first().click();
+    expect(await page.evaluate(() => CC.S().club.bouwen[1].tot)).toBe(10);
+    await controleer(page, fouten, 'bouwen instellen');
+  });
+
   // Training afgelasten met een eigen toelichting: één bericht aan de ouders
   test('trainer gelast een training af met toelichting', async ({ page }) => {
     const fouten = volgFouten(page);
