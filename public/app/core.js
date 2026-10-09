@@ -37,7 +37,7 @@
     return kids.find((k) => k.id === sessie.kindId) || kids[0];
   };
   CC.kinderen = () => { const me = CC.me(); return S.players.filter((p) => p.teamId && p.ouders.includes(me.id)); };
-  CC.rolNaam = (r) => ({ ouder: 'Ouder', trainer: 'Trainer', teamleider: 'Teamleider', hjo: S.club.labels.hjo, beheerder: 'Clubbeheerder', coordinator: S.club.labels.coordinator }[r.rol]);
+  CC.rolNaam = (r) => ({ ouder: 'Ouder', trainer: 'Trainer', teamleider: 'Teamleider', hjo: S.club.labels.hjo, tc: 'Technisch coördinator', beheerder: 'Clubbeheerder', coordinator: S.club.labels.coordinator }[r.rol]);
   CC.login = (pid) => { const me = M.persoon(S, pid); sessie = { pid, rolIdx: 0, kindId: null }; store.set(SESSIE, sessie); ui.tab = 'home'; ui.view = null; ui.stack = []; CC.toast(`Welkom, ${me.naam.split(' ')[0]}!`); CC.render(); };
   CC.zetSessie = (pid) => { const oud = store.get(SESSIE, null); sessie = { pid, rolIdx: oud && oud.pid === pid ? oud.rolIdx || 0 : 0, kindId: oud && oud.pid === pid ? oud.kindId : null }; store.set(SESSIE, sessie); };
   CC.logout = () => { sessie = null; store.del(SESSIE); ui.login = { stap: 'mail', email: '' }; CC.closeSheet(); CC.render(); };
@@ -320,7 +320,7 @@
   CC.on('profiel', () => {
     const me = CC.me(); const rol = CC.rol();
     const kids = CC.kinderen();
-    const rollen = me.rollen.map((r, i) => `<button class="rolkeuze ${i === (sessie.rolIdx || 0) ? 'aan' : ''}" data-act="wisselRol" data-idx="${i}">${icon({ ouder: 'heart', trainer: 'clipboard-check', teamleider: 'hand-helping', hjo: 'shield', beheerder: 'building-2', coordinator: 'users' }[r.rol])}<span><b>${esc(CC.rolNaam(r))}</b><small>${r.teamId ? esc(CC.tn(r.teamId)) : r.groep ? esc(r.groep) : r.rol === 'ouder' ? kids.map((k) => esc(k.voornaam)).join(', ') : esc(S.club.naam)}</small></span>${i === (sessie.rolIdx || 0) ? icon('check') : ''}</button>`).join('');
+    const rollen = me.rollen.map((r, i) => `<button class="rolkeuze ${i === (sessie.rolIdx || 0) ? 'aan' : ''}" data-act="wisselRol" data-idx="${i}">${icon({ ouder: 'heart', trainer: 'clipboard-check', teamleider: 'hand-helping', hjo: 'shield', tc: 'user-check', beheerder: 'building-2', coordinator: 'users' }[r.rol])}<span><b>${esc(CC.rolNaam(r))}</b><small>${r.teamId ? esc(CC.tn(r.teamId)) : r.groep ? esc(r.groep) : (r.bouwen || []).length ? esc(r.bouwen.join(', ')) : r.rol === 'ouder' ? kids.map((k) => esc(k.voornaam)).join(', ') : esc(S.club.naam)}</small></span>${i === (sessie.rolIdx || 0) ? icon('check') : ''}</button>`).join('');
     const blokDemo = CC.live ? '' : `${(() => { // Snel wisselen: één tik naar een ander demo-account en rol, zonder inlogscherm
           const ik = CC.me(); const nu = (CC.rol() || {}).rol;
           const knoppen = ['sanne', 'mark', 'linda', 'peter', 'esther'].map((k) => M.persoon(S, S.demo[k])).filter(Boolean)

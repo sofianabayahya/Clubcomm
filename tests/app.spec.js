@@ -261,6 +261,73 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'begeleidingsmoment');
   });
 
+  // Besluit 100: pakket "Alleen Trainers begeleiden", technisch coördinator met werkgebied, vragenlijst per niveau, evaluatie overnemen
+  test('technisch coördinator, werkgebied en pakket Alleen Trainers begeleiden', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(3).click();
+    await page.locator('[data-act="magischeLink"]').click();
+    // Clubbeheerder: pakket kiezen
+    await page.evaluate(() => CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'beheerder')));
+    await page.locator('nav.nav button[data-tab="regels"]').click();
+    await page.locator('form[data-submit="pakketOk"] input[value="trainers"]').check();
+    await page.locator('form[data-submit="pakketOk"] button').click();
+    expect(await page.evaluate(() => CC.S().club.pakket)).toBe('trainers');
+    // Esther wordt technisch coördinator voor de onderbouw
+    const esther = 'p-esther';
+    await page.evaluate((id) => { document.body.insertAdjacentHTML('beforeend', `<button id="t-rol" data-act="rollenPersoon" data-id="${id}" hidden></button>`); document.getElementById('t-rol').click(); }, esther);
+    await expect(page.locator('#rb-r option[value="ouder"]')).toHaveCount(0);
+    await page.locator('#rb-r').selectOption('tc');
+    await page.locator('#rb-t').selectOption('bouw:Onderbouw');
+    await page.locator('#sheet form[data-submit="rolErbij"] button.knop').click();
+    await page.locator('#sheet [data-act="rolErbijOk"]').click();
+    const rol = await page.evaluate((id) => CC.S().people.find((p) => p.id === id).rollen.find((r) => r.rol === 'tc'), esther);
+    expect(rol).toEqual({ rol: 'tc', bouwen: ['Onderbouw'] });
+    // Esther als TC: alleen Trainers en Berichten, alleen trainers uit de onderbouw
+    await page.evaluate((id) => { CC.zetSessie(id); CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'tc')); }, esther);
+    await page.locator('nav.nav button[data-tab="home"]').click();
+    await expect(page.locator('nav.nav button')).toHaveCount(2);
+    await page.locator('[data-act="seg"][data-key="trDeel"][data-val="alle"]').click();
+    await expect(page.locator('#app')).toContainText('Dennis Peters');
+    const buiten = await page.evaluate(() => CC.S().teams.filter((t) => CC.bouwVan(CC.S(), t).naam !== 'Onderbouw').flatMap((t) => CC.m.stafVan(CC.S(), t.id, ['trainer'])).map((id) => CC.m.persoon(CC.S(), id).naam).filter((n) => !CC.S().teams.some((t) => CC.bouwVan(CC.S(), t).naam === 'Onderbouw' && CC.m.stafVan(CC.S(), t.id, ['trainer']).some((x) => CC.m.persoon(CC.S(), x).naam === n))));
+    for (const n of buiten.slice(0, 2)) await expect(page.locator('#app')).not.toContainText(n);
+    // Notitie: gedeeld per bouw
+    const dennis = await page.evaluate(() => CC.S().people.find((x) => x.naam === 'Dennis Peters').id);
+    await page.evaluate((d) => CC.open('trainerDetail', { id: d }), dennis);
+    await page.locator('#app form[data-submit="hoNotitieOk"] textarea').fill('Kan door, wel nog rustiger coachen');
+    await page.locator('#app form[data-submit="hoNotitieOk"] button').click();
+    expect(await page.evaluate((d) => CC.S().trainerNotities[d], dennis)).toEqual({ tekst: 'Kan door, wel nog rustiger coachen', bouwen: ['Onderbouw'] });
+    // Nieuw moment: korte vragenlijst is standaard, uitgebreid kan
+    await page.locator('#app [data-act="begelNieuw"]').click();
+    await page.locator('#bn-a').selectOption('');
+    await page.locator('#bn-s').selectOption('wedstrijd');
+    await page.locator('#sheet form[data-submit="begelNieuwOk"] button.knop').click();
+    await expect(page.locator('#app details[open] summary', { hasText: 'Planningsgesprek' })).toHaveCount(1);
+    await expect(page.locator('#app [data-act="begelNiveau"].aan')).toHaveText('Kort (4 vragen)');
+    await page.locator('#app [data-act="begelNiveau"][data-n="uitgebreid"]').click();
+    const id = await page.evaluate(() => CC.S().begeleidMomenten.at(-1).id);
+    expect(await page.evaluate((i) => CC.S().begeleidMomenten.find((m) => m.id === i).niveau, id)).toBe('uitgebreid');
+    // Evaluatie van /evaluatie (op dit toestel) overnemen
+    await page.evaluate(() => localStorage.setItem('clubcomm-evaluaties-v1', JSON.stringify({ huidig: 'e1', lijst: [{ id: 'e1', coach: 'Dennis Peters', team: 'O9', datum: '2026-10-08', tegenstander: 'Testclub', leerdoel: 'Rustig coachen', voetbalprobleem: 'Opbouwen onder druk', signalen: 'Elkaar coachen', focus: 'Momenten van ingrijpen', feedbackmoment: 'In de rust', notities: [{ fase: 'h1', min: '25', soort: 'Vraag', coach: 'Wat zie je?', spelers: 'Kijkt om' }, { fase: 'h1', min: '31', soort: 'Directief', coach: 'Schuiven!', spelers: '' }], s1: 'Goed gevoel', s3: 'Ze praatten meer', s6: 'Vaste momenten kiezen', punt: 'Vaste coachmomenten', r1: 'Ik riep minder' }] })));
+    await page.evaluate((i) => CC.open('begelMoment', { id: i }), id);
+    await page.locator('#app summary', { hasText: 'Praktijk' }).click();
+    await page.locator('#app [data-act="begelImport"]').click();
+    await page.locator('#sheet [data-act="begelImportOk"]').click();
+    const m = await page.evaluate((i) => CC.S().begeleidMomenten.find((x) => x.id === i), id);
+    expect(m.datum).toBe('2026-10-08');
+    expect(m.vakken.ontwikkelpunt).toBe('Vaste coachmomenten');
+    expect(m.obs.turf).toEqual({ h1: { Vraag: 1, Directief: 1 } });
+    expect(await page.evaluate((i) => CC.S().begeleidZelf[i].r.r1, id)).toBe('Ik riep minder');
+    // De trainer in het pakket: alleen Home en Berichten
+    await page.evaluate((d) => { CC.zetSessie(d); CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer')); }, dennis);
+    await page.locator('nav.nav button[data-tab="home"]').click();
+    await expect(page.locator('nav.nav button')).toHaveCount(2);
+    await expect(page.locator('#app')).toContainText('Mijn ontwikkeling');
+    await controleer(page, fouten, 'technisch coördinator');
+  });
+
   // Training afgelasten met een eigen toelichting: één bericht aan de ouders
   test('trainer gelast een training af met toelichting', async ({ page }) => {
     const fouten = volgFouten(page);
@@ -317,6 +384,40 @@ test.describe('Kleine club (echte versie, nagebootste database)', () => {
     await page.locator('#sheet form[data-submit="bevestigAfmelden"] button.knop').first().click();
     await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'afm' && r.data.spelerId === 's2').length, { message: 'afmelding opgeslagen in de database' }).toBe(1);
     await controleer(page, fouten, 'ouder na afmelden');
+  });
+
+  // Besluit 100: een club met alleen Trainers begeleiden (zoals de test bij een tweede club): HO, TC en één trainer, geen ouders
+  test('pakket Alleen Trainers begeleiden: HO, TC en trainer klikken door', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await nepDatabase(page);
+    await page.evaluate(() => {
+      const S = kleineClub(CC); S.club.pakket = 'trainers'; S.club.coordinatorAan = false; S.players = [];
+      S.teams = [{ id: 'O15-1', naam: 'Test O15', cat: 'O15', type: 'selectie', rooster: [], afwijking: {}, trainerId: 'p-tr', teamleiderId: null }];
+      const p = (id, naam, email, rollen) => ({ id, naam, email, tel: '', rollen });
+      S.people = [p('p-ho', 'Hanna Oost', 'ho@test.nl', [{ rol: 'hjo' }, { rol: 'beheerder' }]), p('p-tc', 'Tom Cramer', 'tc@test.nl', [{ rol: 'tc' }]), p('p-tr', 'Ties Ruiter', 'tr@test.nl', [{ rol: 'trainer', teamId: 'O15-1' }])];
+      S.trainerDossier = { 'p-tr': { traject: { actief: true, sinds: CC.date.vandaag(), door: 'p-ho', plan: { wedstrijd: 2, training: 2 }, leerdoel: 'Vaste coachmomenten', niveau: 'uitgebreid', ontwikkelpunt: '' } } };
+      S.begeleidMomenten = [{ id: 'bm1', trainerId: 'p-tr', teamId: 'O15-1', actId: null, soort: 'wedstrijd', datum: CC.date.vandaag(), door: 'p-ho', niveau: 'uitgebreid', klaar: false, gevraagd: new Date().toISOString(), voor: { thema: '', doel: 'Opbouwen onder druk', leerdoel: 'Vaste coachmomenten', hoDoel: '' }, plan: {}, obs: { punten: {}, notities: {}, klok: null, turf: {} }, vakken: {} }];
+      const rows = {}; CC.naarRijen(S, 'dcg').forEach((r) => { rows[`dcg|${r.soort}|${r.id}`] = r; });
+      sessionStorage.setItem('fake-sb-db', JSON.stringify({ rows, lid: {}, user: null }));
+    });
+    await inloggen(page, 'ho@test.nl');
+    await doorklik(page, fouten, 'HO (pakket)');
+    await page.evaluate(() => CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'hjo')));
+    await expect(page.locator('nav.nav button')).toHaveCount(2);
+    await page.evaluate(() => CC.open('trainerDetail', { id: 'p-tr' }));
+    await page.locator('#app form[data-submit="hoNotitieOk"] textarea').fill('Kan door');
+    await page.locator('#app form[data-submit="hoNotitieOk"] button').click();
+    await expect.poll(async () => ((await nepDb(page)).rows['dcg|trainerNotities|p-tr'] || {}).data, { message: 'notitie met bouw opgeslagen' }).toEqual({ tekst: 'Kan door', bouwen: ['Middenbouw'] });
+    await page.evaluate(() => CC.open('begelMoment', { id: 'bm1' }));
+    await controleer(page, fouten, 'HO begeleidingsmoment');
+    for (const email of ['tc@test.nl', 'tr@test.nl']) {
+      await page.evaluate(() => CC.logout());
+      await inloggen(page, email);
+      await doorklik(page, fouten, email);
+      await expect(page.locator('nav.nav button')).toHaveCount(2);
+    }
+    await page.locator('nav.nav button[data-tab="home"]').click();
+    await expect(page.locator('#app [data-act="begelZelf"]')).toHaveCount(1);
   });
 
   // Besluit 92: oefenwedstrijd uit, met verzamelen, verzamelpunt en adres; ouder ziet het op het kaartje, in het bericht en bij Vervoer

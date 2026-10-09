@@ -48,9 +48,9 @@
   const FOCUS = 'clubcomm-focus';
   const focus = (S) => { if (!CC.ui.seg.hoFocus) { try { CC.ui.seg.hoFocus = localStorage.getItem(FOCUS) || 'alle'; } catch (e) { CC.ui.seg.hoFocus = 'alle'; } }
     const f = CC.ui.seg.hoFocus; try { localStorage.setItem(FOCUS, f); } catch (e) { /* */ }
-    return CC.bouwenMetTeams(S).some((b) => b.naam === f) ? f : 'alle'; };
-  const inFocus = (S, f, tid) => f === 'alle' || CC.bouwVan(S, M.team(S, tid) || { id: tid }).naam === f;
-  const focusChips = (S, f) => { const bw = CC.bouwenMetTeams(S); if (bw.length < 2) return '';
+    const w = CC.werkgebied(S); return CC.bouwenMetTeams(S).some((b) => b.naam === f && (!w || w.has(b.naam))) ? f : 'alle'; };
+  const inFocus = (S, f, tid) => CC.inWerkgebied(S, tid) && (f === 'alle' || CC.bouwVan(S, M.team(S, tid) || { id: tid }).naam === f);
+  const focusChips = (S, f) => { const w = CC.werkgebied(S); const bw = CC.bouwenMetTeams(S).filter((b) => !w || w.has(b.naam)); if (bw.length < 2) return '';
     return `<div class="chips scroll">${[['alle', 'Alles'], ...bw.map((b) => [b.naam, b.naam])].map(([k, l]) => `<button class="chipknop ${k === f ? 'aan' : ''}" data-act="seg" data-key="hoFocus" data-val="${esc(k)}">${esc(l)}</button>`).join('')}</div>`; };
   CC.hoFocus = { focus: (S) => focus(S), inFocus: (S, f, tid) => inFocus(S, f, tid), chips: (S, f) => focusChips(S, f) };
   const weekActs = (S) => { const v = D.vandaag(); const t = D.addDays(v, 6); return S.teams.flatMap((x) => M.acts(S, x.id, v, t)).filter((a) => !a.afgelast).sort((a, b) => (a.datum + a.tijd).localeCompare(b.datum + b.tijd)); };
@@ -62,7 +62,7 @@
     const aan = stats.reduce((s, x) => s + x.spelers.reduce((a, y) => a + y.st.aanwezig, 0), 0);
     // Te doen: alleen de trainers en jouw eigen stap (clubbesluit); spelerzaken die bij de coördinator blijven liggen gebundeld
     const doen = []; const f = focus(S);
-    const tsAlle = trainerSig(S); const teamVanTr = (x) => (x.p.rollen.find((r) => r.rol === 'trainer') || {}).teamId;
+    const tsAlle = trainerSig(S).filter((x) => CC.inWerkgebied(S, (x.p.rollen.find((r) => r.rol === 'trainer') || {}).teamId)); const teamVanTr = (x) => (x.p.rollen.find((r) => r.rol === 'trainer') || {}).teamId;
     const ts = tsAlle.filter((x) => inFocus(S, f, teamVanTr(x))); const buiten = tsAlle.length - ts.length;
     if (ts.length >= BUNDEL) doen.push(h.rij({ ic: 'user-cog', titel: `${ts.length} trainers vragen aandacht`, sub: ts.slice(0, 3).map((x) => esc(x.p.naam)).join(', ') + (ts.length > 3 ? '…' : ''), kleur: 'oranje', act: 'open', attrs: 'data-view="trainersRapport" data-filter="aandacht"' }));
     else doen.push(...ts.map((x) => h.rij({ ic: 'user-cog', titel: esc(x.tekst), sub: esc(x.sub), kleur: 'oranje', act: 'open', attrs: `data-view="trainerDetail" data-id="${x.p.id}"` })));
@@ -116,7 +116,7 @@
       const delen = [t.afmeldingen && `${t.afmeldingen}× afgemeld`, t.telaat && `${t.telaat}× te laat`, t.niet && `${t.niet}× niet gekomen`, t.afgelast && `${t.afgelast} afgelast`].filter(Boolean);
       return delen.length ? delen.join(' · ') : 'geen afmeldingen dit seizoen'; };
     const per = M.periode(S, 'blok');
-    const bouwen = CC.bouwenMetTeams(S).filter((b) => f === 'alle' || b.naam === f);
+    const wg = CC.werkgebied(S); const bouwen = CC.bouwenMetTeams(S).filter((b) => (f === 'alle' || b.naam === f) && (!wg || wg.has(b.naam)));
     const extra = (tr) => (CC.trainerExtra ? CC.trainerExtra(S, tr) : '');
     const blokken = bouwen.map((b) => {
       const teams = b.teams.slice().sort((x, y) => x.naam.localeCompare(y.naam, 'nl', { numeric: true }));

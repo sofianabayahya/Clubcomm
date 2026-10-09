@@ -1,7 +1,7 @@
 # ClubComm
 
 Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoer, berichten, kaarten, speeltijd.
-**Pilot:** RKSV DCG (Amsterdam, Sportpark Ookmeer), team **O12 talententeam** (code `O12-1`, selectie), 16 spelers (een 17e twijfelt nog). Database sinds 25-09 leeg op dit team na (Besluit 38). De gebruiker (Sofian) is trainer, ouder (zijn kind speelt in het team) en clubbeheerder, met twee teamleiders. Wedstrijden vanaf fase 2 (za 31 okt 2026).
+**Pilot:** RKSV DCG (Amsterdam, Sportpark Ookmeer), team **O12 talententeam** (code `O12-1`, selectie), 16 spelers (een 17e twijfelt nog). Database sinds 25-09 leeg op dit team na (Besluit 38). **Tweede club (10-10): AVV Swift** (club-id `swift`), alleen het pakket Trainers begeleiden: de gebruiker is daar HO + clubbeheerder (eigen e-mailadres), plus een TC en trainers. De gebruiker (Sofian) is trainer, ouder (zijn kind speelt in het team) en clubbeheerder, met twee teamleiders. Wedstrijden vanaf fase 2 (za 31 okt 2026).
 
 ## Werkafspraken met de gebruiker
 - De gebruiker is beginner: altijd **eenvoudig Nederlands**, één stap tegelijk, uitleg waar je klikt.
@@ -17,7 +17,7 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
 ## Waar staat wat
 | Bestand | Inhoud |
 |---|---|
-| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bovenaan het **Register** (status per besluit), onderaan **Afgewezen ideeën**. Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 99). |
+| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bovenaan het **Register** (status per besluit), onderaan **Afgewezen ideeën**. Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 100). |
 | `docs/pilotlog.md` | **Fouten uit de pilot met oorzaak en patroon** (momentopname, opslaan, demo verbergt het, één persoon per rol, buiten de app, rommelige gegevens). Bij elke wijziging langs deze patronen lopen. |
 | `docs/plan-van-aanpak.md` | **Van pilot naar product:** A product af (ook op schaal: 50 teams) → B beschrijven (handboek) → C prijs en groei → D verkopen → E invoeren. Met planning t/m januari 2027. |
 | `docs/productie-en-groei.md` | Controlelijst, **Openstaand**, meerdere clubs, app of website, kosten. |
@@ -30,7 +30,7 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
   - `data.js`: demodata + rekenregels (aanwezigheid, kaarten per seizoen, zones, signalen, speeltijd, vaste taken). `opslag.js`: app-gegevens ↔ databaserijen. `core.js`: inloggen, kop, profiel, berichten, afmelden, planning aanpassen, privacy, feedback.
   - Schermen per rol: `ouder.js`, `trainer.js`, `teamleider.js`, `hjo.js` (ook clubbeheerder), `hjohome.js`; coördinator via `taken.js` (ook taken per rol en profielen).
   - `begeleiding.js`: het begeleidingsmoment (Besluit 99 deel 2): vijf fasen, A4-observatie (leertijd-klok, turven), vier vakken, delen en reflectie trainer, A4 leeg en ingevuld printen; Mijn ontwikkeling van de trainer staat in `trainers.js` (deel 3).
-  - `trainers.js`: trainers begeleiden door de HO (Besluit 99): tabblad Trainers, traject, dossier, kennismaking trainer, VOG en diploma (coördinator), printen (`CC.printDoc`). Scopes `trainerzelf`, `trainerdossier`, `hoprive` (migratie 024).
+  - `trainers.js`: trainers begeleiden door de HO (Besluit 99): tabblad Trainers, traject, dossier, kennismaking trainer, VOG en diploma (coördinator), printen (`CC.printDoc`). Scopes `trainerzelf`, `trainerdossier`, `hoprive` (migratie 024; 025: ook de TC, notities per bouw). Besluit 100: rol `tc` (technisch coördinator), werkgebied `bouwen` bij de rol HO/TC (`CC.werkgebied`), pakket "Alleen Trainers begeleiden" (`club.pakket = 'trainers'`, `CC.pakketTrainers`).
   - `adres.js`: adres aanvullen via PDOK (velden met `data-adres`). `push.js`: pushmeldingen aanzetten en keuzes (Besluit 53); tonen in `sw.js`. `onderhoud.js`: foutregistratie en zelf verversen bij een nieuwe versie (`versie.json`, gemaakt door `versie-maken.js` bij elke publicatie; Besluit 63).
   - Modules: `autoberichten.js` (Communicatieplan, noodberichten, herinneringen activiteiten), `afwezig.js`, `trainerafw.js`, `beoordeling.js` (+ `gesprek.js`: voorbereiding en gesprekspagina ontwikkelgesprek), `materiaal.js`, `meehelpen.js`, `waardering.js`, `hjofilter.js`, `agenda.js`.
   - `evaluatie.html` (los, `/evaluatie`): evaluatieformulier praktijkbegeleiding coach, gegevens alleen op het toestel, PDF via printen (Besluit 93).
