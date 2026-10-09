@@ -31,6 +31,29 @@ test.describe('Demo', () => {
     await expect.poll(() => page.evaluate(() => CC.S().afm.length)).toBe(voor + 1);
     await controleer(page, fouten, 'na afmelden');
   });
+
+  // Training afgelasten met een eigen toelichting: één bericht aan de ouders
+  test('trainer gelast een training af met toelichting', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(1).click();
+    await page.locator('[data-act="magischeLink"]').click();
+    await page.evaluate(() => { CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer')); CC.wijzigingSheet(); });
+    await expect(page.locator('#w-at')).toBeHidden();
+    await page.locator('#w-wat').selectOption('afgelast');
+    await expect(page.locator('#w-at')).toBeVisible();
+    const actId = await page.locator('#w-act').inputValue();
+    await page.locator('#w-at').fill('Door blessures en ziekte. Fijn weekend!');
+    await page.locator('#sheet form[data-submit="wijzigPlanning"] button.knop').click();
+    const uit = await page.evaluate((id) => ({ afgelast: CC.S().acts.find((a) => a.id === id).afgelast, m: CC.S().msgs.filter((m) => /gaat niet door/.test(m.onderwerp)) }), actId);
+    expect(uit.afgelast).toBe(true);
+    expect(uit.m).toHaveLength(1);
+    expect(uit.m[0].tekst).toMatch(/gaat niet door\.\n\nDoor blessures en ziekte\. Fijn weekend!$/);
+    expect(uit.m[0].urgent).toBe(true);
+    await controleer(page, fouten, 'na afgelasten');
+  });
 });
 
 test.describe('Kleine club (echte versie, nagebootste database)', () => {

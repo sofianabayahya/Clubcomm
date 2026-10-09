@@ -779,7 +779,8 @@
     CC.sheet('Planning aanpassen', `<form data-submit="wijzigPlanning" class="codeform">
       <label for="w-wat">Wat wil je doen?</label>
       <select id="w-wat" name="wat" data-change="wijzigWat"><option value="verplaats">Training verplaatsen of veld wijzigen</option><option value="afgelast">Training afgelasten</option><option value="extra">Extra training toevoegen</option><option value="oefen">Oefenwedstrijd toevoegen</option><option value="activiteit">Activiteit toevoegen (zaalvoetbal, toernooi, uitje)</option></select>
-      <div id="w-bestaand"><label for="w-act">Welke training?</label><select id="w-act" name="act">${komend.filter((a) => a.soort === 'training').map((a) => `<option value="${a.id}" ${a.id === actId ? 'selected' : ''}>${D.kort(a.datum)} · ${a.tijd} · ${esc(a.veld)}</option>`).join('')}</select></div>
+      <div id="w-bestaand"><label for="w-act">Welke training?</label><select id="w-act" name="act">${komend.filter((a) => a.soort === 'training').map((a) => `<option value="${a.id}" ${a.id === actId ? 'selected' : ''}>${D.kort(a.datum)} · ${a.tijd} · ${esc(a.veld)}</option>`).join('')}</select>
+        <div id="w-afg" hidden><label for="w-at">Toelichting voor de ouders (mag leeg)</label><textarea id="w-at" name="afgToel" rows="4" placeholder="Bijv. door blessures en ziekte; zo is er extra rust voor het weekend"></textarea></div></div>
       <div id="w-nieuw"><label for="w-dat">Datum</label><input id="w-dat" name="datum" type="date" value="${D.addDays(D.vandaag(), 1)}">
       <div class="twee"><div><label for="w-tijd">Tijd</label><input id="w-tijd" name="tijd" type="time" value="17:30"></div><div><label for="w-veld">Veld</label><input id="w-veld" name="veld" value="Veld 2"></div></div>
       <div id="w-tegen" hidden><label for="w-t">Tegenstander</label><input id="w-t" name="tegen" placeholder="Bijv. FC Waterkant O10-3">
@@ -798,7 +799,7 @@
   CC.on('wijzigWat', (el) => {
     const f = el.form; const v = el.value;
     f.querySelector('#w-bestaand').hidden = !(v === 'verplaats' || v === 'afgelast');
-    f.querySelector('#w-nieuw').hidden = v === 'afgelast';
+    f.querySelector('#w-nieuw').hidden = v === 'afgelast'; f.querySelector('#w-afg').hidden = v !== 'afgelast';
     f.querySelector('#w-tegen').hidden = v !== 'oefen';
     f.querySelector('#w-activ').hidden = v !== 'activiteit'; f.querySelector('#w-veld').closest('div').hidden = v === 'activiteit' || (v === 'oefen' && f.oefThuis.value === '0');
     f.querySelector('label[for="w-tijd"]').textContent = v === 'oefen' ? 'Aftrap' : 'Tijd';
@@ -810,10 +811,10 @@
   CC.oefenTekst = (a) => `Oefenwedstrijd ${a.thuis === false ? 'uit' : 'thuis'}${a.tegen ? ` tegen ${a.tegen}` : ''} op ${D.lang(a.datum)}, aftrap ${a.tijd}${a.thuis !== false && a.veld ? ` (${a.veld})` : ''}.${CC.actWaar(a.thuis === false ? a : { ...a, adres: '' })} Kan je kind niet? Meld af in ClubComm.`;
   CC.on('wijzigPlanning', (f) => {
     const tid = CC.teamId(); const t = M.team(S, tid); const me = CC.me(); const wat = f.wat.value;
-    let tekst = ''; let verloopt = null; let actId = null; // Besluit 80: het bericht vervalt na de dag van de activiteit
+    let tekst = ''; let toel = ''; let verloopt = null; let actId = null; // Besluit 80: het bericht vervalt na de dag van de activiteit
     if (wat === 'afgelast' || wat === 'verplaats') {
       const a = M.act(S, f.act.value); if (!a) return CC.toast('Kies een training', 'fout');
-      if (wat === 'afgelast') { a.afgelast = true; tekst = `Training van ${D.lang(a.datum)} gaat niet door.`; }
+      if (wat === 'afgelast') { a.afgelast = true; tekst = `Training van ${D.lang(a.datum)} gaat niet door.`; toel = f.afgToel.value.trim(); } // eigen toelichting in hetzelfde bericht
       else { const oud = `${D.kort(a.datum)} ${a.tijd}`; if (!a.origDatum) a.origDatum = a.datum; a.verplaatst = true; a.datum = f.datum.value; a.tijd = f.tijd.value; a.veld = f.veld.value; a.eind = CC.plusMin(a.tijd, 75); tekst = `Training van ${oud} is verplaatst naar ${D.lang(a.datum)} ${a.tijd} op ${a.veld}.`; }
       verloopt = a.datum;
     } else {
@@ -828,7 +829,7 @@
       tekst = wat === 'activiteit' ? `${a.naam} op ${D.lang(a.datum)} van ${a.tijd} tot ${a.eind}${a.plaats ? ` bij ${a.plaats}` : ''}.${CC.actWaar(a)}${a.toelichting ? ` ${a.toelichting}` : ''}${a.opgave ? ` Geef je kind vóór ${D.lang(a.opgaveTot)} op in ClubComm: ja of nee.` : ' Kan je kind niet? Meld af in ClubComm.'}` : wat === 'oefen' ? CC.oefenTekst(a) : `Extra training op ${D.lang(a.datum)} om ${a.tijd} (${a.veld}).`;
     }
     const now = new Date().toISOString();
-    S.msgs.push({ id: 'b' + Date.now(), van: me.id, vanRol: (CC.rol() || {}).rol, soort: 'nieuws', verloopt, actId, bereik: tid, onderwerp: wat === 'activiteit' ? `Nieuw: ${f.naam.value.trim()}` : wat === 'oefen' ? `Oefenwedstrijd ${D.kort(f.datum.value)}${f.tegen.value.trim() ? ` tegen ${f.tegen.value.trim()}` : ''}` : 'Wijziging in de planning', tekst, tijd: now, ontvangers: M.oudersVan(S, tid), gelezen: [], antw: [], urgent: ['afgelast', 'verplaats'].includes(wat) || (wat !== 'activiteit' && !!verloopt && verloopt <= D.addDays(D.vandaag(), 1)) /* Besluit 92: urgent alleen bij afgelasten/verplaatsen of iets voor vandaag of morgen */, gepland: null });
+    S.msgs.push({ id: 'b' + Date.now(), van: me.id, vanRol: (CC.rol() || {}).rol, soort: 'nieuws', verloopt, actId, bereik: tid, onderwerp: wat === 'activiteit' ? `Nieuw: ${f.naam.value.trim()}` : wat === 'afgelast' ? `Training ${D.kort(verloopt)} gaat niet door` : wat === 'oefen' ? `Oefenwedstrijd ${D.kort(f.datum.value)}${f.tegen.value.trim() ? ` tegen ${f.tegen.value.trim()}` : ''}` : 'Wijziging in de planning', tekst: toel ? `${tekst}\n\n${toel}` : tekst, tijd: now, ontvangers: M.oudersVan(S, tid), gelezen: [], antw: [], urgent: ['afgelast', 'verplaats'].includes(wat) || (wat !== 'activiteit' && !!verloopt && verloopt <= D.addDays(D.vandaag(), 1)) /* Besluit 92: urgent alleen bij afgelasten/verplaatsen of iets voor vandaag of morgen */, gepland: null });
     const hjo = S.people.filter((p) => p.rollen.some((r) => r.rol === 'hjo')).map((p) => p.id);
     const info = [...new Set([...hjo, ...M.stafVan(S, tid)])].filter((x) => x && x !== me.id);
     S.msgs.push({ id: 'b' + Date.now() + 1, van: 'systeem', soort: 'melding', bereik: 'Ter informatie', onderwerp: `Planning ${CC.tn(tid)} gewijzigd`, tekst: `${me.naam}: ${tekst} Je hoeft niets te doen.`, tijd: now, ontvangers: info, gelezen: [], antw: [], urgent: false, gepland: null });
