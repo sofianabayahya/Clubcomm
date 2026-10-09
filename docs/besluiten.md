@@ -1704,6 +1704,7 @@ Bewust niet gedaan, met de reden. Komt een van deze toch terug, zeg dan dat het 
 
 | Idee | Waarom niet | Besluit |
 |---|---|---|
+| Eigen naam aanpassen in het Profiel (of naam in de kennismaking) | Niet nodig (10-10): de club zet de naam goed bij het inrichten; bij een fout past de clubbeheerder hem aan (Besluit 45) | 45, 100 |
 | Afmelden namens de ouder (door teamleider) | Informatie gaat van de bron de app in; geen taak voor een ander | 34 |
 | Ochtendbericht voor de trainer, weekoverzicht of weekbericht voor ouders | Te veel berichten; de stand verandert tot het laatste moment; de week staat al op Home en in de Planning, wijzigingen krijgen meteen een bericht | 20, bevestigd 10-10 (principe 10) |
 | Knop "Ik kan niet" opvallend op de Home van de trainer | Nodigt uit tot makkelijk afmelden | 20 |
