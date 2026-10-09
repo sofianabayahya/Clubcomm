@@ -583,7 +583,11 @@ body.rl .sheet { max-width: var(--app-b); }
 .stappenlijst li { display: flex; align-items: center; gap: 8px; color: var(--zacht); }
 .stappenlijst li .ic { width: 18px; height: 18px; }
 .stappenlijst li.ok { color: var(--groen, #137333); }
-.stappenlijst li.half { color: var(--oranje, #a84d08); }
+.stappenlijst li.half { color: var(--blauw, #0869c2); }
+/* Besluit 100: groen = klaar (beloning), blauw = bezig, grijs = open; oranje alleen als iets blijft liggen */
+.uitklap summary.fase .ic { color: var(--zacht); } .uitklap summary.fase small { color: var(--zacht); font-weight: 500; }
+.uitklap summary.fase.ok .ic, .uitklap summary.fase.ok small { color: var(--groen); }
+.uitklap summary.fase.half .ic, .uitklap summary.fase.half small { color: var(--blauw); }
 dl.antwoorden { margin: 8px 0 0; font-size: 14px; }
 dl.antwoorden dt { color: var(--zacht); font-size: 13px; margin-top: 8px; }
 dl.antwoorden dd { margin: 2px 0 0; white-space: pre-wrap; }
