@@ -10,7 +10,7 @@
     vervoer: {}, taken: [], opgave: [], aanm: [], beoord: {}, notities: {}, speeltijd: { min: {}, schema: {}, keeper: {}, mogelijk: {} }, wijzigingen: [],
     demo: {}, materiaal: {}, mails: [], trainerLog: [], trainerGesprekken: [], ontwGesprek: [], ontwVoorb: {}, ontwVerslag: {}, ontwNotitie: {}, teamVaardig: {}, sigSinds: {}, signaalAfgedaan: [],
     gezienInfo: {}, mijlpaalGezien: {}, autoVerstuurd: {}, beoordGedeeld: {}, beoordGezien: {},
-    trainerDossier: {}, trainerKennis: {}, trainerAdmin: {}, trainerNotities: {}, begeleidMomenten: [], begeleidZelf: {},
+    trainerDossier: {}, trainerKennis: {}, trainerAdmin: {}, trainerNotities: {}, begeleidMomenten: [], begeleidZelf: {}, begelHoVerslag: {},
     // voorkomt dat de demo-onderdelen voorbeelddata toevoegen
     beoordDemo: true, hjoHomeDemo: true, hulpDemo: true, vervangDemo: true, trainerDemo: true, begelDemo: true, live: true,
   });
@@ -68,6 +68,7 @@
     ['trainerAdmin', 'trainerAdmin', 'hjo', (k) => ({ persoon: k })],
     ['trainerNotities', 'trainerNotities', 'hoprive', (k) => ({ persoon: k })],
     ['begeleidZelf', 'begeleidZelf', 'trainerzelf', (k, v) => ({ persoon: (v || {}).trainerId })],
+    ['begelHoVerslag', 'begelHoVerslag', 'hoprive', (k, v) => ({ persoon: (v || {}).trainerId })],
   ];
   // Losse objecten (één rij)
   const ENKEL = [['club', 'club', 'club'], ['sigSinds', 'sigSinds', 'hjo'], ['autoVerstuurd', 'autoVerstuurd', 'hjo']];
