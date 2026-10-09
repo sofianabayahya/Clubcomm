@@ -70,7 +70,7 @@
 
   // In het dossier (trainers.js roept dit aan)
   CC.begelBlok = (S, pid) => { const l = mom(S).filter((m) => m.trainerId === pid).sort((a, b) => b.datum.localeCompare(a.datum));
-    return `${l.length ? `<div class="lijst compact">${l.map((m) => h.rij({ ic: m.klaar ? 'circle-check' : m.soort === 'wedstrijd' ? 'trophy' : 'dumbbell', titel: esc(titelM(S, m)), sub: faseRegel(S, m), act: 'open', attrs: `data-view="begelMoment" data-id="${m.id}"` })).join('')}</div>` : ''}
+    return `${l.length ? `<div class="lijst compact">${l.map((m) => h.rij({ ic: m.klaar ? 'circle-check' : m.soort === 'wedstrijd' ? 'trophy' : 'dumbbell', kleur: m.klaar ? 'groen' : '', titel: esc(titelM(S, m)), sub: faseRegel(S, m), act: 'open', attrs: `data-view="begelMoment" data-id="${m.id}"` })).join('')}</div>` : ''}
       <button class="knop klein" data-act="begelNieuw" data-id="${pid}">${icon('plus')}Nieuw begeleidingsmoment</button>`; };
 
   // ---------- Nieuw moment ----------
@@ -94,7 +94,7 @@
   CC.views.begelMoment = (S, p) => {
     const m = vind(S, p.id); if (!m) return { titel: 'Begeleidingsmoment', html: h.leeg('Niet gevonden') };
     const tr = M.persoon(S, m.trainerId) || { naam: '' }; const z = zelf(S)[m.id] || {}; const F = fasen(S, m); const huidig = F.findIndex(([, ok]) => !ok);
-    const blok = (i, inhoud) => { const [n, ok, half] = F[i]; return `<details class="uitklap" ${i === (laatst[m.id] ?? huidig) ? 'open' : ''}><summary>${icon(ok ? 'circle-check' : 'clock')}<b>${i + 1}. ${n}</b> <small class="zacht">${ok ? 'klaar' : half ? 'bezig' : ''}</small></summary>${inhoud}</details>`; };
+    const blok = (i, inhoud) => { const [n, ok, half] = F[i]; return `<details class="uitklap" ${i === (laatst[m.id] ?? huidig) ? 'open' : ''}><summary class="fase ${ok ? 'ok' : half ? 'half' : ''}">${icon(ok ? 'circle-check' : 'clock')}<b>${i + 1}. ${n}</b> <small>${ok ? 'klaar' : half ? 'bezig' : ''}</small></summary>${inhoud}</details>`; };
     const vragen = VRAGEN(m.soort, m.niveau);
     return { titel: titelM(S, m), sub: tr.naam, html: `
       ${m.klaar ? '' : `<button class="knop vol" data-act="open" data-view="begelObs" data-id="${m.id}">${icon('list-checks')}Observeren</button>`}
