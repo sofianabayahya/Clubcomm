@@ -631,3 +631,9 @@ dl.antwoorden dd { margin: 2px 0 0; white-space: pre-wrap; }
   #printvak .pv-vakken { display: grid; grid-template-columns: 1fr 1fr; gap: 6pt; break-inside: avoid; }
   #printvak .pv-vak { border: 1px solid #bbc; padding: 4pt 6pt; min-height: 52pt; } #printvak .pv-vak small { display: block; color: #666; font-size: 8pt; }
 }
+
+/* Trainers → Traject: één kaart per trainer */
+.kaartje.traject { margin-bottom: 10px; }
+.traject-kop { display: flex; align-items: center; gap: 6px; width: 100%; text-align: left; padding: 0 0 4px; color: var(--inkt); }
+.traject-kop .ic { margin-left: auto; color: var(--zacht); width: 18px; height: 18px; }
+.stappenlijst li[data-act] { cursor: pointer; }

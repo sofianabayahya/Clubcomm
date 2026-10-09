@@ -85,12 +85,22 @@
     const inTraject = alle.filter((p) => traject(S, p.id));
     const totaal = inTraject.reduce((n, p) => { const t = traject(S, p.id); return n + (t.plan.wedstrijd || 0) + (t.plan.training || 0); }, 0);
     const klaar = inTraject.reduce((n, p) => n + gedaan(S, p.id), 0);
-    return `${kop}<div class="clubregel"><span><b>${inTraject.length}</b> in traject</span><span><b>${totaal}</b> momenten</span><span><b>${klaar}</b> gedaan</span></div>
-      ${inTraject.length ? `<div class="lijst">${inTraject.map((p) => { const t = traject(S, p.id);
-        return h.rij({ ic: CC.trainerVolgt(S, p.id) ? 'star' : 'user-check', titel: `${esc(p.naam)} · ${esc(teamsVan(S, p).map((x) => x.naam).join(', '))}`, sub: `${planTekst(t)} · ${standTekst(S, p.id, t)}${t.ontwikkelpunt ? ` · ontwikkelpunt: ${esc(t.ontwikkelpunt)}` : ''}`, act: 'open', attrs: `data-view="trainerDetail" data-id="${p.id}"` }); }).join('')}</div>`
-        : h.leeg('Nog niemand in een traject', 'user-check')}
-      <p class="zacht klein">Begeleiden is voor trainers die zich willen ontwikkelen. Zet iemand in een traject via <b>Alle trainers</b> → trainer → <b>Traject starten</b>. Trainers zonder traject geven geen signalen over begeleiding.</p>`;
+    // Schoon overzicht: per trainer naam, leerdoel en de geplande momenten, afgevinkt als ze klaar zijn
+    const kaart = (p) => { const t = traject(S, p.id);
+      return `<div class="kaartje traject"><button class="linkknop traject-kop" data-act="open" data-view="trainerDetail" data-id="${p.id}"><b>${esc(p.naam)}</b> <small class="zacht">${esc(teamsVan(S, p).map((x) => x.naam).join(', '))}</small>${icon('chevron-right')}</button>
+        ${t.leerdoel ? `<p class="klein"><b>Leerdoel:</b> ${esc(t.leerdoel)}</p>` : ''}${trajectStappen(S, p.id, t)}</div>`; };
+    return `${kop}<button class="knop vol" data-act="trajectKies">${icon('plus')}Traject toevoegen</button>
+      ${inTraject.length ? `<div class="clubregel"><span><b>${inTraject.length}</b> in traject</span><span><b>${klaar}/${totaal}</b> gedaan</span></div>${inTraject.map(kaart).join('')}` : h.leeg('Nog niemand in een traject', 'user-check')}`;
   };
+  // De momenten van het plan als afvinklijst: wedstrijden, daaronder trainingen; klaar = groen, gepland = blauw, open = grijs
+  const trajectStappen = (S, pid, t) => { const mom = (S.begeleidMomenten || []).filter((m) => m.trainerId === pid).sort((a, b) => a.datum.localeCompare(b.datum));
+    const regels = [['wedstrijd', 'Wedstrijd'], ['training', 'Training']].flatMap(([soort, naam]) => { const l = mom.filter((m) => m.soort === soort); const n = Math.max(t.plan[soort] || 0, l.length);
+      return Array.from({ length: n }, (_, i) => { const m = l[i];
+        return m ? `<li class="${m.klaar ? 'ok' : 'half'}" data-act="open" data-view="begelMoment" data-id="${m.id}" role="button" tabindex="0">${icon(m.klaar ? 'circle-check' : 'clock')}<span>${naam} ${D.kort(m.datum)}</span></li>` : `<li>${icon('clock')}<span>${naam}</span></li>`; }); });
+    return regels.length ? `<ul class="stappenlijst">${regels.join('')}</ul>` : ''; };
+  // Traject toevoegen: kies een trainer uit je werkgebied (zonder traject)
+  CC.on('trajectKies', () => { const S = CC.S(); const f = CC.hoFocus ? CC.hoFocus.focus(S) : 'alle'; const l = trainersIn(S, f).filter((p) => !traject(S, p.id)).sort((a, b) => a.naam.localeCompare(b.naam));
+    CC.sheet('Traject toevoegen', l.length ? `<p class="zacht">Kies de trainer.</p><div class="lijst">${l.map((p) => h.rij({ ic: h.avatar(p.naam), titel: esc(p.naam), sub: esc(teamsVan(S, p).map((x) => x.naam).join(', ')), act: 'trajectSheet', attrs: `data-id="${p.id}"` })).join('')}</div>` : h.leeg('Alle trainers hebben al een traject')); });
   CC.on('zoekTrainer', (el) => { CC.ui.seg.trZoek = el.value; const pos = el.selectionStart; CC.render(); const n = document.querySelector('[data-input="zoekTrainer"]'); if (n) { n.focus(); n.setSelectionRange(pos, pos); } });
 
   // ---------- Trainersdossier (vervangt de detailpagina van trainerafw.js; die blijft eronder als "Afmeldingen en contact") ----------
