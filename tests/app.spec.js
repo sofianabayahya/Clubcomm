@@ -202,7 +202,11 @@ test.describe('Demo', () => {
     await page.locator('[data-act="magischeLink"]').click();
     await page.evaluate(() => CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'hjo')));
     await page.locator('nav.nav button[data-tab="trainers"]').click();
-    await page.locator('#app [data-view="trainerDetail"]', { hasText: 'Dennis Peters' }).first().click();
+    // Deze week op de Home: het geplande moment is er nog niet (over 8 dagen); wel na verplaatsen naar morgen
+    await page.evaluate(() => { CC.S().begeleidMomenten.find((m) => m.id === 'bm-demo2').datum = CC.date.addDays(CC.date.vandaag(), 1); });
+    await page.locator('nav.nav button[data-tab="home"]').click();
+    await expect(page.locator('#app [data-view="begelMoment"]')).toContainText('Morgen: begeleiding Dennis Peters');
+    await page.evaluate(() => CC.open('trainerDetail', { id: CC.S().people.find((x) => x.naam === 'Dennis Peters').id }));
     // Het afgeronde demomoment staat in het dossier en print als A4
     await page.locator('#app [data-view="begelMoment"]', { hasText: 'Training' }).first().click();
     await page.locator('#app [data-act="begelPrint"]:not([data-leeg])').click();
@@ -247,6 +251,13 @@ test.describe('Demo', () => {
     await page.locator('#app textarea[name="r1"]').fill('Ik praat te snel');
     await page.locator('#app form[data-submit="begelReflectieOk"] button.knop').click();
     expect(await page.evaluate((i) => CC.S().begeleidZelf[i].r.r1, id)).toBe('Ik praat te snel');
+    // Mijn ontwikkeling in het profiel: traject, momenten en printen
+    await page.evaluate(() => document.querySelector('[data-act="profiel"]').click());
+    await page.locator('#sheet [data-view="mijnOntw"]').click();
+    await expect(page.locator('#app')).toContainText('Rust gebruiken voor één punt');
+    await expect(page.locator('#app [data-view="begelVerslag"]')).toHaveCount(2);
+    await page.locator('#app [data-act="mijnOntwPrint"]').click();
+    await expect(page.locator('#printvak')).toContainText('Ik praat te snel');
     await controleer(page, fouten, 'begeleidingsmoment');
   });
 

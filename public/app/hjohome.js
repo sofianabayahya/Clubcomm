@@ -75,6 +75,7 @@
     const dagRij = (d) => { const op = acts.filter((a) => a.datum === d); const w = op.filter((a) => M.isWed(a)); const tr = op.filter((a) => a.soort === 'training');
       const delen = [w.length && `${w.length} ${w.length === 1 ? 'wedstrijd' : 'wedstrijden'}${w.some((a) => a.thuis) ? ` (${w.filter((a) => a.thuis).length} thuis)` : ''}`, tr.length && `${tr.length} ${tr.length === 1 ? 'training' : 'trainingen'}`, (op.length - w.length - tr.length) && `${op.length - w.length - tr.length} anders`].filter(Boolean);
       return h.rij({ ic: 'calendar-days', titel: `${D.relatief(d)}`, sub: delen.join(' · ') + (f !== 'alle' ? ` · ${esc(f.toLowerCase())}` : ''), act: 'open', attrs: `data-view="weekHO" data-dag="${d}"` }); };
+    const bw = CC.begelWeek ? CC.begelWeek(S) : [];
     // Rapporten: zelf opzoeken
     const nTr = new Set(S.teams.flatMap((t) => trainersVan(S, t.id).map((p) => p.id))).size;
     // Organisatie: alleen voor teams zonder coördinator (de HO is daar de terugval)
@@ -100,7 +101,7 @@
     }
     return `${focusChips(S, f)}<div class="clubregel"><span><b>${S.teams.length}</b> ${S.teams.length === 1 ? 'team' : 'teams'}</span><span><b>${nTr}</b> ${nTr === 1 ? 'trainer' : 'trainers'}</span><span><b>${tot ? Math.round((100 * aan) / tot) : '–'}%</b> aanwezig</span></div>
       ${h.sectie(`Te doen${doen.length ? ` (${doen.length})` : ''}`)}${doen.length ? `<div class="lijst">${doen.join('')}</div>` : h.leeg('Je trainers vragen nu geen aandacht 👍', 'circle-check')}
-      ${h.sectie('Deze week')}${dagen.length ? `<div class="lijst compact">${dagen.map(dagRij).join('')}</div><p class="zacht klein">Wanneer kun je gaan kijken? Tik op een dag.</p>` : '<p class="zacht klein">Geen trainingen of wedstrijden de komende 7 dagen.</p>'}
+      ${h.sectie('Deze week')}${bw.length ? `<div class="lijst compact">${bw.join('')}</div>` : ''}${dagen.length ? `<div class="lijst compact">${dagen.map(dagRij).join('')}</div><p class="zacht klein">Wanneer kun je gaan kijken? Tik op een dag.</p>` : '<p class="zacht klein">Geen trainingen of wedstrijden de komende 7 dagen.</p>'}
       ${h.sectie('Rapporten')}<div class="lijst compact">
         ${h.rij({ ic: 'user-check', titel: 'Trainers', sub: `${nTr === 1 ? '1 trainer' : `${nTr} trainers`} per bouw en team: afmeldingen, aanwezigheid van het team${ts.length ? ` · ${ts.length} ${ts.length === 1 ? 'vraagt' : 'vragen'} aandacht` : ''}`, act: 'open', attrs: 'data-view="trainersRapport"' })}
         ${h.rij({ ic: 'chart-column', titel: 'Teams', sub: 'Aanwezigheid, redenen en verloop per team', act: 'tab', attrs: 'data-tab="inzicht"' })}</div>
