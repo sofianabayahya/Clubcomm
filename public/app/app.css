@@ -577,3 +577,26 @@ body.rl .sheet { max-width: var(--app-b); }
   #rondleiding { top: auto; left: 0; width: 100%; height: 46vh; border-left: 0; border-top: 1px solid var(--lijn); padding: 14px 16px; font-size: 16px; }
   .rl-titel { font-size: 22px; }
 }
+
+/* Besluit 99: trainersdossier */
+.stappenlijst { list-style: none; margin: 6px 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.stappenlijst li { display: flex; align-items: center; gap: 8px; color: var(--zacht); }
+.stappenlijst li .ic { width: 18px; height: 18px; }
+.stappenlijst li.ok { color: var(--groen, #137333); }
+.stappenlijst li.half { color: var(--oranje, #a84d08); }
+dl.antwoorden { margin: 8px 0 0; font-size: 14px; }
+dl.antwoorden dt { color: var(--zacht); font-size: 13px; margin-top: 8px; }
+dl.antwoorden dd { margin: 2px 0 0; white-space: pre-wrap; }
+/* Printen van een los blad (CC.printDoc) */
+#printvak { display: none; }
+@media print {
+  body.print-doc > *:not(#printvak) { display: none !important; }
+  body.print-doc #printvak { display: block; color: #000; font-size: 11pt; }
+  #printvak h1 { font-size: 17pt; margin: 0 0 6pt; color: #0869c2; }
+  #printvak h2 { font-size: 12.5pt; margin: 12pt 0 4pt; color: #0869c2; border-bottom: 1px solid #ccd; padding-bottom: 2pt; break-after: avoid; }
+  #printvak .pv-blok { break-inside: avoid; margin-bottom: 6pt; }
+  #printvak .pv-lijn { border-bottom: 1px solid #bbb; height: 18pt; }
+  #printvak ul.pv-keuze { list-style: none; padding: 0; margin: 2pt 0; }
+  #printvak dt { color: #555; margin-top: 6pt; } #printvak dd { margin: 0; white-space: pre-wrap; }
+  #printvak .pv-voet { color: #777; font-size: 8.5pt; margin-top: 14pt; }
+}

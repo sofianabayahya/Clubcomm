@@ -147,6 +147,50 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'snel wisselen');
   });
 
+  // Besluit 99 deel 1: tabblad Trainers, traject, kennismaking (uitnodigen → invullen → zien), VOG bij de coördinator, printen
+  test('trainers begeleiden: traject, kennismaking, VOG en printen', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.evaluate(() => { window.print = () => { window.__geprint = (window.__geprint || 0) + 1; }; });
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(3).click();
+    await page.locator('[data-act="magischeLink"]').click();
+    await page.evaluate(() => CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'hjo')));
+    await expect(page.locator('nav.nav button[data-tab="trainers"]')).toBeVisible();
+    await expect(page.locator('nav.nav button[data-tab="planning"]')).toHaveCount(0);
+    await page.locator('nav.nav button[data-tab="trainers"]').click();
+    await expect(page.locator('#app')).toContainText('Dennis Peters');
+    // Mark (trainer O10-1) in een traject zetten en uitnodigen voor de kennismaking
+    await page.locator('[data-act="seg"][data-key="trDeel"][data-val="alle"]').click();
+    await page.locator('#app [data-view="trainerDetail"]', { hasText: 'Mark Jansen' }).first().click();
+    await page.locator('#app [data-act="trajectSheet"]').click();
+    await page.locator('#sheet form[data-submit="trajectOk"] button.knop').click();
+    await page.locator('#app [data-act="kennisUitnodigen"]').click();
+    const mark = await page.evaluate(() => CC.S().demo.mark);
+    expect(await page.evaluate((id) => !!(CC.S().trainerDossier[id].traject || {}).actief, mark)).toBe(true);
+    await page.locator('#app [data-act="dossierPrint"]').click();
+    await expect(page.locator('#printvak')).toContainText('Trainersdossier Mark Jansen');
+    // Mark ziet de kennismaking op zijn Home en vult hem in
+    await page.evaluate(() => document.querySelector('[data-act="profiel"]').click());
+    await page.locator('#sheet [data-act="demoWissel"]', { hasText: 'Mark · Trainer' }).click();
+    await page.locator('#app [data-act="kennisForm"]').click();
+    await page.locator('#sheet input[name="ambitie"][value^="Ik wil me verder"]').check();
+    await page.locator('#sheet textarea[name="beter"]').fill('Meer vragen stellen');
+    await page.locator('#sheet form[data-submit="kennisOk"] button.knop:not([type="button"])').click();
+    await expect(page.locator('#app [data-act="kennisForm"]')).toHaveCount(0);
+    expect(await page.evaluate((id) => CC.S().trainerKennis[id].a.beter, mark)).toBe('Meer vragen stellen');
+    // Esther (coördinator) houdt Planning en legt de VOG vast
+    await page.evaluate(() => document.querySelector('[data-act="profiel"]').click());
+    await page.locator('#sheet [data-act="demoWissel"][data-pid="p-esther"]').click();
+    await expect(page.locator('nav.nav button[data-tab="planning"]')).toBeVisible();
+    await page.evaluate((id) => { document.body.insertAdjacentHTML('beforeend', `<button id="t-adm" data-act="trainerAdminSheet" data-id="${id}" hidden></button>`); document.getElementById('t-adm').click(); }, mark);
+    await page.locator('#ta-v').fill('2026-11-01');
+    await page.locator('#sheet form[data-submit="trainerAdminOk"] button.knop').click();
+    expect(await page.evaluate((id) => CC.S().trainerAdmin[id].vog, mark)).toBe('2026-11-01');
+    await controleer(page, fouten, 'trainers begeleiden');
+  });
+
   // Training afgelasten met een eigen toelichting: één bericht aan de ouders
   test('trainer gelast een training af met toelichting', async ({ page }) => {
     const fouten = volgFouten(page);
