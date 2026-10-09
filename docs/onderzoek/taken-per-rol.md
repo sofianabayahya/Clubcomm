@@ -1,4 +1,4 @@
-# Taken per rol: voorstel (10 oktober 2026)
+# Taken per rol: voorstel (10 oktober 2026, bijgewerkt na de eerste reactie)
 
 *Voorstel, nog geen besluit. Gebaseerd op het KNVB-functieprofiel Hoofd (Jeugd)opleiding, de HO-A-bijeenkomst van 8 oktober en wat de app nu kan (Besluit 12, 25, 26 en 34).*
 
@@ -18,6 +18,8 @@ In de app doet de HJO nu vooral **coördineren**: rooster, staf, aanmeldingen, a
 - **Terugval:** heeft een team geen coördinator, of gebruikt de club geen coördinator, dan doet de HO die taken. Zo werkt de app nu al.
 - **Informatie is geen taak** en **ClubComm signaleert, mensen beslissen** (Besluit 34). De HO ziet signalen om trainers te kunnen **coachen**, niet om ze te regelen.
 - **Iedereen ziet wat hij nodig heeft, niet meer** (AVG, Besluit 24/25).
+- **De HO is een mentor die in rapporten kijkt.** Hij moet zijn trainers beter maken. Hij blijft geïnformeerd, maar zoekt de informatie **zelf op** wanneer hij die nodig heeft. Hij krijgt geen stroom berichten over organisatie (zoals "volgende week vakantie"). Op zijn Home staat alleen wat over **zijn trainers** gaat.
+- **De coördinator coördineert:** organisatie, clubberichten en afgelasten.
 
 ## 3. Wat de HJO nu kan, ingedeeld naar soort werk
 | Soort werk | Wat de HJO nu doet in de app | Hoort volgens KNVB bij |
@@ -38,11 +40,11 @@ In de app doet de HJO nu vooral **coördineren**: rooster, staf, aanmeldingen, a
 | Teams zonder staf: staf koppelen | | | **✔** | (✔) | HJO |
 | Staf toevoegen, ouders uitnodigen | | ✔ | **✔** | | HJO, teamleider |
 | Aanmeldingen die langer dan 48 uur blijven liggen | | | ✔ | | coördinator |
-| Afgelasten en noodbericht (eigen groep teams) | | | **✔** | | HJO |
-| Bericht aan de hele club | | | | ✔ | HJO |
+| Afgelasten en noodbericht | | | **✔** | (✔) | HJO |
+| Clubberichten | | | **✔** | | HJO |
 | Communicatieplan (automatische berichten klaarzetten) | | | **✔** | | HJO |
 | Vervanger zoeken als de trainer niet kan | | ✔ | **✔** | | teamleider, HJO |
-| Registreren dat de trainer niet kwam | | **✔** | | | niemand |
+| Registreren dat de trainer niet kwam | | **✔** | | (✔) signaal | niemand |
 | Materiaal controleren | ✔ | | | | trainer |
 
 ### Spelers opvolgen
@@ -65,12 +67,14 @@ In de app doet de HJO nu vooral **coördineren**: rooster, staf, aanmeldingen, a
 ### Trainers begeleiden (kerntaak 3)
 | Taak | Trainer | Teamleider | Coördinator | HO | Nu |
 |---|:-:|:-:|:-:|:-:|---|
-| Signaal: trainer meldt zich vaak of te laat af | | | | **✔** | coördinator |
+| Signaal: trainer meldt zich vaak of te laat af, of kwam niet | | | | **✔** | coördinator |
+| Overzicht: welke trainer heeft welke training afgemeld of afgelast (per lichting en per team, in- en uitklapbaar) | | | (✔) | **✔** | *nieuw* |
 | Trainers observeren en evalueren (wedstrijd en training) | | | | ✔ | *nieuw* (nu los: `/evaluatie`) |
-| Ontwikkelgesprek met de trainer (leerdoel, ontwikkelpunt) | | | | ✔ | *nieuw* |
+| Ontwikkelgesprekken met de trainer (leerdoel, ontwikkelpunt) | | | | ✔ | *nieuw* |
+| Voortgangsgesprek: gaan club en trainer samen door? (rond februari) | | | | ✔ | *nieuw* |
 | Oefenstof en trainingen aanbieden | | | | ✔ | *nieuw* |
 | Trainersbijeenkomsten plannen | | | | ✔ | *nieuw* |
-| Teamindeling volgend seizoen | | | (✔) | ✔ | *nieuw, later* |
+| Teamindeling volgend seizoen (HO samen met de trainer) | ✔ | | | ✔ | *nieuw* |
 
 ### Wat zie je
 | | Trainer | Teamleider | Coördinator | HO | Nu |
@@ -80,11 +84,22 @@ In de app doet de HJO nu vooral **coördineren**: rooster, staf, aanmeldingen, a
 
 **Waarom de HO geen toelichting meer ziet:** ziekte en blessures zijn gezondheidsgegevens. De HO heeft ze niet nodig om trainers te begeleiden. Komt een speler bij het clubbesluit, dan staat alles wat nodig is in de gespreksnotities.
 
-### Wat de HO op zijn Home ziet (signaleren om te coachen)
-- **Trainers:** wie meldt zich vaak of te laat af, wie is binnenkort aan de beurt voor een observatie of gesprek, en het open ontwikkelpunt per trainer.
-- **Teams:** de aanwezigheid per team (zone) en het verloop, met de vraag *"wat zegt dit over de training?"*. Geen losse spelers (Besluit 34).
-- **Wedstrijden en trainingen deze week:** wanneer kan ik gaan kijken?
-- **Organisatie:** alleen als de club **geen coördinator** heeft, in een eigen blok onder het blok Trainers. Zo blijft voetbal en kader bovenaan.
+### Trainers volgen zoals spelers
+Een trainer valt onder de HO, zoals een speler onder de trainer valt. Dus werkt het op dezelfde manier:
+- **Afmelden en niet komen telt mee:** op tijd afgemeld, te laat afgemeld, of niet gekomen zonder bericht. Dat laatste registreert de teamleider (Besluit 21).
+- **Bij een drempel krijgt de HO een signaal** en voert hij een gesprek met de trainer. Net als bij spelers beslist de HO, niet de app.
+- **Ontwikkelgesprekken met de trainer:** het aantal per seizoen stelt de club zelf in, want met veel trainers lukt niet elke keer hetzelfde. Voorstel voor de standaard: **2 observaties bij een training en 2 bij een wedstrijd**, elk met een nagesprek. Plus één **voortgangsgesprek rond februari**: gaan club en trainer samen door?
+
+### Wat de HO op zijn Home ziet
+Alleen wat over zijn trainers gaat:
+- **Te doen:** trainers met een signaal (vaak afgemeld, niet gekomen), gesprekken die eraan komen of te laat zijn, en het open ontwikkelpunt per trainer.
+- **Deze week:** welke wedstrijden en trainingen zijn er? Dan weet de HO wanneer hij kan gaan kijken.
+
+En verder **niets vanzelf**. De rest zoekt de HO zelf op, als een rapport:
+- **Trainers:** per lichting en per team, in- en uitklapbaar. Welke trainer heeft welke training afgemeld of afgelast, plus de aanwezigheid van het team. Met meer teams en trainers blijft het zo overzichtelijk.
+- **Teams:** aanwezigheid (zone), verloop, beoordelingen. Geen losse spelers op Home (Besluit 34).
+- **Clubberichten en vakanties:** wel te lezen, maar geen pushmelding of e-mail, tenzij het om een noodbericht gaat.
+- **Heeft de club geen coördinator,** dan doet de HO ook de organisatie. Die staat dan in een eigen blok **onder** het blok Trainers, zodat voetbal bovenaan blijft.
 
 ## 5. Stappenplan: eerste gesprek met een club
 De clubbeheerder van ClubComm (nu de initiatiefnemer) loopt dit samen met de club door. Daarna staat alles in de app ingesteld.
@@ -106,12 +121,18 @@ De clubbeheerder van ClubComm (nu de initiatiefnemer) loopt dit samen met de clu
 - Door de terugval doet de HO dus ook de coördinatortaken. Dagelijks verandert er weinig.
 - Het verschil zie je pas als er een coördinator of een andere HO bijkomt, en bij een nieuwe club.
 
-## 7. Open vragen
-1. **Afgelasten en clubberichten:** bij de coördinator (alleen voor zijn eigen groep teams) en clubbreed bij de HO? Of liever helemaal bij de clubbeheerder van de club (bijv. het wedstrijdsecretariaat)?
-2. **HO doet niet mee in de pilot:** gaan zijn taken dan naar de clubbeheerder van de club, of staan ze uit?
-3. **Trainer niet gekomen registreren:** standaard bij de teamleider? Die is er meestal bij.
-4. **Teamindeling:** nu al als taak opnemen, of pas in het voorjaar?
-5. **Volgorde van bouwen** (na akkoord):
+## 7. Antwoorden van de initiatiefnemer (10 oktober)
+- **Afgelasten en clubberichten:** bij de **coördinator**, niet bij de HO. De HO moet wel kunnen zien welke trainer welke training afgelast of zich afmeldt, per lichting en per team, in- en uitklapbaar.
+- **De HO is een mentor die in rapporten kijkt:** geïnformeerd blijven, zelf opzoeken, geen overkill aan berichten.
+- **Trainer niet gekomen:** de teamleider registreert. Er komen signalen bij de HO, net als bij een speler die niet komt. De HO voert dan het gesprek.
+- **Gesprekken met trainers:** een voortgangsgesprek rond februari (gaat de club door met de trainer?), en minimaal twee ontwikkelgesprekken. Het aantal niet vastpinnen: met veel trainers wordt het misschien één.
+- **Teamindeling:** taak van de HO samen met de trainer.
+
+## 8. Nog open
+1. **Afgelasten en clubberichten als de club geen coördinator heeft:** doet de HO het dan toch (de terugval), of de clubbeheerder van de club?
+2. **De HO doet niet mee in de pilot:** gaan zijn taken naar de clubbeheerder van de club, of staan ze uit?
+3. **Ontwikkelgesprekken met trainers:** klopt de standaard van 2 observaties bij een training en 2 bij een wedstrijd, plus het voortgangsgesprek? De club kan het aantal zelf aanpassen.
+4. **Volgorde van bouwen** (na akkoord):
    - eerst de nieuwe standaard en de taken in de lijst;
    - dan de HO-module *Trainers begeleiden* (evaluatieformulier in de app, signalen op Home);
    - daarna oefenstof en bijeenkomsten.
