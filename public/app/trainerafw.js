@@ -82,7 +82,7 @@
   // De app signaleert de ochtend na de training (12 uur na afloop, zodat de trainer 's avonds nog kan invullen);
   // de coördinator (of de HO als terugval) bevestigt. Pas dan telt het mee, en krijgt de HO één pushmelding.
   const eindVan = (a) => new Date(`${a.datum}T${a.eind || a.tijd || '23:59'}:00`);
-  CC.geenAanwezigheid = (S, teamIds) => S.acts.filter((a) => a.soort === 'training' && !a.afgelast && !a.vervangerId && !a.trainerAfwezig && !a.aanwCheck
+  CC.geenAanwezigheid = (S, teamIds) => CC.pakketTrainers && CC.pakketTrainers(S) ? [] : S.acts.filter((a) => a.soort === 'training' && !a.afgelast && !a.vervangerId && !a.trainerAfwezig && !a.aanwCheck
     && teamIds.includes(a.teamId) && (M.team(S, a.teamId) || {}).trainerId && (M.team(S, a.teamId) || {}).trainerId !== (CC.me() || {}).id && !S.pres[a.id] && !log(S).some((x) => x.actId === a.id)
     && a.datum >= D.addDays(D.vandaag(), -14) && Date.now() - eindVan(a) > 12 * 3600e3 && CC.mag('trainerNiet', null, a.teamId))
     .sort((x, y) => (x.datum + x.tijd).localeCompare(y.datum + y.tijd));
@@ -110,7 +110,9 @@
     CC.trainerRegistreer(S, a, t.trainerId, 'niet', { reden: f.o.value, door: me.id, bevestigd: true });
     a.aanwCheck = { soort: 'niet', door: me.id, tijd: new Date().toISOString() };
     // Eén pushmelding aan wie de trainer begeleidt (Besluit 97): de HO (later de TC van de bouw), niet aan jezelf
-    const ho = S.people.filter((p) => p.rollen.some((r) => r.rol === 'hjo') && p.id !== me.id && p.id !== t.trainerId).map((p) => p.id);
+    // Besluit 100: de TC van die bouw, anders de HO van die bouw
+    const tc = CC.begeleidersVan ? CC.begeleidersVan(S, t.id, 'tc') : [];
+    const ho = (tc.length ? tc : CC.begeleidersVan ? CC.begeleidersVan(S, t.id, 'hjo') : S.people.filter((p) => p.rollen.some((r) => r.rol === 'hjo')).map((p) => p.id)).filter((id) => id !== me.id && id !== t.trainerId);
     if (ho.length) S.msgs.push({ id: 'b' + Date.now() + Math.random().toString(36).slice(2, 6), van: 'systeem', soort: 'melding', bereik: 'Ter informatie', onderwerp: `Trainer niet gekomen: ${tr.naam} (${CC.tn(a.teamId)})`,
       tekst: `${tr.naam} was niet bij de training van ${CC.tn(a.teamId)} op ${D.lang(a.datum)} om ${a.tijd} en had zich niet afgemeld. Bevestigd door ${me.naam}.${f.o.value ? ` Toelichting: ${f.o.value}` : ''} Het telt mee in de telling van de trainer; het gesprek voer jij.`,
       tijd: new Date().toISOString(), ontvangers: ho, gelezen: [], antw: [], urgent: false, gepland: null, push: true });

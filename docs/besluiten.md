@@ -17,9 +17,10 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
-| 99 | Trainers begeleiden via een traject, met de KNVB-begeleidingscyclus; tabblad Trainers | ✅ geldt |  |
+| 100 | Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden" | ✅ geldt |  |
+| 99 | Trainers begeleiden via een traject, met de KNVB-begeleidingscyclus; tabblad Trainers | ◐ deels herzien | door 100 (vragenlijst kort of uitgebreid per niveau; notities gedeeld per bouw met de TC) |
 | 98 | Verantwoordelijkheid: iedere rol doet zijn eigen werk, de laag erboven is het vangnet | ✅ geldt |  |
-| 97 | Bouwen, werkgebied en focus, signalen die ertoe doen, trainersdossier | ◐ deels herzien | door 99 (traject per trainer in plaats van 2 + 2; tabblad Trainers; VOG en diploma bij de coördinator) |
+| 97 | Bouwen, werkgebied en focus, signalen die ertoe doen, trainersdossier | ◐ deels herzien | door 99 (traject per trainer in plaats van 2 + 2; tabblad Trainers; VOG en diploma bij de coördinator); door 100 (werkgebied bij de rol, rol TC gebouwd) |
 | 96 | Eén aanspreekpunt: de clubbeheerder (van de club) en de ClubComm-adviseur (van ons) | ✅ geldt |  |
 | 95 | Twee lijnen: voetbal (HO) en organisatie (coördinator) | ◐ deels herzien | door 96 (clubbeheerder en ClubComm-adviseur), 97 (bouwen, focus, dossier; nieuwe bouwvolgorde), 99 (traject per trainer in plaats van 2 + 2 voor iedereen) |
 | 94 | Training afgelasten met eigen toelichting | ◐ deels herzien | door 95 (de HJO-knop Afgelasten ligt nu bij de coördinator) |
@@ -633,8 +634,20 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 100 — Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden"
+*Besloten 10 oktober 2026, voor de test bij een tweede club (HO + TC, twee trainers, geen ouders). Vult Besluit 97, 98 en 99 aan.*
+- **Werkgebied bij de rol.** De clubbeheerder kiest bij elke HO en technisch coördinator (TC) welke **bouwen** bij hem horen, of de hele club (standaard). Zo kan een club **twee HO's** hebben (bijvoorbeeld onder- en middenbouw, en bovenbouw). Wat je ziet en je signalen volgen je werkgebied; de focus-chips tonen alleen bouwen binnen je werkgebied. De bouwen zelf blijven per club instelbaar (Besluit 97).
+- **Rol technisch coördinator (TC).** Hetzelfde begeleidingswerk als de HO (tabblad Trainers, traject, begeleidingsmomenten, A4, printen), alleen voor trainers in zijn werkgebied. De HO blijft eindverantwoordelijk (Besluit 98). Een bevestigde "trainer niet gekomen" gaat naar de TC van die bouw, anders naar de HO van die bouw.
+- **Notities over een trainer** zijn gedeeld tussen de HO's en TC's **van dezelfde bouw**, zodat ze samen kunnen zien of een trainer door kan. Begeleiders van een andere bouw zien ze niet; de trainer nooit; de clubbeheerder (alleen app-beheer) ook niet. Dit wordt ook in de database afgedwongen (de bouw staat bij de notitie).
+- **Pakket "Alleen Trainers begeleiden"** (club-instelling, Regels): voor clubs die alleen de begeleiding van trainers willen, zonder ouders, teamleiders en coördinatoren. HO en TC zien alleen Trainers en Berichten; de trainer ziet zijn begeleiding, Mijn ontwikkeling en Berichten. Alles over spelers, aanwezigheid, afmelden en ouders is uit. Dit is ook een los te verkopen pakket.
+- **Vragenlijst vooraf per niveau van de trainer.** Niet elke trainer kan de uitgebreide vragenlijst aan. Bij het traject kies je het niveau: **kort** (4 eenvoudige vragen, standaard, voor starters en trainers zonder opleiding) of **uitgebreid** (de 9 vragen van het voorgesprek, voor ervaren trainers of trainers in opleiding). Per moment kun je het nog wisselen.
+- **Evaluatieformulier overnemen.** Een evaluatie die op `/evaluatie` is ingevuld (op hetzelfde toestel) kan in een begeleidingsmoment worden overgenomen: voorgesprek, momenten en turven, gesprek, ontwikkelpunt en reflectie.
+- **Gebouwd 10-10:** rol TC (clubbeheerder → Rollen → persoon → rol *Technisch coördinator*, werkgebied als bouw of potlood-knop bij de rol); werkgebied ook bij de HO; focus-chips, rapport, Te doen en de push "trainer niet gekomen" volgen het werkgebied. Notities gedeeld per bouw (migratie 025, ook in de database afgedwongen en getest). Regels → **Pakket**. Traject → *Vragenlijst vooraf: kort of uitgebreid*; per moment te wisselen. Begeleidingsmoment → Praktijk → *Overnemen uit het evaluatieformulier*. Tweede club ingericht (script `supabase/scripts/2026-10-10_tweede_club_trainers_begeleiden.sql`): HO + clubbeheerder, TC, één trainer met traject en het eerste moment (voorgesprek al ingevuld).
+- **Een nieuwe club inrichten** gaat voorlopig via de initiatiefnemer en Claude (een script in de database). Een eigen account voor de **ClubComm-adviseur** (nieuwe club aanmaken, meerdere clubs) komt in december, zoals gepland (Openstaand).
+
 ## Besluit 99 — Trainers begeleiden via een traject, met de KNVB-begeleidingscyclus; tabblad Trainers
 *Besloten 10 oktober 2026. Analyse: `docs/onderzoek/ho-begeleiding-trainers.md` (hand-outs KNVB HO-A bijeenkomst 2 en 3, vragenlijst voorgesprek). Herziet de standaard "2 + 2 per trainer" uit Besluit 95 en 97.*
+> **◐ Deels herzien door Besluit 100** (vragenlijst kort of uitgebreid per niveau van de trainer; notities gedeeld met de TC van dezelfde bouw).
 - **Volgen ≠ begeleiden.** Alle trainers staan in het rapport (afmeldingen, team, VOG). **Begeleiden gaat via een traject**: alleen voor trainers die willen, na een kennismaking, met een **plan per trainer** (bijvoorbeeld 1 wedstrijd + 1 training, of 2 + 2). Signalen over begeleiding alleen voor trainers in een traject, afgezet tegen hun eigen plan. Werkdruk = de som van de trajecten.
 - **Begeleidingsmoment = de KNVB-cyclus in vijf fasen:** voorbereiding (HO) → planningsgesprek (de trainer vult de vragenlijst vooraf zelf in; samen leerdoel, focus HO, feedbackmoment) → praktijk (observatie) → reflectiegesprek (6 stappen, feed-forward, één ontwikkelpunt) → nazorg (reflectie trainer, verslag HO, volgend moment).
 - **Observatie:** wedstrijd in drie delen (1e helft laatste 20 min · rust · 2e helft eerste 20 min); **training per voetbalvorm** (oefening).
@@ -671,6 +684,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ## Besluit 97 — Bouwen, werkgebied en focus, signalen die ertoe doen, trainersdossier
 > **◐ Deels herzien door Besluit 99 (traject per trainer in plaats van 2 + 2; tabblad Trainers; VOG en diploma bij de coördinator)** (zie Register).
+> **◐ Deels herzien door Besluit 100** (werkgebied bij de rol gebouwd; rol technisch coördinator; twee HO's mogelijk).
 *Besloten 10 oktober 2026. Analyse: `docs/onderzoek/ho-werkgebied-en-signalen.md`. Vult Besluit 12, 21, 25, 53, 93 en 95 aan.*
 - **Bouwen als vaste indeling van de club**, los van coördinatoren. Standaard (KNVB): Mini's O6–O7 · Onderbouw O8–O12 · Middenbouw O13–O15 · Bovenbouw O16–O19. De **clubbeheerder past de indeling aan** (Rollen → Indeling in bouwen). Alle rollen gebruiken dezelfde indeling; overzichten hebben drie lagen: club → bouw → team of trainer.
 - **Werkgebied** (stelt de clubbeheerder in bij de rol: bijvoorbeeld TC bovenbouw) bepaalt je signalen. **Focus** (kies je zelf met chips bovenaan, de app onthoudt het op je telefoon) bepaalt alleen wat je ziet. Signalen buiten je focus staan als één regel: *"2 signalen buiten je focus"*. Zo kan de HO focussen zonder iets te missen.

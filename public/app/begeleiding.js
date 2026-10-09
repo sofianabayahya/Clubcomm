@@ -31,14 +31,21 @@
   const DELEN = [['h1', '1e helft'], ['rust', 'Rust'], ['h2', '2e helft']];
   const VAKKEN = [['sterk', 'Sterk zichtbaar', 'Wat deed de trainer goed?'], ['ontwikkelpunt', 'Belangrijkste ontwikkelpunt', 'Waar zit op dit moment de meeste winst?'], ['effect', 'Effect op spelers', 'Wat zag ik veranderen in spelersgedrag door het handelen van de trainer?'], ['afspraak', 'Afspraak volgende keer', 'Wat gaat de trainer concreet opnieuw proberen of anders doen?']];
   // Vragenlijst planningsgesprek (de trainer vult vooraf in), naar het voorgesprek van de HO-A
-  const VRAGEN = (soort) => { const w = soort === 'wedstrijd' ? 'wedstrijd' : 'training'; return [
+  // Besluit 100: kort (standaard, starters) of uitgebreid (ervaren of in opleiding); de sleutels leerdoel en letop zijn gelijk
+  const KORT = (w) => [
+    ['doel', `Wat wil je dat je spelers deze ${w} leren of beter gaan doen?`],
+    ['beginsituatie', 'Wat gaat goed bij je team, en wat vind je nog lastig?'],
+    ['leerdoel', 'Waar wil je zelf beter in worden als trainer?'],
+    ['letop', 'Waar wil je dat ik op let? En hoor je het liefst tussendoor of na afloop wat ik zag?'],
+  ];
+  const VRAGEN = (soort, niveau) => { const w = soort === 'wedstrijd' ? 'wedstrijd' : 'training'; if (niveau !== 'uitgebreid') return KORT(w); return [
     ['beginsituatie', 'Hoe zou je de huidige situatie van je team omschrijven? Wat gaat goed, wat minder?'],
     ['doel', `Waar wil je deze ${w} vooral voor gebruiken? Wat wil je testen, verbeteren of terugzien?`],
     ['probleem', 'Welk voetbalprobleem staat centraal? Wat moeten spelers beter herkennen of uitvoeren? (wie, wat, waar, wanneer)'],
     ['gedrag', `Aan welk zichtbaar gedrag van spelers merk je dat het doel wordt bereikt? Noem 2 of 3 signalen.`],
     ['coachnu', 'Hoe kijk je naar je eigen coaching op dit moment? Wat gaat goed, wat vind je lastig?'],
     ['leerdoel', `Wat wil jij in deze ${w} persoonlijk oefenen in je handelen als trainer?`],
-    ['letop', 'Waar wil je dat de HO op let? Wat wil je na afloop graag terughoren?'],
+    ['letop', 'Waar wil je dat ik op let? Wat wil je na afloop graag van mij terughoren?'],
     ['feedback', `Wanneer werkt feedback voor jou het best: tijdens de ${w}, ${w === 'wedstrijd' ? 'in de rust' : 'tussen de vormen'}, of achteraf?`],
     ['succes', `Wanneer is deze ${w} voor jou geslaagd, los van de uitslag? Wat wil je meenemen naar de volgende keer?`],
   ]; };
@@ -73,7 +80,7 @@
   CC.on('begelNieuwOk', (f) => {
     const S = CC.S(); const tr = M.persoon(S, f.dataset.id); const a = f.a.value ? M.act(S, f.a.value) : null; const t = dosT(S, tr.id) || {};
     const m = { id: 'bm' + Date.now(), trainerId: tr.id, teamId: a ? a.teamId : (tr.rollen.find((r) => r.rol === 'trainer') || {}).teamId, actId: a ? a.id : null, soort: a ? (M.isWed(a) ? 'wedstrijd' : 'training') : f.s.value, datum: a ? a.datum : f.d.value, door: CC.me().id,
-      voor: { thema: '', doel: '', leerdoel: t.leerdoel || '', hoDoel: '' }, plan: { leerdoel: '', focus: '', feedback: '' }, obs: { punten: {}, notities: {}, klok: null, turf: {} }, vakken: {}, klaar: false };
+      niveau: t.niveau || 'kort', voor: { thema: '', doel: '', leerdoel: t.leerdoel || '', hoDoel: '' }, plan: { leerdoel: '', focus: '', feedback: '' }, obs: { punten: {}, notities: {}, klok: null, turf: {} }, vakken: {}, klaar: false };
     mom(S).push(m); CC.save(); CC.closeSheet(); CC.open('begelMoment', { id: m.id });
   });
 
@@ -83,7 +90,7 @@
     const m = vind(S, p.id); if (!m) return { titel: 'Begeleidingsmoment', html: h.leeg('Niet gevonden') };
     const tr = M.persoon(S, m.trainerId) || { naam: '' }; const z = zelf(S)[m.id] || {}; const F = fasen(S, m); const huidig = F.findIndex(([, ok]) => !ok);
     const blok = (i, inhoud) => { const [n, ok, half] = F[i]; return `<details class="uitklap" ${i === (laatst[m.id] ?? huidig) ? 'open' : ''}><summary>${icon(ok ? 'circle-check' : 'clock')}<b>${i + 1}. ${n}</b> <small class="zacht">${ok ? 'klaar' : half ? 'bezig' : ''}</small></summary>${inhoud}</details>`; };
-    const vragen = VRAGEN(m.soort);
+    const vragen = VRAGEN(m.soort, m.niveau);
     return { titel: titelM(S, m), sub: tr.naam, html: `
       ${m.klaar ? '' : `<button class="knop vol" data-act="open" data-view="begelObs" data-id="${m.id}">${icon('list-checks')}Observeren</button>`}
       <div class="knoppen"><button class="knop licht klein" data-act="begelPrint" data-id="${m.id}" data-leeg="1">${icon('printer')}A4 leeg</button><button class="knop licht klein" data-act="begelPrint" data-id="${m.id}">${icon('printer')}A4 ingevuld</button><button class="knop licht klein" data-act="begelVragenPrint" data-id="${m.id}">${icon('printer')}Vragenlijst</button></div>
@@ -94,13 +101,14 @@
         ${veldT('hoDoel', 'Mijn eigen doel als HO (mag leeg)', m.voor.hoDoel)}
         <button class="knop licht klein">Opslaan</button></form>`)}
       ${blok(1, `${z.ingevuld ? `<details class="uitklap stil" open><summary>Vragenlijst van ${esc(tr.naam.split(' ')[0])} (ingevuld ${D.kort(z.ingevuld.slice(0, 10))})</summary><dl class="antwoorden">${vragen.filter(([k]) => (z.v || {})[k]).map(([k, t]) => `<dt>${esc(t)}</dt><dd>${esc(z.v[k])}</dd>`).join('')}</dl></details>`
-          : m.gevraagd ? `<p class="zacht klein">Vragenlijst gestuurd op ${D.kort(m.gevraagd.slice(0, 10))}; nog niet ingevuld.</p>` : `<button class="knop licht klein" data-act="begelVragen" data-id="${m.id}">${icon('send')}Vragenlijst sturen aan ${esc(tr.naam.split(' ')[0])}</button><p class="zacht klein">De trainer vult de vragen vooraf zelf in. Zo begint het gesprek bij de trainer.</p>`}
+          : m.gevraagd ? `<p class="zacht klein">Vragenlijst gestuurd op ${D.kort(m.gevraagd.slice(0, 10))}; nog niet ingevuld.</p>` : `<div class="chips">${[['kort', 'Kort (4 vragen)'], ['uitgebreid', 'Uitgebreid (9 vragen)']].map(([k, l]) => `<button class="chipknop ${(m.niveau || 'kort') === k ? 'aan' : ''}" data-act="begelNiveau" data-id="${m.id}" data-n="${k}">${l}</button>`).join('')}</div>
+          <button class="knop licht klein" data-act="begelVragen" data-id="${m.id}">${icon('send')}Vragenlijst sturen aan ${esc(tr.naam.split(' ')[0])}</button><p class="zacht klein">De trainer vult de vragen vooraf zelf in. Zo begint het gesprek bij de trainer.</p>`}
         <form data-submit="begelPlanOk" data-id="${m.id}" class="codeform"><p class="klein"><b>Afspraken uit het gesprek</b></p>
         ${veldT('leerdoel', 'Leerdoel', m.plan.leerdoel || (z.v || {}).leerdoel || m.voor.leerdoel)}
         ${veldT('focus', 'Focus van de HO tijdens de observatie', m.plan.focus || (z.v || {}).letop)}
         <label>Feedbackmoment</label><input name="feedback" value="${esc(m.plan.feedback || (z.v || {}).feedback || '')}" placeholder="${m.soort === 'wedstrijd' ? 'Bijv. kort in de rust, uitgebreid na afloop' : 'Bijv. tussen de vormen, uitgebreid na afloop'}">
         <button class="knop licht klein">Opslaan</button></form>`)}
-      ${blok(2, `<p class="klein">${Object.keys(m.obs.punten).length} van ${CC.OBS[m.soort].reduce((n, o) => n + o.p.length, 0)} punten bekeken${m.obs.klok && m.obs.klok.totaal ? ` · effectieve voetbaltijd ${pct(m.obs.klok, 'spelen')}%` : ''}</p>${m.klaar ? `<button class="knop licht klein" data-act="open" data-view="begelObs" data-id="${m.id}">Observatie bekijken</button>` : '<p class="zacht klein">Tik bovenaan op Observeren, op het veld.</p>'}`)}
+      ${blok(2, `<p class="klein">${Object.keys(m.obs.punten).length} van ${CC.OBS[m.soort].reduce((n, o) => n + o.p.length, 0)} punten bekeken${m.obs.klok && m.obs.klok.totaal ? ` · effectieve voetbaltijd ${pct(m.obs.klok, 'spelen')}%` : ''}</p>${m.klaar ? `<button class="knop licht klein" data-act="open" data-view="begelObs" data-id="${m.id}">Observatie bekijken</button>` : '<p class="zacht klein">Tik bovenaan op Observeren, op het veld.</p>'}${!m.klaar && evaluaties().length ? `<button class="knop licht klein" data-act="begelImport" data-id="${m.id}">${icon('clipboard-check')}Overnemen uit het evaluatieformulier</button>` : ''}`)}
       ${blok(3, `<form data-submit="begelVakkenOk" data-id="${m.id}" class="codeform"><p class="zacht klein">Samen met de trainer. Laat de trainer eerst vertellen (eerste gevoel, leerdoel), geef daarna wat jij zag.</p>
         ${VAKKEN.map(([k, t, v]) => veldT(k, `${t}${k === 'ontwikkelpunt' ? ' (verplicht)' : ''}`, (m.vakken || {})[k], v)).join('')}
         <button class="knop licht klein">Opslaan</button></form>`)}
@@ -122,12 +130,35 @@
     bewaar(S, 'Begeleidingsmoment afgerond'); });
   // Persoonlijk bericht aan de trainer (één keer; daarna een regel op zijn Home tot het gedaan is)
   const bericht = (S, m, onderwerp, tekst) => { const me = CC.me(); S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'persoonlijk', bereik: m.teamId, onderwerp, tekst, tijd: new Date().toISOString(), ontvangers: [m.trainerId], gelezen: [], antw: [], urgent: false, gepland: null }); };
+  CC.on('begelNiveau', (el) => { const S = CC.S(); const m = vind(S, el.dataset.id); m.niveau = el.dataset.n; laatst[m.id] = 1; CC.save(); CC.render(); });
   CC.on('begelVragen', (el) => { const S = CC.S(); const m = vind(S, el.dataset.id); const tr = M.persoon(S, m.trainerId); laatst[m.id] = 1; m.gevraagd = new Date().toISOString();
     bericht(S, m, `Bereid je begeleidingsmoment voor (${D.kort(m.datum)})`, `Hoi ${tr.naam.split(' ')[0]},\n\nOp ${D.lang(m.datum)} kijk ik mee bij de ${m.soort}. Wil je vooraf een korte vragenlijst invullen? Dan begint ons gesprek bij jou. Je vindt hem op je Home in ClubComm.\n\nGroet, ${CC.me().naam}`);
     bewaar(S, `${tr.naam.split(' ')[0]} krijgt de vragenlijst`); });
   CC.on('begelDeel', (el) => { const S = CC.S(); const m = vind(S, el.dataset.id); const tr = M.persoon(S, m.trainerId); laatst[m.id] = 4; m.gedeeld = new Date().toISOString();
     bericht(S, m, `Je verslag staat klaar (${D.kort(m.datum)})`, `Hoi ${tr.naam.split(' ')[0]},\n\nHet verslag van ons begeleidingsmoment staat klaar in ClubComm. Wil je je reflectie invullen (3 korte vragen)?\n\nOntwikkelpunt: ${(m.vakken || {}).ontwikkelpunt || ''}\n\nGroet, ${CC.me().naam}`);
     bewaar(S, 'Gedeeld met de trainer'); });
+
+  // ---------- Besluit 100: een evaluatie van /evaluatie overnemen (staat op dit toestel, zelfde website) ----------
+  const EVAL = 'clubcomm-evaluaties-v1';
+  const evaluaties = () => { try { return ((JSON.parse(localStorage.getItem(EVAL)) || {}).lijst || []).filter((e) => e.coach || e.leerdoel || (e.notities || []).length); } catch (e) { return []; } };
+  const GESPREK = [['s1', 'Eerste gevoel'], ['s2', 'Leerdoel'], ['s3', 'Effect op spelers'], ['s4', 'Voetbalinhoud'], ['s5', 'Feedback HO'], ['s6', 'Volgende stap']];
+  CC.on('begelImport', (el) => { const l = evaluaties();
+    CC.sheet('Overnemen uit het evaluatieformulier', `<p class="zacht">Deze evaluaties staan op dit toestel (ingevuld op /evaluatie). Kies de juiste.</p><div class="lijst">${l.map((e) => h.rij({ ic: 'clipboard-check', titel: esc(`${e.coach || 'Zonder naam'} · ${e.datum ? D.kort(e.datum) : ''}`), sub: esc(`${e.team || ''}${e.tegenstander ? ` tegen ${e.tegenstander}` : ''} · ${(e.notities || []).length} momenten`), act: 'begelImportOk', attrs: `data-id="${el.dataset.id}" data-e="${esc(e.id)}"` })).join('')}</div>
+      <p class="zacht klein">Wat al is ingevuld in dit begeleidingsmoment blijft staan; lege velden worden aangevuld.</p>`); });
+  CC.on('begelImportOk', (el) => { const S = CC.S(); const m = vind(S, el.dataset.id); const e = evaluaties().find((x) => x.id === el.dataset.e); if (!m || !e) return;
+    const vul = (o, k, v) => { if (v && !o[k]) o[k] = v; };
+    m.soort = 'wedstrijd'; if (e.datum) m.datum = e.datum; m.bron = 'evaluatie';
+    vul(m.voor, 'doel', [e.voetbalprobleem, e.signalen && `Gewenst spelersgedrag: ${e.signalen}`].filter(Boolean).join('\n')); vul(m.voor, 'leerdoel', e.leerdoel); vul(m.voor, 'thema', e.tegenstander && `Tegen ${e.tegenstander}`);
+    vul(m.plan, 'leerdoel', e.leerdoel); vul(m.plan, 'focus', e.focus); vul(m.plan, 'feedback', e.feedbackmoment);
+    const turf = {}; (e.notities || []).forEach((x) => { if (!x.soort || !x.fase) return; const d = turf[x.fase] || (turf[x.fase] = {}); d[x.soort] = (d[x.soort] || 0) + 1; });
+    if (!Object.keys(m.obs.turf || {}).length) m.obs.turf = turf;
+    if (!(m.obs.momenten || []).length) m.obs.momenten = (e.notities || []).map((x) => ({ fase: x.fase, min: x.min || x.tijd || '', soort: x.soort || '', coach: x.coach != null ? x.coach : x.tekst || '', spelers: x.spelers || '' }));
+    m.vakken = m.vakken || {}; vul(m.vakken, 'ontwikkelpunt', e.punt); vul(m.vakken, 'effect', e.s3); vul(m.vakken, 'afspraak', e.s6);
+    if (!m.hoVerslag) m.hoVerslag = GESPREK.filter(([k]) => e[k]).map(([k, t]) => `${t}: ${e[k]}`).join('\n\n');
+    if (e.r1 || e.r2 || e.r3) { const z = zelf(S)[m.id] || (zelf(S)[m.id] = { trainerId: m.trainerId }); if (!z.reflectieOp) { z.r = { r1: e.r1 || '', r2: e.r2 || '', r3: e.r3 || '' }; z.reflectieOp = new Date().toISOString(); } }
+    if (m.vakken.ontwikkelpunt) { const d = (S.trainerDossier || (S.trainerDossier = {}))[m.trainerId] || (S.trainerDossier[m.trainerId] = {}); if (d.traject && d.traject.actief && !d.traject.ontwikkelpunt) d.traject.ontwikkelpunt = m.vakken.ontwikkelpunt; }
+    CC.save(); CC.closeSheet(); CC.render(); CC.toast('Overgenomen uit het evaluatieformulier'); });
+  const momentenHtml = (m) => ((m.obs || {}).momenten || []).length ? `<ol class="momenten">${m.obs.momenten.map((x) => `<li><b>${esc((DELEN.find((d) => d[0] === x.fase) || [, ''])[1])}${x.min ? ` ${esc(String(x.min))}${/^\d+$/.test(String(x.min)) ? "'" : ''}` : ''}</b> ${x.soort ? `[${esc(x.soort)}] ` : ''}${esc(x.coach)}${x.spelers ? ` → ${esc(x.spelers)}` : ''}</li>`).join('')}</ol>` : '';
 
   // ---------- Praktijk: het A4 op de telefoon ----------
   const pct = (k, s) => (k && k.totaal ? Math.round((100 * (k[s] || 0)) / k.totaal) : 0);
@@ -147,6 +178,7 @@
         return `<div class="obspunt"><p>${esc(v)}</p><div class="tekens">${TEKEN.map(([c, t, l]) => `<button class="${w === c ? 'aan' : ''}" data-act="obsTeken" data-id="${m.id}" data-sl="${sl}" data-c="${c}" aria-label="${l}">${t}</button>`).join('')}</div>
           <input data-input="obsNotitie" data-id="${m.id}" data-sl="${sl}" value="${esc(m.obs.notities[sl] || '')}" placeholder="Korte observatie" aria-label="Korte observatie"></div>`; }).join('')}</div>`).join('')}
       ${m.soort === 'wedstrijd' ? `${h.sectie('Turven: wat zegt de coach?')}<div class="turf">${DELEN.map(([d, l]) => `<div><b>${l}</b>${TURF.map((t) => `<button data-act="obsTurf" data-id="${m.id}" data-d="${d}" data-t="${t}">${t} <span>${((m.obs.turf || {})[d] || {})[t] || 0}</span></button>`).join('')}</div>`).join('')}</div>` : ''}
+      ${momentenHtml(m) ? `${h.sectie('Momenten (evaluatieformulier)')}${momentenHtml(m)}` : ''}
       <p class="zacht klein">Alles wordt meteen bewaard. De vier vakken (sterk, ontwikkelpunt, effect, afspraak) vul je in het reflectiegesprek in.</p>` };
   };
   const klokTekst = (k) => (k && k.totaal ? `Voetballen ${mmss(k.spelen)} (${pct(k, 'spelen')}%) · uitleg ${mmss(k.uitleg)} · wisselen ${mmss(k.wissel)} · langste uitleg ${mmss(k.langsteUitleg)} · ${k.overgangen || 0} overgangen${k.overgangen ? `, gemiddeld ${mmss((k.wissel || 0) / k.overgangen)}` : ''}` : 'Nog niet gestart.');
@@ -172,10 +204,11 @@
       <table class="pv-obs"><tr><th>Onderdeel</th><th>Observatiepunt</th><th>✓/~/–</th><th>Korte observatie</th></tr>
       ${CC.OBS[m.soort].map((o) => o.p.map((q, i) => `<tr>${i === 0 ? `<td rowspan="${o.p.length}"><b>${esc(o.t)}</b></td>` : ''}<td>${esc(q)}</td><td class="pv-c">${teken(`${o.k}${i}`)}</td><td>${w(m.obs.notities[`${o.k}${i}`])}</td></tr>`).join('')).join('')}</table>
       ${m.soort === 'wedstrijd' ? `<table class="pv-obs"><tr><th></th>${TURF.map((t) => `<th>${t}</th>`).join('')}</tr>${DELEN.map(([d, l]) => `<tr><td>${l}</td>${TURF.map((t) => `<td class="pv-c">${leeg ? '' : (((m.obs.turf || {})[d] || {})[t] || '')}</td>`).join('')}</tr>`).join('')}</table>` : ''}
+      ${!leeg && momentenHtml(m) ? `<p class="pv-uitleg"><b>Momenten</b></p>${momentenHtml(m)}` : ''}
       <div class="pv-vakken">${VAKKEN.map(([kk, t, q]) => `<div class="pv-vak"><b>${t}</b><small>${q}</small>${leeg || !(m.vakken || {})[kk] ? lijnen(2) : `<p>${esc(m.vakken[kk])}</p>`}</div>`).join('')}</div>`);
   });
   CC.on('begelVragenPrint', (el) => { const S = CC.S(); const m = vind(S, el.dataset.id); const z = zelf(S)[m.id] || {}; const tr = M.persoon(S, m.trainerId) || { naam: '' };
-    CC.printDoc(`Voorbereiding begeleidingsmoment · ${tr.naam}`, `<p>${esc(m.soort === 'wedstrijd' ? 'Wedstrijd' : 'Training')} ${esc(D.lang(m.datum))} · ${esc(CC.tn(m.teamId))}</p>${VRAGEN(m.soort).map(([k, t]) => `<div class="pv-blok"><p><b>${esc(t)}</b></p>${(z.v || {})[k] ? `<p>${esc(z.v[k])}</p>` : lijnen(2)}</div>`).join('')}
+    CC.printDoc(`Voorbereiding begeleidingsmoment · ${tr.naam}`, `<p>${esc(m.soort === 'wedstrijd' ? 'Wedstrijd' : 'Training')} ${esc(D.lang(m.datum))} · ${esc(CC.tn(m.teamId))}</p>${VRAGEN(m.soort, m.niveau).map(([k, t]) => `<div class="pv-blok"><p><b>${esc(t)}</b></p>${(z.v || {})[k] ? `<p>${esc(z.v[k])}</p>` : lijnen(2)}</div>`).join('')}
       <h2>Afspraken</h2><p><b>Leerdoel:</b> ${esc((m.plan || {}).leerdoel || '')}</p>${(m.plan || {}).leerdoel ? '' : lijnen(1)}<p><b>Focus HO:</b> ${esc((m.plan || {}).focus || '')}</p>${(m.plan || {}).focus ? '' : lijnen(1)}<p><b>Feedbackmoment:</b> ${esc((m.plan || {}).feedback || '')}</p>${(m.plan || {}).feedback ? '' : lijnen(1)}`); });
 
   // ---------- De trainer: vragenlijst vooraf en reflectie achteraf (op zijn Home) ----------
@@ -186,9 +219,9 @@
     return uit; };
   CC.on('begelZelf', (el) => { const S = CC.S(); const m = vind(S, el.dataset.id); const z = zelf(S)[m.id] || {};
     CC.sheet('Voorbereiding begeleidingsmoment', `<form data-submit="begelZelfOk" data-id="${m.id}" class="codeform"><p class="zacht">${m.soort === 'wedstrijd' ? 'Wedstrijd' : 'Training'} ${D.lang(m.datum)}. Alles mag kort.</p>
-      ${VRAGEN(m.soort).map(([k, t]) => veldT(k, esc(t), (z.v || {})[k])).join('')}<button class="knop">Opslaan</button></form>`, { groot: true }); });
+      ${VRAGEN(m.soort, m.niveau).map(([k, t]) => veldT(k, esc(t), (z.v || {})[k])).join('')}<button class="knop">Opslaan</button></form>`, { groot: true }); });
   CC.on('begelZelfOk', (f) => { const S = CC.S(); const m = vind(S, f.dataset.id); const z = zelf(S)[m.id] || (zelf(S)[m.id] = { trainerId: m.trainerId });
-    z.v = Object.fromEntries(VRAGEN(m.soort).map(([k]) => [k, f[k].value.trim()])); z.ingevuld = new Date().toISOString(); CC.save(); CC.closeSheet(); CC.render(); CC.toast('Dank je wel! De HO ziet je antwoorden'); });
+    z.v = Object.fromEntries(VRAGEN(m.soort, m.niveau).map(([k]) => [k, f[k].value.trim()])); z.ingevuld = new Date().toISOString(); CC.save(); CC.closeSheet(); CC.render(); CC.toast('Dank je wel! De HO ziet je antwoorden'); });
   CC.views.begelVerslag = (S, p) => { const m = vind(S, p.id); const z = zelf(S)[m.id] || {};
     return { titel: `Verslag ${titelM(S, m)}`, html: `<div class="kaartje klein"><b>Doel:</b> ${esc((m.voor || {}).doel || '—')}<br><b>Leerdoel:</b> ${esc((m.plan || {}).leerdoel || (m.voor || {}).leerdoel || '—')}</div>
       ${VAKKEN.map(([k, t]) => `${h.sectie(t)}<p>${esc((m.vakken || {})[k] || '—')}</p>`).join('')}
@@ -200,7 +233,9 @@
   // ---------- Mijn ontwikkeling (trainers.js): wat de trainer van zijn momenten ziet ----------
   // Alleen gedeelde verslagen en zijn eigen vragenlijsten; een moment dat de HO nog voorbereidt toont alleen de datum.
   const vanTrainer = (S, pid) => mom(S).filter((m) => m.trainerId === pid).sort((a, b) => b.datum.localeCompare(a.datum));
-  CC.begelMijn = (S, pid) => vanTrainer(S, pid).map((m) => { const z = zelf(S)[m.id] || {};
+  CC.begelMijn = (S, pid, opHome) => vanTrainer(S, pid).map((m) => { const z = zelf(S)[m.id] || {};
+    // Op de Home staat een open taak al bij Actie nodig (één vaste plek); hier dan alleen de regel zonder knop
+    if (opHome && ((m.gedeeld && !z.reflectieOp) || (m.gevraagd && !m.klaar && !z.ingevuld))) return h.rij({ ic: 'calendar-days', titel: esc(titelM(S, m)), sub: 'Staat bovenaan bij Actie nodig', chevron: false });
     if (m.gedeeld) return h.rij({ ic: 'clipboard-check', titel: esc(titelM(S, m)), sub: z.reflectieOp ? `Ontwikkelpunt: ${esc((m.vakken || {}).ontwikkelpunt || '')}` : 'Verslag staat klaar · reflectie nog invullen', kleur: z.reflectieOp ? '' : 'blauw', act: 'open', attrs: `data-view="begelVerslag" data-id="${m.id}"` });
     if (m.gevraagd && !m.klaar) return h.rij({ ic: 'list-checks', titel: esc(titelM(S, m)), sub: z.ingevuld ? 'Vragenlijst ingevuld · tik om aan te passen' : 'Vragenlijst nog invullen', kleur: z.ingevuld ? '' : 'blauw', act: 'begelZelf', attrs: `data-id="${m.id}"` });
     return h.rij({ ic: 'calendar-days', titel: esc(titelM(S, m)), sub: m.klaar ? 'Afgerond' : 'Gepland', chevron: false }); });

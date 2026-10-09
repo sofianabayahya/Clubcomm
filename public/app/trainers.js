@@ -41,12 +41,31 @@
   // ---------- Tabbladen: de HO krijgt Trainers, Planning hoort bij de coördinator (Besluit 99) ----------
   const origTabs = CC.rollen.hjo.tabs;
   CC.rollen.hjo.tabs = (S) => { const t = origTabs(S); if ((CC.rol() || {}).rol !== 'hjo') return t;
+    if (CC.pakketTrainers(S)) return [['home', 'Trainers', 'user-check'], t.find((x) => x[0] === 'berichten')];
     return t.map((x) => (x[0] === 'planning' ? ['trainers', 'Trainers', 'user-check'] : x)).sort((a, b) => ['home', 'trainers', 'teams', 'inzicht', 'berichten'].indexOf(a[0]) - ['home', 'trainers', 'teams', 'inzicht', 'berichten'].indexOf(b[0])); };
   // Planning blijft bereikbaar voor de HO als hij organisatiewerk doet (teams zonder coördinator): als knop bovenaan Teams
   const origTeams = CC.rollen.hjo.schermen.teams;
   CC.rollen.hjo.schermen.teams = (S) => { const html = origTeams(S); if ((CC.rol() || {}).rol !== 'hjo') return html;
     const terugval = S.teams.some((t) => !CC.coordinatorVoor || !CC.coordinatorVoor(S, t.id));
     return terugval ? `<div class="lijst compact">${h.rij({ ic: 'calendar-days', titel: 'Planning en rooster', sub: `Weekrooster, veldindeling, afgelasten (geen ${esc(S.club.labels.coordinator.toLowerCase())} voor ${S.teams.every((t) => !CC.coordinatorVoor || !CC.coordinatorVoor(S, t.id)) ? 'de club' : 'een deel van de teams'})`, act: 'tab', attrs: 'data-tab="planning"' })}</div>${html}` : html; };
+
+  // ---------- Besluit 100: pakket "Alleen Trainers begeleiden" en de rol technisch coördinator ----------
+  CC.pakketTrainers = (S) => (S || CC.S()).club.pakket === 'trainers';
+  const trainersHome = (S) => { const w = CC.begelWeek ? CC.begelWeek(S) : [];
+    return `${w.length ? `${h.sectie('Deze week')}<div class="lijst compact">${w.join('')}</div>` : ''}${CC.rollen.hjo.schermen.trainers(S)}`; };
+  const origHjoHome = CC.rollen.hjo.schermen.home;
+  CC.rollen.hjo.schermen.home = (S) => (CC.pakketTrainers(S) && (CC.rol() || {}).rol === 'hjo' ? trainersHome(S) : origHjoHome(S));
+  CC.rollen.tc = {
+    context(S) { const w = CC.werkgebied(S); return { titel: S.club.naam, sub: `Technisch coördinator${w ? ` · ${[...w].join(', ')}` : ''}` }; },
+    tabs(S) { return [['home', 'Trainers', 'user-check'], ['berichten', 'Berichten', 'message-circle', M.ongelezen(S, CC.me().id)]]; },
+    schermen: { home: (S) => trainersHome(S), berichten: (S) => CC.rollen.hjo.schermen.berichten(S) },
+  };
+  // De trainer in het pakket: zijn begeleiding en Berichten (geen spelers, aanwezigheid of afmelden)
+  const origTrTabs = CC.rollen.trainer.tabs; const origTrHome = CC.rollen.trainer.schermen.home;
+  CC.rollen.trainer.tabs = (S) => (CC.pakketTrainers(S) ? [['home', 'Home', 'house'], origTrTabs(S).find((x) => x[0] === 'berichten')] : origTrTabs(S));
+  CC.rollen.trainer.schermen.home = (S) => { if (!CC.pakketTrainers(S)) return origTrHome(S);
+    const acties = CC.trainerActiesExtra(S); const me = CC.me();
+    return `${acties.length ? `${h.sectie('Actie nodig')}<div class="lijst">${acties.join('')}</div>` : ''}${h.sectie('Mijn ontwikkeling')}${heeftOntw(S, me) ? CC.views.mijnOntw(S, { opHome: true }).html : '<p class="zacht klein">Hier komt je begeleiding te staan zodra de club die met je afspreekt.</p>'}`; };
 
   // ---------- Tabblad Trainers ----------
   CC.rollen.hjo.schermen.trainers = (S) => {
@@ -78,7 +97,7 @@
   const origDetail = CC.views.trainerDetail;
   CC.views.trainerDetail = (S, p) => {
     const tr = M.persoon(S, p.id); const basis = origDetail(S, p); const rol = (CC.rol() || {}).rol;
-    if (rol !== 'hjo' && rol !== 'beheerder') return basis;
+    if (!['hjo', 'tc', 'beheerder'].includes(rol)) return basis;
     const t = traject(S, tr.id); const a = adm(S)[tr.id] || {}; const k = ken(S)[tr.id] || {};
     const teams = teamsVan(S, tr); const bouw = teams.length && CC.bouwVan ? [...new Set(teams.map((x) => CC.bouwVan(S, x).naam))].join(', ') : '';
     const vog = a.vog ? (a.vog < D.vandaag() ? `<span class="chip rood mini">VOG verlopen ${D.kort(a.vog)}</span>` : a.vog < D.addDays(D.vandaag(), 60) ? `<span class="chip oranje mini">VOG tot ${D.kort(a.vog)}</span>` : `VOG tot ${D.kort(a.vog)}`) : 'VOG: onbekend';
@@ -103,11 +122,14 @@
       <p class="klein">${esc(teams.map((x) => x.naam).join(', ') || 'Geen team')}${bouw ? ` · ${esc(bouw)}` : ''}<br>KNVB: ${esc(a.diploma || ((k.a || {}).diploma ? `${k.a.diploma} (zelf opgegeven)` : 'onbekend'))} · ${vog}</p>
       ${h.sectie('Traject')}${trajectBlok}
       ${h.sectie('Kennismaking')}${kennisBlok}
-      ${h.sectie('Afmeldingen en contact')}<details class="uitklap"><summary><b>Afmeldingen, geschiedenis en contact</b></summary>${basis.html}</details>
-      ${rol === 'hjo' ? `${h.sectie('Notities (alleen jij)')}<form data-submit="hoNotitieOk" data-id="${tr.id}" class="codeform"><textarea name="n" rows="3" placeholder="Alleen voor jou als ${esc(S.club.labels.hjo)}; de trainer ziet dit niet.">${esc(notities(S)[tr.id] || '')}</textarea><button class="knop licht klein">Opslaan</button></form>` : ''}` };
+      ${CC.pakketTrainers(S) ? '' : `${h.sectie('Afmeldingen en contact')}<details class="uitklap"><summary><b>Afmeldingen, geschiedenis en contact</b></summary>${basis.html}</details>`}
+      ${CC.BEGELEIDERS.includes(rol) ? `${h.sectie('Notities')}<form data-submit="hoNotitieOk" data-id="${tr.id}" class="codeform"><textarea name="n" rows="3" placeholder="Voor de ${esc(S.club.labels.hjo)} en technisch coördinator van deze bouw; de trainer ziet dit niet.">${esc(notitieTekst(notities(S)[tr.id]))}</textarea><button class="knop licht klein">Opslaan</button></form>` : ''}` };
   };
   CC.on('trainerVolg', (el) => { const S = CC.S(); const d = dos(S)[el.dataset.id] || (dos(S)[el.dataset.id] = {}); d.volg = !d.volg; CC.save(); CC.render(); CC.toast(d.volg ? 'Je volgt deze trainer' : 'Niet meer gevolgd'); });
-  CC.on('hoNotitieOk', (f) => { const S = CC.S(); notities(S)[f.dataset.id] = f.n.value; CC.save(); CC.toast('Notitie opgeslagen'); });
+  // Besluit 100: de notitie draagt de bouw(en) van de trainer; de database toont hem alleen aan begeleiders van die bouw
+  const notitieTekst = (n) => (typeof n === 'string' ? n : (n || {}).tekst || '');
+  CC.on('hoNotitieOk', (f) => { const S = CC.S(); const tr = M.persoon(S, f.dataset.id);
+    notities(S)[tr.id] = { tekst: f.n.value, bouwen: [...new Set(teamsVan(S, tr).map((t) => CC.bouwVan(S, t).naam))] }; CC.save(); CC.toast('Notitie opgeslagen'); });
 
   // Traject starten, aanpassen, afronden
   CC.on('trajectSheet', (el) => {
@@ -119,13 +141,14 @@
       <p class="zacht klein">Een traject is voor ${esc(tr.naam.split(' ')[0])}${k.ambitie ? ` (kennismaking: "${esc(k.ambitie)}")` : ''}. Spreek het samen af.</p>
       <div class="twee"><div><label>Wedstrijden begeleiden</label>${kies('w', std.wedstrijd || 0)}</div><div><label>Trainingen begeleiden</label>${kies('t', std.training || 0)}</div></div>
       <label for="tj-l">Leerdoel voor dit seizoen (mag later)</label><textarea id="tj-l" name="l" rows="2" placeholder="${esc(k.beter || 'Bijv. spelers vaker zelf laten oplossen door vragen te stellen')}">${esc(t ? t.leerdoel || '' : k.beter || '')}</textarea>
+      <label for="tj-n">Vragenlijst vooraf</label><select id="tj-n" name="n"><option value="kort" ${(t || {}).niveau !== 'uitgebreid' ? 'selected' : ''}>Kort: 4 eenvoudige vragen (starters, geen opleiding)</option><option value="uitgebreid" ${(t || {}).niveau === 'uitgebreid' ? 'selected' : ''}>Uitgebreid: 9 vragen (ervaren of in opleiding)</option></select>
       ${t ? `<label for="tj-o">Ontwikkelpunt nu</label><input id="tj-o" name="o" value="${esc(t.ontwikkelpunt || '')}">` : ''}
       <button class="knop">${t ? 'Opslaan' : 'Traject starten'}</button>
       <p class="zacht klein">Standaard: selectie 2 + 2, breedte 1 + 1. Het plan bepaalt de werkdruk en wanneer de app signaleert.</p></form>`);
   });
   CC.on('trajectOk', (f) => {
     const S = CC.S(); const d = dos(S)[f.dataset.id] || (dos(S)[f.dataset.id] = {}); const oud = d.traject && d.traject.actief ? d.traject : null;
-    d.traject = { actief: true, sinds: oud ? oud.sinds : D.vandaag(), door: CC.me().id, plan: { wedstrijd: Number(f.w.value), training: Number(f.t.value) }, leerdoel: f.l.value.trim(), ontwikkelpunt: f.o ? f.o.value.trim() : (oud ? oud.ontwikkelpunt || '' : '') };
+    d.traject = { actief: true, sinds: oud ? oud.sinds : D.vandaag(), door: CC.me().id, plan: { wedstrijd: Number(f.w.value), training: Number(f.t.value) }, leerdoel: f.l.value.trim(), niveau: f.n.value, ontwikkelpunt: f.o ? f.o.value.trim() : (oud ? oud.ontwikkelpunt || '' : '') };
     CC.save(); CC.closeSheet(); CC.render(); CC.toast(oud ? 'Traject opgeslagen' : 'Traject gestart');
   });
   CC.on('trajectStop', (el) => { if (!confirm('Traject afronden? Het dossier blijft bewaard.')) return; const S = CC.S(); const d = dos(S)[el.dataset.id]; if (d && d.traject) { d.traject.actief = false; d.traject.afgerond = D.vandaag(); (d.oud || (d.oud = [])).push(d.traject); d.traject = null; } CC.save(); CC.render(); CC.toast('Traject afgerond'); });
@@ -164,8 +187,14 @@
     k.ingevuld = new Date().toISOString(); CC.save(); CC.closeSheet(); CC.render(); CC.toast('Dank je wel!'); });
 
   // ---------- Clubbeheerder: de vragen aanpassen (Regels) ----------
+  // Besluit 100: welk pakket gebruikt de club?
+  const pakketBlok = (S) => `${h.sectie('Pakket')}<form data-submit="pakketOk" class="kaartje codeform"><fieldset class="vinkjes"><legend>Wat gebruikt de club?</legend>
+    <label><input type="radio" name="p" value="" ${CC.pakketTrainers(S) ? '' : 'checked'}> Alles: communicatie en organisatie (ouders, teams, planning) en trainers begeleiden</label>
+    <label><input type="radio" name="p" value="trainers" ${CC.pakketTrainers(S) ? 'checked' : ''}> Alleen Trainers begeleiden (${esc(S.club.labels.hjo)}, technisch coördinator en trainers; geen ouders)</label></fieldset>
+    <button class="knop licht klein">Opslaan</button></form>`;
+  CC.on('pakketOk', (f) => { const S = CC.S(); const v = f.querySelector('[name=p]:checked').value; if (v) S.club.pakket = v; else delete S.club.pakket; CC.save(); CC.render(); CC.toast(v ? 'Pakket: alleen Trainers begeleiden' : 'Pakket: alles'); });
   const origRegels = CC.rollen.beheerder.schermen.regels;
-  CC.rollen.beheerder.schermen.regels = (S) => origRegels(S) + `${h.sectie('Kennismaking trainer')}<form data-submit="vragenOk" class="kaartje codeform"><p class="zacht klein">De vragenlijst die trainers één keer invullen. Zet vragen uit of pas de tekst aan.</p>
+  CC.rollen.beheerder.schermen.regels = (S) => pakketBlok(S) + origRegels(S) + `${h.sectie('Kennismaking trainer')}<form data-submit="vragenOk" class="kaartje codeform"><p class="zacht klein">De vragenlijst die trainers één keer invullen. Zet vragen uit of pas de tekst aan.</p>
     ${CC.trainerVragen(S, true).map((v, i) => `<label class="vink"><input type="checkbox" name="aan${i}" ${v.uit ? '' : 'checked'}> <input name="t${i}" value="${esc(v.t)}" aria-label="Vraag ${i + 1}" style="flex:1"></label>`).join('')}
     <label for="vr-nieuw">Eigen vraag erbij (mag leeg)</label><input id="vr-nieuw" name="nieuw" placeholder="Bijv. Welke positie speelde je zelf?">
     <div class="knoppen"><button class="knop">Opslaan</button><button type="button" class="knop licht" data-act="vragenStd">Terug naar de standaard</button><button type="button" class="knop licht" data-act="kennisPrintLeeg">${icon('printer')}Printen</button></div></form>`;
@@ -216,7 +245,7 @@
   // Alles uit zijn dossier behalve de notities van de HO; geen extra tabblad en geen melding (die staan al op zijn Home).
   const heeftOntw = (S, me) => isTrainer(me) && (traject(S, me.id) || (ken(S)[me.id] || {}).ingevuld || (CC.begelMijn && CC.begelMijn(S, me.id).length));
   CC.profielExtra = (S) => { const me = CC.me(); return heeftOntw(S, me) ? h.rij({ ic: 'graduation-cap', titel: 'Mijn ontwikkeling', sub: 'Je leerdoel, je begeleidingsmomenten en je reflecties', act: 'open', attrs: 'data-view="mijnOntw"' }) : ''; };
-  CC.views.mijnOntw = (S) => { const me = CC.me(); const t = traject(S, me.id); const k = ken(S)[me.id] || {}; const l = CC.begelMijn ? CC.begelMijn(S, me.id) : [];
+  CC.views.mijnOntw = (S, p = {}) => { const me = CC.me(); const t = traject(S, me.id); const k = ken(S)[me.id] || {}; const l = CC.begelMijn ? CC.begelMijn(S, me.id, p.opHome) : [];
     return { titel: 'Mijn ontwikkeling', html: `
       ${t ? `<div class="kaartje"><p class="klein"><b>Begeleiding dit seizoen</b> · ${planTekst(t)} · ${standTekst(S, me.id, t)}</p>
         <p><b>Leerdoel:</b> ${esc(t.leerdoel || 'nog niet afgesproken')}</p>${t.ontwikkelpunt ? `<p><b>Ontwikkelpunt:</b> ${esc(t.ontwikkelpunt)}</p>` : ''}</div>`
