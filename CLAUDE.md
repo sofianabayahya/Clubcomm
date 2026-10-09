@@ -9,13 +9,14 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
 - **Hoofdversie (main) altijd bijwerken:** na elke afgeronde ronde de werkbranch via een pull request samenvoegen met `main` (de gebruiker wil dat `main` op GitHub altijd de actuele stand is). Daarna de werkbranch opnieuw laten beginnen vanaf `main`.
 - Vraagt de gebruiker **"wat zijn de volgende stappen?"**: kijk in `docs/productie-en-groei.md` → blok **Openstaand** en houd dat blok bij.
 - **Eigenaarschap:** zoek zelf actief naar verouderde teksten, gaten en fouten (zoals een tekst die niet meer klopt met een nieuwer besluit). Leg ze eerst voor aan de gebruiker en bouw pas na akkoord; kleine, duidelijke fouten mag je in dezelfde ronde meenemen en melden.
+- **Borgen (bij elk besluit):** (1) nieuw besluit bovenaan in `docs/besluiten.md`; (2) elk ouder besluit dat het raakt krijgt de regel *"◐ Deels herzien door Besluit X"* of *"✖ Vervangen door …"* en het **Register** bovenaan wordt bijgewerkt; (3) wat bewust niet doorgaat komt bij **Afgewezen ideeën** (met reden); (4) *Later / ideeën* en *Nog te bespreken* bijwerken; (5) **Openstaand** bijwerken. **Vóór je een idee voorstelt:** kijk bij Afgewezen ideeën en in het Register; stel nooit een afgewezen idee voor zonder dat te zeggen.
 - Vraag nooit om geheime sleutels in de chat (Brevo, Supabase service key); de gebruiker zet ze zelf in het dashboard.
 - Vuistregels voor elk scherm (Besluit 30 en 34): actie eerst, wat bij elkaar hoort in één blok, elke actie één vaste plek, kleur alleen voor aandacht, **informatie is geen taak**, "ClubComm signaleert, mensen beslissen".
 
 ## Waar staat wat
 | Bestand | Inhoud |
 |---|---|
-| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 95). |
+| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bovenaan het **Register** (status per besluit), onderaan **Afgewezen ideeën**. Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 95). |
 | `docs/pilotlog.md` | **Fouten uit de pilot met oorzaak en patroon** (momentopname, opslaan, demo verbergt het, één persoon per rol, buiten de app, rommelige gegevens). Bij elke wijziging langs deze patronen lopen. |
 | `docs/productie-en-groei.md` | Controlelijst, **Openstaand**, meerdere clubs, app of website, kosten. |
 | `docs/techniek.md` | Opbouw van de echte versie (Supabase, Vercel, Brevo, migraties, e-mail, back-up). |
