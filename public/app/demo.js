@@ -73,7 +73,7 @@
   // Het eerste doel dat iets vindt (de demo rekent vanaf vandaag; niet elke dag staat er hetzelfde)
   const eerste = (...fns) => () => { for (const f of fns) { const r = f(); if (r.length) return r; } return []; };
 
-  const ROL = { ouder: 'Ouder', trainer: 'Trainer', teamleider: 'Teamleider', hjo: 'Hoofd jeugdopleiding', beheerder: 'Clubbeheerder' };
+  const ROL = { ouder: 'Ouder', trainer: 'Trainer', teamleider: 'Teamleider', hjo: 'Hoofd jeugdopleiding', beheerder: 'Clubmanager' };
   const STAPPEN = [
     { hfd: 'Start', wie: 'sanne', rol: 'ouder', titel: 'Eén app voor de hele jeugdafdeling',
       tekst: '<p>Afmelden via WhatsApp, lijstjes voor vervoer, bellen om een timekeeper: bij de meeste clubs zit het overal en nergens. De trainer weet vaak pas op het veld wie er is.</p><p>ClubComm brengt dat samen in één app op de telefoon. Iedere rol ziet precies wat hij nodig heeft, en alles sluit op elkaar aan.</p><p>We volgen <b>één week rond een wedstrijd</b> van de O10-1 van de verzonnen <b>VV De Voorbeeldclub</b>.</p>',

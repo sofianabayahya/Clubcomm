@@ -1,5 +1,5 @@
 // ClubComm prototype — HJO (Besluit 11): Home · Teams · Planning · Inzicht · Berichten
-// en Clubbeheerder (Besluit 12 en 13): Home · Seizoen · Regels · Rollen · Modules
+// en Clubmanager (Besluit 12 en 13): Home · Seizoen · Regels · Rollen · Modules
 (function () {
   const CC = window.CC; const D = CC.date, M = CC.m, h = CC.h, icon = CC.icon, esc = CC.esc;
   const alleTeams = (S) => S.teams.map((t) => t.id);
@@ -102,7 +102,7 @@
         const zonder = c.vakanties.filter((v) => !v.trainen);
         return `<div class="kaartje"><h4>${icon('calendar')}Seizoen ${D.kort(c.seizoen.start)} – ${D.kort(c.seizoen.eind)}</h4>
             <p class="klein">Geen training in: ${zonder.map((v) => esc(v.naam.toLowerCase())).join(', ')}. ${c.vakanties.filter((v) => v.trainen).map((v) => `Wel in de ${esc(v.naam.toLowerCase())}.`).join(' ')}</p>
-            <p class="zacht klein">Seizoen en vakanties stelt de clubbeheerder in. Het systeem maakt alle trainingen aan en slaat vakanties over.</p></div>
+            <p class="zacht klein">Seizoen en vakanties stelt de clubmanager in. Het systeem maakt alle trainingen aan en slaat vakanties over.</p></div>
           <div class="twee-knoppen"><button class="tegel" data-act="bulkRooster">${icon('calendar-plus')}<span>Rooster voor meerdere teams</span></button><button class="tegel" data-act="excelImport">${icon('upload')}<span>Importeren uit Excel</span></button></div>
           <button class="knop licht vol rood-tekst" data-act="noodbericht">${icon('triangle-alert')}Noodbericht of afgelasten</button>
           ${h.sectie('Weekrooster en veldindeling')}
@@ -188,7 +188,7 @@
       ${CC.mag('staf') || CC.rol().rol === 'beheerder' ? `<button class="knop licht klein" data-act="gegevensPersoon" data-id="${p.id}">${icon('pencil')}Gegevens wijzigen</button>` : ''}<div class="lijst">${p.rollen.map((r, i) => h.rij({ ic: 'user-cog', titel: CC.rolNaam(r) + (r.teamId ? ` · ${CC.tn(r.teamId)}` : ''), rechts: `<button class="icoonknop" data-act="rolWeg" data-id="${p.id}" data-i="${i}" aria-label="Rol verwijderen">${icon('trash-2')}</button>` })).join('')}</div>
       <form data-submit="rolErbij" data-id="${p.id}" class="codeform"><div class="twee"><div><label for="rb-r">Rol</label><select id="rb-r" name="r"><option value="trainer">Trainer</option><option value="teamleider">Teamleider</option><option value="ouder">Ouder</option><option value="hjo">${esc(S.club.labels.hjo)}</option>${S.club.coordinatorAan ? `<option value="coordinator">${esc(S.club.labels.coordinator)}</option>` : ''}</select></div><div><label for="rb-t">Team</label><select id="rb-t" name="t"><option value="">–</option>${S.teams.map((t) => `<option value="${t.id}">${esc(t.naam)}</option>`).join('')}${S.club.coordinatorAan ? `<optgroup label="Groep (voor ${esc(S.club.labels.coordinator.toLowerCase())})">${(S.club.groepen || []).map((g) => `<option value="groep:${esc(g.naam)}">${esc(g.naam)}</option>`).join('')}</optgroup>` : ''}</select></div></div><button class="knop">${icon('plus')}Rol koppelen</button><p class="zacht klein">Eén account per persoon. Met meerdere rollen verschijnt de rolwisselaar in het profiel.</p></form>`);
   });
-  // Naam en telefoonnummer van een ander wijzigen: alleen HJO/clubbeheerder, als uitzondering (Besluit 45). E-mailadres niet: daarmee logt iemand in.
+  // Naam en telefoonnummer van een ander wijzigen: alleen HJO/clubmanager, als uitzondering (Besluit 45). E-mailadres niet: daarmee logt iemand in.
   CC.on('gegevensPersoon', (el) => { const S = CC.S(); const p = M.persoon(S, el.dataset.id);
     CC.sheet('Gegevens wijzigen', `<form data-submit="gegevensPersoonOk" data-id="${p.id}" class="codeform">
       <label for="gp-n">Naam</label><input id="gp-n" name="n" required value="${esc(p.naam)}">
@@ -390,15 +390,15 @@
   CC.views.zonderStaf = (S) => ({ titel: 'Teams zonder complete staf', html: `<div class="lijst">${S.teams.filter((t) => !t.trainerId || !t.teamleiderId).map((t) => h.rij({ ic: 'user-cog', titel: esc(t.naam), sub: `Ontbreekt: ${!t.trainerId && !t.teamleiderId ? 'trainer en teamleider' : !t.trainerId ? 'trainer' : 'teamleider'}`, act: 'open', attrs: `data-view="team" data-team="${t.id}"` })).join('') || h.leeg('Alle teams zijn compleet')}</div><p class="zacht klein">Zonder teamleider neemt de trainer het over (goedkeuren, regelen). Zonder beide komt het bij jou (Ontwerpprincipe 7).</p>` });
   CC.views.aanmeldingenHjo = (S) => ({ titel: 'Openstaande aanmeldingen', html: `<p class="zacht klein">Na 48 uur zonder reactie komen aanmeldingen bij jou terecht. Je kunt ze zelf goedkeuren.</p><div class="lijst">${S.aanm.filter((x) => x.status === 'open').map((x) => `<small class="klein-kop">${esc(CC.tn(x.teamId))}</small>${CC.aanmRij(S, x)}`).join('') || h.leeg('Alles is goedgekeurd')}</div>` });
 
-  // ---------- Clubbeheerder ----------
+  // ---------- Clubmanager ----------
   CC.rollen.beheerder = {
-    context(S) { return { titel: S.club.naam, sub: 'Clubbeheerder' }; },
+    context(S) { return { titel: S.club.naam, sub: 'Clubmanager' }; },
     tabs(S) { return [['home', 'Home', 'house'], ['seizoen', 'Seizoen', 'calendar'], ['regels', 'Regels', 'sliders-horizontal'], ['rollen', 'Rollen', 'user-cog'], ['modules', 'Modules', 'puzzle']]; },
     schermen: {
       home(S) {
         const i = S.club.ingericht;
         const stap = (ok, titel, sub, tab) => h.rij({ ic: ok ? 'circle-check' : 'circle-alert', titel, sub, kleur: ok ? 'groen' : 'oranje', act: 'tab', attrs: `data-tab="${tab}"` });
-        return `<div class="info">${icon('info')}<span>Als clubbeheerder richt je ClubComm in, ongeveer één keer per seizoen. Het dagelijkse werk doen de ${esc(S.club.labels.hjo)}, trainers en teamleiders.</span></div>
+        return `<div class="info">${icon('info')}<span>Als clubmanager draai je aan de knoppen van ClubComm: rollen, taken, regels en seizoen. Je bent het aanspreekpunt van de club; loop je ergens tegenaan, bel dan de ClubComm-manager. Het dagelijkse werk doen de ${esc(S.club.labels.hjo)}, coördinatoren, trainers en teamleiders.</span></div>
           ${h.sectie('Klaar voor het seizoen?')}<div class="lijst">
             ${stap(i.seizoen, 'Seizoen', `${D.kort(S.club.seizoen.start)} – ${D.kort(S.club.seizoen.eind)}`, 'seizoen')}
             ${stap(i.vakanties, 'Schoolvakanties', `Regio ${S.club.regio} · ${S.club.vakanties.length} vakanties`, 'seizoen')}
@@ -445,8 +445,8 @@
       rollen(S) {
         const c = S.club; const tel = (r) => S.people.filter((p) => p.rollen.some((x) => x.rol === r)).length;
         return `<form data-submit="labelsOk" class="kaartje codeform"><p class="klein">Hoe noemt jullie club deze rollen?</p><div class="twee"><div><label for="lb-h">Hoofd jeugd</label><input id="lb-h" name="h" value="${esc(c.labels.hjo)}"></div><div><label for="lb-c">Coördinator</label><input id="lb-c" name="c" value="${esc(c.labels.coordinator)}"></div></div><label class="schakel"><span>${esc(c.labels.coordinator)} gebruiken (${esc(c.labels.hjo)}-rechten voor een groep teams)</span><input type="checkbox" name="ca" ${c.coordinatorAan ? 'checked' : ''}><i></i></label><button class="knop licht klein">Opslaan</button></form>
-          ${h.sectie('Rollen in gebruik')}<div class="lijst compact">${[['ouder', 'Ouder'], ['trainer', 'Trainer'], ['teamleider', 'Teamleider'], ['hjo', c.labels.hjo], ...(c.coordinatorAan ? [['coordinator', c.labels.coordinator]] : []), ['beheerder', 'Clubbeheerder']].map(([r, l]) => h.rij({ ic: 'user-cog', titel: esc(l), rechts: `<b>${tel(r)}</b>` })).join('')}</div>
-          <table class="tabel"><thead><tr><th></th><th>Clubbeheerder</th><th>${esc(c.labels.hjo)}</th></tr></thead><tbody><tr><td>Soort werk</td><td>inrichten (± 1× per seizoen)</td><td>jeugd sturen (wekelijks)</td></tr><tr><td>Wat</td><td>rollen, modules, regels, seizoen, vakanties</td><td>teams, staf, signalen, planning, berichten</td></tr></tbody></table>
+          ${h.sectie('Rollen in gebruik')}<div class="lijst compact">${[['ouder', 'Ouder'], ['trainer', 'Trainer'], ['teamleider', 'Teamleider'], ['hjo', c.labels.hjo], ...(c.coordinatorAan ? [['coordinator', c.labels.coordinator]] : []), ['beheerder', 'Clubmanager']].map(([r, l]) => h.rij({ ic: 'user-cog', titel: esc(l), rechts: `<b>${tel(r)}</b>` })).join('')}</div>
+          <table class="tabel"><thead><tr><th></th><th>Clubmanager</th><th>${esc(c.labels.hjo)}</th></tr></thead><tbody><tr><td>Soort werk</td><td>inrichten (± 1× per seizoen)</td><td>jeugd sturen (wekelijks)</td></tr><tr><td>Wat</td><td>rollen, modules, regels, seizoen, vakanties</td><td>teams, staf, signalen, planning, berichten</td></tr></tbody></table>
           <p class="zacht klein">Rollen per persoon koppel je als ${esc(c.labels.hjo)} bij Teams → Staf.</p>`;
       },
       modules(S) {

@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 95)
+Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 96)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -17,7 +17,8 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 95)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
-| 95 | Twee lijnen: voetbal (HO) en organisatie (coördinator) | ✅ geldt |  |
+| 96 | Eén aanspreekpunt: de clubmanager (van de club) en de ClubComm-manager (van ons) | ✅ geldt |  |
+| 95 | Twee lijnen: voetbal (HO) en organisatie (coördinator) | ◐ deels herzien | door 96 (clubbeheerder heet clubmanager) |
 | 94 | Training afgelasten met eigen toelichting | ◐ deels herzien | door 95 (de HJO-knop Afgelasten ligt nu bij de coördinator) |
 | 93 | Evaluatieformulier praktijkbegeleiding coach (testcase, mijnclubcomm.nl/evaluatie) | ◐ deels herzien | door 95 (wordt later de module Trainers begeleiden in de app) |
 | 92 | Oefenwedstrijd: thuis of uit, verzamelen, verzamelpunt en adres | ✅ geldt |  |
@@ -100,7 +101,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 95)
 | 15 | Fases en opschaling | ◐ deels herzien | door 32 (kaarten per seizoen), 25/95 (stap 3 trainer of coördinator, stap 4 coördinator, stap 5 HO) |
 | 14 | Uitschrijven en account verwijderen | ◐ deels herzien | door 72 (ontwikkelgegevens meteen gewist) |
 | 13 | Planning: weekrooster in plaats van losse trainingen | ◐ deels herzien | door 87 (rooster per dag, veilig bijwerken), 95 (rooster en afgelasten: coördinator) |
-| 12 | Rollen en clubbeheerder | ◐ deels herzien | door 25 (taken per rol), 95 (twee lijnen: HO voetbal, coördinator organisatie, clubbeheerder alleen de app) |
+| 12 | Rollen en clubbeheerder | ◐ deels herzien | door 25 (taken per rol), 95 (twee lijnen), 96 (clubbeheerder heet clubmanager: één aanspreekpunt) |
 | 11 | HJO-portaal | ◐ deels herzien | door 26 (Home), 30 (snelknoppen weg), 95 (organisatie naar de coördinator) |
 | 10 | Aanwezigheidsnorm en zones | ◐ deels herzien | door 33 (teamleider volgt spelers standaard niet), 34 (HJO geen losse spelers), 61 (langdurig meldt de ouder), 95 (team in de zone: coördinator, HO kijkt mee) |
 | 9 | Teamleiderportaal | ◐ deels herzien | door 31 (vervoer), 33 (vier knoppen, Regelen in Wedstrijd) |
@@ -576,7 +577,7 @@ Drie vragen, van club → team → speler:
 - **Aanvulling (23 september 2026): teams filteren en sorteren, Inzicht per groep.** Teams-tab: filters alle · oranje/rood · zonder staf · open aanmeldingen · per groep van de coördinator (O6–O9, O10–O12) · selectie; sorteren op naam, aanwezigheid laagste eerst, meeste signalen, minste gezinnen die meehelpen. Inzicht: bovenaan een keuze "Hele club" of een groep, zodat de HJO met de coördinator naar diens teams kan kijken. Op teamniveau; een clubbrede lijst van rode spelers komt er bewust niet (Besluit 26).
 
 ## Besluit 12 — Rollen en clubbeheerder
-> **◐ Deels herzien door Besluit 25 (taken per rol), 95 (twee lijnen: HO voetbal, coördinator organisatie, clubbeheerder alleen de app)** (zie Register).
+> **◐ Deels herzien door Besluit 25 (taken per rol), 95 (twee lijnen), 96 (clubbeheerder heet clubmanager: één aanspreekpunt)** (zie Register).
 
 ### Rollen
 **Ouder · Trainer · Teamleider · Coördinator (optioneel) · HJO · Clubbeheerder**
@@ -628,7 +629,15 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 96 — Eén aanspreekpunt: de clubmanager (van de club) en de ClubComm-manager (van ons)
+*Besloten 10 oktober 2026. Herziet de naam en rol "clubbeheerder" (Besluit 12, 95).*
+- **Clubmanager** (was: clubbeheerder): **één persoon per club** die aan de knoppen van ClubComm draait (rollen, taken, modules, regels, seizoen). Dat kan de voorzitter zijn, een coördinator of de verenigingsmanager; vaak een dubbele rol. Hij is het **enige aanspreekpunt** van de club voor ClubComm, zodat er altijd één communicatielijn is.
+- **ClubComm-manager** (van ons, de aanbieder): biedt ClubComm aan, richt de app samen met de clubmanager in, leert het hem aan en is zijn vaste contact. Loopt de clubmanager ergens tegenaan of wil de club iets aanpassen, dan belt hij de ClubComm-manager en gaan ze samen in gesprek.
+- **Piramide van rollen** (voor het spoorboekje): ClubComm-manager ↔ clubmanager → HO → technisch coördinator → coördinatoren → trainers en teamleiders → ouders → spelers.
+- In de app heet de rol nu **Clubmanager** (de code gebruikt intern nog `beheerder`). Oude documenten en migraties houden het woord clubbeheerder; daar is het hetzelfde.
+
 ## Besluit 95 — Twee lijnen: voetbal (HO) en organisatie (coördinator)
+> **◐ Deels herzien door Besluit 96 (clubbeheerder heet clubmanager)** (zie Register).
 *Besloten 10 oktober 2026. Uitwerking en bronnen: `docs/onderzoek/taken-per-rol.md`. Vult Besluit 12, 21, 25 en 34 aan.*
 - **Voetballijn:** de HO (= HJO, naam per club) maakt de trainers beter. Hij is een **mentor die in rapporten kijkt**: hij blijft geïnformeerd, zoekt zelf op en krijgt geen stroom meldingen over organisatie. De **trainer valt onder de HO**.
 - **Technisch coördinator** (optioneel, per bouw): ondersteunt de HO en kan ook observaties en gesprekken met trainers doen. Komt in een latere stap.
@@ -1562,7 +1571,7 @@ Een ouder regelt dit **zelf** in het profiel, zonder tussenkomst van de club.
 | Clubbesluit (stap 5) | HO met het bestuur | clubbeheerder wijst aan |
 | Trainers volgen, gesprekken en observaties | HO (of technisch coördinator) | clubbeheerder wijst aan |
 | Beoordelen, ontwikkelgesprekken met ouder en kind | Trainer | — |
-| Clubinstellingen, rollen, taken, modules, seizoen | Clubbeheerder | — |
+| Clubinstellingen, rollen, taken, modules, seizoen | Clubmanager (Besluit 96) | ClubComm-manager helpt |
 
 ---
 
