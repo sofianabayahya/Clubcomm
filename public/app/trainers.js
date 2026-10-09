@@ -91,7 +91,7 @@
         <ul class="stappenlijst">${stap(k.ingevuld || (S.trainerGesprekken || []).some((g) => g.trainerId === tr.id && g.soort === 'gesprek'), false, 'Kennismaking')}
           ${t.plan.training ? stap(gedaan(S, tr.id, 'training') >= t.plan.training, gedaan(S, tr.id, 'training') > 0, `Training ${gedaan(S, tr.id, 'training')} van ${t.plan.training}`) : ''}
           ${t.plan.wedstrijd ? stap(gedaan(S, tr.id, 'wedstrijd') >= t.plan.wedstrijd, gedaan(S, tr.id, 'wedstrijd') > 0, `Wedstrijd ${gedaan(S, tr.id, 'wedstrijd')} van ${t.plan.wedstrijd}`) : ''}</ul>
-        <p class="zacht klein">Begeleidingsmomenten (voorbereiding, planningsgesprek, praktijk, reflectiegesprek, nazorg) komen in de volgende stap.</p>
+        ${CC.begelBlok ? CC.begelBlok(S, tr.id) : ''}
         <div class="knoppen"><button class="knop licht klein" data-act="trajectSheet" data-id="${tr.id}">${icon('pencil')}Traject aanpassen</button><button class="knop licht klein" data-act="trajectStop" data-id="${tr.id}">Traject afronden</button></div></div>`
       : `<div class="kaartje"><p class="klein">${plezier(S, tr.id) ? `${esc(tr.naam.split(' ')[0])} traint vooral voor het plezier (kennismaking). Dat is prima: geen traject, geen signalen.` : `${esc(tr.naam.split(' ')[0])} heeft geen traject. Begeleiden doe je als de trainer zich wil ontwikkelen.`}</p>
         <button class="knop ${plezier(S, tr.id) ? 'licht' : ''} klein" data-act="trajectSheet" data-id="${tr.id}">${icon('play')}Traject starten</button></div>`;
@@ -144,7 +144,8 @@
   });
   // Op de Home van de trainer: één regel tot hij het invult (of "Later": 30 dagen weg op deze telefoon)
   const LATER = 'cc-kennis-later';
-  CC.trainerActiesExtra = (S) => { const me = CC.me(); const k = ken(S)[me.id];
+  CC.trainerActiesExtra = (S) => [...kennisActie(S), ...(CC.begelActies ? CC.begelActies(S) : [])];
+  const kennisActie = (S) => { const me = CC.me(); const k = ken(S)[me.id];
     if (!k || !k.gevraagd || k.ingevuld) return [];
     try { const l = Number(localStorage.getItem(LATER)); if (l && Date.now() - l < 30 * 864e5) return []; } catch (e) { /* */ }
     return [h.rij({ ic: 'user-check', titel: 'Kennismaking: we willen je graag beter leren kennen', sub: 'Een korte vragenlijst, een paar minuten', kleur: 'blauw', act: 'kennisForm' })]; };

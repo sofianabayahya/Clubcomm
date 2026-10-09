@@ -10,9 +10,9 @@
     vervoer: {}, taken: [], opgave: [], aanm: [], beoord: {}, notities: {}, speeltijd: { min: {}, schema: {}, keeper: {}, mogelijk: {} }, wijzigingen: [],
     demo: {}, materiaal: {}, mails: [], trainerLog: [], trainerGesprekken: [], ontwGesprek: [], ontwVoorb: {}, ontwVerslag: {}, ontwNotitie: {}, teamVaardig: {}, sigSinds: {}, signaalAfgedaan: [],
     gezienInfo: {}, mijlpaalGezien: {}, autoVerstuurd: {}, beoordGedeeld: {}, beoordGezien: {},
-    trainerDossier: {}, trainerKennis: {}, trainerAdmin: {}, trainerNotities: {},
+    trainerDossier: {}, trainerKennis: {}, trainerAdmin: {}, trainerNotities: {}, begeleidMomenten: [], begeleidZelf: {},
     // voorkomt dat de demo-onderdelen voorbeelddata toevoegen
-    beoordDemo: true, hjoHomeDemo: true, hulpDemo: true, vervangDemo: true, trainerDemo: true, live: true,
+    beoordDemo: true, hjoHomeDemo: true, hulpDemo: true, vervangDemo: true, trainerDemo: true, begelDemo: true, live: true,
   });
 
   // Hulp: team van een speler en van een activiteit
@@ -23,6 +23,8 @@
 
   // Eenvoudige lijsten: [soort, scope, velden(rec) → {team, speler, persoon, act}, id(rec)]
   const LIJSTEN = [
+    // Besluit 99: begeleidingsmomenten (de trainer leest zijn eigen, de HO schrijft)
+    ['begeleidMomenten', 'trainerdossier', (r) => ({ persoon: r.trainerId, team: r.teamId })],
     ['teams', 'club', (r) => ({ team: r.id })],
     ['players', 'kind', (r) => ({ team: r.teamId, speler: r.id })],
     ['acts', 'team', (r) => ({ team: r.teamId, act: r.id })],
@@ -65,6 +67,7 @@
     ['trainerDossier', 'trainerDossier', 'trainerdossier', (k) => ({ persoon: k })],
     ['trainerAdmin', 'trainerAdmin', 'hjo', (k) => ({ persoon: k })],
     ['trainerNotities', 'trainerNotities', 'hoprive', (k) => ({ persoon: k })],
+    ['begeleidZelf', 'begeleidZelf', 'trainerzelf', (k, v) => ({ persoon: (v || {}).trainerId })],
   ];
   // Losse objecten (één rij)
   const ENKEL = [['club', 'club', 'club'], ['sigSinds', 'sigSinds', 'hjo'], ['autoVerstuurd', 'autoVerstuurd', 'hjo']];

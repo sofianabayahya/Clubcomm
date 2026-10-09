@@ -191,6 +191,65 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'trainers begeleiden');
   });
 
+  // Besluit 99 deel 2: begeleidingsmoment (vijf fasen, A4-observatie, delen, reflectie van de trainer)
+  test('begeleidingsmoment: observeren, reflectie, delen en printen', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.evaluate(() => { window.print = () => { window.__geprint = (window.__geprint || 0) + 1; }; });
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(3).click();
+    await page.locator('[data-act="magischeLink"]').click();
+    await page.evaluate(() => CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'hjo')));
+    await page.locator('nav.nav button[data-tab="trainers"]').click();
+    await page.locator('#app [data-view="trainerDetail"]', { hasText: 'Dennis Peters' }).first().click();
+    // Het afgeronde demomoment staat in het dossier en print als A4
+    await page.locator('#app [data-view="begelMoment"]', { hasText: 'Training' }).first().click();
+    await page.locator('#app [data-act="begelPrint"]:not([data-leeg])').click();
+    await expect(page.locator('#printvak')).toContainText('Eerst kijken, dan coachen');
+    await expect(page.locator('#printvak')).toContainText('Effectieve voetbaltijd');
+    await page.evaluate(() => CC.open('trainerDetail', { id: CC.S().people.find((x) => x.naam === 'Dennis Peters').id }));
+    // Nieuw moment: een wedstrijd op een andere datum
+    await page.locator('#app [data-act="begelNieuw"]').click();
+    await page.locator('#bn-a').selectOption('');
+    await page.locator('#bn-s').selectOption('wedstrijd');
+    await page.locator('#sheet form[data-submit="begelNieuwOk"] button.knop').click();
+    await expect(page.locator('#app')).toContainText('Planningsgesprek');
+    await page.locator('#app [data-act="begelPrint"][data-leeg]').click();
+    await expect(page.locator('#printvak')).toContainText('Coachgedrag');
+    await page.locator('#app [data-act="begelVragen"]').click();
+    // Observeren: tekens en turven
+    await page.locator('#app [data-act="open"][data-view="begelObs"]').click();
+    await page.locator('#app [data-act="obsTeken"][data-sl="coach0"][data-c="d"]').click();
+    await page.locator('#app [data-act="obsTurf"][data-d="h1"][data-t="Vraag"]').click();
+    const id = await page.evaluate(() => CC.S().begeleidMomenten.at(-1).id);
+    expect(await page.evaluate((i) => CC.S().begeleidMomenten.find((m) => m.id === i).obs, id)).toMatchObject({ punten: { coach0: 'd' }, turf: { h1: { Vraag: 1 } } });
+    await page.evaluate((i) => CC.open('begelMoment', { id: i }), id);
+    // Reflectiegesprek: ontwikkelpunt is verplicht en komt in het dossier
+    await page.locator('#app summary', { hasText: 'Reflectiegesprek' }).click();
+    await page.locator('#app form[data-submit="begelVakkenOk"] button').click();
+    await expect(page.locator('#toast')).toContainText('ontwikkelpunt');
+    await page.locator('#app form[data-submit="begelVakkenOk"] textarea[name="ontwikkelpunt"]').fill('Rust gebruiken voor één punt');
+    await page.locator('#app form[data-submit="begelVakkenOk"] button').click();
+    await page.locator('#app summary', { hasText: 'Nazorg' }).click();
+    await page.locator('#app [data-act="begelDeel"]').click();
+    await page.locator('#app form[data-submit="begelKlaarOk"] button.knop').click();
+    const dennis = await page.evaluate(() => CC.S().people.find((x) => x.naam === 'Dennis Peters').id);
+    expect(await page.evaluate((d) => CC.S().trainerDossier[d].traject.ontwikkelpunt, dennis)).toBe('Rust gebruiken voor één punt');
+    expect(await page.evaluate((i) => CC.S().begeleidMomenten.find((m) => m.id === i).klaar, id)).toBe(true);
+    // Dennis ziet zijn vragenlijst en het verslag op zijn Home
+    await page.evaluate((d) => { CC.zetSessie(d); CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer')); }, dennis);
+    await page.locator('nav.nav button[data-tab="home"]').click();
+    await page.locator('#app [data-act="begelZelf"]').first().click();
+    await page.locator('#sheet textarea[name="leerdoel"]').fill('Vragen stellen');
+    await page.locator('#sheet form[data-submit="begelZelfOk"] button.knop').click();
+    await page.locator('#app [data-view="begelVerslag"]').first().click();
+    await page.locator('#app textarea[name="r1"]').fill('Ik praat te snel');
+    await page.locator('#app form[data-submit="begelReflectieOk"] button.knop').click();
+    expect(await page.evaluate((i) => CC.S().begeleidZelf[i].r.r1, id)).toBe('Ik praat te snel');
+    await controleer(page, fouten, 'begeleidingsmoment');
+  });
+
   // Training afgelasten met een eigen toelichting: één bericht aan de ouders
   test('trainer gelast een training af met toelichting', async ({ page }) => {
     const fouten = volgFouten(page);
