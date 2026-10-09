@@ -1,9 +1,117 @@
 # ClubComm — Besluiten
 
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
-Dit is de bouwlijst: wat hier staat, bouwen we. Wijzigt een besluit, dan passen we het hier aan.
+Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 28 september 2026 (t/m Besluit 89)
+Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 95)
+
+## Hoe dit bestand werkt (borging)
+- **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
+- **Afgewezen is afgewezen.** Ideeën die we bewust niet doen, staan onderaan bij **Afgewezen ideeën**, met de reden. Voordat er een nieuw idee wordt voorgesteld, kijken we eerst daar. Komt een afgewezen idee toch terug, dan zeggen we dat erbij ("dit was afgewezen in Besluit X, omdat …") en beslist de initiatiefnemer opnieuw.
+- **Ideeën en open vragen** staan onderaan bij *Later / ideeën* en *Nog te bespreken*, elk met een status. Wordt een idee een besluit of afgewezen, dan verhuist het.
+- **Volgorde in dit bestand:** eerst de ontwerpprincipes en de basis (Besluit 1 t/m 13 en 16), daarna van nieuw naar oud (95, 94, … 14). Het register hierboven staat altijd op nummer.
+- **Voorstellen** (nog geen besluit) staan in `docs/onderzoek/`.
+
+## Register
+◐ = een deel geldt nog; lees het nieuwere besluit erbij. ✖ = geldt niet meer (alleen geschiedenis).
+
+| Nr | Onderwerp | Status | Herzien |
+|---|---|---|---|
+| 95 | Twee lijnen: voetbal (HO) en organisatie (coördinator) | ✅ geldt |  |
+| 94 | Training afgelasten met eigen toelichting | ◐ deels herzien | door 95 (de HJO-knop Afgelasten ligt nu bij de coördinator) |
+| 93 | Evaluatieformulier praktijkbegeleiding coach (testcase, mijnclubcomm.nl/evaluatie) | ◐ deels herzien | door 95 (wordt later de module Trainers begeleiden in de app) |
+| 92 | Oefenwedstrijd: thuis of uit, verzamelen, verzamelpunt en adres | ✅ geldt |  |
+| 91 | Aanwezigheid: alleen dagen die nog iets vragen, met adres | ✅ geldt |  |
+| 90 | Adres en verzamelpunt zichtbaar waar de ouder kijkt | ✅ geldt |  |
+| 89 | Demo met rondleiding voor besturen, alleen op uitnodiging | ◐ deels herzien | door 95 (de rondleiding moet de coördinator en de HO nog laten zien) |
+| 88 | Vangnet: automatische tests en bewaking | ✅ geldt |  |
+| 87 | Trainingsrooster: per dag eigen tijd en veld, ingangsdatum, veilig bijwerken | ✅ geldt |  |
+| 86 | Trainersportaal: elk scherm één taak; alle teamleiders zichtbaar | ✅ geldt |  |
+| 85 | Wedstrijddag: alles wordt vastgelegd, niemand valt tussen wal en schip | ✅ geldt |  |
+| 84 | Eerst de pilot bij DCG afmaken, daarna een tweede club (SCPB) | ✅ geldt |  |
+| 83 | Zien wie pushmeldingen aan heeft; de teamleider spreekt ouders aan | ✅ geldt |  |
+| 82 | Berichten verdwijnen vanzelf als ze niet meer belangrijk zijn | ✅ geldt |  |
+| 81 | Lijsten tonen eerst wat nu speelt | ✅ geldt |  |
+| 80 | Berichtencentrum overzichtelijk houden | ✅ geldt |  |
+| 79 | Berichten: gesprek afronden, automatisch archiveren, ouderportaal zonder staf-berichten | ✅ geldt |  |
+| 78 | Gelezen via e-mail: niet meten; wel een oproep om meldingen aan te zetten | ✅ geldt |  |
+| 77 | Automatisch werk vanaf de server | ✅ geldt |  |
+| 76 | Minder handelingen: wat de app zelf doet, en wat bewust een mens blijft doen | ✅ geldt |  |
+| 75 | Vaste clubberichten volledig automatisch; zo min mogelijk handelingen voor vrijwilligers | ✅ geldt |  |
+| 74 | Communicatieplan DCG: vakantie 7 dagen; klaargezette berichten ook op de trainer-Home | ✅ geldt |  |
+| 73 | Home trainer: wedstrijddag; vakanties zichtbaar in de planning | ✅ geldt |  |
+| 72 | Ontwikkelgegevens bewaren zolang het kind lid is | ✅ geldt |  |
+| 71 | Ontwikkeling over de seizoenen heen, keepers, afgelaste training, HJO-signaal | ✅ geldt |  |
+| 70 | Gesprekken plannen rond de training; de trainer is leidend | ✅ geldt |  |
+| 69 | Ontwikkelgesprekken vanaf O12 | ✅ geldt |  |
+| 68 | Ontwikkelgesprek: het kind stuurt, de trainer vraagt door; minder werk voor vrijwilligers | ✅ geldt |  |
+| 67 | Ontwikkelgesprek: het kind is eigenaar, woorden in plaats van cijfers, de kijk van de trainer blijft bij de staf | ◐ deels herzien | door 68 (kijk van de trainer kort, geen vergelijkingstabel) |
+| 66 | Gesprekspagina voor het ontwikkelgesprek | ◐ deels herzien | door 67/68 (woorden in plaats van cijfers, geen vergelijkingstabel, ouders zien de kijk van de trainer niet) |
+| 65 | Ontwikkelgesprekken: Start en Voorjaar, plannen na de training | ◐ deels herzien | door 70 (plannen rond de training, de trainer kiest) |
+| 64 | Trainer en teamleider tellen als meehelpen | ✅ geldt |  |
+| 63 | Veiligheid, leesbaarheid en onderhoud (uit de app-analyse van 26-09) | ✅ geldt |  |
+| 62 | Scorebord en uitslag | ✅ geldt |  |
+| 61 | Spelerpagina: actie eerst, info in de kop | ◐ deels herzien | door 86 (Uitzonderingen in plaats van Geschiedenis) |
+| 60 | Speelduur per leeftijd volgens de KNVB | ✅ geldt |  |
+| 59 | Gesprekken als tekstballonnen: zie wie wat zei | ✅ geldt |  |
+| 58 | Reageren met alinea's | ✅ geldt |  |
+| 57 | Berichtenpagina: gesprekken, opruimen en één e-mail per onderwerp | ◐ deels herzien | door 79 (gesprek afronden, automatisch archiveren), 80/82 (berichten verdwijnen vanzelf) |
+| 56 | Meldingen blijven komen na uitloggen | ✅ geldt |  |
+| 55 | Meldingen: meteen vragen bij de eerste keer | ✅ geldt |  |
+| 54 | Profiel opgeschoond | ✅ geldt |  |
+| 53 | Pushmeldingen (stap 1) | ◐ deels herzien | door 57 (e-mail als vangnet), 77 (herinneringen vanaf de server) |
+| 52 | Inloggen alleen met de code, geen knop in de mail | ✅ geldt |  |
+| 51 | Geen dubbele aanmelding voor hetzelfde kind | ✅ geldt |  |
+| 50 | Actie nodig altijd zichtbaar, materiaalbericht bij Verstuurd, geen filters bij spelers | ✅ geldt |  |
+| 49 | HJO: vierde knop Ouders onder Teams | ✅ geldt |  |
+| 48 | Verversen elke 30 seconden | ✅ geldt |  |
+| 47 | Aanmeldingen: teamleider eerst, trainer kan altijd | ✅ geldt |  |
+| 46 | Telefoonnummer al bij het aanmelden | ✅ geldt |  |
+| 45 | Gegevens van een ander wijzigen: alleen HJO/clubbeheerder | ✅ geldt |  |
+| 44 | Meer trainers en teamleiders per team; rollen pas opslaan na bevestigen | ✅ geldt |  |
+| 43 | Adres aanvullen tijdens het typen | ✅ geldt |  |
+| 42 | Stafleden zonder kind: de club voegt ze toe | ✅ geldt |  |
+| 41 | Vastgezette berichten ook voor nieuwe ouders; welkomstbericht bij goedkeuren | ✅ geldt |  |
+| 40 | Telefoonnummer vult de ouder zelf in | ◐ deels herzien | door 46 (telefoonnummer bij het aanmelden) |
+| 39 | Wisselschema: de club kiest om de hoeveel minuten, de trainer past zelf aan | ◐ deels herzien | door 60 (speelduur per leeftijd) |
+| 38 | Start pilot: het O12 talententeam | ✅ geldt |  |
+| 37 | Klaar voor de ouders: privacy, installeren, feedback en back-up | ◐ deels herzien | door 63 (foutregistratie gebouwd) |
+| 36 | Communicatieplan: aankondigen, herinneren, noodberichten en wanneer een e-mail | ◐ deels herzien | door 57 (e-mail), 74 (vakantie 7 dagen), 75 (vaste berichten automatisch), 77 (vanaf de server) |
+| 35 | Pilot RKSV DCG: activiteiten, taken per leeftijd en e-mailmeldingen | ◐ deels herzien | door 38 (start pilot), 53/57 (pushmeldingen, e-mail als vangnet) |
+| 34 | Informatie is geen taak; profielen per rol | ◐ deels herzien | door 95 (teamleider-profiel zonder trainer registreren) |
+| 33 | Teamleider: alles over de wedstrijd op één plek, en eerlijke speeltijd | ◐ deels herzien | door 39/60 (wisselen en speelduur), 95 (trainer registreren niet bij de teamleider) |
+| 32 | Kaarten: afmelden zoals op het veld, te laat komen apart | ◐ deels herzien | door 95 (wie belt en praat: trainer, coördinator, HO) |
+| 31 | Vervoer: iedereen brengt zijn eigen kind | ◐ deels herzien | door 85 (bericht aan chauffeur), 92 (oefenwedstrijd uit bij Vervoer) |
+| 30 | Volgorde en rust op elk scherm | ✅ geldt |  |
+| 29 | Waardering voor trainers en teamleiders | ◐ deels herzien | door 54 (telling trainer niet in het profiel) |
+| 28 | Wie helpt er mee? (taken en rijden) | ◐ deels herzien | door 33 (Wie helpt er mee staat bij Team), 64 (staf telt als meehelpen) |
+| 27 | Wanneer verdwijnt een actie? | ◐ deels herzien | door 34 (geen Gezien-knoppen) |
+| 26 | Home van HJO en coördinator: te doen en ter informatie | ◐ deels herzien | door 34 (geen losse spelers, geen Gezien-knoppen), 36 (vaste berichten), 75 (automatisch), 95 (HO-Home alleen trainers) |
+| 25 | Taken per rol (de club bepaalt) | ◐ deels herzien | door 95 (nieuwe standaard, eigenaar en terugval) |
+| 24 | Wie ziet wat (per rol) | ✖ vervangen | door 25 (Wat zie je in de takenlijst) |
+| 23 | Beoordelingsmomenten en ontwikkelgesprekken | ◐ deels herzien | door 65 (Start en Voorjaar), 67/68 (woorden in plaats van cijfers, het kind stuurt), 70 (plannen rond de training) |
+| 22 | Signalen afdoen | ◐ deels herzien | door 34 (geen Gezien-knoppen bij ter informatie), 95 (afgedane signalen controleert de coördinator) |
+| 21 | Afwezigheid van trainers signaleren | ◐ deels herzien | door 54 (telling niet meer in het profiel), 95 (niet gekomen: niet door de teamleider; de app signaleert, coördinator of HO bevestigt) |
+| 20 | Periode afmelden en "trainer kan niet" | ◐ deels herzien | door 95 (vervanger zoeken: coördinator, de teamleider helpt met ouders) |
+| 19 | Clubberichten, urgent en vastzetten | ◐ deels herzien | door 30 (vastgezet niet op Home), 95 (clubberichten: coördinator) |
+| 18 | Agenda-abonnement | ✅ geldt |  |
+| 17 | Module Materiaal | ◐ deels herzien | door 50 (bericht van de trainer); herziening open bij Nog te bespreken |
+| 16 | Pilot: de onderbouw | ✖ vervangen | door 35/38 (pilot is het O12 talententeam van DCG). De vuistregel voor nieuwe ideeën blijft gelden. |
+| 15 | Fases en opschaling | ◐ deels herzien | door 32 (kaarten per seizoen), 25/95 (stap 3 trainer of coördinator, stap 4 coördinator, stap 5 HO) |
+| 14 | Uitschrijven en account verwijderen | ◐ deels herzien | door 72 (ontwikkelgegevens meteen gewist) |
+| 13 | Planning: weekrooster in plaats van losse trainingen | ◐ deels herzien | door 87 (rooster per dag, veilig bijwerken), 95 (rooster en afgelasten: coördinator) |
+| 12 | Rollen en clubbeheerder | ◐ deels herzien | door 25 (taken per rol), 95 (twee lijnen: HO voetbal, coördinator organisatie, clubbeheerder alleen de app) |
+| 11 | HJO-portaal | ◐ deels herzien | door 26 (Home), 30 (snelknoppen weg), 95 (organisatie naar de coördinator) |
+| 10 | Aanwezigheidsnorm en zones | ◐ deels herzien | door 33 (teamleider volgt spelers standaard niet), 34 (HJO geen losse spelers), 61 (langdurig meldt de ouder), 95 (team in de zone: coördinator, HO kijkt mee) |
+| 9 | Teamleiderportaal | ◐ deels herzien | door 31 (vervoer), 33 (vier knoppen, Regelen in Wedstrijd) |
+| 8 | Vaste app-structuur en namen (alle rollen) | ◐ deels herzien | door 12 (rollen coördinator en clubbeheerder), 33 (teamleider vier knoppen) |
+| 7 | Trainerportaal | ◐ deels herzien | door 33 (wedstrijdbegeleider vervallen), 39/60 (speeltijd), 50 (geen filters), 57 (berichten), 67/68 (ontwikkelgesprek), 86 (Spelers en Overzicht), 95 (de HO ziet niet alles) |
+| 6 | Instellingen per club en per team | ✅ geldt |  |
+| 5 | Aanwezigheid, stiptheid en kaarten | ◐ deels herzien | door 15 (opschaling), 32 (kaarten) |
+| 4 | Ouderportaal | ◐ deels herzien | door 30 (Home), 31 (vervoer), 32 (kaarten), 54 (profiel), 57 (berichten) |
+| 3 | Taal | ✅ geldt | nog niet gebouwd (alleen in de demo) |
+| 2 | Aanmelden van ouders en kinderen | ◐ deels herzien | door 12 (coördinator is een eigen rol), 47 (teamleider eerst, trainer kan altijd), 95 (na 48 uur: coördinator) |
+| 1 | Inloggen | ◐ deels herzien | door 52 (alleen code), 54 (één knop Uitloggen) |
 
 ---
 
@@ -16,12 +124,13 @@ Laatst bijgewerkt: 28 september 2026 (t/m Besluit 89)
 5. **Zo min mogelijk gegevens.** We vragen alleen wat we echt nodig hebben (AVG, gegevens van kinderen).
 6. **Tweetalig voorbereid.** Alle teksten staan vanaf het begin in een taalbestand (zie Besluit 3).
 7. **Er is altijd een vervanger.** Bij een amateurvereniging ontbreekt soms een teamleider of trainer, of traint een trainer alleen en gaat hij niet mee naar wedstrijden. Elke taak heeft daarom een vaste volgorde van wie het overneemt, en rollen kunnen tijdelijk (bijv. per wedstrijd) aan iemand worden toegewezen.
-8. **Iedereen ziet alleen wat van hem is.** Ouders zien alleen gegevens van hun eigen kind (aanwezigheid, kaarten, beoordelingen) — nooit van andere kinderen. Trainers en teamleiders zien hun eigen team. De HJO ziet alles. Dit wordt server-side afgedwongen.
+8. **Iedereen ziet alleen wat van hem is.** Ouders zien alleen gegevens van hun eigen kind (aanwezigheid, kaarten, beoordelingen) — nooit van andere kinderen. Trainers en teamleiders zien hun eigen team. Coördinator en HO zien hun teams, met wat ze voor hun taak nodig hebben (Besluit 25, 95). Dit wordt server-side afgedwongen.
 9. **Elke taak heeft een eigenaar: één duidelijke lijn.** De club bepaalt welke rol welke taak heeft (Besluit 25). Een taak die aan een rol hangt, moet ook aan een persoon zijn toegewezen, zodat hij wordt opgepakt. ClubComm laat zien waar een taak geen eigenaar heeft. Ook de communicatie volgt die lijn: een signaal gaat naar wie de taak heeft, niet naar iedereen.
 
 ---
 
 ## Besluit 1 — Inloggen
+> **◐ Deels herzien door Besluit 52 (alleen code), 54 (één knop Uitloggen)** (zie Register).
 
 **Voor iedereen: geen wachtwoorden.**
 
@@ -40,6 +149,7 @@ Laatst bijgewerkt: 28 september 2026 (t/m Besluit 89)
 ---
 
 ## Besluit 2 — Aanmelden van ouders en kinderen
+> **◐ Deels herzien door Besluit 12 (coördinator is een eigen rol), 47 (teamleider eerst, trainer kan altijd), 95 (na 48 uur: coördinator)** (zie Register).
 
 ### Wie is verantwoordelijk voor een team?
 
@@ -105,6 +215,7 @@ Een Sportlink-export bevat: voornaam, achternaam, geboortedatum, **bondsnummer**
 ---
 
 ## Besluit 4 — Ouderportaal
+> **◐ Deels herzien door Besluit 30 (Home), 31 (vervoer), 32 (kaarten), 54 (profiel), 57 (berichten)** (zie Register).
 
 **Doel:** de ouder meldt af en ziet wat er komt. Alles wat de ouder invoert (afmeldingen, redenen, vervoer, taken) wordt informatie voor trainer, teamleider en HJO.
 
@@ -181,6 +292,7 @@ Weg uit het profiel: nep-statistieken en "Training geschiedenis" (staat al bij P
 ---
 
 ## Besluit 5 — Aanwezigheid, stiptheid en kaarten
+> **◐ Deels herzien door Besluit 15 (opschaling), 32 (kaarten)** (zie Register).
 
 ### Kaart = registratie van een feit, geen straf
 Het systeem legt feiten vast. Een **gevolg** (zoals een gesprek) besluit altijd een mens. Ouders reageren niet op kaarten: het zijn feitelijke registraties.
@@ -230,6 +342,7 @@ ClubComm moet later aan meerdere clubs aangeboden kunnen worden; elke club heeft
 ---
 
 ## Besluit 7 — Trainerportaal
+> **◐ Deels herzien door Besluit 33 (wedstrijdbegeleider vervallen), 39/60 (speeltijd), 50 (geen filters), 57 (berichten), 67/68 (ontwikkelgesprek), 86 (Spelers en Overzicht), 95 (de HO ziet niet alles)** (zie Register).
 
 ### Navigatie
 - Onderaan: **Home · Aanwezigheid · Berichten · Spelers · Speeltijd** (Speeltijd alleen als de module aan staat).
@@ -309,6 +422,7 @@ Niet elke trainer gaat mee naar wedstrijden. Per wedstrijd is er daarom een **we
 - **Aanvulling (23 september 2026): spelers filteren en sorteren** (tabblad Spelers bij trainer, Team bij teamleider). Filters: alle · komt / afgemeld voor de volgende activiteit · oranje/rood · kaarten · langdurig · niet beoordeeld (alleen voor wie beoordelingen mag zien). Sorteren: op naam, aanwezigheid laagste of hoogste eerst, meeste kaarten eerst. Het aantal staat erbij ("3 van 12").
 
 ## Besluit 8 — Vaste app-structuur en namen (alle rollen)
+> **◐ Deels herzien door Besluit 12 (rollen coördinator en clubbeheerder), 33 (teamleider vier knoppen)** (zie Register).
 
 ### Elke pagina, in elke rol, dezelfde structuur
 - **Bovenaan:** waar ben ik (bijv. *"Jesse · O10-1"* voor een ouder, *"O10-1"* voor een trainer) + **profielknop [👤] rechtsboven**, op elke pagina.
@@ -328,6 +442,7 @@ Niet elke trainer gaat mee naar wedstrijden. Per wedstrijd is er daarom een **we
 ---
 
 ## Besluit 9 — Teamleiderportaal
+> **◐ Deels herzien door Besluit 31 (vervoer), 33 (vier knoppen, Regelen in Wedstrijd)** (zie Register).
 *Deels herzien in Besluit 33 (vier knoppen, Regelen opgegaan in Wedstrijd).*
 
 **Rol:** de regelaar rond wedstrijden (genoeg spelers, vervoer, taken, begeleiding) en de beheerder van het team (wie hoort erbij, welke ouders, wie is nog niet aangemeld).
@@ -375,6 +490,7 @@ Niet elke trainer gaat mee naar wedstrijden. Per wedstrijd is er daarom een **we
 ---
 
 ## Besluit 10 — Aanwezigheidsnorm en zones
+> **◐ Deels herzien door Besluit 33 (teamleider volgt spelers standaard niet), 34 (HJO geen losse spelers), 61 (langdurig meldt de ouder), 95 (team in de zone: coördinator, HO kijkt mee)** (zie Register).
 
 ### Iedereen komt, tenzij afgemeld
 - Geldt voor **alle teams** (breedte én selectie), bij **trainingen én wedstrijden**.
@@ -415,6 +531,7 @@ Het systeem vergelijkt de **speler met zijn eigen team**:
 ---
 
 ## Besluit 11 — HJO-portaal
+> **◐ Deels herzien door Besluit 26 (Home), 30 (snelknoppen weg), 95 (organisatie naar de coördinator)** (zie Register).
 
 **Rol:** de HJO **bewaakt en stuurt**, maar voert niet uit. Teamleiders en trainers doen het dagelijkse werk; de HJO ziet signalen, grijpt in waar nodig en maakt clubbrede keuzes.
 
@@ -459,6 +576,7 @@ Drie vragen, van club → team → speler:
 - **Aanvulling (23 september 2026): teams filteren en sorteren, Inzicht per groep.** Teams-tab: filters alle · oranje/rood · zonder staf · open aanmeldingen · per groep van de coördinator (O6–O9, O10–O12) · selectie; sorteren op naam, aanwezigheid laagste eerst, meeste signalen, minste gezinnen die meehelpen. Inzicht: bovenaan een keuze "Hele club" of een groep, zodat de HJO met de coördinator naar diens teams kan kijken. Op teamniveau; een clubbrede lijst van rode spelers komt er bewust niet (Besluit 26).
 
 ## Besluit 12 — Rollen en clubbeheerder
+> **◐ Deels herzien door Besluit 25 (taken per rol), 95 (twee lijnen: HO voetbal, coördinator organisatie, clubbeheerder alleen de app)** (zie Register).
 
 ### Rollen
 **Ouder · Trainer · Teamleider · Coördinator (optioneel) · HJO · Clubbeheerder**
@@ -482,6 +600,7 @@ Drie vragen, van club → team → speler:
 ---
 
 ## Besluit 13 — Planning: weekrooster in plaats van losse trainingen
+> **◐ Deels herzien door Besluit 87 (rooster per dag, veilig bijwerken), 95 (rooster en afgelasten: coördinator)** (zie Register).
 
 Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
@@ -497,6 +616,7 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 ---
 
 ## Besluit 16 — Pilot: de onderbouw
+> **✖ Vervangen door Besluit 35/38 (pilot is het O12 talententeam van DCG). De vuistregel voor nieuwe ideeën blijft gelden.** (zie Register).
 
 - De pilot draait voor de **onderbouw: mini's (O6–O7) tot en met O12**. Daar spelen ouders de grootste rol en zijn ze nieuw bij de club; zij moeten begeleid worden.
 - Punten die alleen voor O13 en ouder gelden (speler zelf bij het gesprek, dalingssignaal O13+) zijn geparkeerd tot na de pilot.
@@ -522,12 +642,14 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Stap 1 (10 oktober), nieuwe standaard:** naar de coördinator: planning aanpassen (naast de trainer), clubberichten en afgelasten, teams zonder staf, signalen afdoen en langdurig afwezig (naast de trainer), toelichting bij afmelden. Naar de HO: trainers volgen en gesprekken. De teamleider-profielen bevatten "trainer niet gekomen" niet meer. Zonder coördinator doet de HO dit alles via de terugval, zoals nu bij DCG.
 
 ## Besluit 94 — Training afgelasten met eigen toelichting
+> **◐ Deels herzien door Besluit 95 (de HJO-knop Afgelasten ligt nu bij de coördinator)** (zie Register).
 Aanleiding: de trainer wilde een training afzeggen met een eigen uitleg (blessures, ziekte, rust voor het voetbalkamp); dat kon alleen met een tweede, los bericht.
 - Bij **Planning aanpassen → Training afgelasten** staat een veld **"Toelichting voor de ouders (mag leeg)"**. Die tekst komt onder de vaste zin (*"Training van … gaat niet door."*) in **hetzelfde bericht**: ouders krijgen één urgente melding.
 - Het onderwerp is nu *"Training [datum] gaat niet door"* (was "Wijziging in de planning"), zodat de pushmelding meteen zegt wat er is.
 - De HJO-knop **Afgelasten** blijft voor de hele club (velden afgekeurd, onweer); een teamkeuze doet de trainer of teamleider.
 
 ## Besluit 93 — Evaluatieformulier praktijkbegeleiding coach (testcase, mijnclubcomm.nl/evaluatie)
+> **◐ Deels herzien door Besluit 95 (wordt later de module Trainers begeleiden in de app)** (zie Register).
 Testcase: de initiatiefnemer begeleidt als HO (KNVB-opleiding) een coach van een andere club. Losse pagina, geen onderdeel van de app en geen login.
 - **Opbouw volgens de bijeenkomst:** gegevens · afspraak uit het voorgesprek (leerdoel, focus HO, feedbackmoment) · **observatie** in drie delen (1e helft laatste 20 min, rust/kleedkamer, 2e helft eerste 20 min): snel notities tikken, tijd erbij, met labels (bewust stil, te snel gecoacht, effect op spelers, voetbalprobleem) · **evaluatiegesprek** in 6 stappen, met je eigen notities bij de juiste stap · **één concreet ontwikkelpunt** (verplicht voor de PDF) · **reflectie trainer** (4 vragen, mag later; lege vragen krijgen schrijflijnen in de PDF).
 - **Observatie objectief (8-10):** per moment minuut · soort (**Vraag, Directief, Correctie, Compliment**) · wat de coach zegt of doet (zo letterlijk mogelijk) · wat de spelers daarna doen. Geen oordelende labels meer ("bewust stil", "te snel gecoacht"): dat oordeel hoort in het gesprek. Telling per deel staat bij stap 2 en 5, "wat de spelers deden" bij stap 3; in de PDF als tabel. Kloktijd en "alleen op dit toestel" niet meer zichtbaar.
@@ -558,6 +680,7 @@ Aanleiding: een ouder vroeg waar ze moesten verzamelen voor de strandtraining; h
 - **Activiteit aanpassen:** een geplande activiteit kan de trainer of teamleider nu aanpassen (verzamelen, verzamelpunt, plaats, adres, toelichting), met een bericht aan de ouders (aan te vinken).
 
 ## Besluit 89 — Demo met rondleiding voor besturen, alleen op uitnodiging
+> **◐ Deels herzien door Besluit 95 (de rondleiding moet de coördinator en de HO nog laten zien)** (zie Register).
 *28-09. SCPB en AS80 vroegen om een demo; de initiatiefnemer laat besturen (vooral voorzitters) zien wat elke rol doet.*
 - **Adres:** `mijnclubcomm.nl/demo`. **Alleen op uitnodiging:** inloggen zoals in de echte app (e-mail + code); alleen adressen op de toegangslijst (tabel `demo_toegang`, migratie 023) krijgen een code. Anderen zien "Alleen op uitnodiging". Toevoegen of weghalen: zie `supabase/scripts/2026-09-28_demo_toegang_beheerder.sql`.
 - **De oude open demo (`?demo`) is dicht** op de echte website; alleen op de eigen computer werkt hij nog (automatische tests, schermafbeeldingen voor de handleidingen).
@@ -721,6 +844,7 @@ Vaste regel voor alle portalen: een lijst die in het seizoen groeit, toont eerst
 - Samen afgesproken (wapen, werkpunt, twee doelen, wat neem je mee, afspraken) en de zichtbaarheid voor de ouder blijven zoals in Besluit 67.
 
 ## Besluit 67 — Ontwikkelgesprek: het kind is eigenaar, woorden in plaats van cijfers, de kijk van de trainer blijft bij de staf
+> **◐ Deels herzien door Besluit 68 (kijk van de trainer kort, geen vergelijkingstabel)** (zie Register).
 *Herziet Besluit 66 (schaal, zichtbaarheid) en Besluit 23 (ouders zien de beoordeling). Onderzoek: KNVB (ontwikkelgesprekken, formulier O11–O13), Ajax-TIPS, Butler 1988 (cijfers versus opmerkingen), Horn & Weiss (zelfinschatting 10–12 jaar), sterkte-gericht coachen, zelfdeterminatietheorie.*
 - **Waarom:** vanaf O11 leert een kind bewust; zelf kiezen geeft eigenaarschap. Een cijfer voelt als een rapport, remt de motivatie en nodigt uit tot vergelijken met teamgenoten (extra gevoelig in een selectieteam). De KNVB gebruikt voor O11–O13 geen cijfers, maar eigen woorden.
 - **Drie woorden in plaats van 1–10:** kind: *Sterk · Gaat goed · Beter worden*; trainer: *Sterk · Goed · Werkpunt*. Plus een **wapen ⭐** (1, hooguit 2): waar het kind écht goed in is, met de vraag *"Wanneer zie je dat in een wedstrijd?"*. Geldt voor alle leeftijden (de smileys vervallen). Oude cijfers worden automatisch omgezet (8–10 sterk, 6–7 goed, lager werkpunt).
@@ -740,6 +864,7 @@ Vaste regel voor alle portalen: een lijst die in het seizoen groeit, toont eerst
 - Vervalt: ouders zien de scores van de trainer een dag na het gesprek; "Nu al delen met de ouders"; de schaal 1–10 en de smileys.
 
 ## Besluit 66 — Gesprekspagina voor het ontwikkelgesprek
+> **◐ Deels herzien door Besluit 67/68 (woorden in plaats van cijfers, geen vergelijkingstabel, ouders zien de kijk van de trainer niet)** (zie Register).
 - **Voorbereiding thuis (ouder + kind, ± 5 minuten):** na het kiezen van een tijd staat op Home "Bereid het gesprek voor". Zelfbeoordeling per vaardigheid op **1–10** met een schuifje (onderbouw: drie smileys), **droom**, wat is **leuk**, wat is **lastig**. Wordt meteen bewaard.
 - **Gesprekspagina (trainer, tijdens het gesprek):** open via het gespreksoverzicht (tik op een naam), de spelerpagina ("Gesprekspagina") of Home ("Vandaag: 6 gesprekken"). Scores van kind en trainer **naast elkaar**; een verschil van 3 of meer krijgt "bespreken". Droom (+ aanvulling trainer), **maximaal 3 doelen** (wat ga je doen · hoe helpt de trainer · hoe helpen ouders), afspraken, **notitie trainer (alleen staf)**, knop "Gesprek gehad". Alles wordt tijdens het typen bewaard.
 - **Terugkijken:** bij het voorjaarsgesprek staan de droom en doelen van het startgesprek erboven, per doel **bereikt / deels / nog niet**, en de groei per vaardigheid (kind en trainer, start → voorjaar).
@@ -749,6 +874,7 @@ Vaste regel voor alle portalen: een lijst die in het seizoen groeit, toont eerst
 - Opslag: voorbereiding (ouder en staf schrijven), verslag (alleen staf schrijft, ouders lezen), notitie (alleen staf), extra vaardigheden per team (staf schrijft, ouders lezen).
 
 ## Besluit 65 — Ontwikkelgesprekken: Start en Voorjaar, plannen na de training
+> **◐ Deels herzien door Besluit 70 (plannen rond de training, de trainer kiest)** (zie Register).
 *Herziet Besluit 23 (momenten en het plannen van gesprekken).*
 - **Twee momenten:** **Start** (binnen 8 weken na de start van het seizoen en vóór de herfstvakantie; bij DCG 20 sep – 10 okt) en **Voorjaar** (maart, vóór de indeling voor volgend seizoen). Niet vier: met 17 kinderen × 10 minuten kost elke ronde bijna 3 uur. Tussendoor praten kan altijd via "Contact vastleggen". De clubbeheerder kan de data aanpassen.
 - **Waar:** vaste plek bij Spelers → Beoordelen → Ontwikkelgesprekken. Alleen in de periode staat "Plan de startgesprekken" op Home; daarna verdwijnt het.
@@ -777,6 +903,7 @@ Vaste regel voor alle portalen: een lijst die in het seizoen groeit, toont eerst
 - **Doelpunten per speler:** alleen voor de staf, in de kop van de spelerpagina ("3 doelpunten"). **Geen topscorerslijst** (eerlijke speeltijd en teamgevoel gaan voor).
 
 ## Besluit 61 — Spelerpagina: actie eerst, info in de kop
+> **◐ Deels herzien door Besluit 86 (Uitzonderingen in plaats van Geschiedenis)** (zie Register).
 - **In de kop bij de naam:** team · speeltijd dit seizoen (%) · beoordeeld of nog niet. Scheelt ruimte op de pagina.
 - **Volgorde:** Ouder(s) met bellen/appen/mailen · Deze fase/Heel seizoen met aanwezig, te laat, kaarten · Beoordeling (laatste + knop Beoordelen) · Gesprekken + Contact vastleggen · Geschiedenis (laatste 5, "Toon meer") · Kaarten · Redenen van afwezigheid.
 - **"Langdurig afwezig" weg bij de staf:** dat meldt de ouder zelf. De staf ziet het wel als melding op de pagina.
@@ -812,6 +939,7 @@ Vaste regel voor alle portalen: een lijst die in het seizoen groeit, toont eerst
 - **In een gesprek geen knoppenbalk onderin** (zoals WhatsApp; terug via het pijltje linksboven), zodat het reactievak nooit achter de knoppen valt. Het reactievak hoort bij de pagina: groeit het, dan schuiven de berichten erboven mee omhoog (geen overlap). Een gesprek opent onderaan, bij het nieuwste bericht.
 
 ## Besluit 57 — Berichtenpagina: gesprekken, opruimen en één e-mail per onderwerp
+> **◐ Deels herzien door Besluit 79 (gesprek afronden, automatisch archiveren), 80/82 (berichten verdwijnen vanzelf)** (zie Register).
 **Twee tabbladen voor iedereen** (ouder, trainer, teamleider, HJO): **Persoonlijk** en **Nieuws** (vervangt Inbox/Verstuurd).
 - **Persoonlijk** = gesprekken (zoals WhatsApp), wie ook begon. Gesorteerd op laatste activiteit; in de lijst de laatste regel ("Jij: …" of "Dorothee: …").
   - **Wacht op jou** (alleen staf): de andere kant heeft het laatste woord. Heeft een collega al geantwoord: "beantwoord door …" (niet dubbel antwoorden).
@@ -859,6 +987,7 @@ Vaste regel voor alle portalen: een lijst die in het seizoen groeit, toont eerst
 - **Account laten verwijderen** (onder Uitschrijven): in de echte versie een verzoek aan de clubbeheerder (persoonlijk bericht + e-mail), die het binnen een week afhandelt. Later automatisch vanaf de server.
 
 ## Besluit 53 — Pushmeldingen (stap 1)
+> **◐ Deels herzien door Besluit 57 (e-mail als vangnet), 77 (herinneringen vanaf de server)** (zie Register).
 **Vuistregel: een pushmelding alleen als je iets moet weten of doen. Ter informatie en statistieken nooit.** Te veel meldingen = mensen zetten ze uit, en dan mis je ook de belangrijke.
 
 | Soort | Voorbeelden | Push | E-mail | Waarom |
@@ -962,6 +1091,7 @@ Vaste regel voor alle portalen: een lijst die in het seizoen groeit, toont eerst
 - **Welkomstbericht bij goedkeuren** gaat in de app én per e-mail (de ouder weet dan dat hij kan inloggen). Inhoud: gekoppeld aan [kind], zo log je in (code van 6 cijfers), beginscherm, telefoonnummer invullen, afmelden.
 
 ## Besluit 40 — Telefoonnummer vult de ouder zelf in
+> **◐ Deels herzien door Besluit 46 (telefoonnummer bij het aanmelden)** (zie Register).
 *Besloten 25 september 2026.*
 
 - Bij goedkeuren van een aanmelding (of speler handmatig toevoegen) krijgt de ouder **geen** telefoonnummer meer (eerder een voorbeeldnummer, waardoor de belknop naar een verkeerd nummer ging).
@@ -970,6 +1100,7 @@ Vaste regel voor alle portalen: een lijst die in het seizoen groeit, toont eerst
 - Aandachtspunt: de app mailt de staf niet bij een nieuwe aanmelding; die staat op Home van trainer (zonder teamleider) of teamleider.
 
 ## Besluit 39 — Wisselschema: de club kiest om de hoeveel minuten, de trainer past zelf aan
+> **◐ Deels herzien door Besluit 60 (speelduur per leeftijd)** (zie Register).
 *Besloten 25 september 2026. Vult Besluit 33 (eerlijke speeltijd) aan.*
 
 - **Om de hoeveel minuten wisselen bepaalt de club**, per speelvorm (Regels → Speeltijd). ClubComm geeft het advies: **per blok wisselen** (4 tegen 4: 10 min, 6 tegen 6: 12,5 min, 8 tegen 8: 15 min, 11 tegen 11: 17,5 min). Elke waarde vanaf 3 minuten mag, ook bijv. 5 of 7.
@@ -991,6 +1122,7 @@ Vaste regel voor alle portalen: een lijst die in het seizoen groeit, toont eerst
 - **Lege club moet kloppen:** een team zonder gegevens is geen "team in de rode zone", een nieuw team zonder cijfer van vorig seizoen toont alleen het huidige percentage, en een club die halverwege het seizoen begint krijgt geen bericht "het seizoen begint".
 
 ## Besluit 37 — Klaar voor de ouders: privacy, installeren, feedback en back-up
+> **◐ Deels herzien door Besluit 63 (foutregistratie gebouwd)** (zie Register).
 *Besloten 25 september 2026.*
 
 - **Privacyverklaring** in de app (profiel en bij het aanmelden), in gewone taal: wie verantwoordelijk is (de club), welke gegevens, waarvoor, wie wat ziet, waar (EU), hoe lang, cookies, rechten. Het contactadres stelt de club in bij Regels → Privacy.
@@ -1002,6 +1134,7 @@ Vaste regel voor alle portalen: een lijst die in het seizoen groeit, toont eerst
 - **Bewust later:** foutmeldingen automatisch vastleggen en een Content-Security-Policy (zie `docs/productie-en-groei.md`, Openstaand).
 
 ## Besluit 36 — Communicatieplan: aankondigen, herinneren, noodberichten en wanneer een e-mail
+> **◐ Deels herzien door Besluit 57 (e-mail), 74 (vakantie 7 dagen), 75 (vaste berichten automatisch), 77 (vanaf de server)** (zie Register).
 *Besloten 25 september 2026. Herziet Besluit 26 (vaste berichten).*
 
 **Drie soorten berichten**
@@ -1042,6 +1175,7 @@ Zodra er pushmeldingen zijn, gaan vaste herinneringen standaard alleen nog als p
 **Nog te doen (versie 2):** automatisch versturen vanaf de server (nu gebeurt het zodra de beheerder/HJO of de staf van het team de app opent); ingeplande berichten ook per e-mail; weekbericht als optie.
 
 ## Besluit 35 — Pilot RKSV DCG: activiteiten, taken per leeftijd en e-mailmeldingen
+> **◐ Deels herzien door Besluit 38 (start pilot), 53/57 (pushmeldingen, e-mail als vangnet)** (zie Register).
 *Besloten 24 september 2026.*
 
 **Pilot:** één team, **O12-1 (talententeam, selectie)** van RKSV DCG, 17 spelers. Geen HJO of coördinator: de initiatiefnemer is trainer én beheerder, met twee teamleiders. Trainingen di en do 17:15–18:30 op veld 1, vr op veld 2. Wedstrijden vanaf fase 2 (za 31 okt, na de herfstvakantie). Nu al starten met de trainingen zodat iedereen went. Spelers en ouders melden zich zelf aan via de uitnodiging; de teamleiders keuren goed (de koppeling e-mail ↔ kind ontstaat zo bij de bron).
@@ -1053,6 +1187,7 @@ Zodra er pushmeldingen zijn, gaan vaste herinneringen standaard alleen nog als p
 **E-mailmeldingen:** bij een nieuw bericht krijgen de ontvangers een e-mail (via Brevo): persoonlijke berichten, herinneringen en kaarten, nieuws en nieuwe activiteiten, afgelastingen en wijzigingen (urgent). Niet: meldingen ter informatie aan staf, ingeplande berichten (nog niet), oude berichten en voorbeelddata. Elk bericht hooguit één e-mail. Pushmeldingen op de telefoon volgen later.
 
 ## Besluit 34 — Informatie is geen taak; profielen per rol
+> **◐ Deels herzien door Besluit 95 (teamleider-profiel zonder trainer registreren)** (zie Register).
 *Besloten 24 september 2026.*
 
 **Vuistregel (geldt voor elk nieuw idee):** informatie gaat van de bron (meestal de ouder) rechtstreeks de app in. We maken er nooit een taak van voor iemand anders, tenzij er echt iets besloten of gedaan moet worden. Afmelden is communicatie van de ouder, geen taak voor de teamleider ("afmelden namens de ouder" bouwen we dus niet).
@@ -1073,6 +1208,7 @@ Standaard: teamleider **Basis**, trainer **Compleet**.
 **Ter informatie zonder "Gezien"-knoppen:** een regel verdwijnt vanzelf als het is opgelost; wegklikken is geen werk meer.
 
 ## Besluit 33 — Teamleider: alles over de wedstrijd op één plek, en eerlijke speeltijd
+> **◐ Deels herzien door Besluit 39/60 (wisselen en speelduur), 95 (trainer registreren niet bij de teamleider)** (zie Register).
 *Besloten 24 september 2026. Herziet de teamleider-app (Besluit 9), de wedstrijdbegeleider (Besluit 7) en de speeltijd.*
 
 **Teamleider**
@@ -1098,6 +1234,7 @@ Standaard: teamleider **Basis**, trainer **Compleet**.
 - **Selectie:** de trainer mag iemand **een blok minder** geven; de app laat de trainingen van die week zien en legt het vast bij de wedstrijd. Instelbaar per soort team (Regels → Speeltijd).
 
 ## Besluit 32 — Kaarten: afmelden zoals op het veld, te laat komen apart
+> **◐ Deels herzien door Besluit 95 (wie belt en praat: trainer, coördinator, HO)** (zie Register).
 *Besloten 24 september 2026. Herziet de kaarten uit Besluit 5 en de telling per fase uit Besluit 15.*
 
 **Uitgangspunt:** signaleren, communiceren en vastleggen, zonder dat het als straf voelt. Wie echt niet anders kan, wordt begrepen; wie misbruik maakt, valt op. Altijd beslist een mens (trainer of HJO). Het gaat over het afmelden door de ouder, niet over het kind.
@@ -1128,6 +1265,7 @@ Standaard: teamleider **Basis**, trainer **Compleet**.
 - Het vaste startbericht van het seizoen legt afmelden, herinneringen en kaarten kort uit.
 
 ## Besluit 31 — Vervoer: iedereen brengt zijn eigen kind
+> **◐ Deels herzien door Besluit 85 (bericht aan chauffeur), 92 (oefenwedstrijd uit bij Vervoer)** (zie Register).
 *Besloten 24 september 2026. Herziet het onderdeel Vervoer van de ouder-app.*
 
 - **Uitgangspunt:** elke ouder is verantwoordelijk voor het vervoer van het eigen kind. De app gaat ervan uit dat het geregeld is; niemand hoeft iets te doen.
@@ -1160,6 +1298,7 @@ Toegepast (24 sep 2026):
 - Nog open: horen de tabbladen Wedstrijd en Regelen van de teamleider samen?
 
 ## Besluit 29 — Waardering voor trainers en teamleiders
+> **◐ Deels herzien door Besluit 54 (telling trainer niet in het profiel)** (zie Register).
 *Besloten 23 september 2026.*
 
 - **Aanwezig zijn belonen in plaats van afmelden makkelijk maken.** Waardering werkt beter dan controle, zeker bij vrijwilligers.
@@ -1172,6 +1311,7 @@ Toegepast (24 sep 2026):
 - ClubComm telt alleen wat er al gebeurt; geen extra werk. Dit is iets anders dan de module Beloningen (punten voor ouders, later).
 
 ## Besluit 28 — Wie helpt er mee? (taken en rijden)
+> **◐ Deels herzien door Besluit 33 (Wie helpt er mee staat bij Team), 64 (staf telt als meehelpen)** (zie Register).
 *Besloten 23 september 2026.*
 
 - **Meehelpen = taken én rijden.** Rijden bij uitwedstrijden telt mee; het is vaak de grootste hulp.
@@ -1182,6 +1322,7 @@ Toegepast (24 sep 2026):
 - Later mogelijk: verplichte vrijwilligerstaken per gezin en de module Beloningen (zie Later / ideeën).
 
 ## Besluit 27 — Wanneer verdwijnt een actie?
+> **◐ Deels herzien door Besluit 34 (geen Gezien-knoppen)** (zie Register).
 *Besloten 23 september 2026.*
 
 - **Een actie verdwijnt pas als hij gedaan is, of als hij niet meer kan of hoeft.** Echte acties kun je niet wegklikken (anders valt iets tussen wal en schip). Alleen regels ter informatie hebben "Gezien" (Besluit 26).
@@ -1191,6 +1332,7 @@ Toegepast (24 sep 2026):
 - De 7 dagen stelt de clubbeheerder in bij Regels (naast "automatische oproepen").
 
 ## Besluit 26 — Home van HJO en coördinator: te doen en ter informatie
+> **◐ Deels herzien door Besluit 34 (geen losse spelers, geen Gezien-knoppen), 36 (vaste berichten), 75 (automatisch), 95 (HO-Home alleen trainers)** (zie Register).
 *Herzien in Besluit 36 (Communicatieplan).*
 *Besloten 23 september 2026. Vult Besluit 11 aan.*
 
@@ -1208,6 +1350,7 @@ Toegepast (24 sep 2026):
 - **Vaste berichten bij de jaarplanning** (Planning → Vaste berichten): vóór elke vakantie, bij een nieuwe fase, bij de beoordelingsmomenten, bij de start en het einde van het seizoen. De datums komen uit de jaarplanning. Standaard zet ClubComm het bericht **klaar** bij *Te doen*; de HJO kijkt het na en verstuurt het met één tik, of slaat het over. Per bericht kan ook "automatisch". Het gaat om zo'n 8–10 berichten per seizoen (geen ochtendbericht of weekoverzicht).
 
 ## Besluit 25 — Taken per rol (de club bepaalt)
+> **◐ Deels herzien door Besluit 95 (nieuwe standaard, eigenaar en terugval)** (zie Register).
 *Besloten 23 september 2026. Vervangt Besluit 24 (wie ziet wat) en vult Besluit 12 aan.*
 
 - **Rollen zijn vaste bouwstenen met een bereik:** trainer en teamleider (één team), **coördinator** (een groep teams, bijv. O10–O12), HJO (hele club), clubbeheerder (inrichten). Ouders zien altijd alleen hun eigen kind.
@@ -1227,6 +1370,7 @@ Toegepast (24 sep 2026):
 - In versie 2 dwingt de server de rechten af (Supabase RLS).
 
 ## Besluit 24 — Wie ziet wat (per rol)
+> **✖ Vervangen door Besluit 25 (Wat zie je in de takenlijst)** (zie Register).
 *Opgenomen in Besluit 25 ("Wat zie je" in de takenlijst).*
 
 *Besloten 23 september 2026.*
@@ -1248,6 +1392,7 @@ Toegepast (24 sep 2026):
 - In versie 2 dwingt de server dit af (Supabase RLS), niet alleen het scherm.
 
 ## Besluit 23 — Beoordelingsmomenten en ontwikkelgesprekken
+> **◐ Deels herzien door Besluit 65 (Start en Voorjaar), 67/68 (woorden in plaats van cijfers, het kind stuurt), 70 (plannen rond de training)** (zie Register).
 *Besloten 23 september 2026.*
 
 - **Twee momenten per seizoen:** ~~*Winter* en *Einde seizoen*~~ → *Start* (oktober) en *Voorjaar* (maart), zie Besluit 65. Elk moment heeft een periode van 3 weken waarin de trainer beoordeelt. De trainer mag eerder beginnen.
@@ -1261,6 +1406,7 @@ Toegepast (24 sep 2026):
 - De datums volgen uit de jaarplanning; de clubbeheerder kan ze aanpassen (in de demo nog vast).
 
 ## Besluit 22 — Signalen afdoen
+> **◐ Deels herzien door Besluit 34 (geen Gezien-knoppen bij ter informatie), 95 (afgedane signalen controleert de coördinator)** (zie Register).
 
 - **Signalen ter informatie** (patroon, oranje/rode zone, reeks ziek/blessure, langdurig afwezig, team in zone) kan de trainer, teamleider of HJO afdoen met **"Gezien, geen actie nodig"**, met een optionele notitie.
   - Het signaal verdwijnt, maar **komt terug als het erger wordt**: meer afwezigheid of een zwaardere zone (oranje → rood).
@@ -1272,6 +1418,7 @@ Toegepast (24 sep 2026):
 ---
 
 ## Besluit 21 — Afwezigheid van trainers signaleren
+> **◐ Deels herzien door Besluit 54 (telling niet meer in het profiel), 95 (niet gekomen: niet door de teamleider; de app signaleert, coördinator of HO bevestigt)** (zie Register).
 
 Net als bij spelers: ClubComm registreert en signaleert, de HJO beslist.
 
@@ -1290,6 +1437,7 @@ Net als bij spelers: ClubComm registreert en signaleert, de HJO beslist.
 ---
 
 ## Besluit 20 — Periode afmelden en "trainer kan niet"
+> **◐ Deels herzien door Besluit 95 (vervanger zoeken: coördinator, de teamleider helpt met ouders)** (zie Register).
 
 ### Een periode afmelden (ouder)
 - In Planning (en vanuit het afmeldscherm): **"Afwezig voor een periode"** met van, tot en met, reden (standaard Vakantie) en opmerking.
@@ -1312,6 +1460,7 @@ Net als bij spelers: ClubComm registreert en signaleert, de HJO beslist.
 - **Aanvulling (23 september 2026): "ik kan niet" is bewust niet zichtbaar op Home.** Een opvallende knop nodigt uit tot makkelijk afmelden. De trainer vindt het ingeklapt onder de training (Aanwezigheid → kies de training → "Kun je zelf echt niet?"), met de uitleg dat het wordt vastgelegd en, binnen een dag voor de training, als te laat telt. Een reden is verplicht. Op Home staat alleen de status als de trainer al is afgemeld (vervanger gevonden of niet).
 - **Bellen bij de drempel (stap 3):** de rij heeft drie knoppen met tekst: **Bel [ouder]**, **WhatsApp**, en **Contact vastleggen** (gebeld of geappt + afspraak). Pas na het vastleggen verdwijnt de stap.
 ## Besluit 19 — Clubberichten, urgent en vastzetten
+> **◐ Deels herzien door Besluit 30 (vastgezet niet op Home), 95 (clubberichten: coördinator)** (zie Register).
 
 - **Clubberichten herkenbaar:** berichten van de HJO of clubbeheerder krijgen het club-icoon en het label **"Club"**. Ze vallen op zonder dat ze urgent zijn.
 - **Urgent alleen voor tijdgevoelige zaken** (vandaag of morgen, bijv. afgelasting): rood label, bovenaan, pushmelding met geluid en op Home tot het gelezen is. Afgelasten is altijd urgent. Niet alle HJO-berichten worden urgent (anders verliest "urgent" zijn waarde).
@@ -1335,6 +1484,7 @@ Net als bij spelers: ClubComm registreert en signaleert, de HJO beslist.
 ---
 
 ## Besluit 17 — Module Materiaal
+> **◐ Deels herzien door Besluit 50 (bericht van de trainer); herziening open bij Nog te bespreken** (zie Register).
 
 - **Checklist per team bij de start van het seizoen**, in te vullen door de trainer (± 1 minuut).
 - Per item: **In orde** of **Niet ontvangen**, met een knop "Alles in orde" om snel te beginnen, plus een opmerking.
@@ -1348,6 +1498,7 @@ Net als bij spelers: ClubComm registreert en signaleert, de HJO beslist.
 ---
 
 ## Besluit 15 — Fases en opschaling
+> **◐ Deels herzien door Besluit 32 (kaarten per seizoen), 25/95 (stap 3 trainer of coördinator, stap 4 coördinator, stap 5 HO)** (zie Register).
 
 Gebaseerd op een jaarplanning onderbouw 2026/27 (de pilotclub is RKSV DCG).
 
@@ -1378,6 +1529,7 @@ Gebaseerd op een jaarplanning onderbouw 2026/27 (de pilotclub is RKSV DCG).
 ---
 
 ## Besluit 14 — Uitschrijven en account verwijderen
+> **◐ Deels herzien door Besluit 72 (ontwikkelgegevens meteen gewist)** (zie Register).
 
 Een ouder regelt dit **zelf** in het profiel, zonder tussenkomst van de club.
 
@@ -1393,31 +1545,30 @@ Een ouder regelt dit **zelf** in het profiel, zonder tussenkomst van de club.
 ---
 
 ## Wie doet wat (overzicht)
+*Bijgewerkt na Besluit 95. De volledige standaard per taak, met eigenaar en terugval, staat in `docs/onderzoek/taken-per-rol.md` (§4). De club kan alles aanpassen.*
 
-| Taak | Wie | Vervanger |
+| Taak | Eigenaar | Terugval |
 |---|---|---|
-| Afmelden (met reden) | Ouder | — |
-| Langdurig afwezig melden | Ouder | Teamleider |
-| Aanwezigheid opnemen — training | Trainer | Teamleider |
-| Aanwezigheid opnemen — wedstrijd | Wedstrijdbegeleider | Teamleider → trainer → ouder-coach |
-| Ouders uitnodigen | Teamleider, trainer, HJO | — |
-| Aanmeldingen goedkeuren | Teamleider | Trainer → HJO (na 48 uur) |
-| Vervoer en taken | Teamleider (met automatische oproepen) | Trainer |
-| Speeltijd (module) | Wedstrijdbegeleider | — |
-| Beoordelingen | Trainer | — |
-| Uitzonderingen in planning | Trainer / teamleider | HJO |
-| Weekrooster en veldindeling | HJO | Coördinator |
-| Staf en teams indelen, van team wisselen | HJO | Coördinator |
-| Signaal speler opvolgen (gesprek) | Teamleider / trainer | HJO |
-| Signaal team opvolgen | HJO | Coördinator |
-| Clubberichten, afgelasten | HJO | Coördinator |
-| Clubinstellingen, modules, seizoen, rollen | Clubbeheerder | HJO |
+| Afmelden (met reden), langdurig afwezig melden | Ouder | — |
+| Aanwezigheid opnemen (training) | Trainer | vervangende trainer |
+| Aanwezigheid en wissels (wedstrijd) | Trainer-coach | timekeeper (alleen wissels) |
+| Ouders uitnodigen, aanmeldingen goedkeuren | Teamleider | trainer → coördinator (na 48 uur) → HO |
+| Taken bij wedstrijden | Teamleider (met automatische oproepen) | trainer |
+| Planning van het eigen team aanpassen | Trainer | coördinator → HO |
+| Weekrooster en veldindeling, staf koppelen | Coördinator | HO |
+| Clubberichten, noodbericht en afgelasten | Coördinator | HO |
+| Spelers opvolgen, bellen bij de drempel | Trainer | coördinator → HO |
+| Gesprek met ouders (stap 4) | Coördinator | HO |
+| Clubbesluit (stap 5) | HO met het bestuur | clubbeheerder wijst aan |
+| Trainers volgen, gesprekken en observaties | HO (of technisch coördinator) | clubbeheerder wijst aan |
+| Beoordelen, ontwikkelgesprekken met ouder en kind | Trainer | — |
+| Clubinstellingen, rollen, taken, modules, seizoen | Clubbeheerder | — |
 
 ---
 
 ## Handleidingen
 
-De oude handleidingen per rol (23 sep) zijn verwijderd: ze klopten niet meer met Besluit 30–37. Nieuwe handleidingen maken we na de start van de pilot (zie `docs/productie-en-groei.md`, Openstaand).
+PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking voor clubs staan in `docs/presentaties/` (maken met `maak.js`). **Worden bijgewerkt na de HO-stappen van Besluit 95**, samen met nieuwe voor de HO en de coördinator (verkoopmap, zie Openstaand).
 
 ---
 
@@ -1430,17 +1581,17 @@ De oude handleidingen per rol (23 sep) zijn verwijderd: ze klopten niet meer met
 - **Import uit Sportlink** (zie Besluit 2).
 - **Uit de vergelijking met Teamy** (`docs/onderzoek/concurrent-teamy.md`): eerlijk clubrooster voor vrijwilligerstaken, meelezer (bijv. opa/oma die brengt), rollen en tags voor vrijwilligers.
 - **Uit de vergelijking met VeldPlanner** (`docs/onderzoek/concurrent-veldplanner.md`): veldkaart bij een training (plattegrond met het veld van het team), veldindeling importeren uit Sportlink Club i.p.v. dubbel invoeren, infoscherm in de kantine, uitslag delen als nette post voor WhatsApp.
-- **Club inrichten bij de start (onboarding):** bij de verkoop samen met een bestuurslid de taakverdeling instellen: welke taak ligt bij welke rol (HJO, coördinator, clubbeheerder, secretaris…). De tabel "Wie doet wat" wordt dan per club instelbaar.
-- **Handleiding bij de verkoop:** per rol en voor de clubbeheerder (opnieuw te maken).
+- *(Uitgewerkt in Besluit 95 en het stappenplan in `docs/onderzoek/taken-per-rol.md` §6.)* **Club inrichten bij de start (onboarding):** bij de verkoop samen met een bestuurslid de taakverdeling instellen: welke taak ligt bij welke rol (HJO, coördinator, clubbeheerder, secretaris…). De tabel "Wie doet wat" wordt dan per club instelbaar.
+- *(Komt in de verkoopmap, zie Openstaand.)* **Handleiding bij de verkoop:** per rol en voor de clubbeheerder (opnieuw te maken).
 - **Online hulp met AI:** een assistent die de app volledig kent en stap voor stap uitlegt, bijvoorbeeld "hoe zet ik de taken van X uit?" of "hoe zet ik deze module uit?". Scheelt telefoontjes.
 - **Evaluatieformulier aan het einde van het seizoen** (ouders, trainers, teamleiders), zodat we per seizoen een rapport kunnen maken van wat beter kan.
-- **Checklist rollen en taken bij de club:** per rol aankruisen "hebben wij", "wie doet het" en "in de pilot ja/nee" (o.a. vertrouwenscontactpersoon, ledenadministratie, wedstrijdsecretaris, VOG-controle, technisch jeugdcoördinator, kantine, vrijwilligers). Voor nu blijven de rollen: ouder, trainer, teamleider, coördinator, HJO, clubbeheerder.
+- *(Deels in Besluit 95: rollen, wie doet mee aan de pilot.)* **Checklist rollen en taken bij de club:** per rol aankruisen "hebben wij", "wie doet het" en "in de pilot ja/nee" (o.a. vertrouwenscontactpersoon, ledenadministratie, wedstrijdsecretaris, VOG-controle, technisch jeugdcoördinator, kantine, vrijwilligers). Voor nu blijven de rollen: ouder, trainer, teamleider, coördinator, HJO, clubbeheerder.
 - **Meer taken voor de takenlijst (Besluit 25)**, later stap voor stap uitbouwen. Alleen toevoegen wat de app ook echt ondersteunt:
   - *Nu vast bij trainer/teamleider, later instelbaar:* aanwezigheid opnemen · aanmeldingen van het eigen team goedkeuren · berichten aan het team sturen · wedstrijdinfo invullen (verzameltijd, tenue, adres)
-  - *Seizoensstart en -einde:* teamindeling en doorstroom naar volgend seizoen · trainers en teamleiders werven · teamgegevens bijwerken · ouderavond/kennismaking
+  - *Seizoensstart en -einde:* teamindeling (Besluit 95: HO samen met de trainer) en doorstroom naar volgend seizoen · trainers en teamleiders werven · teamgegevens bijwerken · ouderavond/kennismaking
   - *Wedstrijden:* wedstrijdformulier en uitslag doorgeven · oefenwedstrijd of toernooi regelen · vervoer en taken bewaken
   - *Veiligheid en welzijn:* VOG-controle van trainers en teamleiders (signaal "trainer zonder VOG"; niet in de pilot) · doorverwijzen naar de vertrouwenscontactpersoon · blessure of ongeval vastleggen
-  - *Trainers ondersteunen:* nieuwe trainers inwerken · trainingen bezoeken en feedback geven · trainersoverleg · trainingsstof of jaarplan delen
+  - *Trainers ondersteunen (besloten in Besluit 95, wordt de module Trainers begeleiden):* nieuwe trainers inwerken · trainingen bezoeken en feedback geven · trainersoverleg · trainingsstof of jaarplan delen
   - *Communicatie:* clubbrede agenda bijhouden (toernooien, clubdagen, stops)
 
 ---
@@ -1455,7 +1606,44 @@ De oude handleidingen per rol (23 sep) zijn verwijderd: ze klopten niet meer met
   - Nog uitzoeken: wie geeft uit en neemt terug (secretaris of materiaalbeheerder), trainingspak terug of niet, wie tekent bij een team zonder trainer, en of de trainer zelf extra spullen mag toevoegen.
 - **Consequenties, nog open:** speler O13+ bij het gesprek betrekken; compliment bij verbetering; een dalingssignaal bij O13+. (De kaarten zelf zijn besloten in Besluit 32.)
 - **Jaarplanning importeren:** de jaarplanning (trainingen, wedstrijden, oefenwedstrijden "zelf organiseren", teamuitje, zaalvoetbal, vrije dagen) kan het startpunt zijn voor de planning in ClubComm.
-- **Analyse clubproblemen** (`docs/onderzoek/analyse-clubproblemen.md`): voorstellen voor wat ontbreekt (o.a. afmelden namens ouder, bereikbaarheid per ouder, VCP/gedragscode, "mijn kind twijfelt"). Nog niet besloten. Adoptie door ouders ziet de gebruiker niet als risico (mail + push, uitleg, coulante start).
+- **Analyse clubproblemen** (`docs/onderzoek/analyse-clubproblemen.md`): voorstellen voor wat ontbreekt (bereikbaarheid per ouder, VCP/gedragscode, "mijn kind twijfelt"). Nog niet besloten. *Afmelden namens de ouder is afgewezen (Besluit 34).* Adoptie door ouders ziet de gebruiker niet als risico (mail + push, uitleg, coulante start).
 
-- **Presentatie** voor het bestuur van RKSV DCG (een oudere presentatie is verwijderd) en eventueel een rollenbeschrijving.
+- ~~**Presentatie** voor het bestuur van RKSV DCG~~ *gedaan: `docs/presentaties/ClubComm-bestuur.pptx`; de rollenbeschrijving staat in Besluit 95.*
+- **Weekbericht voor ouders:** Besluit 20 wees een weekoverzicht af (te veel berichten, de inhoud verandert tot het laatste moment), maar Besluit 36 en 80 noemen een "weekbericht" als optie voor later. **Tegenstrijdig: de initiatiefnemer beslist.** Tot dan geldt Besluit 20 (niet doen).
 - **Huisstijl:** één set icoontjes in één stijl (Lucide, in het prototype); kleur alleen met betekenis (groen = goed, oranje = aandacht, rood = probleem); verder rustig met het logo-blauw `#0D88F9` als hoofdkleur. **Besloten:** de app is altijd licht (witte achtergrond), ook als de telefoon op donkere modus staat.
+
+---
+
+## Afgewezen ideeën (niet opnieuw voorstellen)
+Bewust niet gedaan, met de reden. Komt een van deze toch terug, zeg dan dat het is afgewezen en waarom; de initiatiefnemer beslist opnieuw.
+
+| Idee | Waarom niet | Besluit |
+|---|---|---|
+| Afmelden namens de ouder (door teamleider) | Informatie gaat van de bron de app in; geen taak voor een ander | 34 |
+| Ochtendbericht voor de trainer, weekoverzicht voor ouders | Te veel berichten; de stand verandert tot het laatste moment (zie Nog te bespreken: weekbericht) | 20 |
+| Knop "Ik kan niet" opvallend op de Home van de trainer | Nodigt uit tot makkelijk afmelden | 20 |
+| Ranglijsten: ouders die helpen, topscorers, trainer van de maand | Vergelijken ontmoedigt; eerlijke speeltijd en teamgevoel gaan voor | 28, 29, 62 |
+| Clubbrede lijst van rode spelers | Spelers volgt de trainer; de HO kijkt per team | 11, 26, 34 |
+| Losse spelers op de Home van HJO/HO | Die volgt de trainer, dan de coördinator | 34 |
+| "Gezien"-knoppen bij ter informatie | Wegklikken is werk; een regel verdwijnt vanzelf | 34 |
+| Weging van wedstrijden in de aanwezigheid | Het belang zit al in de termijn en de rode kaart | 34 |
+| Cijfers 1–10 of smileys in het ontwikkelgesprek | Voelt als een rapport; KNVB gebruikt woorden | 67 |
+| Vergelijkingstabel "jij zegt / ik zeg" | Maakt van het gesprek weer een beoordeling | 68 |
+| Vier gespreksmomenten per seizoen | Te veel tijd voor vrijwilligers; twee is genoeg | 65 |
+| Instelling per club voor de leeftijd van ontwikkelgesprekken | Simpel houden; de trainer beslist | 69 |
+| Maandkalender | Onleesbaar op de telefoon | 4 |
+| Automatisch posten in WhatsApp-groepen | Kan niet voor groepen; privacy | 9 |
+| Inloggen met een magische link | Opent de browser in plaats van de app | 52 |
+| Meten of een e-mail is geopend, gelezen-knop in de mail | Onbetrouwbaar en volgen zonder dat de ouder het merkt | 78 |
+| Vervoer aanbieden zonder vraag, ophalen regelen in de app | Niet nodig; ouders lossen het samen op | 31 |
+| Teamleider heeft een taak in vervoer | Iedereen brengt zijn eigen kind | 31 |
+| Automatisch taken toewijzen, vervoer indelen, teams doorschuiven | Niet elke ouder kan elke taak; teams worden opnieuw ingedeeld | 76 |
+| Tenue bij de wedstrijd | Bijna altijd hetzelfde | 33 |
+| Signaal "planning loopt af" | De planning staat het hele seizoen klaar | 73 |
+| SMS-knop | Weinig gebruikt | 40 |
+| Google Maps voor adressen | Betaalaccount en wat je typt gaat naar Google | 43 |
+| Berichten verwijderen door ontvangers | Archiveren is veiliger | 57 |
+| Zelfbeoordeling van de coach en een rapportcijfer in de evaluatie | Geen tijd in de bijeenkomst; geen cijfer | 93 |
+| Teamleider registreert of de trainer kwam, of praat met hem | Niet bevoegd, geen expertise, schaadt de band | 95 |
+| De HO krijgt meldingen over organisatie (vakantie, clubberichten) | De HO is mentor: hij zoekt zelf op | 95 |
+
