@@ -129,6 +129,24 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'trainer niet gekomen');
   });
 
+  // Demo: snel wisselen van account en rol vanuit het profiel, zonder inlogscherm
+  test('demo: snel wisselen tussen accounts en rollen', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').first().click();
+    await page.locator('[data-act="magischeLink"]').click();
+    await page.locator('[data-act="profiel"]').click();
+    await page.locator('#sheet [data-act="demoWissel"][data-pid="p-esther"]').click();
+    expect(await page.evaluate(() => CC.rol().rol)).toBe('coordinator');
+    await page.locator('[data-act="profiel"]').click();
+    const peterBeheer = page.locator('#sheet [data-act="demoWissel"]', { hasText: 'Peter · Clubbeheerder' });
+    await peterBeheer.click();
+    expect(await page.evaluate(() => [CC.me().naam.split(' ')[0], CC.rol().rol].join(' '))).toBe('Peter beheerder');
+    await controleer(page, fouten, 'snel wisselen');
+  });
+
   // Training afgelasten met een eigen toelichting: één bericht aan de ouders
   test('trainer gelast een training af met toelichting', async ({ page }) => {
     const fouten = volgFouten(page);
