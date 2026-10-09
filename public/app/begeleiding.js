@@ -37,23 +37,41 @@
   const VAKKEN = [['sterk', 'Sterk zichtbaar', 'Wat deed de trainer goed?'], ['ontwikkelpunt', 'Belangrijkste ontwikkelpunt', 'Waar zit op dit moment de meeste winst?'], ['effect', 'Effect op spelers', 'Wat zag ik veranderen in spelersgedrag door het handelen van de trainer?'], ['afspraak', 'Afspraak volgende keer', 'Wat gaat de trainer concreet opnieuw proberen of anders doen?']];
   // Vragenlijst planningsgesprek (de trainer vult vooraf in), naar het voorgesprek van de HO-A
   // Besluit 100: kort (standaard, starters) of uitgebreid (ervaren of in opleiding); de sleutels leerdoel en letop zijn gelijk
-  const KORT = (w) => [
-    ['doel', `Wat wil je dat je spelers deze ${w} leren of beter gaan doen?`],
-    ['beginsituatie', 'Wat gaat goed bij je team, en wat vind je nog lastig?'],
-    ['leerdoel', 'Waar wil je zelf beter in worden als trainer?'],
-    ['letop', 'Waar wil je dat ik op let? En hoor je het liefst tussendoor of na afloop wat ik zag?'],
-  ];
-  const VRAGEN = (soort, niveau) => { const w = soort === 'wedstrijd' ? 'wedstrijd' : 'training'; if (niveau !== 'uitgebreid') return KORT(w); return [
-    ['beginsituatie', 'Hoe zou je de huidige situatie van je team omschrijven? Wat gaat goed, wat minder?'],
-    ['doel', `Waar wil je deze ${w} vooral voor gebruiken? Wat wil je testen, verbeteren of terugzien?`],
-    ['probleem', 'Welk voetbalprobleem staat centraal? Wat moeten spelers beter herkennen of uitvoeren? (wie, wat, waar, wanneer)'],
-    ['gedrag', `Aan welk zichtbaar gedrag van spelers merk je dat het doel wordt bereikt? Noem 2 of 3 signalen.`],
-    ['coachnu', 'Hoe kijk je naar je eigen coaching op dit moment? Wat gaat goed, wat vind je lastig?'],
-    ['leerdoel', `Wat wil jij in deze ${w} persoonlijk oefenen in je handelen als trainer?`],
-    ['letop', 'Waar wil je dat ik op let? Wat wil je na afloop graag van mij terughoren?'],
-    ['feedback', `Wanneer werkt feedback voor jou het best: tijdens de ${w}, ${w === 'wedstrijd' ? 'in de rust' : 'tussen de vormen'}, of achteraf?`],
-    ['succes', `Wanneer is deze ${w} voor jou geslaagd, los van de uitslag? Wat wil je meenemen naar de volgende keer?`],
-  ]; };
+  // Besluit 101: het voorgesprek is een voormeting (hoe denkt de trainer?), geen reflectie. Een training vraagt andere
+  // vragen dan een wedstrijd: opbouw, organisatie en bijsturen. Het derde veld = het onderdeel van het A4 waar het bij hoort.
+  const VRAGEN = (soort, niveau) => {
+    if (soort === 'wedstrijd') return niveau === 'uitgebreid' ? [
+      ['beginsituatie', 'Hoe zou je de huidige situatie van je team omschrijven? Wat gaat goed, wat minder?'],
+      ['doel', 'Waar wil je deze wedstrijd vooral voor gebruiken? Wat wil je testen, verbeteren of terugzien?', 'Wedstrijddoel'],
+      ['probleem', 'Welk voetbalprobleem staat centraal? Wat moeten spelers beter herkennen of uitvoeren? (wie, wat, waar, wanneer)', 'Wedstrijddoel'],
+      ['gedrag', 'Aan welk zichtbaar gedrag van spelers merk je dat het doel wordt bereikt? Noem 2 of 3 signalen.', 'Leersituatie in de wedstrijd'],
+      ['coachnu', 'Hoe kijk je naar je eigen coaching op dit moment? Wat gaat goed, wat vind je lastig?', 'Coachgedrag'],
+      ['leerdoel', 'Wat wil jij in deze wedstrijd persoonlijk oefenen in je handelen als trainer?', 'Persoonlijk leerdoel'],
+      ['letop', 'Waar wil je dat ik op let? Wat wil je na afloop graag van mij terughoren?', 'Focus'],
+      ['feedback', 'Wanneer werkt feedback voor jou het best: tijdens de wedstrijd, in de rust, of achteraf?', 'Feedbackmoment'],
+      ['succes', 'Wanneer is deze wedstrijd voor jou geslaagd, los van de uitslag?', 'Wedstrijddoel'],
+    ] : [
+      ['doel', 'Wat wil je dat je spelers deze wedstrijd laten zien of beter gaan doen?', 'Wedstrijddoel'],
+      ['beginsituatie', 'Wat gaat goed bij je team, en wat vind je nog lastig?'],
+      ['leerdoel', 'Waar wil je zelf beter in worden als trainer?', 'Persoonlijk leerdoel'],
+      ['letop', 'Waar wil je dat ik op let? En hoor je het liefst in de rust of na afloop wat ik zag?', 'Focus'],
+    ];
+    return niveau === 'uitgebreid' ? [
+      ['wedstrijdZag', 'Wat zag je in de laatste wedstrijd(en)? Welk voetbalprobleem kwam je tegen?', 'Trainingsdoel'],
+      ['doel', 'Welk voetbalprobleem train je, en waarom nu?', 'Trainingsdoel'],
+      ['probleem', 'Wat moeten spelers beter herkennen en doen? (wie, wat, waar, wanneer)', 'Trainingsdoel'],
+      ['opbouw', 'Hoe heb je de training opgebouwd? Welke vormen, en hoe komt het voetbalprobleem steeds terug, met genoeg herhaling en weerstand?', 'Leersituatie creëren'],
+      ['organisatie', 'Hoe zorg je dat spelers veel voetballen en weinig wachten? Hoe snel ga je van vorm naar vorm?', 'Organisatie'],
+      ['bijsturen', 'Wanneer grijp je in, en hoe? Wat doe je als het te makkelijk of te moeilijk is?', 'Leersituatie beïnvloeden'],
+      ['leerdoel', 'Wat wil jij in deze training oefenen in je handelen als trainer?', 'Persoonlijk leerdoel'],
+      ['letop', 'Waar wil je dat ik op let, en wanneer hoor je het graag: tussen de vormen of na afloop?', 'Focus en feedback'],
+    ] : [
+      ['doel', 'Wat wil je dat je spelers vandaag leren?', 'Trainingsdoel'],
+      ['opbouw', 'Hoe heb je de training opgebouwd? Welke oefeningen doe je?', 'Leersituatie creëren'],
+      ['leerdoel', 'Waar wil je zelf beter in worden als trainer?', 'Persoonlijk leerdoel'],
+      ['letop', 'Waar wil je dat ik op let?', 'Focus'],
+    ];
+  };
   const REFLECTIE = [['r1', 'Wat heb ik geleerd over mijn eigen coachgedrag?'], ['r2', 'Welk effect had mijn handelen op de spelers?'], ['r3', 'In welke situatie ga ik mijn ontwikkelpunt de volgende keer toepassen?']];
 
   // ---------- Fasen ----------
@@ -120,7 +138,7 @@
         ${veldT('leerdoel', 'Persoonlijk leerdoel trainer', m.voor.leerdoel)}
         ${veldT('hoDoel', 'Mijn eigen doel als HO (mag leeg)', m.voor.hoDoel)}
         <button class="knop licht klein">Opslaan</button></form>`)}
-      ${blok(1, `${z.ingevuld ? `<details class="uitklap stil" open><summary>Vragenlijst van ${esc(tr.naam.split(' ')[0])} (ingevuld ${D.kort(z.ingevuld.slice(0, 10))})</summary><dl class="antwoorden">${vragen.filter(([k]) => (z.v || {})[k]).map(([k, t]) => `<dt>${esc(t)}</dt><dd>${esc(z.v[k])}</dd>`).join('')}</dl></details>`
+      ${blok(1, `${z.ingevuld ? `<details class="uitklap stil" open><summary>Vragenlijst van ${esc(tr.naam.split(' ')[0])} (ingevuld ${D.kort(z.ingevuld.slice(0, 10))})</summary><dl class="antwoorden">${vragen.filter(([k]) => (z.v || {})[k]).map(([k, t, o]) => `<dt>${o ? `<span class="chip mini">${esc(o)}</span> ` : ''}${esc(t)}</dt><dd>${esc(z.v[k])}</dd>`).join('')}</dl></details>`
           : m.gevraagd ? `<p class="zacht klein">Vragenlijst gestuurd op ${D.kort(m.gevraagd.slice(0, 10))}; nog niet ingevuld.</p>` : `<div class="chips">${[['kort', 'Kort (4 vragen)'], ['uitgebreid', 'Uitgebreid (9 vragen)']].map(([k, l]) => `<button class="chipknop ${(m.niveau || 'kort') === k ? 'aan' : ''}" data-act="begelNiveau" data-id="${m.id}" data-n="${k}">${l}</button>`).join('')}</div>
           <button class="knop licht klein" data-act="begelVragen" data-id="${m.id}">${icon('send')}Vragenlijst sturen aan ${esc(tr.naam.split(' ')[0])}</button><p class="zacht klein">De trainer vult de vragen vooraf zelf in. Zo begint het gesprek bij de trainer.</p>`}
         <form data-submit="begelPlanOk" data-id="${m.id}" class="codeform"><p class="klein"><b>Afspraken uit het gesprek</b></p>
@@ -247,7 +265,7 @@
       <div class="pv-vakken">${VAKKEN.map(([kk, t, q]) => `<div class="pv-vak"><b>${t}</b><small>${q}</small>${leeg || !(m.vakken || {})[kk] ? lijnen(2) : `<p>${esc(m.vakken[kk])}</p>`}</div>`).join('')}</div>`);
   });
   CC.on('begelVragenPrint', (el) => { const S = CC.S(); const m = vind(S, el.dataset.id); const z = zelf(S)[m.id] || {}; const tr = M.persoon(S, m.trainerId) || { naam: '' };
-    CC.printDoc(`Voorbereiding begeleidingsmoment · ${tr.naam}`, `<p>${esc(m.soort === 'wedstrijd' ? 'Wedstrijd' : 'Training')} ${esc(D.lang(m.datum))} · ${esc(CC.tn(m.teamId))}</p>${VRAGEN(m.soort, m.niveau).map(([k, t]) => `<div class="pv-blok"><p><b>${esc(t)}</b></p>${(z.v || {})[k] ? `<p>${esc(z.v[k])}</p>` : lijnen(2)}</div>`).join('')}
+    CC.printDoc(`Voorbereiding begeleidingsmoment · ${tr.naam}`, `<p>${esc(m.soort === 'wedstrijd' ? 'Wedstrijd' : 'Training')} ${esc(D.lang(m.datum))} · ${esc(CC.tn(m.teamId))}</p>${VRAGEN(m.soort, m.niveau).map(([k, t, o]) => `<div class="pv-blok"><p><b>${esc(t)}</b>${o ? ` <small>(${esc(o)})</small>` : ''}</p>${(z.v || {})[k] ? `<p>${esc(z.v[k])}</p>` : lijnen(2)}</div>`).join('')}
       <h2>Afspraken</h2><p><b>Leerdoel:</b> ${esc((m.plan || {}).leerdoel || '')}</p>${(m.plan || {}).leerdoel ? '' : lijnen(1)}<p><b>Focus HO:</b> ${esc((m.plan || {}).focus || '')}</p>${(m.plan || {}).focus ? '' : lijnen(1)}<p><b>Feedbackmoment:</b> ${esc((m.plan || {}).feedback || '')}</p>${(m.plan || {}).feedback ? '' : lijnen(1)}`); });
 
   // ---------- De trainer: vragenlijst vooraf en reflectie achteraf (op zijn Home) ----------

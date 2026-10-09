@@ -218,6 +218,12 @@ test.describe('Demo', () => {
     expect(gepland.actId).toBeTruthy(); expect(gepland.gevraagd).toBeTruthy();
     expect(await page.evaluate((n) => CC.S().msgs.slice(n).map((m) => m.onderwerp), voor)).toEqual([expect.stringMatching(/^Bereid je begeleidingsmoment voor/)]);
     await expect(page.locator('#app li.half', { hasText: 'Training' }).first()).toBeVisible();
+    // Besluit 101: een training heeft eigen vragen (opbouw), geen reflectievraag vooraf
+    await page.evaluate((id) => CC.open('begelMoment', { id }), gepland.id);
+    await page.locator('#app [data-act="begelVragenPrint"]').click();
+    await expect(page.locator('#printvak')).toContainText('Hoe heb je de training opgebouwd?');
+    await expect(page.locator('#printvak')).not.toContainText('meenemen');
+    await page.locator('nav.nav button[data-tab="trainers"]').click();
     // Deze week op de Home: het geplande moment is er nog niet (over 8 dagen); wel na verplaatsen naar morgen
     await page.evaluate(() => { CC.S().begeleidMomenten.find((m) => m.id === 'bm-demo2').datum = CC.date.addDays(CC.date.vandaag(), 1); });
     await page.locator('nav.nav button[data-tab="home"]').click();
