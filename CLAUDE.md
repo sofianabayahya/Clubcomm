@@ -19,6 +19,7 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
 |---|---|
 | `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bovenaan het **Register** (status per besluit), onderaan **Afgewezen ideeën**. Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 96). |
 | `docs/pilotlog.md` | **Fouten uit de pilot met oorzaak en patroon** (momentopname, opslaan, demo verbergt het, één persoon per rol, buiten de app, rommelige gegevens). Bij elke wijziging langs deze patronen lopen. |
+| `docs/plan-van-aanpak.md` | **Van pilot naar product:** A product af (ook op schaal: 50 teams) → B beschrijven (handboek) → C prijs en groei → D verkopen → E invoeren. Met planning t/m januari 2027. |
 | `docs/productie-en-groei.md` | Controlelijst, **Openstaand**, meerdere clubs, app of website, kosten. |
 | `docs/techniek.md` | Opbouw van de echte versie (Supabase, Vercel, Brevo, migraties, e-mail, back-up). |
 | `docs/presentaties/` | **Productoverzicht** "Wat kan ClubComm" (`maak.js product`, de bron voor pitch, demo en handleidingen) en PowerPoints per rol (bestuur, teamleider, ouders, trainer): handleiding én presentatie. Opnieuw maken: `shots*.js` (schermafbeeldingen uit de demo) en `maak.js`. Kennismaking voor een andere club: `shots-clubs.js`, dan `CONTACT_NAAM=… CONTACT_MAIL=… node docs/presentaties/maak.js clubs "Clubnaam"` → `uit/` (niet in git); PDF met `soffice --headless --convert-to pdf` (lettertype Carlito nodig). |
