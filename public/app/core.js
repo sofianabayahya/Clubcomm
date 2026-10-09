@@ -37,7 +37,7 @@
     return kids.find((k) => k.id === sessie.kindId) || kids[0];
   };
   CC.kinderen = () => { const me = CC.me(); return S.players.filter((p) => p.teamId && p.ouders.includes(me.id)); };
-  CC.rolNaam = (r) => ({ ouder: 'Ouder', trainer: 'Trainer', teamleider: 'Teamleider', hjo: S.club.labels.hjo, beheerder: 'Clubbeheerder', coordinator: S.club.labels.coordinator }[r.rol]);
+  CC.rolNaam = (r) => ({ ouder: 'Ouder', trainer: 'Trainer', teamleider: 'Teamleider', hjo: S.club.labels.hjo, beheerder: 'Clubmanager', coordinator: S.club.labels.coordinator }[r.rol]);
   CC.login = (pid) => { const me = M.persoon(S, pid); sessie = { pid, rolIdx: 0, kindId: null }; store.set(SESSIE, sessie); ui.tab = 'home'; ui.view = null; ui.stack = []; CC.toast(`Welkom, ${me.naam.split(' ')[0]}!`); CC.render(); };
   CC.zetSessie = (pid) => { const oud = store.get(SESSIE, null); sessie = { pid, rolIdx: oud && oud.pid === pid ? oud.rolIdx || 0 : 0, kindId: oud && oud.pid === pid ? oud.kindId : null }; store.set(SESSIE, sessie); };
   CC.logout = () => { sessie = null; store.del(SESSIE); ui.login = { stap: 'mail', email: '' }; CC.closeSheet(); CC.render(); };
@@ -225,7 +225,7 @@
         <button class="linkknop" data-act="loginTerug">Ander e-mailadres</button>
       </div>`;
     }
-    const demo = [[S.demo.sanne, 'Ouder', 'moeder van Jesse (O10-1) en Mila (O8-2)'], [S.demo.mark, 'Trainer + ouder', 'trainer O10-1, vader van Daan'], [S.demo.linda, 'Teamleider + ouder', 'teamleider O10-1, moeder van Noah'], [S.demo.peter, `${S.club.labels.hjo} + clubbeheerder`, 'hoofd jeugdopleiding'], ...(S.demo.esther ? [[S.demo.esther, S.club.labels.coordinator, 'coördinator O10–O12']] : [])];
+    const demo = [[S.demo.sanne, 'Ouder', 'moeder van Jesse (O10-1) en Mila (O8-2)'], [S.demo.mark, 'Trainer + ouder', 'trainer O10-1, vader van Daan'], [S.demo.linda, 'Teamleider + ouder', 'teamleider O10-1, moeder van Noah'], [S.demo.peter, `${S.club.labels.hjo} + clubmanager`, 'hoofd jeugdopleiding'], ...(S.demo.esther ? [[S.demo.esther, S.club.labels.coordinator, 'coördinator O10–O12']] : [])];
     return `<div class="login">${taal}
       <img src="assets/clubcomm-icon.png" class="login-logo" alt="ClubComm">
       <h1>ClubComm</h1>
@@ -300,7 +300,7 @@
     <h3>Jouw rechten</h3><p>Je mag je gegevens inzien, laten aanpassen of laten verwijderen, en bezwaar maken. Neem daarvoor contact op met ${contact}. Ben je het er niet mee eens hoe de club met je gegevens omgaat, dan kun je een klacht indienen bij de Autoriteit Persoonsgegevens.</p></div>`; };
   CC.on('privacy', () => CC.sheet('Privacyverklaring', CC.privacyHtml(CC.me() ? S.club : CC.privacyClub || S.club), { groot: true }));
 
-  // ---------- Feedback (Besluit 37): komt als persoonlijk bericht (en e-mail) bij de clubbeheerder ----------
+  // ---------- Feedback (Besluit 37): komt als persoonlijk bericht (en e-mail) bij de clubmanager ----------
   CC.on('feedback', () => CC.sheet('Feedback of een probleem', `<form data-submit="feedbackOk" class="codeform">
       <label for="fb-s">Waar gaat het over?</label><select id="fb-s" name="s"><option>Er klopt iets niet</option><option>Ik heb een idee</option><option>Ik heb een vraag</option></select>
       <label for="fb-t">Vertel het kort</label><textarea id="fb-t" name="t" rows="5" required placeholder="Wat deed je, wat gebeurde er, wat had je verwacht?"></textarea>
@@ -336,7 +336,7 @@
       ${h.rij({ ic: 'smartphone', titel: 'App op je beginscherm zetten', act: 'beginscherm' })}
       <h3 class="klein-kop">Uitschrijven</h3>
       ${kids.length ? h.rij({ ic: 'user-cog', titel: 'Kind uitschrijven', sub: 'Stopt je kind of gaat het naar een andere club?', act: 'uitschrijfSheet' }) : ''}
-      ${CC.live ? h.rij({ ic: 'trash-2', titel: 'Account laten verwijderen', sub: 'De clubbeheerder wist je gegevens', act: 'verwijderVerzoek' }) : h.rij({ ic: 'trash-2', titel: 'Mijn account verwijderen', sub: 'Al je gegevens worden gewist', act: 'verwijderSheet' })}
+      ${CC.live ? h.rij({ ic: 'trash-2', titel: 'Account laten verwijderen', sub: 'De clubmanager wist je gegevens', act: 'verwijderVerzoek' }) : h.rij({ ic: 'trash-2', titel: 'Mijn account verwijderen', sub: 'Al je gegevens worden gewist', act: 'verwijderSheet' })}
       <h3 class="klein-kop">Uitloggen</h3>
       ${h.rij({ ic: 'log-out', titel: 'Uitloggen', sub: CC.live ? 'Je wordt op al je apparaten uitgelogd' : '', act: 'logout', chevron: false })}
       ${CC.live ? '' : `<div class="demo-blok"><h3 class="klein-kop">Demo</h3>
@@ -344,16 +344,16 @@
         ${h.rij({ ic: 'refresh-cw', titel: 'Demo opnieuw beginnen', sub: 'Zet alle demodata terug', act: 'resetDemo', chevron: false })}
       </div>`}`);
   });
-  // Echte versie: verzoek aan de clubbeheerder om het account te verwijderen (Besluit 54). Later automatisch vanaf de server.
-  CC.on('verwijderVerzoek', () => CC.sheet('Account laten verwijderen', `<p>De clubbeheerder krijgt een verzoek en wist daarna je naam, e-mailadres, telefoonnummer en koppelingen. Je hoort het binnen een week.</p>
+  // Echte versie: verzoek aan de clubmanager om het account te verwijderen (Besluit 54). Later automatisch vanaf de server.
+  CC.on('verwijderVerzoek', () => CC.sheet('Account laten verwijderen', `<p>De clubmanager krijgt een verzoek en wist daarna je naam, e-mailadres, telefoonnummer en koppelingen. Je hoort het binnen een week.</p>
     <p class="zacht klein">Stopt je kind bij de club? Gebruik dan eerst <b>Kind uitschrijven</b>. Het lidmaatschap zeg je apart op bij de ledenadministratie.</p>
     <div class="knoppen kolom"><button class="knop rood" data-act="verwijderVerzoekOk">Verzoek versturen</button><button class="knop licht" data-act="sluit">Annuleren</button></div>`));
   CC.on('verwijderVerzoekOk', () => {
     const me = CC.me(); const ontv = S.people.filter((p) => p.id !== me.id && p.rollen.some((r) => r.rol === 'beheerder')).map((p) => p.id);
-    if (!ontv.length) { CC.closeSheet(); return CC.toast('Er is nog geen clubbeheerder. Vraag het de trainer of teamleider.', 'fout'); }
+    if (!ontv.length) { CC.closeSheet(); return CC.toast('Er is nog geen clubmanager. Vraag het de trainer of teamleider.', 'fout'); }
     const kids = CC.kinderen().map((k) => `${k.voornaam} (${CC.tn(k.teamId)})`).join(', ');
     S.msgs.push({ id: 'b' + Date.now(), van: me.id, vanRol: (CC.rol() || {}).rol, soort: 'persoonlijk', bereik: 'Clubbeheer', onderwerp: `Verzoek: account van ${me.naam} verwijderen`, tekst: `${me.naam} (${me.email}) vraagt om het account te verwijderen.${kids ? ` Kinderen: ${kids}.` : ''}\n\nVerwijder de persoon via HJO → Teams → Ouders of Staf, en laat het weten als het gedaan is.`, tijd: new Date().toISOString(), ontvangers: ontv, gelezen: [me.id], antw: [], urgent: false, gepland: null, mail: true });
-    CC.save(); CC.closeSheet(); CC.toast('Verzoek verstuurd naar de clubbeheerder');
+    CC.save(); CC.closeSheet(); CC.toast('Verzoek verstuurd naar de clubmanager');
   });
   CC.on('wisselRol', (el) => CC.wisselRol(Number(el.dataset.idx)));
   // Eigen telefoonnummer (alleen trainer, teamleider en staf van het team zien het; Besluit 40)
@@ -459,7 +459,7 @@
   const voornaam = (id) => pNaam(id).split(' ')[0];
   // Bereik bevat teamcodes (nodig voor de rechten); toon de teamnaam
   const bereikNaam = (m) => String(m.bereik || '').split(', ').map((x) => (S.teams.some((t) => t.id === x) ? CC.tn(x) : x)).join(', ');
-  // Berichten van de club (HJO/clubbeheerder) zijn herkenbaar; vastgezette berichten blijven tijdelijk bovenaan (Besluit 19)
+  // Berichten van de club (HJO/clubmanager) zijn herkenbaar; vastgezette berichten blijven tijdelijk bovenaan (Besluit 19)
   CC.isClub = (m) => { const p = m.van !== 'systeem' && M.persoon(S, m.van); return !!(p && p.rollen.some((r) => ['hjo', 'beheerder'].includes(r.rol))); };
   CC.isVast = (m) => !!(m.vastTot && new Date(m.vastTot) > new Date());
   const afzenderIc = (m, naam) => (m.van === 'systeem' ? `<span class="avatar sys">${icon('bell')}</span>` : CC.isClub(m) ? `<span class="avatar club">${icon('shield')}</span>` : h.avatar(naam));

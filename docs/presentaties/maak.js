@@ -694,7 +694,184 @@ async function clubs() {
   await pres.writeFile({ fileName: path.join(map, `ClubComm-${naar.replace(/[^\w-]+/g, '-')}.pptx`) });
 }
 
+// ======================================================================
+// PRODUCTOVERZICHT "Wat kan ClubComm" (Besluit 95/96): de bron voor pitch, demo en handleidingen.
+// node docs/presentaties/maak.js product  → ClubComm-productoverzicht.pptx
+// ======================================================================
+async function product() {
+  const pres = nieuw('Wat kan ClubComm'); const v = 'ClubComm · productoverzicht · oktober 2026';
+  const GROEN = '137333', PAARS = '6D28D9';
+  await titelDia(pres, { titel: 'Wat kan ClubComm', sub: 'Het hele product op een rij: per rol, wat de app zelf doet, en hoe een club het inricht.', regel: 'Productoverzicht · oktober 2026', beeld: 'club-ou-home' });
+
+  await kaarten(pres, v, {
+    label: 'In één zin', titel: 'Eén app voor de hele jeugdafdeling', intro: 'Afmelden, planning, taken, vervoer, berichten, speeltijd en ontwikkeling. Op de telefoon, zonder wachtwoord.', kol: 3,
+    items: [
+      ['FaBell', 'Signaleren', 'Wie is vaak afwezig, wie meldt te laat af, welke taak blijft open, welke trainer heeft hulp nodig.'],
+      ['FaComments', 'Communiceren', 'Afmelden met één tik, berichten per team en club, pushmeldingen; vaste berichten gaan vanzelf.'],
+      ['FaFolderOpen', 'Vastleggen', 'Aanwezigheid, speeltijd, gesprekken en afspraken op één plek, ook als iemand stopt.'],
+    ],
+    noot: 'ClubComm signaleert, mensen beslissen. Geen automatische straffen; de club stelt de regels in.',
+  });
+
+  // Piramide van rollen met de twee lijnen
+  let s = pres.addSlide(); s.background = { color: WHITE };
+  kop(s, { label: 'Rollen', titel: 'De piramide van rollen', intro: 'Eén aanspreekpunt bovenaan, twee lijnen in de club: voetbal en organisatie.' }, 11.9);
+  const lagen = [
+    ['ClubComm-manager  ↔  Clubmanager', 'wij bieden aan  ·  één persoon van de club draait aan de knoppen', NAVY],
+    ['Hoofd Opleiding (HO)', 'voetballijn: maakt de trainers beter, mentor die in rapporten kijkt', GROEN],
+    ['Technisch coördinator', 'voetballijn, per bouw (optioneel): helpt de HO met observaties en gesprekken', GROEN],
+    ['Coördinatoren', 'organisatielijn, het liefst één per bouw: rooster, staf, afgelasten, clubberichten', BLUE],
+    ['Trainers  ·  Teamleiders', 'trainer onder de HO (voetbal)  ·  teamleider onder de coördinator (eerste lijn naar ouders)', '475569'],
+    ['Ouders', 'melden af, helpen mee, lezen berichten', '64748B'],
+    ['Spelers', 'om wie het draait', '94A3B8'],
+  ];
+  const top = 2.45, lh = 0.58, gap = 0.07, maxW = 11.9, minW = 6.2;
+  lagen.forEach(([naam, uitleg, kleur], i) => {
+    const w = minW + (maxW - minW) * (i / (lagen.length - 1)); const x = 0.7 + (maxW - w) / 2; const y = top + i * (lh + gap);
+    s.addShape('roundRect', { x, y, w, h: lh, rectRadius: 0.1, fill: { color: kleur } });
+    s.addText([{ text: naam, options: { bold: true, fontSize: 15, breakLine: true } }, { text: uitleg, options: { fontSize: 11 } }], { x: x + 0.1, y, w: w - 0.2, h: lh, color: WHITE, align: 'center', valign: 'middle', fontFace: FONT, margin: 0, isTextBox: true });
+  });
+  voet(s, v);
+
+  await kaarten(pres, v, {
+    label: 'Twee lijnen', titel: 'Voetbal en organisatie, elk een eigen lijn', kol: 2,
+    items: [
+      ['FaFutbol', 'Voetballijn: HO en technisch coördinator', 'Over de trainers. Observeren, evalueren, gesprekken, oefenstof, teamindeling. Krijgt weinig meldingen en zoekt zelf op.', GROEN],
+      ['FaSitemap', 'Organisatielijn: coördinatoren', 'Over teamleiders, ouders en planning. Rooster, staf, aanmeldingen, afgelasten, clubberichten, vervangers. Krijgt de meldingen.', BLUE],
+      ['FaArrowsRotate', 'Terugval', 'Geen coördinator? Dan doet de HO het. Geen HO? Dan wijst de clubmanager iemand aan. Er valt nooit iets tussen wal en schip.'],
+      ['FaSliders', 'De club kiest', 'Elke taak kan bij een andere rol. Wij leveren een standaard; de clubmanager past hem aan.'],
+    ],
+  });
+
+  await stappen(pres, v, {
+    label: 'Ouder', titel: 'Alles voor je kind op één plek', beeld: 'club-ou-home',
+    stappen: [
+      ['Afmelden in drie tikken', 'Met een reden; ook voor een periode of langdurig. Kind wordt verwacht, tenzij afgemeld.'],
+      ['Planning met adres en route', 'Trainingen, wedstrijden, activiteiten en vakanties; verzamelen en routeknop op het kaartje.'],
+      ['Vervoer en taken', 'Vervoer vragen als het een keer niet lukt; taken bij de wedstrijd oppakken met één tik.'],
+      ['Berichten en pushmeldingen', 'Persoonlijk en Nieuws; een vraag aan trainer of teamleider stellen.'],
+      ['Aanwezigheid, kaarten en ontwikkelgesprek', 'Dezelfde cijfers als de staf; het kind bereidt het gesprek thuis voor.'],
+    ],
+  });
+  await stappen(pres, v, {
+    label: 'Trainer', titel: 'Minder regelwerk, meer voetbal', beeld: 'club-tr-aanwezigheid',
+    stappen: [
+      ['Wie komt er, aanwezigheid in één minuut', 'Iedereen staat op aanwezig; tik alleen wie er niet of te laat is.'],
+      ['Spelers volgen', 'Kaarten en signalen; bij de drempel bellen of appen met één tik, contact vastleggen.'],
+      ['Planning aanpassen', 'Verplaatsen, afgelasten met eigen toelichting, extra training, oefenwedstrijd of activiteit.'],
+      ['Wedstrijddag', 'Eerlijk wisselschema volgens de KNVB, scorebord, uitslag en speeltijd liggen daarna vast.'],
+      ['Ontwikkelgesprekken (vanaf O12)', 'Plannen rond de training; het kind stuurt, de trainer vraagt door.'],
+    ],
+  });
+  await stappen(pres, v, {
+    label: 'Teamleider', titel: 'De regelaar rond het team', beeld: 'club-tl-wedstrijd',
+    stappen: [
+      ['Wedstrijden en taken', 'Alles over de wedstrijd op één plek; open taken krijgen vanzelf een oproep.'],
+      ['Wie helpt er mee?', 'Per gezin, nooit als ranglijst; trainer en teamleider tellen als meehelpen.'],
+      ['Ouders uitnodigen en goedkeuren', 'Delen, QR tonen of printen; aanmeldingen goedkeuren.'],
+      ['Bereikbaarheid', 'Wie heeft pushmeldingen aan; contact met een ouder met één tik.'],
+    ],
+    tip: 'De teamleider valt onder de coördinator en beoordeelt de trainer niet.',
+  });
+  await kaarten(pres, v, {
+    label: 'Coördinator', titel: 'Coördineren voor een groep teams', intro: 'Bijvoorbeeld onderbouw, middenbouw of bovenbouw. Zonder coördinator doet de HO dit.', kol: 3,
+    items: [
+      ['FaCalendarDays', 'Rooster en velden', 'Weekrooster per team, voor meerdere teams tegelijk of via Excel.'],
+      ['FaUserPlus', 'Staf en aanmeldingen', 'Teams zonder staf oplossen; aanmeldingen die blijven liggen.'],
+      ['FaTriangleExclamation', 'Afgelasten en noodbericht', 'Velden afgekeurd, code rood: één tik, iedereen ingelicht.'],
+      ['FaBullhorn', 'Clubberichten', 'Communicatieplan: vaste berichten door het seizoen gaan vanzelf.'],
+      ['FaPeopleArrows', 'Vervangers', 'Trainer kan niet: vervanger zoeken met de teamleider en ouders.'],
+      ['FaPhone', 'Spelerzaken', 'Persoonlijk gesprek met ouders als het na het bellen doorgaat (stap 4).'],
+    ],
+  });
+  await kaarten(pres, v, {
+    label: 'Hoofd Opleiding', titel: 'De HO maakt de trainers beter', intro: 'Mentor die in rapporten kijkt: geïnformeerd, zonder stroom meldingen.', kol: 2,
+    items: [
+      ['FaUserCheck', 'Trainers volgen', 'Afgemeld, te laat, niet gekomen; bij de drempel een signaal en een gesprek met de trainer.', GROEN],
+      ['FaChartColumn', 'Rapporten', 'Aanwezigheid per team en lichting, verloop, beoordelingen; zelf opzoeken wanneer nodig.', GROEN],
+      ['FaClipboardList', 'Trainers begeleiden (in ontwikkeling)', 'Observaties bij training en wedstrijd, nagesprek met één ontwikkelpunt, voortgangsgesprek rond februari.', ORANGE],
+      ['FaPeopleGroup', 'Teamindeling en clubbesluit', 'Teamindeling samen met de trainer; clubbesluit over een speler samen met het bestuur.', GROEN],
+    ],
+  });
+  await kaarten(pres, v, {
+    label: 'Clubmanager', titel: 'Eén persoon draait aan de knoppen', intro: 'Voorzitter, coördinator of verenigingsmanager. Aanspreekpunt voor de ClubComm-manager.', kol: 3,
+    items: [
+      ['FaUsersGear', 'Rollen en namen', 'Welke rollen de club gebruikt en hoe ze heten (HO, HJO, TC).'],
+      ['FaListCheck', 'Taken per rol', 'Eigenaar en terugval per taak; profielen voor trainer en teamleider.'],
+      ['FaPuzzlePiece', 'Modules', 'Vervoer, taken, speeltijd, ontwikkelgesprekken, materiaal: aan of uit.'],
+      ['FaScaleBalanced', 'Regels', 'Afmeldtermijn, kaarten, zones, speeltijd, nachtrust.'],
+      ['FaCalendar', 'Seizoen', 'Fases, schoolvakanties automatisch, eigen stops.'],
+      ['FaShieldHalved', 'Beheer', 'Privacycontact, back-up downloaden, foutmeldingen.'],
+    ],
+  });
+  await stappen(pres, v, {
+    label: 'Wat de app zelf doet', titel: 'Automatisch, elk kwartier', intro: 'Ook als niemand de app open heeft. Nachtrust van 21:00 tot 07:30.',
+    stappen: [
+      ['Vaste clubberichten', 'Vakantie, vrije dag, start en einde seizoen, wedstrijden beginnen.'],
+      ['Herinneringen en oproepen', 'Bij activiteiten en open taken; alleen aan wie het nodig heeft.'],
+      ['Uitslag, aanwezigheid en speeltijd', 'Twee uur na de wedstrijd vastgelegd.'],
+      ['Ontwikkelgesprekken', 'Tijden verdelen, herinneren en afronden.'],
+      ['Berichten opruimen', 'Wat voorbij is, gaat vanzelf naar het archief.'],
+    ],
+  });
+  await stappen(pres, v, {
+    label: 'Signalen', titel: 'Opschaling: signaleren, mensen beslissen', beeld: 'club-tr-home',
+    stappen: [
+      ['Herinneren', 'De eerste keren een vriendelijke herinnering, geen kaart.'],
+      ['Waarschuwen', 'Te laat afgemeld is geel; twee keer geel of niet afgemeld is rood.'],
+      ['Bellen of appen', 'Trainer (of coördinator) legt contact en de afspraak vast.'],
+      ['Persoonlijk gesprek', 'Coördinator met de ouders.'],
+      ['Clubbesluit', 'HO met het bestuur.'],
+    ],
+    tip: 'Ook teams en trainers krijgen signalen: een team onder de norm, een trainer die vaak afmeldt.',
+  });
+  await kaarten(pres, v, {
+    label: 'Berichten', titel: 'Alleen een melding als het moet', kol: 2,
+    items: [
+      ['FaBell', 'Pushmelding', 'Afgelast, persoonlijk, aankondiging. Ter informatie nooit.'],
+      ['FaEnvelope', 'E-mail als vangnet', 'Alleen voor wie geen pushmelding krijgt; noodberichten altijd.'],
+      ['FaComment', 'Gesprekken', 'Zoals WhatsApp, met gelezen-vinkjes; afronden en archief.'],
+      ['FaThumbtack', 'Vastzetten en urgent', 'Belangrijk bovenaan; urgent alleen voor vandaag en morgen.'],
+    ],
+  });
+  await kaarten(pres, v, {
+    label: 'Privacy en techniek', titel: 'Zorgvuldig met gegevens van kinderen', kol: 3,
+    items: [
+      ['FaEarthEurope', 'In Europa', 'Opslag in Frankfurt, e-mail via een Europese dienst.'],
+      ['FaLock', 'Wie ziet wat', 'De database controleert het zelf: ouders alleen hun kind, staf alleen wat nodig is.'],
+      ['FaKey', 'Zonder wachtwoord', 'Inloggen met een code per e-mail.'],
+      ['FaDatabase', 'Back-up', 'Elke week een kopie, acht weken bewaard.'],
+      ['FaVialCircleCheck', 'Getest', 'Automatische tests bij elke wijziging; bewaking dag en nacht.'],
+      ['FaMobileScreen', 'Een app zonder winkel', 'Op het beginscherm van elke telefoon; altijd de nieuwste versie.'],
+    ],
+  });
+  await kaarten(pres, v, {
+    label: 'Bewuste keuzes', titel: 'Wat ClubComm bewust niet doet', kol: 2,
+    items: [
+      ['FaRankingStar', 'Geen ranglijsten', 'Niet voor ouders, spelers of trainers. Vergelijken ontmoedigt.', ORANGE],
+      ['FaHandshakeSlash', 'Geen afmelden namens een ander', 'Informatie komt van de bron: de ouder.', ORANGE],
+      ['FaGavel', 'Geen automatische straffen', 'De app signaleert; een mens beslist.', ORANGE],
+      ['FaBellSlash', 'Geen stroom meldingen', 'Ter informatie zonder melding; de HO zoekt zelf op.', ORANGE],
+    ],
+  });
+  await stappen(pres, v, {
+    label: 'In ontwikkeling', titel: 'Wat er nog komt',
+    stappen: [
+      ['Module Trainers begeleiden (HO)', 'Observaties, gesprekken en voortgangsgesprek; rapport Trainers per lichting en team.'],
+      ['Technisch coördinator', 'Tweede rol in de voetballijn, per bouw.'],
+      ['Sportlink', 'Wedstrijden, teams en spelers automatisch ophalen.'],
+      ['Meerdere clubs', 'De ClubComm-manager beheert clubs; één account bij meerdere clubs.'],
+    ],
+  });
+  await slotDia(pres, { titel: 'ClubComm', regels: [
+    ['FaMobileScreen', 'App: mijnclubcomm.nl'],
+    ['FaDisplay', 'Rondleiding: mijnclubcomm.nl/demo (op uitnodiging)'],
+    ['FaUserTie', 'Vragen of aanpassen: bel de ClubComm-manager'],
+  ] });
+  await pres.writeFile({ fileName: path.join(OUT, 'ClubComm-productoverzicht.pptx') });
+}
+
 (async () => {
   const welke = process.argv[2];
-  for (const [n, f] of Object.entries({ bestuur, teamleider, ouders, trainer, clubs })) if (welke ? welke === n : n !== 'clubs') { await f(); console.log('klaar:', n); }
+  for (const [n, f] of Object.entries({ bestuur, teamleider, ouders, trainer, clubs, product })) if (welke ? welke === n : !['clubs', 'product'].includes(n)) { await f(); console.log('klaar:', n); }
 })();
