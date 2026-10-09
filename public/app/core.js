@@ -258,6 +258,7 @@
     CC.login(ui.login.pid);
   };
   CC.on('magischeLink', inloggenMet);
+  CC.on('demoWissel', (el) => { if (CC.live) return; CC.closeSheet(); CC.zetSessie(el.dataset.pid); CC.wisselRol(Number(el.dataset.idx)); ui.tab = 'home'; ui.view = null; ui.stack = []; CC.render(); CC.toast(`Je kijkt nu als ${M.persoon(S, el.dataset.pid).naam.split(' ')[0]}`); });
   CC.on('checkCode', (f) => { if (f.code.value.trim() === ui.login.code) inloggenMet(); else CC.toast('Deze code klopt niet. Kijk nog eens in de mail.', 'fout'); });
   CC.on('loginTerug', () => { ui.login = { stap: 'mail', email: '' }; CC.render(); });
 
@@ -320,7 +321,14 @@
     const me = CC.me(); const rol = CC.rol();
     const kids = CC.kinderen();
     const rollen = me.rollen.map((r, i) => `<button class="rolkeuze ${i === (sessie.rolIdx || 0) ? 'aan' : ''}" data-act="wisselRol" data-idx="${i}">${icon({ ouder: 'heart', trainer: 'clipboard-check', teamleider: 'hand-helping', hjo: 'shield', beheerder: 'building-2', coordinator: 'users' }[r.rol])}<span><b>${esc(CC.rolNaam(r))}</b><small>${r.teamId ? esc(CC.tn(r.teamId)) : r.groep ? esc(r.groep) : r.rol === 'ouder' ? kids.map((k) => esc(k.voornaam)).join(', ') : esc(S.club.naam)}</small></span>${i === (sessie.rolIdx || 0) ? icon('check') : ''}</button>`).join('');
+    const blokDemo = CC.live ? '' : `${(() => { // Snel wisselen: één tik naar een ander demo-account en rol, zonder inlogscherm
+          const ik = CC.me(); const nu = (CC.rol() || {}).rol;
+          const knoppen = ['sanne', 'mark', 'linda', 'peter', 'esther'].map((k) => M.persoon(S, S.demo[k])).filter(Boolean)
+            .flatMap((p) => p.rollen.map((r, i) => ({ p, r, i }))).filter((x, j, a) => a.findIndex((y) => y.p.id === x.p.id && y.r.rol === x.r.rol) === j)
+            .map(({ p, r, i }) => `<button class="chipknop ${p.id === ik.id && r.rol === nu ? 'aan' : ''}" data-act="demoWissel" data-pid="${p.id}" data-idx="${i}">${esc(p.naam.split(' ')[0])} · ${esc(CC.rolNaam(r))}</button>`).join('');
+          return `<div class="demo-blok boven"><h3 class="klein-kop">Demo · snel wisselen</h3><div class="chips wrap">${knoppen}</div></div>`; })()}`;
     CC.sheet('Profiel', `
+      ${CC.live ? '' : blokDemo}
       <div class="profiel-kop">${h.avatar(me.naam, 'groot')}<div><b>${esc(me.naam)}</b><small>${esc(me.email)}${me.tel ? ` · ${esc(me.tel)}` : ''}</small></div></div>
       ${h.rij({ ic: 'phone', titel: me.tel ? 'Telefoonnummer wijzigen' : 'Telefoonnummer toevoegen', sub: me.tel ? esc(me.tel) : 'Zodat trainer en teamleider je kunnen bellen of appen', act: 'telSheet', kleur: me.tel ? '' : 'blauw' })}
       ${me.rollen.length > 1 ? `<h3 class="klein-kop">Wissel van rol</h3><div class="rollen">${rollen}</div>` : ''}
