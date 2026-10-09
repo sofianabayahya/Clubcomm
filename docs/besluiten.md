@@ -17,8 +17,9 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
-| 100 | Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden" | ✅ geldt |  |
-| 99 | Trainers begeleiden via een traject, met de KNVB-begeleidingscyclus; tabblad Trainers | ◐ deels herzien | door 100 (vragenlijst kort of uitgebreid per niveau; notities gedeeld per bouw met de TC) |
+| 101 | Voorgesprek als voormeting: eigen vragen voor training en wedstrijd | ✅ geldt |  |
+| 100 | Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden" | ◐ deels herzien | door 101 (vragen kort en uitgebreid per soort) |
+| 99 | Trainers begeleiden via een traject, met de KNVB-begeleidingscyclus; tabblad Trainers | ◐ deels herzien | door 100 (vragenlijst kort of uitgebreid per niveau; notities gedeeld per bouw met de TC); door 101 (vragenlijst vooraf per soort) |
 | 98 | Verantwoordelijkheid: iedere rol doet zijn eigen werk, de laag erboven is het vangnet | ✅ geldt |  |
 | 97 | Bouwen, werkgebied en focus, signalen die ertoe doen, trainersdossier | ◐ deels herzien | door 99 (traject per trainer in plaats van 2 + 2; tabblad Trainers; VOG en diploma bij de coördinator); door 100 (werkgebied bij de rol, rol TC gebouwd) |
 | 96 | Eén aanspreekpunt: de clubbeheerder (van de club) en de ClubComm-adviseur (van ons) | ✅ geldt |  |
@@ -634,8 +635,17 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 101 — Voorgesprek als voormeting: eigen vragen voor training en wedstrijd
+*Besloten 10 oktober 2026. Herziet de vragenlijst vooraf uit Besluit 99 en 100.*
+- **Het voorgesprek is een voormeting**, geen reflectie: de trainer informeert de begeleider hoe hij denkt (kennis van wat hij doet, zelfreflectie), zodat de begeleider weet waar hij op moet letten. Vragen over "wat neem je mee naar de volgende keer" horen in de nazorg (reflectie), niet vooraf.
+- **Een training vraagt andere vragen dan een wedstrijd** (visie op leren): bij een training gaat het om de opbouw (leersituatie creëren: komt het voetbalprobleem vaak terug, herhaling, weerstand), de organisatie (veel voetballen, weinig wachten) en het bijsturen (leersituatie beïnvloeden). Bij een wedstrijd om wedstrijddoel en coachgedrag.
+- **Training uitgebreid (8):** wat zag je in de laatste wedstrijd(en) · welk voetbalprobleem train je en waarom nu · wat moeten spelers beter herkennen en doen (5 W's) · hoe heb je de training opgebouwd · hoe zorg je dat spelers veel voetballen en weinig wachten · wanneer en hoe grijp je in, wat als het te makkelijk of te moeilijk is · wat wil je zelf oefenen · waar moet ik op letten en wanneer hoor je het. **Training kort (4):** wat moeten spelers vandaag leren · hoe heb je de training opgebouwd · waar wil je zelf beter in worden · waar moet ik op letten.
+- **Wedstrijd uitgebreid (9)** blijft het voorgesprek van de HO-A, zonder de vervolgstap ("wat neem je mee"). **Wedstrijd kort (4)** zoals in Besluit 100.
+- **Elke vraag hoort bij een onderdeel van het A4** (trainingsdoel, organisatie, leersituatie creëren, leersituatie beïnvloeden, coachgedrag, persoonlijk leerdoel). De begeleider ziet dat label bij elk antwoord, zodat een vaag antwoord meteen laat zien waar hij moet kijken. De trainer ziet alleen de vragen.
+
 ## Besluit 100 — Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden"
 *Besloten 10 oktober 2026, voor de test bij een tweede club (HO + TC, twee trainers, geen ouders). Vult Besluit 97, 98 en 99 aan.*
+> **◐ Deels herzien door Besluit 101** (de vragenlijst vooraf: eigen vragen voor training en wedstrijd, als voormeting).
 - **Werkgebied bij de rol.** De clubbeheerder kiest bij elke HO en technisch coördinator (TC) welke **bouwen** bij hem horen, of de hele club (standaard). Zo kan een club **twee HO's** hebben (bijvoorbeeld onder- en middenbouw, en bovenbouw). Wat je ziet en je signalen volgen je werkgebied; de focus-chips tonen alleen bouwen binnen je werkgebied. De bouwen zelf blijven per club instelbaar (Besluit 97).
 - **Rol technisch coördinator (TC).** Hetzelfde begeleidingswerk als de HO (tabblad Trainers, traject, begeleidingsmomenten, A4, printen), alleen voor trainers in zijn werkgebied. De HO blijft eindverantwoordelijk (Besluit 98). Een bevestigde "trainer niet gekomen" gaat naar de TC van die bouw, anders naar de HO van die bouw.
 - **Notities over een trainer** zijn gedeeld tussen de HO's en TC's **van dezelfde bouw**, zodat ze samen kunnen zien of een trainer door kan. Begeleiders van een andere bouw zien ze niet; de trainer nooit; de clubbeheerder (alleen app-beheer) ook niet. Dit wordt ook in de database afgedwongen (de bouw staat bij de notitie).
@@ -652,6 +662,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ## Besluit 99 — Trainers begeleiden via een traject, met de KNVB-begeleidingscyclus; tabblad Trainers
 *Besloten 10 oktober 2026. Analyse: `docs/onderzoek/ho-begeleiding-trainers.md` (hand-outs KNVB HO-A bijeenkomst 2 en 3, vragenlijst voorgesprek). Herziet de standaard "2 + 2 per trainer" uit Besluit 95 en 97.*
+> **◐ Deels herzien door Besluit 101** (de vragenlijst vooraf: eigen vragen voor training en wedstrijd, als voormeting).
 > **◐ Deels herzien door Besluit 100** (vragenlijst kort of uitgebreid per niveau van de trainer; notities gedeeld met de TC van dezelfde bouw).
 - **Volgen ≠ begeleiden.** Alle trainers staan in het rapport (afmeldingen, team, VOG). **Begeleiden gaat via een traject**: alleen voor trainers die willen, na een kennismaking, met een **plan per trainer** (bijvoorbeeld 1 wedstrijd + 1 training, of 2 + 2). Signalen over begeleiding alleen voor trainers in een traject, afgezet tegen hun eigen plan. Werkdruk = de som van de trajecten.
 - **Begeleidingsmoment = de KNVB-cyclus in vijf fasen:** voorbereiding (HO) → planningsgesprek (de trainer vult de vragenlijst vooraf zelf in; samen leerdoel, focus HO, feedbackmoment) → praktijk (observatie) → reflectiegesprek (6 stappen, feed-forward, één ontwikkelpunt) → nazorg (reflectie trainer, verslag HO, volgend moment).
