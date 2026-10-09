@@ -600,3 +600,30 @@ dl.antwoorden dd { margin: 2px 0 0; white-space: pre-wrap; }
   #printvak dt { color: #555; margin-top: 6pt; } #printvak dd { margin: 0; white-space: pre-wrap; }
   #printvak .pv-voet { color: #777; font-size: 8.5pt; margin-top: 14pt; }
 }
+
+/* Besluit 99 deel 2: observatie op de telefoon */
+.obslijst { display: flex; flex-direction: column; gap: 8px; }
+.obspunt { background: var(--vlak, #fff); border-radius: 12px; padding: 10px 12px; box-shadow: var(--schaduw); display: flex; flex-direction: column; gap: 6px; }
+.obspunt p { margin: 0; font-size: 14px; }
+.tekens { display: flex; gap: 6px; }
+.tekens button { min-width: 48px; min-height: 40px; border-radius: 10px; border: 1px solid var(--lijn); background: var(--vlak, #fff); font-size: 18px; font-weight: 700; color: var(--zacht); }
+.tekens button.aan { background: var(--blauw, #0869c2); color: #fff; border-color: transparent; }
+.klokknoppen { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.klokknoppen .knop { padding: 0 4px; min-width: 0; font-size: 14px; }
+.turf { display: flex; flex-direction: column; gap: 8px; }
+.turf > div { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.turf > div > b { width: 70px; font-size: 13px; }
+.turf button { min-height: 40px; padding: 0 10px; border-radius: 10px; border: 1px solid var(--lijn); background: var(--vlak, #fff); font-size: 13px; font-weight: 600; }
+.turf button span { color: var(--blauw, #0869c2); margin-left: 4px; }
+@media print {
+  #printvak .pv-kop { display: flex; gap: 12pt; align-items: flex-start; }
+  #printvak table.pv-voor { flex: 1; border-collapse: collapse; font-size: 10pt; }
+  #printvak table.pv-voor td { padding: 2pt 6pt 2pt 0; border-bottom: 1px solid #ddd; } #printvak table.pv-voor td:first-child { color: #555; width: 38%; }
+  #printvak table.pv-tijd { border: 1.5pt solid #0869c2; border-collapse: collapse; font-size: 9.5pt; } #printvak table.pv-tijd td { padding: 2pt 6pt; }
+  #printvak .pv-uitleg { font-size: 9pt; color: #555; margin: 6pt 0 3pt; }
+  #printvak table.pv-obs { width: 100%; border-collapse: collapse; font-size: 9pt; margin-bottom: 6pt; }
+  #printvak table.pv-obs th, #printvak table.pv-obs td { border: 1px solid #bbc; padding: 3pt 4pt; vertical-align: top; text-align: left; }
+  #printvak table.pv-obs th { background: #eef3fa; } #printvak .pv-c { text-align: center; width: 12%; font-size: 12pt; }
+  #printvak .pv-vakken { display: grid; grid-template-columns: 1fr 1fr; gap: 6pt; break-inside: avoid; }
+  #printvak .pv-vak { border: 1px solid #bbc; padding: 4pt 6pt; min-height: 52pt; } #printvak .pv-vak small { display: block; color: #666; font-size: 8pt; }
+}
