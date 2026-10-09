@@ -78,6 +78,45 @@
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Geregistreerd; de HJO ziet het');
   });
 
+  // ---------- Besluit 95/97, stap 3: geen aanwezigheid opgenomen → trainer niet gekomen? ----------
+  // De app signaleert de ochtend na de training (12 uur na afloop, zodat de trainer 's avonds nog kan invullen);
+  // de coördinator (of de HO als terugval) bevestigt. Pas dan telt het mee, en krijgt de HO één pushmelding.
+  const eindVan = (a) => new Date(`${a.datum}T${a.eind || a.tijd || '23:59'}:00`);
+  CC.geenAanwezigheid = (S, teamIds) => S.acts.filter((a) => a.soort === 'training' && !a.afgelast && !a.vervangerId && !a.trainerAfwezig && !a.aanwCheck
+    && teamIds.includes(a.teamId) && (M.team(S, a.teamId) || {}).trainerId && (M.team(S, a.teamId) || {}).trainerId !== (CC.me() || {}).id && !S.pres[a.id] && !log(S).some((x) => x.actId === a.id)
+    && a.datum >= D.addDays(D.vandaag(), -14) && Date.now() - eindVan(a) > 12 * 3600e3 && CC.mag('trainerNiet', null, a.teamId))
+    .sort((x, y) => (x.datum + x.tijd).localeCompare(y.datum + y.tijd));
+  const aanwRij = (S, a) => { const tr = M.persoon(S, M.team(S, a.teamId).trainerId);
+    return h.rij({ ic: 'clipboard-check', titel: `${esc(CC.tn(a.teamId))} ${D.kort(a.datum)}: geen aanwezigheid opgenomen`, sub: `Trainer niet gekomen? · ${esc(tr ? tr.naam : '')}`, kleur: 'oranje', act: 'aanwCheck', attrs: `data-id="${a.id}"` }); };
+  // Rijen voor Te doen: vanaf 3 gebundeld in één regel (principe 10)
+  CC.geenAanwRijen = (S, teamIds) => { const l = CC.geenAanwezigheid(S, teamIds); if (!l.length) return [];
+    if (l.length < 3) return l.map((a) => aanwRij(S, a));
+    return [h.rij({ ic: 'clipboard-check', titel: `${l.length} trainingen zonder aanwezigheid`, sub: `Trainer niet gekomen? · ${[...new Set(l.map((a) => CC.tn(a.teamId)))].slice(0, 4).map(esc).join(', ')}`, kleur: 'oranje', act: 'open', attrs: `data-view="geenAanw" data-teams="${esc(teamIds.join(','))}"` })]; };
+  CC.views.geenAanw = (S, p) => ({ titel: 'Geen aanwezigheid opgenomen', html: `<p class="zacht klein">Na deze trainingen heeft niemand de aanwezigheid ingevuld. Vaak is het vergeten; soms was de trainer er niet. Vraag het na en leg het vast.</p><div class="lijst">${CC.geenAanwezigheid(S, String(p.teams || '').split(',')).map((a) => aanwRij(S, a)).join('') || h.leeg('Alles is nagelopen 👍', 'circle-check')}</div>` });
+  CC.on('aanwCheck', (el) => {
+    const S = CC.S(); const a = M.act(S, el.dataset.id); const tr = M.persoon(S, M.team(S, a.teamId).trainerId);
+    CC.sheet('Geen aanwezigheid opgenomen', `<p>Bij de training van <b>${esc(CC.tn(a.teamId))}</b> op ${D.lang(a.datum)} om ${a.tijd} is geen aanwezigheid ingevuld. Was <b>${esc(tr.naam)}</b> er?</p>
+      <form data-submit="aanwCheckOk" data-id="${a.id}" class="codeform"><input type="hidden" name="w" value="">
+      <label for="ac-o">Toelichting (mag leeg)</label><input id="ac-o" name="o" placeholder="Bijv. de teamleider heeft de training overgenomen">
+      <button class="knop rood vol" data-act="aanwKies" data-w="niet">${icon('ban')}Trainer was er niet</button>
+      <button class="knop licht vol" data-act="aanwKies" data-w="vergeten">${icon('check')}Wel geweest, aanwezigheid vergeten</button>
+      <p class="zacht klein">"Was er niet" telt mee in de telling van de trainer en de ${esc(S.club.labels.hjo)} krijgt een melding; het gesprek voert de ${esc(S.club.labels.hjo)}. De trainer ziet het in zijn eigen telling, zodat niemand verrast wordt.</p></form>`);
+  });
+  CC.on('aanwKies', (el) => { el.form.w.value = el.dataset.w; });
+  CC.on('aanwCheckOk', (f) => {
+    const S = CC.S(); const a = M.act(S, f.dataset.id); const t = M.team(S, a.teamId); const me = CC.me(); const tr = M.persoon(S, t.trainerId);
+    if (f.w.value === 'vergeten') { a.aanwCheck = { soort: 'vergeten', door: me.id, tijd: new Date().toISOString() }; CC.save(); CC.closeSheet(); CC.render(); return CC.toast('Vastgelegd: wel geweest'); }
+    if (f.w.value !== 'niet') return;
+    CC.trainerRegistreer(S, a, t.trainerId, 'niet', { reden: f.o.value, door: me.id, bevestigd: true });
+    a.aanwCheck = { soort: 'niet', door: me.id, tijd: new Date().toISOString() };
+    // Eén pushmelding aan wie de trainer begeleidt (Besluit 97): de HO (later de TC van de bouw), niet aan jezelf
+    const ho = S.people.filter((p) => p.rollen.some((r) => r.rol === 'hjo') && p.id !== me.id && p.id !== t.trainerId).map((p) => p.id);
+    if (ho.length) S.msgs.push({ id: 'b' + Date.now() + Math.random().toString(36).slice(2, 6), van: 'systeem', soort: 'melding', bereik: 'Ter informatie', onderwerp: `Trainer niet gekomen: ${tr.naam} (${CC.tn(a.teamId)})`,
+      tekst: `${tr.naam} was niet bij de training van ${CC.tn(a.teamId)} op ${D.lang(a.datum)} om ${a.tijd} en had zich niet afgemeld. Bevestigd door ${me.naam}.${f.o.value ? ` Toelichting: ${f.o.value}` : ''} Het telt mee in de telling van de trainer; het gesprek voer jij.`,
+      tijd: new Date().toISOString(), ontvangers: ho, gelezen: [], antw: [], urgent: false, gepland: null, push: true });
+    CC.save(); CC.closeSheet(); CC.render(); CC.toast(ho.length ? `Vastgelegd; de ${S.club.labels.hjo} krijgt een melding` : 'Vastgelegd');
+  });
+
   // Eigen telling voor de trainer (profiel)
   // Eigen telling voor de trainer, alleen op het moment van afmelden (Besluit 54; stond eerst in het profiel)
   CC.trainerEigenTekst = (S, id) => {

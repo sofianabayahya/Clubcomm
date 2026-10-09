@@ -108,6 +108,27 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'bouwen instellen');
   });
 
+  // Besluit 97 stap 3: geen aanwezigheid opgenomen → coördinator bevestigt → telt mee + pushmelding aan de HO
+  test('trainer niet gekomen: signaal, bevestigen, melding aan de HO', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid="p-esther"]').click();
+    await page.locator('[data-act="magischeLink"]').click();
+    const actId = await page.evaluate(() => { const S = CC.S(); const gisteren = CC.date.addDays(CC.date.vandaag(), -2);
+      const a = { id: 'a-test-niet', teamId: 'O11-2', soort: 'training', datum: gisteren, tijd: '17:00', eind: '18:15', veld: 'Veld 1', afgelast: false };
+      S.acts.push(a); delete S.pres[a.id]; S.trainerLog = (S.trainerLog || []).filter((x) => x.actId !== a.id); CC.render(); return a.id; });
+    await expect(page.locator('#app [data-act="aanwCheck"]')).toHaveCount(1);
+    await page.locator('#app [data-act="aanwCheck"]').click();
+    await page.locator('#sheet [data-act="aanwKies"][data-w="niet"]').click();
+    const r = await page.evaluate((id) => { const S = CC.S(); return { log: S.trainerLog.filter((x) => x.actId === id && x.soort === 'niet').length,
+      m: S.msgs.filter((m) => /Trainer niet gekomen/.test(m.onderwerp) && m.push).map((m) => m.ontvangers.includes(S.demo.peter)) }; }, actId);
+    expect(r.log).toBe(1); expect(r.m).toEqual([true]);
+    await expect(page.locator('#app [data-act="aanwCheck"]')).toHaveCount(0);
+    await controleer(page, fouten, 'trainer niet gekomen');
+  });
+
   // Training afgelasten met een eigen toelichting: één bericht aan de ouders
   test('trainer gelast een training af met toelichting', async ({ page }) => {
     const fouten = volgFouten(page);
