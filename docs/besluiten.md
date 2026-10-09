@@ -508,6 +508,12 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 94 — Training afgelasten met eigen toelichting
+Aanleiding: de trainer wilde een training afzeggen met een eigen uitleg (blessures, ziekte, rust voor het voetbalkamp); dat kon alleen met een tweede, los bericht.
+- Bij **Planning aanpassen → Training afgelasten** staat een veld **"Toelichting voor de ouders (mag leeg)"**. Die tekst komt onder de vaste zin (*"Training van … gaat niet door."*) in **hetzelfde bericht**: ouders krijgen één urgente melding.
+- Het onderwerp is nu *"Training [datum] gaat niet door"* (was "Wijziging in de planning"), zodat de pushmelding meteen zegt wat er is.
+- De HJO-knop **Afgelasten** blijft voor de hele club (velden afgekeurd, onweer); een teamkeuze doet de trainer of teamleider.
+
 ## Besluit 93 — Evaluatieformulier praktijkbegeleiding coach (testcase, mijnclubcomm.nl/evaluatie)
 Testcase: de initiatiefnemer begeleidt als HO (KNVB-opleiding) een coach van een andere club. Losse pagina, geen onderdeel van de app en geen login.
 - **Opbouw volgens de bijeenkomst:** gegevens · afspraak uit het voorgesprek (leerdoel, focus HO, feedbackmoment) · **observatie** in drie delen (1e helft laatste 20 min, rust/kleedkamer, 2e helft eerste 20 min): snel notities tikken, tijd erbij, met labels (bewust stil, te snel gecoacht, effect op spelers, voetbalprobleem) · **evaluatiegesprek** in 6 stappen, met je eigen notities bij de juiste stap · **één concreet ontwikkelpunt** (verplicht voor de PDF) · **reflectie trainer** (4 vragen, mag later; lege vragen krijgen schrijflijnen in de PDF).
