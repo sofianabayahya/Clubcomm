@@ -1,5 +1,7 @@
 # Schets: trainersdossier en Trainers begeleiden (10 oktober 2026)
 
+> **Let op:** deze schets is bijgewerkt door `ho-begeleiding-trainers.md` (traject per trainer, de vijf fasen van de KNVB-begeleidingscyclus, tabblad Trainers). Lees die eerst.
+
 *Schets, nog niet gebouwd. Hoort bij Besluit 97, stap 4. Volgt principe 10 (overzichtelijk, nooit een overkill) en Besluit 98 (de HO is eindverantwoordelijk voor de voetballijn).*
 
 ## Het idee in één zin
