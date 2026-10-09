@@ -717,7 +717,7 @@ async function product() {
   let s = pres.addSlide(); s.background = { color: WHITE };
   kop(s, { label: 'Rollen', titel: 'De piramide van rollen', intro: 'Eén aanspreekpunt bovenaan, twee lijnen in de club: voetbal en organisatie.' }, 11.9);
   const lagen = [
-    ['ClubComm-manager  ↔  Clubmanager', 'wij bieden aan  ·  één persoon van de club draait aan de knoppen', NAVY],
+    ['ClubComm-adviseur  ↔  Clubbeheerder', 'wij bieden aan  ·  één persoon van de club draait aan de knoppen', NAVY],
     ['Hoofd Opleiding (HO)', 'voetballijn: maakt de trainers beter, mentor die in rapporten kijkt', GROEN],
     ['Technisch coördinator', 'voetballijn, per bouw (optioneel): helpt de HO met observaties en gesprekken', GROEN],
     ['Coördinatoren', 'organisatielijn, het liefst één per bouw: rooster, staf, afgelasten, clubberichten', BLUE],
@@ -738,8 +738,8 @@ async function product() {
     items: [
       ['FaFutbol', 'Voetballijn: HO en technisch coördinator', 'Over de trainers. Observeren, evalueren, gesprekken, oefenstof, teamindeling. Krijgt weinig meldingen en zoekt zelf op.', GROEN],
       ['FaSitemap', 'Organisatielijn: coördinatoren', 'Over teamleiders, ouders en planning. Rooster, staf, aanmeldingen, afgelasten, clubberichten, vervangers. Krijgt de meldingen.', BLUE],
-      ['FaArrowsRotate', 'Terugval', 'Geen coördinator? Dan doet de HO het. Geen HO? Dan wijst de clubmanager iemand aan. Er valt nooit iets tussen wal en schip.'],
-      ['FaSliders', 'De club kiest', 'Elke taak kan bij een andere rol. Wij leveren een standaard; de clubmanager past hem aan.'],
+      ['FaArrowsRotate', 'Terugval', 'Geen coördinator? Dan doet de HO het. Geen HO? Dan wijst de clubbeheerder iemand aan. Er valt nooit iets tussen wal en schip.'],
+      ['FaSliders', 'De club kiest', 'Elke taak kan bij een andere rol. Wij leveren een standaard; de clubbeheerder past hem aan.'],
     ],
   });
 
@@ -794,7 +794,7 @@ async function product() {
     ],
   });
   await kaarten(pres, v, {
-    label: 'Clubmanager', titel: 'Eén persoon draait aan de knoppen', intro: 'Voorzitter, coördinator of verenigingsmanager. Aanspreekpunt voor de ClubComm-manager.', kol: 3,
+    label: 'Clubbeheerder', titel: 'Eén persoon draait aan de knoppen', intro: 'Voorzitter, coördinator of verenigingsmanager. Aanspreekpunt voor de ClubComm-adviseur.', kol: 3,
     items: [
       ['FaUsersGear', 'Rollen en namen', 'Welke rollen de club gebruikt en hoe ze heten (HO, HJO, TC).'],
       ['FaListCheck', 'Taken per rol', 'Eigenaar en terugval per taak; profielen voor trainer en teamleider.'],
@@ -860,13 +860,13 @@ async function product() {
       ['Module Trainers begeleiden (HO)', 'Observaties, gesprekken en voortgangsgesprek; rapport Trainers per lichting en team.'],
       ['Technisch coördinator', 'Tweede rol in de voetballijn, per bouw.'],
       ['Sportlink', 'Wedstrijden, teams en spelers automatisch ophalen.'],
-      ['Meerdere clubs', 'De ClubComm-manager beheert clubs; één account bij meerdere clubs.'],
+      ['Meerdere clubs', 'De ClubComm-adviseur beheert clubs; één account bij meerdere clubs.'],
     ],
   });
   await slotDia(pres, { titel: 'ClubComm', regels: [
     ['FaMobileScreen', 'App: mijnclubcomm.nl'],
     ['FaDisplay', 'Rondleiding: mijnclubcomm.nl/demo (op uitnodiging)'],
-    ['FaUserTie', 'Vragen of aanpassen: bel de ClubComm-manager'],
+    ['FaUserTie', 'Vragen of aanpassen: bel de ClubComm-adviseur'],
   ] });
   await pres.writeFile({ fileName: path.join(OUT, 'ClubComm-productoverzicht.pptx') });
 }

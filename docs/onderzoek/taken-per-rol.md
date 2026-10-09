@@ -19,20 +19,20 @@ Clubs beschrijven hun jeugd bijna altijd als **twee lijnen**. Be Quick '28 heeft
 ## 2. Elke taak heeft een eigenaar en een terugval
 In plaats van losse vinkjes per rol werken we met één regel per taak:
 
-> **Eigenaar** (doet het) → **terugval** (als de eigenaar-rol bij de club of in het team ontbreekt) → als die er ook niet is, **kiest de clubmanager** iemand.
+> **Eigenaar** (doet het) → **terugval** (als de eigenaar-rol bij de club of in het team ontbreekt) → als die er ook niet is, **kiest de clubbeheerder** iemand.
 
 - Een club met drie coördinatoren geeft elke coördinator een eigen groep teams (dat kan al: groepen op leeftijd).
 - Een club met één coördinator zet al zijn teams in één groep.
 - Een club zonder coördinator: alles valt terug op de HO.
-- Een club zonder HO (of de HO doet niet mee aan de pilot): de clubmanager wijst per taak iemand aan.
+- Een club zonder HO (of de HO doet niet mee aan de pilot): de clubbeheerder wijst per taak iemand aan.
 
-De app werkt al zo voor coördinator → HJO (Besluit 25). Nieuw is alleen de laatste stap: de clubmanager wijst iemand aan als ook de HO ontbreekt.
+De app werkt al zo voor coördinator → HJO (Besluit 25). Nieuw is alleen de laatste stap: de clubbeheerder wijst iemand aan als ook de HO ontbreekt.
 
 ## 3. De rollen buiten de lijnen
 | Rol | Wat |
 |---|---|
-| **Clubmanager** (van de club) | zorgt dat de app goed werkt: rollen, taken, modules, regels, seizoen. Neemt zelf geen voetbal- of organisatietaken over, behalve als hij iemand moet aanwijzen. |
-| **ClubComm-manager** (van ons) | richt de app samen met de clubmanager in en leert hem hoe het werkt (stappenplan in §6). |
+| **Clubbeheerder** (van de club) | zorgt dat de app goed werkt: rollen, taken, modules, regels, seizoen. Neemt zelf geen voetbal- of organisatietaken over, behalve als hij iemand moet aanwijzen. |
+| **ClubComm-adviseur** (van ons) | richt de app samen met de clubbeheerder in en leert hem hoe het werkt (stappenplan in §6). |
 | **Teamleider** | eerste lijn naar de ouders: wedstrijden, taken, vervoer, uitnodigen, berichten. Valt onder de coördinator. |
 | **Trainer** | spelers, aanwezigheid, beoordelen. Valt onder de HO. |
 
@@ -58,13 +58,13 @@ De app werkt al zo voor coördinator → HJO (Besluit 25). Nieuw is alleen de la
 | Signalen zien en afdoen | trainer | coördinator | 👁 |
 | Bellen bij de drempel (stap 3) | trainer | coördinator | |
 | Gesprek met ouders (stap 4) | coördinator | HO | |
-| Clubbesluit met het bestuur (stap 5) | HO | clubmanager wijst aan | |
+| Clubbesluit met het bestuur (stap 5) | HO | clubbeheerder wijst aan | |
 | Toelichting bij afmelden (gezondheid) | trainer, coördinator | | – (niet nodig) |
 
 ### Voetballijn: trainers
 | Taak | Eigenaar | Terugval |
 |---|---|---|
-| Afwezigheid van trainers volgen (afgemeld, te laat, niet gekomen, afgelast), per lichting en team, in- en uitklapbaar | HO | clubmanager wijst aan |
+| Afwezigheid van trainers volgen (afgemeld, te laat, niet gekomen, afgelast), per lichting en team, in- en uitklapbaar | HO | clubbeheerder wijst aan |
 | Signaal bij de drempel en gesprek met de trainer | HO | idem |
 | Observaties en ontwikkelgesprekken: standaard **2 bij een training en 2 bij een wedstrijd** per seizoen, elk met een nagesprek; de club kan het aantal aanpassen | HO *(nieuw)* | idem |
 | Voortgangsgesprek rond februari: gaan club en trainer door? | HO *(nieuw)* | idem |
@@ -82,10 +82,10 @@ De teamleider valt af: die is niet bevoegd, heeft er de kennis niet voor, en het
 
 De gesprekken die daaruit volgen, horen altijd bij de **HO**.
 
-## 6. Stappenplan: de ClubComm-manager en de clubmanager
+## 6. Stappenplan: de ClubComm-adviseur en de clubbeheerder
 1. **Organisatie van de jeugd:** organigram en functieprofielen. Is er een HO, zijn er coördinatoren (hoeveel, per bouw), is er een technisch coördinator per bouw?
 2. **Rollen en namen** in de app: HJO/HO/TC; coördinator aan of uit, met de groepen.
-3. **Wie doet mee aan de pilot:** welke teams, en wie per rol? Ontbreekt er een rol, dan doorlopen we de terugval en wijst de clubmanager waar nodig iemand aan.
+3. **Wie doet mee aan de pilot:** welke teams, en wie per rol? Ontbreekt er een rol, dan doorlopen we de terugval en wijst de clubbeheerder waar nodig iemand aan.
 4. **Taken:** begin met de standaard hierboven en pas alleen aan waar de club echt anders werkt. Leg het functieprofiel van de club ernaast.
 5. **Profielen** van trainer en teamleider (Basis, Plus, Compleet).
 6. **Modules** aan of uit.
@@ -95,7 +95,7 @@ De gesprekken die daaruit volgen, horen altijd bij de **HO**.
 
 ## 7. Andere ideeën (voorstellen)
 - **Technisch coördinator per bouw** (bij grote clubs): een tweede, optionele middenrol in de **voetballijn**. Die neemt observaties en gesprekken over voor zijn bouw, zoals Westlandia beschrijft. Nu kan een club dat al nabootsen door de coördinator "TC" te noemen. Maar heeft een club **allebei** (een organisatiecoördinator én een TC), dan zijn er twee middenrollen nodig. Voorstel: pas bouwen als een club erom vraagt.
-- **Werkdruk van de HO zichtbaar maken:** bij Rollen ziet de clubmanager hoeveel trainers per HO of TC er zijn, en hoeveel observaties dat per seizoen betekent. Voorbeeld: 20 trainers × 4 = 80 observaties. Dan kan de club het aantal of de verdeling bijstellen.
+- **Werkdruk van de HO zichtbaar maken:** bij Rollen ziet de clubbeheerder hoeveel trainers per HO of TC er zijn, en hoeveel observaties dat per seizoen betekent. Voorbeeld: 20 trainers × 4 = 80 observaties. Dan kan de club het aantal of de verdeling bijstellen.
 - **Teamleider en trainer als duo:** de teamleider ziet de afwezigheid van de trainer **niet** als telling, alleen dat er een vervanger nodig is. Zo blijft het een samenwerking.
 
 ## 8. Nog open
