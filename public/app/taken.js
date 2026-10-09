@@ -20,7 +20,7 @@
     { groep: 'Spelers opvolgen', k: 'clubbesluit', titel: 'Clubbesluit voorbereiden', sub: 'Stap 5, samen met het bestuur', std: [0, 0, 0, 1] },
     { groep: 'Ontwikkeling', k: 'beoordelen', titel: 'Spelers beoordelen', sub: 'Winter en einde seizoen', std: [1, 0, 0, 0] },
     { groep: 'Ontwikkeling', k: 'ontwgesprek', titel: 'Ontwikkelgesprekken plannen en voeren', sub: 'Met ouder en kind', std: [1, 0, 0, 0] },
-    { groep: 'Trainers (voetballijn)', k: 'trainerNiet', titel: 'Registreren dat de trainer niet kwam', sub: 'Bij de laatste trainingen', std: [0, 0, 0, 0] },
+    { groep: 'Trainers (voetballijn)', k: 'trainerNiet', titel: 'Bevestigen dat de trainer niet kwam', sub: 'Als er na een training geen aanwezigheid is opgenomen', std: [0, 0, 1, 0] },
     { groep: 'Trainers (voetballijn)', k: 'trainersVolgen', titel: 'Trainers volgen en gesprekken', sub: 'Afgemeld, te laat, niet gekomen; gesprek met de trainer', std: [0, 0, 0, 1] },
     { groep: 'Materiaal', k: 'materiaal', titel: 'Materiaal controleren', sub: 'Checklist aan het begin van het seizoen', std: [1, 0, 0, 0] },
     { groep: 'Wat zie je', k: 'toelichting', titel: 'Toelichting bij afmelden', sub: 'Wat de ouder erbij typt, bijv. "enkelblessure"', std: [1, 0, 1, 0] },

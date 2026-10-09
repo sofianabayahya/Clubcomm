@@ -66,6 +66,7 @@
     if (ts.length >= BUNDEL) doen.push(h.rij({ ic: 'user-cog', titel: `${ts.length} trainers vragen aandacht`, sub: ts.slice(0, 3).map((x) => esc(x.p.naam)).join(', ') + (ts.length > 3 ? '…' : ''), kleur: 'oranje', act: 'open', attrs: 'data-view="trainersRapport" data-filter="aandacht"' }));
     else doen.push(...ts.map((x) => h.rij({ ic: 'user-cog', titel: esc(x.tekst), sub: esc(x.sub), kleur: 'oranje', act: 'open', attrs: `data-view="trainerDetail" data-id="${x.p.id}"` })));
     if (buiten) doen.push(h.rij({ ic: 'filter', titel: `${buiten} ${buiten === 1 ? 'signaal' : 'signalen'} buiten je focus`, sub: 'Trainers in een andere bouw', act: 'open', attrs: 'data-view="trainersRapport" data-filter="aandacht" data-alle="1"' }));
+    if (CC.geenAanwRijen) doen.push(...CC.geenAanwRijen(S, S.teams.filter((t) => inFocus(S, f, t.id)).map((t) => t.id)));
     groep('clubbesluit').filter((s) => CC.mag('clubbesluit', null, s.teamId)).forEach((s) => doen.push(CC.stapRij(S, s)));
     if (O.liggen.length) doen.push(h.rij({ ic: 'hourglass', titel: `${O.liggen.length} ${O.liggen.length === 1 ? 'spelerzaak blijft' : 'spelerzaken blijven'} liggen`, sub: `Langer dan ${i.liggenDagen} dagen zonder vastgelegd contact · ${esc(L.coordinator.toLowerCase())}`, kleur: 'oranje', act: 'open', attrs: 'data-view="signalen" data-soort="liggen"' }));
     // Deze week: wanneer kun je gaan kijken? Eén regel per dag
@@ -170,6 +171,7 @@
     const laat = S.aanm.filter((x) => x.status === 'open' && Date.now() - new Date(x.tijd) > 48 * 3600e3 && S.teams.some((t) => t.id === x.teamId) && CC.mag('aanmeldingen48', null, x.teamId));
     if (laat.length) doen.push(h.rij({ ic: 'hourglass', titel: `${laat.length} aanmelding${laat.length > 1 ? 'en' : ''} langer dan 48 uur open`, sub: laat.map((x) => `${esc(x.kindVoor)} (${esc(CC.tn(x.teamId))})`).join(', '), kleur: 'oranje', act: 'open', attrs: 'data-view="aanmeldingenHjo"' }));
     if (CC.trainerAandacht) doen.push(...CC.trainerAandacht(S));
+    if (CC.geenAanwRijen) doen.push(...CC.geenAanwRijen(S, S.teams.map((t) => t.id)));
 
     // ---- Ter informatie ----
     const teams = groep('team');

@@ -81,7 +81,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 97; principe 10)
 | 36 | Communicatieplan: aankondigen, herinneren, noodberichten en wanneer een e-mail | ◐ deels herzien | door 57 (e-mail), 74 (vakantie 7 dagen), 75 (vaste berichten automatisch), 77 (vanaf de server) |
 | 35 | Pilot RKSV DCG: activiteiten, taken per leeftijd en e-mailmeldingen | ◐ deels herzien | door 38 (start pilot), 53/57 (pushmeldingen, e-mail als vangnet) |
 | 34 | Informatie is geen taak; profielen per rol | ◐ deels herzien | door 95 (teamleider-profiel zonder trainer registreren) |
-| 33 | Teamleider: alles over de wedstrijd op één plek, en eerlijke speeltijd | ◐ deels herzien | door 39/60 (wisselen en speelduur), 95 (trainer registreren niet bij de teamleider) |
+| 33 | Teamleider: alles over de wedstrijd op één plek, en eerlijke speeltijd | ◐ deels herzien | door 39/60 (wisselen en speelduur), 95 (trainer registreren niet bij de teamleider), 97 (trainer niet gekomen: standaard bevestigt de coördinator) |
 | 32 | Kaarten: afmelden zoals op het veld, te laat komen apart | ◐ deels herzien | door 95 (wie belt en praat: trainer, coördinator, HO) |
 | 31 | Vervoer: iedereen brengt zijn eigen kind | ◐ deels herzien | door 85 (bericht aan chauffeur), 92 (oefenwedstrijd uit bij Vervoer) |
 | 30 | Volgorde en rust op elk scherm | ✅ geldt |  |
@@ -641,6 +641,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Volglijst:** de HO of TC zet trainers op "volgen" (bijvoorbeeld nieuwe trainers); die staan bovenaan zijn rapport.
 - **Werkdruk zichtbaar:** "22 trainers in je werkgebied · 88 observaties · 14 gedaan".
 - **Gebouwd 10-10 (stap 1 en 2):** clubbeheerder → Rollen → *Indeling in bouwen* (naam, van, tot en met; overlap wordt geweigerd; terug naar de KNVB-standaard). HO: chips *Alles · Mini's · Onderbouw · …* op Home en in het rapport (alleen bouwen met teams; onthouden op de telefoon); Te doen en Deze week volgen de focus, signalen buiten de focus staan als één regel; rapport Trainers per bouw met teams, trainers en gemiddelde aanwezigheid in de kop.
+- **Gebouwd 10-10 (stap 3), trainer niet gekomen:** is er de ochtend na een training (12 uur na afloop, zodat de trainer 's avonds nog kan invullen; tot 14 dagen terug) geen aanwezigheid, geen afmelding van de trainer, geen vervanger en is ze niet afgelast, dan staat bij **Te doen** van de coördinator (terugval: HO) *"O9-1 di 14 okt: geen aanwezigheid opgenomen · Trainer niet gekomen?"* (vanaf 3 gebundeld). Twee knoppen: **Trainer was er niet** (telt mee, met toelichting; één pushmelding aan de HO, niet aan jezelf) of **Wel geweest, aanwezigheid vergeten** (verdwijnt, telt niet). Over jezelf als trainer krijg je de vraag niet. De taak in de takenlijst heet nu "Bevestigen dat de trainer niet kwam" (standaard: coördinator).
 - **Bouwvolgorde (vervangt die van Besluit 95):** (1) bouwen als clubindeling · (2) focus voor de HO, rapport Trainers per bouw · (3) trainer niet gekomen (app signaleert, coördinator of HO bevestigt, push) · (4) trainersdossier en module Trainers begeleiden met het evaluatieformulier, volglijst, werkdruk · (5) rol technisch coördinator met werkgebied · (6) de nieuwe signalen, stap voor stap.
 
 ## Besluit 96 — Eén aanspreekpunt: de clubbeheerder (van de club) en de ClubComm-adviseur (van ons)
@@ -1232,7 +1233,7 @@ Standaard: teamleider **Basis**, trainer **Compleet**.
 **Ter informatie zonder "Gezien"-knoppen:** een regel verdwijnt vanzelf als het is opgelost; wegklikken is geen werk meer.
 
 ## Besluit 33 — Teamleider: alles over de wedstrijd op één plek, en eerlijke speeltijd
-> **◐ Deels herzien door Besluit 39/60 (wisselen en speelduur), 95 (trainer registreren niet bij de teamleider)** (zie Register).
+> **◐ Deels herzien door Besluit 39/60 (wisselen en speelduur), 95 (trainer registreren niet bij de teamleider), 97 (trainer niet gekomen: standaard bevestigt de coördinator)** (zie Register).
 *Besloten 24 september 2026. Herziet de teamleider-app (Besluit 9), de wedstrijdbegeleider (Besluit 7) en de speeltijd.*
 
 **Teamleider**
