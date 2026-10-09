@@ -96,7 +96,7 @@
   const trajectStappen = (S, pid, t) => { const mom = (S.begeleidMomenten || []).filter((m) => m.trainerId === pid).sort((a, b) => a.datum.localeCompare(b.datum));
     const regels = [['wedstrijd', 'Wedstrijd'], ['training', 'Training']].flatMap(([soort, naam]) => { const l = mom.filter((m) => m.soort === soort); const n = Math.max(t.plan[soort] || 0, l.length);
       return Array.from({ length: n }, (_, i) => { const m = l[i];
-        return m ? `<li class="${m.klaar ? 'ok' : 'half'}" data-act="open" data-view="begelMoment" data-id="${m.id}" role="button" tabindex="0">${icon(m.klaar ? 'circle-check' : 'clock')}<span>${naam} ${D.kort(m.datum)}</span></li>` : `<li>${icon('clock')}<span>${naam}</span></li>`; }); });
+        return m ? `<li class="${m.klaar ? 'ok' : 'half'}" data-act="open" data-view="begelMoment" data-id="${m.id}" role="button" tabindex="0">${icon(m.klaar ? 'circle-check' : 'clock')}<span>${naam} ${D.kort(m.datum)}</span></li>` : `<li data-act="begelInplannen" data-id="${pid}" data-soort="${soort}" role="button" tabindex="0">${icon('clock')}<span>${naam} <small class="zacht">· plannen</small></span></li>`; }); });
     return regels.length ? `<ul class="stappenlijst">${regels.join('')}</ul>` : ''; };
   // Traject toevoegen: kies een trainer uit je werkgebied (zonder traject)
   CC.on('trajectKies', () => { const S = CC.S(); const f = CC.hoFocus ? CC.hoFocus.focus(S) : 'alle'; const l = trainersIn(S, f).filter((p) => !traject(S, p.id)).sort((a, b) => a.naam.localeCompare(b.naam));

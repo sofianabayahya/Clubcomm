@@ -78,10 +78,10 @@
         }
         if (modus === 'mensen') {
           const q = (h.segVal('zoekMens', '') || '').toLowerCase(); const f = h.segVal('stafRol', 'alle');
-          const filters = [['alle', 'Alle staf'], ['trainer', 'Trainers'], ['teamleider', 'Teamleiders'], ...(S.club.coordinatorAan ? [['coordinator', S.club.labels.coordinator + 'en']] : []), ['hjo', S.club.labels.hjo], ['geen', 'Zonder team']];
+          const filters = [['alle', 'Alle staf'], ['trainer', 'Trainers'], ['teamleider', 'Teamleiders'], ...(S.club.coordinatorAan ? [['coordinator', S.club.labels.coordinator + 'en']] : []), ['hjo', S.club.labels.hjo], ['tc', 'TC'], ['geen', 'Zonder team']];
           const staf = (p) => p.rollen.some((r) => r.rol !== 'ouder');
           const res = S.people.filter((p) => (q ? p.naam.toLowerCase().includes(q) : staf(p)))
-            .filter((p) => q || f === 'alle' || (f === 'geen' ? p.rollen.some((r) => ['trainer', 'teamleider'].includes(r.rol) && !r.teamId) || (staf(p) && !p.rollen.some((r) => r.teamId || r.groep || ['hjo', 'beheerder'].includes(r.rol))) : p.rollen.some((r) => r.rol === f)))
+            .filter((p) => q || f === 'alle' || (f === 'geen' ? p.rollen.some((r) => ['trainer', 'teamleider'].includes(r.rol) && !r.teamId) || (staf(p) && !p.rollen.some((r) => r.teamId || r.groep || ['hjo', 'tc', 'beheerder'].includes(r.rol))) : p.rollen.some((r) => r.rol === f)))
             .filter((p) => !CC.coordinatorVoor || CC.rol().rol !== 'coordinator' || q || p.rollen.some((r) => !r.teamId || S.teams.some((t) => t.id === r.teamId)))
             .sort((a, b) => a.naam.localeCompare(b.naam)).slice(0, 60);
           const contact = (p) => `${CC.belKnoppen(p)}<a class="icoonknop" href="mailto:${esc(p.email)}" aria-label="Mail ${esc(p.naam)}">${icon('mail')}</a>`;
@@ -249,8 +249,8 @@
       <label for="sn-n">Naam</label><input id="sn-n" name="n" required autocomplete="off" placeholder="Voor- en achternaam">
       <label for="sn-e">E-mailadres</label><input id="sn-e" name="e" type="email" required autocomplete="off" placeholder="Hiermee logt hij of zij in">
       <label for="sn-t">Telefoonnummer (mag leeg)</label><input id="sn-t" name="tel" type="tel" inputmode="tel" autocomplete="off" placeholder="06 12345678">
-      <div class="twee"><div><label for="sn-r">Rol</label><select id="sn-r" name="r"><option value="trainer">Trainer</option><option value="teamleider">Teamleider</option>${S.club.coordinatorAan ? `<option value="coordinator">${esc(S.club.labels.coordinator)}</option>` : ''}<option value="hjo">${esc(S.club.labels.hjo)}</option></select></div>
-      <div><label for="sn-team">Team of groep</label><select id="sn-team" name="team">${S.teams.map((t) => `<option value="${t.id}">${esc(t.naam)}</option>`).join('')}${S.club.coordinatorAan ? `<optgroup label="Groep (voor ${esc(S.club.labels.coordinator.toLowerCase())})">${(S.club.groepen || []).map((g) => `<option value="groep:${esc(g.naam)}">${esc(g.naam)}</option>`).join('')}</optgroup>` : ''}</select></div></div>
+      <div class="twee"><div><label for="sn-r">Rol</label><select id="sn-r" name="r"><option value="trainer">Trainer</option>${CC.pakketTrainers && CC.pakketTrainers(S) ? '' : '<option value="teamleider">Teamleider</option>'}${S.club.coordinatorAan && !(CC.pakketTrainers && CC.pakketTrainers(S)) ? `<option value="coordinator">${esc(S.club.labels.coordinator)}</option>` : ''}<option value="hjo">${esc(S.club.labels.hjo)}</option><option value="tc">Technisch coördinator</option></select></div>
+      <div><label for="sn-team">Team (niet nodig voor ${esc(S.club.labels.hjo)} of TC)</label><select id="sn-team" name="team">${S.teams.map((t) => `<option value="${t.id}">${esc(t.naam)}</option>`).join('')}${S.club.coordinatorAan ? `<optgroup label="Groep (voor ${esc(S.club.labels.coordinator.toLowerCase())})">${(S.club.groepen || []).map((g) => `<option value="groep:${esc(g.naam)}">${esc(g.naam)}</option>`).join('')}</optgroup>` : ''}</select></div></div>
       <button class="knop">Toevoegen en uitnodigen</button>
       <p class="zacht klein">Hij of zij krijgt een welkomstmail met hoe je inlogt. Staat dit e-mailadres al in de club (bijv. als ouder), dan komt de rol erbij.</p></form>`); });
   CC.on('stafNieuwOk', (f) => {
@@ -258,7 +258,7 @@
     const tel = f.tel.value.replace(/[^0-9+]/g, ''); if (tel && !/^(\+\d{10,14}|0\d{9})$/.test(tel)) return CC.toast('Vul een geldig telefoonnummer in, of laat het leeg', 'fout');
     let rol;
     if (r === 'coordinator') { const g = (S.club.groepen || []).find((x) => 'groep:' + x.naam === t); if (!g) return CC.toast('Kies een groep teams', 'fout'); rol = { rol: r, groep: g.naam, cats: g.cats }; }
-    else if (r === 'hjo') rol = { rol: 'hjo' };
+    else if (CC.BEGELEIDERS.includes(r)) rol = { rol: r }; // werkgebied: hele club; aanpassen met het potlood bij de rol
     else { if (!t || t.startsWith('groep:')) return CC.toast('Kies een team', 'fout'); rol = { rol: r, teamId: t }; }
     let p = S.people.find((x) => (x.email || '').toLowerCase() === email); const bestond = !!p;
     if (!p) { p = { id: 'p' + Date.now(), naam, email, tel, rollen: [] }; S.people.push(p); } else if (tel && !p.tel) p.tel = tel;
@@ -456,9 +456,11 @@
       rollen(S) {
         const c = S.club; const tel = (r) => S.people.filter((p) => p.rollen.some((x) => x.rol === r)).length;
         return `<form data-submit="labelsOk" class="kaartje codeform"><p class="klein">Hoe noemt jullie club deze rollen?</p><div class="twee"><div><label for="lb-h">Hoofd jeugd</label><input id="lb-h" name="h" value="${esc(c.labels.hjo)}"></div><div><label for="lb-c">Coördinator</label><input id="lb-c" name="c" value="${esc(c.labels.coordinator)}"></div></div><label class="schakel"><span>${esc(c.labels.coordinator)} gebruiken (${esc(c.labels.hjo)}-rechten voor een groep teams)</span><input type="checkbox" name="ca" ${c.coordinatorAan ? 'checked' : ''}><i></i></label><button class="knop licht klein">Opslaan</button></form>
-          ${h.sectie('Rollen in gebruik')}<div class="lijst compact">${[['ouder', 'Ouder'], ['trainer', 'Trainer'], ['teamleider', 'Teamleider'], ['hjo', c.labels.hjo], ...(c.coordinatorAan ? [['coordinator', c.labels.coordinator]] : []), ['beheerder', 'Clubbeheerder']].map(([r, l]) => h.rij({ ic: 'user-cog', titel: esc(l), rechts: `<b>${tel(r)}</b>` })).join('')}</div>
+          ${h.sectie('Rollen in gebruik')}<div class="lijst compact">${[['ouder', 'Ouder'], ['trainer', 'Trainer'], ['teamleider', 'Teamleider'], ['hjo', c.labels.hjo], ['tc', 'Technisch coördinator'], ...(c.coordinatorAan ? [['coordinator', c.labels.coordinator]] : []), ['beheerder', 'Clubbeheerder']].filter(([r]) => tel(r) || !['ouder', 'teamleider', 'coordinator'].includes(r) || !(CC.pakketTrainers && CC.pakketTrainers(S))).map(([r, l]) => h.rij({ ic: 'user-cog', titel: esc(l), rechts: `<b>${tel(r)}</b>` })).join('')}</div>
           <table class="tabel"><thead><tr><th></th><th>Clubbeheerder</th><th>${esc(c.labels.hjo)}</th></tr></thead><tbody><tr><td>Soort werk</td><td>inrichten (± 1× per seizoen)</td><td>jeugd sturen (wekelijks)</td></tr><tr><td>Wat</td><td>rollen, modules, regels, seizoen, vakanties</td><td>teams, staf, signalen, planning, berichten</td></tr></tbody></table>
-          <p class="zacht klein">Rollen per persoon koppel je als ${esc(c.labels.hjo)} bij Teams → Staf.</p>`;
+          ${h.sectie('Mensen en hun rollen')}<button class="knop licht vol" data-act="stafNieuw">${icon('user-plus')}Persoon toevoegen</button>
+          <div class="lijst">${S.people.filter((p) => p.rollen.some((r) => r.rol !== 'ouder')).sort((a, b) => a.naam.localeCompare(b.naam)).map((p) => h.rij({ ic: h.avatar(p.naam), titel: esc(p.naam), sub: p.rollen.filter((r) => r.rol !== 'ouder').map((r) => `${esc(CC.rolNaam(r))}${r.teamId ? ' ' + esc(CC.tn(r.teamId)) : r.groep ? ' ' + esc(r.groep) : (r.bouwen || []).length ? ' (' + esc(r.bouwen.join(', ')) + ')' : ''}`).join(' · '), act: 'rollenPersoon', attrs: `data-id="${p.id}"` })).join('')}</div>
+          <p class="zacht klein">Tik op een naam om een rol te koppelen, weg te halen of het werkgebied te kiezen.</p>`;
       },
       modules(S) {
         const m = S.club.modules;
