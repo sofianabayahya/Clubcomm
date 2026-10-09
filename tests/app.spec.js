@@ -202,6 +202,14 @@ test.describe('Demo', () => {
     await page.locator('[data-act="magischeLink"]').click();
     await page.evaluate(() => CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'hjo')));
     await page.locator('nav.nav button[data-tab="trainers"]').click();
+    // Trainers → Traject: per trainer leerdoel en afvinklijst; Traject toevoegen kiest een trainer zonder traject
+    await page.locator('nav.nav button[data-tab="trainers"]').click();
+    await expect(page.locator('#app .kaartje.traject', { hasText: 'Dennis Peters' }).locator('li.ok')).toContainText('Training');
+    await page.locator('#app [data-act="trajectKies"]').click();
+    await expect(page.locator('#sheet [data-act="trajectSheet"]', { hasText: 'Dennis Peters' })).toHaveCount(0);
+    await page.locator('#sheet [data-act="trajectSheet"]').first().click();
+    await expect(page.locator('#sheet form[data-submit="trajectOk"]')).toBeVisible();
+    await page.evaluate(() => CC.closeSheet());
     // Deze week op de Home: het geplande moment is er nog niet (over 8 dagen); wel na verplaatsen naar morgen
     await page.evaluate(() => { CC.S().begeleidMomenten.find((m) => m.id === 'bm-demo2').datum = CC.date.addDays(CC.date.vandaag(), 1); });
     await page.locator('nav.nav button[data-tab="home"]').click();
