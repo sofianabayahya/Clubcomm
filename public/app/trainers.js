@@ -212,6 +212,24 @@
       ${tl ? `<h2>Afmeldingen dit seizoen</h2><p>${tl.afmeldingen}× afgemeld · ${tl.telaat}× te laat · ${tl.niet}× niet gekomen · ${tl.afgelast} afgelast</p>` : ''}
       <h2>Aantekeningen</h2>${lijnen(5)}`); });
 
+  // ---------- De trainer zelf: Mijn ontwikkeling (Besluit 99 deel 3), in het profiel ----------
+  // Alles uit zijn dossier behalve de notities van de HO; geen extra tabblad en geen melding (die staan al op zijn Home).
+  const heeftOntw = (S, me) => isTrainer(me) && (traject(S, me.id) || (ken(S)[me.id] || {}).ingevuld || (CC.begelMijn && CC.begelMijn(S, me.id).length));
+  CC.profielExtra = (S) => { const me = CC.me(); return heeftOntw(S, me) ? h.rij({ ic: 'graduation-cap', titel: 'Mijn ontwikkeling', sub: 'Je leerdoel, je begeleidingsmomenten en je reflecties', act: 'open', attrs: 'data-view="mijnOntw"' }) : ''; };
+  CC.views.mijnOntw = (S) => { const me = CC.me(); const t = traject(S, me.id); const k = ken(S)[me.id] || {}; const l = CC.begelMijn ? CC.begelMijn(S, me.id) : [];
+    return { titel: 'Mijn ontwikkeling', html: `
+      ${t ? `<div class="kaartje"><p class="klein"><b>Begeleiding dit seizoen</b> · ${planTekst(t)} · ${standTekst(S, me.id, t)}</p>
+        <p><b>Leerdoel:</b> ${esc(t.leerdoel || 'nog niet afgesproken')}</p>${t.ontwikkelpunt ? `<p><b>Ontwikkelpunt:</b> ${esc(t.ontwikkelpunt)}</p>` : ''}</div>`
+        : `<p class="zacht klein">Je hebt geen begeleidingstraject. Wil je graag begeleid worden? Zeg het tegen de ${esc(S.club.labels.hjo)}.</p>`}
+      ${l.length ? `${h.sectie('Begeleidingsmomenten')}<div class="lijst compact">${l.join('')}</div>` : ''}
+      ${h.sectie('Kennismaking')}${k.ingevuld ? `<details class="uitklap"><summary>Mijn antwoorden (${D.kort(k.ingevuld.slice(0, 10))})</summary><dl class="antwoorden">${CC.trainerVragen(S, true).filter((v) => (k.a || {})[v.k]).map((v) => `<dt>${esc(v.t)}</dt><dd>${esc(k.a[v.k])}</dd>`).join('')}</dl></details>` : ''}
+      ${h.rij({ ic: 'pencil', titel: k.ingevuld ? 'Antwoorden aanpassen' : 'Kennismaking invullen', act: 'kennisForm' })}
+      <button class="knop licht klein" data-act="mijnOntwPrint">${icon('printer')}Printen</button>
+      <p class="zacht klein">Alleen jij en de ${esc(S.club.labels.hjo)} zien dit. De persoonlijke notities van de ${esc(S.club.labels.hjo)} staan hier niet in.</p>` }; };
+  CC.on('mijnOntwPrint', () => { const S = CC.S(); const me = CC.me(); const t = traject(S, me.id);
+    CC.printDoc(`Mijn ontwikkeling · ${me.naam}`, `${t ? `<p>Plan: ${planTekst(t)} · ${standTekst(S, me.id, t)}</p><p><b>Leerdoel:</b> ${esc(t.leerdoel || '')}</p><p><b>Ontwikkelpunt:</b> ${esc(t.ontwikkelpunt || '')}</p>` : '<p>Geen traject.</p>'}
+      ${CC.begelPrintMijn ? CC.begelPrintMijn(S, me.id) : ''}`); });
+
   // ---------- Demo: één trainer in traject, kennismakingen ----------
   const demo = (S) => {
     const p = (naam) => S.people.find((x) => x.naam === naam);

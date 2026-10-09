@@ -331,6 +331,7 @@
       ${CC.live ? '' : blokDemo}
       <div class="profiel-kop">${h.avatar(me.naam, 'groot')}<div><b>${esc(me.naam)}</b><small>${esc(me.email)}${me.tel ? ` · ${esc(me.tel)}` : ''}</small></div></div>
       ${h.rij({ ic: 'phone', titel: me.tel ? 'Telefoonnummer wijzigen' : 'Telefoonnummer toevoegen', sub: me.tel ? esc(me.tel) : 'Zodat trainer en teamleider je kunnen bellen of appen', act: 'telSheet', kleur: me.tel ? '' : 'blauw' })}
+      ${CC.profielExtra ? CC.profielExtra(S) : ''}
       ${me.rollen.length > 1 ? `<h3 class="klein-kop">Wissel van rol</h3><div class="rollen">${rollen}</div>` : ''}
       ${rol.rol === 'ouder' || kids.length ? `<h3 class="klein-kop">Mijn kinderen</h3>${kids.map((k) => h.rij({ ic: h.avatar(k.voornaam), titel: esc(M.naam(S, k)), sub: esc(CC.tn(k.teamId)) })).join('')}
         ${S.teams.length > 1 ? h.rij({ ic: 'user-plus', titel: 'Nog een kind aanmelden', sub: 'Speelt je andere kind in een ander team?', act: 'demoMelding', attrs: 'data-tekst="Vraag de teamleider van het andere team om de uitnodiging (link of QR-code) en meld je daar aan met hetzelfde e-mailadres. Dan staan beide kinderen onder jouw account."' }) : ''}
