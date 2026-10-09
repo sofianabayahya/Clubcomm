@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 96)
+Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 96; principe 10)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -127,6 +127,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 96)
 7. **Er is altijd een vervanger.** Bij een amateurvereniging ontbreekt soms een teamleider of trainer, of traint een trainer alleen en gaat hij niet mee naar wedstrijden. Elke taak heeft daarom een vaste volgorde van wie het overneemt, en rollen kunnen tijdelijk (bijv. per wedstrijd) aan iemand worden toegewezen.
 8. **Iedereen ziet alleen wat van hem is.** Ouders zien alleen gegevens van hun eigen kind (aanwezigheid, kaarten, beoordelingen) — nooit van andere kinderen. Trainers en teamleiders zien hun eigen team. Coördinator en HO zien hun teams, met wat ze voor hun taak nodig hebben (Besluit 25, 95). Dit wordt server-side afgedwongen.
 9. **Elke taak heeft een eigenaar: één duidelijke lijn.** De club bepaalt welke rol welke taak heeft (Besluit 25). Een taak die aan een rol hangt, moet ook aan een persoon zijn toegewezen, zodat hij wordt opgepakt. ClubComm laat zien waar een taak geen eigenaar heeft. Ook de communicatie volgt die lijn: een signaal gaat naar wie de taak heeft, niet naar iedereen.
+10. **Overzichtelijk en precies, nooit een overkill.** Voor elke rol en elke betrokkene blijft de app overzichtelijk. We informeren en signaleren secuur: alleen wat iemand nodig heeft, op het moment dat het ertoe doet, één keer. Liever één goed signaal dan tien meldingen; wie te veel krijgt, zet alles uit en mist dan ook het belangrijke. Elk nieuw idee toetsen we hieraan (uitgewerkt in Besluit 30, 34, 53 en 95).
 
 ---
 
@@ -766,7 +767,7 @@ Vaste regel voor alle portalen: een lijst die in het seizoen groeit, toont eerst
 - **Nieuws over een activiteit vervalt vanzelf:** een herinnering, planningswijziging, afgelasting of uitslag gaat de dag na die activiteit naar het Archief (niet pas na 14 dagen). Vastgezette berichten niet.
 - **Archief per maand:** kopjes per maand, de nieuwste open, oudere ingeklapt.
 - **Zoekbalk in het archief:** zoekt in onderwerp, tekst, antwoorden en namen, meteen tijdens het typen.
-- Later (ideeën): berichten tonen bij de activiteit en bij de speler; vast blok "Belangrijk dit seizoen"; filters voor de staf; weekbericht.
+- Later (ideeën): berichten tonen bij de activiteit en bij de speler; vast blok "Belangrijk dit seizoen"; filters voor de staf. ~~Weekbericht~~ (afgewezen 10-10, zie Afgewezen ideeën).
 
 ## Besluit 79 — Berichten: gesprek afronden, automatisch archiveren, ouderportaal zonder staf-berichten
 - **Gesprek afronden:** de knop "Archiveren" heet bij een gesprek **"✓ Gesprek afronden"** (bovenaan in het gesprek). Ieder rondt voor zichzelf af. De ander ziet in het gesprek: *"Sofian heeft het gesprek afgerond."* Stuurt iemand daarna nog iets, dan komt het gesprek bij iedereen terug. Een afgerond gesprek kun je zelf weer openen via het Archief.
@@ -1181,7 +1182,7 @@ Vaste regel voor alle portalen: een lijst die in het seizoen groeit, toont eerst
 | nieuws van team of club (de afzender kan "ook per e-mail" uitzetten) | |
 Zodra er pushmeldingen zijn, gaan vaste herinneringen standaard alleen nog als pushmelding.
 
-**Nog te doen (versie 2):** automatisch versturen vanaf de server (nu gebeurt het zodra de beheerder/HJO of de staf van het team de app opent); ingeplande berichten ook per e-mail; weekbericht als optie.
+**Nog te doen (versie 2):** automatisch versturen vanaf de server (nu gebeurt het zodra de beheerder/HJO of de staf van het team de app opent); ingeplande berichten ook per e-mail. ~~Weekbericht als optie~~ (afgewezen 10-10).
 
 ## Besluit 35 — Pilot RKSV DCG: activiteiten, taken per leeftijd en e-mailmeldingen
 > **◐ Deels herzien door Besluit 38 (start pilot), 53/57 (pushmeldingen, e-mail als vangnet)** (zie Register).
@@ -1618,7 +1619,7 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 - **Analyse clubproblemen** (`docs/onderzoek/analyse-clubproblemen.md`): voorstellen voor wat ontbreekt (bereikbaarheid per ouder, VCP/gedragscode, "mijn kind twijfelt"). Nog niet besloten. *Afmelden namens de ouder is afgewezen (Besluit 34).* Adoptie door ouders ziet de gebruiker niet als risico (mail + push, uitleg, coulante start).
 
 - ~~**Presentatie** voor het bestuur van RKSV DCG~~ *gedaan: `docs/presentaties/ClubComm-bestuur.pptx`; de rollenbeschrijving staat in Besluit 95.*
-- **Weekbericht voor ouders:** Besluit 20 wees een weekoverzicht af (te veel berichten, de inhoud verandert tot het laatste moment), maar Besluit 36 en 80 noemen een "weekbericht" als optie voor later. **Tegenstrijdig: de initiatiefnemer beslist.** Tot dan geldt Besluit 20 (niet doen).
+- ~~**Weekbericht voor ouders**~~ *besloten 10-10: afgewezen (principe 10), zie Afgewezen ideeën.*
 - **Huisstijl:** één set icoontjes in één stijl (Lucide, in het prototype); kleur alleen met betekenis (groen = goed, oranje = aandacht, rood = probleem); verder rustig met het logo-blauw `#0D88F9` als hoofdkleur. **Besloten:** de app is altijd licht (witte achtergrond), ook als de telefoon op donkere modus staat.
 
 ---
@@ -1629,7 +1630,7 @@ Bewust niet gedaan, met de reden. Komt een van deze toch terug, zeg dan dat het 
 | Idee | Waarom niet | Besluit |
 |---|---|---|
 | Afmelden namens de ouder (door teamleider) | Informatie gaat van de bron de app in; geen taak voor een ander | 34 |
-| Ochtendbericht voor de trainer, weekoverzicht voor ouders | Te veel berichten; de stand verandert tot het laatste moment (zie Nog te bespreken: weekbericht) | 20 |
+| Ochtendbericht voor de trainer, weekoverzicht of weekbericht voor ouders | Te veel berichten; de stand verandert tot het laatste moment; de week staat al op Home en in de Planning, wijzigingen krijgen meteen een bericht | 20, bevestigd 10-10 (principe 10) |
 | Knop "Ik kan niet" opvallend op de Home van de trainer | Nodigt uit tot makkelijk afmelden | 20 |
 | Ranglijsten: ouders die helpen, topscorers, trainer van de maand | Vergelijken ontmoedigt; eerlijke speeltijd en teamgevoel gaan voor | 28, 29, 62 |
 | Clubbrede lijst van rode spelers | Spelers volgt de trainer; de HO kijkt per team | 11, 26, 34 |

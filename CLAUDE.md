@@ -11,6 +11,7 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
 - **Eigenaarschap:** zoek zelf actief naar verouderde teksten, gaten en fouten (zoals een tekst die niet meer klopt met een nieuwer besluit). Leg ze eerst voor aan de gebruiker en bouw pas na akkoord; kleine, duidelijke fouten mag je in dezelfde ronde meenemen en melden.
 - **Borgen (bij elk besluit):** (1) nieuw besluit bovenaan in `docs/besluiten.md`; (2) elk ouder besluit dat het raakt krijgt de regel *"◐ Deels herzien door Besluit X"* of *"✖ Vervangen door …"* en het **Register** bovenaan wordt bijgewerkt; (3) wat bewust niet doorgaat komt bij **Afgewezen ideeën** (met reden); (4) *Later / ideeën* en *Nog te bespreken* bijwerken; (5) **Openstaand** bijwerken. **Vóór je een idee voorstelt:** kijk bij Afgewezen ideeën en in het Register; stel nooit een afgewezen idee voor zonder dat te zeggen.
 - Vraag nooit om geheime sleutels in de chat (Brevo, Supabase service key); de gebruiker zet ze zelf in het dashboard.
+- **Principe 10: overzichtelijk en precies, nooit een overkill.** Redeneer altijd vanuit hier: alleen informeren en signaleren wat iemand nodig heeft, op het juiste moment, één keer.
 - Vuistregels voor elk scherm (Besluit 30 en 34): actie eerst, wat bij elkaar hoort in één blok, elke actie één vaste plek, kleur alleen voor aandacht, **informatie is geen taak**, "ClubComm signaleert, mensen beslissen".
 
 ## Waar staat wat
