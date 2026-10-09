@@ -38,7 +38,102 @@
     return { sig, z, eigen, groep, rood, liggen, ernstig, rol, i };
   };
 
+  // ---------- Besluit 95, stap 2: Home van de HO (voetballijn) ----------
+  // De HO is mentor: op Home alleen wat over zijn trainers gaat. Organisatie alleen voor teams zonder coördinator (terugval),
+  // in een eigen blok eronder. Ontworpen voor 50 teams: alles gebundeld, nooit een lange lijst (principe 10).
+  const BUNDEL = 3; // vanaf zoveel regels van dezelfde soort: één regel met een teller
+  const trainersVan = (S, tid) => S.people.filter((p) => p.rollen.some((r) => r.rol === 'trainer' && r.teamId === tid));
+  const lichting = (t) => t.cat || (t.id.match(/^O\d+/) || ['Overig'])[0];
+  const lichtingen = (S) => { const g = {}; S.teams.forEach((t) => { (g[lichting(t)] = g[lichting(t)] || []).push(t); });
+    return Object.entries(g).sort(([a], [b]) => (parseInt(a.slice(1), 10) || 99) - (parseInt(b.slice(1), 10) || 99)); };
+  const trainerSig = (S) => (CC.trainerSignalen ? CC.trainerSignalen(S) : []).filter((s) => s.p.rollen.some((r) => r.rol === 'trainer' && S.teams.some((t) => t.id === r.teamId) && CC.mag('trainersVolgen', null, r.teamId)));
+  const weekActs = (S) => { const v = D.vandaag(); const t = D.addDays(v, 6); return S.teams.flatMap((x) => M.acts(S, x.id, v, t)).filter((a) => !a.afgelast).sort((a, b) => (a.datum + a.tijd).localeCompare(b.datum + b.tijd)); };
+
+  const hoHome = (S) => {
+    const O = CC.hjoOverzicht(S); const { i, eigen, groep } = O; const L = S.club.labels;
+    const per = M.periode(S, 'blok'); const stats = S.teams.map((t) => M.teamStats(S, t.id, per));
+    const tot = stats.reduce((s, x) => s + x.spelers.reduce((a, y) => a + y.st.totaal, 0), 0);
+    const aan = stats.reduce((s, x) => s + x.spelers.reduce((a, y) => a + y.st.aanwezig, 0), 0);
+    // Te doen: alleen de trainers en jouw eigen stap (clubbesluit); spelerzaken die bij de coördinator blijven liggen gebundeld
+    const doen = [];
+    const ts = trainerSig(S);
+    if (ts.length >= BUNDEL) doen.push(h.rij({ ic: 'user-cog', titel: `${ts.length} trainers vragen aandacht`, sub: ts.slice(0, 3).map((x) => esc(x.p.naam)).join(', ') + (ts.length > 3 ? '…' : ''), kleur: 'oranje', act: 'open', attrs: 'data-view="trainersRapport" data-filter="aandacht"' }));
+    else doen.push(...(CC.trainerAandacht ? CC.trainerAandacht(S) : []));
+    groep('clubbesluit').filter((s) => CC.mag('clubbesluit', null, s.teamId)).forEach((s) => doen.push(CC.stapRij(S, s)));
+    if (O.liggen.length) doen.push(h.rij({ ic: 'hourglass', titel: `${O.liggen.length} ${O.liggen.length === 1 ? 'spelerzaak blijft' : 'spelerzaken blijven'} liggen`, sub: `Langer dan ${i.liggenDagen} dagen zonder vastgelegd contact · ${esc(L.coordinator.toLowerCase())}`, kleur: 'oranje', act: 'open', attrs: 'data-view="signalen" data-soort="liggen"' }));
+    // Deze week: wanneer kun je gaan kijken? Eén regel per dag
+    const acts = weekActs(S); const dagen = [...new Set(acts.map((a) => a.datum))];
+    const dagRij = (d) => { const op = acts.filter((a) => a.datum === d); const w = op.filter((a) => M.isWed(a)); const tr = op.filter((a) => a.soort === 'training');
+      const delen = [w.length && `${w.length} ${w.length === 1 ? 'wedstrijd' : 'wedstrijden'}${w.some((a) => a.thuis) ? ` (${w.filter((a) => a.thuis).length} thuis)` : ''}`, tr.length && `${tr.length} ${tr.length === 1 ? 'training' : 'trainingen'}`, (op.length - w.length - tr.length) && `${op.length - w.length - tr.length} anders`].filter(Boolean);
+      return h.rij({ ic: 'calendar-days', titel: `${D.relatief(d)}`, sub: delen.join(' · '), act: 'open', attrs: `data-view="weekHO" data-dag="${d}"` }); };
+    // Rapporten: zelf opzoeken
+    const nTr = new Set(S.teams.flatMap((t) => trainersVan(S, t.id).map((p) => p.id))).size;
+    // Organisatie: alleen voor teams zonder coördinator (de HO is daar de terugval)
+    const eigenTeams = S.teams.filter((t) => eersteLijn(S, t.id, 'hjo'));
+    const org = [];
+    if (eigenTeams.length) {
+      if (CC.vervangerRijen) org.push(...CC.mijnVervangingen(S), ...CC.vervangerRijen(S, eigenTeams.map((t) => t.id)));
+      if (CC.autoBerichtRijen && CC.mag('clubbericht', 'hjo')) org.push(...CC.autoBerichtRijen(S));
+      { const w = CC.wachtRij && CC.wachtRij(); if (w) org.push(w); }
+      const gesprek = groep('gesprekHjo', eigen).filter((s) => CC.mag('gesprek', null, s.teamId));
+      if (gesprek.length >= BUNDEL) org.push(h.rij({ ic: 'users', titel: `${gesprek.length} gesprekken met ouders`, sub: 'Stap 4 · teams zonder ' + esc(L.coordinator.toLowerCase()), kleur: 'rood', act: 'open', attrs: 'data-view="signalen" data-soort="gesprekHjo"' }));
+      else gesprek.forEach((s) => org.push(CC.stapRij(S, s)));
+      const bel = groep('bellen', eigen).filter((s) => CC.mag('bellen', null, s.teamId) && !CC.mag('bellen', 'trainer') && !CC.mag('bellen', 'teamleider'));
+      if (bel.length) org.push(h.rij({ ic: 'phone', titel: `${bel.length} ${bel.length === 1 ? 'ouder' : 'ouders'} bellen of appen`, sub: `Drempel bereikt · ${perTeam(bel)}`, kleur: 'rood', act: 'open', attrs: 'data-view="signalen" data-soort="bellen"' }));
+      const zonderStaf = CC.mag('staf') ? eigenTeams.filter((t) => !t.trainerId || !t.teamleiderId) : [];
+      if (zonderStaf.length) org.push(h.rij({ ic: 'user-cog', titel: zonderStaf.length === 1 ? `${esc(zonderStaf[0].naam)} zonder ${!zonderStaf[0].trainerId ? 'trainer' : 'teamleider'}` : `${zonderStaf.length} teams zonder complete staf`, sub: zonderStaf.slice(0, 4).map((t) => esc(t.naam)).join(', ') + (zonderStaf.length > 4 ? '…' : ''), kleur: 'oranje', act: 'open', attrs: 'data-view="zonderStaf"' }));
+      const laat = S.aanm.filter((x) => x.status === 'open' && Date.now() - new Date(x.tijd) > 48 * 3600e3 && eigenTeams.some((t) => t.id === x.teamId) && CC.mag('aanmeldingen48', null, x.teamId));
+      if (laat.length) org.push(h.rij({ ic: 'hourglass', titel: `${laat.length} aanmelding${laat.length > 1 ? 'en' : ''} langer dan 48 uur open`, sub: laat.slice(0, 3).map((x) => `${esc(x.kindVoor)} (${esc(CC.tn(x.teamId))})`).join(', ') + (laat.length > 3 ? '…' : ''), kleur: 'oranje', act: 'open', attrs: 'data-view="aanmeldingenHjo"' }));
+      const af = M.afgedaanRecent(S, eigenTeams.map((t) => t.id), 14).filter((x) => !x.akkoord);
+      if (af.length) org.push(h.rij({ ic: 'check', titel: `${af.length} ${af.length === 1 ? 'signaal' : 'signalen'} afgedaan als "geen actie nodig"`, sub: 'Akkoord, of toch oppakken?', act: 'open', attrs: 'data-view="afgedaan"' }));
+      const mat = CC.materiaalAandacht && CC.materiaalAandacht(S); if (mat) org.push(mat);
+    }
+    return `<div class="clubregel"><span><b>${S.teams.length}</b> ${S.teams.length === 1 ? 'team' : 'teams'}</span><span><b>${nTr}</b> ${nTr === 1 ? 'trainer' : 'trainers'}</span><span><b>${tot ? Math.round((100 * aan) / tot) : '–'}%</b> aanwezig</span></div>
+      ${h.sectie(`Te doen${doen.length ? ` (${doen.length})` : ''}`)}${doen.length ? `<div class="lijst">${doen.join('')}</div>` : h.leeg('Je trainers vragen nu geen aandacht 👍', 'circle-check')}
+      ${h.sectie('Deze week')}${dagen.length ? `<div class="lijst compact">${dagen.map(dagRij).join('')}</div><p class="zacht klein">Wanneer kun je gaan kijken? Tik op een dag.</p>` : '<p class="zacht klein">Geen trainingen of wedstrijden de komende 7 dagen.</p>'}
+      ${h.sectie('Rapporten')}<div class="lijst compact">
+        ${h.rij({ ic: 'user-check', titel: 'Trainers', sub: `${nTr === 1 ? '1 trainer' : `${nTr} trainers`} per lichting en team: afmeldingen, aanwezigheid van het team${ts.length ? ` · ${ts.length} ${ts.length === 1 ? 'vraagt' : 'vragen'} aandacht` : ''}`, act: 'open', attrs: 'data-view="trainersRapport"' })}
+        ${h.rij({ ic: 'chart-column', titel: 'Teams', sub: 'Aanwezigheid, redenen en verloop per team', act: 'tab', attrs: 'data-tab="inzicht"' })}</div>
+      ${org.length ? `${h.sectie(`Organisatie · ${eigenTeams.length === S.teams.length ? 'je club heeft geen ' + esc(L.coordinator.toLowerCase()) : `${eigenTeams.length} teams zonder ${esc(L.coordinator.toLowerCase())}`}`)}<p class="zacht klein">Dit doe je omdat er voor deze teams geen ${esc(L.coordinator.toLowerCase())} is.</p><div class="lijst">${org.join('')}</div>` : ''}`;
+  };
+
+  // Rapport Trainers: per lichting en team, in- en uitklapbaar (Besluit 95). Open: alleen waar iets speelt.
+  CC.views.trainersRapport = (S, p) => {
+    const filter = h.segVal('trRap', p.filter || 'alle'); const sig = new Set(trainerSig(S).map((x) => x.p.id));
+    const regel = (tr) => { const t = CC.trainerTelling ? CC.trainerTelling(S, tr.id) : null; if (!t) return '';
+      const delen = [t.afmeldingen && `${t.afmeldingen}× afgemeld`, t.telaat && `${t.telaat}× te laat`, t.niet && `${t.niet}× niet gekomen`, t.afgelast && `${t.afgelast} afgelast`].filter(Boolean);
+      return delen.length ? delen.join(' · ') : 'geen afmeldingen dit seizoen'; };
+    const per = M.periode(S, 'blok');
+    const blokken = lichtingen(S).map(([naam, teams]) => {
+      const rijen = teams.map((t) => { const trs = trainersVan(S, t.id); const pct = M.teamStats(S, t.id, per).pct; const z = M.zone(S, pct, t.id); const let_ = trs.some((x) => sig.has(x.id));
+        if (filter === 'aandacht' && !let_) return '';
+        return trs.length ? trs.map((tr) => h.rij({ ic: h.stip(z), titel: `${esc(t.naam)} · ${esc(tr.naam)}`, sub: `${regel(tr)} · team ${pct ?? '–'}%`, kleur: sig.has(tr.id) ? 'oranje' : '', act: 'open', attrs: `data-view="trainerDetail" data-id="${tr.id}"` })).join('')
+          : h.rij({ ic: h.stip(z), titel: `${esc(t.naam)} · geen trainer`, sub: `team ${pct ?? '–'}%`, kleur: 'oranje' }); }).join('');
+      if (!rijen) return '';
+      const n = teams.filter((t) => trainersVan(S, t.id).some((x) => sig.has(x.id))).length;
+      return `<details class="uitklap" ${n || filter === 'aandacht' ? 'open' : ''}><summary><b>${esc(naam)}</b> <small class="zacht">${teams.length} ${teams.length === 1 ? 'team' : 'teams'}${n ? ` · ${n} ${n === 1 ? 'vraagt' : 'vragen'} aandacht` : ''}</small></summary><div class="lijst compact">${rijen}</div></details>`;
+    }).join('');
+    return { titel: 'Rapport trainers', html: `${h.seg('trRap', [['alle', 'Alle trainers'], ['aandacht', `Vraagt aandacht (${sig.size})`]], filter)}
+      <p class="zacht klein">Per lichting en team: afmeldingen van de trainer dit seizoen en de aanwezigheid van het team (${esc(h.faseLabel(S))}). Tik op een trainer voor de geschiedenis en om contact vast te leggen.</p>
+      ${blokken || h.leeg(filter === 'aandacht' ? 'Geen trainers die aandacht vragen 👍' : 'Nog geen trainers', 'circle-check')}` };
+  };
+
+  // Deze week: per dag welke teams trainen of spelen, met de trainer (om te gaan kijken)
+  CC.views.weekHO = (S, p) => {
+    const acts = weekActs(S).filter((a) => a.datum === p.dag);
+    const rij = (a) => { const t = M.team(S, a.teamId); const tr = trainersVan(S, a.teamId).map((x) => x.naam).join(', ');
+      const wat = M.isWed(a) ? `${a.soort === 'oefen' ? 'Oefenwedstrijd' : 'Wedstrijd'} ${a.thuis === false ? 'uit' : 'thuis'}${a.tegen ? ` tegen ${esc(a.tegen)}` : ''}` : a.soort === 'training' ? `Training${a.veld ? ` · ${esc(a.veld)}` : ''}` : esc(a.naam || 'Activiteit');
+      return h.rij({ ic: M.isWed(a) ? 'trophy' : 'dumbbell', titel: `${esc(a.tijd)} · ${esc(t ? t.naam : a.teamId)}`, sub: `${wat}${tr ? ` · ${esc(tr)}` : ''}`, chevron: false }); };
+    const wed = acts.filter((a) => M.isWed(a)); const rest = acts.filter((a) => !M.isWed(a));
+    const thuis = wed.filter((a) => a.thuis !== false); const uit = wed.filter((a) => a.thuis === false);
+    return { titel: D.relatief(p.dag), html: `${thuis.length ? `${h.sectie(`Thuiswedstrijden (${thuis.length})`)}<div class="lijst compact">${thuis.map(rij).join('')}</div>` : ''}
+      ${uit.length ? `<details class="uitklap" ${thuis.length ? '' : 'open'}><summary><b>Uitwedstrijden</b> <small class="zacht">${uit.length}</small></summary><div class="lijst compact">${uit.map(rij).join('')}</div></details>` : ''}
+      ${rest.length ? `<details class="uitklap" ${wed.length ? '' : 'open'}><summary><b>Trainingen en activiteiten</b> <small class="zacht">${rest.length}</small></summary><div class="lijst compact">${rest.map(rij).join('')}</div></details>` : ''}
+      ${acts.length ? '' : h.leeg('Niets gepland')}` };
+  };
+
   CC.rollen.hjo.schermen.home = (S) => {
+    if (CC.rol().rol === 'hjo') return hoHome(S);
     const O = CC.hjoOverzicht(S); const { rol, i, eigen, groep } = O; const L = S.club.labels;
     const per = M.periode(S, 'blok');
     const stats = S.teams.map((t) => M.teamStats(S, t.id, per));
@@ -84,10 +179,10 @@
   // Signalenlijst: ook "ernstig", en alleen wat bij deze rol hoort
   const origSignalen = CC.views.signalen;
   CC.views.signalen = (S, p) => {
-    if (!['ernstig', 'speler', 'lang', 'patroon'].includes(p.soort)) return origSignalen(S, p);
+    if (!['ernstig', 'speler', 'lang', 'patroon', 'liggen', 'gesprekHjo'].includes(p.soort)) return origSignalen(S, p);
     const O = CC.hjoOverzicht(S);
-    const lijst = p.soort === 'ernstig' ? O.ernstig : p.soort === 'speler' ? O.rood.filter(O.eigen) : O.groep(p.soort, O.eigen);
-    const titel = { ernstig: `Onder ${O.i.ernstig}% aanwezig`, speler: 'Spelers in de rode zone', lang: 'Langdurig afwezig', patroon: 'Opvallende patronen' }[p.soort];
+    const lijst = p.soort === 'ernstig' ? O.ernstig : p.soort === 'speler' ? O.rood.filter(O.eigen) : p.soort === 'liggen' ? O.liggen : O.groep(p.soort, O.eigen);
+    const titel = { ernstig: `Onder ${O.i.ernstig}% aanwezig`, speler: 'Spelers in de rode zone', lang: 'Langdurig afwezig', patroon: 'Opvallende patronen', liggen: 'Blijft liggen', gesprekHjo: 'Gesprekken met ouders' }[p.soort];
     const teams = [...new Set(lijst.map((s) => s.teamId))];
     return { titel, html: `<p class="zacht klein">ClubComm signaleert; de trainer of teamleider pakt het als eerste op. ${p.soort === 'ernstig' ? `De ${esc(S.club.labels.coordinator.toLowerCase())} volgt dit op; jij hoeft niets te doen.` : 'Jij kijkt of het gebeurt.'}</p>
       ${teams.map((tid) => `${h.sectie(`${esc(CC.tn(tid))} · trainer ${esc((M.persoon(S, M.team(S, tid).trainerId) || { naam: '–' }).naam)}`)}<div class="lijst">${lijst.filter((s) => s.teamId === tid).map((s) => { const d = dagenOpen(O.z[s.sleutel] || new Date().toISOString()); const op = opgepakt(S, s, O.z[s.sleutel] || new Date().toISOString()); return (s.afdoenbaar ? CC.signaalRijAfdoen(S, s) : CC.stapRij(S, s)).replace('</small>', ` · ${op ? 'opgepakt' : d ? `${d} ${d === 1 ? 'dag' : 'dagen'} open` : 'nieuw'}</small>`); }).join('')}</div>`).join('') || h.leeg('Niets')}` };

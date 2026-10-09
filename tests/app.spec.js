@@ -50,6 +50,33 @@ test.describe('Demo', () => {
     expect(r).toEqual({ coordClub: true, coordStaf: true, coordTrainers: false, hoTrainers: true, hoAfdoenMet: false, hoAfdoenZonder: true, hoToelMet: false, tlTrainerNiet: false });
   });
 
+  // Besluit 95 stap 2: Home van de HO = trainers, deze week, rapporten; organisatie alleen voor teams zonder coördinator
+  test('HO-Home: trainers eerst, rapport per lichting, coördinator houdt zijn eigen Home', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(3).click();
+    await page.locator('[data-act="magischeLink"]').click();
+    await page.evaluate(() => CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'hjo')));
+    const koppen = await page.locator('#app h3').allInnerTexts();
+    const k = koppen.join(' | ');
+    expect(k).toMatch(/Te doen/i); expect(k).toMatch(/Deze week/i); expect(k).toMatch(/Rapporten/i); expect(k).toMatch(/Organisatie/i);
+    expect(k).not.toMatch(/Ter informatie/i);
+    await page.locator('#app [data-view="trainersRapport"]').first().click();
+    await expect(page.locator('details.uitklap').first()).toBeVisible();
+    await page.locator('[data-act="seg"][data-key="trRap"][data-val="aandacht"]').click();
+    expect(await page.locator('details.uitklap[open]').count()).toBeGreaterThan(0);
+    await controleer(page, fouten, 'HO rapport');
+    // De coördinator houdt zijn eigen Home: "Ter informatie", geen blok Rapporten
+    await page.evaluate(() => CC.logout());
+    await page.locator('[data-act="demoLogin"][data-pid="p-esther"]').click();
+    await page.locator('[data-act="magischeLink"]').click();
+    const k2 = (await page.locator('#app h3').allInnerTexts()).join(' | ');
+    expect(k2).toMatch(/Ter informatie/i); expect(k2).not.toMatch(/Rapporten/i);
+    await controleer(page, fouten, 'coördinator Home');
+  });
+
   // Training afgelasten met een eigen toelichting: één bericht aan de ouders
   test('trainer gelast een training af met toelichting', async ({ page }) => {
     const fouten = volgFouten(page);

@@ -109,7 +109,7 @@
       tekst: '<p>Herinneringen voor trainingen en wedstrijden, de uitslag, vakanties, het begin van het seizoen: de server verstuurt ze elk kwartier vanzelf, met de regels die de club instelt.</p><p>Gesprekken met de staf staan apart. Nieuws verdwijnt vanzelf naar het archief als het niet meer speelt.</p>',
       zet: () => als('sanne', 'ouder', 'berichten'), doel: el('#app .lijst') },
     { hfd: 'Club', wie: 'peter', rol: 'hjo', titel: 'De club in één oogopslag',
-      tekst: '<p>Peter is hoofd jeugdopleiding. Hij hoeft niet rond te bellen: kan een trainer niet, zit een team zonder staf, ligt een aanmelding te lang stil, dan staat het hier.</p><p>Met één tik neemt hij over of gelast af. Wat alleen informatie is, staat apart.</p>',
+      tekst: '<p>Peter is hoofd opleiding: hij maakt de trainers beter. Op zijn Home staat alleen wat over zijn trainers gaat: wie aandacht vraagt, wanneer hij deze week kan gaan kijken, en het rapport Trainers per lichting.</p><p>Het regelwerk (vervanger, staf, aanmeldingen) doet de coördinator. Alleen voor teams zonder coördinator staat het hier, in een eigen blok.</p>',
       zet: () => als('peter', 'hjo'), doel: sectie('Te doen') },
     { hfd: 'Club', wie: 'peter', rol: 'hjo', titel: 'Inzicht: waar gaat het goed of mis?',
       tekst: '<p>Aanwezigheid per team en leeftijdsgroep, met de norm van de club (selectie 90%, breedte 80%). Waarom kinderen afwezig zijn, en hoe het zich ontwikkelt.</p><p>Zo ziet het bestuur waar een team extra aandacht nodig heeft.</p>',
