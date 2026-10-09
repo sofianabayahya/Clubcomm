@@ -209,11 +209,19 @@ test.describe('Demo', () => {
     await expect(page.locator('#sheet [data-act="trajectSheet"]', { hasText: 'Dennis Peters' })).toHaveCount(0);
     await page.locator('#sheet [data-act="trajectSheet"]').first().click();
     await expect(page.locator('#sheet form[data-submit="trajectOk"]')).toBeVisible();
-    await page.evaluate(() => CC.closeSheet());
+    await page.locator('#sheet form[data-submit="trajectOk"] button.knop').click();
+    // Op de nieuwe kaart: grijs "Training · plannen" → kies een training → moment gepland en de vragenlijst is verstuurd
+    const voor = await page.evaluate(() => CC.S().msgs.length);
+    await page.locator('#app [data-act="begelInplannen"][data-soort="training"]').first().click();
+    await page.locator('#sheet [data-act="begelInplannenOk"]').first().click();
+    const gepland = await page.evaluate(() => CC.S().begeleidMomenten.at(-1));
+    expect(gepland.actId).toBeTruthy(); expect(gepland.gevraagd).toBeTruthy();
+    expect(await page.evaluate((n) => CC.S().msgs.slice(n).map((m) => m.onderwerp), voor)).toEqual([expect.stringMatching(/^Bereid je begeleidingsmoment voor/)]);
+    await expect(page.locator('#app li.half', { hasText: 'Training' }).first()).toBeVisible();
     // Deze week op de Home: het geplande moment is er nog niet (over 8 dagen); wel na verplaatsen naar morgen
     await page.evaluate(() => { CC.S().begeleidMomenten.find((m) => m.id === 'bm-demo2').datum = CC.date.addDays(CC.date.vandaag(), 1); });
     await page.locator('nav.nav button[data-tab="home"]').click();
-    await expect(page.locator('#app [data-view="begelMoment"]')).toContainText('Morgen: begeleiding Dennis Peters');
+    await expect(page.locator('#app [data-view="begelMoment"]', { hasText: 'Dennis Peters' })).toContainText('Morgen: begeleiding Dennis Peters');
     await page.evaluate(() => CC.open('trainerDetail', { id: CC.S().people.find((x) => x.naam === 'Dennis Peters').id }));
     // Het afgeronde demomoment staat in het dossier en print als A4
     await page.locator('#app [data-view="begelMoment"]', { hasText: 'Training' }).first().click();
@@ -303,6 +311,10 @@ test.describe('Demo', () => {
     await page.locator('#sheet [data-act="rolErbijOk"]').click();
     const rol = await page.evaluate((id) => CC.S().people.find((p) => p.id === id).rollen.find((r) => r.rol === 'tc'), esther);
     expect(rol).toEqual({ rol: 'tc', bouwen: ['Onderbouw'] });
+    // Clubbeheerder → Rollen: de TC staat bij de rollen in gebruik en in de lijst met mensen
+    await page.locator('nav.nav button[data-tab="rollen"]').click();
+    await expect(page.locator('#app .rij', { hasText: 'Technisch coördinator' }).first()).toBeVisible();
+    await expect(page.locator('#app [data-act="rollenPersoon"]', { hasText: 'Technisch coördinator (Onderbouw)' })).toHaveCount(1);
     // Esther als TC: alleen Trainers en Berichten, alleen trainers uit de onderbouw
     await page.evaluate((id) => { CC.zetSessie(id); CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'tc')); }, esther);
     await page.locator('nav.nav button[data-tab="home"]').click();

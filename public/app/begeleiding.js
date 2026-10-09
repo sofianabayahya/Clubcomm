@@ -82,12 +82,27 @@
       <div class="twee"><div><label for="bn-s">Soort</label><select id="bn-s" name="s"><option value="training">Training</option><option value="wedstrijd">Wedstrijd</option></select></div><div><label for="bn-d">Datum (bij een andere datum)</label><input id="bn-d" name="d" type="date" value="${D.vandaag()}"></div></div>
       <button class="knop">Aanmaken</button><p class="zacht klein">Daarna doorloop je de vijf fasen: voorbereiding, planningsgesprek, praktijk, reflectiegesprek en nazorg.</p></form>`);
   });
-  CC.on('begelNieuwOk', (f) => {
-    const S = CC.S(); const tr = M.persoon(S, f.dataset.id); const a = f.a.value ? M.act(S, f.a.value) : null; const t = dosT(S, tr.id) || {};
-    const m = { id: 'bm' + Date.now(), trainerId: tr.id, teamId: a ? a.teamId : (tr.rollen.find((r) => r.rol === 'trainer') || {}).teamId, actId: a ? a.id : null, soort: a ? (M.isWed(a) ? 'wedstrijd' : 'training') : f.s.value, datum: a ? a.datum : f.d.value, door: CC.me().id,
+  // Een moment aanmaken (gekoppeld aan een training of wedstrijd, of aan een losse datum)
+  const maakMoment = (S, tr, a, soort, datum) => { const t = dosT(S, tr.id) || {};
+    const m = { id: 'bm' + Date.now(), trainerId: tr.id, teamId: a ? a.teamId : (tr.rollen.find((r) => r.rol === 'trainer') || {}).teamId, actId: a ? a.id : null, soort: a ? (M.isWed(a) ? 'wedstrijd' : 'training') : soort, datum: a ? a.datum : datum, door: CC.me().id,
       niveau: t.niveau || 'kort', voor: { thema: '', doel: '', leerdoel: t.leerdoel || '', hoDoel: '' }, plan: { leerdoel: '', focus: '', feedback: '' }, obs: { punten: {}, notities: {}, klok: null, turf: {} }, vakken: {}, klaar: false };
-    mom(S).push(m); CC.save(); CC.closeSheet(); CC.open('begelMoment', { id: m.id });
+    mom(S).push(m); return m; };
+  CC.on('begelNieuwOk', (f) => {
+    const S = CC.S(); const tr = M.persoon(S, f.dataset.id); const a = f.a.value ? M.act(S, f.a.value) : null;
+    const m = maakMoment(S, tr, a, f.s.value, f.d.value); CC.save(); CC.closeSheet(); CC.open('begelMoment', { id: m.id });
   });
+  // Vanaf de kaart in Trainers → Traject: kies de training (of wedstrijd) waar je gaat kijken; de trainer krijgt meteen de vragenlijst
+  CC.on('begelInplannen', (el) => { const S = CC.S(); const tr = M.persoon(S, el.dataset.id); const soort = el.dataset.soort; const teams = tr.rollen.filter((r) => r.rol === 'trainer').map((r) => r.teamId);
+    const bezet = new Set(mom(S).map((m) => m.actId).filter(Boolean));
+    const acts = S.acts.filter((a) => teams.includes(a.teamId) && !a.afgelast && !bezet.has(a.id) && (soort === 'wedstrijd' ? M.isWed(a) : a.soort === 'training') && a.datum >= D.vandaag() && a.datum <= D.addDays(D.vandaag(), 42)).sort((a, b) => (a.datum + a.tijd).localeCompare(b.datum + b.tijd));
+    const t = dosT(S, tr.id) || {}; const voor = tr.naam.split(' ')[0];
+    CC.sheet(`${soort === 'wedstrijd' ? 'Wedstrijd' : 'Training'} kiezen`, `<p class="zacht">Waar ga je kijken? ${esc(voor)} krijgt meteen de ${t.niveau === 'uitgebreid' ? 'uitgebreide' : 'korte'} vragenlijst om voor te bereiden.</p>
+      ${acts.length ? `<div class="lijst">${acts.map((a) => h.rij({ ic: soort === 'wedstrijd' ? 'trophy' : 'dumbbell', titel: `${D.lang(a.datum)} · ${a.tijd}`, sub: esc([CC.tn(a.teamId), a.veld].filter(Boolean).join(' · ')), act: 'begelInplannenOk', attrs: `data-id="${tr.id}" data-a="${a.id}"` })).join('')}</div>` : `<p class="zacht klein">Er staan de komende 6 weken geen ${soort === 'wedstrijd' ? 'wedstrijden' : 'trainingen'} van het team in ClubComm. Kies hieronder een datum.</p>`}
+      <form data-submit="begelInplannenOk" data-id="${tr.id}" data-soort="${soort}" class="codeform"><label for="bp-d">Andere datum</label><input id="bp-d" name="d" type="date" min="${D.vandaag()}" required><button class="knop licht">Plannen</button></form>`); });
+  CC.on('begelInplannenOk', (el) => { const S = CC.S(); const tr = M.persoon(S, el.dataset.id); const a = el.dataset.a ? M.act(S, el.dataset.a) : null;
+    const datum = a ? a.datum : el.d.value; if (!datum) return CC.toast('Kies een datum', 'fout');
+    const m = maakMoment(S, tr, a, el.dataset.soort, datum); stuurVragen(S, m); CC.save(); CC.closeSheet(); CC.render();
+    CC.toast(`Gepland: ${m.soort} ${D.kort(m.datum)}. ${tr.naam.split(' ')[0]} krijgt de vragenlijst`); });
 
   // ---------- De pagina van het moment ----------
   const veldT = (naam, label, waarde, ph = '', rijen = 2) => `<label>${label}</label><textarea name="${naam}" rows="${rijen}" placeholder="${esc(ph)}">${esc(waarde || '')}</textarea>`;
@@ -141,9 +156,23 @@
   // Typ je je terugblik en tik je daarna op een knop, dan blijft de tekst bewaard
   const bewaarTerugblik = (S, m) => { const t = document.querySelector('form[data-submit="begelKlaarOk"] textarea[name="hoVerslag"]'); if (t && t.value.trim() !== hoTekst(S, m)) zetHoTekst(S, m, t.value.trim()); };
   CC.on('begelVoorbeeld', (el) => { const S = CC.S(); const m = vind(S, el.dataset.id); bewaarTerugblik(S, m); laatst[m.id] = 4; CC.save(); CC.open('begelVerslag', { id: m.id, voorbeeld: '1' }); });
-  CC.on('begelVragen', (el) => { const S = CC.S(); const m = vind(S, el.dataset.id); const tr = M.persoon(S, m.trainerId); laatst[m.id] = 1; m.gevraagd = new Date().toISOString();
-    bericht(S, m, `Bereid je begeleidingsmoment voor (${D.kort(m.datum)})`, `Hoi ${tr.naam.split(' ')[0]},\n\nOp ${D.lang(m.datum)} kijk ik mee bij de ${m.soort}. Wil je vooraf een korte vragenlijst invullen? Dan begint ons gesprek bij jou. Je vindt hem op je Home in ClubComm.\n\nGroet, ${CC.me().naam}`);
+  const stuurVragen = (S, m) => { const tr = M.persoon(S, m.trainerId); const a = m.actId && M.act(S, m.actId); m.gevraagd = new Date().toISOString();
+    bericht(S, m, `Bereid je begeleidingsmoment voor (${D.kort(m.datum)})`, `Hoi ${tr.naam.split(' ')[0]},\n\nOp ${D.lang(m.datum)}${a ? ` om ${a.tijd}` : ''} kom ik kijken bij de ${m.soort}. Wil je vooraf een korte vragenlijst invullen? Dan begint ons gesprek bij jou. Je vindt hem op je Home in ClubComm.\n\nGroet, ${CC.me().naam}`); };
+  CC.on('begelVragen', (el) => { const S = CC.S(); const m = vind(S, el.dataset.id); const tr = M.persoon(S, m.trainerId); laatst[m.id] = 1; stuurVragen(S, m);
     bewaar(S, `${tr.naam.split(' ')[0]} krijgt de vragenlijst`); });
+  // Eén herinnering, de dag ervoor vanaf 17:00, als de vragenlijst nog niet is ingevuld (ook vanaf de server; Besluit 77)
+  CC.begelHerinnering = (S) => { let veranderd = false; const morgen = D.addDays(D.vandaag(), 1);
+    if (new Date().getHours() < 17) return false;
+    mom(S).forEach((m) => { const z = zelf(S)[m.id] || {};
+      if (m.klaar || !m.gevraagd || z.ingevuld || m.herinnerd || m.datum !== morgen || Date.now() - new Date(m.gevraagd).getTime() < 12 * 3600e3) return;
+      const tr = M.persoon(S, m.trainerId); if (!tr) return; const a = m.actId && M.act(S, m.actId);
+      m.herinnerd = new Date().toISOString(); veranderd = true;
+      S.msgs.push({ id: 'b' + Date.now() + Math.random().toString(36).slice(2, 6), van: 'systeem', soort: 'persoonlijk', bereik: m.teamId, onderwerp: `Herinnering: bereid je begeleidingsmoment voor (morgen)`,
+        tekst: `Hoi ${tr.naam.split(' ')[0]},\n\nMorgen${a ? ` om ${a.tijd}` : ''} komt er iemand kijken bij je ${m.soort}. Je vragenlijst is nog niet ingevuld. Het kost een paar minuten; je vindt hem op je Home in ClubComm.`,
+        tijd: new Date().toISOString(), ontvangers: [m.trainerId], gelezen: [], antw: [], urgent: false, gepland: null }); });
+    return veranderd; };
+  const origClub = CC.automaatClub;
+  if (origClub) CC.automaatClub = (S) => { const a = origClub(S); const b = CC.begelHerinnering(S); return a || b; };
   CC.on('begelDeel', (el) => { const S = CC.S(); const m = vind(S, el.dataset.id); const tr = M.persoon(S, m.trainerId); laatst[m.id] = 4; bewaarTerugblik(S, m); m.gedeeld = new Date().toISOString();
     bericht(S, m, `Je verslag staat klaar (${D.kort(m.datum)})`, `Hoi ${tr.naam.split(' ')[0]},\n\nHet verslag van ons begeleidingsmoment staat klaar in ClubComm. Wil je je reflectie invullen (3 korte vragen)?\n\nOntwikkelpunt: ${(m.vakken || {}).ontwikkelpunt || ''}\n\nGroet, ${CC.me().naam}`);
     bewaar(S, 'Gedeeld met de trainer'); });
@@ -260,7 +289,7 @@
   CC.begelWeek = (S) => { const tot = D.addDays(D.vandaag(), 7);
     return mom(S).filter((m) => !m.klaar && m.datum >= D.vandaag() && m.datum <= tot).sort((a, b) => a.datum.localeCompare(b.datum)).map((m) => { const tr = M.persoon(S, m.trainerId) || { naam: '' };
       const a = m.actId && M.act(S, m.actId);
-      return h.rij({ ic: 'user-check', titel: `${D.relatief(m.datum)}: begeleiding ${esc(tr.naam)}`, sub: `${m.soort === 'wedstrijd' ? 'Wedstrijd' : 'Training'} ${esc(CC.tn(m.teamId))}${a ? ` · ${a.tijd}` : ''} · ${faseRegel(S, m)}`, act: 'open', attrs: `data-view="begelMoment" data-id="${m.id}"` }); }); };
+      return h.rij({ ic: 'user-check', titel: `${D.relatief(m.datum)}: begeleiding ${esc(tr.naam)}`, sub: `${m.soort === 'wedstrijd' ? 'Wedstrijd' : 'Training'} ${esc(CC.tn(m.teamId))}${a ? ` · ${a.tijd}` : ''} · ${fasen(S, m)[0][1] ? faseRegel(S, m) : 'voorbereiding nog invullen'}`, kleur: fasen(S, m)[0][1] ? '' : 'blauw', act: 'open', attrs: `data-view="begelMoment" data-id="${m.id}"` }); }); };
 
   // ---------- Demo: Dennis heeft één afgerond trainingsmoment en een geplande wedstrijd ----------
   const demo = (S) => { const d = S.people.find((x) => x.naam === 'Dennis Peters'); if (!d) return; const team = (d.rollen.find((r) => r.rol === 'trainer') || {}).teamId;
