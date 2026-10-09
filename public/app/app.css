@@ -272,7 +272,8 @@ input:not([type=checkbox]):not([type=radio]):not([type=file]), select, textarea 
 textarea { min-height: 90px; resize: vertical; }
 select.kies { font-weight: 600; }
 .twee { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.twee > div { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.drie-velden { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 8px; }
+.twee > div, .drie-velden > div { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .twee.drie { grid-template-columns: 1fr 1fr 1.2fr; gap: 8px; }
 .roosterdag { border-bottom: 1px solid var(--lijn); padding: 6px 0 10px; display: flex; flex-direction: column; gap: 6px; }
 .roosterdag:last-of-type { border-bottom: 0; }

@@ -43,10 +43,15 @@
   // in een eigen blok eronder. Ontworpen voor 50 teams: alles gebundeld, nooit een lange lijst (principe 10).
   const BUNDEL = 3; // vanaf zoveel regels van dezelfde soort: één regel met een teller
   const trainersVan = (S, tid) => S.people.filter((p) => p.rollen.some((r) => r.rol === 'trainer' && r.teamId === tid));
-  const lichting = (t) => t.cat || (t.id.match(/^O\d+/) || ['Overig'])[0];
-  const lichtingen = (S) => { const g = {}; S.teams.forEach((t) => { (g[lichting(t)] = g[lichting(t)] || []).push(t); });
-    return Object.entries(g).sort(([a], [b]) => (parseInt(a.slice(1), 10) || 99) - (parseInt(b.slice(1), 10) || 99)); };
   const trainerSig = (S) => (CC.trainerSignalen ? CC.trainerSignalen(S) : []).filter((s) => s.p.rollen.some((r) => r.rol === 'trainer' && S.teams.some((t) => t.id === r.teamId) && CC.mag('trainersVolgen', null, r.teamId)));
+  // Besluit 97: focus = welke bouwen je wilt zien (onthouden op deze telefoon); signalen volgen het werkgebied, niet de focus
+  const FOCUS = 'clubcomm-focus';
+  const focus = (S) => { if (!CC.ui.seg.hoFocus) { try { CC.ui.seg.hoFocus = localStorage.getItem(FOCUS) || 'alle'; } catch (e) { CC.ui.seg.hoFocus = 'alle'; } }
+    const f = CC.ui.seg.hoFocus; try { localStorage.setItem(FOCUS, f); } catch (e) { /* */ }
+    return CC.bouwenMetTeams(S).some((b) => b.naam === f) ? f : 'alle'; };
+  const inFocus = (S, f, tid) => f === 'alle' || CC.bouwVan(S, M.team(S, tid) || { id: tid }).naam === f;
+  const focusChips = (S, f) => { const bw = CC.bouwenMetTeams(S); if (bw.length < 2) return '';
+    return `<div class="chips scroll">${[['alle', 'Alles'], ...bw.map((b) => [b.naam, b.naam])].map(([k, l]) => `<button class="chipknop ${k === f ? 'aan' : ''}" data-act="seg" data-key="hoFocus" data-val="${esc(k)}">${esc(l)}</button>`).join('')}</div>`; };
   const weekActs = (S) => { const v = D.vandaag(); const t = D.addDays(v, 6); return S.teams.flatMap((x) => M.acts(S, x.id, v, t)).filter((a) => !a.afgelast).sort((a, b) => (a.datum + a.tijd).localeCompare(b.datum + b.tijd)); };
 
   const hoHome = (S) => {
@@ -55,17 +60,19 @@
     const tot = stats.reduce((s, x) => s + x.spelers.reduce((a, y) => a + y.st.totaal, 0), 0);
     const aan = stats.reduce((s, x) => s + x.spelers.reduce((a, y) => a + y.st.aanwezig, 0), 0);
     // Te doen: alleen de trainers en jouw eigen stap (clubbesluit); spelerzaken die bij de coördinator blijven liggen gebundeld
-    const doen = [];
-    const ts = trainerSig(S);
+    const doen = []; const f = focus(S);
+    const tsAlle = trainerSig(S); const teamVanTr = (x) => (x.p.rollen.find((r) => r.rol === 'trainer') || {}).teamId;
+    const ts = tsAlle.filter((x) => inFocus(S, f, teamVanTr(x))); const buiten = tsAlle.length - ts.length;
     if (ts.length >= BUNDEL) doen.push(h.rij({ ic: 'user-cog', titel: `${ts.length} trainers vragen aandacht`, sub: ts.slice(0, 3).map((x) => esc(x.p.naam)).join(', ') + (ts.length > 3 ? '…' : ''), kleur: 'oranje', act: 'open', attrs: 'data-view="trainersRapport" data-filter="aandacht"' }));
-    else doen.push(...(CC.trainerAandacht ? CC.trainerAandacht(S) : []));
+    else doen.push(...ts.map((x) => h.rij({ ic: 'user-cog', titel: esc(x.tekst), sub: esc(x.sub), kleur: 'oranje', act: 'open', attrs: `data-view="trainerDetail" data-id="${x.p.id}"` })));
+    if (buiten) doen.push(h.rij({ ic: 'filter', titel: `${buiten} ${buiten === 1 ? 'signaal' : 'signalen'} buiten je focus`, sub: 'Trainers in een andere bouw', act: 'open', attrs: 'data-view="trainersRapport" data-filter="aandacht" data-alle="1"' }));
     groep('clubbesluit').filter((s) => CC.mag('clubbesluit', null, s.teamId)).forEach((s) => doen.push(CC.stapRij(S, s)));
     if (O.liggen.length) doen.push(h.rij({ ic: 'hourglass', titel: `${O.liggen.length} ${O.liggen.length === 1 ? 'spelerzaak blijft' : 'spelerzaken blijven'} liggen`, sub: `Langer dan ${i.liggenDagen} dagen zonder vastgelegd contact · ${esc(L.coordinator.toLowerCase())}`, kleur: 'oranje', act: 'open', attrs: 'data-view="signalen" data-soort="liggen"' }));
     // Deze week: wanneer kun je gaan kijken? Eén regel per dag
-    const acts = weekActs(S); const dagen = [...new Set(acts.map((a) => a.datum))];
+    const acts = weekActs(S).filter((a) => inFocus(S, f, a.teamId)); const dagen = [...new Set(acts.map((a) => a.datum))];
     const dagRij = (d) => { const op = acts.filter((a) => a.datum === d); const w = op.filter((a) => M.isWed(a)); const tr = op.filter((a) => a.soort === 'training');
       const delen = [w.length && `${w.length} ${w.length === 1 ? 'wedstrijd' : 'wedstrijden'}${w.some((a) => a.thuis) ? ` (${w.filter((a) => a.thuis).length} thuis)` : ''}`, tr.length && `${tr.length} ${tr.length === 1 ? 'training' : 'trainingen'}`, (op.length - w.length - tr.length) && `${op.length - w.length - tr.length} anders`].filter(Boolean);
-      return h.rij({ ic: 'calendar-days', titel: `${D.relatief(d)}`, sub: delen.join(' · '), act: 'open', attrs: `data-view="weekHO" data-dag="${d}"` }); };
+      return h.rij({ ic: 'calendar-days', titel: `${D.relatief(d)}`, sub: delen.join(' · ') + (f !== 'alle' ? ` · ${esc(f.toLowerCase())}` : ''), act: 'open', attrs: `data-view="weekHO" data-dag="${d}"` }); };
     // Rapporten: zelf opzoeken
     const nTr = new Set(S.teams.flatMap((t) => trainersVan(S, t.id).map((p) => p.id))).size;
     // Organisatie: alleen voor teams zonder coördinator (de HO is daar de terugval)
@@ -88,39 +95,44 @@
       if (af.length) org.push(h.rij({ ic: 'check', titel: `${af.length} ${af.length === 1 ? 'signaal' : 'signalen'} afgedaan als "geen actie nodig"`, sub: 'Akkoord, of toch oppakken?', act: 'open', attrs: 'data-view="afgedaan"' }));
       const mat = CC.materiaalAandacht && CC.materiaalAandacht(S); if (mat) org.push(mat);
     }
-    return `<div class="clubregel"><span><b>${S.teams.length}</b> ${S.teams.length === 1 ? 'team' : 'teams'}</span><span><b>${nTr}</b> ${nTr === 1 ? 'trainer' : 'trainers'}</span><span><b>${tot ? Math.round((100 * aan) / tot) : '–'}%</b> aanwezig</span></div>
+    return `${focusChips(S, f)}<div class="clubregel"><span><b>${S.teams.length}</b> ${S.teams.length === 1 ? 'team' : 'teams'}</span><span><b>${nTr}</b> ${nTr === 1 ? 'trainer' : 'trainers'}</span><span><b>${tot ? Math.round((100 * aan) / tot) : '–'}%</b> aanwezig</span></div>
       ${h.sectie(`Te doen${doen.length ? ` (${doen.length})` : ''}`)}${doen.length ? `<div class="lijst">${doen.join('')}</div>` : h.leeg('Je trainers vragen nu geen aandacht 👍', 'circle-check')}
       ${h.sectie('Deze week')}${dagen.length ? `<div class="lijst compact">${dagen.map(dagRij).join('')}</div><p class="zacht klein">Wanneer kun je gaan kijken? Tik op een dag.</p>` : '<p class="zacht klein">Geen trainingen of wedstrijden de komende 7 dagen.</p>'}
       ${h.sectie('Rapporten')}<div class="lijst compact">
-        ${h.rij({ ic: 'user-check', titel: 'Trainers', sub: `${nTr === 1 ? '1 trainer' : `${nTr} trainers`} per lichting en team: afmeldingen, aanwezigheid van het team${ts.length ? ` · ${ts.length} ${ts.length === 1 ? 'vraagt' : 'vragen'} aandacht` : ''}`, act: 'open', attrs: 'data-view="trainersRapport"' })}
+        ${h.rij({ ic: 'user-check', titel: 'Trainers', sub: `${nTr === 1 ? '1 trainer' : `${nTr} trainers`} per bouw en team: afmeldingen, aanwezigheid van het team${ts.length ? ` · ${ts.length} ${ts.length === 1 ? 'vraagt' : 'vragen'} aandacht` : ''}`, act: 'open', attrs: 'data-view="trainersRapport"' })}
         ${h.rij({ ic: 'chart-column', titel: 'Teams', sub: 'Aanwezigheid, redenen en verloop per team', act: 'tab', attrs: 'data-tab="inzicht"' })}</div>
       ${org.length ? `${h.sectie(`Organisatie · ${eigenTeams.length === S.teams.length ? 'je club heeft geen ' + esc(L.coordinator.toLowerCase()) : `${eigenTeams.length} teams zonder ${esc(L.coordinator.toLowerCase())}`}`)}<p class="zacht klein">Dit doe je omdat er voor deze teams geen ${esc(L.coordinator.toLowerCase())} is.</p><div class="lijst">${org.join('')}</div>` : ''}`;
   };
 
-  // Rapport Trainers: per lichting en team, in- en uitklapbaar (Besluit 95). Open: alleen waar iets speelt.
+  // Rapport Trainers: per bouw en team, in- en uitklapbaar (Besluit 95, 97). Open: alleen waar iets speelt.
   CC.views.trainersRapport = (S, p) => {
-    const filter = h.segVal('trRap', p.filter || 'alle'); const sig = new Set(trainerSig(S).map((x) => x.p.id));
+    if (p.alle) { CC.ui.seg.hoFocus = 'alle'; delete p.alle; }
+    const filter = h.segVal('trRap', p.filter || 'alle'); const sig = new Set(trainerSig(S).map((x) => x.p.id)); const f = focus(S);
     const regel = (tr) => { const t = CC.trainerTelling ? CC.trainerTelling(S, tr.id) : null; if (!t) return '';
       const delen = [t.afmeldingen && `${t.afmeldingen}× afgemeld`, t.telaat && `${t.telaat}× te laat`, t.niet && `${t.niet}× niet gekomen`, t.afgelast && `${t.afgelast} afgelast`].filter(Boolean);
       return delen.length ? delen.join(' · ') : 'geen afmeldingen dit seizoen'; };
     const per = M.periode(S, 'blok');
-    const blokken = lichtingen(S).map(([naam, teams]) => {
+    const bouwen = CC.bouwenMetTeams(S).filter((b) => f === 'alle' || b.naam === f);
+    const blokken = bouwen.map((b) => {
+      const teams = b.teams.slice().sort((x, y) => x.naam.localeCompare(y.naam, 'nl', { numeric: true }));
       const rijen = teams.map((t) => { const trs = trainersVan(S, t.id); const pct = M.teamStats(S, t.id, per).pct; const z = M.zone(S, pct, t.id); const let_ = trs.some((x) => sig.has(x.id));
         if (filter === 'aandacht' && !let_) return '';
         return trs.length ? trs.map((tr) => h.rij({ ic: h.stip(z), titel: `${esc(t.naam)} · ${esc(tr.naam)}`, sub: `${regel(tr)} · team ${pct ?? '–'}%`, kleur: sig.has(tr.id) ? 'oranje' : '', act: 'open', attrs: `data-view="trainerDetail" data-id="${tr.id}"` })).join('')
           : h.rij({ ic: h.stip(z), titel: `${esc(t.naam)} · geen trainer`, sub: `team ${pct ?? '–'}%`, kleur: 'oranje' }); }).join('');
       if (!rijen) return '';
       const n = teams.filter((t) => trainersVan(S, t.id).some((x) => sig.has(x.id))).length;
-      return `<details class="uitklap" ${n || filter === 'aandacht' ? 'open' : ''}><summary><b>${esc(naam)}</b> <small class="zacht">${teams.length} ${teams.length === 1 ? 'team' : 'teams'}${n ? ` · ${n} ${n === 1 ? 'vraagt' : 'vragen'} aandacht` : ''}</small></summary><div class="lijst compact">${rijen}</div></details>`;
+      const nTr = new Set(teams.flatMap((t) => trainersVan(S, t.id).map((x) => x.id))).size;
+      const pcts = teams.map((t) => M.teamStats(S, t.id, per).pct).filter((x) => x != null); const gem = pcts.length ? Math.round(pcts.reduce((a, c) => a + c, 0) / pcts.length) : null;
+      return `<details class="uitklap" ${n || filter === 'aandacht' || bouwen.length === 1 ? 'open' : ''}><summary><b>${esc(b.naam)}</b> <small class="zacht">${teams.length} ${teams.length === 1 ? 'team' : 'teams'} · ${nTr} ${nTr === 1 ? 'trainer' : 'trainers'}${gem != null ? ` · ${gem}%` : ''}${n ? ` · ${n} ${n === 1 ? 'vraagt' : 'vragen'} aandacht` : ''}</small></summary><div class="lijst compact">${rijen}</div></details>`;
     }).join('');
-    return { titel: 'Rapport trainers', html: `${h.seg('trRap', [['alle', 'Alle trainers'], ['aandacht', `Vraagt aandacht (${sig.size})`]], filter)}
-      <p class="zacht klein">Per lichting en team: afmeldingen van de trainer dit seizoen en de aanwezigheid van het team (${esc(h.faseLabel(S))}). Tik op een trainer voor de geschiedenis en om contact vast te leggen.</p>
+    return { titel: 'Rapport trainers', html: `${focusChips(S, f)}${h.seg('trRap', [['alle', 'Alle trainers'], ['aandacht', `Vraagt aandacht (${sig.size})`]], filter)}
+      <p class="zacht klein">Per bouw en team: afmeldingen van de trainer dit seizoen en de aanwezigheid van het team (${esc(h.faseLabel(S))}). Tik op een trainer voor de geschiedenis en om contact vast te leggen.</p>
       ${blokken || h.leeg(filter === 'aandacht' ? 'Geen trainers die aandacht vragen 👍' : 'Nog geen trainers', 'circle-check')}` };
   };
 
   // Deze week: per dag welke teams trainen of spelen, met de trainer (om te gaan kijken)
   CC.views.weekHO = (S, p) => {
-    const acts = weekActs(S).filter((a) => a.datum === p.dag);
+    const f = focus(S); const acts = weekActs(S).filter((a) => a.datum === p.dag && inFocus(S, f, a.teamId));
     const rij = (a) => { const t = M.team(S, a.teamId); const tr = trainersVan(S, a.teamId).map((x) => x.naam).join(', ');
       const wat = M.isWed(a) ? `${a.soort === 'oefen' ? 'Oefenwedstrijd' : 'Wedstrijd'} ${a.thuis === false ? 'uit' : 'thuis'}${a.tegen ? ` tegen ${esc(a.tegen)}` : ''}` : a.soort === 'training' ? `Training${a.veld ? ` · ${esc(a.veld)}` : ''}` : esc(a.naam || 'Activiteit');
       return h.rij({ ic: M.isWed(a) ? 'trophy' : 'dumbbell', titel: `${esc(a.tijd)} · ${esc(t ? t.naam : a.teamId)}`, sub: `${wat}${tr ? ` · ${esc(tr)}` : ''}`, chevron: false }); };
