@@ -236,11 +236,21 @@ test.describe('Demo', () => {
     await page.locator('#app form[data-submit="begelVakkenOk"] textarea[name="ontwikkelpunt"]').fill('Rust gebruiken voor één punt');
     await page.locator('#app form[data-submit="begelVakkenOk"] button').click();
     await page.locator('#app summary', { hasText: 'Nazorg' }).click();
+    // Vóór het delen: de drie reflectievragen staan er, en de begeleider kan bekijken wat de trainer ziet
+    await expect(page.locator('#app')).toContainText('In welke situatie ga ik mijn ontwikkelpunt de volgende keer toepassen?');
+    await page.locator('#app [data-act="begelVoorbeeld"]').click();
+    await expect(page.locator('#app')).toContainText('Voorbeeld: dit ziet de trainer');
+    await expect(page.locator('#app form[data-submit="begelReflectieOk"]')).toHaveCount(0);
+    await page.locator('[data-act="terug"]').click();
+    await page.locator('#app textarea[name="hoVerslag"]').fill('Ik gaf te snel mijn eigen oplossing');
     await page.locator('#app [data-act="begelDeel"]').click();
     await page.locator('#app form[data-submit="begelKlaarOk"] button.knop').click();
     const dennis = await page.evaluate(() => CC.S().people.find((x) => x.naam === 'Dennis Peters').id);
     expect(await page.evaluate((d) => CC.S().trainerDossier[d].traject.ontwikkelpunt, dennis)).toBe('Rust gebruiken voor één punt');
     expect(await page.evaluate((i) => CC.S().begeleidMomenten.find((m) => m.id === i).klaar, id)).toBe(true);
+    // De eigen terugblik staat apart (niet in het moment dat de trainer kan lezen)
+    expect(await page.evaluate((i) => CC.S().begelHoVerslag[i].tekst, id)).toBe('Ik gaf te snel mijn eigen oplossing');
+    expect(await page.evaluate((i) => CC.S().begeleidMomenten.find((m) => m.id === i).hoVerslag, id)).toBeUndefined();
     // Dennis ziet zijn vragenlijst en het verslag op zijn Home
     await page.evaluate((d) => { CC.zetSessie(d); CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer')); }, dennis);
     await page.locator('nav.nav button[data-tab="home"]').click();
