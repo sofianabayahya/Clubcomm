@@ -3,7 +3,7 @@
 (function () {
   const CC = window.CC; const D = CC.date, M = CC.m, h = CC.h, icon = CC.icon, esc = CC.esc;
 
-  // Standaardlijst (clubmanager kan aanpassen). aantal 'spelers' = 1 per speler van het team.
+  // Standaardlijst (clubbeheerder kan aanpassen). aantal 'spelers' = 1 per speler van het team.
   CC.MATERIAAL = [
     { id: 'ballen', naam: 'Ballen', aantal: 'spelers', voor: ['mini', 'o8', 'o11'] },
     { id: 'hoedjes', naam: 'Hoedjes', aantal: 40, voor: ['mini', 'o8', 'o11'] },
@@ -117,7 +117,7 @@
     CC.save(); CC.render(); CC.toast('Afgevinkt; de trainer krijgt bericht');
   });
 
-  // Instellingen voor de clubmanager
+  // Instellingen voor de clubbeheerder
   CC.views.materiaalInst = (S) => {
     const c = S.club.materiaal;
     const g = { mini: "mini's", o8: 'O8–O10', o11: 'O11–O12' };

@@ -1,6 +1,6 @@
 // ClubComm prototype — Besluit 25: taken per rol (vervangt Besluit 24 "wie ziet wat").
 // Rollen zijn vaste bouwstenen met een bereik; de club (bestuur) bepaalt welke taken bij welke rol horen.
-// De clubmanager vinkt dat aan en kan het altijd aanpassen. Coördinator = laag tussen trainer en HJO
+// De clubbeheerder vinkt dat aan en kan het altijd aanpassen. Coördinator = laag tussen trainer en HJO
 // voor een groep teams. Taken van de coördinator gaan vanzelf naar de HJO als een team geen coördinator heeft.
 (function () {
   const CC = window.CC; const M = CC.m, h = CC.h, icon = CC.icon, esc = CC.esc;
@@ -85,7 +85,7 @@
   const profielBlok = (S) => Object.entries(CC.PROFIELEN).map(([rol, lijst]) => { const nu = profielVan(S, rol);
     return `${h.sectie(`Profiel ${rol === 'teamleider' ? 'teamleider' : 'trainer'}`)}<div class="profielen">${lijst.map((p) => `<button class="profiel ${p.id === nu ? 'aan' : ''}" data-act="profielZet" data-rol="${rol}" data-id="${p.id}"><b>${esc(p.naam)}</b><small>${esc(p.sub)}</small></button>`).join('')}</div>${nu === 'eigen' ? '<p class="zacht klein">Eigen keuze: je hebt losse vinkjes aangepast (zie hieronder).</p>' : ''}`; }).join('');
 
-  // ---------- Clubmanager: taken per rol ----------
+  // ---------- Clubbeheerder: taken per rol ----------
   const matrix = (S) => {
     const z = taken(S); const L = S.club.labels; const co = S.club.coordinatorAan;
     const kol = ROLLEN.filter((r) => r !== 'coordinator' || co);
