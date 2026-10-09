@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 98; principe 10)
+Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -17,10 +17,11 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 98; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 99 | Trainers begeleiden via een traject, met de KNVB-begeleidingscyclus; tabblad Trainers | ✅ geldt |  |
 | 98 | Verantwoordelijkheid: iedere rol doet zijn eigen werk, de laag erboven is het vangnet | ✅ geldt |  |
-| 97 | Bouwen, werkgebied en focus, signalen die ertoe doen, trainersdossier | ✅ geldt |  |
+| 97 | Bouwen, werkgebied en focus, signalen die ertoe doen, trainersdossier | ◐ deels herzien | door 99 (traject per trainer in plaats van 2 + 2; tabblad Trainers; VOG en diploma bij de coördinator) |
 | 96 | Eén aanspreekpunt: de clubbeheerder (van de club) en de ClubComm-adviseur (van ons) | ✅ geldt |  |
-| 95 | Twee lijnen: voetbal (HO) en organisatie (coördinator) | ◐ deels herzien | door 96 (clubbeheerder en ClubComm-adviseur), 97 (bouwen, focus, dossier; nieuwe bouwvolgorde) |
+| 95 | Twee lijnen: voetbal (HO) en organisatie (coördinator) | ◐ deels herzien | door 96 (clubbeheerder en ClubComm-adviseur), 97 (bouwen, focus, dossier; nieuwe bouwvolgorde), 99 (traject per trainer in plaats van 2 + 2 voor iedereen) |
 | 94 | Training afgelasten met eigen toelichting | ◐ deels herzien | door 95 (de HJO-knop Afgelasten ligt nu bij de coördinator) |
 | 93 | Evaluatieformulier praktijkbegeleiding coach (testcase, mijnclubcomm.nl/evaluatie) | ◐ deels herzien | door 95 (wordt later de module Trainers begeleiden in de app), 97 (in het trainersdossier) |
 | 92 | Oefenwedstrijd: thuis of uit, verzamelen, verzamelpunt en adres | ✅ geldt |  |
@@ -632,6 +633,22 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 99 — Trainers begeleiden via een traject, met de KNVB-begeleidingscyclus; tabblad Trainers
+*Besloten 10 oktober 2026. Analyse: `docs/onderzoek/ho-begeleiding-trainers.md` (hand-outs KNVB HO-A bijeenkomst 2 en 3, vragenlijst voorgesprek). Herziet de standaard "2 + 2 per trainer" uit Besluit 95 en 97.*
+- **Volgen ≠ begeleiden.** Alle trainers staan in het rapport (afmeldingen, team, VOG). **Begeleiden gaat via een traject**: alleen voor trainers die willen, na een kennismaking, met een **plan per trainer** (bijvoorbeeld 1 wedstrijd + 1 training, of 2 + 2). Signalen over begeleiding alleen voor trainers in een traject, afgezet tegen hun eigen plan. Werkdruk = de som van de trajecten.
+- **Begeleidingsmoment = de KNVB-cyclus in vijf fasen:** voorbereiding (HO) → planningsgesprek (de trainer vult de vragenlijst vooraf zelf in; samen leerdoel, focus HO, feedbackmoment) → praktijk (observatie) → reflectiegesprek (6 stappen, feed-forward, één ontwikkelpunt) → nazorg (reflectie trainer, verslag HO, volgend moment).
+- **Observatie:** wedstrijd in drie delen (1e helft laatste 20 min · rust · 2e helft eerste 20 min); **training per voetbalvorm** (oefening).
+- **Niet voetbalinhoudelijk = coördinatie:** VOG en registratie van het KNVB-diploma liggen bij de coördinator; de HO ziet ze.
+- **Tabbladen HO:** *Home · Trainers · Teams · Inzicht · Berichten*. Planning is organisatie (coördinator); zonder coördinator staat Planning als knop in Teams. Tabblad Trainers: *Traject · Alle trainers · Scholing (later)*.
+- **De trainer** ziet in zijn profiel *Mijn ontwikkeling* (traject, eigen vragenlijsten, verslagen, reflectie; niet de notities van de HO) en krijgt alleen een melding als hij iets moet doen.
+- **Thema's en periodisering van de club:** nog niet. De club (de HO) werkt eerst haar visie en periodisering uit; daarna komt het in de app (Later / ideeën).
+- **Kennismaking trainer (vragenlijst voor alle trainers, aanvulling 10-10):** "We willen je graag beter leren kennen." Geboortejaar (jonge trainers, VOG vanaf 18) · ervaring (sinds wanneer, leeftijden, breedte/selectie) · KNVB-diploma's (de coördinator controleert) · tijd en beschikbaarheid ("wisselend door studie, werk of gezin?", vrij veld, niet verplicht; **geen vragen naar kinderen of school**: vraag naar het gevolg, niet de reden) · **ambitie** (plezier · ontwikkelen · opleiding · doorgroeien) · waar wil je beter in worden, wat heb je van de club nodig. Eén uitnodiging bij de start, elk seizoen "klopt dit nog?", geen herinneringen. HO/TC en de trainer zien alles; de coördinator alleen tijd en diploma's; de teamleider niets. **Ambitie bepaalt het aanbod:** "plezier" krijgt geen traject en geen signalen. De **clubbeheerder kan de vragen aanpassen.**
+- **Observatie zonder schaal (aanvulling 10-10):** geen 1–5. De KNVB-onderdelen zijn **aandachtspunten**: doelstelling past (beleid, team, leerdoel) · veilige leersituatie · beïnvloedt de leersituatie · pedagogisch passend · **organisatie en leertijd** (training). Tijdens de observatie koppel je een moment met één tik aan een aandachtspunt; in het gesprek staat per punt *wat je zag*. Groei tonen we als feiten ("vragen: okt 3×, mrt 9×") plus de woordenschaal op het leerdoel (nog niet · soms · meestal · bewust en vaak).
+- **Leertijd-klok bij een training (optioneel, aanvulling 10-10):** knoppen *Spelen · Uitleg · Wisselen*; na afloop per voetbalvorm en totaal: effectieve leertijd %, uitleg %, wisselen %, langste uitleg, snelste overgang. Gebaseerd op de gouden trainingsprincipes (visie op leren voetballen, KNVB).
+- **Alles ook op papier (10-10):** sommige clubs willen niet dat trainers of de HO op hun telefoon kijken. Elk formulier voor het begeleiden (kennismaking, dossier, straks het begeleidingsmoment en de observatie) is **leeg en ingevuld te printen** of als PDF op te slaan.
+- **Gebouwd 10-10 (deel 1):** tabblad **Trainers** voor de HO (*Traject · Alle trainers*, met focus per bouw en zoekveld; Planning als knop in Teams voor teams zonder coördinator; de coördinator houdt Planning). Werkdruk bovenaan (*in traject · momenten · gedaan*). **Dossier**: volgen (★), printen, kop (team, bouw, KNVB-diploma, VOG), **traject** (plan wedstrijden/trainingen, standaard selectie 2+2 en breedte 1+1, leerdoel, ontwikkelpunt, stand, aanpassen of afronden), **kennismaking** (ingevuld of uitnodigen), afmeldingen en contact (ingeklapt), **notities alleen voor de HO**. **Kennismaking**: de HO nodigt uit (één persoonlijk bericht per trainer, geen herinneringen); de trainer ziet op Home één regel (met "Later": 30 dagen weg) en vult de vragenlijst in; lege vragenlijst printen; de clubbeheerder past de vragen aan (Regels → Kennismaking trainer). **VOG en diploma**: Teams → Staf → naam → *VOG en diploma* (coördinator, of de HO als terugval); een VOG die binnen 2 maanden verloopt staat bij Te doen van de coördinator. **Database** (migratie 024): de kennismaking ziet alleen de trainer zelf en HO/clubbeheerder; het traject leest de trainer, schrijft de HO; notities alleen de HO.
+- **Bouwvolgorde:** (1) tabblad Trainers, traject, dossier, werkdruk · (2) begeleidingsmoment met de vijf fasen (het evaluatieformulier verhuist; `/evaluatie` blijft los) · (3) Mijn ontwikkeling · (4) later: periodisering, scholing, rol technisch coördinator.
+
 ## Besluit 98 — Verantwoordelijkheid: iedere rol doet zijn eigen werk, de laag erboven is het vangnet
 *Besloten 10 oktober 2026. Vult Besluit 95 en 97 aan.*
 - **Geen controle, maar opschaling.** Niemand controleert een ander. Iedere rol doet zijn eigen werk; de laag erboven ziet iets pas als het blijft liggen of ertoe doet (principe 4 en 10).
@@ -650,6 +667,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **De organisatielijn heeft in de app geen bovenste rol:** een organisatiezaak die vastzit gaat naar de HO. Bewust zo gelaten (principe 10); een meekijkende rol "bestuur (jeugdzaken)" staat bij Later / ideeën.
 
 ## Besluit 97 — Bouwen, werkgebied en focus, signalen die ertoe doen, trainersdossier
+> **◐ Deels herzien door Besluit 99 (traject per trainer in plaats van 2 + 2; tabblad Trainers; VOG en diploma bij de coördinator)** (zie Register).
 *Besloten 10 oktober 2026. Analyse: `docs/onderzoek/ho-werkgebied-en-signalen.md`. Vult Besluit 12, 21, 25, 53, 93 en 95 aan.*
 - **Bouwen als vaste indeling van de club**, los van coördinatoren. Standaard (KNVB): Mini's O6–O7 · Onderbouw O8–O12 · Middenbouw O13–O15 · Bovenbouw O16–O19. De **clubbeheerder past de indeling aan** (Rollen → Indeling in bouwen). Alle rollen gebruiken dezelfde indeling; overzichten hebben drie lagen: club → bouw → team of trainer.
 - **Werkgebied** (stelt de clubbeheerder in bij de rol: bijvoorbeeld TC bovenbouw) bepaalt je signalen. **Focus** (kies je zelf met chips bovenaan, de app onthoudt het op je telefoon) bepaalt alleen wat je ziet. Signalen buiten je focus staan als één regel: *"2 signalen buiten je focus"*. Zo kan de HO focussen zonder iets te missen.
@@ -670,7 +688,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - Niet gekozen: "clubmanager" (botst met bestaande functies bij clubs en lijkt te veel op onze eigen naam) en "ClubComm-manager" of "ClubComm-coach" (botst met de taak trainer-coach).
 
 ## Besluit 95 — Twee lijnen: voetbal (HO) en organisatie (coördinator)
-> **◐ Deels herzien door Besluit 96 (clubbeheerder en ClubComm-adviseur), 97 (bouwen, focus, dossier; nieuwe bouwvolgorde)** (zie Register).
+> **◐ Deels herzien door Besluit 96 (clubbeheerder en ClubComm-adviseur), 97 (bouwen, focus, dossier; nieuwe bouwvolgorde), 99 (traject per trainer in plaats van 2 + 2 voor iedereen)** (zie Register).
 *Besloten 10 oktober 2026. Uitwerking en bronnen: `docs/onderzoek/taken-per-rol.md`. Vult Besluit 12, 21, 25 en 34 aan.*
 - **Voetballijn:** de HO (= HJO, naam per club) maakt de trainers beter. Hij is een **mentor die in rapporten kijkt**: hij blijft geïnformeerd, zoekt zelf op en krijgt geen stroom meldingen over organisatie. De **trainer valt onder de HO**.
 - **Technisch coördinator** (optioneel, per bouw): ondersteunt de HO en kan ook observaties en gesprekken met trainers doen. Komt in een latere stap.
@@ -1628,6 +1646,8 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 - *(Uitgewerkt in Besluit 95 en het stappenplan in `docs/onderzoek/taken-per-rol.md` §6.)* **Club inrichten bij de start (onboarding):** bij de verkoop samen met een bestuurslid de taakverdeling instellen: welke taak ligt bij welke rol (HJO, coördinator, clubbeheerder, secretaris…). De tabel "Wie doet wat" wordt dan per club instelbaar.
 - *(Komt in de verkoopmap, zie Openstaand.)* **Handleiding bij de verkoop:** per rol en voor de clubbeheerder (opnieuw te maken).
 - **Rol "bestuur (jeugdzaken)"** (idee 10 okt 2026, Besluit 98): alleen meekijken (rapporten, clubbesluit), geen dagelijkse signalen; de bovenste laag van de organisatielijn. Pas als een club erom vraagt.
+- **Periodisering en thema's van de club** (idee 10 okt 2026, Besluit 99): per bouw en teamtype (selectie traint vaak 3×, breedte 2× per week) een jaarplan met periodes en voetbalinhoudelijke thema's, zichtbaar voor de trainer en te kiezen bij een begeleidingsmoment. Pas als de club haar visie en periodisering heeft uitgewerkt.
+- **Scholing en bijeenkomsten voor trainers** (kerntaak 3 HO, Besluit 99).
 - **Online hulp met AI:** een assistent die de app volledig kent en stap voor stap uitlegt, bijvoorbeeld "hoe zet ik de taken van X uit?" of "hoe zet ik deze module uit?". Scheelt telefoontjes.
 - **Evaluatieformulier aan het einde van het seizoen** (ouders, trainers, teamleiders), zodat we per seizoen een rapport kunnen maken van wat beter kan.
 - *(Deels in Besluit 95: rollen, wie doet mee aan de pilot.)* **Checklist rollen en taken bij de club:** per rol aankruisen "hebben wij", "wie doet het" en "in de pilot ja/nee" (o.a. vertrouwenscontactpersoon, ledenadministratie, wedstrijdsecretaris, VOG-controle, technisch jeugdcoördinator, kantine, vrijwilligers). Voor nu blijven de rollen: ouder, trainer, teamleider, coördinator, HJO, clubbeheerder.
@@ -1689,6 +1709,8 @@ Bewust niet gedaan, met de reden. Komt een van deze toch terug, zeg dan dat het 
 | Google Maps voor adressen | Betaalaccount en wat je typt gaat naar Google | 43 |
 | Berichten verwijderen door ontvangers | Archiveren is veiliger | 57 |
 | Zelfbeoordeling van de coach en een rapportcijfer in de evaluatie | Geen tijd in de bijeenkomst; geen cijfer | 93 |
+| Schaal 1–5 op de KNVB-stellingen bij de observatie van een trainer | Voelt als beoordelen; we willen ontwikkelen en bewust maken met wat je zag | 99 |
+| Privévragen aan trainers (kinderen, school) | Vraag naar het gevolg (beschikbaarheid), niet de reden (AVG, niet pushend) | 99 |
 | Teamleider registreert of de trainer kwam, of praat met hem | Niet bevoegd, geen expertise, schaadt de band | 95 |
 | De HO krijgt meldingen over organisatie (vakantie, clubberichten) | De HO is mentor: hij zoekt zelf op | 95 |
 

@@ -10,8 +10,9 @@
     vervoer: {}, taken: [], opgave: [], aanm: [], beoord: {}, notities: {}, speeltijd: { min: {}, schema: {}, keeper: {}, mogelijk: {} }, wijzigingen: [],
     demo: {}, materiaal: {}, mails: [], trainerLog: [], trainerGesprekken: [], ontwGesprek: [], ontwVoorb: {}, ontwVerslag: {}, ontwNotitie: {}, teamVaardig: {}, sigSinds: {}, signaalAfgedaan: [],
     gezienInfo: {}, mijlpaalGezien: {}, autoVerstuurd: {}, beoordGedeeld: {}, beoordGezien: {},
+    trainerDossier: {}, trainerKennis: {}, trainerAdmin: {}, trainerNotities: {},
     // voorkomt dat de demo-onderdelen voorbeelddata toevoegen
-    beoordDemo: true, hjoHomeDemo: true, hulpDemo: true, vervangDemo: true, live: true,
+    beoordDemo: true, hjoHomeDemo: true, hulpDemo: true, vervangDemo: true, trainerDemo: true, live: true,
   });
 
   // Hulp: team van een speler en van een activiteit
@@ -58,6 +59,12 @@
     ['speeltijdMogelijk', 'speeltijd.mogelijk', 'speeltijd', (k, v, I) => ({ team: I.teamVanSpeler(k), speler: k })],
     ['speeltijdKeeper', 'speeltijd.keeper', 'speeltijd', (k, v, I) => ({ team: I.teamVanSpeler(k), speler: k })],
     ['speeltijdSchema', 'speeltijd.schema', 'act', (k, v, I) => ({ team: I.teamVanAct(k), act: k })],
+    // Besluit 99: trainersdossier (sleutel = persoon). Kennismaking: de trainer zelf; traject: HO schrijft, trainer leest;
+    // VOG en diploma: organisatie (coördinator); notities: alleen de HO.
+    ['trainerKennis', 'trainerKennis', 'trainerzelf', (k) => ({ persoon: k })],
+    ['trainerDossier', 'trainerDossier', 'trainerdossier', (k) => ({ persoon: k })],
+    ['trainerAdmin', 'trainerAdmin', 'hjo', (k) => ({ persoon: k })],
+    ['trainerNotities', 'trainerNotities', 'hoprive', (k) => ({ persoon: k })],
   ];
   // Losse objecten (één rij)
   const ENKEL = [['club', 'club', 'club'], ['sigSinds', 'sigSinds', 'hjo'], ['autoVerstuurd', 'autoVerstuurd', 'hjo']];
