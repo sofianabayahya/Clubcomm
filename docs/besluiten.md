@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 97; principe 10)
+Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 98; principe 10)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -17,6 +17,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 97; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 98 | Verantwoordelijkheid: iedere rol doet zijn eigen werk, de laag erboven is het vangnet | ✅ geldt |  |
 | 97 | Bouwen, werkgebied en focus, signalen die ertoe doen, trainersdossier | ✅ geldt |  |
 | 96 | Eén aanspreekpunt: de clubbeheerder (van de club) en de ClubComm-adviseur (van ons) | ✅ geldt |  |
 | 95 | Twee lijnen: voetbal (HO) en organisatie (coördinator) | ◐ deels herzien | door 96 (clubbeheerder en ClubComm-adviseur), 97 (bouwen, focus, dossier; nieuwe bouwvolgorde) |
@@ -630,6 +631,23 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 98 — Verantwoordelijkheid: iedere rol doet zijn eigen werk, de laag erboven is het vangnet
+*Besloten 10 oktober 2026. Vult Besluit 95 en 97 aan.*
+- **Geen controle, maar opschaling.** Niemand controleert een ander. Iedere rol doet zijn eigen werk; de laag erboven ziet iets pas als het blijft liggen of ertoe doet (principe 4 en 10).
+
+| Rol | Soort | Doet zelf | Schaalt op naar … als |
+|---|---|---|---|
+| Ouder | – | afmelden, meehelpen | – |
+| Teamleider | helpend | ouders, wedstrijden, taken | coördinator: aanmelding 48 uur blijft liggen |
+| Trainer | uitvoerend | spelers, aanwezigheid, ontwikkeling | coördinator: speler verbetert niet na het bellen (gesprek met ouders) |
+| Coördinator | regelend | organisatie van zijn bouw | HO: zaak blijft 14 dagen liggen; trainer niet gekomen (bevestigd) |
+| HO / TC | begeleidend | trainers beter maken | bestuur: clubbesluit |
+| Clubbeheerder | technisch | de app laten werken | ClubComm-adviseur |
+
+- **Eindverantwoordelijk:** de **HO** voor de voetballijn (trainers, opleiding, teamindeling); de **coördinator** voor de organisatie van zijn bouw; **het bestuur** voor de hele jeugd (clubbesluit en privacy).
+- **Zonder coördinator** neemt de HO de organisatie over (terugval); dan lijkt hij verantwoordelijk voor alles, maar dat komt door de terugval.
+- **De organisatielijn heeft in de app geen bovenste rol:** een organisatiezaak die vastzit gaat naar de HO. Bewust zo gelaten (principe 10); een meekijkende rol "bestuur (jeugdzaken)" staat bij Later / ideeën.
 
 ## Besluit 97 — Bouwen, werkgebied en focus, signalen die ertoe doen, trainersdossier
 *Besloten 10 oktober 2026. Analyse: `docs/onderzoek/ho-werkgebied-en-signalen.md`. Vult Besluit 12, 21, 25, 53, 93 en 95 aan.*
@@ -1608,6 +1626,7 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 - **Uit de vergelijking met VeldPlanner** (`docs/onderzoek/concurrent-veldplanner.md`): veldkaart bij een training (plattegrond met het veld van het team), veldindeling importeren uit Sportlink Club i.p.v. dubbel invoeren, infoscherm in de kantine, uitslag delen als nette post voor WhatsApp.
 - *(Uitgewerkt in Besluit 95 en het stappenplan in `docs/onderzoek/taken-per-rol.md` §6.)* **Club inrichten bij de start (onboarding):** bij de verkoop samen met een bestuurslid de taakverdeling instellen: welke taak ligt bij welke rol (HJO, coördinator, clubbeheerder, secretaris…). De tabel "Wie doet wat" wordt dan per club instelbaar.
 - *(Komt in de verkoopmap, zie Openstaand.)* **Handleiding bij de verkoop:** per rol en voor de clubbeheerder (opnieuw te maken).
+- **Rol "bestuur (jeugdzaken)"** (idee 10 okt 2026, Besluit 98): alleen meekijken (rapporten, clubbesluit), geen dagelijkse signalen; de bovenste laag van de organisatielijn. Pas als een club erom vraagt.
 - **Online hulp met AI:** een assistent die de app volledig kent en stap voor stap uitlegt, bijvoorbeeld "hoe zet ik de taken van X uit?" of "hoe zet ik deze module uit?". Scheelt telefoontjes.
 - **Evaluatieformulier aan het einde van het seizoen** (ouders, trainers, teamleiders), zodat we per seizoen een rapport kunnen maken van wat beter kan.
 - *(Deels in Besluit 95: rollen, wie doet mee aan de pilot.)* **Checklist rollen en taken bij de club:** per rol aankruisen "hebben wij", "wie doet het" en "in de pilot ja/nee" (o.a. vertrouwenscontactpersoon, ledenadministratie, wedstrijdsecretaris, VOG-controle, technisch jeugdcoördinator, kantine, vrijwilligers). Voor nu blijven de rollen: ouder, trainer, teamleider, coördinator, HJO, clubbeheerder.

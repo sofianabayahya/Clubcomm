@@ -743,6 +743,22 @@ async function product() {
     ],
   });
 
+  // Besluit 98: wie doet wat, en wanneer schaalt het op (geen controle, maar een vangnet)
+  s = pres.addSlide(); s.background = { color: WHITE };
+  kop(s, { label: 'Verantwoordelijkheid', titel: 'Iedere rol doet zijn eigen werk', intro: 'Geen controle, maar een vangnet: de laag erboven ziet iets pas als het blijft liggen of ertoe doet.' }, 11.9);
+  const rijen = [
+    ['Rol', 'Soort', 'Doet zelf', 'Schaalt op als …'],
+    ['Teamleider', 'helpend', 'ouders, wedstrijden, taken', 'aanmelding 48 uur blijft liggen → coördinator'],
+    ['Trainer', 'uitvoerend', 'spelers, aanwezigheid, ontwikkeling', 'speler verbetert niet na het bellen → coördinator'],
+    ['Coördinator', 'regelend', 'organisatie van zijn bouw', 'zaak blijft 14 dagen liggen, trainer niet gekomen → HO'],
+    ['HO / TC', 'begeleidend', 'trainers beter maken', 'clubbesluit → bestuur'],
+    ['Clubbeheerder', 'technisch', 'de app laten werken', 'vragen en aanpassingen → ClubComm-adviseur'],
+  ];
+  s.addTable(rijen.map((r, i) => r.map((c) => ({ text: c, options: { bold: i === 0 || false, color: i === 0 ? WHITE : INK, fill: { color: i === 0 ? NAVY : (i % 2 ? SOFT : WHITE) } } }))),
+    { x: 0.7, y: 2.75, w: 11.9, colW: [2.0, 1.7, 3.6, 4.6], fontFace: FONT, fontSize: 14, border: { type: 'solid', pt: 0.5, color: 'D9DEE7' }, rowH: 0.5 });
+  s.addText('Eindverantwoordelijk: de HO voor de voetballijn, de coördinator voor de organisatie van zijn bouw, het bestuur voor de hele jeugd.', { x: 0.7, y: 6.2, w: 11.9, h: 0.5, fontSize: 14, bold: true, color: NAVY, fontFace: FONT, margin: 0, isTextBox: true });
+  voet(s, v);
+
   await stappen(pres, v, {
     label: 'Ouder', titel: 'Alles voor je kind op één plek', beeld: 'club-ou-home',
     stappen: [
