@@ -100,7 +100,7 @@
     return regels.length ? `<ul class="stappenlijst">${regels.join('')}</ul>` : ''; };
   // Traject toevoegen: kies een trainer uit je werkgebied (zonder traject)
   CC.on('trajectKies', () => { const S = CC.S(); const f = CC.hoFocus ? CC.hoFocus.focus(S) : 'alle'; const l = trainersIn(S, f).filter((p) => !traject(S, p.id)).sort((a, b) => a.naam.localeCompare(b.naam));
-    CC.sheet('Traject toevoegen', l.length ? `<p class="zacht">Kies de trainer.</p><div class="lijst">${l.map((p) => h.rij({ ic: h.avatar(p.naam), titel: esc(p.naam), sub: esc(teamsVan(S, p).map((x) => x.naam).join(', ')), act: 'trajectSheet', attrs: `data-id="${p.id}"` })).join('')}</div>` : h.leeg('Alle trainers hebben al een traject')); });
+    CC.sheet('Traject toevoegen', l.length ? `<p class="zacht">Kies de trainer.</p><div class="lijst">${l.map((p) => h.rij({ ic: h.avatar(p.naam), titel: esc(p.naam), sub: esc(teamsVan(S, p).map((x) => x.naam).join(', ')), act: 'trajectSheet', attrs: `data-id="${p.id}"` })).join('')}</div>` : `${h.leeg('Er is geen trainer zonder traject', 'user-check')}<p class="zacht klein">Staat een trainer er nog niet in? Die zet ${(() => { const b = S.people.find((p) => p.rollen.some((r) => r.rol === 'beheerder')); return b ? `de clubbeheerder (${esc(b.naam.split(' ')[0])})` : 'de clubbeheerder'; })()} erbij via Rollen → Persoon toevoegen. Daarna staat de trainer hier.</p>`); });
   CC.on('zoekTrainer', (el) => { CC.ui.seg.trZoek = el.value; const pos = el.selectionStart; CC.render(); const n = document.querySelector('[data-input="zoekTrainer"]'); if (n) { n.focus(); n.setSelectionRange(pos, pos); } });
 
   // ---------- Trainersdossier (vervangt de detailpagina van trainerafw.js; die blijft eronder als "Afmeldingen en contact") ----------
