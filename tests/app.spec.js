@@ -418,6 +418,32 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'automatisch bewaren');
   });
 
+  // Besluit 104: rol wisselen met één tik in de kop, met per rol wat er wacht
+  test('rol wisselen in de kop', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(1).click(); // Mark: trainer en ouder
+    await page.locator('[data-act="magischeLink"]').click();
+    await page.evaluate(() => CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer')));
+    await expect(page.locator('.kop [data-act="rolMenu"]')).toContainText('Trainer');
+    await page.locator('.kop [data-act="rolMenu"]').click();
+    await expect(page.locator('.rolmenu button')).toHaveCount(2);
+    await expect(page.locator('.rolmenu button.aan')).toContainText('nu');
+    // Buiten het menu tikken sluit het
+    await page.locator('main').click({ position: { x: 10, y: 300 } });
+    await expect(page.locator('.rolmenu')).toHaveCount(0);
+    await page.locator('.kop [data-act="rolMenu"]').click();
+    await page.locator('.rolmenu button', { hasText: 'Ouder' }).click();
+    expect(await page.evaluate(() => CC.rol().rol)).toBe('ouder');
+    await expect(page.locator('.kop [data-act="rolMenu"]')).toContainText('Ouder');
+    // Iemand met één rol ziet geen rolknop
+    await page.evaluate(() => { CC.zetSessie(CC.S().demo.sanne); CC.wisselRol(0); });
+    await expect(page.locator('.kop [data-act="rolMenu"]')).toHaveCount(0);
+    await controleer(page, fouten, 'rol wisselen');
+  });
+
   // Training afgelasten met een eigen toelichting: één bericht aan de ouders
   test('trainer gelast een training af met toelichting', async ({ page }) => {
     const fouten = volgFouten(page);

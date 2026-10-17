@@ -17,6 +17,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 104 | Rol wisselen met één tik in de kop, met per rol wat er wacht | ✅ geldt |  |
 | 103 | Automatisch bewaren in formulieren; Rollen opgeschoond | ✅ geldt |  |
 | 102 | Snelle winsten: dringend bovenaan, Observeren op de dag zelf, unieke knopnamen | ✅ geldt |  |
 | 101 | Voorgesprek als voormeting: eigen vragen voor training en wedstrijd | ✅ geldt |  |
@@ -112,7 +113,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 | 11 | HJO-portaal | ◐ deels herzien | door 26 (Home), 30 (snelknoppen weg), 95 (organisatie naar de coördinator) |
 | 10 | Aanwezigheidsnorm en zones | ◐ deels herzien | door 33 (teamleider volgt spelers standaard niet), 34 (HJO geen losse spelers), 61 (langdurig meldt de ouder), 95 (team in de zone: coördinator, HO kijkt mee) |
 | 9 | Teamleiderportaal | ◐ deels herzien | door 31 (vervoer), 33 (vier knoppen, Regelen in Wedstrijd) |
-| 8 | Vaste app-structuur en namen (alle rollen) | ◐ deels herzien | door 12 (rollen coördinator en clubbeheerder), 33 (teamleider vier knoppen) |
+| 8 | Vaste app-structuur en namen (alle rollen) | ◐ deels herzien | door 12 (rollen coördinator en clubbeheerder), 33 (teamleider vier knoppen), 104 (rol wisselen in de kop, niet in het profiel) |
 | 7 | Trainerportaal | ◐ deels herzien | door 33 (wedstrijdbegeleider vervallen), 39/60 (speeltijd), 50 (geen filters), 57 (berichten), 67/68 (ontwikkelgesprek), 86 (Spelers en Overzicht), 95 (de HO ziet niet alles) |
 | 6 | Instellingen per club en per team | ✅ geldt |  |
 | 5 | Aanwezigheid, stiptheid en kaarten | ◐ deels herzien | door 15 (opschaling), 32 (kaarten) |
@@ -431,7 +432,7 @@ Niet elke trainer gaat mee naar wedstrijden. Per wedstrijd is er daarom een **we
 - **Aanvulling (23 september 2026): spelers filteren en sorteren** (tabblad Spelers bij trainer, Team bij teamleider). Filters: alle · komt / afgemeld voor de volgende activiteit · oranje/rood · kaarten · langdurig · niet beoordeeld (alleen voor wie beoordelingen mag zien). Sorteren: op naam, aanwezigheid laagste of hoogste eerst, meeste kaarten eerst. Het aantal staat erbij ("3 van 12").
 
 ## Besluit 8 — Vaste app-structuur en namen (alle rollen)
-> **◐ Deels herzien door Besluit 12 (rollen coördinator en clubbeheerder), 33 (teamleider vier knoppen)** (zie Register).
+> **◐ Deels herzien door Besluit 12 (rollen coördinator en clubbeheerder), 33 (teamleider vier knoppen), 104 (rol wisselen in de kop, niet in het profiel)** (zie Register).
 
 ### Elke pagina, in elke rol, dezelfde structuur
 - **Bovenaan:** waar ben ik (bijv. *"Jesse · O10-1"* voor een ouder, *"O10-1"* voor een trainer) + **profielknop [👤] rechtsboven**, op elke pagina.
@@ -636,6 +637,12 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 104 — Rol wisselen met één tik in de kop, met per rol wat er wacht
+*Besloten 17 oktober 2026. Uit `docs/onderzoek/verbeterplan-gebruik-2026-10.md` (P1). Herziet de rolwisselaar uit Besluit 8.*
+- **Wie meer dan één rol heeft**, ziet bovenaan onder de naam de huidige rol als knop (bijvoorbeeld *Trainer ▾ · clubnaam*). Eén tik opent een klein menu met al je rollen; één tik op een rol en je bent er.
+- **Per rol staat erbij wat er wacht** (*1 wacht*, *3 wachten*: de regels bij *Actie nodig* of *Te doen* van die rol), en bij de huidige rol *nu*. Zo zie je zonder te wisselen of een andere rol iets van je vraagt.
+- **Het profiel** heeft geen eigen rolwisselaar meer; daar staat alleen waar je wisselt. Het menu sluit bij een tik ernaast of met Escape.
 
 ## Besluit 103 — Automatisch bewaren in formulieren; Rollen opgeschoond
 *Besloten 17 oktober 2026. Uit `docs/onderzoek/verbeterplan-gebruik-2026-10.md` (P0 en P1). Vult Besluit 81 en 102 aan.*

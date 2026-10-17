@@ -643,3 +643,12 @@ form[data-autosave] { position: relative; }
 small.bewaard { position: absolute; right: 10px; margin: 0; padding: 0 6px; border-radius: 6px; background: var(--vlak, #fff); font-size: 12px; font-weight: 600; color: var(--zacht); pointer-events: none; }
 small.bewaard.ok { color: var(--groen); } small.bewaard.fout { color: var(--rood); }
 .blokken { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+
+/* Besluit 104: rol wisselen in de kop */
+.rolknop { border: 0; background: none; padding: 2px 0; font: inherit; font-size: 12px; font-weight: 700; color: var(--blauw); display: inline-flex; align-items: center; gap: 2px; cursor: pointer; }
+.rolknop .ic { width: 14px; height: 14px; }
+.rolmenu { position: fixed; z-index: 60; left: 56px; right: 12px; max-width: 420px; background: var(--vlak); border-radius: 14px; box-shadow: 0 8px 30px rgba(11, 37, 69, .25); padding: 6px; display: flex; flex-direction: column; gap: 2px; }
+.rolmenu button { display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; min-height: 48px; padding: 10px 12px; border: 0; border-radius: 10px; background: none; font: inherit; font-size: 15px; text-align: left; color: var(--inkt); cursor: pointer; }
+.rolmenu button.aan { background: var(--blauw-l); }
+.rolmenu small { font-size: 13px; font-weight: 600; color: var(--blauw); white-space: nowrap; }
+.rolmenu small.wacht { color: var(--oranje); } .rolmenu small.zacht { color: var(--zacht); }
