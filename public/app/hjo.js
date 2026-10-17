@@ -92,7 +92,7 @@
             <div class="lijst">${res.map((p) => h.rij({ ic: h.avatar(p.naam), titel: esc(p.naam), sub: p.rollen.filter((r) => r.rol !== 'ouder' || !staf(p)).map((r) => `${esc(CC.rolNaam(r))}${r.teamId ? ' ' + esc(CC.tn(r.teamId)) : r.groep ? ' ' + esc(r.groep) : ''}`).join(' · ') || 'Ouder', rechts: contact(p), act: 'rollenPersoon', attrs: `data-id="${p.id}"` })).join('') || h.leeg('Niemand gevonden')}</div>`;
         }
         return `${seg}<div class="lijst">${S.teams.map((t) => {
-          const ts = M.teamStats(S, t.id, per); const z = M.zone(S, ts.pct, t.id);
+          const ts = M.teamStats(S, t.id, per); const z = M.zone(S, ts, t.id);
           const staf = t.trainerId && t.teamleiderId; const open = S.aanm.filter((x) => x.teamId === t.id && x.status === 'open').length;
           return h.rij({ ic: h.stip(z), titel: `${esc(t.naam)} <span class="label">${t.type}</span>`, sub: `${ts.pct ?? '–'}% · ${M.spelers(S, t.id).length} spelers`, rechts: `${staf ? '' : `<span class="chip oranje mini">${icon('user-cog')}staf</span>`}${open ? `<span class="chip blauw mini">${open} aanm.</span>` : ''}`, act: 'open', attrs: `data-view="team" data-team="${t.id}"` });
         }).join('')}</div>`;
@@ -122,14 +122,14 @@
         const berichten = S.teams.map((t) => { const ms = S.msgs.filter((m) => m.soort === 'nieuws' && m.ontvangers.length && (!m.gepland || new Date(m.gepland) <= new Date()) && (m.bereik === t.id || m.bereik === 'Hele club')); const o = new Set(M.oudersVan(S, t.id)); let tot = 0, gel = 0; ms.forEach((m) => { m.ontvangers.forEach((p) => { if (o.has(p)) { tot++; if (m.gelezen.includes(p)) gel++; } }); }); return { t, pct: tot ? Math.round((100 * gel) / tot) : null }; });
         return `${h.seg('inzPer', [['blok', h.faseLabel(S)], ['seizoen', 'Heel seizoen']], 'blok')}
           ${h.sectie('1. Waar gaat het goed of mis?')}
-          <div class="staven">${rij.map(({ t, s }) => { const z = M.zone(S, s.pct, t.id); return `<button class="staaf" data-act="open" data-view="team" data-team="${t.id}"><span>${esc(t.naam)}</span><i class="${z}" style="--w:${s.pct || 0}%"></i><b>${s.pct ?? '–'}%</b></button>`; }).join('')}</div>
-          <p class="zacht klein">Laagste bovenaan. Groen/oranje/rood volgens de zones per teamtype (breedte ${S.club.inst.zones.breedte.groen}/${S.club.inst.zones.breedte.oranje}, selectie ${S.club.inst.zones.selectie.groen}/${S.club.inst.zones.selectie.oranje}).</p>
+          <div class="staven">${rij.map(({ t, s }) => { const z = M.zone(S, s, t.id); return `<button class="staaf" data-act="open" data-view="team" data-team="${t.id}"><span>${esc(t.naam)}</span><i class="${z}" style="--w:${s.pct || 0}%"></i><b>${s.pct ?? '–'}%</b></button>`; }).join('')}</div>
+          <p class="zacht klein">Laagste bovenaan. Groen/oranje/rood volgens de zones per teamtype (breedte ${S.club.inst.zones.breedte.groen}/${S.club.inst.zones.breedte.oranje}, selectie ${S.club.inst.zones.selectie.groen}/${S.club.inst.zones.selectie.oranje}).${rij.some(({ s }) => M.teWeinig(S, s) && s.totaal) ? ` Grijs: nog minder dan ${M.minMetingen(S)} keer gemeten.` : ''}</p>
           ${h.sectie('2. Waarom?')}
           <div class="legenda">${Object.keys(kleuren).map((k) => `<span><i style="background:${kleuren[k]}"></i>${k}</span>`).join('')}</div>
           <div class="staven">${rij.slice(0, 10).map(({ t, s }) => { const tot = Object.values(s.redenen).reduce((a, b) => a + b, 0) || 1; const del = Object.entries(s.redenen).map(([r, n]) => `${r}: ${n}`).join(', ') || 'geen afwezigheid'; return `<div class="staaf gestapeld" role="img" aria-label="${esc(t.naam)}: ${esc(del)}"><span>${esc(t.naam)}</span><span class="stapel">${Object.entries(s.redenen).map(([r, n]) => `<i style="width:${(100 * n) / tot}%;background:${kleur(r.startsWith('Langdurig') ? 'Blessure' : r)}" title="${esc(r)}: ${n}"></i>`).join('')}</span><b>${Object.values(s.redenen).reduce((a, b) => a + b, 0)}×</b></div>`; }).join('')}</div>
           <p class="zacht klein">Aantal keer afwezig per reden, voor de 10 teams met de laagste aanwezigheid. Zo zie je of 80% komt door blessures of door andere sporten.</p>
           ${h.sectie('3. Hoe ontwikkelt het zich?')}
-          <div class="lijst compact">${rij.slice(0, 8).map(({ t, s }) => { if (t.vorig == null || s.pct == null) return h.rij({ ic: h.stip(M.zone(S, s.pct, t.id)), titel: esc(t.naam), sub: `Nu ${s.pct ?? '–'}%${t.vorig == null ? ' · nog geen cijfer van vorig seizoen' : ''}` }); const d = s.pct - t.vorig; return h.rij({ ic: h.stip(M.zone(S, s.pct, t.id)), titel: esc(t.naam), sub: `Vorig seizoen ${t.vorig}% → nu ${s.pct}%`, rechts: `<b class="${d < -3 ? 'rood-tekst' : d > 3 ? 'groen-tekst' : 'zacht'}">${d > 0 ? '▲' : d < 0 ? '▼' : '='} ${Math.abs(d)}</b>` }); }).join('')}</div>
+          <div class="lijst compact">${rij.slice(0, 8).map(({ t, s }) => { if (t.vorig == null || s.pct == null) return h.rij({ ic: h.stip(M.zone(S, s, t.id)), titel: esc(t.naam), sub: `Nu ${s.pct ?? '–'}%${t.vorig == null ? ' · nog geen cijfer van vorig seizoen' : ''}` }); const d = s.pct - t.vorig; return h.rij({ ic: h.stip(M.zone(S, s, t.id)), titel: esc(t.naam), sub: `Vorig seizoen ${t.vorig}% → nu ${s.pct}%`, rechts: `<b class="${d < -3 ? 'rood-tekst' : d > 3 ? 'groen-tekst' : 'zacht'}">${d > 0 ? '▲' : d < 0 ? '▼' : '='} ${Math.abs(d)}</b>` }); }).join('')}</div>
           <p class="zacht klein">Na elke fase komt er een punt bij, zodat je de trend per fase ziet.</p>
           ${CC.beoordInzicht && S.club.modules.beoordeling ? CC.beoordInzicht(S) : ''}
           ${h.sectie('Gelezen berichten per team')}
@@ -357,7 +357,7 @@
 
   // Team-detail (HJO)
   CC.views.team = (S, p) => {
-    const t = M.team(S, p.team); const per = M.periode(S, 'blok'); const ts = M.teamStats(S, t.id, per); const z = M.zone(S, ts.pct, t.id);
+    const t = M.team(S, p.team); const per = M.periode(S, 'blok'); const ts = M.teamStats(S, t.id, per); const z = M.zone(S, ts, t.id);
     const kandidaten = S.people.filter((x) => x.rollen.some((r) => r.rol !== 'ouder') || M.oudersVan(S, t.id).includes(x.id));
     // Alle trainers en teamleiders van het team, met erbij zetten en weghalen (een team kan er meer hebben, Besluit 44/86)
     const stafBlok = (rol) => { const ids = M.stafVan(S, t.id, [rol]); const meer = rol === 'trainer' ? 'Trainers' : 'Teamleiders';

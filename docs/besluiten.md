@@ -17,6 +17,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 105 | Aanwezigheid: pas een kleur en signaal vanaf 6 keer gemeten | ✅ geldt |  |
 | 104 | Rol wisselen met één tik in de kop, met per rol wat er wacht | ✅ geldt |  |
 | 103 | Automatisch bewaren in formulieren; Rollen opgeschoond | ✅ geldt |  |
 | 102 | Snelle winsten: dringend bovenaan, Observeren op de dag zelf, unieke knopnamen | ✅ geldt |  |
@@ -35,7 +36,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 | 89 | Demo met rondleiding voor besturen, alleen op uitnodiging | ◐ deels herzien | door 95 (de rondleiding moet de coördinator en de HO nog laten zien) |
 | 88 | Vangnet: automatische tests en bewaking | ✅ geldt |  |
 | 87 | Trainingsrooster: per dag eigen tijd en veld, ingangsdatum, veilig bijwerken | ✅ geldt |  |
-| 86 | Trainersportaal: elk scherm één taak; alle teamleiders zichtbaar | ✅ geldt |  |
+| 86 | Trainersportaal: elk scherm één taak; alle teamleiders zichtbaar | ◐ deels herzien | door 105 (Vraagt aandacht pas vanaf 6 keer gemeten) |
 | 85 | Wedstrijddag: alles wordt vastgelegd, niemand valt tussen wal en schip | ✅ geldt |  |
 | 84 | Eerst de pilot bij DCG afmaken, daarna een tweede club (SCPB) | ✅ geldt |  |
 | 83 | Zien wie pushmeldingen aan heeft; de teamleider spreekt ouders aan | ✅ geldt |  |
@@ -106,7 +107,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 | 18 | Agenda-abonnement | ✅ geldt |  |
 | 17 | Module Materiaal | ◐ deels herzien | door 50 (bericht van de trainer); herziening open bij Nog te bespreken |
 | 16 | Pilot: de onderbouw | ✖ vervangen | door 35/38 (pilot is het O12 talententeam van DCG). De vuistregel voor nieuwe ideeën blijft gelden. |
-| 15 | Fases en opschaling | ◐ deels herzien | door 32 (kaarten per seizoen), 25/95 (stap 3 trainer of coördinator, stap 4 coördinator, stap 5 HO) |
+| 15 | Fases en opschaling | ◐ deels herzien | door 32 (kaarten per seizoen), 25/95 (stap 3 trainer of coördinator, stap 4 coördinator, stap 5 HO), 105 (zones pas vanaf 6 keer gemeten) |
 | 14 | Uitschrijven en account verwijderen | ◐ deels herzien | door 72 (ontwikkelgegevens meteen gewist) |
 | 13 | Planning: weekrooster in plaats van losse trainingen | ◐ deels herzien | door 87 (rooster per dag, veilig bijwerken), 95 (rooster en afgelasten: coördinator) |
 | 12 | Rollen en clubbeheerder | ◐ deels herzien | door 25 (taken per rol), 95 (twee lijnen), 96 (clubbeheerder is het enige aanspreekpunt, ClubComm-adviseur), 97 (bouwen in plaats van groepen) |
@@ -638,6 +639,13 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 105 — Aanwezigheid: pas een kleur en signaal vanaf 6 keer gemeten
+*Besloten 17 oktober 2026. Aanleiding: bij DCG telden in fase 1 maar 8 momenten (meten sinds 25-09); één keer afwezig gaf al oranje. Vult Besluit 15 en 86 aan.*
+- **De teller blijft per fase** en begint bij een nieuwe fase opnieuw. **Heel seizoen** telt alle momenten van alle fases bij elkaar op (geen gemiddelde van de fases).
+- **Minder dan 6 keer gemeten** in de gekozen periode (fase of seizoen): het percentage staat er wel, maar **grijs**, zonder groen/oranje/rood. Er komen dan ook **geen signalen** over aanwezigheid (speler in de rode zone, team onder de norm), en bij de trainer staat het kind niet bij *Vraagt aandacht*. Eén zin legt het uit: *"Nog maar 3 keer gemeten deze fase. Een kleur en signalen komen vanaf 6 keer."*
+- **Wat wel meteen blijft werken:** kaarten (afmeldgedrag, per seizoen), langdurig afwezig, te laat komen en de patronen (vaste dag, reeks ziek/blessure).
+- Het aantal (6) is een clubinstelling (`minMetingen`), standaard 6.
+
 ## Besluit 104 — Rol wisselen met één tik in de kop, met per rol wat er wacht
 *Besloten 17 oktober 2026. Uit `docs/onderzoek/verbeterplan-gebruik-2026-10.md` (P1). Herziet de rolwisselaar uit Besluit 8.*
 - **Wie meer dan één rol heeft**, ziet bovenaan onder de naam de huidige rol als knop (bijvoorbeeld *Trainer ▾ · clubnaam*). Eén tik opent een klein menu met al je rollen; één tik op een rol en je bent er.
@@ -823,6 +831,8 @@ Aanleiding: een ouder vroeg waar ze moesten verzamelen voor de strandtraining; h
 - Geldt ook voor "Rooster voor meerdere teams" en de Excel-import.
 
 ## Besluit 86 — Trainersportaal: elk scherm één taak; alle teamleiders zichtbaar
+> **◐ Deels herzien door Besluit 105 (Vraagt aandacht pas vanaf 6 keer gemeten)** (zie Register).
+
 - **Spelers = wie is dit kind:** op naam, zonder cijfers. Per kind: keeper, of het de volgende keer niet komt, en de stand van het ontwikkelgesprek.
 - **Aanwezigheid → Overzicht = de cijfers (de enige plek):** teamcijfer met de norm van het teamtype (selectie 90%, breedte 80%, zoals vastgelegd), dan **"Vraagt aandacht"** (onder de norm, kaarten of langdurig afwezig); de rest van het team ingeklapt. Ook zo op de teampagina van de HJO.
 - **Spelerpagina:** "Geschiedenis" wordt **"Uitzonderingen"**: alleen afgemeld, te laat, niet afgemeld en langdurig ("aanwezig" is de norm). Erboven één zin: *"13 van de 17 keer er · 2× ziek, 1× familie"*. Kaarten staan als label bij de activiteit; de aparte kaartenlijst en de grafiek met redenen zijn weg.
@@ -1614,7 +1624,7 @@ Net als bij spelers: ClubComm registreert en signaleert, de HJO beslist.
 ---
 
 ## Besluit 15 — Fases en opschaling
-> **◐ Deels herzien door Besluit 32 (kaarten per seizoen), 25/95 (stap 3 trainer of coördinator, stap 4 coördinator, stap 5 HO)** (zie Register).
+> **◐ Deels herzien door Besluit 32 (kaarten per seizoen), 25/95 (stap 3 trainer of coördinator, stap 4 coördinator, stap 5 HO), 105 (zones pas vanaf 6 keer gemeten)** (zie Register).
 
 Gebaseerd op een jaarplanning onderbouw 2026/27 (de pilotclub is RKSV DCG).
 

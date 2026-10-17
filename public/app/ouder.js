@@ -29,7 +29,7 @@
         const komend = M.komend(S, pl.teamId, 3);
         const st = M.stats(S, pl, M.periode(S, 'blok'));
         const k = M.kaarten(S, pl);
-        const z = M.zone(S, st.pct, pl.teamId);
+        const z = M.zone(S, st, pl.teamId);
         const lang = S.lang.find((l) => l.spelerId === pl.id && l.tot >= D.vandaag());
         const acties = [];
         // Urgent (ongelezen) ook op Home; vastgezette uitleg staat bij Berichten (Besluit 19, aangepast in Besluit 30)
@@ -130,12 +130,12 @@
     return `${hist.length}× afgemeld${hist.length > 1 && n > 1 ? `, meestal: ${esc(reden.toLowerCase())}` : ''}.`; };
   CC.views.kindOverzicht = (S, p) => {
     const pl = M.speler(S, p.id); const soort = h.segVal('kindPer', 'blok'); const per = M.periode(S, soort);
-    const st = M.stats(S, pl, per); const z = M.zone(S, st.pct, pl.teamId);
+    const st = M.stats(S, pl, per); const z = M.zone(S, st, pl.teamId);
     const k = M.kaarten(S, pl); const stap = M.stap(S, pl, k);
     const hist = S.afm.filter((f) => f.spelerId === pl.id).map((f) => ({ f, a: M.act(S, f.actId) })).filter((x) => x.a && x.a.datum < D.vandaag() && x.a.datum >= per.van).sort((x, y) => y.a.datum.localeCompare(x.a.datum));
     return { titel: 'Aanwezigheid en kaarten', html: `${h.seg('kindPer', [['blok', h.faseLabel(S)], ['seizoen', 'Heel seizoen']], 'blok')}
       <div class="cijfers"><div class="cijfer ${z}"><b>${st.pct == null ? '–' : st.pct + '%'}</b><small>aanwezig</small></div><div class="cijfer"><b>${st.pctTr == null ? '–' : st.pctTr + '%'}</b><small>trainingen (${st.tr.aan}/${st.tr.tot})</small></div><div class="cijfer"><b>${st.pctWed == null ? '–' : st.pctWed + '%'}</b><small>wedstrijden (${st.wed.aan}/${st.wed.tot})</small></div></div>
-      <p class="zacht klein">${st.aanwezig} van de ${st.totaal} keer aanwezig (te laat telt als aanwezig). Alleen activiteiten die al geweest zijn en waarbij de aanwezigheid is opgenomen; afgelaste trainingen tellen niet mee.</p>
+      ${h.weinig(S, st, soort === 'seizoen')}<p class="zacht klein">${st.aanwezig} van de ${st.totaal} keer aanwezig (te laat telt als aanwezig). Alleen activiteiten die al geweest zijn en waarbij de aanwezigheid is opgenomen; afgelaste trainingen tellen niet mee.</p>
       ${h.sectie('Afmelden: kaarten dit seizoen')}${k.ev.length ? h.eerst(k.ev.slice().reverse().map((e) => h.rij({ ic: CC.kaartIc(e), titel: CC.kaartTitel(e), sub: `${D.kort(e.act.datum)} · ${e.wat.toLowerCase()}${e.geaccepteerd ? ' · geaccepteerd door de trainer' : ''}` }))) : '<p class="zacht klein">Geen herinneringen of kaarten. Top!</p>'}
       <p class="zacht klein">${k.herinneringen < k.max ? `Nog ${k.max - k.herinneringen === 1 ? 'één vriendelijke herinnering' : `${k.max - k.herinneringen} vriendelijke herinneringen`} dit seizoen; daarna volgt een kaart.` : 'De vriendelijke herinneringen van dit seizoen zijn gebruikt; hierna volgt bij te laat afmelden een gele kaart, bij niet afmelden een rode.'}${stap ? ` <b>Volgende stap: ${stap.soort === 'bellen' ? `de ${CC.wie('bellen', pl.teamId)} neemt contact met je op` : stap.soort === 'gesprekHjo' ? `een persoonlijk gesprek met de ${CC.wie('gesprek', pl.teamId)}` : 'de club bespreekt het vervolg'}.</b>` : ''} ${st.telaat ? `Te laat gekomen: ${st.telaat}× (geen kaart).` : ''}</p>
       <div class="knoppen"><button class="linkknop" data-act="uitlegKaarten">Wat betekenen de kaarten?</button><button class="linkknop" data-act="open" data-view="beoordelingKind" data-id="${pl.id}">Wapen en doelen</button></div>

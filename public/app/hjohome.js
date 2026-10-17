@@ -123,7 +123,7 @@
     const extra = (tr) => (CC.trainerExtra ? CC.trainerExtra(S, tr) : '');
     const blokken = bouwen.map((b) => {
       const teams = b.teams.slice().sort((x, y) => x.naam.localeCompare(y.naam, 'nl', { numeric: true }));
-      const rijen = teams.map((t) => { const trs = trainersVan(S, t.id); const pct = M.teamStats(S, t.id, per).pct; const z = M.zone(S, pct, t.id); const let_ = trs.some((x) => sig.has(x.id));
+      const rijen = teams.map((t) => { const trs = trainersVan(S, t.id); const ts = M.teamStats(S, t.id, per); const pct = ts.pct; const z = M.zone(S, ts, t.id); const let_ = trs.some((x) => sig.has(x.id));
         if (filter === 'aandacht' && !let_) return '';
         return trs.length ? trs.filter((tr) => !p.zoek || tr.naam.toLowerCase().includes(p.zoek) || t.naam.toLowerCase().includes(p.zoek)).map((tr) => h.rij({ ic: h.stip(z), titel: `${esc(t.naam)} · ${esc(tr.naam)}${CC.trainerVolgt && CC.trainerVolgt(S, tr.id) ? ' ★' : ''}`, sub: `${regel(tr)} · team ${pct ?? '–'}%${extra(tr)}`, kleur: sig.has(tr.id) ? 'oranje' : '', act: 'open', attrs: `data-view="trainerDetail" data-id="${tr.id}"` })).join('')
           : h.rij({ ic: h.stip(z), titel: `${esc(t.naam)} · geen trainer`, sub: `team ${pct ?? '–'}%`, kleur: 'oranje' }); }).join('');

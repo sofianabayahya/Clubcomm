@@ -444,6 +444,36 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'rol wisselen');
   });
 
+  // Besluit 105: aan het begin van een fase (minder dan 6 keer gemeten) geen kleur en geen signaal, wel het percentage
+  test('nieuwe fase: pas een kleur vanaf 6 keer gemeten', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(1).click(); // Mark: trainer
+    await page.locator('[data-act="magischeLink"]').click();
+    const voor = await page.evaluate(() => { const S = CC.S(); return CC.m.signalen(S, S.teams.map((t) => t.id), true).filter((s) => ['speler', 'team'].includes(s.soort)).length; });
+    expect(voor).toBeGreaterThan(0); // in de demo staan genoeg metingen: wel signalen
+    const na = await page.evaluate(() => {
+      const S = CC.S(); const M = CC.m; const D = CC.date;
+      // Een nieuwe fase die begon bij de op twee na laatste gemeten activiteit: 3 metingen
+      const gemeten = M.acts(S, S.teams[0].id, S.club.seizoen.start, D.vandaag()).filter((a) => !a.afgelast && S.pres[a.id]).map((a) => a.datum).sort();
+      const van = gemeten[gemeten.length - 3];
+      S.club.fasen.push({ van });
+      const per = M.periode(S, 'blok'); const ts = M.teamStats(S, S.teams[0].id, per);
+      return { totaal: ts.totaal, zone: M.zone(S, ts, S.teams[0].id), seizoen: M.zone(S, M.teamStats(S, S.teams[0].id, M.periode(S, 'seizoen')), S.teams[0].id), signalen: M.signalen(S, S.teams.map((t) => t.id), true).filter((s) => ['speler', 'team'].includes(s.soort)).length };
+    });
+    expect(na.totaal).toBeGreaterThan(0); expect(na.totaal).toBeLessThan(6);
+    expect(na.zone).toBe('grijs');
+    expect(na.seizoen).not.toBe('grijs'); // Heel seizoen telt alles op en heeft wel een kleur
+    expect(na.signalen).toBe(0);
+    await page.evaluate(() => { CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer')); });
+    await page.locator('nav >> text=Aanwezigheid').click();
+    await page.evaluate(() => { CC.ui.seg.aanwModus = 'overzicht'; CC.render(); });
+    await expect(page.locator('#app')).toContainText('keer gemeten deze fase');
+    await controleer(page, fouten, 'nieuwe fase');
+  });
+
   // Gevonden 17-10 bij DCG: een lange teamnaam ("O12 talententeam") liep over het balkje heen
   test('inzicht: lange teamnaam overlapt het balkje niet', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 800 });
