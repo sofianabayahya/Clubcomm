@@ -474,6 +474,53 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'nieuwe fase');
   });
 
+  // Besluit 106: selectieteam in de O13-competitie (11 tegen 11); de trainer maakt het schema zelf
+  test('eigen wisselschema: opstelling, wissel, minuten en posities', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(1).click(); // Mark: trainer
+    await page.locator('[data-act="magischeLink"]').click();
+    const wed = await page.evaluate(() => {
+      const S = CC.S(), M = CC.m, D = CC.date; CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer'));
+      const t = M.team(S, CC.teamId()); t.type = 'selectie'; t.speelCat = 'O13';
+      ['Bank1', 'Bank2'].forEach((n) => S.players.push({ id: `sp-${n}`, voornaam: n, achternaam: 'Test', teamId: t.id, ouders: [] }));
+      // Een wedstrijd vandaag, zodat de klok en de wissels te zien zijn
+      const a = { id: 'a-test-zelf', teamId: t.id, soort: 'wedstrijd', datum: D.vandaag(), tijd: '10:00', eind: '11:15', thuis: true, tegen: 'Testclub O13-1', veld: '', adres: '', verzamel: '09:30', tenue: '', begeleiderId: null, uitslag: null, afgelast: false };
+      S.acts.push(a); CC.ui.seg.stWed = a.id; CC.save(); return { id: a.id, team: t.id };
+    });
+    await page.locator('nav >> text=Speeltijd').click();
+    await page.locator('[data-act="zetWisselwijze"][data-val="zelf"]').click();
+    await expect(page.locator('#app')).toContainText('11 tegen 11');
+    await page.locator('[data-act="zelfNieuw"]').click();
+    // Basiself: elke plek met een tik, steeds de eerste speler die nog vrij is
+    for (const pos of ['1', '2', '3', '4', '5', '6', '8', '10', '7', '9', '11']) {
+      await page.locator(`.plek[data-pos="${pos}"]`).click();
+      await page.locator('#sheet [data-act="zelfKies"]').first().click();
+    }
+    await expect(page.locator('.plek.leeg')).toHaveCount(0);
+    // Wissel plannen op minuut 20 (nog geen aftrap): de rechtsback eruit, iemand van de bank erin
+    const rb = await page.evaluate((id) => CC.S().speeltijd.schema[id].opstelling['2'], wed.id);
+    await page.locator('[data-act="zelfWissel"]').click();
+    await page.locator('#zw-m').fill('20');
+    await page.locator('#zw-u').selectOption(rb);
+    await page.locator('#zw-i').selectOption({ index: 1 });
+    await page.locator('#sheet form[data-submit="zelfWisselOk"] button.knop').click();
+    const uit = await page.evaluate(({ id, rb }) => { const sch = CC.S().speeltijd.schema[id]; const m = CC.m.schemaMinuten(sch); const inval = sch.wissels[0].in; return { rb: m[rb], inval: m[inval], pos: sch.pos[1][inval], wed: sch.wedMin }; }, { id: wed.id, rb });
+    expect(uit).toEqual({ rb: 20, inval: 40, pos: '2', wed: 60 });
+    // Aftrap, dan vastleggen: minuten en posities tellen mee voor het seizoen
+    await page.locator('[data-act="zelfKlok"][data-k="aftrap"]').click();
+    await expect(page.locator('#app')).toContainText('Minuut 0');
+    const na = await page.evaluate(({ id, rb }) => { const S = CC.S(); const voor = S.speeltijd.min[rb] || 0; const a = CC.m.act(S, id); CC.wedstrijdVastleggen(S, a, CC.me().id); return { erbij: (S.speeltijd.min[rb] || 0) - voor, pos: CC.m.posMinuten(S, rb) }; }, { id: wed.id, rb });
+    expect(na.erbij).toBe(20);
+    expect(na.pos['2']).toBe(20);
+    // Vaste taken bij 11 tegen 11: vlagger en scheidsrechter (thuis), geen spelbegeleider
+    const taken = await page.evaluate((tid) => CC.vasteTakenVoor(CC.S(), CC.m.team(CC.S(), tid)), wed.team);
+    expect(taken).toContain('Vlagger'); expect(taken).not.toContain('Spelbegeleider');
+    await controleer(page, fouten, 'eigen wisselschema');
+  });
+
   // Gevonden 17-10 bij DCG: een lange teamnaam ("O12 talententeam") liep over het balkje heen
   test('inzicht: lange teamnaam overlapt het balkje niet', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 800 });

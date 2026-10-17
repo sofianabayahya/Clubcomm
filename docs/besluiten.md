@@ -17,6 +17,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 106 | Eigen wisselschema voor selectieteams (opstelling 1-4-3-3, wissels, minuten en posities); speelvorm per team | ✅ geldt |  |
 | 105 | Aanwezigheid: pas een kleur en signaal vanaf 6 keer gemeten | ✅ geldt |  |
 | 104 | Rol wisselen met één tik in de kop, met per rol wat er wacht | ✅ geldt |  |
 | 103 | Automatisch bewaren in formulieren; Rollen opgeschoond | ✅ geldt |  |
@@ -83,13 +84,13 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 | 42 | Stafleden zonder kind: de club voegt ze toe | ✅ geldt |  |
 | 41 | Vastgezette berichten ook voor nieuwe ouders; welkomstbericht bij goedkeuren | ✅ geldt |  |
 | 40 | Telefoonnummer vult de ouder zelf in | ◐ deels herzien | door 46 (telefoonnummer bij het aanmelden) |
-| 39 | Wisselschema: de club kiest om de hoeveel minuten, de trainer past zelf aan | ◐ deels herzien | door 60 (speelduur per leeftijd) |
+| 39 | Wisselschema: de club kiest om de hoeveel minuten, de trainer past zelf aan | ◐ deels herzien | door 60 (speelduur per leeftijd), 106 (selectie: zelf maken in plaats van een voorstel) |
 | 38 | Start pilot: het O12 talententeam | ✅ geldt |  |
 | 37 | Klaar voor de ouders: privacy, installeren, feedback en back-up | ◐ deels herzien | door 63 (foutregistratie gebouwd) |
 | 36 | Communicatieplan: aankondigen, herinneren, noodberichten en wanneer een e-mail | ◐ deels herzien | door 57 (e-mail), 74 (vakantie 7 dagen), 75 (vaste berichten automatisch), 77 (vanaf de server) |
 | 35 | Pilot RKSV DCG: activiteiten, taken per leeftijd en e-mailmeldingen | ◐ deels herzien | door 38 (start pilot), 53/57 (pushmeldingen, e-mail als vangnet) |
 | 34 | Informatie is geen taak; profielen per rol | ◐ deels herzien | door 95 (teamleider-profiel zonder trainer registreren) |
-| 33 | Teamleider: alles over de wedstrijd op één plek, en eerlijke speeltijd | ◐ deels herzien | door 39/60 (wisselen en speelduur), 95 (trainer registreren niet bij de teamleider), 97 (trainer niet gekomen: standaard bevestigt de coördinator) |
+| 33 | Teamleider: alles over de wedstrijd op één plek, en eerlijke speeltijd | ◐ deels herzien | door 39/60 (wisselen en speelduur), 106 (selectieteam mag het schema zelf maken; geen eerlijke verdeling), 95 (trainer registreren niet bij de teamleider), 97 (trainer niet gekomen: standaard bevestigt de coördinator) |
 | 32 | Kaarten: afmelden zoals op het veld, te laat komen apart | ◐ deels herzien | door 95 (wie belt en praat: trainer, coördinator, HO) |
 | 31 | Vervoer: iedereen brengt zijn eigen kind | ◐ deels herzien | door 85 (bericht aan chauffeur), 92 (oefenwedstrijd uit bij Vervoer) |
 | 30 | Volgorde en rust op elk scherm | ✅ geldt |  |
@@ -638,6 +639,15 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 106 — Eigen wisselschema voor selectieteams; speelvorm per team
+*Besloten 17 oktober 2026. Aanleiding: het O12 talententeam van DCG speelt in de O13-competitie (11 tegen 11) en de trainer kiest zelf wie speelt (training, inzet, coachbaarheid, aanwezigheid). Vult Besluit 33, 39 en 60 aan.*
+- **Speelvorm per team:** de clubbeheerder kiest op de teampagina *Speelt wedstrijden als* (bijv. O13, 11 tegen 11, 2 × 30 minuten). Dat bepaalt speelduur, aantal in het veld en de vaste taken: vanaf O13 een **vlagger** bij elke wedstrijd en bij thuiswedstrijden een **scheidsrechter** (geen spelbegeleider). Leeg = zoals de teamnaam.
+- **Zelf maken of eerlijk voorstel:** bij Speeltijd kiest de trainer *Eerlijk voorstel* (zoals nu) of *Zelf maken*. Alleen waar de club afwijken toestaat (standaard: selectieteams). Breedteteams houden de eerlijke verdeling.
+- **Zelf maken:** de trainer kiest de basiself op een veld in **1-4-3-3** (1 keeper, 2 rechtsback, 3 en 4 centrale verdedigers, 5 linksback, 6 controlerende, 8 rechter en 10 aanvallende middenvelder, 7 rechtsbuiten, 9 spits, 11 linksbuiten). Bij elke speler staat ter hulp hoe vaak hij deze week trainde en zijn minuten dit seizoen. **Inzet en coachbaarheid beoordeelt de trainer zelf; daar komen geen cijfers voor** (geen vergelijken, zie Afgewezen ideeën).
+- **Wissels:** vooraf plannen (met een minuut) én tijdens de wedstrijd met één tik; de invaller neemt de plek over. Tijdens de wedstrijd tikt de trainer *Aftrap*, *Rust* en *Start 2e helft*, zodat de app de minuut zelf invult. Welke manier de trainer vooral gebruikt, laten we bewust open (zie Nog te bespreken).
+- **Bijhouden:** minuten per speler per wedstrijd en over het seizoen (bij Speeltijd in minuten), en **minuten per positie** (*Posities dit seizoen*). Vastleggen gaat zoals in Besluit 85 (Einde wedstrijd, of vanzelf 2 uur na afloop).
+- De keuze *Zelf maken* is van de staf van het team (de trainer kan hem zelf aan- en uitzetten); de speelvorm is van de clubbeheerder.
 
 ## Besluit 105 — Aanwezigheid: pas een kleur en signaal vanaf 6 keer gemeten
 *Besloten 17 oktober 2026. Aanleiding: bij DCG telden in fase 1 maar 8 momenten (meten sinds 25-09); één keer afwezig gaf al oranje. Vult Besluit 15 en 86 aan.*
@@ -1226,7 +1236,7 @@ Vaste regel voor alle portalen: een lijst die in het seizoen groeit, toont eerst
 - Aandachtspunt: de app mailt de staf niet bij een nieuwe aanmelding; die staat op Home van trainer (zonder teamleider) of teamleider.
 
 ## Besluit 39 — Wisselschema: de club kiest om de hoeveel minuten, de trainer past zelf aan
-> **◐ Deels herzien door Besluit 60 (speelduur per leeftijd)** (zie Register).
+> **◐ Deels herzien door Besluit 60 (speelduur per leeftijd), 106 (selectie: zelf maken in plaats van een voorstel)** (zie Register).
 *Besloten 25 september 2026. Vult Besluit 33 (eerlijke speeltijd) aan.*
 
 - **Om de hoeveel minuten wisselen bepaalt de club**, per speelvorm (Regels → Speeltijd). ClubComm geeft het advies: **per blok wisselen** (4 tegen 4: 10 min, 6 tegen 6: 12,5 min, 8 tegen 8: 15 min, 11 tegen 11: 17,5 min). Elke waarde vanaf 3 minuten mag, ook bijv. 5 of 7.
@@ -1334,7 +1344,7 @@ Standaard: teamleider **Basis**, trainer **Compleet**.
 **Ter informatie zonder "Gezien"-knoppen:** een regel verdwijnt vanzelf als het is opgelost; wegklikken is geen werk meer.
 
 ## Besluit 33 — Teamleider: alles over de wedstrijd op één plek, en eerlijke speeltijd
-> **◐ Deels herzien door Besluit 39/60 (wisselen en speelduur), 95 (trainer registreren niet bij de teamleider), 97 (trainer niet gekomen: standaard bevestigt de coördinator)** (zie Register).
+> **◐ Deels herzien door Besluit 39/60 (wisselen en speelduur), 106 (selectieteam mag het schema zelf maken), 95 (trainer registreren niet bij de teamleider), 97 (trainer niet gekomen: standaard bevestigt de coördinator)** (zie Register).
 *Besloten 24 september 2026. Herziet de teamleider-app (Besluit 9), de wedstrijdbegeleider (Besluit 7) en de speeltijd.*
 
 **Teamleider**
@@ -1726,6 +1736,9 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 ---
 
 ## Nog te bespreken
+
+- **Scheidsrechter betalen (DCG, O12 talententeam, 17-10):** vlaggen en fluiten worden een taak voor de ouders (Besluit 106). Nog overleggen of het team een scheidsrechter betaalt voor alle wedstrijden en de kosten deelt; dan vervalt de taak scheidsrechter bij thuiswedstrijden.
+- **Eigen wisselschema: vooraf plannen of tijdens de wedstrijd?** (Besluit 106) Beide kan nu; na een paar wedstrijden bekijken wat de trainer gebruikt en het scherm daarop vereenvoudigen. Ook nog open: posities ruilen tussen twee veldspelers zonder wissel, en een andere speelwijze dan 1-4-3-3.
 
 - **Materiaal: uitgeven en inleveren** (herziening van Besluit 17). Richting:
   - Trainer **tekent digitaal** bij de start van het seizoen voor het ontvangen materiaal (aantallen per item) en **levert het in** aan het einde; bij een trainerswissel volgt een overdracht.

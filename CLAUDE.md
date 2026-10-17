@@ -17,7 +17,7 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
 ## Waar staat wat
 | Bestand | Inhoud |
 |---|---|
-| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bovenaan het **Register** (status per besluit), onderaan **Afgewezen ideeën**. Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 105). |
+| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bovenaan het **Register** (status per besluit), onderaan **Afgewezen ideeën**. Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 106). |
 | `docs/pilotlog.md` | **Fouten uit de pilot met oorzaak en patroon** (momentopname, opslaan, demo verbergt het, één persoon per rol, buiten de app, rommelige gegevens). Bij elke wijziging langs deze patronen lopen. |
 | `docs/plan-van-aanpak.md` | **Van pilot naar product:** A product af (ook op schaal: 50 teams) → B beschrijven (handboek) → C prijs en groei → D verkopen → E invoeren. Met planning t/m januari 2027. |
 | `docs/productie-en-groei.md` | Controlelijst, **Openstaand**, meerdere clubs, app of website, kosten. |
@@ -33,6 +33,7 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
   - `begeleiding.js`: het begeleidingsmoment (Besluit 99 deel 2): vijf fasen, A4-observatie (leertijd-klok, turven), vier vakken, delen en reflectie trainer, A4 leeg en ingevuld printen; Mijn ontwikkeling van de trainer staat in `trainers.js` (deel 3).
   - `trainers.js`: trainers begeleiden door de HO (Besluit 99): tabblad Trainers, traject, dossier, kennismaking trainer, VOG en diploma (coördinator), printen (`CC.printDoc`). Scopes `trainerzelf`, `trainerdossier`, `hoprive` (migratie 024; 025: ook de TC, notities per bouw). Besluit 100: rol `tc` (technisch coördinator), werkgebied `bouwen` bij de rol HO/TC (`CC.werkgebied`), pakket "Alleen Trainers begeleiden" (`club.pakket = 'trainers'`, `CC.pakketTrainers`).
   - **Formulieren (Besluit 103):** lange formulieren krijgen `data-autosave="naam"` en een functie `CC.autosave.naam(form)` die zonder opnieuw tekenen bewaart; de knop heet *Klaar*. Knopnamen zijn uniek (`CC.on`; bewuste vervanging met `{ vervangt: true }`, Besluit 102).
+  - `opstelling.js`: eigen wisselschema (Besluit 106): opstelling 1-4-3-3, wissels, klok, minuten en posities; omgerekend naar blokken (`M.zelfAfleiden`). Speelvorm per team: `team.speelCat` (`M.wedCat`); keuze van de staf in `S.teamKeuze`.
   - `adres.js`: adres aanvullen via PDOK (velden met `data-adres`). `push.js`: pushmeldingen aanzetten en keuzes (Besluit 53); tonen in `sw.js`. `onderhoud.js`: foutregistratie en zelf verversen bij een nieuwe versie (`versie.json`, gemaakt door `versie-maken.js` bij elke publicatie; Besluit 63).
   - Modules: `autoberichten.js` (Communicatieplan, noodberichten, herinneringen activiteiten), `afwezig.js`, `trainerafw.js`, `beoordeling.js` (+ `gesprek.js`: voorbereiding en gesprekspagina ontwikkelgesprek), `materiaal.js`, `meehelpen.js`, `waardering.js`, `hjofilter.js`, `agenda.js`.
   - `evaluatie.html` (los, `/evaluatie`): evaluatieformulier praktijkbegeleiding coach, gegevens alleen op het toestel, PDF via printen (Besluit 93).

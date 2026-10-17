@@ -371,6 +371,8 @@
         ${top.length ? `<p class="klein">Meest genoemde redenen: ${top.map(([r, n]) => `${esc(r.toLowerCase())} (${n})`).join(', ')}</p>` : ''}
         ${h.sectie('Staf')}<div class="kaartje">${stafBlok('trainer')}${stafBlok('teamleider')}<p class="zacht klein">Een team kan meer trainers en teamleiders hebben; ze zien en doen allemaal hetzelfde. Kies uit bestaande ouders of staf. Iemand van buiten? Voeg de persoon toe via Teams → Staf.</p></div>
         ${h.sectie('Teamtype en regels')}<div class="kaartje"><div class="seg">${['breedte', 'selectie'].map((x) => `<button class="${t.type === x ? 'aan' : ''}" data-act="zetType" data-team="${t.id}" data-val="${x}">${x[0].toUpperCase() + x.slice(1)}</button>`).join('')}</div>
+          <label for="tm-sc">Speelt wedstrijden als</label><select id="tm-sc" class="kies" data-change="zetSpeelCat" data-team="${t.id}"><option value="">Zoals de teamnaam (${esc(t.cat)})</option>${CC.LEEFTIJDEN.map((l) => { const v = `O${l.tot === 99 ? 19 : l.tot}`; return `<option value="${v}" ${t.speelCat === v ? 'selected' : ''}>${esc(l.label)} · ${esc(l.vorm)}, ${l.helften === 2 ? `2 × ${l.helft}` : l.helft} min</option>`; }).join('')}</select>
+          <p class="zacht klein">Speelt het team in een andere leeftijd dan zijn naam (bijv. een O12 in de O13-competitie)? Dat bepaalt speelduur, aantal in het veld en de taken bij de wedstrijd.</p>
           <form data-submit="afwijkingOk" data-team="${t.id}" class="codeform"><label for="af-d">Afmelden training tot … uur van tevoren</label><input id="af-d" name="dt" type="number" min="0" max="48" value="${afw.deadlineTraining ?? ''}" placeholder="Clubstandaard: ${S.club.inst.deadlineTraining}"><button class="knop licht klein">Afwijking opslaan</button><p class="zacht klein">Leeg = clubstandaard. Zo kan een selectieteam strenger zijn dan een breedteteam.</p></form></div>
         ${CC.materiaalStatus && S.club.modules.materiaal ? `<div class="lijst">${CC.materiaalStatus(S, t.id)}</div>` : ''}
         ${CC.recenteTrainingen ? CC.recenteTrainingen(S, t.id) : ''}
@@ -388,6 +390,8 @@
     if (p) p.rollen = p.rollen.filter((r) => !(r.rol === rol && r.teamId === t.id));
     if (t[veld] === el.dataset.id) t[veld] = M.stafVan(S, t.id, [rol]).find((x) => x !== el.dataset.id) || null;
     CC.save(); CC.closeSheet(); CC.render(); CC.toast(`${p ? p.naam.split(' ')[0] : 'Deze persoon'} is geen ${rol} meer van ${t.naam}`); });
+  // Besluit 106: speelvorm van de wedstrijden (leeg = zoals de teamnaam)
+  CC.on('zetSpeelCat', (el) => { const S = CC.S(); const t = M.team(S, el.dataset.team); if (el.value) t.speelCat = el.value; else delete t.speelCat; CC.save(); CC.render(); CC.toast('Opgeslagen'); });
   CC.on('zetType', (el) => { const S = CC.S(); M.team(S, el.dataset.team).type = el.dataset.val; CC.save(); CC.render(); });
   CC.on('afwijkingOk', (f) => { const S = CC.S(); const t = M.team(S, f.dataset.team); if (f.dt.value === '') delete t.afwijking.deadlineTraining; else t.afwijking.deadlineTraining = Number(f.dt.value); CC.save(); CC.render(); CC.toast('Opgeslagen'); });
 
