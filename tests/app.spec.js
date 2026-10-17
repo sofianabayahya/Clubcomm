@@ -444,6 +444,23 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'rol wisselen');
   });
 
+  // Gevonden 17-10 bij DCG: een lange teamnaam ("O12 talententeam") liep over het balkje heen
+  test('inzicht: lange teamnaam overlapt het balkje niet', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 800 });
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(3).click(); // Peter: HJO
+    await page.locator('[data-act="magischeLink"]').click();
+    await page.evaluate(() => { CC.S().teams.forEach((t) => { t.naam = `${t.naam} talententeam`; }); CC.render(); });
+    await page.locator('nav >> text=Inzicht').click();
+    const overlap = await page.evaluate(() => [...document.querySelectorAll('.staaf')].filter((s) => {
+      const naam = s.children[0].getBoundingClientRect(); const balk = s.children[1].getBoundingClientRect();
+      return naam.right > balk.left + 1 || s.children[0].scrollWidth > s.children[0].clientWidth + 1;
+    }).length);
+    expect(overlap).toBe(0);
+  });
+
   // Training afgelasten met een eigen toelichting: één bericht aan de ouders
   test('trainer gelast een training af met toelichting', async ({ page }) => {
     const fouten = volgFouten(page);
