@@ -62,6 +62,9 @@
     const aan = stats.reduce((s, x) => s + x.spelers.reduce((a, y) => a + y.st.aanwezig, 0), 0);
     // Te doen: alleen de trainers en jouw eigen stap (clubbesluit); spelerzaken die bij de coördinator blijven liggen gebundeld
     const doen = []; const f = focus(S);
+    // Dringend bovenaan (verbeterplan 17-10): een training zonder trainer, of die jij overneemt
+    const dringendTeams = S.teams.filter((t) => eersteLijn(S, t.id, 'hjo')).map((t) => t.id);
+    if (CC.vervangerRijen && dringendTeams.length) doen.push(...CC.mijnVervangingen(S), ...CC.vervangerRijen(S, dringendTeams));
     const tsAlle = trainerSig(S).filter((x) => CC.inWerkgebied(S, (x.p.rollen.find((r) => r.rol === 'trainer') || {}).teamId)); const teamVanTr = (x) => (x.p.rollen.find((r) => r.rol === 'trainer') || {}).teamId;
     const ts = tsAlle.filter((x) => inFocus(S, f, teamVanTr(x))); const buiten = tsAlle.length - ts.length;
     if (ts.length >= BUNDEL) doen.push(h.rij({ ic: 'user-cog', titel: `${ts.length} trainers vragen aandacht`, sub: ts.slice(0, 3).map((x) => esc(x.p.naam)).join(', ') + (ts.length > 3 ? '…' : ''), kleur: 'oranje', act: 'open', attrs: 'data-view="trainersRapport" data-filter="aandacht"' }));
@@ -82,7 +85,6 @@
     const eigenTeams = S.teams.filter((t) => eersteLijn(S, t.id, 'hjo'));
     const org = [];
     if (eigenTeams.length) {
-      if (CC.vervangerRijen) org.push(...CC.mijnVervangingen(S), ...CC.vervangerRijen(S, eigenTeams.map((t) => t.id)));
       if (CC.autoBerichtRijen && CC.mag('clubbericht', 'hjo')) org.push(...CC.autoBerichtRijen(S));
       { const w = CC.wachtRij && CC.wachtRij(); if (w) org.push(w); }
       const gesprek = groep('gesprekHjo', eigen).filter((s) => CC.mag('gesprek', null, s.teamId));
@@ -100,7 +102,8 @@
       if (CC.vogRijen && CC.mag('staf')) org.push(...CC.vogRijen(S, eigenTeams.map((t) => t.id)));
     }
     return `${focusChips(S, f)}<div class="clubregel"><span><b>${S.teams.length}</b> ${S.teams.length === 1 ? 'team' : 'teams'}</span><span><b>${nTr}</b> ${nTr === 1 ? 'trainer' : 'trainers'}</span><span><b>${tot ? Math.round((100 * aan) / tot) : '–'}%</b> aanwezig</span></div>
-      ${h.sectie(`Te doen${doen.length ? ` (${doen.length})` : ''}`)}${doen.length ? `<div class="lijst">${doen.join('')}</div>` : h.leeg('Je trainers vragen nu geen aandacht 👍', 'circle-check')}
+      ${CC.begelVandaag ? CC.begelVandaag(S) : ''}
+      ${h.sectie(`Te doen${doen.length ? ` (${doen.length})` : ''}`)}${doen.length ? `<div class="lijst">${h.roodEerst(doen).join('')}</div>` : h.leeg('Je trainers vragen nu geen aandacht 👍', 'circle-check')}
       ${h.sectie('Deze week')}${bw.length ? `<div class="lijst compact">${bw.join('')}</div>` : ''}${dagen.length ? `<div class="lijst compact">${dagen.map(dagRij).join('')}</div><p class="zacht klein">Wanneer kun je gaan kijken? Tik op een dag.</p>` : '<p class="zacht klein">Geen trainingen of wedstrijden de komende 7 dagen.</p>'}
       ${h.sectie('Rapporten')}<div class="lijst compact">
         ${h.rij({ ic: 'user-check', titel: 'Trainers', sub: `${nTr === 1 ? '1 trainer' : `${nTr} trainers`} per bouw en team: afmeldingen, aanwezigheid van het team${ts.length ? ` · ${ts.length} ${ts.length === 1 ? 'vraagt' : 'vragen'} aandacht` : ''}`, act: 'open', attrs: 'data-view="trainersRapport"' })}

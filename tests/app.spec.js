@@ -364,6 +364,27 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'technisch coördinator');
   });
 
+  // Verbeterplan 17-10, snelle winsten: geen dubbele knopnamen, dringend bovenaan, Observeren op de dag zelf
+  test('snelle winsten: unieke knopnamen, dringend bovenaan, knop Observeren', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    expect(await page.evaluate(() => CC.dubbeleActies)).toEqual([]);
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(3).click();
+    await page.locator('[data-act="magischeLink"]').click();
+    await page.evaluate(() => { CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'hjo')); CC.S().begeleidMomenten.find((m) => m.id === 'bm-demo2').datum = CC.date.vandaag(); });
+    await page.locator('nav.nav button[data-tab="home"]').click();
+    // Vandaag: één tik naar het A4
+    await expect(page.locator('#app [data-view="begelObs"]')).toContainText('Observeren: Dennis Peters');
+    // Een training zonder trainer staat als eerste bij Te doen, niet meer onder Organisatie
+    const eerste = page.locator('#app .sectie-kop:has-text("Te doen") + .lijst > .rij').first();
+    await expect(eerste).toContainText('Trainer kan niet');
+    await page.locator('#app [data-view="begelObs"]').click();
+    await expect(page.locator('#app')).toContainText('Turven');
+    await controleer(page, fouten, 'snelle winsten');
+  });
+
   // Training afgelasten met een eigen toelichting: één bericht aan de ouders
   test('trainer gelast een training af met toelichting', async ({ page }) => {
     const fouten = volgFouten(page);

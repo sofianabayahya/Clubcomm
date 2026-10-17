@@ -52,7 +52,7 @@
   // ---------- Besluit 100: pakket "Alleen Trainers begeleiden" en de rol technisch coördinator ----------
   CC.pakketTrainers = (S) => (S || CC.S()).club.pakket === 'trainers';
   const trainersHome = (S) => { const w = CC.begelWeek ? CC.begelWeek(S) : [];
-    return `${w.length ? `${h.sectie('Deze week')}<div class="lijst compact">${w.join('')}</div>` : ''}${CC.rollen.hjo.schermen.trainers(S)}`; };
+    return `${CC.begelVandaag ? CC.begelVandaag(S) : ''}${w.length ? `${h.sectie('Deze week')}<div class="lijst compact">${w.join('')}</div>` : ''}${CC.rollen.hjo.schermen.trainers(S)}`; };
   const origHjoHome = CC.rollen.hjo.schermen.home;
   CC.rollen.hjo.schermen.home = (S) => (CC.pakketTrainers(S) && (CC.rol() || {}).rol === 'hjo' ? trainersHome(S) : origHjoHome(S));
   CC.rollen.tc = {

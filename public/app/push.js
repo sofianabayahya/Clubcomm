@@ -63,7 +63,7 @@
         ${st === 'aan' ? `<button class="knop licht vol" data-act="pushUit">${icon('bell-off')}Uitzetten op deze telefoon</button>` : ''}${uitleg}`;
     }
     CC.sheet('Meldingen', inhoud);
-  });
+  }, { vervangt: true });
 
   // Aanzetten: toestemming vragen meteen bij de tik (de iPhone staat het alleen dan toe), daarna de telefoon aanmelden
   const zetAan = async (voorkeur, knop) => {
