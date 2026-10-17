@@ -92,7 +92,7 @@
       zet: () => als('mark', 'trainer'), doel: sectie('Actie nodig') },
     { hfd: 'Trainer', wie: 'mark', rol: 'trainer', titel: 'Aanwezigheid in één minuut',
       tekst: '<p>Na de training tikt de trainer aan wie er was en wie te laat kwam. Afmeldingen staan er al in.</p><p>Aanwezigheid per fase, kaarten en signalen rekent de app daarna zelf uit. Dezelfde cijfers ziet de ouder bij het eigen kind.</p>',
-      zet: () => { als('mark', 'trainer', 'aanwezigheid'); segKlik('Opnemen'); }, doel: el('#app .opnemen') },
+      zet: () => { als('mark', 'trainer', 'aanwezigheid'); segKlik('Opnemen'); }, doel: eerste(el('#app .opnemen'), el('#app .lijst'), el('#app main > *')) }, // in een vakantie staat er geen training: dan de lijst of het scherm
     { hfd: 'Trainer', wie: 'mark', rol: 'trainer', titel: 'Wedstrijddag: schema, score en speeltijd',
       tekst: '<p>De trainer maakt met één tik een wisselschema, met de speelduur volgens de KNVB voor de leeftijd. Wie het minst speelde, krijgt voorrang. De timekeeper, een ouder, ziet het schema op de wedstrijddag.</p><p>Langs de lijn houdt de timekeeper de doelpunten bij. Na <b>Einde wedstrijd</b> liggen uitslag, speeltijd en aanwezigheid vast. Vergeet de trainer het, dan doet de server het 2 uur na afloop.</p>',
       zet: () => als('mark', 'trainer', 'speeltijd'), doel: () => { // Scorebord als er een wedstrijd loopt of net gespeeld is; anders het wisselschema (hangt af van de dag van de week)
