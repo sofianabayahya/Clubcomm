@@ -59,6 +59,22 @@
   document.addEventListener('click', handle('act'));
   document.addEventListener('change', handle('change'));
   document.addEventListener('input', handle('input'));
+  // Besluit 103: automatisch bewaren. Een formulier met data-autosave="naam" bewaart elk veld zodra je het verlaat
+  // (CC.autosave[naam](form), zonder het scherm opnieuw te tekenen). "Bewaard ✓" pas als de database het echt heeft.
+  CC.autosave = {};
+  // De melding staat in de hoek van het veld zelf: er verschuift niets, zodat een tik op Klaar niet misgaat
+  const statusBij = (veld) => { const f = veld.form; const doel = veld.closest('fieldset') || veld; const sl = veld.name || 'veld';
+    let s = f.querySelector(`small.bewaard[data-voor="${sl}"]`);
+    if (!s) { s = document.createElement('small'); s.dataset.voor = sl; s.setAttribute('aria-live', 'polite'); f.appendChild(s); }
+    s.style.top = `${doel.offsetTop + doel.offsetHeight - 22}px`; return s; };
+  document.addEventListener('change', (e) => {
+    const veld = e.target; const f = veld.closest && veld.closest('form[data-autosave]'); const fn = f && CC.autosave[f.dataset.autosave]; if (!fn) return;
+    const s = statusBij(veld); const zet = (k, t) => { s.className = `bewaard ${k}`; s.textContent = t; };
+    try { fn(f); CC.save(); } catch (err) { console.warn(err); zet('fout', 'Niet bewaard, probeer het opnieuw'); return; }
+    zet('bezig', 'Bewaren…'); let n = 0;
+    const kijk = () => { if (!CC.allesOpgeslagen || CC.allesOpgeslagen()) zet('ok', 'Bewaard ✓'); else if (++n < 40) setTimeout(kijk, 500); else zet('fout', 'Nog niet bewaard: geen verbinding? We blijven het proberen.'); };
+    setTimeout(kijk, CC.allesOpgeslagen ? 700 : 0);
+  });
   document.addEventListener('submit', (e) => { const f = e.target.closest('[data-submit]'); if (f) { e.preventDefault(); const fn = acties[f.dataset.submit]; if (fn) fn(f, e); } });
 
   // ---------- Toast en sheet ----------
@@ -191,6 +207,11 @@
     } catch (err) { console.error(err); if (CC.meldFout) CC.meldFout(err, 'scherm'); inhoud = h.leeg(`Er ging iets mis op dit scherm: ${esc(err.message)}`, 'circle-alert'); }
     const ctx = R.context(S);
     const me = CC.me();
+    // Besluit 103: wat je hebt opengeklapt, blijft open na opnieuw tekenen (op hetzelfde scherm)
+    const scherm = `${rol.rol}|${ui.tab}|${ui.view ? `${ui.view.naam}|${ui.view.id || ''}` : ''}`;
+    const blokNaam = (sum) => (sum.querySelector('b') || sum).textContent.replace(/\d+/g, '').replace(/\s+/g, ' ').trim();
+    const open = CC._scherm === scherm ? new Set([...app.querySelectorAll('details[open] > summary')].map(blokNaam)) : new Set();
+    CC._scherm = scherm;
     app.innerHTML = `
       <header class="kop">
         ${terug ? `<button class="icoonknop" data-act="terug" aria-label="Terug">${icon('chevron-left')}</button>` : `<img class="kop-logo" src="assets/clubcomm-icon.png" alt="">`}
@@ -202,6 +223,7 @@
       </header>
       <main class="inhoud">${inhoud}</main>
       <nav class="nav" aria-label="Hoofdmenu">${tabs.map(([id, label, ic, n]) => `<button class="${ui.tab === id ? 'aan' : ''}" data-act="tab" data-tab="${id}" ${ui.tab === id ? 'aria-current="page"' : ''}>${icon(ic)}<span>${label}</span>${h.badge(n)}</button>`).join('')}</nav>`;
+    if (open.size) app.querySelectorAll('details > summary').forEach((sum) => { if (open.has(blokNaam(sum))) sum.parentElement.open = true; });
     document.title = 'ClubComm';
   };
 

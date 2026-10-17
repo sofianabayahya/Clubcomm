@@ -95,7 +95,11 @@ test.describe('Demo', () => {
     // Clubbeheerder: onderbouw splitsen in O8–O10 en O11–O12
     await page.evaluate(() => CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'beheerder')));
     await page.locator('nav.nav button[data-tab="rollen"]').click();
+    // Besluit 103: Persoon toevoegen staat bovenaan; de indeling staat in een ingeklapt blok dat open blijft na een tik
+    await expect(page.locator('#app main > button[data-act="stafNieuw"]').first()).toBeVisible();
+    await page.locator('#app summary', { hasText: 'Indeling in bouwen' }).click();
     await page.locator('[data-act="bouwErbij"]').click();
+    await expect(page.locator('#app details[open] > summary', { hasText: 'Indeling in bouwen' })).toHaveCount(1);
     await page.locator('#bw-t1').selectOption('10');
     await page.locator('#bw-n4').fill('Onderbouw 2'); await page.locator('#bw-v4').selectOption('11'); await page.locator('#bw-t4').selectOption('12');
     await page.locator('form[data-submit="bouwenOk"] button.knop').first().click();
@@ -385,6 +389,35 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'snelle winsten');
   });
 
+  // Besluit 103: automatisch bewaren; tekst gaat niet verloren bij een andere tik of bij het sluiten van een venster
+  test('automatisch bewaren in formulieren', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(3).click();
+    await page.locator('[data-act="magischeLink"]').click();
+    await page.evaluate(() => { CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'hjo')); CC.open('begelMoment', { id: 'bm-demo2' }); });
+    await page.locator('#app summary', { hasText: 'Reflectiegesprek' }).click();
+    const veld = page.locator('#app form[data-submit="begelVakkenOk"] textarea[name="sterk"]');
+    await veld.fill('Rustige toon langs de lijn'); await veld.press('Tab');
+    await expect(page.locator('#app small.bewaard', { hasText: 'Bewaard ✓' })).toBeVisible();
+    // Een andere knop aantikken (zonder Klaar): de tekst staat in het moment en is er na opnieuw tekenen nog
+    await page.locator('#app summary', { hasText: 'Nazorg' }).click();
+    await page.locator('#app [data-act="begelVoorbeeld"]').click();
+    await page.locator('[data-act="terug"]').click();
+    await expect(page.locator('#app form[data-submit="begelVakkenOk"] textarea[name="sterk"]')).toHaveValue('Rustige toon langs de lijn');
+    expect(await page.evaluate(() => CC.S().begeleidMomenten.find((m) => m.id === 'bm-demo2').vakken.sterk)).toBe('Rustige toon langs de lijn');
+    // Venster sluiten door ernaast te tikken: de kennismaking is bewaard, maar nog niet "ingevuld"
+    await page.evaluate(() => { CC.zetSessie(CC.S().demo.mark); CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer')); document.body.insertAdjacentHTML('beforeend', '<button id="t-ken" data-act="kennisForm" hidden></button>'); document.getElementById('t-ken').click(); });
+    const beter = page.locator('#sheet textarea[name="beter"]');
+    await beter.fill('Vragen stellen'); await beter.press('Tab');
+    await page.locator('#sheet .sheet-bg').click({ position: { x: 5, y: 5 } });
+    const k = await page.evaluate(() => CC.S().trainerKennis[CC.me().id]);
+    expect(k.a.beter).toBe('Vragen stellen'); expect(k.ingevuld).toBeFalsy();
+    await controleer(page, fouten, 'automatisch bewaren');
+  });
+
   // Training afgelasten met een eigen toelichting: één bericht aan de ouders
   test('trainer gelast een training af met toelichting', async ({ page }) => {
     const fouten = volgFouten(page);
@@ -463,6 +496,9 @@ test.describe('Kleine club (echte versie, nagebootste database)', () => {
     await expect(page.locator('nav.nav button')).toHaveCount(2);
     await page.evaluate(() => CC.open('trainerDetail', { id: 'p-tr' }));
     await page.locator('#app form[data-submit="hoNotitieOk"] textarea').fill('Kan door');
+    await page.locator('#app form[data-submit="hoNotitieOk"] textarea').press('Tab');
+    // Besluit 103: in de echte versie pas "Bewaard ✓" als de database het heeft
+    await expect(page.locator('#app small.bewaard', { hasText: 'Bewaard ✓' })).toBeVisible();
     await page.locator('#app form[data-submit="hoNotitieOk"] button').click();
     await expect.poll(async () => ((await nepDb(page)).rows['dcg|trainerNotities|p-tr'] || {}).data, { message: 'notitie met bouw opgeslagen' }).toEqual({ tekst: 'Kan door', bouwen: ['Middenbouw'] });
     await page.evaluate(() => CC.open('begelMoment', { id: 'bm1' }));
