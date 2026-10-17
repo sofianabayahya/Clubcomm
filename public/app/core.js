@@ -193,7 +193,7 @@
 
   // ---------- Render ----------
   CC.render = () => {
-    const app = document.getElementById('app');
+    const app = document.getElementById('app'); sluitRolMenu();
     if (!sessie || !CC.me()) { app.innerHTML = CC.loginScherm(); document.title = 'ClubComm'; return; }
     if (M.vulVasteTaken) M.vulVasteTaken(S);
     const rol = CC.rol();
@@ -217,7 +217,7 @@
         ${terug ? `<button class="icoonknop" data-act="terug" aria-label="Terug">${icon('chevron-left')}</button>` : `<img class="kop-logo" src="assets/clubcomm-icon.png" alt="">`}
         <div class="kop-tekst" ${!terug && ctx.act ? `data-act="${ctx.act}" role="button" tabindex="0"` : ''}>
           <b>${terug ? esc(kop) : esc(ctx.titel)}${!terug && ctx.act ? icon('chevron-down', 'klein') : ''}</b>
-          <small>${terug ? esc(kopSub != null ? kopSub : ctx.titel) : esc(ctx.sub)}</small>
+          <small>${terug ? esc(kopSub != null ? kopSub : ctx.titel) : me.rollen.length > 1 ? `<button class="rolknop" data-act="rolMenu" aria-haspopup="true" aria-label="Wissel van rol (nu ${esc(CC.rolNaam(rol))})">${esc(CC.rolNaam(rol))}${icon('chevron-down', 'klein')}</button> · ${esc(S.club.naam)}` : esc(ctx.sub)}</small>
         </div>
         <button class="profielknop" data-act="profiel" aria-label="Profiel">${h.avatar(me.naam)}${me.rollen.length > 1 ? `<span class="rolstip">${esc(CC.rolNaam(rol)[0])}</span>` : ''}</button>
       </header>
@@ -347,7 +347,6 @@
   CC.on('profiel', () => {
     const me = CC.me(); const rol = CC.rol();
     const kids = CC.kinderen();
-    const rollen = me.rollen.map((r, i) => `<button class="rolkeuze ${i === (sessie.rolIdx || 0) ? 'aan' : ''}" data-act="wisselRol" data-idx="${i}">${icon({ ouder: 'heart', trainer: 'clipboard-check', teamleider: 'hand-helping', hjo: 'shield', tc: 'user-check', beheerder: 'building-2', coordinator: 'users' }[r.rol])}<span><b>${esc(CC.rolNaam(r))}</b><small>${r.teamId ? esc(CC.tn(r.teamId)) : r.groep ? esc(r.groep) : (r.bouwen || []).length ? esc(r.bouwen.join(', ')) : r.rol === 'ouder' ? kids.map((k) => esc(k.voornaam)).join(', ') : esc(S.club.naam)}</small></span>${i === (sessie.rolIdx || 0) ? icon('check') : ''}</button>`).join('');
     const blokDemo = CC.live ? '' : `${(() => { // Snel wisselen: één tik naar een ander demo-account en rol, zonder inlogscherm
           const ik = CC.me(); const nu = (CC.rol() || {}).rol;
           const knoppen = ['sanne', 'mark', 'linda', 'peter', 'esther'].map((k) => M.persoon(S, S.demo[k])).filter(Boolean)
@@ -359,7 +358,7 @@
       <div class="profiel-kop">${h.avatar(me.naam, 'groot')}<div><b>${esc(me.naam)}</b><small>${esc(me.email)}${me.tel ? ` · ${esc(me.tel)}` : ''}</small></div></div>
       ${h.rij({ ic: 'phone', titel: me.tel ? 'Telefoonnummer wijzigen' : 'Telefoonnummer toevoegen', sub: me.tel ? esc(me.tel) : 'Zodat trainer en teamleider je kunnen bellen of appen', act: 'telSheet', kleur: me.tel ? '' : 'blauw' })}
       ${CC.profielExtra ? CC.profielExtra(S) : ''}
-      ${me.rollen.length > 1 ? `<h3 class="klein-kop">Wissel van rol</h3><div class="rollen">${rollen}</div>` : ''}
+      ${me.rollen.length > 1 ? `<p class="zacht klein">Je hebt ${me.rollen.length} rollen. Wisselen doe je bovenaan in beeld: tik op <b>${esc(CC.rolNaam(CC.rol()))} ▾</b> onder de naam.</p>` : ''}
       ${rol.rol === 'ouder' || kids.length ? `<h3 class="klein-kop">Mijn kinderen</h3>${kids.map((k) => h.rij({ ic: h.avatar(k.voornaam), titel: esc(M.naam(S, k)), sub: esc(CC.tn(k.teamId)) })).join('')}
         ${S.teams.length > 1 ? h.rij({ ic: 'user-plus', titel: 'Nog een kind aanmelden', sub: 'Speelt je andere kind in een ander team?', act: 'demoMelding', attrs: 'data-tekst="Vraag de teamleider van het andere team om de uitnodiging (link of QR-code) en meld je daar aan met hetzelfde e-mailadres. Dan staan beide kinderen onder jouw account."' }) : ''}
         ${h.rij({ ic: 'users', titel: 'Tweede ouder uitnodigen', sub: 'Ieder een eigen account, jullie zien elkaars e-mail niet', act: 'tweedeOuder' })}` : ''}
@@ -392,6 +391,21 @@
     CC.save(); CC.closeSheet(); CC.toast('Verzoek verstuurd naar de clubbeheerder');
   });
   CC.on('wisselRol', (el) => CC.wisselRol(Number(el.dataset.idx)));
+  // Besluit 104: rol wisselen met één tik in de kop. Per rol hoeveel er wacht (gekleurde regels bij Actie nodig of Te doen).
+  CC.openActies = (idx) => { const r = CC.me().rollen[idx]; const R = r && CC.rollen[r.rol]; if (!R || !R.schermen.home) return 0;
+    const oud = sessie.rolIdx; sessie.rolIdx = idx; let n = 0;
+    try { const html = R.schermen.home(S); const m = html.match(/<h3>(?:Actie nodig|Te doen)[^<]*<\/h3>[\s\S]*?(?=<div class="sectie-kop">|$)/); if (m) n = (m[0].match(/class="rij (?:rood|oranje|blauw)/g) || []).length; } catch (e) { n = 0; } finally { sessie.rolIdx = oud; }
+    return n; };
+  CC.on('rolMenu', (el) => { if (document.querySelector('.rolmenu')) return sluitRolMenu(); const me = CC.me(); const nu = sessie.rolIdx || 0;
+    const kop = document.querySelector('.kop'); const m = document.createElement('div'); m.className = 'rolmenu'; m.setAttribute('role', 'menu');
+    m.style.top = `${kop ? kop.getBoundingClientRect().bottom - 4 : 60}px`;
+    m.innerHTML = me.rollen.map((r, i) => { const n = i === nu ? 0 : CC.openActies(i);
+      const wat = r.teamId ? CC.tn(r.teamId) : r.groep ? r.groep : (r.bouwen || []).length ? r.bouwen.join(', ') : r.rol === 'ouder' ? CC.kinderen().map((k) => k.voornaam).join(', ') : '';
+      return `<button role="menuitem" class="${i === nu ? 'aan' : ''}" data-act="wisselRol" data-idx="${i}"><span><b>${esc(CC.rolNaam(r))}</b>${wat ? ` · ${esc(wat)}` : ''}</span><small class="${i === nu ? '' : n ? 'wacht' : 'zacht'}">${i === nu ? 'nu' : n ? `${n} ${n === 1 ? 'wacht' : 'wachten'}` : ''}</small></button>`; }).join('');
+    document.body.appendChild(m); const eerste = m.querySelector('button:not(.aan)'); if (eerste) eerste.focus(); });
+  const sluitRolMenu = () => { const m = document.querySelector('.rolmenu'); if (m) m.remove(); };
+  document.addEventListener('click', (e) => { if (!e.target.closest('.rolmenu, [data-act="rolMenu"]')) sluitRolMenu(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') sluitRolMenu(); });
   // Eigen telefoonnummer (alleen trainer, teamleider en staf van het team zien het; Besluit 40)
   CC.on('telSheet', () => { const me = CC.me(); CC.sheet('Telefoonnummer', `<form data-submit="telOk" class="codeform"><label for="tn">Je mobiele nummer</label><input id="tn" name="t" type="tel" inputmode="tel" autocomplete="tel" value="${esc(me.tel || '')}" placeholder="06 12345678"><button class="knop">Opslaan</button><p class="zacht klein">Alleen de trainer en teamleider van het team van je kind en de jeugdleiding zien dit nummer, om je te bellen of te appen. Andere ouders zien het niet.</p></form>`); });
   CC.on('telOk', (f) => { const t = f.t.value.replace(/[^0-9+]/g, ''); if (t && !/^(\+\d{10,14}|0\d{9})$/.test(t)) return CC.toast('Vul een geldig nummer in, bijv. 0612345678', 'fout'); CC.me().tel = t; CC.save(); CC.closeSheet(); CC.toast(t ? 'Telefoonnummer opgeslagen' : 'Telefoonnummer verwijderd'); });
