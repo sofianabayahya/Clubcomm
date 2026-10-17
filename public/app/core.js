@@ -45,7 +45,10 @@
 
   // ---------- Acties (event delegation) ----------
   const acties = {};
-  CC.on = (naam, fn) => { acties[naam] = fn; };
+  // Elke knopnaam (data-act, data-submit, data-input) is uniek; een bewuste vervanging geeft { vervangt: true } mee.
+  // Dubbele namen komen in CC.dubbeleActies; de tests falen daarop (verbeterplan 17-10, snelle winst 2).
+  CC.dubbeleActies = [];
+  CC.on = (naam, fn, o = {}) => { if (acties[naam] && !o.vervangt) CC.dubbeleActies.push(naam); acties[naam] = fn; };
   const handle = (type) => (e) => {
     const el = e.target.closest(`[data-${type}]`);
     if (!el) return;
@@ -102,11 +105,13 @@
     },
     segVal: (key, standaard) => ui.seg[key] || standaard,
     // Blok "Actie nodig": altijd zichtbaar, ook als het leeg is, zodat je weet waar acties straks verschijnen (Besluit 50)
-    actieBlok: (acties0, wat) => { const p = CC.pushRij ? CC.pushRij() : ''; const acties = p ? [...acties0, p] : acties0; return `${h.sectie('Actie nodig')}${acties.length ? `<div class="lijst">${acties.join('')}</div>` : `<p class="zacht klein">Niets te doen 👍 Hier verschijnen je acties, bijvoorbeeld ${wat}.</p>`}`; },
+    actieBlok: (acties0, wat) => { const p = CC.pushRij ? CC.pushRij() : ''; const acties = h.roodEerst(p ? [...acties0, p] : acties0); return `${h.sectie('Actie nodig')}${acties.length ? `<div class="lijst">${acties.join('')}</div>` : `<p class="zacht klein">Niets te doen 👍 Hier verschijnen je acties, bijvoorbeeld ${wat}.</p>`}`; },
     rij({ ic, titel, sub, rechts, act, attrs = '', kleur = '', chevron = true }) {
       const tag = 'div';
       return `<${tag} class="rij ${kleur} ${act ? 'klikbaar' : ''}" ${act ? `data-act="${act}" role="button" tabindex="0"` : ''} ${attrs}>${ic ? `<span class="rij-ic">${ic.startsWith('<') ? ic : icon(ic)}</span>` : ''}<span class="rij-tekst"><b>${titel}</b>${sub ? `<small>${sub}</small>` : ''}</span>${rechts ? `<span class="rij-r">${rechts}</span>` : ''}${act && chevron ? icon('chevron-right', 'chev') : ''}</${tag}>`;
     },
+    // Verbeterplan 17-10: een rode regel (probleem) staat altijd bovenaan; verder blijft de volgorde gelijk
+    roodEerst: (rijen) => [...rijen.filter((r) => /class="rij rood/.test(r)), ...rijen.filter((r) => !/class="rij rood/.test(r))],
     stip: (zone) => `<span class="stip ${zone}" aria-label="${zone}"></span>`,
     avatar: (naam, cls = '') => `<span class="avatar ${cls}">${esc(initialen(naam))}</span>`,
     leeg: (tekst, ic = 'circle-check') => `<div class="leeg">${icon(ic)}<p>${tekst}</p></div>`,

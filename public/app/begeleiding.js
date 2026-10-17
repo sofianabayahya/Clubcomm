@@ -303,9 +303,16 @@
     return h.rij({ ic: 'calendar-days', titel: esc(titelM(S, m)), sub: m.klaar ? 'Afgerond' : 'Gepland', chevron: false }); });
   CC.begelPrintMijn = (S, pid) => vanTrainer(S, pid).filter((m) => m.gedeeld).map((m) => { const z = zelf(S)[m.id] || {};
     return `<h2>${esc(titelM(S, m))}</h2>${VAKKEN.map(([k, t]) => `<p><b>${t}:</b> ${esc((m.vakken || {})[k] || '')}</p>`).join('')}${z.reflectieOp ? REFLECTIE.map(([k, t]) => `<p><b>${esc(t)}</b><br>${esc((z.r || {})[k] || '')}</p>`).join('') : ''}`; }).join('');
+  // Verbeterplan 17-10: op de dag zelf bovenaan Home één tik naar het A4 (alleen wat in jouw werkgebied ligt)
+  CC.begelVandaag = (S) => { const l = mom(S).filter((m) => !m.klaar && m.datum === D.vandaag() && CC.inWerkgebied(S, m.teamId)).sort((a, b) => ((M.act(S, a.actId) || {}).tijd || '').localeCompare((M.act(S, b.actId) || {}).tijd || ''));
+    if (!l.length) return '';
+    return `${h.sectie('Vandaag')}${l.map((m) => { const tr = M.persoon(S, m.trainerId) || { naam: '' }; const a = m.actId && M.act(S, m.actId);
+      return `<button class="knop vol" data-act="open" data-view="begelObs" data-id="${m.id}">${icon('list-checks')}Observeren: ${esc(tr.naam)}${a ? ` · ${a.tijd}${a.veld ? ` · ${esc(a.veld.toLowerCase())}` : ''}` : ''}</button>
+        <p class="zacht klein">${m.soort === 'wedstrijd' ? 'Wedstrijd' : 'Training'} ${esc(CC.tn(m.teamId))} · ${fasen(S, m)[0][1] ? 'voorbereiding klaar' : '<b>voorbereiding nog invullen</b>'} · <button class="linkknop" data-act="open" data-view="begelMoment" data-id="${m.id}">Moment openen</button></p>`; }).join('')}`; };
   // Home van de HO, Deze week: de begeleidingsmomenten die gepland staan
+  // Wat vandaag is, staat al bovenaan bij Vandaag (begelVandaag); hier alleen de rest van de week
   CC.begelWeek = (S) => { const tot = D.addDays(D.vandaag(), 7);
-    return mom(S).filter((m) => !m.klaar && m.datum >= D.vandaag() && m.datum <= tot).sort((a, b) => a.datum.localeCompare(b.datum)).map((m) => { const tr = M.persoon(S, m.trainerId) || { naam: '' };
+    return mom(S).filter((m) => !m.klaar && m.datum >= D.vandaag() && m.datum <= tot && !(m.datum === D.vandaag() && CC.inWerkgebied(S, m.teamId))).sort((a, b) => a.datum.localeCompare(b.datum)).map((m) => { const tr = M.persoon(S, m.trainerId) || { naam: '' };
       const a = m.actId && M.act(S, m.actId);
       return h.rij({ ic: 'user-check', titel: `${D.relatief(m.datum)}: begeleiding ${esc(tr.naam)}`, sub: `${m.soort === 'wedstrijd' ? 'Wedstrijd' : 'Training'} ${esc(CC.tn(m.teamId))}${a ? ` · ${a.tijd}` : ''} · ${fasen(S, m)[0][1] ? faseRegel(S, m) : 'voorbereiding nog invullen'}`, kleur: fasen(S, m)[0][1] ? '' : 'blauw', act: 'open', attrs: `data-view="begelMoment" data-id="${m.id}"` }); }); };
 

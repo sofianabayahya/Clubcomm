@@ -17,6 +17,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 102 | Snelle winsten: dringend bovenaan, Observeren op de dag zelf, unieke knopnamen | ✅ geldt |  |
 | 101 | Voorgesprek als voormeting: eigen vragen voor training en wedstrijd | ✅ geldt |  |
 | 100 | Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden" | ◐ deels herzien | door 101 (vragen kort en uitgebreid per soort) |
 | 99 | Trainers begeleiden via een traject, met de KNVB-begeleidingscyclus; tabblad Trainers | ◐ deels herzien | door 100 (vragenlijst kort of uitgebreid per niveau; notities gedeeld per bouw met de TC); door 101 (vragenlijst vooraf per soort) |
@@ -634,6 +635,12 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 102 — Snelle winsten uit het verbeterplan: dringend bovenaan, Observeren op de dag zelf, unieke knopnamen
+*Besloten 17 oktober 2026. Uit `docs/onderzoek/verbeterplan-gebruik-2026-10.md` (snelle winsten 1–3). Vult Besluit 30, 34 en 97 aan.*
+- **Dringend bovenaan:** op de Home van de HO staat een training zonder trainer (*"Trainer kan niet … nog geen vervanger"*) of een training die jij overneemt als eerste bij *Te doen*, niet meer onder Organisatie. In elk blok *Actie nodig* en bij *Te doen* staat een **rode regel altijd bovenaan**; verder blijft de volgorde gelijk.
+- **Vandaag:** heeft de HO of TC vandaag een begeleidingsmoment in zijn werkgebied, dan staat bovenaan Home de knop **"Observeren: [trainer] · [tijd] · [veld]"** (één tik naar het A4), met eronder of de voorbereiding klaar is en *Moment openen*. Het moment staat dan niet nog eens bij *Deze week* (één keer, principe 10).
+- **Unieke knopnamen:** elke interne knopnaam komt één keer voor; een bewuste vervanging wordt gemarkeerd. De tests falen bij een dubbele naam (oorzaak van de fout bij *Training plannen* op 10-10).
 
 ## Besluit 101 — Voorgesprek als voormeting: eigen vragen voor training en wedstrijd
 *Besloten 10 oktober 2026. Herziet de vragenlijst vooraf uit Besluit 99 en 100.*
