@@ -132,31 +132,41 @@
     return { titel: titelM(S, m), sub: tr.naam, html: `
       ${m.klaar ? '' : `<button class="knop vol" data-act="open" data-view="begelObs" data-id="${m.id}">${icon('list-checks')}Observeren</button>`}
       <div class="knoppen"><button class="knop licht klein" data-act="begelPrint" data-id="${m.id}" data-leeg="1">${icon('printer')}A4 leeg</button><button class="knop licht klein" data-act="begelPrint" data-id="${m.id}">${icon('printer')}A4 ingevuld</button><button class="knop licht klein" data-act="begelVragenPrint" data-id="${m.id}">${icon('printer')}Vragenlijst</button></div>
-      ${blok(0, `<form data-submit="begelVoorOk" data-id="${m.id}" class="codeform">
+      ${blok(0, `<form data-submit="begelVoorOk" data-autosave="begelVoor" data-id="${m.id}" class="codeform">
         <label>Thema</label><input name="thema" value="${esc(m.voor.thema)}" placeholder="Bijv. opbouwen onder druk">
         ${veldT('doel', m.soort === 'wedstrijd' ? 'Wedstrijddoel en voetbalprobleem' : 'Trainingsdoel en voetbalprobleem', m.voor.doel, 'Wat moeten spelers leren?')}
         ${veldT('leerdoel', 'Persoonlijk leerdoel trainer', m.voor.leerdoel)}
         ${veldT('hoDoel', 'Mijn eigen doel als HO (mag leeg)', m.voor.hoDoel)}
-        <button class="knop licht klein">Opslaan</button></form>`)}
+        <button class="knop klein">Klaar</button></form>`)}
       ${blok(1, `${z.ingevuld ? `<details class="uitklap stil" open><summary>Vragenlijst van ${esc(tr.naam.split(' ')[0])} (ingevuld ${D.kort(z.ingevuld.slice(0, 10))})</summary><dl class="antwoorden">${vragen.filter(([k]) => (z.v || {})[k]).map(([k, t, o]) => `<dt>${o ? `<span class="chip mini">${esc(o)}</span> ` : ''}${esc(t)}</dt><dd>${esc(z.v[k])}</dd>`).join('')}</dl></details>`
           : m.gevraagd ? `<p class="zacht klein">Vragenlijst gestuurd op ${D.kort(m.gevraagd.slice(0, 10))}; nog niet ingevuld.</p>` : `<div class="chips">${[['kort', 'Kort (4 vragen)'], ['uitgebreid', 'Uitgebreid (9 vragen)']].map(([k, l]) => `<button class="chipknop ${(m.niveau || 'kort') === k ? 'aan' : ''}" data-act="begelNiveau" data-id="${m.id}" data-n="${k}">${l}</button>`).join('')}</div>
           <button class="knop licht klein" data-act="begelVragen" data-id="${m.id}">${icon('send')}Vragenlijst sturen aan ${esc(tr.naam.split(' ')[0])}</button><p class="zacht klein">De trainer vult de vragen vooraf zelf in. Zo begint het gesprek bij de trainer.</p>`}
-        <form data-submit="begelPlanOk" data-id="${m.id}" class="codeform"><p class="klein"><b>Afspraken uit het gesprek</b></p>
+        <form data-submit="begelPlanOk" data-autosave="begelPlan" data-id="${m.id}" class="codeform"><p class="klein"><b>Afspraken uit het gesprek</b></p>
         ${veldT('leerdoel', 'Leerdoel', m.plan.leerdoel || (z.v || {}).leerdoel || m.voor.leerdoel)}
         ${veldT('focus', 'Focus van de HO tijdens de observatie', m.plan.focus || (z.v || {}).letop)}
         <label>Feedbackmoment</label><input name="feedback" value="${esc(m.plan.feedback || (z.v || {}).feedback || '')}" placeholder="${m.soort === 'wedstrijd' ? 'Bijv. kort in de rust, uitgebreid na afloop' : 'Bijv. tussen de vormen, uitgebreid na afloop'}">
-        <button class="knop licht klein">Opslaan</button></form>`)}
+        <button class="knop klein">Klaar</button></form>`)}
       ${blok(2, `<p class="klein">${Object.keys(m.obs.punten).length} van ${CC.OBS[m.soort].reduce((n, o) => n + o.p.length, 0)} punten bekeken${m.obs.klok && m.obs.klok.totaal ? ` · effectieve voetbaltijd ${pct(m.obs.klok, 'spelen')}%` : ''}</p>${m.klaar ? `<button class="knop licht klein" data-act="open" data-view="begelObs" data-id="${m.id}">Observatie bekijken</button>` : '<p class="zacht klein">Tik bovenaan op Observeren, op het veld.</p>'}${!m.klaar && evaluaties().length ? `<button class="knop licht klein" data-act="begelImport" data-id="${m.id}">${icon('clipboard-check')}Overnemen uit het evaluatieformulier</button>` : ''}`)}
-      ${blok(3, `<form data-submit="begelVakkenOk" data-id="${m.id}" class="codeform"><p class="zacht klein">Samen met de trainer. Laat de trainer eerst vertellen (eerste gevoel, leerdoel), geef daarna wat jij zag.</p>
+      ${blok(3, `<form data-submit="begelVakkenOk" data-autosave="begelVakken" data-id="${m.id}" class="codeform"><p class="zacht klein">Samen met de trainer. Laat de trainer eerst vertellen (eerste gevoel, leerdoel), geef daarna wat jij zag.</p>
         ${VAKKEN.map(([k, t, v]) => veldT(k, `${t}${k === 'ontwikkelpunt' ? ' (verplicht)' : ''}`, (m.vakken || {})[k], v)).join('')}
-        <button class="knop licht klein">Opslaan</button></form>`)}
+        <button class="knop klein">Klaar</button></form>`)}
       ${blok(4, `<p class="klein"><b>a. Reflectieverslag van ${esc(tr.naam.split(' ')[0])}</b></p>
         ${m.gedeeld ? `<p class="zacht klein">Gedeeld op ${D.kort(m.gedeeld.slice(0, 10))}.</p>` : `<p class="zacht klein">Na het delen ziet de trainer het voorblok, je observatie (✓ / ~ / – met je korte observaties) en de vier vakken. Daarna beantwoordt de trainer drie vragen:</p>`}
         <dl class="antwoorden">${REFLECTIE.map(([k, t]) => `<dt>${esc(t)}</dt><dd>${z.reflectieOp ? esc((z.r || {})[k] || '') : '<span class="zacht">nog niet ingevuld</span>'}</dd>`).join('')}</dl>
         <div class="knoppen">${m.gedeeld ? '' : `<button class="knop licht klein" data-act="begelDeel" data-id="${m.id}">${icon('send')}Delen met de trainer</button>`}<button class="knop licht klein" data-act="begelVoorbeeld" data-id="${m.id}">${icon('eye')}Bekijk wat de trainer ziet</button></div>
-        <form data-submit="begelKlaarOk" data-id="${m.id}" class="codeform"><p class="klein"><b>b. Mijn eigen terugblik als begeleider</b></p>${veldT('hoVerslag', 'Hoe ging mijn begeleiding? (mag leeg)', hoTekst(S, m), 'Wat deed ik goed als begeleider, wat doe ik de volgende keer anders? Handig voor je HO-opleiding. Alleen jij en de begeleiders van deze bouw zien dit; de trainer niet.', 4)}
+        <form data-submit="begelKlaarOk" data-autosave="begelTerugblik" data-id="${m.id}" class="codeform"><p class="klein"><b>b. Mijn eigen terugblik als begeleider</b></p>${veldT('hoVerslag', 'Hoe ging mijn begeleiding? (mag leeg)', hoTekst(S, m), 'Wat deed ik goed als begeleider, wat doe ik de volgende keer anders? Handig voor je HO-opleiding. Alleen jij en de begeleiders van deze bouw zien dit; de trainer niet.', 4)}
         ${m.klaar ? `<p class="klein">${icon('circle-check')} Afgerond.</p><button class="knop licht klein" type="button" data-act="begelNieuw" data-id="${m.trainerId}">${icon('plus')}Volgend moment plannen</button>` : '<button class="knop">Afronden</button>'}</form>`)}` };
   };
+  // Besluit 103: automatisch bewaren per veld (zonder opnieuw tekenen); de knop Klaar rondt het blok af
+  CC.autosave.begelVoor = (f) => { const m = vind(CC.S(), f.dataset.id); m.voor = { thema: f.thema.value.trim(), doel: f.doel.value.trim(), leerdoel: f.leerdoel.value.trim(), hoDoel: f.hoDoel.value.trim() }; };
+  CC.autosave.begelPlan = (f) => { const m = vind(CC.S(), f.dataset.id); m.plan = { leerdoel: f.leerdoel.value.trim(), focus: f.focus.value.trim(), feedback: f.feedback.value.trim() }; };
+  CC.autosave.begelVakken = (f) => { const S = CC.S(); const m = vind(S, f.dataset.id); m.vakken = Object.fromEntries(VAKKEN.map(([k]) => [k, f[k].value.trim()]));
+    const t = ((S.trainerDossier || {})[m.trainerId] || {}).traject; if (t && t.actief && m.vakken.ontwikkelpunt) t.ontwikkelpunt = m.vakken.ontwikkelpunt; };
+  CC.autosave.begelTerugblik = (f) => { const S = CC.S(); zetHoTekst(S, vind(S, f.dataset.id), f.hoVerslag.value.trim()); };
+  CC.autosave.begelZelf = (f) => { const S = CC.S(); const m = vind(S, f.dataset.id); const z = zelf(S)[m.id] || (zelf(S)[m.id] = { trainerId: m.trainerId });
+    z.v = Object.fromEntries(VRAGEN(m.soort, m.niveau).map(([k]) => [k, f[k].value.trim()])); };
+  CC.autosave.begelReflectie = (f) => { const S = CC.S(); const m = vind(S, f.dataset.id); const z = zelf(S)[m.id] || (zelf(S)[m.id] = { trainerId: m.trainerId });
+    z.r = Object.fromEntries(REFLECTIE.map(([k]) => [k, f[k].value.trim()])); };
   const bewaar = (S, toast) => { CC.save(); CC.render(); CC.toast(toast || 'Opgeslagen'); };
   CC.on('begelVoorOk', (f) => { const S = CC.S(); const m = vind(S, f.dataset.id); laatst[m.id] = 0; m.voor = { thema: f.thema.value.trim(), doel: f.doel.value.trim(), leerdoel: f.leerdoel.value.trim(), hoDoel: f.hoDoel.value.trim() }; bewaar(S); });
   CC.on('begelPlanOk', (f) => { const S = CC.S(); const m = vind(S, f.dataset.id); laatst[m.id] = 1; m.plan = { leerdoel: f.leerdoel.value.trim(), focus: f.focus.value.trim(), feedback: f.feedback.value.trim() }; bewaar(S); });
@@ -271,12 +281,12 @@
   // ---------- De trainer: vragenlijst vooraf en reflectie achteraf (op zijn Home) ----------
   CC.begelActies = (S) => { const me = CC.me(); const uit = [];
     mom(S).filter((m) => m.trainerId === me.id).forEach((m) => { const z = zelf(S)[m.id] || {};
-      if (m.gevraagd && !z.ingevuld && !m.klaar) uit.push(h.rij({ ic: 'list-checks', titel: `Bereid je begeleidingsmoment voor (${D.kort(m.datum)})`, sub: 'Een paar vragen vooraf, zodat het gesprek bij jou begint', kleur: 'blauw', act: 'begelZelf', attrs: `data-id="${m.id}"` }));
+      if (m.gevraagd && !z.ingevuld && !m.klaar) uit.push(h.rij({ ic: 'list-checks', titel: `Bereid je begeleidingsmoment voor (${D.kort(m.datum)})`, sub: z.v ? 'Je bent begonnen; je antwoorden zijn bewaard. Tik op Klaar als je klaar bent' : 'Een paar vragen vooraf, zodat het gesprek bij jou begint', kleur: 'blauw', act: 'begelZelf', attrs: `data-id="${m.id}"` }));
       if (m.gedeeld && !z.reflectieOp) uit.push(h.rij({ ic: 'message-circle', titel: `Je verslag staat klaar (${D.kort(m.datum)})`, sub: 'Lees het en vul je reflectie in (3 vragen)', kleur: 'blauw', act: 'open', attrs: `data-view="begelVerslag" data-id="${m.id}"` })); });
     return uit; };
   CC.on('begelZelf', (el) => { const S = CC.S(); const m = vind(S, el.dataset.id); const z = zelf(S)[m.id] || {};
-    CC.sheet('Voorbereiding begeleidingsmoment', `<form data-submit="begelZelfOk" data-id="${m.id}" class="codeform"><p class="zacht">${m.soort === 'wedstrijd' ? 'Wedstrijd' : 'Training'} ${D.lang(m.datum)}. Alles mag kort.</p>
-      ${VRAGEN(m.soort, m.niveau).map(([k, t]) => veldT(k, esc(t), (z.v || {})[k])).join('')}<button class="knop">Opslaan</button></form>`, { groot: true }); });
+    CC.sheet('Voorbereiding begeleidingsmoment', `<form data-submit="begelZelfOk" data-autosave="begelZelf" data-id="${m.id}" class="codeform"><p class="zacht">${m.soort === 'wedstrijd' ? 'Wedstrijd' : 'Training'} ${D.lang(m.datum)}. Alles mag kort. Wat je typt, wordt vanzelf bewaard; tik op <b>Klaar</b> als je klaar bent.</p>
+      ${VRAGEN(m.soort, m.niveau).map(([k, t]) => veldT(k, esc(t), (z.v || {})[k])).join('')}<button class="knop">Klaar</button></form>`, { groot: true }); });
   CC.on('begelZelfOk', (f) => { const S = CC.S(); const m = vind(S, f.dataset.id); const z = zelf(S)[m.id] || (zelf(S)[m.id] = { trainerId: m.trainerId });
     z.v = Object.fromEntries(VRAGEN(m.soort, m.niveau).map(([k]) => [k, f[k].value.trim()])); z.ingevuld = new Date().toISOString(); CC.save(); CC.closeSheet(); CC.render(); CC.toast('Dank je wel! De HO ziet je antwoorden'); });
   // Wat de trainer ziet: voorblok, observatie, vier vakken en zijn reflectie. De begeleider kan het vooraf bekijken (voorbeeld).
@@ -287,7 +297,7 @@
       <div class="kaartje klein"><b>Doel:</b> ${esc((m.voor || {}).doel || '—')}<br><b>Leerdoel:</b> ${esc((m.plan || {}).leerdoel || (m.voor || {}).leerdoel || '—')}</div>
       ${obs.length ? `${h.sectie('Wat er gezien is')}<div class="lijst compact">${obs.map(([o, q, sl]) => h.rij({ ic: '', titel: `${(TEKEN.find((t) => t[0] === m.obs.punten[sl]) || [, ''])[1]} ${esc(q)}`, sub: esc(m.obs.notities[sl] || ''), chevron: false })).join('')}</div>` : ''}
       ${VAKKEN.map(([k, t]) => `${h.sectie(t)}<p>${esc((m.vakken || {})[k] || '—')}</p>`).join('')}
-      ${h.sectie(vb ? 'Reflectie van de trainer' : 'Jouw reflectie')}${vb ? `<dl class="antwoorden">${REFLECTIE.map(([k, t]) => `<dt>${esc(t)}</dt><dd>${z.reflectieOp ? esc((z.r || {})[k] || '') : '<span class="zacht">nog niet ingevuld</span>'}</dd>`).join('')}</dl>` : `<form data-submit="begelReflectieOk" data-id="${m.id}" class="codeform">${REFLECTIE.map(([k, t]) => veldT(k, esc(t), (z.r || {})[k])).join('')}<button class="knop">Opslaan</button></form>`}
+      ${h.sectie(vb ? 'Reflectie van de trainer' : 'Jouw reflectie')}${vb ? `<dl class="antwoorden">${REFLECTIE.map(([k, t]) => `<dt>${esc(t)}</dt><dd>${z.reflectieOp ? esc((z.r || {})[k] || '') : '<span class="zacht">nog niet ingevuld</span>'}</dd>`).join('')}</dl>` : `<form data-submit="begelReflectieOk" data-autosave="begelReflectie" data-id="${m.id}" class="codeform">${REFLECTIE.map(([k, t]) => veldT(k, esc(t), (z.r || {})[k])).join('')}<button class="knop">Klaar</button></form>`}
       <button class="knop licht klein" data-act="begelPrint" data-id="${m.id}">${icon('printer')}Printen</button>` }; };
   CC.on('begelReflectieOk', (f) => { const S = CC.S(); const m = vind(S, f.dataset.id); const z = zelf(S)[m.id] || (zelf(S)[m.id] = { trainerId: m.trainerId });
     z.r = Object.fromEntries(REFLECTIE.map(([k]) => [k, f[k].value.trim()])); z.reflectieOp = new Date().toISOString(); CC.save(); CC.render(); CC.toast('Reflectie opgeslagen'); });

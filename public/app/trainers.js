@@ -133,13 +133,14 @@
       ${h.sectie('Traject')}${trajectBlok}
       ${h.sectie('Kennismaking')}${kennisBlok}
       ${CC.pakketTrainers(S) ? '' : `${h.sectie('Afmeldingen en contact')}<details class="uitklap"><summary><b>Afmeldingen, geschiedenis en contact</b></summary>${basis.html}</details>`}
-      ${CC.BEGELEIDERS.includes(rol) ? `${h.sectie('Notities')}<form data-submit="hoNotitieOk" data-id="${tr.id}" class="codeform"><textarea name="n" rows="3" placeholder="Voor de ${esc(S.club.labels.hjo)} en technisch coördinator van deze bouw; de trainer ziet dit niet.">${esc(notitieTekst(notities(S)[tr.id]))}</textarea><button class="knop licht klein">Opslaan</button></form>` : ''}` };
+      ${CC.BEGELEIDERS.includes(rol) ? `${h.sectie('Notities')}<form data-submit="hoNotitieOk" data-autosave="hoNotitie" data-id="${tr.id}" class="codeform"><textarea name="n" rows="3" placeholder="Voor de ${esc(S.club.labels.hjo)} en technisch coördinator van deze bouw; de trainer ziet dit niet.">${esc(notitieTekst(notities(S)[tr.id]))}</textarea><button class="knop licht klein">Klaar</button></form>` : ''}` };
   };
   CC.on('trainerVolg', (el) => { const S = CC.S(); const d = dos(S)[el.dataset.id] || (dos(S)[el.dataset.id] = {}); d.volg = !d.volg; CC.save(); CC.render(); CC.toast(d.volg ? 'Je volgt deze trainer' : 'Niet meer gevolgd'); });
   // Besluit 100: de notitie draagt de bouw(en) van de trainer; de database toont hem alleen aan begeleiders van die bouw
   const notitieTekst = (n) => (typeof n === 'string' ? n : (n || {}).tekst || '');
-  CC.on('hoNotitieOk', (f) => { const S = CC.S(); const tr = M.persoon(S, f.dataset.id);
-    notities(S)[tr.id] = { tekst: f.n.value, bouwen: [...new Set(teamsVan(S, tr).map((t) => CC.bouwVan(S, t).naam))] }; CC.save(); CC.toast('Notitie opgeslagen'); });
+  const zetNotitie = (f) => { const S = CC.S(); const tr = M.persoon(S, f.dataset.id); notities(S)[tr.id] = { tekst: f.n.value, bouwen: [...new Set(teamsVan(S, tr).map((t) => CC.bouwVan(S, t).naam))] }; };
+  CC.autosave.hoNotitie = zetNotitie; // Besluit 103
+  CC.on('hoNotitieOk', (f) => { zetNotitie(f); CC.save(); CC.toast('Notitie opgeslagen'); });
 
   // Traject starten, aanpassen, afronden
   CC.on('trajectSheet', (el) => {
@@ -187,14 +188,32 @@
     : `<label for="kn-${v.k}">${esc(v.t)}${v.mag ? ' <small class="zacht">(mag leeg)</small>' : ''}</label><textarea id="kn-${v.k}" name="${v.k}" rows="2">${esc(w || '')}</textarea>`;
   CC.on('kennisForm', () => {
     const S = CC.S(); const me = CC.me(); const a = ((ken(S)[me.id] || {}).a) || {};
-    CC.sheet('Kennismaking', `<form data-submit="kennisOk" class="codeform"><p class="zacht">We willen je graag beter leren kennen, zodat we je als club goed kunnen ondersteunen. Alles mag kort. Alleen de ${esc(S.club.labels.hjo)} en jij zien je antwoorden.</p>
+    CC.sheet('Kennismaking', `<form data-submit="kennisOk" data-autosave="kennis" class="codeform"><p class="zacht">We willen je graag beter leren kennen, zodat we je als club goed kunnen ondersteunen. Alles mag kort. Alleen de ${esc(S.club.labels.hjo)} en jij zien je antwoorden.</p>
       ${CC.trainerVragen(S).map((v) => veld(v, a[v.k])).join('')}
-      <button class="knop">Opslaan</button><button type="button" class="knop licht" data-act="kennisLater">Later</button></form>`, { groot: true });
+      <button class="knop">Klaar</button><button type="button" class="knop licht" data-act="kennisLater">Later verder</button></form>`, { groot: true });
   });
   CC.on('kennisLater', () => { try { localStorage.setItem(LATER, String(Date.now())); } catch (e) { /* */ } CC.closeSheet(); CC.render(); });
+  // Besluit 103: elk antwoord wordt bewaard zodra je het veld verlaat; Klaar zet de kennismaking op ingevuld
+  CC.autosave.kennis = (f) => { const S = CC.S(); const me = CC.me(); const k = ken(S)[me.id] || (ken(S)[me.id] = {});
+    k.a = Object.fromEntries(CC.trainerVragen(S).map((v) => [v.k, (f[v.k] && f[v.k].value != null ? f[v.k].value : '').trim()])); };
   CC.on('kennisOk', (f) => { const S = CC.S(); const me = CC.me(); const k = ken(S)[me.id] || (ken(S)[me.id] = {});
     k.a = Object.fromEntries(CC.trainerVragen(S).map((v) => [v.k, (f[v.k] && f[v.k].value != null ? f[v.k].value : '').trim()]));
     k.ingevuld = new Date().toISOString(); CC.save(); CC.closeSheet(); CC.render(); CC.toast('Dank je wel!'); });
+
+  // ---------- Besluit 103: Rollen opgeschoond. Persoon toevoegen en Mensen bovenaan (open), de rest ingeklapt ----------
+  // Werkt als laatste laag over alle blokken die andere bestanden aan Rollen toevoegen (bouwen, profielen, taken per rol).
+  const origRollenScherm = CC.rollen.beheerder.schermen.rollen;
+  CC.rollen.beheerder.schermen.rollen = (S) => {
+    const delen = origRollenScherm(S).split(/(?=<div class="sectie-kop">)/);
+    const blokken = delen.map((d, i) => { const m = d.match(/^<div class="sectie-kop"><h3>([\s\S]*?)<\/h3>[\s\S]*?<\/div>/);
+      return m ? { titel: m[1], inhoud: d.slice(m[0].length) } : { titel: i === 0 ? 'Hoe noemt jullie club de rollen?' : '', inhoud: d }; }).filter((b) => b.inhoud.trim());
+    // Een inleiding die vóór een kop stond, hoort bij het blok erna
+    blokken.forEach((b, i) => { const m = b.inhoud.match(/<p class="zacht klein">Kies per rol een profiel[\s\S]*?<\/p>\s*$/); if (m && blokken[i + 1]) { b.inhoud = b.inhoud.slice(0, m.index); blokken[i + 1].inhoud = m[0] + blokken[i + 1].inhoud; } });
+    const mensen = blokken.find((b) => /^Mensen/.test(b.titel)); const rest = blokken.filter((b) => b !== mensen && b.titel);
+    const knop = `<button class="knop vol" data-act="stafNieuw">${icon('user-plus')}Persoon toevoegen</button>`;
+    return `${knop}${mensen ? `${h.sectie(mensen.titel)}${mensen.inhoud.replace(/<button class="knop licht vol" data-act="stafNieuw">[\s\S]*?<\/button>/, '')}` : ''}
+      <div class="blokken">${rest.map((b) => `<details class="uitklap"><summary>${b.titel}</summary>${b.inhoud}</details>`).join('')}</div>`;
+  };
 
   // ---------- Clubbeheerder: de vragen aanpassen (Regels) ----------
   // Besluit 100: welk pakket gebruikt de club?

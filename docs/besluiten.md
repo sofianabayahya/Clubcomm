@@ -17,6 +17,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 103 | Automatisch bewaren in formulieren; Rollen opgeschoond | ✅ geldt |  |
 | 102 | Snelle winsten: dringend bovenaan, Observeren op de dag zelf, unieke knopnamen | ✅ geldt |  |
 | 101 | Voorgesprek als voormeting: eigen vragen voor training en wedstrijd | ✅ geldt |  |
 | 100 | Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden" | ◐ deels herzien | door 101 (vragen kort en uitgebreid per soort) |
@@ -635,6 +636,12 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 103 — Automatisch bewaren in formulieren; Rollen opgeschoond
+*Besloten 17 oktober 2026. Uit `docs/onderzoek/verbeterplan-gebruik-2026-10.md` (P0 en P1). Vult Besluit 81 en 102 aan.*
+- **Automatisch bewaren:** in lange formulieren wordt elk veld bewaard zodra je het verlaat. Het gaat om het begeleidingsmoment (voorbereiding, planningsgesprek, reflectiegesprek, eigen terugblik), de vragenlijst en reflectie van de trainer, de kennismaking en de notities over een trainer. In de hoek van het veld staat **"Bewaard ✓"**, en pas als de database het echt heeft; anders *"Bewaren…"* of *"Nog niet bewaard: geen verbinding?"*. Er verschuift niets op het scherm. De knop heet **Klaar**: die rondt het blok af (bijvoorbeeld de vragenlijst op "ingevuld"). Een venster sluiten of een andere knop tikken kost geen tekst meer. Bij een half ingevulde vragenlijst staat bij de trainer *"Je bent begonnen; je antwoorden zijn bewaard"*.
+- **Open blokken blijven open:** wat je op een scherm hebt opengeklapt, blijft open als de app het scherm opnieuw tekent (bijvoorbeeld na een tik op *Bouw erbij*).
+- **Rollen (clubbeheerder):** bovenaan **Persoon toevoegen** en **Mensen en hun rollen** (open). De rest staat als ingeklapte blokken eronder: clubnamen, rollen in gebruik, indeling in bouwen, profielen en taken per rol. De vinkjes in *Taken per rol* zijn groter (26 px).
 
 ## Besluit 102 — Snelle winsten uit het verbeterplan: dringend bovenaan, Observeren op de dag zelf, unieke knopnamen
 *Besloten 17 oktober 2026. Uit `docs/onderzoek/verbeterplan-gebruik-2026-10.md` (snelle winsten 1–3). Vult Besluit 30, 34 en 97 aan.*

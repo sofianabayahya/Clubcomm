@@ -419,7 +419,7 @@ body.sheet-open { overflow: hidden; }
 .tabel.zicht td:first-child { padding-right: 4px; }
 .tabel.zicht tr.groep th { background: var(--vlak2); color: var(--tekst, inherit); font-size: 12px; padding: 6px 10px; }
 .tabel.zicht td small { display: block; color: var(--zacht); font-size: 12px; }
-.tabel.zicht input { width: 20px; height: 20px; accent-color: var(--blauw); }
+.tabel.zicht input { width: 26px; height: 26px; accent-color: var(--blauw); } /* Besluit 103: groter tikvak */
 .knoppen-rij { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
 .stap-knoppen { display: flex; flex-wrap: wrap; gap: 6px; }
 .stap-knoppen .knop { display: inline-flex; align-items: center; gap: 4px; text-decoration: none; }
@@ -637,3 +637,9 @@ dl.antwoorden dd { margin: 2px 0 0; white-space: pre-wrap; }
 .traject-kop { display: flex; align-items: center; gap: 6px; width: 100%; text-align: left; padding: 0 0 4px; color: var(--inkt); }
 .traject-kop .ic { margin-left: auto; color: var(--zacht); width: 18px; height: 18px; }
 .stappenlijst li[data-act] { cursor: pointer; }
+
+/* Besluit 103: automatisch bewaren */
+form[data-autosave] { position: relative; }
+small.bewaard { position: absolute; right: 10px; margin: 0; padding: 0 6px; border-radius: 6px; background: var(--vlak, #fff); font-size: 12px; font-weight: 600; color: var(--zacht); pointer-events: none; }
+small.bewaard.ok { color: var(--groen); } small.bewaard.fout { color: var(--rood); }
+.blokken { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
