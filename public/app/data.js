@@ -456,8 +456,13 @@
     r.pctTr = r.tr.tot ? Math.round((100 * r.tr.aan) / r.tr.tot) : null; r.pctWed = r.wed.tot ? Math.round((100 * r.wed.aan) / r.wed.tot) : null;
     return r;
   };
-  M.zone = (S, pct, teamId) => {
-    if (pct == null) return 'grijs';
+  // Besluit 105: pas een kleur (en dus een signaal) vanaf een minimum aantal metingen in de periode; daarvoor grijs.
+  // M.zone krijgt een getal of de uitkomst van M.stats/M.teamStats ({ pct, totaal }).
+  M.minMetingen = (S) => (S.club.inst && S.club.inst.minMetingen) || 6;
+  M.teWeinig = (S, x) => !!x && typeof x === 'object' && x.totaal < M.minMetingen(S);
+  M.zone = (S, x, teamId) => {
+    const pct = x && typeof x === 'object' ? x.pct : x;
+    if (pct == null || M.teWeinig(S, x)) return 'grijs';
     const t = M.team(S, teamId); const z = (M.inst(S, teamId).zones || S.club.inst.zones)[t.type];
     return pct >= z.groen ? 'groen' : pct >= z.oranje ? 'oranje' : 'rood';
   };
@@ -465,7 +470,7 @@
     const sp = M.spelers(S, teamId).map((pl) => ({ pl, st: M.stats(S, pl, per) }));
     const tot = sp.reduce((s, x) => s + x.st.totaal, 0), aan = sp.reduce((s, x) => s + x.st.aanwezig, 0);
     const redenen = {}; sp.forEach((x) => Object.entries(x.st.redenen).forEach(([k, v]) => { redenen[k] = (redenen[k] || 0) + v; }));
-    return { pct: tot ? Math.round((100 * aan) / tot) : null, spelers: sp, redenen, telaat: sp.reduce((s, x) => s + x.st.telaat, 0) };
+    return { pct: tot ? Math.round((100 * aan) / tot) : null, totaal: Math.max(0, ...sp.map((x) => x.st.totaal)), spelers: sp, redenen, telaat: sp.reduce((s, x) => s + x.st.telaat, 0) };
   };
 
   // Kaartregels (Besluit 32), per soort team; de club kan ze aanpassen
@@ -520,10 +525,10 @@
     teamIds.forEach((tid) => {
       const t = M.team(S, tid);
       const ts = M.teamStats(S, tid, per);
-      const tz = M.zone(S, ts.pct, tid);
+      const tz = M.zone(S, ts, tid);
       if (voorHjo && ['oranje', 'rood'].includes(tz)) res.push({ soort: 'team', niveau: tz, teamId: tid, tekst: `${t.naam}: teamgemiddelde ${ts.pct}% (${t.type})`, sub: 'Waarschijnlijk iets in het team: tijd, trainer of sfeer?', ernst: 100 - (ts.pct || 0) });
       ts.spelers.forEach(({ pl, st }) => {
-        const z = M.zone(S, st.pct, tid);
+        const z = M.zone(S, st, tid);
         const naam = M.naam(S, pl);
         const lang = S.lang.find((l) => l.spelerId === pl.id && l.tot >= vandaag());
         if (lang) res.push({ soort: 'lang', niveau: 'info', teamId: tid, spelerId: pl.id, tekst: `${naam}: langdurig afwezig (${lang.reden.toLowerCase()})`, sub: `Tot ongeveer ${CC.date.kort(lang.tot)}${lang.opm && (!CC.zicht || CC.zicht('toelichting')) ? ' · ' + lang.opm : ''}`, ernst: 0, sleutelExtra: lang.id });

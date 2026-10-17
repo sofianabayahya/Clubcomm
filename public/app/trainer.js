@@ -223,7 +223,7 @@
   CC.spelerFilter = (S, tid, eenvoudig) => {
     const per = M.periode(S, 'blok'); const so = h.segVal('spSort', 'naam');
     const volg = M.komend(S, tid, 8).find((a) => !a.afgelast);
-    const rijen = M.spelers(S, tid).map((pl) => { const st = M.stats(S, pl, per); const k = M.kaarten(S, pl); return { pl, st, k, z: M.zone(S, st.pct, tid), vs: volg ? M.status(S, pl, volg) : null, b: CC.beoordLaatste ? CC.beoordLaatste(S, pl.id) : null }; });
+    const rijen = M.spelers(S, tid).map((pl) => { const st = M.stats(S, pl, per); const k = M.kaarten(S, pl); return { pl, st, k, z: M.zone(S, st, tid), vs: volg ? M.status(S, pl, volg) : null, b: CC.beoordLaatste ? CC.beoordLaatste(S, pl.id) : null }; });
     const sorteer = { naam: (a, b) => M.naam(S, a.pl).localeCompare(M.naam(S, b.pl)), laag: (a, b) => (a.st.pct ?? 101) - (b.st.pct ?? 101), hoog: (a, b) => (b.st.pct ?? -1) - (a.st.pct ?? -1), kaarten: (a, b) => (b.k.geel + 2 * b.k.rood) - (a.k.geel + 2 * a.k.rood) }[so] || ((a, b) => M.naam(S, a.pl).localeCompare(M.naam(S, b.pl)));
     const lijst = rijen.sort(sorteer);
     const opties = eenvoudig ? [] : [['naam', 'Op naam'], ['laag', 'Aanwezigheid: laagste eerst'], ['hoog', 'Aanwezigheid: hoogste eerst'], ['kaarten', 'Meeste kaarten eerst']];
@@ -364,13 +364,14 @@
   // de rest van het team ingeklapt.
   CC.overzichtHtml = (S, tid) => {
     const per = M.periode(S, h.segVal('ovPer', 'blok')); const t = M.team(S, tid);
-    const rijen = M.spelers(S, tid).map((pl) => { const st = M.stats(S, pl, per); return { pl, st, k: M.kaarten(S, pl), z: M.zone(S, st.pct, tid) }; }).sort((a, b) => (a.st.pct ?? 101) - (b.st.pct ?? 101));
+    const rijen = M.spelers(S, tid).map((pl) => { const st = M.stats(S, pl, per); return { pl, st, k: M.kaarten(S, pl), z: M.zone(S, st, tid) }; }).sort((a, b) => (a.st.pct ?? 101) - (b.st.pct ?? 101));
     const ts = M.teamStats(S, tid, per); const norm = ((S.club.inst.zones || {})[t.type] || {}).groen;
-    const aandacht = rijen.filter((x) => (x.st.pct != null && x.z !== 'groen') || x.k.geel || x.k.rood || x.st.lang); const rest = rijen.filter((x) => !aandacht.includes(x));
+    const aandacht = rijen.filter((x) => ['oranje', 'rood'].includes(x.z) || x.k.geel || x.k.rood || x.st.lang); const rest = rijen.filter((x) => !aandacht.includes(x));
     const rij = ({ pl, st, k, z }) => h.rij({ ic: h.stip(z), titel: esc(M.naam(S, pl)), sub: `${st.pct == null ? '–' : st.pct + '%'} aanwezig (${h.split(st).toLowerCase()})${st.telaat ? ` · ${st.telaat}× te laat` : ''}${st.lang ? ' · langdurig' : ''}`, rechts: h.let(S, pl, k), act: 'open', attrs: `data-view="speler" data-id="${pl.id}"` });
     return `${h.seg('ovPer', [['blok', h.faseLabel(S)], ['seizoen', 'Heel seizoen']], 'blok')}
       <p class="zacht klein">Team: <b>${ts.pct ?? '–'}%</b> aanwezig · ${esc(t.type)}${norm ? ` · norm ${norm}%` : ''}</p>
+      ${h.weinig(S, ts, h.segVal('ovPer', 'blok') === 'seizoen')}
       ${aandacht.length ? `${h.sectie(`Vraagt aandacht (${aandacht.length})`)}<div class="lijst">${aandacht.map(rij).join('')}</div>` : ts.pct == null ? '<p class="zacht klein">Nog geen aanwezigheid bijgehouden in deze periode.</p>' : `<p class="klein">${icon('circle-check')} Niemand zit onder de norm of heeft een kaart.</p>`}
-      ${rest.length ? `<details class="uitklap"><summary>Rest van het team (${rest.length})${rest.some((x) => x.st.pct != null) ? ' · op of boven de norm' : ''}</summary><div class="lijst">${rest.map(rij).join('')}</div></details>` : ''}`;
+      ${rest.length ? `<details class="uitklap"><summary>Rest van het team (${rest.length})${rest.some((x) => x.st.pct != null) && !M.teWeinig(S, ts) ? ' · op of boven de norm' : ''}</summary><div class="lijst">${rest.map(rij).join('')}</div></details>` : ''}`;
   };;
 })();

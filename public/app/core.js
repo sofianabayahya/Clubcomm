@@ -185,6 +185,8 @@
     verzamelTekst: (a) => { const vp = CC.vpunt(a); return a.verzamel ? `Verzamelen ${a.verzamel}${vp ? ` bij ${esc(vp)}` : ''}` : vp ? `Verzamelen bij ${esc(vp)}` : ''; },
     route: (adres, klein) => (adres ? `<a class="knop licht${klein ? ' klein' : ''}" href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(adres)}" target="_blank" rel="noopener">${icon('navigation')}Route</a>` : ''),
     // Aanwezigheid apart: trainingen en wedstrijden (Besluit 34)
+    // Besluit 105: nog te weinig gemeten voor een kleur; één zin, alleen als het speelt
+    weinig: (S, x, seizoen) => (M.teWeinig(S, x) && x.totaal ? `<p class="zacht klein">Nog maar ${x.totaal} keer gemeten ${seizoen ? 'dit seizoen' : 'deze fase'}. Een kleur en signalen komen vanaf ${M.minMetingen(S)} keer.</p>` : ''),
     split: (st) => `Trainingen ${st.pctTr == null ? '–' : st.pctTr + '%'} · wedstrijden ${st.pctWed == null ? '–' : st.pctWed + '%'}`,
     badge: (n) => (n ? `<span class="badge">${n > 99 ? '99+' : n}</span>` : ''),
     knop: (tekst, act, attrs = '', cls = '') => `<button class="knop ${cls}" data-act="${act}" ${attrs}>${tekst}</button>`,
@@ -974,7 +976,7 @@
   CC.views.speler = (S, p) => {
     const pl = M.speler(S, p.id); const t = M.team(S, pl.teamId);
     const per = M.periode(S, h.segVal('spPer', 'blok'));
-    const st = M.stats(S, pl, per); const k = M.kaarten(S, pl); const z = M.zone(S, st.pct, t.id);
+    const st = M.stats(S, pl, per); const k = M.kaarten(S, pl); const z = M.zone(S, st, t.id);
     const lang = S.lang.find((l) => l.spelerId === pl.id && l.tot >= D.vandaag());
     const rol = CC.rol().rol; const staf = rol !== 'ouder';
     const ouders = pl.ouders.map((o) => M.persoon(S, o)).filter(Boolean);
@@ -1011,6 +1013,7 @@
       ${h.seg('spPer', [['blok', h.faseLabel(S)], ['seizoen', 'Heel seizoen']], 'blok')}
       <div class="cijfers"><div class="cijfer ${z}"><b>${st.pct == null ? '–' : st.pct + '%'}</b><small>aanwezig</small></div><div class="cijfer"><b>${st.telaat}×</b><small>te laat</small></div><div class="cijfer"><b>${h.kaartjes(k) || '–'}</b><small>kaarten seizoen</small></div></div>
       <p class="klein zacht">${h.split(st)}</p>
+      ${h.weinig(S, st, h.segVal('spPer', 'blok') === 'seizoen')}
       ${langBlok(false)}
       ${beoBlok}
       ${gesprBlok}

@@ -12,7 +12,7 @@
     const seg = CC.hjoTeamsSeg();
     const per = M.periode(S, 'blok'); const f = h.segVal('tmF', 'alle'); const so = h.segVal('tmSort', 'naam');
     const rijen = S.teams.map((t) => {
-      const ts = M.teamStats(S, t.id, per); const z = M.zone(S, ts.pct, t.id);
+      const ts = M.teamStats(S, t.id, per); const z = M.zone(S, ts, t.id);
       const open = S.aanm.filter((x) => x.teamId === t.id && x.status === 'open').length;
       const sig = M.signalen(S, [t.id], false).filter((s) => s.soort !== 'lang').length;
       const hulp = CC.hulpTeam ? CC.hulpTeam(S, t.id) : null;
