@@ -653,3 +653,11 @@ small.bewaard.ok { color: var(--groen); } small.bewaard.fout { color: var(--rood
 .rolmenu button.aan { background: var(--blauw-l); }
 .rolmenu small { font-size: 13px; font-weight: 600; color: var(--blauw); white-space: nowrap; }
 .rolmenu small.wacht { color: var(--oranje); } .rolmenu small.zacht { color: var(--zacht); }
+
+/* Besluit 106: eigen opstelling op een veld (aanval boven, keeper onder) */
+.veld { display: flex; flex-direction: column; gap: 10px; padding: 14px 8px; border-radius: var(--r); background: #e8f5ec; border: 1px solid #b7dfc4; margin: 6px 0 10px; }
+.veldrij { display: flex; justify-content: space-around; gap: 6px; }
+.plek { flex: 1 1 0; max-width: 92px; min-height: 52px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border: 1px solid var(--lijn); border-radius: 10px; background: var(--vlak); padding: 4px; font: inherit; color: inherit; }
+.plek small { font-size: 11px; color: var(--zacht); } .plek b { font-size: 13px; overflow-wrap: anywhere; line-height: 1.15; }
+.plek.leeg { border-style: dashed; background: transparent; } .plek.leeg b { color: var(--blauw); font-size: 18px; }
+.kaartje.klokrij { display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 8px; }

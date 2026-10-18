@@ -34,7 +34,7 @@
   // Tot en met O12: spelbegeleider (alleen thuis). Vanaf O13: vlagger (elke wedstrijd) en scheidsrechter (alleen thuis).
   CC.VASTE_TAKEN = { pupillen: ['Trainer-coach', 'Timekeeper', 'Spelbegeleider'], junioren: ['Trainer-coach', 'Vlagger', 'Scheidsrechter'] };
   CC.ALLEEN_THUIS = ['Spelbegeleider', 'Scheidsrechter'];
-  CC.vasteTakenVoor = (S, team) => { const n = parseInt(String((team || {}).cat || '').replace(/\D/g, ''), 10) || 0; const v = S.club.vasteTaken || CC.VASTE_TAKEN; return Array.isArray(v) ? v : v[n >= 13 ? 'junioren' : 'pupillen']; };
+  CC.vasteTakenVoor = (S, team) => { const n = parseInt(String((team || {}).speelCat || (team || {}).cat || '').replace(/\D/g, ''), 10) || 0; const v = S.club.vasteTaken || CC.VASTE_TAKEN; return Array.isArray(v) ? v : v[n >= 13 ? 'junioren' : 'pupillen']; };
   // Besluit 67: vanaf O11 vier blokken (in de geest van TIPS), in kindertaal. Geen cijfers maar drie woorden + wapen.
   CC.VAARDIGHEDEN = {
     mini: ['Plezier', 'Balgevoel'],
@@ -657,7 +657,7 @@
   // Wisselen om de … minuten (Besluit 39): de club kiest per speelvorm, de trainer mag per wedstrijd afwijken. Advies: per blok.
   // Instellen per leeftijdsgroep (Regels → Speeltijd): [sleutel, naam, advies wisselen, speelduur]
   CC.SPEELVORMEN = CC.LEEFTIJDEN.map((l) => [l.key, `${l.label} · ${l.vorm}, ${l.helften === 2 ? `2×${l.helft}` : l.helft}`, (l.helften * l.helft) / 4, l.helften * l.helft]);
-  M.wisselMin = (S, teamId) => { const c = CC.categorie(M.team(S, teamId).cat); const w = M.inst(S, teamId).wissel || {}; return Number(w[c.key]) || Number(w[c.vormKey]) || c.blokMin; };
+  M.wisselMin = (S, teamId) => { const c = CC.categorie(M.wedCat(S, teamId)); const w = M.inst(S, teamId).wissel || {}; return Number(w[c.key]) || Number(w[c.vormKey]) || c.blokMin; };
   // Lengte van elk blok: steeds het gekozen aantal minuten; het laatste blok is de rest (een korte rest gaat bij het laatste blok)
   M.blokLengtes = (duur, om) => {
     om = Math.min(Math.max(Number(om) || duur, 1), duur); let n = Math.ceil(duur / om - 1e-9);
@@ -669,7 +669,7 @@
   M.schemaLengtes = (sch) => sch.blokLen || sch.blokken.map(() => sch.blokMin);
   M.schemaMinuten = (sch) => { const len = M.schemaLengtes(sch); const m = {}; sch.blokken.forEach((b, i) => b.forEach((id) => { m[id] = Math.round(((m[id] || 0) + len[i]) * 10) / 10; })); return m; };
   M.maakSchema = (S, act, minder, om) => {
-    const t = M.team(S, act.teamId); const c = CC.categorie(t.cat);
+    const c = CC.categorie(M.wedCat(S, act.teamId));
     const beschikbaar = M.spelers(S, act.teamId).filter((pl) => ['verwacht', 'aanwezig', 'telaat'].includes(M.status(S, pl, act).code));
     const blokLen = M.blokLengtes(c.duur, om || M.wisselMin(S, act.teamId));
     const wedMin = c.duur; const mog = S.speeltijd.mogelijk || {};
@@ -697,5 +697,37 @@
     });
     return { blokken, keepers, huidig: 0, bevestigd: false, blokMin: blokLen[0], blokLen, vorm: c.vorm, opVeld: c.opVeld, spelers: beschikbaar.map((p) => p.id), wedMin, minder: minderIds };
   };
+
+  // Besluit 106: speelvorm van de wedstrijden. Een team kan in een andere leeftijd spelen dan zijn naam
+  // (DCG: O12 talententeam speelt O13, 11 tegen 11). Bepaalt speelduur, aantal in het veld en de vaste taken.
+  M.wedCat = (S, teamId) => { const t = M.team(S, teamId) || {}; return t.speelCat || t.cat || 'O12'; };
+  // Besluit 106: de trainer maakt het wisselschema zelf (per team; alleen waar de club afwijken toestaat, standaard selectie)
+  M.zelfSchema = (S, teamId) => ((S.teamKeuze || {})[teamId] || {}).wisselwijze === 'zelf' && M.speeltijdAfwijken(S, teamId);
+  M.POSITIES = { '1-4-3-3': [['1', 'Keeper'], ['2', 'Rechtsback'], ['3', 'Centrale verdediger rechts'], ['4', 'Centrale verdediger links'], ['5', 'Linksback'], ['6', 'Controlerende middenvelder'],
+    ['8', 'Rechter middenvelder'], ['10', 'Aanvallende middenvelder'], ['7', 'Rechtsbuiten'], ['9', 'Spits'], ['11', 'Linksbuiten']] };
+  M.VELD = { '1-4-3-3': [['11', '9', '7'], ['10', '6', '8'], ['5', '4', '3', '2'], ['1']] };
+  M.posNaam = (sys, pos) => ((M.POSITIES[sys] || []).find(([p]) => p === pos) || [pos, pos])[1];
+  // Wie staat waar op minuut m: de basisopstelling plus alle wissels tot en met die minuut (de invaller neemt de plek over)
+  M.zelfStand = (sch, m) => { const st = { ...(sch.opstelling || {}) };
+    (sch.wissels || []).slice().sort((x, y) => x.min - y.min).filter((w) => w.min <= m).forEach((w) => { const pos = Object.keys(st).find((p) => st[p] === w.uit); if (pos && !Object.values(st).includes(w.in)) st[pos] = w.in; });
+    return st; };
+  // Minuut op de klok: aftrap, rust en start tweede helft tikt de trainer aan
+  M.klokMin = (sch, nu = Date.now()) => { const k = sch.klok || {}; if (!k.aftrap) return null; const helft = sch.helft || sch.wedMin / 2;
+    const m = k.tweede ? helft + (nu - new Date(k.tweede)) / 60000 : k.rust ? helft : (nu - new Date(k.aftrap)) / 60000;
+    return Math.max(0, Math.min(sch.wedMin, Math.floor(m))); };
+  // Uit opstelling en wissels de blokken afleiden, zodat minuten, keeper en vastleggen hetzelfde werken als bij het eerlijke schema
+  M.zelfAfleiden = (sch) => {
+    const grens = [...new Set((sch.wissels || []).map((w) => w.min).filter((m) => m > 0 && m < sch.wedMin))].sort((x, y) => x - y);
+    const start = [0, ...grens]; const einde = [...grens, sch.wedMin];
+    sch.blokLen = start.map((s, i) => Math.round((einde[i] - s) * 10) / 10); sch.blokMin = sch.blokLen[0];
+    const standen = start.map((s) => M.zelfStand(sch, s));
+    sch.pos = standen.map((st) => Object.fromEntries(Object.entries(st).filter(([, id]) => id).map(([p, id]) => [id, p])));
+    sch.blokken = standen.map((st) => Object.values(st).filter(Boolean)); sch.keepers = standen.map((st) => st['1'] || null);
+    const nu = M.klokMin(sch); sch.huidig = nu == null ? 0 : Math.max(0, start.filter((s) => s <= nu).length - 1);
+    return sch; };
+  // Minuten per positie dit seizoen (uit de vastgelegde eigen schema's)
+  M.posMinuten = (S, spelerId) => { const r = {};
+    Object.values(S.speeltijd.schema || {}).filter((sch) => sch && sch.zelf && sch.bevestigd && sch.pos).forEach((sch) => sch.pos.forEach((m, i) => { const p = m[spelerId]; if (p) r[p] = (r[p] || 0) + (sch.blokLen[i] || 0); }));
+    return r; };
 
 })();

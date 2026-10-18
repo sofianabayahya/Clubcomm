@@ -71,19 +71,24 @@
     const wedstrijden = [...new Set([...recent, ...vandaagW, ...M.komend(S, teamId, 10)])].filter((a) => M.isWed(a) && !a.afgelast && (!opties.act || a.id === opties.act));
     const kies = h.segVal('stWed', wedstrijden[0] && wedstrijden[0].id);
     const a = wedstrijden.find((x) => x.id === kies) || wedstrijden[0];
-    const t = M.team(S, teamId); const c = CC.categorie(t.cat);
+    const t = M.team(S, teamId); const c = CC.categorie(M.wedCat(S, teamId));
     // Percentage van de mogelijke speeltijd in bijgewoonde wedstrijden (Besluit 33)
     const seizoen = M.spelers(S, teamId).map((pl) => ({ pl, x: M.speeltijdStand(S, pl) })).sort((a, b) => (a.x.pct ?? -1) - (b.x.pct ?? -1));
+    const zelf = M.zelfSchema(S, teamId);
     const gemistTekst = (g) => Object.entries(g).map(([r, n]) => `${n}× ${r.toLowerCase()}`).join(', ');
-    const tabel = `${h.sectie('Speeltijd dit seizoen')}<div class="balkjes">${seizoen.map(({ pl, x }) => `<div class="balkje"><span>${esc(pl.voornaam)}</span><i style="--w:${x.pct ?? 0}%"></i><b>${x.pct == null ? '–' : x.pct + '%'}</b></div>`).join('')}</div>
+    const tabel = `${h.sectie('Speeltijd dit seizoen')}<div class="balkjes">${seizoen.map(({ pl, x }) => `<div class="balkje"><span>${esc(pl.voornaam)}</span><i style="--w:${x.pct ?? 0}%"></i><b>${zelf ? `${Math.round(x.min)}'` : x.pct == null ? '–' : x.pct + '%'}</b></div>`).join('')}</div>
       <p class="zacht klein">Percentage van de mogelijke speeltijd in de wedstrijden waarbij het kind er was. Gemiste wedstrijden tellen niet mee${seizoen.some(({ x }) => Object.keys(x.gemist).length) ? `: ${seizoen.filter(({ x }) => Object.keys(x.gemist).length).map(({ pl, x }) => `${esc(pl.voornaam)} (${gemistTekst(x.gemist)})`).join(', ')}` : ''}.</p>`;
+    // Besluit 106: bij een eigen schema ook de posities dit seizoen
+    const seizoenBlok = zelf ? tabel + CC.posTabel(S, teamId) : tabel;
     // Nog geen wedstrijd: uitleggen wat hier komt, met de KNVB-speelduur van dit team (Besluit 60)
-    if (!a) { const c0 = CC.categorie(M.team(S, teamId).cat);
-      return `${h.leeg('Nog geen wedstrijd gepland', 'timer')}<p class="zacht klein midden">Zodra er een (oefen)wedstrijd in de planning staat, maak je hier het wisselschema. ${esc(c0.leeftijd)}: ${esc(c0.vorm)}, ${esc(c0.speelduur)}${c0.timeout ? ', met een time-out halverwege elke helft' : ''} (KNVB).</p>` + (opties.alleenSchema ? '' : tabel); }
+    if (!a) { const c0 = CC.categorie(M.wedCat(S, teamId));
+      return `${h.leeg('Nog geen wedstrijd gepland', 'timer')}<p class="zacht klein midden">Zodra er een (oefen)wedstrijd in de planning staat, maak je hier het wisselschema. ${esc(c0.leeftijd)}: ${esc(c0.vorm)}, ${esc(c0.speelduur)}${c0.timeout ? ', met een time-out halverwege elke helft' : ''} (KNVB).</p>` + (opties.alleenSchema ? '' : seizoenBlok); }
     const sch = S.speeltijd.schema[a.id];
     const naam = (id) => (M.speler(S, id) || {}).voornaam;
     let body;
-    if (!sch) {
+    // Besluit 106: de trainer maakt het schema zelf (opstelling, posities en wissels); zie opstelling.js
+    if (M.zelfSchema(S, teamId) && (!sch || sch.zelf)) body = CC.zelfHtml(S, a, c, opties);
+    else if (!sch) {
       const n = M.spelers(S, teamId).filter((pl) => M.status(S, pl, a).code === 'verwacht').length;
       // Selectie (instelbaar): de trainer mag iemand een blok minder geven; de app laat de trainingen van deze week zien
       let minderBlok = '';
@@ -98,7 +103,7 @@
       const om = Number(h.segVal(`om_${a.id}`, '')) || M.wisselMin(S, teamId); const len = M.blokLengtes(c.duur, om);
       const omKeuze = opties.alleenSchema ? '' : `<label for="st-om">Wisselen om de … minuten</label><input id="st-om" type="number" inputmode="decimal" min="3" max="${c.duur}" step="0.5" value="${om}" data-change="stOm" data-a="${a.id}">
         <p class="zacht klein">${len.length} ${len.length === 1 ? 'blok' : 'wisselblokken'}: ${len.map(M.minTekst).join(' + ')} minuten. Advies: per blok wisselen, om de ${M.minTekst(c.blokMin)} minuten${M.wisselMin(S, teamId) !== c.blokMin ? ` (jullie club: ${M.minTekst(M.wisselMin(S, teamId))})` : ''}.</p>`;
-      body = `<div class="kaartje"><p><b>${n} spelers</b> komen · ${c.vorm} · ${c.speelduur}.</p>${c.timeout ? `<p class="zacht klein">KNVB: halverwege elke helft een time-out (max. 2 minuten), een goed moment om te wisselen.</p>` : ''}${omKeuze}<p class="zacht klein">De app verdeelt de speeltijd eerlijk: wie in de gespeelde wedstrijden het laagste percentage speeltijd had, krijgt voorrang. Gemiste wedstrijden tellen niet mee. De keeper staat de hele wedstrijd op doel en wisselt per week (clubbeleid).</p>${minderBlok}<button class="knop vol" data-act="maakSchema" data-id="${a.id}">${icon('sparkles')}Maak wisselschema</button></div>`;
+      body = `${opties.alleenSchema ? '' : CC.wisselwijzeKeuze(S, teamId)}<div class="kaartje"><p><b>${n} spelers</b> komen · ${c.vorm} · ${c.speelduur}.</p>${c.timeout ? `<p class="zacht klein">KNVB: halverwege elke helft een time-out (max. 2 minuten), een goed moment om te wisselen.</p>` : ''}${omKeuze}<p class="zacht klein">De app verdeelt de speeltijd eerlijk: wie in de gespeelde wedstrijden het laagste percentage speeltijd had, krijgt voorrang. Gemiste wedstrijden tellen niet mee. De keeper staat de hele wedstrijd op doel en wisselt per week (clubbeleid).</p>${minderBlok}<button class="knop vol" data-act="maakSchema" data-id="${a.id}">${icon('sparkles')}Maak wisselschema</button></div>`;
     } else if (!sch.bevestigd) {
       const cur = sch.huidig;
       const inNu = sch.blokken[cur] || []; const vorig = cur > 0 ? sch.blokken[cur - 1] : [];
@@ -129,7 +134,7 @@
         <button class="linkknop" data-act="nieuwSchema" data-id="${a.id}">Schema opnieuw maken</button>`;
     } else body = `<div class="info groen">${icon('circle-check')}<span>Speeltijd van deze wedstrijd is verwerkt in de seizoenstotalen.</span></div>`;
     return `${wedstrijden.length > 1 ? `<label class="klein-kop" for="stw">Wedstrijd</label><select id="stw" class="kies" data-change="kiesStWed">${wedstrijden.map((w) => `<option value="${w.id}" ${w.id === a.id ? 'selected' : ''}>${D.kort(w.datum)} · ${h.actTitel(S, w)}</option>`).join('')}</select>` : ''}
-      ${CC.scorebord(S, a, t)}${body}${opties.alleenSchema ? '' : tabel}`;
+      ${CC.scorebord(S, a, t)}${body}${opties.alleenSchema ? '' : seizoenBlok}`;
   };
   // ---------- Scorebord (Besluit 62): thuis en uit, wie scoorde, uitslag naar de ouders ----------
   // Alleen op de wedstrijddag (of als er al gescoord is). De timekeeper en de trainer houden het bij.
@@ -176,6 +181,7 @@
     if (!S.pres[a.id]) { const s = {}; M.spelers(S, a.teamId).forEach((pl) => { s[pl.id] = ['afgemeld', 'langdurig', 'open'].includes(M.status(S, pl, a).code) ? 'x' : 'a'; });
       S.pres[a.id] = { s, door, tijd: new Date().toISOString(), auto: true }; }
     const sch = S.speeltijd.schema[a.id]; if (!sch || sch.bevestigd) return;
+    if (sch.zelf) M.zelfAfleiden(sch);
     const kb = S.speeltijd.keeper || (S.speeltijd.keeper = {}); if (sch.keepers[0] && komtNog(S, a, sch.keepers[0])) kb[sch.keepers[0]] = (kb[sch.keepers[0]] || 0) + 1;
     const len = M.schemaLengtes(sch); sch.blokken.forEach((b, i) => b.forEach((id) => { if (komtNog(S, a, id)) S.speeltijd.min[id] = (S.speeltijd.min[id] || 0) + len[i]; }));
     const mog = S.speeltijd.mogelijk || (S.speeltijd.mogelijk = {}); (sch.spelers || [...new Set(sch.blokken.flat())]).filter((id) => komtNog(S, a, id)).forEach((id) => { mog[id] = (mog[id] || 0) + (sch.wedMin || len.reduce((x, y) => x + y, 0)); });

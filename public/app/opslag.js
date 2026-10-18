@@ -8,7 +8,7 @@
   const leeg = () => ({
     v: 8, gen: '', club: {}, teams: [], people: [], players: [], acts: [], afm: [], pres: {}, lang: [], gesprekken: [], msgs: [],
     vervoer: {}, taken: [], opgave: [], aanm: [], beoord: {}, notities: {}, speeltijd: { min: {}, schema: {}, keeper: {}, mogelijk: {} }, wijzigingen: [],
-    demo: {}, materiaal: {}, mails: [], trainerLog: [], trainerGesprekken: [], ontwGesprek: [], ontwVoorb: {}, ontwVerslag: {}, ontwNotitie: {}, teamVaardig: {}, sigSinds: {}, signaalAfgedaan: [],
+    demo: {}, materiaal: {}, mails: [], trainerLog: [], trainerGesprekken: [], ontwGesprek: [], ontwVoorb: {}, ontwVerslag: {}, ontwNotitie: {}, teamVaardig: {}, teamKeuze: {}, sigSinds: {}, signaalAfgedaan: [],
     gezienInfo: {}, mijlpaalGezien: {}, autoVerstuurd: {}, beoordGedeeld: {}, beoordGezien: {},
     trainerDossier: {}, trainerKennis: {}, trainerAdmin: {}, trainerNotities: {}, begeleidMomenten: [], begeleidZelf: {}, begelHoVerslag: {},
     // voorkomt dat de demo-onderdelen voorbeelddata toevoegen
@@ -55,6 +55,8 @@
     ['ontwVerslag', 'ontwVerslag', 'spelerlees', (k, v, I) => { const s = k.split('|')[0]; return { team: I.teamVanSpeler(s), speler: s }; }],
     ['ontwNotitie', 'ontwNotitie', 'notitie', (k, v, I) => { const s = k.split('|')[0]; return { team: I.teamVanSpeler(s), speler: s }; }],
     ['teamVaardig', 'teamVaardig', 'kind', (k) => ({ team: k })],
+    // Besluit 106: keuzes van de staf per team (bijv. het wisselschema zelf maken)
+    ['teamKeuze', 'teamKeuze', 'teamstaf', (k) => ({ team: k })],
     ['beoordGedeeld', 'beoordGedeeld', 'beoord', (k, v, I) => { const s = k.replace(/(\d{4}-)?m\d+$/, ''); return { team: I.teamVanSpeler(s), speler: s }; }],
     ['beoordGezien', 'beoordGezien', 'speler', (k, v, I) => { const s = k.replace(/(\d{4}-)?m\d+$/, ''); return { team: I.teamVanSpeler(s), speler: s }; }],
     ['speeltijdMin', 'speeltijd.min', 'speeltijd', (k, v, I) => ({ team: I.teamVanSpeler(k), speler: k })],
