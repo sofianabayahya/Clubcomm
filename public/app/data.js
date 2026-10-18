@@ -735,5 +735,8 @@
   M.posMinuten = (S, spelerId) => { const r = {};
     Object.values(S.speeltijd.schema || {}).filter((sch) => sch && sch.zelf && sch.bevestigd && sch.pos).forEach((sch) => sch.pos.forEach((m, i) => { const p = m[spelerId]; if (p) r[p] = (r[p] || 0) + (sch.blokLen[i] || 0); }));
     return r; };
+  // Besluit 109: per positie het percentage van zijn gespeelde minuten, hoogste eerst: [{ pos, min, pct }]
+  M.posVerdeling = (S, spelerId) => { const p = M.posMinuten(S, spelerId); const tot = Object.values(p).reduce((a, b) => a + b, 0);
+    return Object.entries(p).sort((x, y) => y[1] - x[1]).map(([pos, min]) => ({ pos, min: Math.round(min), pct: tot ? Math.round((100 * min) / tot) : 0 })); };
 
 })();

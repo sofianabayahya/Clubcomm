@@ -525,6 +525,7 @@ test.describe('Demo', () => {
     const na = await page.evaluate(({ id, rb }) => { const S = CC.S(); const voor = S.speeltijd.min[rb] || 0; const a = CC.m.act(S, id); CC.wedstrijdVastleggen(S, a, CC.me().id); return { erbij: (S.speeltijd.min[rb] || 0) - voor, pos: CC.m.posMinuten(S, rb) }; }, { id: wed.id, rb });
     expect(na.erbij).toBe(20);
     expect(na.pos['2']).toBe(20);
+    expect(await page.evaluate((rb) => CC.m.posVerdeling(CC.S(), rb), rb)).toEqual([{ pos: '2', min: 20, pct: 100 }]);
     // Vaste taken bij 11 tegen 11: vlagger en scheidsrechter (thuis), geen spelbegeleider
     const taken = await page.evaluate((tid) => CC.vasteTakenVoor(CC.S(), CC.m.team(CC.S(), tid)), wed.team);
     expect(taken).toContain('Vlagger'); expect(taken).not.toContain('Spelbegeleider');
