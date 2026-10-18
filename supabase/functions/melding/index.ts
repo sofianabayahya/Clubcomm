@@ -6,7 +6,7 @@
 // Pushmeldingen (Besluit 53): naast de e-mail een pushmelding naar de telefoons van de ontvangers (tabel push_abonnement),
 // per soort: nood (altijd, ook 's nachts), persoonlijk, aankondiging, herinnering, staf. Nachtrust 21:00–07:30: dan in de
 // wachtrij, 's ochtends verstuurd ({ wachtrij: true }, via pg_cron). E-mail is het vangnet (Besluit 57): alleen naar wie
-// geen pushmelding krijgt (noodberichten altijd), één e-mail per onderwerp, antwoorden nooit per e-mail.
+// geen pushmelding krijgt (noodberichten altijd), ook bij antwoorden (Besluit 107). Wie wat kreeg: rij "bezorgd".
 // Onderaan elke e-mail: "Sneller op de hoogte? Zet meldingen aan in ClubComm." (Besluit 78).
 // Verder: { club, soort: 'afm'|'aanm', rij } = seintje bij afmelding (trainer, alleen op de dag zelf) en aanmelding (staf);
 // { sleutel: true } = sleutelpaar voor push maken (één keer; de geheime helft blijft hier).
@@ -60,11 +60,20 @@ const pushNaar = async (sb: Sb, app: string, club: string, personen: string[], p
   const wacht = p.soort !== "nood" && nachtrust();
   for (const ab of abs ?? []) {
     if (p.soort !== "nood" && (ab.voorkeur ?? {})[p.soort] === false) continue;
-    bereikt.add(ab.persoon_id);
-    if (wacht) { await sb.from("push_wachtrij").insert({ endpoint: ab.endpoint, bericht: p }); continue; }
-    if (await stuurEen(sb, ab, p)) n++;
+    // Besluit 107: alleen wie de pushmelding echt kreeg (of in de wachtrij van de nachtrust staat) telt als bereikt
+    if (wacht) { await sb.from("push_wachtrij").insert({ endpoint: ab.endpoint, bericht: p }); bereikt.add(ab.persoon_id); continue; }
+    if (await stuurEen(sb, ab, p)) { n++; bereikt.add(ab.persoon_id); }
   }
   return { bereikt, n };
+};
+// Besluit 107: per bericht (en per antwoord) vastleggen wie een pushmelding en wie een e-mail kreeg. Eigen rij (soort
+// "bezorgd", alleen de server schrijft), zichtbaar voor de deelnemers van het bericht (zelfde rechten als het bericht).
+const bezorgd = async (sb: Sb, club: string, id: string, m: { van: string; ontvangers?: string[] }, nr: number, push: string[], mail: string[]) => {
+  const { data: oud } = await sb.from("rij").select("data").eq("club_id", club).eq("soort", "bezorgd").eq("id", id).maybeSingle();
+  const d = oud?.data ?? { van: m.van, ontvangers: m.ontvangers ?? [], antw: {} };
+  d.van = m.van; d.ontvangers = m.ontvangers ?? [];
+  if (nr) d.antw = { ...(d.antw ?? {}), [nr]: { push, mail } }; else { d.push = push; d.mail = mail; }
+  await sb.from("rij").upsert({ club_id: club, soort: "bezorgd", id, scope: "bericht", data: d }, { onConflict: "club_id,soort,id" });
 };
 // Staf van een team: trainers en/of teamleiders (rollen per persoon en de vaste trainer/teamleider van het team)
 const stafVan = async (sb: Sb, club: string, teamId: string, rollen: string[]) => {
@@ -156,9 +165,9 @@ Deno.serve(async (req) => {
   // Soort pushmelding (Besluit 53); null = geen pushmelding
   const pushSoort = a ? "persoonlijk" : m.urgent ? "nood" : m.soort === "persoonlijk" ? "persoonlijk"
     : m.soort === "melding" ? (m.push ? "staf" : null) : (m.herinnering || m.auto) ? "herinnering" : "aankondiging";
-  // E-mail (Besluit 57): één e-mail per onderwerp. Antwoorden in een gesprek nooit per e-mail (alleen push); de ontvanger
-  // weet dat het gesprek loopt en ziet het in de app. Niet bij meldingen ter informatie en niet bij "alleen in de app".
-  let mailen = !!(sleutel && afzender) && !a;
+  // E-mail (Besluit 57 en 107): het vangnet. Wie geen pushmelding krijgt, krijgt een e-mail, ook bij een antwoord in een
+  // gesprek: elk bericht komt aan. Niet bij meldingen ter informatie en niet bij "alleen in de app".
+  let mailen = !!(sleutel && afzender);
   if (!a && m.soort === "melding" && !m.urgent) mailen = false;
   if (!a && m.mail === false && !m.urgent) mailen = false;
   if (!pushSoort && !mailen) { await log(m.soort === "melding" ? "melding ter informatie" : "alleen in de app"); return json({ overgeslagen: "geen mail of push" }); }
@@ -181,7 +190,7 @@ Deno.serve(async (req) => {
   }
   // E-mail is het vangnet (Besluit 57): alleen naar wie geen pushmelding krijgt. Noodberichten altijd ook per e-mail.
   const mailNaar = pushSoort === "nood" ? ontvangers : ontvangers.filter((x) => !bereikt.has(x));
-  if (!mailen || !mailNaar.length) { await log(`push ${pushN}${mailen ? ", mail niet nodig" : ", geen mail"}`, pushN); return json({ push: pushN, verstuurd: 0 }); }
+  if (!mailen || !mailNaar.length) { await bezorgd(sb, club, id, m, nr, ontvangers.filter((x) => bereikt.has(x)), []); await log(`push ${pushN}${mailen ? ", mail niet nodig" : ", geen mail"}`, pushN); return json({ push: pushN, verstuurd: 0 }); }
   const { data: contacten } = await sb.from("rij").select("id, data").eq("club_id", club).eq("soort", "contact").in("id", mailNaar);
   const { data: c } = await sb.from("rij").select("data").eq("club_id", club).eq("soort", "club").eq("id", "club").maybeSingle();
   const clubnaam = c?.data?.naam ?? "ClubComm";
@@ -199,7 +208,7 @@ Deno.serve(async (req) => {
     <p style="font-size:14px;margin:0 0 12px">Sneller op de hoogte? Zet meldingen aan in ClubComm.</p>
     <p style="color:#5b6b7f;font-size:12px">Je krijgt deze e-mail omdat je bij ${esc(clubnaam)} in ClubComm staat. Reageren of afmelden doe je in de app.</p></div>`;
 
-  let n = 0; const fouten: string[] = [];
+  let n = 0; const fouten: string[] = []; const gemaild: string[] = [];
   for (const k of contacten ?? []) {
     const email = String(k.data?.email ?? "").trim();
     if (!email || /\.invalid$/i.test(email)) continue;
@@ -207,8 +216,9 @@ Deno.serve(async (req) => {
       method: "POST", headers: { "api-key": sleutel!, "Content-Type": "application/json", accept: "application/json" },
       body: JSON.stringify({ sender: { name: `${clubnaam} via ClubComm`, email: afzender }, to: [{ email }], subject: onderwerp, htmlContent: html, textContent: `${onderwerp}\n\n${tekst}\n\nOpen ClubComm: ${app}\n\nSneller op de hoogte? Zet meldingen aan in ClubComm.` }),
     });
-    if (r.ok) n++; else fouten.push(`${r.status}`);
+    if (r.ok) { n++; gemaild.push(k.id); } else fouten.push(`${r.status}`);
   }
+  await bezorgd(sb, club, id, m, nr, ontvangers.filter((x) => bereikt.has(x)), gemaild);
   await log(`${fouten.length ? `fouten: ${fouten.join(",")}` : "verstuurd"} · push ${pushN}`, n);
   return json({ verstuurd: n, push: pushN, fouten });
 });

@@ -115,10 +115,10 @@
     const actief = document.activeElement; const typt = actief && /INPUT|TEXTAREA|SELECT/.test(actief.tagName);
     const sheet = document.getElementById('sheet'); if (!dwing && (typt || (sheet && !sheet.hidden))) return;
     if (!allesOpgeslagen()) { CC.save(); return; }
-    const voor = L.snap;
+    const voor = L.snap; const bezVoor = JSON.stringify(CC.S().bezorgd || {}); // Besluit 107: ook als alleen "hoe kwam het aan" veranderde
     try {
       await laden();
-      const anders = voor.size !== L.snap.size || [...L.snap].some(([k, v]) => voor.get(k) !== v);
+      const anders = voor.size !== L.snap.size || [...L.snap].some(([k, v]) => voor.get(k) !== v) || bezVoor !== JSON.stringify(CC.S().bezorgd || {});
       if (anders || dwing) { const y = window.scrollY; CC.render(); window.scrollTo(0, y); }
     } catch (e) { console.warn(e); }
   };
