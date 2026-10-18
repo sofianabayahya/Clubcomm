@@ -17,6 +17,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 107 | Elk bericht komt aan (push of e-mail, ook antwoorden) en je ziet hoe; teamleider zet oefenwedstrijden in | ✅ geldt |  |
 | 106 | Eigen wisselschema voor selectieteams (opstelling 1-4-3-3, wissels, minuten en posities); speelvorm per team | ✅ geldt |  |
 | 105 | Aanwezigheid: pas een kleur en signaal vanaf 6 keer gemeten | ✅ geldt |  |
 | 104 | Rol wisselen met één tik in de kop, met per rol wat er wacht | ✅ geldt |  |
@@ -31,7 +32,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 | 95 | Twee lijnen: voetbal (HO) en organisatie (coördinator) | ◐ deels herzien | door 96 (clubbeheerder en ClubComm-adviseur), 97 (bouwen, focus, dossier; nieuwe bouwvolgorde), 99 (traject per trainer in plaats van 2 + 2 voor iedereen) |
 | 94 | Training afgelasten met eigen toelichting | ◐ deels herzien | door 95 (de HJO-knop Afgelasten ligt nu bij de coördinator) |
 | 93 | Evaluatieformulier praktijkbegeleiding coach (testcase, mijnclubcomm.nl/evaluatie) | ◐ deels herzien | door 95 (wordt later de module Trainers begeleiden in de app), 97 (in het trainersdossier) |
-| 92 | Oefenwedstrijd: thuis of uit, verzamelen, verzamelpunt en adres | ✅ geldt |  |
+| 92 | Oefenwedstrijd: thuis of uit, verzamelen, verzamelpunt en adres | ◐ deels herzien | door 107 (ook de teamleider zet een oefenwedstrijd in) |
 | 91 | Aanwezigheid: alleen dagen die nog iets vragen, met adres | ✅ geldt |  |
 | 90 | Adres en verzamelpunt zichtbaar waar de ouder kijkt | ✅ geldt |  |
 | 89 | Demo met rondleiding voor besturen, alleen op uitnodiging | ◐ deels herzien | door 95 (de rondleiding moet de coördinator en de HO nog laten zien) |
@@ -66,7 +67,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 | 60 | Speelduur per leeftijd volgens de KNVB | ✅ geldt |  |
 | 59 | Gesprekken als tekstballonnen: zie wie wat zei | ✅ geldt |  |
 | 58 | Reageren met alinea's | ✅ geldt |  |
-| 57 | Berichtenpagina: gesprekken, opruimen en één e-mail per onderwerp | ◐ deels herzien | door 79 (gesprek afronden, automatisch archiveren), 80/82 (berichten verdwijnen vanzelf) |
+| 57 | Berichtenpagina: gesprekken, opruimen en één e-mail per onderwerp | ◐ deels herzien | door 79 (gesprek afronden, automatisch archiveren), 80/82 (berichten verdwijnen vanzelf), 107 (antwoorden per e-mail als de pushmelding niet lukt) |
 | 56 | Meldingen blijven komen na uitloggen | ✅ geldt |  |
 | 55 | Meldingen: meteen vragen bij de eerste keer | ✅ geldt |  |
 | 54 | Profiel opgeschoond | ✅ geldt |  |
@@ -640,6 +641,17 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 107 — Elk bericht komt aan, en je ziet hoe; de teamleider zet oefenwedstrijden in
+*Besloten 18 oktober 2026. Aanleiding: de trainer wist niet of zijn gesprek met de teamleider per pushmelding of e-mail aankwam, en bij Inzicht leek het alsof ouders niets lazen (ze lezen de e-mail en openen de app niet). In de gegevens bleek dat twee antwoorden in een gesprek bij niemand aankwamen: geen pushmelding en (volgens Besluit 57) geen e-mail. Herziet Besluit 57, vult 92 aan.*
+- **De belofte: elk bericht komt aan, via een pushmelding of een e-mail, nooit via niets.** Lukt de pushmelding niet (uitgezet, of de telefoon is niet bereikbaar), dan gaat er een e-mail, **ook bij een antwoord in een gesprek**. Urgent blijft: altijd allebei. *Alleen in de app* (vinkje e-mail uit bij nieuws) blijft mogelijk.
+- **Je ziet hoe het aankwam**, als een klein regeltje (zoals de vinkjes bij WhatsApp):
+  - in een gesprek, onder je eigen laatste bericht: *"✓✓ Gelezen door Dorothee"*, of *"🔔 Pushmelding bij Dorothee"*, of *"✉ Gemaild naar Dorothee"*;
+  - bij je eigen nieuwsbericht: *"Aangekomen bij 16 van 16 · 11 per e-mail · 5 met een pushmelding · 4 openden de app"*, met per persoon hoe.
+- **Inzicht:** *Gelezen berichten per team* wordt **Berichten aangekomen per team** (pushmelding, e-mail of gelezen). Een ouder die de e-mail leest, telt niet meer als "niet gelezen".
+- Geen keuze per bericht (*altijd ook mailen*): door de belofte is dat niet nodig. Niet bijhouden of een e-mail geopend is: dat klopt vaak niet (zie Afgewezen ideeën).
+- **Oefenwedstrijd door de teamleider:** bij **Wedstrijd** staat **Oefenwedstrijd toevoegen**, met hetzelfde formulier als de trainer (thuis of uit, verzamelen, verzamelpunt, adres). De ouders krijgen een bericht, de trainer en de HJO een melding ter informatie.
+- Techniek: de server (Edge Function *melding*) legt per bericht en per antwoord vast wie een pushmelding en wie een e-mail kreeg (rij *bezorgd*; alleen de server mag die schrijven, migratie 027).
+
 ## Besluit 106 — Eigen wisselschema voor selectieteams; speelvorm per team
 *Besloten 17 oktober 2026. Aanleiding: het O12 talententeam van DCG speelt in de O13-competitie (11 tegen 11) en de trainer kiest zelf wie speelt (training, inzet, coachbaarheid, aanwezigheid). Vult Besluit 33, 39 en 60 aan.*
 - **Speelvorm per team:** de clubbeheerder kiest op de teampagina *Speelt wedstrijden als* (bijv. O13, 11 tegen 11, 2 × 30 minuten). Dat bepaalt speelduur, aantal in het veld en de vaste taken: vanaf O13 een **vlagger** bij elke wedstrijd en bij thuiswedstrijden een **scheidsrechter** (geen spelbegeleider). Leeg = zoals de teamnaam.
@@ -795,6 +807,8 @@ Testcase: de initiatiefnemer begeleidt als HO (KNVB-opleiding) een coach van een
 - Werkt het, dan kan het later een module in ClubComm worden (trainers begeleiden, bijv. door een TC of HJO).
 
 ## Besluit 92 — Oefenwedstrijd: thuis of uit, verzamelen, verzamelpunt en adres
+> **◐ Deels herzien door Besluit 107 (ook de teamleider zet een oefenwedstrijd in)** (zie Register).
+
 - Bij **Planning aanpassen → Oefenwedstrijd toevoegen** kies je **thuis of uit**, een **verzameltijd** (leeg = half uur voor de aftrap thuis, een uur uit), een **verzamelpunt** en bij uit het **adres** van de tegenstander (met adres aanvullen). Bij uit geen veld.
 - De ouder ziet het in de weekplanning op het kaartje (*"Oefenwedstrijd · uit bij SCPB"*, verzamelen bij …, adres met routeknop), in het bericht, en een uit-oefenwedstrijd staat ook bij **Vervoer**.
 - **Oefenwedstrijd aanpassen** op de pagina van de wedstrijd (trainer of teamleider), met bericht aan de ouders.
@@ -1075,7 +1089,7 @@ Vaste regel voor alle portalen: een lijst die in het seizoen groeit, toont eerst
 - **In een gesprek geen knoppenbalk onderin** (zoals WhatsApp; terug via het pijltje linksboven), zodat het reactievak nooit achter de knoppen valt. Het reactievak hoort bij de pagina: groeit het, dan schuiven de berichten erboven mee omhoog (geen overlap). Een gesprek opent onderaan, bij het nieuwste bericht.
 
 ## Besluit 57 — Berichtenpagina: gesprekken, opruimen en één e-mail per onderwerp
-> **◐ Deels herzien door Besluit 79 (gesprek afronden, automatisch archiveren), 80/82 (berichten verdwijnen vanzelf)** (zie Register).
+> **◐ Deels herzien door Besluit 79 (gesprek afronden, automatisch archiveren), 80/82 (berichten verdwijnen vanzelf), 107 (antwoorden per e-mail als de pushmelding niet lukt)** (zie Register).
 **Twee tabbladen voor iedereen** (ouder, trainer, teamleider, HJO): **Persoonlijk** en **Nieuws** (vervangt Inbox/Verstuurd).
 - **Persoonlijk** = gesprekken (zoals WhatsApp), wie ook begon. Gesorteerd op laatste activiteit; in de lijst de laatste regel ("Jij: …" of "Dorothee: …").
   - **Wacht op jou** (alleen staf): de andere kant heeft het laatste woord. Heeft een collega al geantwoord: "beantwoord door …" (niet dubbel antwoorden).
@@ -1761,6 +1775,7 @@ Bewust niet gedaan, met de reden. Komt een van deze toch terug, zeg dan dat het 
 
 | Idee | Waarom niet | Besluit |
 |---|---|---|
+| Bijhouden of een e-mail geopend is (open-tracking) | Klopt vaak niet: iPhones melden elke e-mail als geopend, andere blokkeren het; dan krijg je cijfers waar je niet op kunt vertrouwen. We laten zien hoe het aankwam, niet of het geopend is | 107 |
 | Eigen naam aanpassen in het Profiel (of naam in de kennismaking) | Niet nodig (10-10): de club zet de naam goed bij het inrichten; bij een fout past de clubbeheerder hem aan (Besluit 45) | 45, 100 |
 | Afmelden namens de ouder (door teamleider) | Informatie gaat van de bron de app in; geen taak voor een ander | 34 |
 | Ochtendbericht voor de trainer, weekoverzicht of weekbericht voor ouders | Te veel berichten; de stand verandert tot het laatste moment; de week staat al op Home en in de Planning, wijzigingen krijgen meteen een bericht | 20, bevestigd 10-10 (principe 10) |

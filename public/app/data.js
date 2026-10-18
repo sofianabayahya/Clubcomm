@@ -611,6 +611,10 @@
     && (m.bereik === 'Hele club' || String(m.bereik || '').split(', ').some((t) => S.players.some((p) => p.teamId === t && p.ouders.includes(pid))));
   // Berichten als gesprekken (Besluit 57): bij een persoonlijk bericht doet de afzender ook mee; het laatste woord telt
   M.deelnemers = (m) => (m.soort === 'persoonlijk' ? [m.van, ...m.ontvangers] : m.ontvangers);
+  // Besluit 107: hoe kwam een bericht (nr 0) of antwoord (nr 1, 2, …) aan? { push: [ids], mail: [ids] } of null (nog niet bekend)
+  M.aankomst = (S, m, nr) => { const b = (S.bezorgd || {})[m.id]; if (!b) return null; const x = nr ? (b.antw || {})[nr] : b; return x ? { push: x.push || [], mail: x.mail || [] } : null; };
+  // Bereikt = gelezen in de app, of een pushmelding of e-mail gekregen
+  M.bereikt = (S, m, id) => m.gelezen.includes(id) || (() => { const a = M.aankomst(S, m, 0); return !!a && (a.push.includes(id) || a.mail.includes(id)); })();
   M.laatste = (m) => ((m.antw || []).length ? m.antw[m.antw.length - 1] : { van: m.van, tekst: m.tekst, tijd: m.tijd });
   M.gearchiveerd = (m, pid) => (m.archief || []).includes(pid);
   M.zichtbaar = (S, m, pid) => (M.deelnemers(m).includes(pid) || M.vastVoor(S, m, pid)) && (!m.gepland || new Date(m.gepland) <= new Date());

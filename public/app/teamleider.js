@@ -44,7 +44,7 @@
         const lijst = S.acts.filter((a) => a.teamId === tid && M.isWed(a) && a.datum >= D.addDays(D.vandaag(), -14)).slice(0, 8);
         const std = volgendeWedstrijd(S, tid);
         const a = lijst.find((x) => x.id === h.segVal('tlWed', std && std.id)) || std || lijst[0];
-        if (!a) return h.leeg('Geen wedstrijden') + `<button class="knop vol" data-act="wedstrijdToevoegen">${icon('plus')}Wedstrijd toevoegen</button>`;
+        if (!a) return h.leeg('Geen wedstrijden') + `<div class="knoppen kolom"><button class="knop vol" data-act="tlOefen">${icon('plus')}Oefenwedstrijd toevoegen</button><button class="knop licht vol" data-act="wedstrijdToevoegen">${icon('plus')}Competitiewedstrijd toevoegen</button></div>`;
         const sp = M.spelers(S, tid).map((pl) => ({ pl, st: M.status(S, pl, a) }));
         const af = sp.filter((x) => !['verwacht', 'aanwezig', 'telaat'].includes(x.st.code));
         const gespeeld = a.datum < D.vandaag() || (a.datum === D.vandaag() && new Date() > D.start(a));
@@ -65,7 +65,7 @@
             <div class="knoppen"><button class="knop klein licht" data-act="taakToevoegen" data-a="${a.id}">${icon('plus')}Taak</button>${t.t.length - t.bezet ? `<button class="knop klein licht" data-act="deelTaken" data-a="${a.id}">${icon('share-2')}Oproep delen</button>` : ''}</div>
             <p class="zacht klein">Staat een taak ${S.club.inst.oproepDagen} dagen van tevoren nog open, dan krijgen de ouders automatisch een oproep.</p>` : ''}
           ${!a.afgelast && (vandaag || gespeeld) ? `${h.sectie('Op de dag zelf')}<div class="knoppen"><button class="knop licht" data-act="open" data-view="opnemen" data-id="${a.id}">${icon('clipboard-check')}Aanwezigheid</button>${S.club.modules.speeltijd ? `<button class="knop licht" data-act="open" data-view="speeltijd" data-team="${tid}">${icon('timer')}Wisselschema</button>` : ''}</div><p class="zacht klein">De trainer-coach vult de aanwezigheid in, de timekeeper doet de wissels.</p>` : ''}
-          <div class="knoppen">${!a.afgelast && !gespeeld ? `<button class="knop licht rood-tekst" data-act="wedstrijdAfgelast" data-id="${a.id}">${icon('ban')}Afgelast</button>` : ''}<button class="knop licht" data-act="wedstrijdToevoegen">${icon('plus')}Wedstrijd toevoegen</button></div>`;
+          <div class="knoppen">${!a.afgelast && !gespeeld ? `<button class="knop licht rood-tekst" data-act="wedstrijdAfgelast" data-id="${a.id}">${icon('ban')}Afgelast</button>` : ''}<button class="knop licht" data-act="tlOefen">${icon('plus')}Oefenwedstrijd toevoegen</button></div>`;
       },
       berichten: (S) => CC.berichtenScherm(S, { nieuw: true }),
       team(S) {
@@ -113,6 +113,8 @@
     S.taken = S.taken.filter((x) => x !== t); CC.save(); CC.closeSheet(); CC.render(); CC.toast('Taak verwijderd');
   });
   CC.on('taakToevoegenOk', (el) => { const S = CC.S(); S.taken.push({ id: 't' + Date.now(), actId: el.dataset.a, soort: el.dataset.s, personId: null }); CC.save(); CC.closeSheet(); CC.render(); });
+  // Besluit 107: de teamleider zet zelf een oefenwedstrijd in (zelfde formulier als de trainer; de trainer krijgt een melding)
+  CC.on('tlOefen', () => CC.wijzigingSheet(null, 'oefen'));
   CC.on('wedstrijdToevoegen', () => CC.sheet('Wedstrijd toevoegen', `<form data-submit="wedstrijdToevoegenOk" class="codeform"><label for="nw-t">Tegenstander</label><input id="nw-t" name="tegen" required placeholder="Bijv. FC Waterkant O10-2"><div class="twee"><div><label for="nw-d">Datum</label><input id="nw-d" name="datum" type="date" required value="${D.addDays(D.vandaag(), 10)}"></div><div><label for="nw-a">Aftrap</label><input id="nw-a" name="tijd" type="time" required value="09:00"></div></div><label class="vink"><input type="checkbox" name="thuis" checked> Thuiswedstrijd</label><button class="knop">Toevoegen</button><p class="zacht klein">In de pilot voer je wedstrijden zelf in. Later komen ze automatisch uit Sportlink of voetbal.nl.</p></form>`));
   CC.on('wedstrijdToevoegenOk', (f) => {
     const S = CC.S(); const tid = CC.teamId(); const thuis = f.thuis.checked; const [hh, mm] = f.tijd.value.split(':').map(Number); const vz = hh * 60 + mm - (thuis ? 30 : 60);

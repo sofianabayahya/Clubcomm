@@ -521,6 +521,52 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'eigen wisselschema');
   });
 
+  // Besluit 107: de teamleider zet zelf een oefenwedstrijd in; de ouders krijgen een bericht, de trainer een melding
+  test('teamleider zet een oefenwedstrijd in', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(2).click(); // Linda: teamleider
+    await page.locator('[data-act="magischeLink"]').click();
+    await page.evaluate(() => CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'teamleider')));
+    await page.locator('nav >> text=Wedstrijd').click();
+    await page.locator('[data-act="tlOefen"]').click();
+    await expect(page.locator('#sheet')).toContainText('Oefenwedstrijd toevoegen');
+    await expect(page.locator('#w-wat')).toBeHidden();
+    await page.locator('#w-t').fill('Testclub O10-3');
+    await page.locator('#sheet input[name="oefThuis"][value="0"]').check();
+    await page.locator('#w-oad').fill('Sportpark Test 1, Teststad');
+    await page.locator('#sheet form[data-submit="wijzigPlanning"] button.knop').click();
+    const r = await page.evaluate(() => { const S = CC.S(); const a = S.acts.find((x) => x.tegen === 'Testclub O10-3');
+      return { soort: a && a.soort, thuis: a && a.thuis, adres: a && a.adres, trainer: S.msgs.some((m) => m.soort === 'melding' && m.ontvangers.includes(CC.m.team(S, a.teamId).trainerId)) }; });
+    expect(r).toEqual({ soort: 'oefen', thuis: false, adres: 'Sportpark Test 1, Teststad', trainer: true });
+    await controleer(page, fouten, 'oefenwedstrijd teamleider');
+  });
+
+  // Besluit 107: bij je eigen bericht zie je hoe het aankwam (pushmelding, e-mail of gelezen in de app)
+  test('berichten: zien hoe het aankwam', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(1).click(); // Mark
+    await page.locator('[data-act="magischeLink"]').click();
+    const id = await page.evaluate(() => { const S = CC.S(); const me = CC.me(); const tid = CC.teamId(); const o = CC.m.oudersVan(S, tid);
+      const m = { id: 'b-test-aank', van: me.id, soort: 'nieuws', bereik: tid, onderwerp: 'Testbericht aankomst', tekst: 'Hallo', tijd: new Date().toISOString(), ontvangers: o, gelezen: [o[0]], antw: [], urgent: false, gepland: null, mail: true };
+      S.msgs.push(m); S.bezorgd = { [m.id]: { van: me.id, ontvangers: o, push: [o[1]], mail: o.slice(2), antw: {} } };
+      // Gesprek: het antwoord van Mark kwam per e-mail aan bij de ander
+      const ander = o[0]; S.msgs.push({ id: 'b-test-gesp', van: ander, soort: 'persoonlijk', bereik: 'x', onderwerp: 'Vraag', tekst: 'Kan het?', tijd: new Date(Date.now() - 6e4).toISOString(), ontvangers: [me.id], gelezen: [me.id], antw: [{ van: me.id, tekst: 'Ja hoor', tijd: new Date().toISOString() }], urgent: false, gepland: null });
+      S.bezorgd['b-test-gesp'] = { van: ander, ontvangers: [me.id], push: [me.id], mail: [], antw: { 1: { push: [], mail: [ander] } } };
+      CC.save(); return { n: o.length };
+    });
+    await page.evaluate(() => CC.open('bericht', { id: 'b-test-aank' }));
+    await expect(page.locator('#app summary', { hasText: 'Aangekomen bij' })).toContainText(`Aangekomen bij ${id.n} van ${id.n}`);
+    await page.evaluate(() => CC.open('bericht', { id: 'b-test-gesp' }));
+    await expect(page.locator('#app')).toContainText('✉ Gemaild naar');
+    await controleer(page, fouten, 'aankomst berichten');
+  });
+
   // Gevonden 17-10 bij DCG: een lange teamnaam ("O12 talententeam") liep over het balkje heen
   test('inzicht: lange teamnaam overlapt het balkje niet', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 800 });
