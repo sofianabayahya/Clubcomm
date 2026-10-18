@@ -21,7 +21,9 @@
   const hulpTekst = (S, a, pl) => {
     const week = S.acts.filter((x) => x.teamId === a.teamId && x.soort === 'training' && !x.afgelast && x.datum < D.vandaag() && x.datum >= D.addDays(a.datum, -7) && S.pres[x.id]);
     const er = week.filter((x) => ['aanwezig', 'telaat'].includes(M.status(S, pl, x).code)).length;
-    return `${week.length ? `${er} van ${week.length} trainingen deze week · ` : ''}${Math.round(M.speeltijdStand(S, pl).min)}' dit seizoen`;
+    // Besluit 109: waar hij speelde, in procenten van zijn minuten (de twee meest gespeelde posities)
+    const pos = M.posVerdeling(S, pl.id).slice(0, 2).map((x) => `${M.posNaam('1-4-3-3', x.pos).toLowerCase()} ${x.pct}%`).join(', ');
+    return `${week.length ? `${er} van ${week.length} trainingen deze week · ` : ''}${Math.round(M.speeltijdStand(S, pl).min)}' dit seizoen${pos ? ` · ${pos}` : ''}`;
   };
 
   CC.zelfHtml = (S, a, c, opties) => {
@@ -59,10 +61,10 @@
       return h.rij({ ic: h.avatar(naam(S, id)), titel: esc(naam(S, id)), sub: pos.map((p) => esc(`${p} · ${M.posNaam(sch.systeem, p)}`)).join(', '), rechts: `<b>${M.minTekst(mins[id])}'</b>` }); }).join('')}</div></details>`; };
 
   // Posities dit seizoen (Speeltijd, onder de minuten)
-  CC.posTabel = (S, teamId) => { const rijen = M.spelers(S, teamId).map((pl) => ({ pl, p: M.posMinuten(S, pl.id) })).filter((x) => Object.keys(x.p).length);
+  CC.posTabel = (S, teamId) => { const rijen = M.spelers(S, teamId).map((pl) => ({ pl, p: M.posVerdeling(S, pl.id) })).filter((x) => x.p.length);
     if (!rijen.length) return '';
     return `<details class="uitklap"><summary>Posities dit seizoen</summary><div class="lijst compact">${rijen.map(({ pl, p }) => h.rij({ ic: h.avatar(pl.voornaam), titel: esc(pl.voornaam),
-      sub: Object.entries(p).sort((x, y) => y[1] - x[1]).map(([pos, min]) => esc(`${M.posNaam('1-4-3-3', pos)} ${Math.round(min)}'`)).join(' · ') })).join('')}</div></details>`; };
+      sub: p.map((x) => esc(`${M.posNaam('1-4-3-3', x.pos)} ${x.pct}% (${x.min}')`)).join(' · ') })).join('')}</div><p class="zacht klein">Percentage van zijn gespeelde minuten per positie.</p></details>`; };
 
   CC.on('zelfNieuw', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.id); const c = CC.categorie(M.wedCat(S, a.teamId));
     const sch = { zelf: true, systeem: '1-4-3-3', opstelling: {}, wissels: [], klok: {}, wedMin: c.duur, helft: c.helft, vorm: c.vorm, opVeld: c.opVeld, bevestigd: false };

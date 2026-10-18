@@ -17,6 +17,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 109 | Posities in procenten van de gespeelde minuten | ✅ geldt |  |
 | 108 | Verzameltijd per team: thuis en uit zoveel minuten voor de aftrap | ✅ geldt |  |
 | 107 | Elk bericht komt aan (push of e-mail, ook antwoorden) en je ziet hoe; teamleider zet oefenwedstrijden in | ✅ geldt |  |
 | 106 | Eigen wisselschema voor selectieteams (opstelling 1-4-3-3, wissels, minuten en posities); speelvorm per team | ✅ geldt |  |
@@ -641,6 +642,11 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 109 — Posities in procenten
+*Besloten 18 oktober 2026. Vult Besluit 106 aan.*
+- Per speler zie je per positie welk **percentage van zijn gespeelde minuten** hij daar stond (*Rechtsback 60% (120') · Spits 40% (80')*), bij Speeltijd → *Posities dit seizoen*.
+- Bij het kiezen van een speler voor een plek staan zijn twee meest gespeelde posities erbij (*rechtsback 60%, spits 40%*).
 
 ## Besluit 108 — Verzameltijd per team
 *Besloten 18 oktober 2026. Vult Besluit 92 aan.*
@@ -1757,6 +1763,8 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 ---
 
 ## Nog te bespreken
+
+- **Beloning voor inzet en het teamkompas (DCG, 18-10):** idee van de trainer: elke week drie spelers een *immuniteitskaart* (een hele wedstrijd spelen), op basis van aanwezigheid, gedrag en houding, opletten, positief zijn en op tijd komen; een kaart met foto en een spinnenweb. Voorstel van Claude (nog geen besluit): punten voor het teamkompas die iedereen kan verdienen (geen top 3), een teamdoel, en de kaart op een vaste lat in plaats van een wedstrijd tussen kinderen. Let op: ranglijsten zijn afgewezen (Besluit 28, 29, 62) en scores op een spinnenweb botsen met Besluit 67 (woorden, geen cijfers); foto's van kinderen vragen toestemming van ouders.
 
 - **Scheidsrechter betalen (DCG, O12 talententeam, 17-10):** vlaggen en fluiten worden een taak voor de ouders (Besluit 106). Nog overleggen of het team een scheidsrechter betaalt voor alle wedstrijden en de kosten deelt; dan vervalt de taak scheidsrechter bij thuiswedstrijden.
 - **Eigen wisselschema: vooraf plannen of tijdens de wedstrijd?** (Besluit 106) Beide kan nu; na een paar wedstrijden bekijken wat de trainer gebruikt en het scherm daarop vereenvoudigen. Ook nog open: posities ruilen tussen twee veldspelers zonder wissel, en een andere speelwijze dan 1-4-3-3.
