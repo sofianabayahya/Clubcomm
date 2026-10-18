@@ -333,6 +333,8 @@ pre.code { background: var(--vlak2); border: 1px solid var(--lijn); border-radiu
 .sheet-kop { display: flex; align-items: center; justify-content: space-between; padding: 12px 8px 6px 16px; }
 .sheet-kop h2 { font-size: 18px; }
 .sheet-body { overflow-y: auto; min-height: 0; overscroll-behavior: contain; padding: 4px 16px calc(20px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 10px; }
+/* Blokken in een venster krimpen nooit (anders knipt .lijst met overflow:hidden de onderste regels af); het venster scrollt */
+.sheet-body > * { flex-shrink: 0; }
 body.sheet-open { overflow: hidden; }
 .profiel-kop { display: flex; gap: 12px; align-items: center; }
 .profiel-kop > div { display: flex; flex-direction: column; } .profiel-kop small { color: var(--zacht); font-size: 13px; }
