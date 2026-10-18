@@ -17,6 +17,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 108 | Verzameltijd per team: thuis en uit zoveel minuten voor de aftrap | ✅ geldt |  |
 | 107 | Elk bericht komt aan (push of e-mail, ook antwoorden) en je ziet hoe; teamleider zet oefenwedstrijden in | ✅ geldt |  |
 | 106 | Eigen wisselschema voor selectieteams (opstelling 1-4-3-3, wissels, minuten en posities); speelvorm per team | ✅ geldt |  |
 | 105 | Aanwezigheid: pas een kleur en signaal vanaf 6 keer gemeten | ✅ geldt |  |
@@ -32,7 +33,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 | 95 | Twee lijnen: voetbal (HO) en organisatie (coördinator) | ◐ deels herzien | door 96 (clubbeheerder en ClubComm-adviseur), 97 (bouwen, focus, dossier; nieuwe bouwvolgorde), 99 (traject per trainer in plaats van 2 + 2 voor iedereen) |
 | 94 | Training afgelasten met eigen toelichting | ◐ deels herzien | door 95 (de HJO-knop Afgelasten ligt nu bij de coördinator) |
 | 93 | Evaluatieformulier praktijkbegeleiding coach (testcase, mijnclubcomm.nl/evaluatie) | ◐ deels herzien | door 95 (wordt later de module Trainers begeleiden in de app), 97 (in het trainersdossier) |
-| 92 | Oefenwedstrijd: thuis of uit, verzamelen, verzamelpunt en adres | ◐ deels herzien | door 107 (ook de teamleider zet een oefenwedstrijd in) |
+| 92 | Oefenwedstrijd: thuis of uit, verzamelen, verzamelpunt en adres | ◐ deels herzien | door 107 (ook de teamleider zet een oefenwedstrijd in), 108 (standaard verzameltijd per team) |
 | 91 | Aanwezigheid: alleen dagen die nog iets vragen, met adres | ✅ geldt |  |
 | 90 | Adres en verzamelpunt zichtbaar waar de ouder kijkt | ✅ geldt |  |
 | 89 | Demo met rondleiding voor besturen, alleen op uitnodiging | ◐ deels herzien | door 95 (de rondleiding moet de coördinator en de HO nog laten zien) |
@@ -641,6 +642,12 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 108 — Verzameltijd per team
+*Besloten 18 oktober 2026. Vult Besluit 92 aan.*
+- Hoeveel minuten voor de aftrap het team verzamelt, stelt de clubbeheerder per team in (teampagina → *Teamtype en regels*): **thuis** en **uit**. Standaard thuis 30 en uit 60 minuten.
+- **DCG, O12 talententeam:** thuis **45**, uit **60** minuten. De thuiswedstrijden van 7 en 28 november staan op 11:45 en 13:45.
+- Geldt als voorstel bij elke nieuwe wedstrijd of oefenwedstrijd (trainer en teamleider); een tijd bij één wedstrijd pas je bij die wedstrijd aan.
+
 ## Besluit 107 — Elk bericht komt aan, en je ziet hoe; de teamleider zet oefenwedstrijden in
 *Besloten 18 oktober 2026. Aanleiding: de trainer wist niet of zijn gesprek met de teamleider per pushmelding of e-mail aankwam, en bij Inzicht leek het alsof ouders niets lazen (ze lezen de e-mail en openen de app niet). In de gegevens bleek dat twee antwoorden in een gesprek bij niemand aankwamen: geen pushmelding en (volgens Besluit 57) geen e-mail. Herziet Besluit 57, vult 92 aan.*
 - **De belofte: elk bericht komt aan, via een pushmelding of een e-mail, nooit via niets.** Lukt de pushmelding niet (uitgezet, of de telefoon is niet bereikbaar), dan gaat er een e-mail, **ook bij een antwoord in een gesprek**. Urgent blijft: altijd allebei. *Alleen in de app* (vinkje e-mail uit bij nieuws) blijft mogelijk.
@@ -807,7 +814,7 @@ Testcase: de initiatiefnemer begeleidt als HO (KNVB-opleiding) een coach van een
 - Werkt het, dan kan het later een module in ClubComm worden (trainers begeleiden, bijv. door een TC of HJO).
 
 ## Besluit 92 — Oefenwedstrijd: thuis of uit, verzamelen, verzamelpunt en adres
-> **◐ Deels herzien door Besluit 107 (ook de teamleider zet een oefenwedstrijd in)** (zie Register).
+> **◐ Deels herzien door Besluit 107 (ook de teamleider zet een oefenwedstrijd in), 108 (standaard verzameltijd per team)** (zie Register).
 
 - Bij **Planning aanpassen → Oefenwedstrijd toevoegen** kies je **thuis of uit**, een **verzameltijd** (leeg = half uur voor de aftrap thuis, een uur uit), een **verzamelpunt** en bij uit het **adres** van de tegenstander (met adres aanvullen). Bij uit geen veld.
 - De ouder ziet het in de weekplanning op het kaartje (*"Oefenwedstrijd · uit bij SCPB"*, verzamelen bij …, adres met routeknop), in het bericht, en een uit-oefenwedstrijd staat ook bij **Vervoer**.

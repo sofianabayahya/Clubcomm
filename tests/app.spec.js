@@ -544,6 +544,25 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'oefenwedstrijd teamleider');
   });
 
+  // Besluit 108: verzamelen per team (DCG: thuis 45, uit 60 minuten voor de aftrap)
+  test('verzameltijd per team bij een nieuwe wedstrijd', async ({ page }) => {
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(2).click(); // Linda: teamleider
+    await page.locator('[data-act="magischeLink"]').click();
+    const r = await page.evaluate(() => { const S = CC.S(); CC.wisselRol(CC.me().rollen.findIndex((x) => x.rol === 'teamleider')); const t = CC.m.team(S, CC.teamId());
+      const voor = [CC.m.verzamelMin(S, t.id, true), CC.m.verzamelMin(S, t.id, false)]; t.afwijking = { ...(t.afwijking || {}), verzamelThuis: 45 };
+      return { voor, na: [CC.m.verzamelMin(S, t.id, true), CC.m.verzamelMin(S, t.id, false)] }; });
+    expect(r).toEqual({ voor: [30, 60], na: [45, 60] });
+    await page.locator('nav >> text=Wedstrijd').click();
+    await page.locator('[data-act="tlOefen"]').click();
+    await expect(page.locator('#sheet')).toContainText('45 minuten voor de aftrap (thuis)');
+    await page.locator('#w-t').fill('Thuisclub O10-1'); await page.locator('#w-tijd').fill('10:00');
+    await page.locator('#sheet form[data-submit="wijzigPlanning"] button.knop').click();
+    expect(await page.evaluate(() => CC.S().acts.find((a) => a.tegen === 'Thuisclub O10-1').verzamel)).toBe('09:15');
+  });
+
   // Besluit 107: bij je eigen bericht zie je hoe het aankwam (pushmelding, e-mail of gelezen in de app)
   test('berichten: zien hoe het aankwam', async ({ page }) => {
     const fouten = volgFouten(page);

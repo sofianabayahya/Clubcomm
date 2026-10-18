@@ -378,6 +378,8 @@
   M.spelers = (S, teamId) => S.players.filter((p) => p.teamId === teamId).sort((a, b) => a.voornaam.localeCompare(b.voornaam));
   M.naam = (S, pl) => `${pl.voornaam} ${pl.achternaam}`;
   M.inst = (S, teamId) => ({ ...S.club.inst, ...((teamId && M.team(S, teamId).afwijking) || {}) });
+  // Besluit 108: zoveel minuten voor de aftrap verzamelen (standaard thuis 30, uit 60; per team aan te passen)
+  M.verzamelMin = (S, teamId, thuis) => { const i = M.inst(S, teamId); return Number(thuis ? i.verzamelThuis : i.verzamelUit) || (thuis ? 30 : 60); };
 
   // Vaste taken aanvullen voor komende wedstrijden (vaste id's, dus nooit dubbel)
   M.vulVasteTaken = (S) => {
