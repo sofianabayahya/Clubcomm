@@ -500,6 +500,14 @@ test.describe('Demo', () => {
       await page.locator('#sheet [data-act="zelfKies"]').first().click();
     }
     await expect(page.locator('.plek.leeg')).toHaveCount(0);
+    // Gevonden 18-10 bij DCG (iPhone): de onderste spelers in de keuzelijst vielen van het scherm. De lijst moet tot onderaan scrollen.
+    await page.setViewportSize({ width: 390, height: 560 });
+    await page.locator('.plek[data-pos="9"]').click();
+    const laatste = page.locator('#sheet [data-act="zelfKies"]').last();
+    await laatste.scrollIntoViewIfNeeded();
+    const box = await laatste.boundingBox(); expect(box.y + box.height).toBeLessThanOrEqual(560);
+    await page.locator('#sheet .sheet-bg').click({ position: { x: 5, y: 5 } }).catch(() => page.evaluate(() => CC.closeSheet()));
+    await page.evaluate(() => CC.closeSheet()); await page.setViewportSize({ width: 1280, height: 720 });
     // Wissel plannen op minuut 20 (nog geen aftrap): de rechtsback eruit, iemand van de bank erin
     const rb = await page.evaluate((id) => CC.S().speeltijd.schema[id].opstelling['2'], wed.id);
     await page.locator('[data-act="zelfWissel"]').click();

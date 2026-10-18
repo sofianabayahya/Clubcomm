@@ -327,10 +327,12 @@ pre.code { background: var(--vlak2); border: 1px solid var(--lijn); border-radiu
 .sheet-bg { position: absolute; inset: 0; background: rgba(11, 20, 32, .45); }
 .sheet { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); width: 100%; max-width: 520px; max-height: 88vh; display: flex; flex-direction: column; background: var(--grond); border-radius: 20px 20px 0 0; animation: omhoog .18s ease-out; padding-bottom: env(safe-area-inset-bottom, 0px); }
 .sheet.groot { max-height: 94vh; }
+/* iPhone: vh telt de balk van Safari mee, waardoor de onderkant van een lange lijst onbereikbaar wordt. dvh = wat echt zichtbaar is */
+@supports (height: 100dvh) { .sheet { max-height: 88dvh; } .sheet.groot { max-height: 94dvh; } }
 @keyframes omhoog { from { transform: translate(-50%, 30px); opacity: .6; } to { transform: translate(-50%, 0); opacity: 1; } }
 .sheet-kop { display: flex; align-items: center; justify-content: space-between; padding: 12px 8px 6px 16px; }
 .sheet-kop h2 { font-size: 18px; }
-.sheet-body { overflow-y: auto; padding: 4px 16px 20px; display: flex; flex-direction: column; gap: 10px; }
+.sheet-body { overflow-y: auto; min-height: 0; overscroll-behavior: contain; padding: 4px 16px calc(20px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 10px; }
 body.sheet-open { overflow: hidden; }
 .profiel-kop { display: flex; gap: 12px; align-items: center; }
 .profiel-kop > div { display: flex; flex-direction: column; } .profiel-kop small { color: var(--zacht); font-size: 13px; }
