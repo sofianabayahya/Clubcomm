@@ -503,6 +503,8 @@ test.describe('Demo', () => {
     // Gevonden 18-10 bij DCG (iPhone): de onderste spelers in de keuzelijst vielen van het scherm. De lijst moet tot onderaan scrollen.
     await page.setViewportSize({ width: 390, height: 560 });
     await page.locator('.plek[data-pos="9"]').click();
+    // Geen lijst in het venster mag afgeknipt zijn (alles past, of het venster scrollt)
+    expect(await page.evaluate(() => [...document.querySelectorAll('#sheet .sheet-body > *')].filter((x) => x.scrollHeight > x.clientHeight + 1).length)).toBe(0);
     const laatste = page.locator('#sheet [data-act="zelfKies"]').last();
     await laatste.scrollIntoViewIfNeeded();
     const box = await laatste.boundingBox(); expect(box.y + box.height).toBeLessThanOrEqual(560);
