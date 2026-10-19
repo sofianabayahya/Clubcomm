@@ -1,6 +1,6 @@
 # Amuletten — concept (voorstel, nog geen besluit)
 
-*19 oktober 2026 · O12 talententeam DCG · idee van de trainer, uitgewerkt met Claude. Belonen, niet straffen. Iets speciaals: niet elke training.*
+*19 oktober 2026 · O12 talententeam DCG · idee van de trainer, uitgewerkt met Claude. Belonen, niet straffen. Iets speciaals: niet elke training. **Blijft buiten ClubComm:** de trainer werkt het zelf uit op papier (kaarten van dik materiaal).*
 
 ## Het idee in één zin
 Elke speler krijgt een **voetbalamulet** voor waar hij sterk in is (zijn wapen). Daarna verdient hij **kompas-amuletten** voor de waarden van het teamkompas. Zijn alle zeven kompaskrachten in het team verdiend, dan ontstaat **Captain DCG** (zoals Captain Planet): samen compleet.

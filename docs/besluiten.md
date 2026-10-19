@@ -1764,7 +1764,7 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 
 ## Nog te bespreken
 
-- **Beloning voor inzet en het teamkompas (DCG, 18-10, bijgewerkt 19-10):** gekozen vertrekpunt: **amuletten** (iedereen een voetbalamulet = zijn wapen; kompas-amuletten verdienen per fase; Captain DCG als teamkracht). Uitwerking (wat, hoe, wanneer, prompt voor stickers) in `docs/onderzoek/amuletten-concept-2026-10.md`. Eerst op papier proberen; pas daarna eventueel in de app. Let op: geen ranglijst of top 3 (Besluit 28, 29, 62), woorden in plaats van scores (Besluit 67).
+- **Beloning voor inzet en het teamkompas (DCG, 18-10, bijgewerkt 19-10):** gekozen vertrekpunt: **amuletten** (iedereen een voetbalamulet = zijn wapen; kompas-amuletten verdienen per fase; Captain DCG als teamkracht). Uitwerking (wat, hoe, wanneer, prompt voor stickers) in `docs/onderzoek/amuletten-concept-2026-10.md`. **19-10: blijft buiten ClubComm** — de eigen aanpak van deze trainer (kaarten van dik materiaal), geen functie voor alle clubs. Alleen opnieuw bekijken als de trainer er later zelf om vraagt. Let op: geen ranglijst of top 3 (Besluit 28, 29, 62), woorden in plaats van scores (Besluit 67).
 
 - **Scheidsrechter betalen (DCG, O12 talententeam, 17-10):** vlaggen en fluiten worden een taak voor de ouders (Besluit 106). Nog overleggen of het team een scheidsrechter betaalt voor alle wedstrijden en de kosten deelt; dan vervalt de taak scheidsrechter bij thuiswedstrijden.
 - **Eigen wisselschema: vooraf plannen of tijdens de wedstrijd?** (Besluit 106) Beide kan nu; na een paar wedstrijden bekijken wat de trainer gebruikt en het scherm daarop vereenvoudigen. Ook nog open: posities ruilen tussen twee veldspelers zonder wissel, en een andere speelwijze dan 1-4-3-3.
