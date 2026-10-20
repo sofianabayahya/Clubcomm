@@ -574,6 +574,25 @@ test.describe('Demo', () => {
     expect(await page.evaluate(() => CC.S().acts.find((a) => a.tegen === 'Thuisclub O10-1').verzamel)).toBe('09:15');
   });
 
+  // Gevonden 20-10 bij DCG: een verlopen urgent bericht (afgelaste training van 9 okt) bleef bovenaan Actie nodig bij ouders,
+  // ook bij de trainer zelf in zijn ouderrol. Nu: verlopen en eigen berichten staan er niet meer.
+  test('ouder: verlopen of eigen urgent bericht niet meer bij Actie nodig', async ({ page }) => {
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(1).click(); // Mark: trainer en ouder
+    await page.locator('[data-act="magischeLink"]').click();
+    await page.evaluate(() => { const S = CC.S(); const D = CC.date; const me = CC.me(); const kind = CC.kinderen()[0]; const o = [...new Set([...CC.m.oudersVan(S, kind.teamId), me.id])];
+      const oud = new Date(Date.now() - 5 * 864e5).toISOString(); const gisteren = D.addDays(D.vandaag(), -1);
+      S.msgs.push({ id: 'b-verlopen', van: 'systeem', soort: 'nieuws', bereik: kind.teamId, onderwerp: 'Verlopen afgelasting', tekst: 'x', tijd: oud, verloopt: gisteren, ontvangers: o, gelezen: [], antw: [], urgent: true, gepland: null });
+      S.msgs.push({ id: 'b-eigen', van: me.id, vanRol: 'trainer', soort: 'nieuws', bereik: kind.teamId, onderwerp: 'Mijn eigen urgent bericht', tekst: 'x', tijd: new Date().toISOString(), ontvangers: o, gelezen: [], antw: [], urgent: true, gepland: null });
+      S.msgs.push({ id: 'b-nieuw', van: 'systeem', soort: 'nieuws', bereik: kind.teamId, onderwerp: 'Nieuwe urgente melding', tekst: 'x', tijd: new Date().toISOString(), ontvangers: o, gelezen: [], antw: [], urgent: true, gepland: null });
+      CC.wisselRol(me.rollen.findIndex((r) => r.rol === 'ouder')); });
+    await expect(page.locator('#app')).toContainText('Nieuwe urgente melding');
+    await expect(page.locator('#app')).not.toContainText('Verlopen afgelasting');
+    await expect(page.locator('#app')).not.toContainText('Mijn eigen urgent bericht');
+  });
+
   // Besluit 107: bij je eigen bericht zie je hoe het aankwam (pushmelding, e-mail of gelezen in de app)
   test('berichten: zien hoe het aankwam', async ({ page }) => {
     const fouten = volgFouten(page);
