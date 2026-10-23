@@ -334,6 +334,14 @@ pre.code { background: var(--vlak2); border: 1px solid var(--lijn); border-radiu
 /* Besluit 113: greep bovenaan, venster naar beneden vegen om te sluiten */
 .greep { width: 40px; height: 5px; border-radius: 3px; background: #b8c2ce; margin: 8px auto 4px; flex-shrink: 0; }
 .kaart-sub { margin-top: -6px; }
+/* Besluit 113: op de laptop (vanaf 1100 px) staat het venster in het midden; zonder greep (sluiten met kruisje, Esc of ernaast klikken) */
+@media (min-width: 1100px) {
+  .sheet, .sheet.groot { top: 50%; bottom: auto; transform: translate(-50%, -50%); max-height: 85vh; border-radius: 20px; padding-bottom: 0; box-shadow: 0 20px 60px rgba(11, 20, 32, .25); animation: verschijn .15s ease-out; }
+  .sheet .greep { display: none; }
+  .sheet-kop { padding-top: 14px; }
+  .sheet-body { padding-bottom: 20px; }
+}
+@keyframes verschijn { from { transform: translate(-50%, -48%); opacity: 0; } to { transform: translate(-50%, -50%); opacity: 1; } }
 .sheet-kop h2 { font-size: 18px; }
 .sheet-body { overflow-y: auto; min-height: 0; overscroll-behavior: contain; padding: 4px 16px calc(20px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 10px; }
 /* Blokken in een venster krimpen nooit (anders knipt .lijst met overflow:hidden de onderste regels af); het venster scrollt */

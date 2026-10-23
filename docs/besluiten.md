@@ -654,7 +654,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Vegen om te sluiten:** elk venster heeft bovenaan een greep en gaat dicht als je het naar beneden veegt (vanaf de kop, of overal als de inhoud bovenaan staat). Het kruisje blijft.
 - **Aangekomen bij X van N (23-10, tweede ronde):** onder je eigen bericht één regel; tik → venster met groepen: eerst **Nog niet aangekomen** (met bellen, appen, mailen), dan *Gelezen in de app*, *Pushmelding*, *E-mail*. De afzender telt niet meer mee (ook niet als hij zelf ouder in het team is).
 - **Trainerkaart (HO, 23-10):** tik op een trainer in Rapport trainers of in *Alle trainers* → venster met team, KNVB en VOG, afgemeld/te laat/momenten, leerdoel en volgende moment, contact, *Wedstrijd bekijken*, *Training bekijken*, *Contact vastleggen*, *Volgen*; onderaan **Dossier van [naam]**. Het tabblad Trainers (kaartjes per traject) blijft zoals het is.
-- Later (zie *Later / ideeën*): venster in het midden op de laptop.
+- **Laptop (23-10, na een voorbeeld):** vanaf 1100 px breed staat het venster in het midden (ronde hoeken, schaduw), zonder greep; sluiten met het kruisje, Esc of ernaast klikken. Op de telefoon blijft het van onder.
 
 ## Besluit 112 — Anoniem tellen welke schermen gebruikt worden
 *Besloten 23 oktober 2026. Uit de app-controle (Besluit 111); doel: functie eerst, na de pilot weten wat echt gebruikt wordt.*
@@ -1775,7 +1775,6 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 
 ## Later / ideeën
 
-- **Venster in het midden op de laptop** (Besluit 113, norm uit `docs/app-controle.md`); nu staat het onderaan, ook op een breed scherm.
 - **Huiswerk en filmpjes** (idee 24 sep 2026): de trainer deelt oefeningen voor thuis (een filmpje of een link) per team of per speler, gekoppeld aan de vaardigheden uit de beoordeling ("werken aan: aannemen"). Kind of ouder kan aangeven "gedaan". Eerst met links naar YouTube/Vimeo (geen eigen opslag). Filmpjes waarin kinderen te zien zijn alleen met toestemming van de ouders (AVG).
 - **Fondsenwerving en teamkas** (idee 24 sep 2026, zoals bij Spond): acties voor het team of de club (bijv. een toernooi, nieuwe trainingspakken), bijdragen via een betaallink (bijv. Tikkie of Mollie), met een teller "zoveel opgehaald". Alleen via de penningmeester of het bestuur; eerst uitzoeken wat de club wil en mag. Mogelijk ook een verdienmodel voor ClubComm.
 - **Beloningen** (punten, contributie terugverdienen) als optionele module die de HJO per club of team aanzet.

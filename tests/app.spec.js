@@ -689,6 +689,28 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'trainerkaart');
   });
 
+  test('venster: telefoon onderaan, laptop in het midden', async ({ page }) => {
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(1).click(); // Mark: trainer
+    await page.locator('[data-act="magischeLink"]').click();
+    await page.evaluate(() => { CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer')); CC.go('spelers'); });
+    const meet = async () => page.evaluate(() => { const r = document.querySelector('#sheet .sheet').getBoundingClientRect(); return { onder: Math.round(innerHeight - r.bottom), midden: Math.round((r.top + r.bottom) / 2 - innerHeight / 2), greep: getComputedStyle(document.querySelector('#sheet .greep')).display }; });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.locator('#app [data-act="spelerKaart"]').first().click();
+    await page.waitForTimeout(400);
+    let m = await meet(); expect(m.onder).toBe(0); expect(m.greep).not.toBe('none');
+    await page.evaluate(() => CC.closeSheet());
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.waitForTimeout(400);
+    await page.locator('#app [data-act="spelerKaart"]').first().click();
+    await page.waitForTimeout(400);
+    m = await meet(); expect(Math.abs(m.midden)).toBeLessThan(3); expect(m.greep).toBe('none');
+    await page.keyboard.press('Escape');
+    await expect(page.locator('#sheet')).toBeHidden();
+  });
+
   test('spelerskaart: teamleider', async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
