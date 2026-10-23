@@ -651,7 +651,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 ## Besluit 108 — Verzameltijd per team
 *Besloten 18 oktober 2026. Vult Besluit 92 aan.*
 - Hoeveel minuten voor de aftrap het team verzamelt, stelt de clubbeheerder per team in (teampagina → *Teamtype en regels*): **thuis** en **uit**. Standaard thuis 30 en uit 60 minuten.
-- **DCG, O12 talententeam:** thuis **45**, uit **60** minuten. De thuiswedstrijden van 7 en 28 november staan op 11:45 en 13:45.
+- **DCG, O12 talententeam:** thuis en uit **60** minuten (23-10; eerst thuis 45). De thuiswedstrijden van 7 en 28 november staan op 11:30 en 13:30.
 - Geldt als voorstel bij elke nieuwe wedstrijd of oefenwedstrijd (trainer en teamleider); een tijd bij één wedstrijd pas je bij die wedstrijd aan.
 
 ## Besluit 107 — Elk bericht komt aan, en je ziet hoe; de teamleider zet oefenwedstrijden in
