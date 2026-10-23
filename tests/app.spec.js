@@ -613,6 +613,27 @@ test.describe('Demo', () => {
     expect(await page.evaluate(() => [CC.alGetikt('a', 350), CC.alGetikt('b', 350), CC.alGetikt('b', 350)])).toEqual([false, false, true]);
   });
 
+  // Besluit 112: anoniem schermgebruik tellen (per rol en scherm), overzicht voor de clubbeheerder
+  test('schermgebruik: tellen en overzicht', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(3).click(); // Peter: HJO en clubbeheerder
+    await page.locator('[data-act="magischeLink"]').click();
+    await page.evaluate(() => { window.__tel = []; CC.telScherm = (rol, scherm) => window.__tel.push(`${rol}|${scherm}`);
+      CC.haalGebruik = async () => [{ rol: 'ouder', scherm: 'planning', aantal: 23, dagen: 6 }, { rol: 'trainer', scherm: 'speler', aantal: 4, dagen: 2 }]; });
+    await page.locator('nav >> text=Inzicht').click();
+    await page.evaluate(() => CC.render()); // opnieuw tekenen op hetzelfde scherm telt niet nog een keer
+    expect(await page.evaluate(() => window.__tel.filter((x) => x === 'hjo|inzicht').length)).toBe(1);
+    await page.evaluate(() => CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'beheerder')));
+    await page.locator('#gebruik summary').click();
+    await expect(page.locator('#gebruik')).toContainText('Planning');
+    await expect(page.locator('#gebruik')).toContainText('23×');
+    await expect(page.locator('#gebruik')).toContainText('Spelerpagina');
+    await controleer(page, fouten, 'schermgebruik');
+  });
+
   // Besluit 107: bij je eigen bericht zie je hoe het aankwam (pushmelding, e-mail of gelezen in de app)
   test('berichten: zien hoe het aankwam', async ({ page }) => {
     const fouten = volgFouten(page);

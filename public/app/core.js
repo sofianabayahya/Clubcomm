@@ -48,6 +48,7 @@
   // Elke knopnaam (data-act, data-submit, data-input) is uniek; een bewuste vervanging geeft { vervangt: true } mee.
   // Dubbele namen komen in CC.dubbeleActies; de tests falen daarop (verbeterplan 17-10, snelle winst 2).
   CC.dubbeleActies = [];
+  let laatsteTelling = ''; // Besluit 112
   CC.on = (naam, fn, o = {}) => { if (acties[naam] && !o.vervangt) CC.dubbeleActies.push(naam); acties[naam] = fn; };
   // Dubbel tikken voorkomen: dezelfde knop (zelfde actie en gegevens) binnen korte tijd telt één keer. Na het opnieuw
   // tekenen staat er vaak een nieuwe knop op dezelfde plek; zonder deze rem zou een dubbele tik twee keer iets doen
@@ -219,6 +220,8 @@
     const me = CC.me();
     // Besluit 103: wat je hebt opengeklapt, blijft open na opnieuw tekenen (op hetzelfde scherm)
     const scherm = `${rol.rol}|${ui.tab}|${ui.view ? `${ui.view.naam}|${ui.view.id || ''}` : ''}`;
+    // Besluit 112: anoniem tellen welk scherm opent (per rol, geen naam), alleen als je naar een ander scherm gaat
+    const telNaam = ui.view ? ui.view.naam : ui.tab; if (`${rol.rol}|${telNaam}` !== laatsteTelling) { laatsteTelling = `${rol.rol}|${telNaam}`; if (CC.telScherm) CC.telScherm(rol.rol, telNaam); }
     const blokNaam = (sum) => (sum.querySelector('b') || sum).textContent.replace(/\d+/g, '').replace(/\s+/g, ' ').trim();
     const open = CC._scherm === scherm ? new Set([...app.querySelectorAll('details[open] > summary')].map(blokNaam)) : new Set();
     CC._scherm = scherm;
@@ -335,6 +338,7 @@
     <h3>Waar staan de gegevens?</h3><p>In de Europese Unie: de database en het inloggen bij Supabase (Frankfurt, Duitsland), de e-mails via Brevo (Frankrijk). Vercel levert alleen de app zelf, zonder persoonsgegevens. De verbinding is altijd versleuteld.</p>
     <h3>Hoe lang?</h3><p>Zolang je kind bij de club in ClubComm staat. Details over aanwezigheid, kaarten en contactmomenten worden verwijderd na de teamindeling van het volgende seizoen. De ontwikkelgesprekken (voorbereiding, wapen, doelen en afspraken) blijven bewaard zolang je kind lid is, ook in een volgend seizoen of een ander team, zodat je kind kan zien hoe het groeit. Schrijf je je kind uit of verwijder je je account, dan worden de gegevens gewist; in de wekelijkse back-up staan ze nog hooguit 8 weken.</p>
     <h3>Cookies</h3><p>Geen reclame- of volgcookies. ClubComm onthoudt alleen op je telefoon dat je bent ingelogd.</p>
+    <h3>Gebruik van de app</h3><p>We tellen anoniem welke schermen gebruikt worden (per rol, zonder naam), om de app te verbeteren. Die telling bewaren we een jaar.</p>
     <h3>Jouw rechten</h3><p>Je mag je gegevens inzien, laten aanpassen of laten verwijderen, en bezwaar maken. Neem daarvoor contact op met ${contact}. Ben je het er niet mee eens hoe de club met je gegevens omgaat, dan kun je een klacht indienen bij de Autoriteit Persoonsgegevens.</p></div>`; };
   CC.on('privacy', () => CC.sheet('Privacyverklaring', CC.privacyHtml(CC.me() ? S.club : CC.privacyClub || S.club), { groot: true }));
 
