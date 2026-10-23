@@ -33,6 +33,9 @@
   });
 
   // ---------- 2. Trainer kan zelf niet ----------
+  // Besluit 115: wie wordt gevraagd een vervanger te regelen? De teamleider en de coördinator van het team; zonder coördinator de HO (terugval, Besluit 95)
+  const vraagWie = (S, a) => { const c = CC.coordinatorVoor ? CC.coordinatorVoor(S, a.teamId) : null;
+    return { ids: [...M.stafVan(S, a.teamId, ['teamleider']), ...(c ? [c.id] : hjoIds(S))], tekst: `teamleider en ${c ? S.club.labels.coordinator.toLowerCase() : S.club.labels.hjo}` }; };
   const openVraag = (S, a) => a.trainerAfwezig && !a.vervangerId && !a.afgelast && a.datum >= D.vandaag();
   CC.vervangerRijen = (S, teamIds) => S.acts.filter((a) => teamIds.includes(a.teamId) && openVraag(S, a)).map((a) => {
     const tr = M.persoon(S, a.trainerAfwezig.door);
@@ -47,7 +50,7 @@
     if (t.trainerId !== me.id) return '';
     if (!a.trainerAfwezig) return alleenStatus ? '' : `<details class="uitklap stil"><summary>Kun je zelf echt niet?</summary><p class="zacht klein">Het team rekent op je. Meld je alleen af als het niet anders kan: dit wordt vastgelegd${CC.trainerAfmeldSoort && CC.trainerAfmeldSoort(S, a) === 'telaat' ? ', en omdat de training binnen een dag begint, telt het als <b>te laat afgemeld</b>' : ''}.</p><button class="linkknop" data-act="kanNiet" data-id="${a.id}">Afmelden als trainer</button></details>`;
     const v = a.vervangerId && M.persoon(S, a.vervangerId);
-    return `<div class="info ${v ? 'groen' : 'oranje'}">${icon(v ? 'circle-check' : 'hourglass')}<span>Je bent afgemeld als trainer. ${v ? `<b>${esc(v.naam)}</b> neemt de training over.` : 'Teamleider en HJO zijn gevraagd; nog geen vervanger.'} <button class="linkknop" data-act="kanToch" data-id="${a.id}">Ik kan toch</button>${v ? '' : ` · <button class="linkknop rood-tekst" data-act="trainingAfgelasten" data-id="${a.id}">Afgelasten</button>`}</span></div>`;
+    return `<div class="info ${v ? 'groen' : 'oranje'}">${icon(v ? 'circle-check' : 'hourglass')}<span>Je bent afgemeld als trainer. ${v ? `<b>${esc(v.naam)}</b> neemt de training over.` : `${(() => { const w = vraagWie(S, a).tekst; return w.charAt(0).toUpperCase() + w.slice(1); })()} zijn gevraagd; nog geen vervanger.`} <button class="linkknop" data-act="kanToch" data-id="${a.id}">Ik kan toch</button>${v ? '' : ` · <button class="linkknop rood-tekst" data-act="trainingAfgelasten" data-id="${a.id}">Afgelasten</button>`}</span></div>`;
   };
   CC.on('kanNiet', (el) => {
     const S = CC.S(); const a = M.act(S, el.dataset.id);
@@ -69,8 +72,9 @@
     if (f.k.value === 'afgelast') return afgelasten(S, a, f.r.value || 'trainer afwezig');
     a.trainerAfwezig = { door: me.id, reden: f.r.value, tijd: new Date().toISOString() }; a.vervangerId = null;
     S.taken.push({ id: 't' + Date.now(), actId: a.id, soort: CC.VERVANGER, personId: null });
-    melding(S, [...M.stafVan(S, a.teamId, ['teamleider']), ...hjoIds(S)], `Vervanger nodig: ${CC.tn(a.teamId)} ${D.kort(a.datum)}`, `${me.naam} kan de training van ${D.lang(a.datum)} om ${a.tijd} niet geven${f.r.value ? ' (' + f.r.value + ')' : ''}. Kun jij het overnemen? Open ClubComm en tik op "Ik neem over".`, true);
-    CC.save(); CC.closeSheet(); CC.render(); CC.toast('Doorgegeven; teamleider en HJO zijn gevraagd');
+    const wie = vraagWie(S, a);
+    melding(S, wie.ids, `Vervanger nodig: ${CC.tn(a.teamId)} ${D.kort(a.datum)}`, `${me.naam} kan de training van ${D.lang(a.datum)} om ${a.tijd} niet geven${f.r.value ? ' (' + f.r.value + ')' : ''}. Kun jij het overnemen? Open ClubComm en tik op "Ik neem over".`, true);
+    CC.save(); CC.closeSheet(); CC.render(); CC.toast(`Doorgegeven; ${wie.tekst} zijn gevraagd`);
   });
   const neemOver = (S, a, p) => {
     a.vervangerId = p.id; (S.trainerLog || []).filter((x) => x.actId === a.id).forEach((x) => { x.vervanger = true; });
