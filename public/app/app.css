@@ -360,7 +360,7 @@ body.sheet-open { overflow: hidden; }
 .toast .ic { color: #4ade80; } .toast.fout .ic { color: #f87171; }
 
 /* Inloggen */
-.login { max-width: 420px; margin: 0 auto; padding: 32px 16px 40px; display: flex; flex-direction: column; gap: 12px; text-align: center; }
+.login { max-width: 420px; margin: 0 auto; padding: calc(32px + env(safe-area-inset-top, 0px)) 16px calc(40px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 12px; text-align: center; }
 .login .codeform { text-align: left; }
 .login-logo { width: 84px; height: 84px; border-radius: 20px; margin: 8px auto 0; }
 .login h1 { font-size: 26px; }
@@ -665,3 +665,6 @@ small.bewaard.ok { color: var(--groen); } small.bewaard.fout { color: var(--rood
 .plek small { font-size: 11px; color: var(--zacht); } .plek b { font-size: 13px; overflow-wrap: anywhere; line-height: 1.15; }
 .plek.leeg { border-style: dashed; background: transparent; } .plek.leeg b { color: var(--blauw); font-size: 18px; }
 .kaartje.klokrij { display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 8px; }
+
+/* "Beperk beweging" (iPhone: Toegankelijkheid → Beweging): geen schuivende vensters of overgangen */
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }

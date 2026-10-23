@@ -11,13 +11,16 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
 - **Eigenaarschap:** zoek zelf actief naar verouderde teksten, gaten en fouten (zoals een tekst die niet meer klopt met een nieuwer besluit). Leg ze eerst voor aan de gebruiker en bouw pas na akkoord; kleine, duidelijke fouten mag je in dezelfde ronde meenemen en melden.
 - **Borgen (bij elk besluit):** (1) nieuw besluit bovenaan in `docs/besluiten.md`; (2) elk ouder besluit dat het raakt krijgt de regel *"◐ Deels herzien door Besluit X"* of *"✖ Vervangen door …"* en het **Register** bovenaan wordt bijgewerkt; (3) wat bewust niet doorgaat komt bij **Afgewezen ideeën** (met reden); (4) *Later / ideeën* en *Nog te bespreken* bijwerken; (5) **Openstaand** bijwerken. **Vóór je een idee voorstelt:** kijk bij Afgewezen ideeën en in het Register; stel nooit een afgewezen idee voor zonder dat te zeggen.
 - Vraag nooit om geheime sleutels in de chat (Brevo, Supabase service key); de gebruiker zet ze zelf in het dashboard.
+- **Eerst een voorbeeld:** bij een nieuw of gewijzigd scherm eerst een schermafbeelding op telefoonformaat (390 px), met voordelen, nadelen en een eerlijk advies ("zou ik doen" / "zou ik niet doen"). Bouwen na zijn ja.
+- **Zelf meedenken:** stel na elke opdracht minstens één verbetering voor die niet gevraagd is, met een keuze voor de gebruiker. Loop bij schermwerk de normen en technieken uit `docs/app-controle.md` zelf na (tikvlak 44 pt, contrast 4,5:1, leestekst 16 px, safe area, Beperk beweging, dubbel tikken), voordat de gebruiker het ziet.
 - **Principe 10: overzichtelijk en precies, nooit een overkill.** Redeneer altijd vanuit hier: alleen informeren en signaleren wat iemand nodig heeft, op het juiste moment, één keer.
 - Vuistregels voor elk scherm (Besluit 30 en 34): actie eerst, wat bij elkaar hoort in één blok, elke actie één vaste plek, kleur alleen voor aandacht, **informatie is geen taak**, "ClubComm signaleert, mensen beslissen".
 
 ## Waar staat wat
 | Bestand | Inhoud |
 |---|---|
-| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bovenaan het **Register** (status per besluit), onderaan **Afgewezen ideeën**. Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 110). |
+| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bovenaan het **Register** (status per besluit), onderaan **Afgewezen ideeën**. Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 111). |
+| `docs/app-controle.md` | **Controlelijst voor schermen** (uit het starterspakket van de gebruiker, mijnrijlesplanner): technieken met vakterm, vaste normen en ontwerpregels. Gebruiken bij elke controle of nieuw scherm. |
 | `docs/pilotlog.md` | **Fouten uit de pilot met oorzaak en patroon** (momentopname, opslaan, demo verbergt het, één persoon per rol, buiten de app, rommelige gegevens). Bij elke wijziging langs deze patronen lopen. |
 | `docs/plan-van-aanpak.md` | **Van pilot naar product:** A product af (ook op schaal: 50 teams) → B beschrijven (handboek) → C prijs en groei → D verkopen → E invoeren. Met planning t/m januari 2027. |
 | `docs/productie-en-groei.md` | Controlelijst, **Openstaand**, meerdere clubs, app of website, kosten. |

@@ -49,11 +49,17 @@
   // Dubbele namen komen in CC.dubbeleActies; de tests falen daarop (verbeterplan 17-10, snelle winst 2).
   CC.dubbeleActies = [];
   CC.on = (naam, fn, o = {}) => { if (acties[naam] && !o.vervangt) CC.dubbeleActies.push(naam); acties[naam] = fn; };
+  // Dubbel tikken voorkomen: dezelfde knop (zelfde actie en gegevens) binnen korte tijd telt één keer. Na het opnieuw
+  // tekenen staat er vaak een nieuwe knop op dezelfde plek; zonder deze rem zou een dubbele tik twee keer iets doen
+  // (twee berichten, twee blokken verder in het wisselschema). Snel achter elkaar op verschillende knoppen tikken kan wel.
+  let laatsteTik = { sleutel: '', tijd: 0 };
+  CC.alGetikt = (sleutel, ms) => { const nu = Date.now(); if (laatsteTik.sleutel === sleutel && nu - laatsteTik.tijd < ms) return true; laatsteTik = { sleutel, tijd: nu }; return false; };
   const handle = (type) => (e) => {
     const el = e.target.closest(`[data-${type}]`);
     if (!el) return;
     const link = e.target.closest('a[href]'); if (link && link !== el && el.contains(link)) return;
     const fn = acties[el.dataset[type]];
+    if (fn && type === 'act' && CC.alGetikt(`act|${JSON.stringify(el.dataset)}`, 350)) { e.preventDefault(); return; }
     if (fn) { if (type === 'act' && el.tagName === 'A' && !el.getAttribute('target')) e.preventDefault(); fn(el, e); }
   };
   document.addEventListener('click', handle('act'));
@@ -75,7 +81,9 @@
     const kijk = () => { if (!CC.allesOpgeslagen || CC.allesOpgeslagen()) zet('ok', 'Bewaard ✓'); else if (++n < 40) setTimeout(kijk, 500); else zet('fout', 'Nog niet bewaard: geen verbinding? We blijven het proberen.'); };
     setTimeout(kijk, CC.allesOpgeslagen ? 700 : 0);
   });
-  document.addEventListener('submit', (e) => { const f = e.target.closest('[data-submit]'); if (f) { e.preventDefault(); const fn = acties[f.dataset.submit]; if (fn) fn(f, e); } });
+  // Een formulier versturen: een tweede tik binnen 1,5 seconde doet niets (geen dubbel bericht of dubbele wedstrijd)
+  document.addEventListener('submit', (e) => { const f = e.target.closest('[data-submit]'); if (!f) return; e.preventDefault(); const fn = acties[f.dataset.submit]; if (!fn) return;
+    if (CC.alGetikt(`submit|${JSON.stringify(f.dataset)}`, 1500)) return; fn(f, e); });
 
   // ---------- Toast en sheet ----------
   CC.toast = (tekst, soort = '') => {

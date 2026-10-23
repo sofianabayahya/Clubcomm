@@ -17,6 +17,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 111 | App-controle: dubbel tikken, Beperk beweging, kleur statusbalk, notch op de inlogpagina | ✅ geldt |  |
 | 110 | Verzamelen voor wedstrijden is clubbeleid, per leeftijd | ✅ geldt |  |
 | 109 | Posities in procenten van de gespeelde minuten | ✅ geldt |  |
 | 108 | Verzameltijd per team: thuis en uit zoveel minuten voor de aftrap | ◐ deels herzien | door 110 (geen instelling per team meer: clubregel per leeftijd) |
@@ -643,6 +644,14 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 111 — App-controle (normen uit het starterspakket van de trainer)
+*Besloten 23 oktober 2026. ClubComm nagelopen met `docs/app-controle.md` (technieken, normen en ontwerpregels uit mijnrijlesplanner).*
+- **Dubbel tikken telt één keer:** dezelfde knop binnen 0,35 seconde, of hetzelfde formulier binnen 1,5 seconde, doet maar één keer iets (geen dubbel bericht, geen twee blokken verder in het wisselschema). Snel op verschillende knoppen tikken blijft werken.
+- **Beperk beweging:** staat die instelling op de telefoon aan, dan schuiven vensters en overgangen niet meer.
+- **Kleur statusbalk = kleur kopbalk (wit):** geen blauwe strook meer boven de witte kopbalk (Android, Safari).
+- **Inlogpagina:** ruimte voor de notch en de thuisbalk.
+- Nog te doen uit dezelfde controle: leestekst naar 16 px (eerst een voorbeeld) en meten welke schermen gebruikt worden. Bewust niet nu: zwevende tabbalk, krimpende titel, laptop met twee kolommen.
 
 ## Besluit 110 — Verzamelen voor wedstrijden is clubbeleid, per leeftijd
 *Besloten 23 oktober 2026. Herziet Besluit 108.*
