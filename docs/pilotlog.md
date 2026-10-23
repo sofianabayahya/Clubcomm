@@ -8,6 +8,7 @@ Besluiten staan in `besluiten.md`; dit is het logboek van fouten. Nieuwste boven
 | Wat we zagen | Oorzaak | Opgelost | Patroon |
 |---|---|---|---|
 | (zelf gevonden, bij het bouwen van de demo) Meldt een ouder een kind af dat met een andere ouder zou meerijden, dan kreeg die chauffeur wel een bericht, maar zag het niet in de app als hij alleen ouder is | De ouderrol verbergt persoonlijke berichten van andere ouders (Besluit 79: vragen aan jou als staf horen in je stafrol); het rit-bericht viel daaronder | Rit-berichten zijn gemarkeerd (`rit`) en staan altijd bij de ouder; test erbij | **Eén persoon per rol:** een regel voor de ene rol (staf) raakte een bericht dat voor de andere rol (ouder) bedoeld was |
+| (zelf gevonden, bij de demostap coördinator) Als een trainer niet kan, kregen teamleider en HO het bericht "Vervanger nodig", maar de coördinator niet, terwijl het regelwerk bij haar ligt | De code van Besluit 20 is na Besluit 95 (twee lijnen) niet aangepast; bij DCG (geen coördinator) viel het niet op | Bericht naar teamleider en coördinator, HO alleen als terugval (Besluit 115); test met en zonder coördinator | **Demo verbergt het / één persoon per rol:** een nieuwe rol (coördinator) kwam erbij, maar niet elke melding ging mee |
 
 ## 30 september 2026 (rondleiding op elke dag)
 

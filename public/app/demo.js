@@ -73,7 +73,7 @@
   // Het eerste doel dat iets vindt (de demo rekent vanaf vandaag; niet elke dag staat er hetzelfde)
   const eerste = (...fns) => () => { for (const f of fns) { const r = f(); if (r.length) return r; } return []; };
 
-  const ROL = { ouder: 'Ouder', trainer: 'Trainer', teamleider: 'Teamleider', hjo: 'Hoofd jeugdopleiding', beheerder: 'Clubbeheerder' };
+  const ROL = { ouder: 'Ouder', trainer: 'Trainer', teamleider: 'Teamleider', coordinator: 'Coördinator', hjo: 'Hoofd jeugdopleiding', beheerder: 'Clubbeheerder' };
   // ---------- Het verhaal (Besluit 114) ----------
   // Eén week bij de democlub, met twee kinderen uit de O10-1: Jesse (meldt netjes af) en Sem (vergeet het weleens).
   // Een paar stappen doen het echt (afmelden), zodat je ziet hoe het "overspringt" naar trainer, teamleider en chauffeur.
@@ -102,6 +102,15 @@
       m = { id, van: s.demo.linda, vanRol: 'teamleider', soort: 'nieuws', bereik: 'O10-1', onderwerp: 'Zaterdag: denk aan de wastas', tekst: 'Beste ouders, deze week neemt het gezin van Jesse de wastas mee. Lukt het niet? Laat het mij even weten.', tijd: new Date().toISOString(), ontvangers: o, gelezen: o.slice(0, 5), antw: [], urgent: false, gepland: null, mail: true };
       s.msgs.push(m); s.bezorgd = s.bezorgd || {}; s.bezorgd[id] = { van: s.demo.linda, ontvangers: o, push: o.slice(5, 9), mail: o.slice(9, o.length - 1), antw: {} }; CC.save(); }
     return m; };
+
+  // Mark kan een training niet geven (werk): de coördinator ziet het en regelt een vervanger (Besluit 115)
+  const markTraining = () => M.komend(S(), 'O10-1').find((a) => a.soort === 'training' && !a.afgelast);
+  const zorgKanNiet = () => { const a = markTraining(); if (!a || a.trainerAfwezig) return; als('mark', 'trainer'); knop('kanNiet', { id: a.id });
+    const f = document.querySelector('#sheet form[data-submit="kanNietOk"]'); if (!f) return; f.r.value = 'werk'; f.requestSubmit(); };
+  const spoorKanNiet = () => { const a = markTraining(); const x = a && a.trainerAfwezig; const e = S().demo.esther;
+    const kreeg = x && S().msgs.some((m) => m.ontvangers.includes(e) && /Vervanger nodig/.test(m.onderwerp));
+    const rij = (ok, tekst, sub) => `<li class="${ok ? 'ok' : ''}"><b>${ok ? '✓' : '→'}</b><span>${tekst}${sub ? `<small>${sub}</small>` : ''}</span></li>`;
+    return x ? `<div class="rl-spoor"><small>Wat er net gebeurde</small><ul>${rij(true, 'Mark meldt zich af als trainer', `${tijdVan(x.tijd)} · ${esc(x.reden || '')}`)}${rij(kreeg, 'Esther (coördinator) krijgt een bericht', 'met een pushmelding')}${rij(false, 'Esther neemt over, zet een vervanger in of gelast af', 'haar keuze')}</ul></div>` : ''; };
 
   const STAPPEN = [
     { hfd: 'Proloog', wie: 'sanne', rol: 'ouder', titel: 'Het begon langs de lijn',
@@ -153,6 +162,9 @@
     { hfd: 'De club', wie: 'peter', rol: 'hjo', titel: 'De club in één oogopslag',
       tekst: '<p>Peter is hoofd opleiding: hij maakt de trainers beter. Op zijn Home staat alleen wat over zijn trainers gaat: wie aandacht vraagt, wanneer hij deze week kan gaan kijken, en het rapport Trainers per lichting.</p><p>Het regelwerk (vervanger, staf, aanmeldingen) doet de coördinator. Alleen voor teams zonder coördinator staat het hier, in een eigen blok.</p>',
       zet: () => als('peter', 'hjo'), doel: eerste(sectie('Te doen'), el('#app main > *')) },
+    { hfd: 'De club', wie: 'esther', rol: 'coordinator', titel: 'Trainer kan niet? De coördinator regelt het',
+      tekst: () => `<p>Mark moet onverwacht werken. Hij meldt zich af als trainer, bij de training zelf. Esther, coördinator van de O10 tot en met O12, krijgt meteen bericht en ziet het bovenaan haar Home.</p><p>Met één tik neemt ze de training over, of ze zet een vervanger in. Lukt het niet, dan gelast ze af: de ouders krijgen vanzelf bericht. Zo blijft het regelwerk niet liggen bij de hoofd opleiding.</p>${spoorKanNiet()}`,
+      zet: () => { zorgKanNiet(); als('esther', 'coordinator'); }, doel: eerste(rijMet('Trainer kan niet'), sectie('Te doen'), el('#app main > *')) },
     { hfd: 'De club', wie: 'peter', rol: 'hjo', titel: 'Inzicht: waar gaat het goed of mis?',
       tekst: '<p>Aanwezigheid per team en leeftijdsgroep, met de norm van de club (selectie 90%, breedte 80%). Waarom kinderen afwezig zijn, en hoe het zich ontwikkelt.</p><p>Zo ziet het bestuur waar een team extra aandacht nodig heeft.</p>',
       zet: () => als('peter', 'hjo', 'inzicht'), doel: eerste(sectie('1. Waar gaat het goed'), el('#app main > *')) },
@@ -164,7 +176,7 @@
       zet: () => als('peter', 'hjo') },
   ];
   // Hoofdstukken die het bestuur kan kiezen; Proloog en Slot horen er altijd bij
-  const KIES = [['Ouder', 'Afmelden; de chauffeur hoort het vanzelf'], ['Trainer', 'Ziet het meteen, aanwezigheid, kaarten, bellen'], ['Teamleider', 'Taken verdelen, berichten die aankomen'], ['Wedstrijddag', 'Wisselschema, speeltijd, de uitslag gaat vanzelf naar huis'], ['De club', 'Hoofd opleiding, inzicht, clubregels']];
+  const KIES = [['Ouder', 'Afmelden; de chauffeur hoort het vanzelf'], ['Trainer', 'Ziet het meteen, aanwezigheid, kaarten, bellen'], ['Teamleider', 'Taken verdelen, berichten die aankomen'], ['Wedstrijddag', 'Wisselschema, speeltijd, de uitslag gaat vanzelf naar huis'], ['De club', 'Hoofd opleiding, coördinator, inzicht, clubregels']];
   const actief = () => STAPPEN.filter((s) => !KIES.some(([k]) => k === s.hfd) || (R.keuze || []).includes(s.hfd));
   Object.defineProperty(CC, 'demoStappen', { get: () => actief(), configurable: true }); // voor de automatische test (Besluit 88)
 

@@ -564,7 +564,7 @@ body.rl .sheet { max-width: var(--app-b); }
 .rl-rol small { font-size: 13px; color: var(--zacht); }
 .rl-rol b { font-size: 20px; color: var(--rk); }
 .rol-ouder { --rk: #137333; --rl: #e7f6ec; } .rol-trainer { --rk: #0869c2; --rl: #e7f2fe; } .rol-teamleider { --rk: #7c3aed; --rl: #f1ebfe; }
-.rol-hjo { --rk: #0b2545; --rl: #e8edf4; } .rol-beheerder { --rk: #a84d08; --rl: #fdf1e1; }
+.rol-hjo { --rk: #0b2545; --rl: #e8edf4; } .rol-beheerder { --rk: #a84d08; --rl: #fdf1e1; } .rol-coordinator { --rk: #6b2fa0; --rl: #f3ecfa; }
 .rl-voortgang { height: 6px; border-radius: 3px; background: var(--lijn); overflow: hidden; }
 .rl-voortgang i { display: block; height: 100%; background: var(--blauw); }
 .rl-teller { margin: 0; font-size: 14px; color: var(--zacht); }

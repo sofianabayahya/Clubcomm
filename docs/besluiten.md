@@ -17,6 +17,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 115 | "Vervanger nodig" naar teamleider en coördinator (HO alleen als terugval); coördinator in de rondleiding | ✅ geldt |  |
 | 114 | De demo is één verhaal (een week bij de democlub); het bestuur kiest de hoofdstukken; afmelden gebeurt echt | ✅ geldt |  |
 | 113 | Drie lagen: tabblad → venster → pagina; spelerskaart, trainerkaart en "Aangekomen bij" als venster, vegen om te sluiten | ✅ geldt |  |
 | 112 | Anoniem tellen welke schermen gebruikt worden; overzicht voor de clubbeheerder | ✅ geldt |  |
@@ -42,7 +43,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 | 92 | Oefenwedstrijd: thuis of uit, verzamelen, verzamelpunt en adres | ◐ deels herzien | door 107 (ook de teamleider zet een oefenwedstrijd in), 108 (standaard verzameltijd per team) |
 | 91 | Aanwezigheid: alleen dagen die nog iets vragen, met adres | ✅ geldt |  |
 | 90 | Adres en verzamelpunt zichtbaar waar de ouder kijkt | ✅ geldt |  |
-| 89 | Demo met rondleiding voor besturen, alleen op uitnodiging | ◐ deels herzien | door 95 (de rondleiding moet de coördinator en de HO nog laten zien) en 114 (de rondleiding is één verhaal) |
+| 89 | Demo met rondleiding voor besturen, alleen op uitnodiging | ◐ deels herzien | door 95 (coördinator en HO in de rondleiding: gedaan met 114 en 115) en 114 (de rondleiding is één verhaal) |
 | 88 | Vangnet: automatische tests en bewaking | ✅ geldt |  |
 | 87 | Trainingsrooster: per dag eigen tijd en veld, ingangsdatum, veilig bijwerken | ✅ geldt |  |
 | 86 | Trainersportaal: elk scherm één taak; alle teamleiders zichtbaar | ◐ deels herzien | door 105 (Vraagt aandacht pas vanaf 6 keer gemeten) |
@@ -111,7 +112,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 | 23 | Beoordelingsmomenten en ontwikkelgesprekken | ◐ deels herzien | door 65 (Start en Voorjaar), 67/68 (woorden in plaats van cijfers, het kind stuurt), 70 (plannen rond de training) |
 | 22 | Signalen afdoen | ◐ deels herzien | door 34 (geen Gezien-knoppen bij ter informatie), 95 (afgedane signalen controleert de coördinator) |
 | 21 | Afwezigheid van trainers signaleren | ◐ deels herzien | door 54 (telling niet meer in het profiel), 95 (niet gekomen: niet door de teamleider; de app signaleert, coördinator of HO bevestigt), 97 (pushmelding aan HO/TC bij bevestigd niet gekomen) |
-| 20 | Periode afmelden en "trainer kan niet" | ◐ deels herzien | door 95 (vervanger zoeken: coördinator, de teamleider helpt met ouders) |
+| 20 | Periode afmelden en "trainer kan niet" | ◐ deels herzien | door 95 (vervanger zoeken: coördinator, de teamleider helpt met ouders) en 115 (het bericht gaat ook echt naar de coördinator) |
 | 19 | Clubberichten, urgent en vastzetten | ◐ deels herzien | door 30 (vastgezet niet op Home), 95 (clubberichten: coördinator) |
 | 18 | Agenda-abonnement | ✅ geldt |  |
 | 17 | Module Materiaal | ◐ deels herzien | door 50 (bericht van de trainer); herziening open bij Nog te bespreken |
@@ -647,6 +648,13 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 115 — "Vervanger nodig" gaat naar de coördinator; coördinator in de rondleiding
+*Besloten 23 oktober 2026, na een voorbeeld. Gevonden bij het maken van de demostap: de app volgde Besluit 95 hier nog niet.*
+- **Trainer kan niet (vervanger zoeken):** het bericht "Vervanger nodig" (met pushmelding) gaat naar de **teamleider en de coördinator van dat team**. Alleen als het team geen coördinator heeft, gaat het naar de **HO** (terugval, Besluit 95). Eerder ging het altijd naar teamleider en HO, en kreeg de coördinator niets.
+- De teksten zeggen wie er gevraagd is ("teamleider en coördinator zijn gevraagd").
+- Bij DCG verandert niets (geen coördinator: de HO krijgt het).
+- **Rondleiding (hoofdstuk De club):** nieuwe stap "Trainer kan niet? De coördinator regelt het". Mark meldt zich echt af voor een training; Esther (coördinator) ziet het bovenaan haar Home met *Ik neem over* en *Afgelasten*, en het spoor "Wat er net gebeurde". Daarmee laat de rondleiding nu ook de coördinator zien (Besluit 95).
 
 ## Besluit 114 — De demo is één verhaal: een week bij de democlub
 *Besloten 23 oktober 2026, na een voorbeeld. Wens van de initiatiefnemer: het verhaal van A tot Z kunnen vertellen, beginnend bij de ouder, en laten zien hoe alles in elkaar grijpt.*
@@ -1650,7 +1658,7 @@ Net als bij spelers: ClubComm registreert en signaleert, de HJO beslist.
 ---
 
 ## Besluit 20 — Periode afmelden en "trainer kan niet"
-> **◐ Deels herzien door Besluit 95 (vervanger zoeken: coördinator, de teamleider helpt met ouders)** (zie Register).
+> **◐ Deels herzien door Besluit 95 (vervanger zoeken: coördinator, de teamleider helpt met ouders) en Besluit 115 (het bericht "Vervanger nodig" gaat naar teamleider en coördinator; de HO alleen zonder coördinator)** (zie Register).
 
 ### Een periode afmelden (ouder)
 - In Planning (en vanuit het afmeldscherm): **"Afwezig voor een periode"** met van, tot en met, reden (standaard Vakantie) en opmerking.

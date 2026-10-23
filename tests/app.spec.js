@@ -725,6 +725,26 @@ test.describe('Demo', () => {
     await expect(page.locator('#app')).toContainText('Noah rijdt');
   });
 
+  // Besluit 115: trainer kan niet → teamleider en coördinator krijgen bericht; zonder coördinator de HO (terugval)
+  test('trainer kan niet: bericht naar coördinator, anders HO', async ({ page }) => {
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(1).click(); // Mark: trainer O10-1
+    await page.locator('[data-act="magischeLink"]').click();
+    const vraag = async () => page.evaluate(() => { const S = CC.S(), M = CC.m; CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer'));
+      const a = M.komend(S, 'O10-1').find((x) => x.soort === 'training' && !x.afgelast && !x.trainerAfwezig);
+      const b = document.createElement('button'); b.dataset.act = 'kanNiet'; b.dataset.id = a.id; document.body.appendChild(b); b.click(); b.remove();
+      const f = document.querySelector('#sheet form[data-submit="kanNietOk"]'); f.r.value = 'werk'; f.requestSubmit();
+      const m = S.msgs.filter((x) => /Vervanger nodig/.test(x.onderwerp)).pop();
+      return { esther: m.ontvangers.includes(S.demo.esther), peter: m.ontvangers.includes(S.demo.peter), linda: m.ontvangers.includes(S.demo.linda) }; });
+    expect(await vraag()).toEqual({ esther: true, peter: false, linda: true });
+    await expect(page.locator('#toast')).toContainText('teamleider en coördinator');
+    await page.waitForTimeout(1600);
+    await page.evaluate(() => { CC.S().club.coordinatorAan = false; CC.save(); });
+    expect(await vraag()).toEqual({ esther: false, peter: true, linda: true });
+  });
+
   test('spelerskaart: teamleider', async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
