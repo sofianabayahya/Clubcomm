@@ -12,7 +12,7 @@
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; }
-body { font-family: var(--font); font-size: 15px; line-height: 1.4; color: var(--inkt); background: var(--grond); -webkit-font-smoothing: antialiased; }
+body { font-family: var(--font); font-size: 16px; line-height: 1.4; color: var(--inkt); background: var(--grond); -webkit-font-smoothing: antialiased; }
 button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; }
 a { color: var(--blauw); }
@@ -21,7 +21,7 @@ p { margin: .4em 0; }
 .ic { width: 20px; height: 20px; flex: none; }
 .ic.klein { width: 14px; height: 14px; }
 .zacht { color: var(--zacht); }
-.klein { font-size: 13px; }
+.klein { font-size: 14px; }
 .midden { text-align: center; }
 .groen-tekst { color: var(--groen); } .oranje-tekst { color: var(--oranje); } .rood-tekst { color: var(--rood) !important; }
 [hidden] { display: none !important; }
@@ -35,7 +35,7 @@ p { margin: .4em 0; }
 .kop-tekst { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .kop-tekst[role=button] { cursor: pointer; }
 .kop-tekst b { font-size: 17px; display: flex; align-items: center; gap: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.kop-tekst small { color: var(--zacht); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kop-tekst small { color: var(--zacht); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .profielknop { position: relative; border: 0; background: none; padding: 0; }
 .rolstip { position: absolute; right: -4px; bottom: -3px; background: var(--inkt); color: var(--vlak); font-size: 12px; font-weight: 700; border-radius: 6px; padding: 0 4px; border: 2px solid var(--vlak); }
 .avatar { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--blauw-l); color: var(--blauw-d); font-weight: 700; font-size: 13px; flex: none; }
@@ -67,7 +67,7 @@ p { margin: .4em 0; }
 .rij-ic { display: grid; place-items: center; color: var(--blauw); flex: none; }
 .rij-tekst { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .rij-tekst b { font-weight: 600; }
-.rij-tekst small { color: var(--zacht); font-size: 13px; }
+.rij-tekst small { color: var(--zacht); font-size: 14px; }
 .rij-tekst b, .rij-tekst small { overflow-wrap: anywhere; } /* lange e-mailadressen lopen niet onder de knoppen door */
 .rij-r { display: flex; align-items: center; gap: 6px; flex: none; flex-wrap: wrap; justify-content: flex-end; }
 .rij .chev { color: var(--zacht); width: 18px; height: 18px; }
