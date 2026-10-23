@@ -555,17 +555,19 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'oefenwedstrijd teamleider');
   });
 
-  // Besluit 108: verzamelen per team (DCG: thuis 45, uit 60 minuten voor de aftrap)
-  test('verzameltijd per team bij een nieuwe wedstrijd', async ({ page }) => {
+  // Besluit 110: verzamelen is clubbeleid per leeftijd (de speelvorm telt); trainer of teamleider past per wedstrijd aan
+  test('verzameltijd volgens de clubregel per leeftijd', async ({ page }) => {
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
     await page.goto('/?demo');
     await page.locator('[data-act="demoLogin"][data-pid]').nth(2).click(); // Linda: teamleider
     await page.locator('[data-act="magischeLink"]').click();
     const r = await page.evaluate(() => { const S = CC.S(); CC.wisselRol(CC.me().rollen.findIndex((x) => x.rol === 'teamleider')); const t = CC.m.team(S, CC.teamId());
-      const voor = [CC.m.verzamelMin(S, t.id, true), CC.m.verzamelMin(S, t.id, false)]; t.afwijking = { ...(t.afwijking || {}), verzamelThuis: 45 };
-      return { voor, na: [CC.m.verzamelMin(S, t.id, true), CC.m.verzamelMin(S, t.id, false)] }; });
-    expect(r).toEqual({ voor: [30, 60], na: [45, 60] });
+      const voor = [CC.m.verzamelMin(S, t.id, true), CC.m.verzamelMin(S, t.id, false)];
+      t.speelCat = 'O13'; const o13 = [CC.m.verzamelMin(S, t.id, true), CC.m.verzamelMin(S, t.id, false)];
+      delete t.speelCat; S.club.inst.verzamel = { onder: { thuis: 45, uit: 60 } }; const club = [CC.m.verzamelMin(S, t.id, true), CC.m.verzamelMin(S, t.id, false)];
+      return { voor, o13, club }; });
+    expect(r).toEqual({ voor: [30, 60], o13: [60, 60], club: [45, 60] });
     await page.locator('nav >> text=Wedstrijd').click();
     await page.locator('[data-act="tlOefen"]').click();
     await expect(page.locator('#sheet')).toContainText('45 minuten voor de aftrap (thuis)');
