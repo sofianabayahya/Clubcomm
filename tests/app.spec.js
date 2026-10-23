@@ -634,6 +634,51 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'schermgebruik');
   });
 
+  // Besluit 113: tik op een speler → venster (spelerskaart); "Alles over …" opent de pagina; vegen sluit het venster
+  test('spelerskaart als venster en vegen om te sluiten', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(1).click(); // Mark: trainer
+    await page.locator('[data-act="magischeLink"]').click();
+    await page.evaluate(() => { CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer')); CC.go('spelers'); });
+    await page.locator('#app [data-act="spelerKaart"]').first().click();
+    await expect(page.locator('#sheet .sheet')).toBeVisible();
+    await expect(page.locator('#sheet')).toContainText('aanwezig');
+    await expect(page.locator('#sheet [data-act="gesprekVastleggen"]')).toBeVisible();
+    expect(await page.evaluate(() => CC.ui.view)).toBeNull(); // je blijft op het tabblad
+    // Vegen naar beneden vanaf de greep sluit het venster
+    const box = await page.locator('#sheet .greep').boundingBox();
+    const cdp = await page.context().newCDPSession(page);
+    const punt = (y) => [{ x: box.x + 20, y }];
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: punt(box.y + 2) });
+    for (const d of [20, 60, 120, 180]) await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: punt(box.y + 2 + d) });
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    await expect(page.locator('#sheet')).toBeHidden();
+    await page.waitForTimeout(400); // dubbel-tik-bewaking (Besluit 111)
+    // Opnieuw openen en door naar de volledige pagina
+    await page.locator('#app [data-act="spelerKaart"]').first().click();
+    await page.locator('#sheet [data-act="open"][data-view="speler"]').click();
+    await expect(page.locator('#sheet')).toBeHidden();
+    expect(await page.evaluate(() => CC.ui.view.naam)).toBe('speler');
+    await controleer(page, fouten, 'spelerskaart');
+  });
+
+  test('spelerskaart: teamleider', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(2).click(); // Linda: teamleider
+    await page.locator('[data-act="magischeLink"]').click();
+    await page.evaluate(() => CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'teamleider')));
+    await page.evaluate(() => CC.go('team'));
+    await page.locator('#app [data-act="spelerKaart"]').first().click();
+    await expect(page.locator('#sheet')).toContainText('Alles over');
+    await controleer(page, fouten, 'spelerskaart teamleider');
+  });
+
   // Besluit 107: bij je eigen bericht zie je hoe het aankwam (pushmelding, e-mail of gelezen in de app)
   test('berichten: zien hoe het aankwam', async ({ page }) => {
     const fouten = volgFouten(page);
