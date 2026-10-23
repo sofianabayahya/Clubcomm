@@ -651,7 +651,8 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Beperk beweging:** staat die instelling op de telefoon aan, dan schuiven vensters en overgangen niet meer.
 - **Kleur statusbalk = kleur kopbalk (wit):** geen blauwe strook meer boven de witte kopbalk (Android, Safari).
 - **Inlogpagina:** ruimte voor de notch en de thuisbalk.
-- Nog te doen uit dezelfde controle: leestekst naar 16 px (eerst een voorbeeld) en meten welke schermen gebruikt worden. Bewust niet nu: zwevende tabbalk, krimpende titel, laptop met twee kolommen.
+- **Grotere tekst (23-10, na een voorbeeld):** leestekst 16 px, grijze regels 14 px, onderregel in de kop 13 px.
+- Nog te doen uit dezelfde controle: meten welke schermen gebruikt worden (eerst een voorstel, privacy). Bewust niet nu: zwevende tabbalk, krimpende titel, laptop met twee kolommen.
 
 ## Besluit 110 — Verzamelen voor wedstrijden is clubbeleid, per leeftijd
 *Besloten 23 oktober 2026. Herziet Besluit 108.*
