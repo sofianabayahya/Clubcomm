@@ -135,6 +135,32 @@
       ${CC.pakketTrainers(S) ? '' : `${h.sectie('Afmeldingen en contact')}<details class="uitklap"><summary><b>Afmeldingen, geschiedenis en contact</b></summary>${basis.html}</details>`}
       ${CC.BEGELEIDERS.includes(rol) ? `${h.sectie('Notities')}<form data-submit="hoNotitieOk" data-autosave="hoNotitie" data-id="${tr.id}" class="codeform"><textarea name="n" rows="3" placeholder="Voor de ${esc(S.club.labels.hjo)} en technisch coördinator van deze bouw; de trainer ziet dit niet.">${esc(notitieTekst(notities(S)[tr.id]))}</textarea><button class="knop licht klein">Klaar</button></form>` : ''}` };
   };
+  // Besluit 113: tik op een trainer in Rapport trainers → venster (trainerkaart); het dossier via de knop onderaan
+  const trainerKaart = (S, id) => {
+    const tr = M.persoon(S, id); if (!tr) return;
+    const t = traject(S, tr.id); const a = adm(S)[tr.id] || {}; const k = ken(S)[tr.id] || {};
+    const vog = a.vog ? (a.vog < D.vandaag() ? `<span class="chip rood mini">VOG verlopen ${D.kort(a.vog)}</span>` : `VOG tot ${D.kort(a.vog)}`) : 'VOG onbekend';
+    const sub = [teamsVan(S, tr).map((x) => x.naam).join(', ') || 'Geen team', `KNVB: ${a.diploma || (k.a || {}).diploma || 'onbekend'}`].map(esc).join(' · ') + ` · ${vog}`;
+    const tel = CC.trainerTelling && !CC.pakketTrainers(S) ? CC.trainerTelling(S, tr.id) : null;
+    const plan = t ? (t.plan.wedstrijd || 0) + (t.plan.training || 0) : 0;
+    const cijfer = (w, l) => `<div class="cijfer"><b>${w}</b><small>${l}</small></div>`;
+    const cijfers = [tel && cijfer(`${tel.afmeldingen}×`, 'afgemeld'), tel && cijfer(`${tel.telaat}×`, 'te laat'), t && cijfer(`${gedaan(S, tr.id)} / ${plan}`, 'momenten')].filter(Boolean);
+    const volgend = (S.begeleidMomenten || []).filter((m) => m.trainerId === tr.id && !m.klaar && m.datum >= D.vandaag()).sort((x, y) => x.datum.localeCompare(y.datum))[0];
+    const info = [t && t.leerdoel ? `<p class="klein"><b>Leerdoel:</b> ${esc(t.leerdoel)}</p>` : '', volgend ? `<p class="klein"><b>Volgende moment:</b> ${volgend.soort === 'wedstrijd' ? 'wedstrijd' : 'training'} ${D.kort(volgend.datum)}</p>` : '',
+      !t ? `<p class="klein">${plezier(S, tr.id) ? 'Traint vooral voor het plezier: geen traject.' : 'Nog geen traject.'}</p>` : ''].join('');
+    const volgt = CC.trainerVolgt(S, tr.id);
+    const acties = [
+      t && h.rij({ ic: 'clock', titel: 'Wedstrijd bekijken', sub: 'Begeleidingsmoment plannen', act: 'begelInplannen', attrs: `data-id="${tr.id}" data-soort="wedstrijd"` }),
+      t && h.rij({ ic: 'clock', titel: 'Training bekijken', sub: 'Begeleidingsmoment plannen', act: 'begelInplannen', attrs: `data-id="${tr.id}" data-soort="training"` }),
+      !CC.pakketTrainers(S) && h.rij({ ic: 'phone', titel: 'Contact vastleggen', sub: 'Gebeld, geappt of gesprek', act: 'trainerContact', attrs: `data-id="${tr.id}"` }),
+      h.rij({ ic: 'star', titel: volgt ? 'Niet meer volgen' : 'Volgen', sub: volgt ? 'Staat nu bovenaan bij Gevolgd' : 'Komt bovenaan bij Gevolgd', act: 'trainerKaartVolg', attrs: `data-id="${tr.id}"` }),
+    ].filter(Boolean).join('');
+    CC.sheet(tr.naam, `<p class="zacht klein kaart-sub">${sub}</p>${cijfers.length ? `<div class="cijfers">${cijfers.join('')}</div>` : ''}
+      ${info ? `<div class="kaartje">${info}</div>` : ''}<div class="lijst">${CC.contactRij(tr)}</div><div class="lijst">${acties}</div>
+      <button class="knop licht" data-act="open" data-view="trainerDetail" data-id="${tr.id}">Dossier van ${esc(tr.naam.split(' ')[0])} ${icon('chevron-right')}</button>`);
+  };
+  CC.on('trainerKaart', (el) => trainerKaart(CC.S(), el.dataset.id));
+  CC.on('trainerKaartVolg', (el) => { const S = CC.S(); const d = dos(S)[el.dataset.id] || (dos(S)[el.dataset.id] = {}); d.volg = !d.volg; CC.save(); CC.render(); trainerKaart(S, el.dataset.id); CC.toast(d.volg ? 'Je volgt deze trainer' : 'Niet meer gevolgd'); });
   CC.on('trainerVolg', (el) => { const S = CC.S(); const d = dos(S)[el.dataset.id] || (dos(S)[el.dataset.id] = {}); d.volg = !d.volg; CC.save(); CC.render(); CC.toast(d.volg ? 'Je volgt deze trainer' : 'Niet meer gevolgd'); });
   // Besluit 100: de notitie draagt de bouw(en) van de trainer; de database toont hem alleen aan begeleiders van die bouw
   const notitieTekst = (n) => (typeof n === 'string' ? n : (n || {}).tekst || '');

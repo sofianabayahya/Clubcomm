@@ -674,7 +674,7 @@
     const eigen = m.van === me.id; const ong = M.isOngelezen(S, m, me.id);
     const gepland = m.gepland && new Date(m.gepland) > new Date();
     const urgentRood = m.urgent && (ong || eigen && dagenOud(m) < 1);
-    const sub = eigen ? (gepland ? `Jij · gepland voor ${D.tijdstip(m.gepland)}` : `Jij · gelezen door ${m.gelezen.filter((x) => x !== me.id).length} van ${m.ontvangers.length}`) : `${esc(vanNaam(m))}${m.bereik ? ` · ${esc(bereikNaam(m))}` : ''}`;
+    const sub = eigen ? (gepland ? `Jij · gepland voor ${D.tijdstip(m.gepland)}` : `Jij · gelezen door ${m.gelezen.filter((x) => x !== me.id && m.ontvangers.includes(x)).length} van ${m.ontvangers.filter((x) => x !== me.id).length}`) : `${esc(vanNaam(m))}${m.bereik ? ` · ${esc(bereikNaam(m))}` : ''}`;
     return `<button class="bericht ${ong ? 'nieuw' : ''} ${m.ingetrokken ? 'ingetrokken' : ''}" data-act="open" data-view="bericht" data-id="${m.id}">
       ${eigen ? `<span class="avatar sys">${icon('send')}</span>` : afzenderIc(m, vanNaam(m))}
       <span class="b-tekst"><b>${m.urgent ? `<span class="chip ${urgentRood ? 'rood' : 'grijs'} mini">Urgent</span> ` : ''}${CC.isClub(m) && !eigen ? '<span class="chip blauw mini">Club</span> ' : ''}${esc(m.onderwerp)}</b><small>${sub}</small><span class="b-voorbeeld">${m.ingetrokken ? `<i>Ingetrokken door ${esc(pNaam(m.ingetrokken.door))}</i>` : esc(m.tekst.split('\n')[0])}</span></span>
@@ -718,10 +718,11 @@
     const arch = pers ? gespArchief(m, me) : nieuwsArchief(m, me.id);
     // Besluit 107: niet alleen wie het in de app las, ook hoe het aankwam (pushmelding of e-mail). Wie het per e-mail kreeg, las het meestal daar.
     const aank = M.aankomst(S, m, 0);
-    const hoe = (id) => (m.gelezen.includes(id) ? '✓ gelezen in de app' : aank && aank.push.includes(id) ? '🔔 pushmelding' : aank && aank.mail.includes(id) ? '✉ e-mail' : aank ? '· nog niet' : '· nog niet gelezen');
-    const nGel = m.gelezen.filter((x) => x !== me.id && m.ontvangers.includes(x)).length; const nBer = m.ontvangers.filter((id) => M.bereikt(S, m, id)).length;
-    const samen = aank ? `Aangekomen bij ${nBer} van ${m.ontvangers.length}${aank.mail.length ? ` · ${aank.mail.length} per e-mail` : ''}${aank.push.length ? ` · ${aank.push.length} met een pushmelding` : ''} · ${nGel} openden de app` : `Gelezen door ${nGel} van ${m.ontvangers.length}`;
-    const gelezenLijst = eigen && !pers ? `<details class="uitklap"><summary>${samen}</summary><p class="zacht klein">${m.ontvangers.map((id) => { const pp = M.persoon(S, id); return pp ? `${esc(pp.naam)}: ${hoe(id)}` : ''; }).filter(Boolean).slice(0, 40).join('<br>')}</p>${aank ? '' : (m.mail === false && !m.urgent ? '<p class="zacht klein">Alleen in de app verstuurd.</p>' : '')}</details>` : '';
+    // De afzender telt niet mee (ook niet als hij zelf ouder in het team is)
+    const ontv = m.ontvangers.filter((id) => id !== me.id);
+    const nGel = m.gelezen.filter((x) => ontv.includes(x)).length; const nBer = ontv.filter((id) => M.bereikt(S, m, id)).length;
+    // Besluit 113: wie het kreeg staat in een venster (gegroepeerd), niet als uitklaplijst onder het bericht
+    const gelezenLijst = eigen && !pers ? h.rij({ ic: aank && nBer < ontv.length ? 'circle-alert' : 'circle-check', titel: aank ? `Aangekomen bij ${nBer} van ${ontv.length}` : `Gelezen door ${nGel} van ${ontv.length}`, sub: aank ? [`${nGel} in de app`, aank.push.length && `${aank.push.length} pushmelding`, aank.mail.length && `${aank.mail.length} e-mail`].filter(Boolean).join(' · ') : (m.mail === false && !m.urgent ? 'Alleen in de app verstuurd' : ''), act: 'aankomstVenster', attrs: `data-id="${esc(m.id)}"` }) : '';
     // Gesprek: onder je eigen laatste bericht wie het gelezen heeft (zoals WhatsApp)
     const l = M.laatste(m);
     const gezienDoor = pers && l.van === me.id ? m.gelezen.filter((x) => x !== me.id).map(voornaam) : [];
@@ -1072,6 +1073,22 @@
   };
   // Besluit 113: tik op een speler in een lijst → venster (spelerskaart): de kern en de twee acties, je blijft op je plek.
   // Alles over de speler staat op de pagina (CC.views.speler), via de knop onderaan.
+  // Besluit 113: venster "Aangekomen bij …": eerst wie het (nog) niet kreeg, met bellen en appen; daarna app, pushmelding, e-mail
+  CC.on('aankomstVenster', (el) => {
+    const S = CC.S(); const m = S.msgs.find((x) => x.id === el.dataset.id); if (!m) return;
+    const aank = M.aankomst(S, m, 0); const pers = (id) => M.persoon(S, id);
+    const ids = m.ontvangers.filter((id) => id !== CC.me().id && pers(id)); // de afzender telt niet mee
+    const app = ids.filter((id) => m.gelezen.includes(id));
+    const push = aank ? ids.filter((id) => !m.gelezen.includes(id) && aank.push.includes(id)) : [];
+    const mail = aank ? ids.filter((id) => !m.gelezen.includes(id) && !aank.push.includes(id) && aank.mail.includes(id)) : [];
+    const niet = ids.filter((id) => !M.bereikt(S, m, id));
+    const groep = (titel, l, teken, label) => (l.length ? `${h.sectie(`${titel} (${l.length})`)}<div class="lijst compact">${l.map((id) => h.rij({ ic: h.avatar(pers(id).naam), titel: esc(pers(id).naam), rechts: `<span class="zacht" role="img" aria-label="${label}">${teken}</span>` })).join('')}</div>` : '');
+    const nietBlok = niet.length ? `${h.sectie(`${aank ? 'Nog niet aangekomen' : 'Nog niet gelezen'} (${niet.length})`)}<div class="lijst">${niet.map((id) => CC.contactRij(pers(id))).join('')}</div>
+      <p class="zacht klein">${aank ? 'Geen pushmelding of e-mail gelukt en de app nog niet geopend. Even appen of bellen?' : 'Nog niet geopend in de app.'}</p>` : '';
+    const nBer = ids.length - niet.length;
+    CC.sheet(aank ? `Aangekomen bij ${nBer} van ${ids.length}` : `Gelezen door ${app.length} van ${ids.length}`,
+      `${nietBlok}${groep('Gelezen in de app', app, '✓', 'gelezen')}${groep('Pushmelding', push, '🔔', 'pushmelding')}${groep('E-mail', mail, '✉', 'e-mail')}${!aank && m.mail === false && !m.urgent ? '<p class="zacht klein">Alleen in de app verstuurd.</p>' : ''}`);
+  });
   CC.on('spelerKaart', (el) => {
     const S = CC.S(); const pl = M.speler(S, el.dataset.id); if (!pl) return;
     const t = M.team(S, pl.teamId); const staf = CC.rol().rol !== 'ouder';
