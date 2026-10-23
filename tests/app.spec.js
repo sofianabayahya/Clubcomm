@@ -167,7 +167,8 @@ test.describe('Demo', () => {
     await expect(page.locator('#app')).toContainText('Dennis Peters');
     // Mark (trainer O10-1) in een traject zetten en uitnodigen voor de kennismaking
     await page.locator('[data-act="seg"][data-key="trDeel"][data-val="alle"]').click();
-    await page.locator('#app [data-view="trainerDetail"]', { hasText: 'Mark Jansen' }).first().click();
+    await page.locator('#app [data-act="trainerKaart"]', { hasText: 'Mark Jansen' }).first().click(); // Besluit 113: eerst het venster
+    await page.locator('#sheet [data-view="trainerDetail"]').click();
     await page.locator('#app [data-act="trajectSheet"]').click();
     await page.locator('#sheet form[data-submit="trajectOk"] button.knop').click();
     await page.locator('#app [data-act="kennisUitnodigen"]').click();
@@ -665,6 +666,29 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'spelerskaart');
   });
 
+  test('trainerkaart als venster (HO, Rapport trainers)', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(3).click(); // Peter: HJO
+    await page.locator('[data-act="magischeLink"]').click();
+    await page.evaluate(() => { CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'hjo')); CC.open('trainersRapport', { alle: 1 }); });
+    await page.locator('#app [data-act="trainerKaart"]', { hasText: 'Dennis Peters' }).first().click();
+    await expect(page.locator('#sheet')).toContainText('Dennis Peters');
+    await expect(page.locator('#sheet')).toContainText('momenten');
+    await expect(page.locator('#sheet [data-act="trainerContact"]')).toBeVisible();
+    expect(await page.evaluate(() => CC.ui.view.naam)).toBe('trainersRapport');
+    // Volgen wisselen houdt het venster open
+    await page.locator('#sheet [data-act="trainerKaartVolg"]').click();
+    await expect(page.locator('#sheet [data-act="trainerKaartVolg"]')).toBeVisible();
+    await page.waitForTimeout(400);
+    await page.locator('#sheet [data-act="open"][data-view="trainerDetail"]').click();
+    await expect(page.locator('#sheet')).toBeHidden();
+    expect(await page.evaluate(() => CC.ui.view.naam)).toBe('trainerDetail');
+    await controleer(page, fouten, 'trainerkaart');
+  });
+
   test('spelerskaart: teamleider', async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
@@ -687,16 +711,28 @@ test.describe('Demo', () => {
     await page.goto('/?demo');
     await page.locator('[data-act="demoLogin"][data-pid]').nth(1).click(); // Mark
     await page.locator('[data-act="magischeLink"]').click();
-    const id = await page.evaluate(() => { const S = CC.S(); const me = CC.me(); const tid = CC.teamId(); const o = CC.m.oudersVan(S, tid);
-      const m = { id: 'b-test-aank', van: me.id, soort: 'nieuws', bereik: tid, onderwerp: 'Testbericht aankomst', tekst: 'Hallo', tijd: new Date().toISOString(), ontvangers: o, gelezen: [o[0]], antw: [], urgent: false, gepland: null, mail: true };
-      S.msgs.push(m); S.bezorgd = { [m.id]: { van: me.id, ontvangers: o, push: [o[1]], mail: o.slice(2), antw: {} } };
+    const id = await page.evaluate(() => { const S = CC.S(); const me = CC.me(); const tid = CC.teamId(); const o = CC.m.oudersVan(S, tid); const o2 = o.filter((x) => x !== me.id); // de afzender telt niet mee
+      const m = { id: 'b-test-aank', van: me.id, soort: 'nieuws', bereik: tid, onderwerp: 'Testbericht aankomst', tekst: 'Hallo', tijd: new Date().toISOString(), ontvangers: o, gelezen: [o2[0]], antw: [], urgent: false, gepland: null, mail: true };
+      S.msgs.push(m); S.bezorgd = { [m.id]: { van: me.id, ontvangers: o, push: [o2[1]], mail: o2.slice(2), antw: {} } };
       // Gesprek: het antwoord van Mark kwam per e-mail aan bij de ander
       const ander = o[0]; S.msgs.push({ id: 'b-test-gesp', van: ander, soort: 'persoonlijk', bereik: 'x', onderwerp: 'Vraag', tekst: 'Kan het?', tijd: new Date(Date.now() - 6e4).toISOString(), ontvangers: [me.id], gelezen: [me.id], antw: [{ van: me.id, tekst: 'Ja hoor', tijd: new Date().toISOString() }], urgent: false, gepland: null });
       S.bezorgd['b-test-gesp'] = { van: ander, ontvangers: [me.id], push: [me.id], mail: [], antw: { 1: { push: [], mail: [ander] } } };
-      CC.save(); return { n: o.length };
+      CC.save(); return { n: o2.length, app: 1, push: 1, mail: o2.length - 2 };
     });
     await page.evaluate(() => CC.open('bericht', { id: 'b-test-aank' }));
-    await expect(page.locator('#app summary', { hasText: 'Aangekomen bij' })).toContainText(`Aangekomen bij ${id.n} van ${id.n}`);
+    await expect(page.locator('#app [data-act="aankomstVenster"]')).toContainText(`Aangekomen bij ${id.n} van ${id.n}`);
+    // Besluit 113: het venster groepeert wie het kreeg (app, pushmelding, e-mail)
+    await page.locator('#app [data-act="aankomstVenster"]').click();
+    await expect(page.locator('#sheet')).toContainText(`Gelezen in de app (${id.app})`);
+    await expect(page.locator('#sheet')).toContainText(`Pushmelding (${id.push})`);
+    await expect(page.locator('#sheet')).toContainText(`E-mail (${id.mail})`);
+    await expect(page.locator('#sheet')).not.toContainText('Nog niet aangekomen');
+    await page.evaluate(() => { const S = CC.S(); const b = S.bezorgd['b-test-aank']; b.mail = b.mail.slice(1); CC.closeSheet(); CC.render(); });
+    await page.waitForTimeout(400);
+    await page.locator('#app [data-act="aankomstVenster"]').click();
+    await expect(page.locator('#sheet')).toContainText('Nog niet aangekomen (1)');
+    await expect(page.locator('#sheet .contactknoppen')).toHaveCount(1);
+    await page.evaluate(() => CC.closeSheet());
     await page.evaluate(() => CC.open('bericht', { id: 'b-test-gesp' }));
     await expect(page.locator('#app')).toContainText('✉ Gemaild naar');
     await controleer(page, fouten, 'aankomst berichten');
