@@ -434,6 +434,7 @@ test.describe('Demo', () => {
     // Buiten het menu tikken sluit het
     await page.locator('main').click({ position: { x: 10, y: 300 } });
     await expect(page.locator('.rolmenu')).toHaveCount(0);
+    await page.waitForTimeout(400); // een tweede tik op dezelfde knop binnen 0,35 s telt niet (dubbel tikken voorkomen)
     await page.locator('.kop [data-act="rolMenu"]').click();
     await page.locator('.rolmenu button', { hasText: 'Ouder' }).click();
     expect(await page.evaluate(() => CC.rol().rol)).toBe('ouder');
@@ -593,6 +594,23 @@ test.describe('Demo', () => {
     await expect(page.locator('#app')).toContainText('Nieuwe urgente melding');
     await expect(page.locator('#app')).not.toContainText('Verlopen afgelasting');
     await expect(page.locator('#app')).not.toContainText('Mijn eigen urgent bericht');
+  });
+
+  // App-controle 23-10: een dubbele tik op Versturen of Volgend blok doet maar één keer iets
+  test('dubbel tikken telt één keer', async ({ page }) => {
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(1).click(); // Mark: trainer
+    await page.locator('[data-act="magischeLink"]').click();
+    const voor = await page.evaluate(() => { CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer')); return CC.S().msgs.length; });
+    await page.evaluate(() => CC.berichtForm ? CC.berichtForm('team') : null);
+    await page.locator('#m-ond').fill('Dubbel getest'); await page.locator('#m-tekst').fill('Hallo');
+    await page.evaluate(() => { const f = document.querySelector('#sheet form[data-submit="verstuurBericht"]'); f.requestSubmit(); f.requestSubmit(); });
+    expect(await page.evaluate(() => CC.S().msgs.filter((m) => m.onderwerp === 'Dubbel getest').length)).toBe(1);
+    expect(await page.evaluate(() => CC.S().msgs.length)).toBeGreaterThan(voor);
+    // Snel na elkaar op verschillende knoppen tikken blijft gewoon werken
+    expect(await page.evaluate(() => [CC.alGetikt('a', 350), CC.alGetikt('b', 350), CC.alGetikt('b', 350)])).toEqual([false, false, true]);
   });
 
   // Besluit 107: bij je eigen bericht zie je hoe het aankwam (pushmelding, e-mail of gelezen in de app)
