@@ -330,7 +330,10 @@ pre.code { background: var(--vlak2); border: 1px solid var(--lijn); border-radiu
 /* iPhone: vh telt de balk van Safari mee, waardoor de onderkant van een lange lijst onbereikbaar wordt. dvh = wat echt zichtbaar is */
 @supports (height: 100dvh) { .sheet { max-height: 88dvh; } .sheet.groot { max-height: 94dvh; } }
 @keyframes omhoog { from { transform: translate(-50%, 30px); opacity: .6; } to { transform: translate(-50%, 0); opacity: 1; } }
-.sheet-kop { display: flex; align-items: center; justify-content: space-between; padding: 12px 8px 6px 16px; }
+.sheet-kop { display: flex; align-items: center; justify-content: space-between; padding: 2px 8px 6px 16px; }
+/* Besluit 113: greep bovenaan, venster naar beneden vegen om te sluiten */
+.greep { width: 40px; height: 5px; border-radius: 3px; background: #b8c2ce; margin: 8px auto 4px; flex-shrink: 0; }
+.kaart-sub { margin-top: -6px; }
 .sheet-kop h2 { font-size: 18px; }
 .sheet-body { overflow-y: auto; min-height: 0; overscroll-behavior: contain; padding: 4px 16px calc(20px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 10px; }
 /* Blokken in een venster krimpen nooit (anders knipt .lijst met overflow:hidden de onderste regels af); het venster scrollt */

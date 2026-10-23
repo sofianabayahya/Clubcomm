@@ -95,13 +95,39 @@
   CC.sheet = (titel, html, opts = {}) => {
     const el = document.getElementById('sheet');
     el.innerHTML = `<div class="sheet-bg" data-act="sluit"></div><div class="sheet ${opts.groot ? 'groot' : ''}" role="dialog" aria-modal="true" aria-label="${esc(titel)}">
-      <div class="sheet-kop"><h2>${esc(titel)}</h2><button class="icoonknop" data-act="sluit" aria-label="Sluiten">${icon('x')}</button></div>
+      <div class="greep" aria-hidden="true"></div><div class="sheet-kop"><h2>${esc(titel)}</h2><button class="icoonknop" data-act="sluit" aria-label="Sluiten">${icon('x')}</button></div>
       <div class="sheet-body">${html}</div></div>`;
     el.hidden = false; document.body.classList.add('sheet-open');
     const f = el.querySelector('[autofocus]'); if (f) setTimeout(() => f.focus(), 50);
   };
   CC.closeSheet = () => { const el = document.getElementById('sheet'); el.hidden = true; el.innerHTML = ''; document.body.classList.remove('sheet-open'); };
   CC.on('sluit', () => CC.closeSheet());
+  // Besluit 113: venster naar beneden vegen om te sluiten (vanaf de kop, of overal als de inhoud bovenaan staat)
+  (() => {
+    let start = null; let dy = 0; let sh = null;
+    const host = () => document.getElementById('sheet');
+    document.addEventListener('touchstart', (e) => {
+      sh = e.target.closest && e.target.closest('#sheet .sheet'); if (!sh || e.touches.length !== 1) { sh = null; return; }
+      const body = e.target.closest('.sheet-body');
+      if (body && body.scrollTop > 0) { sh = null; return; }
+      if (e.target.closest('input, textarea, select, .veld')) { sh = null; return; }
+      start = { y: e.touches[0].clientY, x: e.touches[0].clientX, t: Date.now() }; dy = 0;
+    }, { passive: true });
+    document.addEventListener('touchmove', (e) => {
+      if (!sh || !start) return;
+      const ny = e.touches[0].clientY - start.y; const nx = e.touches[0].clientX - start.x;
+      if (dy === 0 && (ny <= 0 || Math.abs(nx) > ny)) { sh = null; return; }
+      dy = Math.max(0, ny); sh.style.transition = 'none'; sh.style.transform = `translateX(-50%) translateY(${dy}px)`;
+      if (e.cancelable) e.preventDefault();
+    }, { passive: false });
+    document.addEventListener('touchend', () => {
+      if (!sh || !start) { sh = null; return; }
+      const snel = dy > 40 && Date.now() - start.t < 250; const s = sh; sh = null; start = null;
+      if (dy > 110 || snel) { CC.closeSheet(); return; }
+      s.style.transition = 'transform .15s ease-out'; s.style.transform = '';
+      if (!host().hidden) setTimeout(() => { s.style.transition = ''; }, 200);
+    });
+  })();
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') CC.closeSheet();
     if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[role=button][data-act]')) { e.preventDefault(); e.target.click(); }
@@ -1044,6 +1070,32 @@
       ${uitzBlok}`,
     };
   };
+  // Besluit 113: tik op een speler in een lijst → venster (spelerskaart): de kern en de twee acties, je blijft op je plek.
+  // Alles over de speler staat op de pagina (CC.views.speler), via de knop onderaan.
+  CC.on('spelerKaart', (el) => {
+    const S = CC.S(); const pl = M.speler(S, el.dataset.id); if (!pl) return;
+    const t = M.team(S, pl.teamId); const staf = CC.rol().rol !== 'ouder';
+    const ouders = pl.ouders.map((o) => M.persoon(S, o)).filter(Boolean);
+    const v = M.komend(S, t.id, 6).find((x) => !x.afgelast);
+    const sp = M.speeltijdStand ? M.speeltijdStand(S, pl) : null;
+    const sub = [CC.tn(pl.teamId), pl.positie === 'keeper' ? 'keeper' : '', sp && sp.pct != null ? `${sp.pct}% speeltijd` : ''].filter(Boolean).join(' · ');
+    const volgt = CC.volgtSpelers(t.id);
+    let cijfers = '';
+    if (volgt) {
+      const st = M.stats(S, pl, M.periode(S, 'blok')); const k = M.kaarten(S, pl); const z = M.zone(S, st, t.id);
+      cijfers = `<div class="cijfers"><div class="cijfer ${z}"><b>${st.pct == null ? '–' : st.pct + '%'}</b><small>aanwezig</small></div><div class="cijfer"><b>${st.telaat}×</b><small>te laat</small></div><div class="cijfer"><b>${h.kaartjes(k) || '–'}</b><small>kaarten</small></div></div>`;
+    }
+    const moment = staf && volgt && CC.zicht('beoordeling') && CC.views.gesprekVerslag && CC.actiefMoment ? CC.actiefMoment(S) : null;
+    const acties = [
+      staf && volgt && CC.zicht('gesprekken') && CC.zicht('contact') ? h.rij({ ic: 'phone', titel: 'Contact vastleggen', sub: 'Gebeld, geappt of gesprek', act: 'gesprekVastleggen', attrs: `data-id="${pl.id}"` }) : '',
+      moment ? h.rij({ ic: 'users', titel: 'Ontwikkelgesprek', sub: esc(moment.naam), act: 'open', attrs: `data-view="gesprekVerslag" data-id="${pl.id}" data-m="${moment.id}"` }) : '',
+    ].filter(Boolean).join('');
+    CC.sheet(M.naam(S, pl), `<p class="zacht klein kaart-sub">${esc(sub)}</p>${cijfers}
+      ${v ? `<p class="klein">${D.relatief(v.datum)} · ${h.actTitel(S, v)}: ${h.chip(M.status(S, pl, v))}</p>` : ''}
+      ${staf && ouders.length ? `<div class="lijst">${ouders.map((o) => CC.contactRij(o)).join('')}</div>` : ''}
+      ${acties ? `<div class="lijst">${acties}</div>` : ''}
+      <button class="knop licht" data-act="open" data-view="speler" data-id="${pl.id}">Alles over ${esc(pl.voornaam)} ${icon('chevron-right')}</button>`);
+  });
   CC.on('zetPositie', (el) => { const pl = M.speler(S, el.dataset.id); if (el.dataset.v) pl.positie = el.dataset.v; else delete pl.positie; CC.save(); CC.render(); CC.toast(el.dataset.v ? `${pl.voornaam} staat nu als keeper` : `${pl.voornaam} staat nu als veldspeler`); });
   CC.kaartIc = (e) => (e.kaart === 'herinnering' ? 'mail' : `<span class="kaart ${e.kaart}${e.geaccepteerd ? ' vaag' : ''}">${e.tweedeGeel ? '2' : '1'}</span>`);
   CC.kaartTitel = (e) => (e.kaart === 'herinnering' ? 'Vriendelijke herinnering' : e.kaart === 'geel' ? 'Gele kaart' : e.tweedeGeel ? 'Rode kaart (tweede gele)' : 'Rode kaart');

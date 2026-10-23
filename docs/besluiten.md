@@ -17,6 +17,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 113 | Drie lagen: tabblad → venster → pagina; spelerskaart als venster, vegen om te sluiten | ✅ geldt |  |
 | 112 | Anoniem tellen welke schermen gebruikt worden; overzicht voor de clubbeheerder | ✅ geldt |  |
 | 111 | App-controle: dubbel tikken, Beperk beweging, kleur statusbalk, notch op de inlogpagina | ✅ geldt |  |
 | 110 | Verzamelen voor wedstrijden is clubbeleid, per leeftijd | ✅ geldt |  |
@@ -645,6 +646,13 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 113 — Drie lagen: tabblad → venster → pagina (spelerskaart)
+*Besloten 23 oktober 2026, na een voorbeeld op telefoonformaat. Vraag van de trainer: zoveel mogelijk op één scherm, zoals in mijnrijlesplanner.*
+- **Vaste regel voor elk scherm:** **tabblad** = wat je dagelijks ziet (lijsten, overzicht) · **venster** (van onder) = snel kijken of één ding doen, past op één scherm, daarna sta je weer op dezelfde plek · **pagina** (terug linksboven) = alles over één ding, lang of om te lezen. **Nooit een venster op een venster**; uit een venster ga je hooguit door naar de pagina ("Alles over … →").
+- **Spelerskaart:** tik op een speler in een lijst (trainer: Spelers en Aanwezigheid; teamleider: Team) → venster met team, speeltijd, de cijfers (aanwezig, te laat, kaarten), de volgende activiteit, de ouders (bellen, appen, mailen) en de acties *Contact vastleggen* en *Ontwikkelgesprek*. Onderaan **Alles over [naam]** naar de spelerpagina. Een teamleider die geen spelerszaken volgt, ziet geen cijfers en acties (zoals op de pagina). Signalen openen nog steeds de pagina (daar hoort de hele geschiedenis bij).
+- **Vegen om te sluiten:** elk venster heeft bovenaan een greep en gaat dicht als je het naar beneden veegt (vanaf de kop, of overal als de inhoud bovenaan staat). Het kruisje blijft.
+- Later (zie *Later / ideeën*): "Aangekomen bij X van N" als venster, trainer in het tabblad Trainers als venster, venster in het midden op de laptop.
 
 ## Besluit 112 — Anoniem tellen welke schermen gebruikt worden
 *Besloten 23 oktober 2026. Uit de app-controle (Besluit 111); doel: functie eerst, na de pilot weten wat echt gebruikt wordt.*
@@ -1765,6 +1773,7 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 
 ## Later / ideeën
 
+- **Meer vensters (Besluit 113, volgende ronde):** "Aangekomen bij X van N" bij een bericht als venster in plaats van uitklappen; trainer in het tabblad Trainers (HO) eerst als venster met "Dossier →"; op de laptop het venster in het midden (norm uit `docs/app-controle.md`).
 - **Huiswerk en filmpjes** (idee 24 sep 2026): de trainer deelt oefeningen voor thuis (een filmpje of een link) per team of per speler, gekoppeld aan de vaardigheden uit de beoordeling ("werken aan: aannemen"). Kind of ouder kan aangeven "gedaan". Eerst met links naar YouTube/Vimeo (geen eigen opslag). Filmpjes waarin kinderen te zien zijn alleen met toestemming van de ouders (AVG).
 - **Fondsenwerving en teamkas** (idee 24 sep 2026, zoals bij Spond): acties voor het team of de club (bijv. een toernooi, nieuwe trainingspakken), bijdragen via een betaallink (bijv. Tikkie of Mollie), met een teller "zoveel opgehaald". Alleen via de penningmeester of het bestuur; eerst uitzoeken wat de club wil en mag. Mogelijk ook een verdienmodel voor ClubComm.
 - **Beloningen** (punten, contributie terugverdienen) als optionele module die de HJO per club of team aanzet.
