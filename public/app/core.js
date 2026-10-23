@@ -571,6 +571,7 @@
     S.people.filter((p) => p.rollen.some((r) => ['hjo', 'beheerder', 'coordinator'].includes(r.rol))).forEach((p) => s.add(p.id)); return s; };
   CC.voorRol = (m, me, staf) => {
     if (!ouderRol()) return true;
+    if (m.rit) return true; // Besluit 114 (fout gevonden): "X rijdt niet mee" gaat over je eigen rit als ouder, ook als een andere ouder het stuurt
     if (m.van === me.id && m.vanRol) return m.vanRol === 'ouder';
     if (m.van !== me.id && m.vanRol === 'ouder' && m.soort === 'persoonlijk') return false; // een ouder die jou als staf iets vraagt
     staf = staf || ouderStaf();
@@ -980,7 +981,7 @@
   // Besluit 85: rijdt het kind met iemand anders mee, dan hoort die chauffeur dat meteen (persoonlijk bericht, dus ook een pushmelding)
   CC.ritVervalt = (S, a, pl, waarom) => { const v = S.vervoer[a.id]; const ch = v && v.plek[pl.id]; const me = CC.me();
     if (!ch || ch === me.id || pl.ouders.includes(ch) || !M.persoon(S, ch)) return;
-    S.msgs.push({ id: 'b' + Date.now() + pl.id + a.id, van: me.id, vanRol: (CC.rol() || {}).rol, soort: 'persoonlijk', bereik: M.persoon(S, ch).naam, onderwerp: `${pl.voornaam} rijdt ${D.kort(a.datum)} niet mee`,
+    S.msgs.push({ id: 'b' + Date.now() + pl.id + a.id, van: me.id, vanRol: (CC.rol() || {}).rol, rit: true, soort: 'persoonlijk', bereik: M.persoon(S, ch).naam, onderwerp: `${pl.voornaam} rijdt ${D.kort(a.datum)} niet mee`,
       tekst: `${pl.voornaam} rijdt ${D.lang(a.datum)} niet met je mee naar ${h.actTitel(S, a).replace(/<[^>]*>/g, '')}: ${waarom}. Je hoeft ${pl.voornaam} dus niet op te halen.`, tijd: new Date().toISOString(), gepland: null, ontvangers: [ch], gelezen: [], antw: [], urgent: false }); };
   CC.on('bevestigAfmelden', (f) => {
     const a = M.act(S, f.dataset.act2); const pl = M.speler(S, f.dataset.speler);

@@ -579,6 +579,20 @@ body.rl .sheet { max-width: var(--app-b); }
 .rl-hfd button:hover { background: var(--vlak2); } .rl-hfd button.aan { background: var(--blauw-l); font-weight: 700; }
 .rl-hulp { margin: 0; font-size: 13px; color: var(--zacht); }
 .rl-uit { align-self: flex-start; font-size: 13px; }
+/* Besluit 114: startscherm (hoofdstukken kiezen), "kijk mee" en het spoor van wat er net gebeurde */
+.rl-keuze { display: flex; flex-direction: column; gap: 8px; }
+.rl-keuze label { display: flex; gap: 12px; align-items: flex-start; font-size: 16px; font-weight: 400; color: var(--inkt); text-transform: none; letter-spacing: 0; margin: 0; padding: 12px 14px; border: 1px solid var(--lijn); border-radius: var(--r-s); background: var(--grond); cursor: pointer; min-height: 44px; }
+.rl-keuze input { width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--blauw); flex: none; }
+.rl-keuze span { display: flex; flex-direction: column; } .rl-keuze b { font-weight: 700; } .rl-keuze small { font-size: 14px; font-weight: 400; color: var(--zacht); }
+.rl-keuze .rl-knoppen { margin-top: 6px; }
+.rl-doe { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: var(--r-s); background: var(--blauw-l); }
+.rl-doe span { display: flex; flex-direction: column; } .rl-doe small { font-size: 14px; color: var(--zacht); }
+.rl-spoor { padding: 12px 14px; border-radius: var(--r-s); border: 1px solid var(--lijn); background: var(--grond); }
+.rl-spoor > small { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--zacht); }
+.rl-spoor ul { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.rl-spoor li { display: flex; gap: 10px; } .rl-spoor li b { color: var(--zacht); flex: none; width: 14px; } .rl-spoor li.ok b { color: var(--groen, #137a3b); }
+.rl-spoor li span { display: flex; flex-direction: column; } .rl-spoor li small { font-size: 14px; color: var(--zacht); }
+.rl-onder { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; }
 #rl-rand { position: fixed; z-index: 65; pointer-events: none; border: 4px solid #f5b400; border-radius: 14px; box-shadow: 0 0 0 6px rgba(245, 180, 0, .25); transition: top .2s, left .2s, width .2s, height .2s; }
 #rl-rand[hidden] { display: none; }
 #rl-open { position: fixed; top: 12px; right: 16px; z-index: 70; box-shadow: var(--schaduw); }

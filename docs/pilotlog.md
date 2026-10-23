@@ -3,6 +3,12 @@
 Wat we tijdens de pilot vinden, met de oorzaak en het patroon erachter. Doel: dezelfde soort fout niet twee keer maken.
 Besluiten staan in `besluiten.md`; dit is het logboek van fouten. Nieuwste bovenaan.
 
+## 23 oktober 2026 (demo als verhaal)
+
+| Wat we zagen | Oorzaak | Opgelost | Patroon |
+|---|---|---|---|
+| (zelf gevonden, bij het bouwen van de demo) Meldt een ouder een kind af dat met een andere ouder zou meerijden, dan kreeg die chauffeur wel een bericht, maar zag het niet in de app als hij alleen ouder is | De ouderrol verbergt persoonlijke berichten van andere ouders (Besluit 79: vragen aan jou als staf horen in je stafrol); het rit-bericht viel daaronder | Rit-berichten zijn gemarkeerd (`rit`) en staan altijd bij de ouder; test erbij | **Eén persoon per rol:** een regel voor de ene rol (staf) raakte een bericht dat voor de andere rol (ouder) bedoeld was |
+
 ## 30 september 2026 (rondleiding op elke dag)
 
 | Wat we zagen | Oorzaak | Opgelost | Patroon |
