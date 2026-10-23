@@ -17,8 +17,9 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 110 | Verzamelen voor wedstrijden is clubbeleid, per leeftijd | ✅ geldt |  |
 | 109 | Posities in procenten van de gespeelde minuten | ✅ geldt |  |
-| 108 | Verzameltijd per team: thuis en uit zoveel minuten voor de aftrap | ✅ geldt |  |
+| 108 | Verzameltijd per team: thuis en uit zoveel minuten voor de aftrap | ◐ deels herzien | door 110 (geen instelling per team meer: clubregel per leeftijd) |
 | 107 | Elk bericht komt aan (push of e-mail, ook antwoorden) en je ziet hoe; teamleider zet oefenwedstrijden in | ✅ geldt |  |
 | 106 | Eigen wisselschema voor selectieteams (opstelling 1-4-3-3, wissels, minuten en posities); speelvorm per team | ✅ geldt |  |
 | 105 | Aanwezigheid: pas een kleur en signaal vanaf 6 keer gemeten | ✅ geldt |  |
@@ -643,15 +644,24 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 110 — Verzamelen voor wedstrijden is clubbeleid, per leeftijd
+*Besloten 23 oktober 2026. Herziet Besluit 108.*
+- Hoe lang voor de aftrap een team er is, is **clubbeleid**, niet de keuze van een trainer: ouders weten bij elk team waar ze aan toe zijn.
+- **Regels → Verzamelen voor wedstrijden**, in twee groepen: **O7 t/m O12** (standaard thuis 30, uit 60 minuten) en **vanaf O13** (thuis en uit **60 minuten**). Telt de speelvorm van het team (Besluit 106): het O12 talententeam van DCG speelt O13 en verzamelt dus altijd een uur van tevoren.
+- **Trainer en teamleider** passen de tijd per wedstrijd aan (bijv. een verre uitwedstrijd), niet meer voor het hele team. De instelling per team uit Besluit 108 vervalt.
+- **Wie stelt het in:** de clubbeheerder (Regels). Het hoort bij de organisatie (coördinator, Besluit 95), maar clubregels kan nu alleen de clubbeheerder opslaan; zie Nog te bespreken.
+
 ## Besluit 109 — Posities in procenten
 *Besloten 18 oktober 2026. Vult Besluit 106 aan.*
 - Per speler zie je per positie welk **percentage van zijn gespeelde minuten** hij daar stond (*Rechtsback 60% (120') · Spits 40% (80')*), bij Speeltijd → *Posities dit seizoen*.
 - Bij het kiezen van een speler voor een plek staan zijn twee meest gespeelde posities erbij (*rechtsback 60%, spits 40%*).
 
 ## Besluit 108 — Verzameltijd per team
+> **◐ Deels herzien door Besluit 110 (geen instelling per team meer: clubregel per leeftijd)** (zie Register).
+
 *Besloten 18 oktober 2026. Vult Besluit 92 aan.*
 - Hoeveel minuten voor de aftrap het team verzamelt, stelt de clubbeheerder per team in (teampagina → *Teamtype en regels*): **thuis** en **uit**. Standaard thuis 30 en uit 60 minuten.
-- **DCG, O12 talententeam:** thuis **45**, uit **60** minuten. De thuiswedstrijden van 7 en 28 november staan op 11:45 en 13:45.
+- **DCG, O12 talententeam:** thuis en uit **60** minuten (23-10; eerst thuis 45). De thuiswedstrijden van 7 en 28 november staan op 11:30 en 13:30.
 - Geldt als voorstel bij elke nieuwe wedstrijd of oefenwedstrijd (trainer en teamleider); een tijd bij één wedstrijd pas je bij die wedstrijd aan.
 
 ## Besluit 107 — Elk bericht komt aan, en je ziet hoe; de teamleider zet oefenwedstrijden in
@@ -1763,6 +1773,8 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 ---
 
 ## Nog te bespreken
+
+- **Clubregels ook door de coördinator (Besluit 110):** verzamelen voor wedstrijden hoort bij de organisatie, maar alleen de clubbeheerder kan clubregels opslaan (rechten in de database). Bij DCG is dat geen probleem; bij een club met een aparte coördinator een deel van de regels voor de coördinator openzetten.
 
 - **Beloning voor inzet en het teamkompas (DCG, 18-10, bijgewerkt 19-10):** gekozen vertrekpunt: **amuletten** (iedereen een voetbalamulet = zijn wapen; kompas-amuletten verdienen per fase; Captain DCG als teamkracht). Uitwerking (wat, hoe, wanneer, prompt voor stickers) in `docs/onderzoek/amuletten-concept-2026-10.md`. **19-10: blijft buiten ClubComm** — de eigen aanpak van deze trainer (kaarten van dik materiaal), geen functie voor alle clubs. Alleen opnieuw bekijken als de trainer er later zelf om vraagt. Let op: geen ranglijst of top 3 (Besluit 28, 29, 62), woorden in plaats van scores (Besluit 67).
 

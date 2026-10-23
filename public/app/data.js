@@ -378,8 +378,11 @@
   M.spelers = (S, teamId) => S.players.filter((p) => p.teamId === teamId).sort((a, b) => a.voornaam.localeCompare(b.voornaam));
   M.naam = (S, pl) => `${pl.voornaam} ${pl.achternaam}`;
   M.inst = (S, teamId) => ({ ...S.club.inst, ...((teamId && M.team(S, teamId).afwijking) || {}) });
-  // Besluit 108: zoveel minuten voor de aftrap verzamelen (standaard thuis 30, uit 60; per team aan te passen)
-  M.verzamelMin = (S, teamId, thuis) => { const i = M.inst(S, teamId); return Number(thuis ? i.verzamelThuis : i.verzamelUit) || (thuis ? 30 : 60); };
+  // Besluit 110: verzamelen voor wedstrijden is clubbeleid, per leeftijd (de speelvorm van het team telt, Besluit 106).
+  // Tot en met O12 standaard thuis 30 en uit 60 minuten, vanaf O13 thuis en uit 60. Per wedstrijd blijft aanpassen mogelijk.
+  M.VERZAMEL_STD = { onder: { thuis: 30, uit: 60 }, boven: { thuis: 60, uit: 60 } };
+  M.verzamelMin = (S, teamId, thuis) => { const n = parseInt(String(M.wedCat(S, teamId)).replace(/\D/g, ''), 10) || 12; const g = n >= 13 ? 'boven' : 'onder';
+    const v = { ...M.VERZAMEL_STD[g], ...((S.club.inst.verzamel || {})[g] || {}) }; return Number(thuis ? v.thuis : v.uit); };
 
   // Vaste taken aanvullen voor komende wedstrijden (vaste id's, dus nooit dubbel)
   M.vulVasteTaken = (S) => {
