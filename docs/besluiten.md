@@ -17,6 +17,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 112 | Anoniem tellen welke schermen gebruikt worden; overzicht voor de clubbeheerder | ✅ geldt |  |
 | 111 | App-controle: dubbel tikken, Beperk beweging, kleur statusbalk, notch op de inlogpagina | ✅ geldt |  |
 | 110 | Verzamelen voor wedstrijden is clubbeleid, per leeftijd | ✅ geldt |  |
 | 109 | Posities in procenten van de gespeelde minuten | ✅ geldt |  |
@@ -645,6 +646,13 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 112 — Anoniem tellen welke schermen gebruikt worden
+*Besloten 23 oktober 2026. Uit de app-controle (Besluit 111); doel: functie eerst, na de pilot weten wat echt gebruikt wordt.*
+- De app telt per dag, per **rol** en per **scherm** hoe vaak het geopend is. **Geen namen**, dus niet terug te leiden naar een ouder of kind. Opnieuw tekenen van hetzelfde scherm telt niet.
+- **Clubbeheerder → Home → Gebruik van de app (laatste 4 weken):** per rol de schermen, meest gebruikte bovenaan, met aantal keer en op hoeveel dagen. Alleen clubbeheerder en HJO zien dit.
+- **Bewaartermijn een jaar** (elke zondagnacht opgeruimd). In de privacyverklaring: *"We tellen anoniem welke schermen gebruikt worden (per rol, zonder naam), om de app te verbeteren. Die telling bewaren we een jaar."*
+- Techniek: tabel `schermgebruik`, functies `tel_scherm` en `schermgebruik_overzicht` (migratie 028).
+
 ## Besluit 111 — App-controle (normen uit het starterspakket van de trainer)
 *Besloten 23 oktober 2026. ClubComm nagelopen met `docs/app-controle.md` (technieken, normen en ontwerpregels uit mijnrijlesplanner).*
 - **Dubbel tikken telt één keer:** dezelfde knop binnen 0,35 seconde, of hetzelfde formulier binnen 1,5 seconde, doet maar één keer iets (geen dubbel bericht, geen twee blokken verder in het wisselschema). Snel op verschillende knoppen tikken blijft werken.
@@ -652,7 +660,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Kleur statusbalk = kleur kopbalk (wit):** geen blauwe strook meer boven de witte kopbalk (Android, Safari).
 - **Inlogpagina:** ruimte voor de notch en de thuisbalk.
 - **Grotere tekst (23-10, na een voorbeeld):** leestekst 16 px, grijze regels 14 px, onderregel in de kop 13 px.
-- Nog te doen uit dezelfde controle: meten welke schermen gebruikt worden (eerst een voorstel, privacy). Bewust niet nu: zwevende tabbalk, krimpende titel, laptop met twee kolommen.
+- Meten welke schermen gebruikt worden: zie Besluit 112. Bewust niet nu: zwevende tabbalk, krimpende titel, laptop met twee kolommen.
 
 ## Besluit 110 — Verzamelen voor wedstrijden is clubbeleid, per leeftijd
 *Besloten 23 oktober 2026. Herziet Besluit 108.*

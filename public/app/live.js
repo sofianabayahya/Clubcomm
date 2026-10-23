@@ -11,6 +11,9 @@
 
   const sb = window.supabase.createClient(cfg.url, cfg.key, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
   CC.sb = sb;
+  // Besluit 112: anoniem schermgebruik (per rol en scherm, geen naam). Lukt het niet, dan gewoon niets.
+  CC.telScherm = (rol, scherm) => { if (!L.pid) return; sb.rpc('tel_scherm', { p_rol: rol, p_scherm: scherm }).then(() => {}, () => {}); };
+  CC.haalGebruik = async (dagen) => { const { data, error } = await sb.rpc('schermgebruik_overzicht', { p_dagen: dagen }); if (error) throw error; return data || []; };
   CC.clubId = () => club;
   let club = cfg.club; // na inloggen: de club uit de koppeling
   const L = { stap: 'laden', email: '', fout: '', snap: new Map(), geweigerd: new Map(), bezig: false, opnieuw: false, timer: null, geladen: 0, pid: null, uitleg: '' };

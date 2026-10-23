@@ -410,6 +410,18 @@
   CC.views.aanmeldingenHjo = (S) => ({ titel: 'Openstaande aanmeldingen', html: `<p class="zacht klein">Na 48 uur zonder reactie komen aanmeldingen bij jou terecht. Je kunt ze zelf goedkeuren.</p><div class="lijst">${S.aanm.filter((x) => x.status === 'open').map((x) => `<small class="klein-kop">${esc(CC.tn(x.teamId))}</small>${CC.aanmRij(S, x)}`).join('') || h.leeg('Alles is goedgekeurd')}</div>` });
 
   // ---------- Clubbeheerder ----------
+  // Besluit 112: gebruik van de app (anoniem, laatste 4 weken), ingeklapt op de Home van de clubbeheerder.
+  // De cijfers komen pas als je het blok opent (één keer per 5 minuten opgehaald).
+  const SCHERMNAMEN = { bericht: 'Een bericht', speler: 'Spelerpagina', team: 'Teampagina', opnemen: 'Aanwezigheid opnemen', speeltijd: 'Speeltijd', archief: 'Archief', kindOverzicht: 'Aanwezigheid kind', begeleidMoment: 'Begeleidingsmoment' };
+  const schermNaam = (S, rol, k) => { const r = CC.rollen[rol]; const t = r && r.tabs ? (r.tabs(S) || []).filter(Boolean).find((x) => x[0] === k) : null; return t ? t[1] : SCHERMNAMEN[k] || (k.charAt(0).toUpperCase() + k.slice(1)); };
+  CC.gebruikBlok = (S) => { const g = CC.ui.gebruik;
+    const inhoud = !CC.haalGebruik ? '<p class="zacht klein">Alleen in de echte versie.</p>' : !g ? '<p class="zacht klein">Laden…</p>' : g.fout ? `<p class="zacht klein">${esc(g.fout)}</p>` : !g.rijen.length ? '<p class="zacht klein">Nog geen gebruik geteld.</p>'
+      : [...new Set(g.rijen.map((r) => r.rol))].map((rol) => { const rij = g.rijen.filter((r) => r.rol === rol);
+        return `<p class="klein"><b>${esc(CC.rolNaam({ rol }))}</b></p><div class="lijst compact">${rij.map((r) => h.rij({ ic: 'eye', titel: esc(schermNaam(S, rol, r.scherm)), rechts: `<span class="zacht klein">${r.aantal}× · ${r.dagen} ${Number(r.dagen) === 1 ? 'dag' : 'dagen'}</span>` })).join('')}</div>`; }).join('');
+    return `<details class="uitklap" id="gebruik"><summary>Gebruik van de app (laatste 4 weken)</summary>${inhoud}<p class="zacht klein">Anoniem geteld: hoe vaak een scherm geopend is, per rol, zonder namen. Zo zie je wat echt gebruikt wordt.</p></details>`; };
+  document.addEventListener('toggle', (e) => { const d = e.target; if (!d || d.id !== 'gebruik' || !d.open || !CC.haalGebruik) return;
+    const g = CC.ui.gebruik; if (g && Date.now() - g.tijd < 5 * 60e3) return;
+    CC.haalGebruik(28).then((rijen) => { CC.ui.gebruik = { rijen, tijd: Date.now() }; CC.render(); }, () => { CC.ui.gebruik = { rijen: [], fout: 'Kon het gebruik niet ophalen.', tijd: Date.now() }; CC.render(); }); }, true);
   CC.rollen.beheerder = {
     context(S) { return { titel: S.club.naam, sub: 'Clubbeheerder' }; },
     tabs(S) { return [['home', 'Home', 'house'], ['seizoen', 'Seizoen', 'calendar'], ['regels', 'Regels', 'sliders-horizontal'], ['rollen', 'Rollen', 'user-cog'], ['modules', 'Modules', 'puzzle']]; },
@@ -425,6 +437,7 @@
             ${stap(i.rollen, 'Rollen', `${S.club.labels.hjo}${S.club.coordinatorAan ? ' + ' + S.club.labels.coordinator : ''}`, 'rollen')}
             ${stap(i.modules, 'Modules', Object.entries(S.club.modules).filter(([, v]) => v).map(([k]) => k).join(', '), 'modules')}
           </div>
+          ${CC.gebruikBlok(S)}
           ${h.sectie('Later')}<div class="lijst">${h.rij({ ic: 'upload', titel: 'Import uit Sportlink', sub: 'Eén keer per seizoen; ouders krijgen dan automatisch een uitnodiging', kleur: '', act: 'demoMelding', attrs: 'data-tekst="Komt na de pilot (Besluit 2)"' })}</div>`;
       },
       seizoen(S) {
