@@ -19,7 +19,7 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
 ## Waar staat wat
 | Bestand | Inhoud |
 |---|---|
-| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bovenaan het **Register** (status per besluit), onderaan **Afgewezen ideeën**. Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 113). |
+| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bovenaan het **Register** (status per besluit), onderaan **Afgewezen ideeën**. Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 114). |
 | `docs/app-controle.md` | **Controlelijst voor schermen** (uit het starterspakket van de gebruiker, mijnrijlesplanner): technieken met vakterm, vaste normen en ontwerpregels. Gebruiken bij elke controle of nieuw scherm. |
 | `docs/pilotlog.md` | **Fouten uit de pilot met oorzaak en patroon** (momentopname, opslaan, demo verbergt het, één persoon per rol, buiten de app, rommelige gegevens). Bij elke wijziging langs deze patronen lopen. |
 | `docs/plan-van-aanpak.md` | **Van pilot naar product:** A product af (ook op schaal: 50 teams) → B beschrijven (handboek) → C prijs en groei → D verkopen → E invoeren. Met planning t/m januari 2027. |
@@ -41,7 +41,7 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
   - Modules: `autoberichten.js` (Communicatieplan, noodberichten, herinneringen activiteiten), `afwezig.js`, `trainerafw.js`, `beoordeling.js` (+ `gesprek.js`: voorbereiding en gesprekspagina ontwikkelgesprek), `materiaal.js`, `meehelpen.js`, `waardering.js`, `hjofilter.js`, `agenda.js`.
   - `evaluatie.html` (los, `/evaluatie`): evaluatieformulier praktijkbegeleiding coach, gegevens alleen op het toestel, PDF via printen (Besluit 93).
   - `live.js`: echte versie (Supabase: inloggen met e-mailcode, laden, automatisch opslaan, beheer).
-- **Demo:** online alleen `mijnclubcomm.nl/demo` met rondleiding voor besturen, **alleen op uitnodiging** (`demo.js`, tabel `demo_toegang`, Besluit 89). `?demo` werkt alleen nog lokaal (tests, schermafbeeldingen). Accounts: Sanne (ouder), Mark (trainer + ouder), Linda (teamleider + ouder), Peter (HJO + beheerder), Esther (coördinator). Democlub "VV De Voorbeeldclub", alleen verzonnen namen (geen echte clubs of adressen gebruiken!); staat in localStorage. Nieuwe of gewijzigde schermen: kijk of de rondleiding (`STAPPEN` in `demo.js`) nog klopt.
+- **Demo:** online alleen `mijnclubcomm.nl/demo` met rondleiding voor besturen, **alleen op uitnodiging** (`demo.js`, tabel `demo_toegang`, Besluit 89). `?demo` werkt alleen nog lokaal (tests, schermafbeeldingen). Accounts: Sanne (ouder), Mark (trainer + ouder), Linda (teamleider + ouder), Peter (HJO + beheerder), Esther (coördinator). Democlub "VV De Voorbeeldclub", alleen verzonnen namen (geen echte clubs of adressen gebruiken!); staat in localStorage. De rondleiding is één verhaal met hoofdstukken die het bestuur kiest (Besluit 114); sommige stappen doen het echt (afmelden). Nieuwe of gewijzigde schermen: kijk of de rondleiding (`STAPPEN` in `demo.js`) nog klopt.
 
 ## Online
 - App: https://mijnclubcomm.nl (domein bij Hostnet, DNS naar Vercel; oud adres clubcomm-nine.vercel.app werkt ook) — Vercel-project `clubcomm` (map `public`). Online zetten: Vercel `create_deployment` (project `clubcomm`, target production, gitSource github `sofianabayahya/Clubcomm`, ref = de werkbranch, zonder teamId).

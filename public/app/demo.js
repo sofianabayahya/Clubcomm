@@ -3,7 +3,7 @@
 // alleen verzonnen voorbeeldgegevens in de browser en schrijft nooit naar de database.
 // Laptop: links de app op telefoonbreedte, rechts een vast uitlegpaneel; een gele rand toont het besproken onderdeel.
 (function () {
-  const CC = window.CC; const cfg = window.CC_CONFIG; const esc = CC.esc, icon = CC.icon;
+  const CC = window.CC; const cfg = window.CC_CONFIG; const esc = CC.esc, icon = CC.icon, M = CC.m;
   if (!CC.demoPad) return;
 
   // ---------- Toegang ----------
@@ -56,11 +56,11 @@
 
   // ---------- Rondleiding ----------
   const bewaar = { get(k) { try { return JSON.parse(sessionStorage.getItem(k)); } catch (e) { return null; } }, set(k, v) { try { sessionStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* */ } } };
-  const R = { i: bewaar.get('cc-rl-stap') || 0, open: true };
+  const R = { i: bewaar.get('cc-rl-stap') || 0, open: true, keuze: bewaar.get('cc-rl-keuze') }; // keuze: de hoofdstukken die het bestuur wil zien (Besluit 114)
   const S = () => CC.S();
   // Hulp om de juiste stand klaar te zetten
   const als = (wie, rol, tab) => {
-    const pid = S().demo[wie]; CC.zetSessie(pid);
+    CC.closeSheet(); const pid = S().demo[wie]; CC.zetSessie(pid);
     const i = CC.me().rollen.findIndex((r) => r.rol === rol); CC.wisselRol(i < 0 ? 0 : i);
     if (tab && tab !== 'home') CC.go(tab);
   };
@@ -74,71 +74,123 @@
   const eerste = (...fns) => () => { for (const f of fns) { const r = f(); if (r.length) return r; } return []; };
 
   const ROL = { ouder: 'Ouder', trainer: 'Trainer', teamleider: 'Teamleider', hjo: 'Hoofd jeugdopleiding', beheerder: 'Clubbeheerder' };
+  // ---------- Het verhaal (Besluit 114) ----------
+  // Eén week bij de democlub, met twee kinderen uit de O10-1: Jesse (meldt netjes af) en Sem (vergeet het weleens).
+  // Een paar stappen doen het echt (afmelden), zodat je ziet hoe het "overspringt" naar trainer, teamleider en chauffeur.
+  const kind = (naam) => S().players.find((p) => p.voornaam === naam && p.teamId === 'O10-1') || S().players.find((p) => p.voornaam === naam);
+  const jesse = () => kind('Jesse'); const sem = () => kind('Sem');
+  // De eerstvolgende wedstrijd (anders de eerstvolgende activiteit). Is de afmeldtermijn al voorbij: bij ziek telt dat niet.
+  const jesseAct = () => { const j = jesse(); const l = M.komend(S(), j.teamId).filter((a) => !a.afgelast && !a.opgave); return l.find(M.isWed) || l[0]; };
+  const isEerste = () => { const l = M.komend(S(), jesse().teamId).filter((a) => !a.afgelast); return l[0] && jesseAct() && l[0].id === jesseAct().id; };
+  const afmVan = () => { const a = jesseAct(); return a && S().afm.find((x) => x.spelerId === jesse().id && x.actId === a.id); };
+  // Jesse rijdt mee met Linda (zij heeft zelf een kind in het team); zo hoort zij het vanzelf als hij afgemeld wordt
+  const zetRit = () => { const a = jesseAct(); if (!a || afmVan()) return; const v = S().vervoer[a.id];
+    if (!(v && v.plek[jesse().id])) { M.neemMee(S(), a, jesse(), S().demo.linda); CC.save(); } };
+  const knop = (act, data) => { const b = Object.assign(document.createElement('button'), { hidden: true }); b.dataset.act = act; Object.assign(b.dataset, data); document.body.appendChild(b); b.click(); b.remove(); };
+  // Overgeslagen? Dan meldt Sanne Jesse alsnog af (zonder venster), zodat het verhaal verderop klopt
+  const zorgAfgemeld = () => { if (afmVan()) return; const a = jesseAct(); if (!a) return; zetRit(); als('sanne', 'ouder');
+    const j = jesse(); S().afm.push({ id: 'f' + Date.now(), spelerId: j.id, actId: a.id, reden: 'Ziek', opm: '', tijd: new Date().toISOString(), door: CC.me().id });
+    if (M.isWed(a) || a.soort === 'activiteit') CC.ritVervalt(S(), a, j, `${j.voornaam} is afgemeld`);
+    const v = S().vervoer[a.id]; if (v) delete v.plek[j.id]; CC.save(); };
+  const ritBericht = () => S().msgs.find((m) => m.soort === 'persoonlijk' && m.ontvangers.includes(S().demo.linda) && /rijdt .* niet mee/.test(m.onderwerp) && m.onderwerp.startsWith('Jesse'));
+  const tijdVan = (iso) => new Date(iso).toTimeString().slice(0, 5);
+  const spoor = () => { const f = afmVan(); const r = ritBericht(); const rij = (ok, tekst, sub) => `<li class="${ok ? 'ok' : ''}"><b>${ok ? '✓' : '→'}</b><span>${tekst}${sub ? `<small>${sub}</small>` : ''}</span></li>`;
+    return `<div class="rl-spoor"><small>Wat er net gebeurde</small><ul>${rij(!!f, 'Sanne meldt Jesse af', f ? `${tijdVan(f.tijd)} · ${esc(f.reden.toLowerCase())}` : '')}${rij(!!f, 'Mark (trainer) ziet het op zijn Home', 'meteen')}${rij(!!f, 'Linda (teamleider) ziet het bij de wedstrijd', 'meteen')}${r ? rij(true, 'Jesse zou met Linda meerijden: zij kreeg een bericht', 'vanzelf, met een pushmelding') : ''}</ul></div>`; };
+  // Linda's bericht aan het team: wie het kreeg (app, pushmelding, e-mail) en wie nog niet (Besluit 107 en 113)
+  const lindaBericht = () => { const s = S(); const id = 'b-demo-verhaal'; let m = s.msgs.find((x) => x.id === id);
+    if (!m) { const o = M.oudersVan(s, 'O10-1').filter((x) => x !== s.demo.linda);
+      m = { id, van: s.demo.linda, vanRol: 'teamleider', soort: 'nieuws', bereik: 'O10-1', onderwerp: 'Zaterdag: denk aan de wastas', tekst: 'Beste ouders, deze week neemt het gezin van Jesse de wastas mee. Lukt het niet? Laat het mij even weten.', tijd: new Date().toISOString(), ontvangers: o, gelezen: o.slice(0, 5), antw: [], urgent: false, gepland: null, mail: true };
+      s.msgs.push(m); s.bezorgd = s.bezorgd || {}; s.bezorgd[id] = { van: s.demo.linda, ontvangers: o, push: o.slice(5, 9), mail: o.slice(9, o.length - 1), antw: {} }; CC.save(); }
+    return m; };
+
   const STAPPEN = [
-    { hfd: 'Start', wie: 'sanne', rol: 'ouder', titel: 'Eén app voor de hele jeugdafdeling',
-      tekst: '<p>Afmelden via WhatsApp, lijstjes voor vervoer, bellen om een timekeeper: bij de meeste clubs zit het overal en nergens. De trainer weet vaak pas op het veld wie er is.</p><p>ClubComm brengt dat samen in één app op de telefoon. Iedere rol ziet precies wat hij nodig heeft, en alles sluit op elkaar aan.</p><p>We volgen <b>één week rond een wedstrijd</b> van de O10-1 van de verzonnen <b>VV De Voorbeeldclub</b>.</p>',
+    { hfd: 'Proloog', wie: 'sanne', rol: 'ouder', titel: 'Het begon langs de lijn',
+      tekst: '<p>Als hoofd opleiding zag ik het elke week bij ouders: afmelden met losse appjes aan de trainer, lijstjes voor het rijden, op zaterdag nog bellen wie de klok wil doen. Goed bedoeld, maar het zat overal en nergens. De trainer wist vaak pas op het veld wie er was.</p><p>Daarom bouwde ik ClubComm: één app waarin alles op elkaar aansluit. Iedereen ziet precies wat hij nodig heeft.</p><p>We volgen één week bij VV De Voorbeeldclub, met twee kinderen uit de O10-1: <b>Jesse</b>, die netjes afmeldt, en <b>Sem</b>, die het weleens vergeet.</p>',
       zet: () => als('sanne', 'ouder') },
-    { hfd: 'Ouder', wie: 'sanne', rol: 'ouder', titel: 'Home: wat moet ik doen, wat komt er?',
-      tekst: '<p>Sanne is moeder van Jesse. Bovenaan staat alleen wat zij nu moet doen: een bericht van de trainer lezen, vervoer, een open taak.</p><p>Staat er niets, dan hoeft ze niets. Daaronder het programma van de week.</p>',
-      zet: () => als('sanne', 'ouder'), doel: sectie('Actie nodig') },
-    { hfd: 'Ouder', wie: 'sanne', rol: 'ouder', titel: 'Afmelden in 3 tikken',
-      tekst: '<p>Afmelden gebeurt bij de training of wedstrijd zelf: tik op <b>Afmelden</b>, kies een reden, klaar.</p><p>De trainer en teamleider zien het meteen. Is de afmeldtermijn voorbij, dan zegt de app dat vooraf. Er is geen verrassing achteraf.</p>',
-      zet: () => { als('sanne', 'ouder'); klik('#app button[data-act="afmelden"]'); }, doel: el('#sheet .sheet') },
-    { hfd: 'Ouder', wie: 'sanne', rol: 'ouder', titel: 'Vervoer: wie rijdt er?',
-      tekst: '<p>Voor een uitwedstrijd zien ouders wie nog vervoer zoekt, en met één tik bieden ze een plek aan.</p><p>Meldt een kind zich af dat zou meerijden, dan krijgt de chauffeur vanzelf bericht.</p>',
-      zet: () => als('sanne', 'ouder', 'vervoer'), doel: eerste(rijMet('zoekt vervoer'), el('#app button[data-act="plekZoeken"]'), el('#app main > *')) },
-    { hfd: 'Trainer', wie: 'mark', rol: 'trainer', titel: 'De trainer weet wie er komt',
-      tekst: '<p>Mark is trainer. Op zijn Home: wie er niet komt en waarom, of een uitslag nog moet worden opgeslagen, en welke spelers aandacht vragen.</p><p><b>ClubComm signaleert, mensen beslissen.</b> Bij een speler die vaak niet afmeldt, stelt de app voor de ouders te bellen. De trainer beslist.</p>',
-      zet: () => als('mark', 'trainer'), doel: sectie('Actie nodig') },
+    { hfd: 'Ouder', wie: 'sanne', rol: 'ouder', titel: 'Jesse is ziek',
+      tekst: () => (afmVan() ? '<p>Sanne heeft Jesse afgemeld: <b>Afmelden → Ziek → Afmelden</b>. Drie tikken.</p><p>Ga verder en kijk wat de trainer ziet.</p>'
+        : `<p>Jesse heeft koorts. Vroeger appte Sanne de trainer, en hoopte dat hij het las.</p><p>Nu meldt ze Jesse af bij de wedstrijd zelf: <b>Afmelden → Ziek → Afmelden</b>. Drie tikken.${jesseAct() && new Date() > M.deadline(S(), jesseAct()) ? ' De afmeldtermijn is al voorbij, maar bij ziek telt dat niet.' : ''}</p><div class="rl-doe">${icon('play')}<span><b>Kijk mee:</b> de demo doet het echt.<small>Tik op Afmelden, of op Volgende.</small></span></div>`),
+      zet: () => { als('sanne', 'ouder'); zetRit(); const a = jesseAct(); if (!a || afmVan()) return;
+        knop('afmelden', { act2: a.id, speler: jesse().id });
+        setTimeout(() => { const r = [...document.querySelectorAll('#sheet label.reden')].find((x) => /Ziek/.test(x.innerText)); if (r) r.click(); }, 700); },
+      // Volgende = Sanne tikt op Afmelden (als ze dat zelf nog niet deed)
+      verder: (door) => { const f = document.querySelector('#sheet form[data-submit="bevestigAfmelden"]'); if (!f) return false;
+        const z = [...f.querySelectorAll('input[name="reden"]')].find((x) => x.value === 'Ziek'); if (z) z.checked = true; f.requestSubmit(); setTimeout(door, 700); return true; },
+      doel: eerste(el('#sheet .sheet'), rijMet('Jesse'), sectie('Programma'), el('#app main > *')) },
+    { hfd: 'Ouder', wie: 'linda', rol: 'ouder', titel: 'De chauffeur hoort het vanzelf',
+      tekst: '<p>Jesse zou meerijden met Linda, de moeder van Noah. Zij krijgt vanzelf een bericht (en een pushmelding): Jesse rijdt niet mee, je hoeft hem niet op te halen.</p><p>Niemand hoeft eraan te denken het door te geven.</p>',
+      zet: () => { zorgAfgemeld(); als('linda', 'ouder', 'berichten'); }, doel: eerste(rijMet('Jesse rijdt'), el('#app .lijst'), el('#app main > *')) },
+    { hfd: 'Trainer', wie: 'mark', rol: 'trainer', titel: 'Het springt over',
+      tekst: () => `<p>Mark is trainer. Hij opent de app en ziet het meteen: <b>Jesse komt niet, ziek.</b> Zonder appje, zonder bellen.</p>${spoor()}`,
+      // Is de wedstrijd van Jesse de eerstvolgende, dan staat het op Home; anders bij die wedstrijd zelf
+      zet: () => { zorgAfgemeld(); als('mark', 'trainer'); if (!isEerste()) CC.open('activiteit', { id: jesseAct().id }); },
+      doel: eerste(rijMet(`${jesse().voornaam} ${jesse().achternaam}`), sectie('Actie nodig'), el('#app main > *')) },
     { hfd: 'Trainer', wie: 'mark', rol: 'trainer', titel: 'Aanwezigheid in één minuut',
-      tekst: '<p>Na de training tikt de trainer aan wie er was en wie te laat kwam. Afmeldingen staan er al in.</p><p>Aanwezigheid per fase, kaarten en signalen rekent de app daarna zelf uit. Dezelfde cijfers ziet de ouder bij het eigen kind.</p>',
+      tekst: '<p>Na de training tikt Mark aan wie er was en wie te laat kwam. Afmeldingen, zoals die van Jesse, staan er al in.</p><p>Was er iemand niet die ook niet had afgemeld, zoals Sem laatst? Dan tikt Mark dat aan. De rest rekent de app zelf uit.</p>',
       zet: () => { als('mark', 'trainer', 'aanwezigheid'); segKlik('Opnemen'); }, doel: eerste(el('#app .opnemen'), el('#app .lijst'), el('#app main > *')) }, // in een vakantie staat er geen training: dan de lijst of het scherm
-    { hfd: 'Trainer', wie: 'mark', rol: 'trainer', titel: 'Wedstrijddag: schema, score en speeltijd',
-      tekst: '<p>De trainer maakt met één tik een wisselschema, met de speelduur volgens de KNVB voor de leeftijd. Wie het minst speelde, krijgt voorrang. De timekeeper, een ouder, ziet het schema op de wedstrijddag.</p><p>Langs de lijn houdt de timekeeper de doelpunten bij. Na <b>Einde wedstrijd</b> liggen uitslag, speeltijd en aanwezigheid vast. Vergeet de trainer het, dan doet de server het 2 uur na afloop.</p>',
+    { hfd: 'Trainer', wie: 'mark', rol: 'trainer', titel: 'De regels doen de rest',
+      tekst: () => `<p>Op de spelerskaart van ${esc(sem().voornaam)} ziet Mark hoe het gaat. De club bepaalt de regels, bijvoorbeeld:</p><ul><li>de eerste keren een <b>vriendelijke herinnering</b> aan de ouders;</li><li><b>te laat afmelden</b>: een gele kaart;</li><li><b>niet afmelden en niet komen</b>: rood.</li></ul><p>Ziek telt nooit. En de ouders zien bij hun eigen kind precies hetzelfde.</p>`,
+      zet: () => { als('mark', 'trainer', 'spelers'); knop('spelerKaart', { id: sem().id }); }, doel: eerste(el('#sheet .sheet'), el('#app .lijst'), el('#app main > *')) },
+    { hfd: 'Trainer', wie: 'mark', rol: 'trainer', titel: 'ClubComm signaleert, de trainer beslist',
+      tekst: () => `<p>Gaat het vaker mis, dan stelt de app voor: <b>bel of app de ouders van ${esc(sem().voornaam)}</b>. Mark belt vanuit de app en legt kort vast wat er speelt.</p><p>Is er een goede reden, dan tikt hij <b>Begrijpelijk</b>: geen kaart. De app signaleert, de trainer beslist.</p>`,
+      zet: () => als('mark', 'trainer'), doel: eerste(rijMet('bel of app de ouders'), sectie('Actie nodig'), el('#app main > *')) },
+    { hfd: 'Teamleider', wie: 'linda', rol: 'teamleider', titel: 'De wedstrijd: wie doet wat?',
+      tekst: '<p>Linda is ook teamleider. Ze ziet wie er komt (Jesse niet) en welke taken nog open staan: trainer-coach, timekeeper, fotograaf, wastas.</p><p>Met <b>Oproep delen</b> vraagt ze in de teamgroep om hulp. Wie zich opgeeft, staat meteen ingedeeld.</p>',
+      zet: () => als('linda', 'teamleider', 'wedstrijd'), doel: eerste(sectie('Taken'), el('#app main > *')) },
+    { hfd: 'Teamleider', wie: 'linda', rol: 'teamleider', titel: 'Berichten die aankomen',
+      tekst: '<p>Linda stuurt een bericht aan het team. Ze ziet niet alleen wie het las, maar ook <b>hoe het aankwam</b>: in de app, met een pushmelding of per e-mail.</p><p>Bovenaan staat wie het (nog) niet kreeg, met een knop om even te bellen of te appen.</p>',
+      zet: () => { als('linda', 'teamleider', 'berichten'); const m = lindaBericht(); CC.open('bericht', { id: m.id }); knop('aankomstVenster', { id: m.id }); },
+      doel: eerste(el('#sheet .sheet'), el('#app main > *')) },
+    { hfd: 'Wedstrijddag', wie: 'mark', rol: 'trainer', titel: 'Schema, score en speeltijd',
+      tekst: '<p>De trainer maakt met één tik een wisselschema, met de speelduur volgens de KNVB voor de leeftijd. Jesse staat er niet in: hij is afgemeld. Wie het minst speelde, krijgt voorrang.</p><p>Langs de lijn houdt de timekeeper, een ouder, de klok en de doelpunten bij. Na <b>Einde wedstrijd</b> liggen uitslag, speeltijd en aanwezigheid vast. Vergeet de trainer het, dan doet de server het 2 uur na afloop.</p>',
       zet: () => als('mark', 'trainer', 'speeltijd'), doel: () => { // Scorebord als er een wedstrijd loopt of net gespeeld is; anders het wisselschema (hangt af van de dag van de week)
         const b = document.querySelector('#app button[data-act="uitslagKlaar"]') || document.querySelector('#app button[data-act="maakSchema"]');
         const k = b && (b.closest('.kaart') || b.parentElement); if (k) return [k];
-        return sectie('Speeltijd dit seizoen')(); } },
-    { hfd: 'Teamleider', wie: 'linda', rol: 'teamleider', titel: 'De wedstrijd: wie doet wat?',
-      tekst: '<p>Linda is teamleider. Ze ziet wie er komt en welke taken nog open staan: trainer-coach, timekeeper, fotograaf, wastas.</p><p>Met <b>Oproep delen</b> vraagt ze in de teamgroep om hulp. Wie zich opgeeft, staat meteen ingedeeld.</p>',
-      zet: () => als('linda', 'teamleider', 'wedstrijd'), doel: sectie('Taken') },
-    { hfd: 'Teamleider', wie: 'linda', rol: 'teamleider', titel: 'Het hele team bereiken',
-      tekst: '<p>Nieuwe ouders melden zich zelf aan met een link of QR-code. De teamleider keurt alleen goed.</p><p>De teamleider ziet ook welke gezinnen pushmeldingen krijgen, en spreekt de rest langs het veld aan.</p>',
-      zet: () => als('linda', 'teamleider', 'team'), doel: sectie('Pushmeldingen') },
-    { hfd: 'Vanzelf', wie: 'sanne', rol: 'ouder', titel: 'Berichten die vanzelf gaan',
-      tekst: '<p>Herinneringen voor trainingen en wedstrijden, de uitslag, vakanties, het begin van het seizoen: de server verstuurt ze elk kwartier vanzelf, met de regels die de club instelt.</p><p>Gesprekken met de staf staan apart. Nieuws verdwijnt vanzelf naar het archief als het niet meer speelt.</p>',
-      zet: () => als('sanne', 'ouder', 'berichten'), doel: el('#app .lijst') },
-    { hfd: 'Club', wie: 'peter', rol: 'hjo', titel: 'De club in één oogopslag',
+        return eerste(sectie('Speeltijd dit seizoen'), el('#app main > *'))(); } },
+    { hfd: 'Wedstrijddag', wie: 'sanne', rol: 'ouder', titel: 'De uitslag gaat vanzelf naar huis',
+      tekst: '<p>Jesse ligt ziek in bed, maar Sanne ziet de uitslag gewoon in de app. Herinneringen, de uitslag, vakanties, het begin van het seizoen: de server verstuurt ze vanzelf, met de regels die de club instelt.</p><p>Nieuws verdwijnt vanzelf naar het archief als het niet meer speelt.</p>',
+      zet: () => als('sanne', 'ouder', 'berichten'), doel: eerste(el('#app .lijst'), el('#app main > *')) },
+    { hfd: 'De club', wie: 'peter', rol: 'hjo', titel: 'De club in één oogopslag',
       tekst: '<p>Peter is hoofd opleiding: hij maakt de trainers beter. Op zijn Home staat alleen wat over zijn trainers gaat: wie aandacht vraagt, wanneer hij deze week kan gaan kijken, en het rapport Trainers per lichting.</p><p>Het regelwerk (vervanger, staf, aanmeldingen) doet de coördinator. Alleen voor teams zonder coördinator staat het hier, in een eigen blok.</p>',
-      zet: () => als('peter', 'hjo'), doel: sectie('Te doen') },
-    { hfd: 'Club', wie: 'peter', rol: 'hjo', titel: 'Inzicht: waar gaat het goed of mis?',
+      zet: () => als('peter', 'hjo'), doel: eerste(sectie('Te doen'), el('#app main > *')) },
+    { hfd: 'De club', wie: 'peter', rol: 'hjo', titel: 'Inzicht: waar gaat het goed of mis?',
       tekst: '<p>Aanwezigheid per team en leeftijdsgroep, met de norm van de club (selectie 90%, breedte 80%). Waarom kinderen afwezig zijn, en hoe het zich ontwikkelt.</p><p>Zo ziet het bestuur waar een team extra aandacht nodig heeft.</p>',
-      zet: () => als('peter', 'hjo', 'inzicht'), doel: sectie('1. Waar gaat het goed') },
-    { hfd: 'Beheer', wie: 'peter', rol: 'beheerder', titel: 'De club bepaalt de regels',
-      tekst: '<p>Afmeldtermijn, kaarten, zones, speeltijd, automatische berichten: alles is een instelling van de club. Niets ligt vast in de app.</p><p>Zo past ClubComm bij de afspraken die de club al heeft.</p>',
-      zet: () => als('peter', 'beheerder', 'regels'), doel: sectie('Afmelden') },
-    { hfd: 'Beheer', wie: 'peter', rol: 'beheerder', titel: 'Modules aan of uit',
-      tekst: '<p>Vervoer, taken, speeltijd, ontwikkelgesprekken: de club zet aan wat ze nodig heeft. Klein beginnen kan, uitbreiden later ook.</p>',
-      zet: () => als('peter', 'beheerder', 'modules'), doel: el('#app .lijst') },
-    { hfd: 'Afsluiting', wie: 'peter', rol: 'hjo', titel: 'Veilig, en samen ingericht',
+      zet: () => als('peter', 'hjo', 'inzicht'), doel: eerste(sectie('1. Waar gaat het goed'), el('#app main > *')) },
+    { hfd: 'De club', wie: 'peter', rol: 'beheerder', titel: 'De club bepaalt de regels',
+      tekst: '<p>Afmeldtermijn, kaarten, verzameltijd, speeltijd, automatische berichten: alles is een instelling van de club. Niets ligt vast in de app.</p><p>Ook zet de club zelf aan wat ze nodig heeft: vervoer, taken, speeltijd, ontwikkelgesprekken. Klein beginnen kan, uitbreiden later ook.</p>',
+      zet: () => als('peter', 'beheerder', 'regels'), doel: eerste(sectie('Afmelden'), el('#app main > *')) },
+    { hfd: 'Slot', wie: 'peter', rol: 'hjo', titel: 'Veilig, en samen ingericht',
       tekst: '<ul><li><b>Privacy:</b> gegevens staan in de EU. Ouders zien alleen hun eigen kind. De rechten zijn in de database zelf geregeld, niet alleen op het scherm.</li><li><b>Inloggen</b> met e-mail en een code: geen wachtwoorden.</li><li><b>In gebruik</b> bij een jeugdteam in Amsterdam, sinds september 2026.</li><li><b>Starten:</b> we richten ClubComm samen met de club in, stap voor stap.</li></ul>',
       zet: () => als('peter', 'hjo') },
   ];
-  CC.demoStappen = STAPPEN; // voor de automatische test (Besluit 88)
+  // Hoofdstukken die het bestuur kan kiezen; Proloog en Slot horen er altijd bij
+  const KIES = [['Ouder', 'Afmelden; de chauffeur hoort het vanzelf'], ['Trainer', 'Ziet het meteen, aanwezigheid, kaarten, bellen'], ['Teamleider', 'Taken verdelen, berichten die aankomen'], ['Wedstrijddag', 'Wisselschema, speeltijd, de uitslag gaat vanzelf naar huis'], ['De club', 'Hoofd opleiding, inzicht, clubregels']];
+  const actief = () => STAPPEN.filter((s) => !KIES.some(([k]) => k === s.hfd) || (R.keuze || []).includes(s.hfd));
+  Object.defineProperty(CC, 'demoStappen', { get: () => actief(), configurable: true }); // voor de automatische test (Besluit 88)
 
+  // Startscherm (Besluit 114): samen met het bestuur kiezen wat ze willen zien
+  const startPaneel = () => `<div class="rl-kop"><span class="rl-merk">${icon('play')} Rondleiding · ClubComm</span></div>
+      <h2 class="rl-titel">Een week bij VV De Voorbeeldclub</h2>
+      <div class="rl-tekst"><p>We volgen één week, van een afmelding tot de uitslag. Kies wat u wilt zien; het begin en het slot horen er altijd bij.</p></div>
+      <form data-submit="rlBegin" class="rl-keuze">${KIES.map(([k, sub]) => { const n = STAPPEN.filter((x) => x.hfd === k).length;
+        return `<label><input type="checkbox" name="h" value="${esc(k)}" checked><span><b>${esc(k)}</b><small>${esc(sub)} · ${n} ${n === 1 ? 'stap' : 'stappen'}</small></span></label>`; }).join('')}
+        <div class="rl-knoppen"><button class="knop">Begin het verhaal ${icon('chevron-right')}</button></div></form>
+      <p class="rl-hulp">Tip: vraag vooraf wat het bestuur wil zien. Alle namen en clubs zijn verzonnen.</p>
+      <button class="linkknop rl-uit" data-act="demoPoortUit">Uitloggen uit de demo</button>`;
   const paneel = () => {
-    const s = STAPPEN[R.i]; const hfds = [...new Set(STAPPEN.map((x) => x.hfd))];
+    if (!R.keuze) return startPaneel();
+    const ST = actief(); const s = ST[R.i]; const hfds = [...new Set(ST.map((x) => x.hfd))];
     const persoon = CC.me(); const naam = persoon ? persoon.naam.split(' ')[0] : '';
     return `<div class="rl-kop"><span class="rl-merk">${icon('play')} Rondleiding · ClubComm</span><button class="rl-klein" data-act="rlSluit" title="Vrij rondkijken (Esc)">Vrij rondkijken</button></div>
       <div class="rl-rol rol-${s.rol}"><small>Je kijkt nu als</small><b>${esc(ROL[s.rol])}${naam ? ` · ${esc(naam)}` : ''}</b></div>
-      <div class="rl-voortgang" aria-hidden="true"><i style="width:${Math.round(((R.i + 1) / STAPPEN.length) * 100)}%"></i></div>
-      <p class="rl-teller">Stap ${R.i + 1} van ${STAPPEN.length} · ${esc(s.hfd)}</p>
+      <div class="rl-voortgang" aria-hidden="true"><i style="width:${Math.round(((R.i + 1) / ST.length) * 100)}%"></i></div>
+      <p class="rl-teller">Stap ${R.i + 1} van ${ST.length} · ${esc(s.hfd)}</p>
       <h2 class="rl-titel">${esc(s.titel)}</h2>
-      <div class="rl-tekst">${s.tekst}</div>
-      <div class="rl-knoppen"><button class="knop licht" data-act="rlVorige" ${R.i === 0 ? 'disabled' : ''}>${icon('chevron-left')} Vorige</button><button class="knop" data-act="rlVolgende" ${R.i === STAPPEN.length - 1 ? 'disabled' : ''}>Volgende ${icon('chevron-right')}</button></div>
-      <nav class="rl-lijst" aria-label="Alle stappen">${hfds.map((hf) => `<div class="rl-hfd"><h3>${esc(hf)}</h3>${STAPPEN.map((x, i) => (x.hfd === hf ? `<button class="${i === R.i ? 'aan' : ''}" data-act="rlGa" data-i="${i}"><span>${i + 1}</span>${esc(x.titel)}</button>` : '')).join('')}</div>`).join('')}</nav>
+      <div class="rl-tekst">${typeof s.tekst === 'function' ? s.tekst() : s.tekst}</div>
+      <div class="rl-knoppen"><button class="knop licht" data-act="rlVorige" ${R.i === 0 ? 'disabled' : ''}>${icon('chevron-left')} Vorige</button><button class="knop" data-act="rlVolgende" ${R.i === ST.length - 1 ? 'disabled' : ''}>Volgende ${icon('chevron-right')}</button></div>
+      <nav class="rl-lijst" aria-label="Alle stappen">${hfds.map((hf) => `<div class="rl-hfd"><h3>${esc(hf)}</h3>${ST.map((x, i) => (x.hfd === hf ? `<button class="${i === R.i ? 'aan' : ''}" data-act="rlGa" data-i="${i}"><span>${i + 1}</span>${esc(x.titel)}</button>` : '')).join('')}</div>`).join('')}</nav>
       <p class="rl-hulp">Pijltjes ← → of een presentatieklikker: vorige en volgende. Esc: vrij rondkijken in de app. Alle namen en clubs zijn verzonnen.</p>
-      <button class="linkknop rl-uit" data-act="demoPoortUit">Uitloggen uit de demo</button>`;
+      <div class="rl-onder"><button class="linkknop" data-act="rlOpnieuw">Opnieuw beginnen</button><button class="linkknop" data-act="demoPoortUit">Uitloggen uit de demo</button></div>`;
   };
   const aside = () => document.getElementById('rondleiding') || document.body.appendChild(Object.assign(document.createElement('aside'), { id: 'rondleiding' }));
   const rand = () => document.getElementById('rl-rand') || document.body.appendChild(Object.assign(document.createElement('div'), { id: 'rl-rand' }));
@@ -155,8 +207,9 @@
     let k = document.getElementById('rl-open'); if (!k) { k = document.body.appendChild(Object.assign(document.createElement('button'), { id: 'rl-open', className: 'knop' })); k.dataset.act = 'rlOpen'; k.innerHTML = `${icon('play')} Rondleiding`; }
     k.hidden = R.open; };
   const toon = (i) => {
-    R.i = Math.max(0, Math.min(STAPPEN.length - 1, i)); bewaar.set('cc-rl-stap', R.i);
-    const s = STAPPEN[R.i];
+    if (!R.keuze) { try { als('sanne', 'ouder'); } catch (e) { console.error(e); } doelen = []; tekenPaneel(); plaatsRand(); return; }
+    const ST = actief(); R.i = Math.max(0, Math.min(ST.length - 1, i)); bewaar.set('cc-rl-stap', R.i);
+    const s = ST[R.i];
     try { s.zet(); } catch (e) { console.error(e); }
     tekenPaneel();
     requestAnimationFrame(() => {
@@ -172,7 +225,12 @@
       if (actief) lijst.scrollTop = actief.offsetTop - lijst.clientHeight / 2;
     });
   };
-  CC.on('rlVolgende', () => toon(R.i + 1));
+  // Volgende: doet een stap iets echt (afmelden), dan eerst dat, daarna verder
+  const volgende = () => { const s = R.keuze && actief()[R.i]; if (s && s.verder && s.verder(() => toon(R.i + 1))) return; toon(R.i + 1); };
+  CC.on('rlVolgende', volgende);
+  CC.on('rlBegin', (f) => { const k = [...f.querySelectorAll('input[name="h"]:checked')].map((x) => x.value); R.keuze = k; bewaar.set('cc-rl-keuze', k); toon(0); });
+  // Opnieuw beginnen: de democlub zoals hij was (de afmelding van Jesse is weer weg) en opnieuw kiezen
+  CC.on('rlOpnieuw', () => { CC.reset(); R.keuze = null; R.i = 0; bewaar.set('cc-rl-keuze', null); bewaar.set('cc-rl-stap', 0); toon(0); });
   CC.on('rlVorige', () => toon(R.i - 1));
   CC.on('rlGa', (b) => toon(Number(b.dataset.i)));
   CC.on('rlSluit', () => { R.open = false; tekenPaneel(); plaatsRand(); });
@@ -182,7 +240,8 @@
     const t = e.target; if (t && /INPUT|TEXTAREA|SELECT/.test(t.tagName)) return;
     if (e.key === 'Escape') { if (!R.open) { R.open = true; toon(R.i); } else if (document.getElementById('sheet').hidden) { R.open = false; tekenPaneel(); plaatsRand(); } return; }
     if (!R.open) return;
-    if (['ArrowRight', 'PageDown'].includes(e.key)) { e.preventDefault(); toon(R.i + 1); }
+    if (!R.keuze) return;
+    if (['ArrowRight', 'PageDown'].includes(e.key)) { e.preventDefault(); volgende(); }
     if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); toon(R.i - 1); }
   });
   // De rand volgt het onderdeel bij scrollen, venstergrootte en opnieuw tekenen; klikt iemand zelf verder, dan verdwijnt hij.

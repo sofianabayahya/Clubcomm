@@ -17,6 +17,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 114 | De demo is één verhaal (een week bij de democlub); het bestuur kiest de hoofdstukken; afmelden gebeurt echt | ✅ geldt |  |
 | 113 | Drie lagen: tabblad → venster → pagina; spelerskaart, trainerkaart en "Aangekomen bij" als venster, vegen om te sluiten | ✅ geldt |  |
 | 112 | Anoniem tellen welke schermen gebruikt worden; overzicht voor de clubbeheerder | ✅ geldt |  |
 | 111 | App-controle: dubbel tikken, Beperk beweging, kleur statusbalk, notch op de inlogpagina | ✅ geldt |  |
@@ -41,7 +42,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 | 92 | Oefenwedstrijd: thuis of uit, verzamelen, verzamelpunt en adres | ◐ deels herzien | door 107 (ook de teamleider zet een oefenwedstrijd in), 108 (standaard verzameltijd per team) |
 | 91 | Aanwezigheid: alleen dagen die nog iets vragen, met adres | ✅ geldt |  |
 | 90 | Adres en verzamelpunt zichtbaar waar de ouder kijkt | ✅ geldt |  |
-| 89 | Demo met rondleiding voor besturen, alleen op uitnodiging | ◐ deels herzien | door 95 (de rondleiding moet de coördinator en de HO nog laten zien) |
+| 89 | Demo met rondleiding voor besturen, alleen op uitnodiging | ◐ deels herzien | door 95 (de rondleiding moet de coördinator en de HO nog laten zien) en 114 (de rondleiding is één verhaal) |
 | 88 | Vangnet: automatische tests en bewaking | ✅ geldt |  |
 | 87 | Trainingsrooster: per dag eigen tijd en veld, ingangsdatum, veilig bijwerken | ✅ geldt |  |
 | 86 | Trainersportaal: elk scherm één taak; alle teamleiders zichtbaar | ◐ deels herzien | door 105 (Vraagt aandacht pas vanaf 6 keer gemeten) |
@@ -647,6 +648,16 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 114 — De demo is één verhaal: een week bij de democlub
+*Besloten 23 oktober 2026, na een voorbeeld. Wens van de initiatiefnemer: het verhaal van A tot Z kunnen vertellen, beginnend bij de ouder, en laten zien hoe alles in elkaar grijpt.*
+- **Startscherm:** "Een week bij VV De Voorbeeldclub". Samen met het bestuur vink je aan wat ze willen zien: **Ouder, Trainer, Teamleider, Wedstrijddag, De club**. De **proloog** en het **slot** horen er altijd bij. "Opnieuw beginnen" zet de democlub terug en laat opnieuw kiezen.
+- **Proloog in de ik-vorm, vanuit de HO:** "Als hoofd opleiding zag ik het elke week bij ouders …".
+- **Twee kinderen lopen door het verhaal:** **Jesse** meldt netjes af (ziek), **Sem** vergeet het weleens (kaarten, "bel de ouders").
+- **De handelingen zijn zichtbaar en gebeuren echt:** bij "Jesse is ziek" opent het afmeldvenster, *Ziek* licht op en **Volgende** tikt op *Afmelden*. Daarna zie je het overspringen: de chauffeur (Linda) krijgt een bericht, de trainer ziet "Jesse · Ziek", met rechts een spoor **"Wat er net gebeurde"**. Wordt een hoofdstuk overgeslagen, dan gebeurt de afmelding stil, zodat het verhaal verderop klopt.
+- **Volgorde:** Proloog → Ouder (Jesse is ziek; de chauffeur hoort het vanzelf) → Trainer (het springt over; aanwezigheid; de regels doen de rest; ClubComm signaleert, de trainer beslist) → Teamleider (wie doet wat; berichten die aankomen) → Wedstrijddag (schema, score en speeltijd; de uitslag gaat vanzelf naar huis) → De club (in één oogopslag; inzicht; de club bepaalt de regels, ook modules) → Slot (veilig, samen ingericht).
+- Vervallen stappen: "Het hele team bereiken" (aanmelden met QR) en "Modules aan of uit" (nu één zin in "De club bepaalt de regels").
+- **Gevonden fout (meegenomen):** een chauffeur die alleen ouder is, zag het bericht "X rijdt niet mee" niet in de app (de ouderrol verbergt persoonlijke berichten van andere ouders, Besluit 79). Die berichten zijn nu gemarkeerd als rit-bericht en staan altijd bij de ouder. Zie `pilotlog.md`.
+
 ## Besluit 113 — Drie lagen: tabblad → venster → pagina (spelerskaart)
 *Besloten 23 oktober 2026, na een voorbeeld op telefoonformaat. Vraag van de trainer: zoveel mogelijk op één scherm, zoals in mijnrijlesplanner.*
 - **Vaste regel voor elk scherm:** **tabblad** = wat je dagelijks ziet (lijsten, overzicht) · **venster** (van onder) = snel kijken of één ding doen, past op één scherm, daarna sta je weer op dezelfde plek · **pagina** (terug linksboven) = alles over één ding, lang of om te lezen. **Nooit een venster op een venster**; uit een venster ga je hooguit door naar de pagina ("Alles over … →").
@@ -879,6 +890,7 @@ Aanleiding: een ouder vroeg waar ze moesten verzamelen voor de strandtraining; h
 
 ## Besluit 89 — Demo met rondleiding voor besturen, alleen op uitnodiging
 > **◐ Deels herzien door Besluit 95 (de rondleiding moet de coördinator en de HO nog laten zien)** (zie Register).
+> **◐ Deels herzien door Besluit 114: de rondleiding is één verhaal met hoofdstukken die het bestuur kiest** (zie Register).
 *28-09. SCPB en AS80 vroegen om een demo; de initiatiefnemer laat besturen (vooral voorzitters) zien wat elke rol doet.*
 - **Adres:** `mijnclubcomm.nl/demo`. **Alleen op uitnodiging:** inloggen zoals in de echte app (e-mail + code); alleen adressen op de toegangslijst (tabel `demo_toegang`, migratie 023) krijgen een code. Anderen zien "Alleen op uitnodiging". Toevoegen of weghalen: zie `supabase/scripts/2026-09-28_demo_toegang_beheerder.sql`.
 - **De oude open demo (`?demo`) is dicht** op de echte website; alleen op de eigen computer werkt hij nog (automatische tests, schermafbeeldingen voor de handleidingen).

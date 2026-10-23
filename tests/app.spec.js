@@ -711,6 +711,20 @@ test.describe('Demo', () => {
     await expect(page.locator('#sheet')).toBeHidden();
   });
 
+  // Gevonden bij Besluit 114: een chauffeur die alleen ouder is, zag "X rijdt niet mee" niet (persoonlijk bericht van een andere ouder)
+  test('chauffeur (ouder) ziet dat een kind niet meerijdt', async ({ page }) => {
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(2).click(); // Linda: ouder van Noah
+    await page.locator('[data-act="magischeLink"]').click();
+    await page.evaluate(() => { const S = CC.S(), M = CC.m; CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'ouder'));
+      const noah = S.players.find((p) => p.voornaam === 'Noah'); const a = M.komend(S, noah.teamId).find(M.isWed);
+      M.neemMee(S, a, noah, S.demo.sanne); CC.ritVervalt(S, a, noah, 'Noah is afgemeld'); CC.save();
+      CC.zetSessie(S.demo.sanne); CC.wisselRol(Math.max(0, CC.me().rollen.findIndex((r) => r.rol === 'ouder'))); CC.go('berichten'); });
+    await expect(page.locator('#app')).toContainText('Noah rijdt');
+  });
+
   test('spelerskaart: teamleider', async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
@@ -901,6 +915,42 @@ test.describe('Kleine club (echte versie, nagebootste database)', () => {
 });
 
 // De demo rekent vanaf "vandaag": de rondleiding moet op elke dag van de week kloppen (fout gevonden op een woensdag)
+// Besluit 114: de rondleiding als één verhaal; het bestuur kiest de hoofdstukken; afmelden gebeurt echt en springt over
+test('rondleiding: kiezen, afmelden springt over, opnieuw beginnen', async ({ page }) => {
+  const fouten = volgFouten(page);
+  await page.setViewportSize({ width: 1366, height: 768 });
+  await page.route('**/app/vendor/supabase.js', (r) => r.fulfill({ contentType: 'application/javascript', body: NEP_SUPABASE }));
+  await page.goto('/demo'); await page.evaluate(() => { localStorage.clear(); sessionStorage.clear(); }); await page.goto('/demo');
+  await page.fill('#dm', 'admin@test.nl'); await page.locator('#dm').press('Enter');
+  await page.fill('#dc', '123456'); await page.locator('#dc').press('Enter');
+  await expect(page.locator('#rondleiding .rl-titel')).toHaveText('Een week bij VV De Voorbeeldclub');
+  // Alleen Ouder en Trainer
+  for (const h of ['Teamleider', 'Wedstrijddag', 'De club']) await page.locator(`#rondleiding input[value="${h}"]`).uncheck();
+  await page.locator('#rondleiding [data-submit="rlBegin"] button').click();
+  expect(await page.evaluate(() => [...new Set(CC.demoStappen.map((s) => s.hfd))])).toEqual(['Proloog', 'Ouder', 'Trainer', 'Slot']);
+  // Stap 2: Sanne meldt Jesse af; Volgende = op Afmelden tikken
+  await page.locator('#rondleiding [data-act="rlVolgende"]').click();
+  await expect(page.locator('#rondleiding .rl-titel')).toHaveText('Jesse is ziek');
+  await expect(page.locator('#sheet form[data-submit="bevestigAfmelden"]')).toBeVisible();
+  await page.waitForTimeout(400);
+  await page.locator('#rondleiding [data-act="rlVolgende"]').click();
+  await expect(page.locator('#rondleiding .rl-titel')).toHaveText('De chauffeur hoort het vanzelf');
+  const st = await page.evaluate(() => { const S = CC.S(); const j = S.players.find((p) => p.voornaam === 'Jesse');
+    return { afm: S.afm.filter((x) => x.spelerId === j.id && x.reden === 'Ziek').length, rit: S.msgs.filter((m) => m.rit && m.onderwerp.startsWith('Jesse')).length }; });
+  expect(st.afm).toBeGreaterThan(0); expect(st.rit).toBe(1);
+  await expect(page.locator('#app')).toContainText('Jesse rijdt');
+  await page.waitForTimeout(400);
+  await page.locator('#rondleiding [data-act="rlVolgende"]').click();
+  await expect(page.locator('#rondleiding .rl-titel')).toHaveText('Het springt over');
+  await expect(page.locator('#rondleiding .rl-spoor')).toContainText('Sanne meldt Jesse af');
+  await expect(page.locator('#rl-rand')).toBeVisible();
+  // Opnieuw beginnen: de afmelding is weer weg en je kiest opnieuw
+  await page.locator('#rondleiding [data-act="rlOpnieuw"]').click();
+  await expect(page.locator('#rondleiding [data-submit="rlBegin"]')).toBeVisible();
+  expect(await page.evaluate(() => { const S = CC.S(); const j = S.players.find((p) => p.voornaam === 'Jesse'); return S.afm.filter((x) => x.spelerId === j.id && x.reden === 'Ziek' && Date.now() - new Date(x.tijd).getTime() < 6e5).length; })).toBe(0);
+  expect(fouten).toEqual([]);
+});
+
 test.describe('Rondleiding op elke dag van de week', () => {
   for (const dag of ['2026-10-05T16:00', '2026-10-06T16:00', '2026-10-07T16:00', '2026-10-08T16:00', '2026-10-09T20:00', '2026-10-10T09:45', '2026-10-10T16:00', '2026-10-11T12:00']) {
     test(`elke stap vindt zijn onderdeel · ${dag}`, async ({ page }) => {
@@ -912,6 +962,7 @@ test.describe('Rondleiding op elke dag van de week', () => {
       await page.fill('#dm', 'admin@test.nl'); await page.locator('#dm').press('Enter');
       await page.fill('#dc', '123456'); await page.locator('#dc').press('Enter');
       await expect(page.locator('#rondleiding .rl-titel')).toBeVisible();
+      await page.locator('#rondleiding [data-submit="rlBegin"] button').click();
       const stappen = await page.evaluate(() => CC.demoStappen.map((s) => !!s.doel));
       for (let i = 0; i < stappen.length; i++) {
         await page.locator(`#rondleiding [data-act="rlGa"][data-i="${i}"]`).click();
@@ -937,6 +988,7 @@ test.describe('Demo voor besturen (/demo, Besluit 89)', () => {
     await page.fill('#dm', 'admin@test.nl'); await page.locator('#dm').press('Enter');
     await page.fill('#dc', '123456'); await page.locator('#dc').press('Enter');
     await expect(page.locator('#rondleiding .rl-titel')).toBeVisible();
+    await page.locator('#rondleiding [data-submit="rlBegin"] button').click(); // Besluit 114: eerst kiezen wat je wilt zien (alles staat aan)
     const stappen = await page.evaluate(() => CC.demoStappen.map((s) => ({ titel: s.titel, doel: !!s.doel })));
     for (let i = 0; i < stappen.length; i++) {
       await page.locator(`#rondleiding [data-act="rlGa"][data-i="${i}"]`).click();
