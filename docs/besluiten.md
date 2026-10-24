@@ -17,6 +17,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 118 | Tikvlakken minimaal 44 pt: keuze- en filterknoppen, balkjes, rolwissel, profielknop | ✅ geldt |  |
 | 117 | Vangnet: mag de timekeeper iets niet opslaan, dan gaat het als voorstel naar de trainer (één tik overnemen) | ✅ geldt |  |
 | 116 | De timekeeper slaat de wedstrijd echt op; minuten en speeltijd ziet alleen de trainer | ✅ geldt |  |
 | 115 | "Vervanger nodig" naar teamleider en coördinator (HO alleen als terugval); coördinator in de rondleiding | ✅ geldt |  |
@@ -650,6 +651,13 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 118 — Tikvlakken minimaal 44 pt
+*Besloten 24 oktober 2026, na de beoordeling (toegankelijkheid 6,5) en een voorbeeld. Norm uit `docs/app-controle.md`.*
+- **Keuzeknoppen** (bijv. *Teams / Spelers / Staf*, *Fase 1 / Heel seizoen*) en **filterknoppen** (*Alle / Oranje-rood*): 44 pt hoog, letters iets groter.
+- **Balkjes** bij Inzicht, de **kop van een trainerkaartje** en korte invulvelden (datums): 44 pt.
+- **Rolwissel** en **profielknop** zien er hetzelfde uit, maar hebben een groter onzichtbaar tikvlak (rolwissel van 21 naar 45 pt).
+- Bewust zo gelaten: losse tekstlinks in een zin (bijv. *Dank je!*, een adres).
 
 ## Besluit 117 — Vangnet: wat de timekeeper niet mag opslaan, gaat als voorstel naar de trainer
 *Besloten 24 oktober 2026, na een voorbeeld. Wens van de trainer: de timekeeper hoeft na de wedstrijd niets meer te regelen, en de trainer is ook met andere dingen bezig.*
