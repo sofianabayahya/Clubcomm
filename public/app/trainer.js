@@ -79,7 +79,7 @@
     const tabel = `${h.sectie('Speeltijd dit seizoen')}<div class="balkjes">${seizoen.map(({ pl, x }) => `<div class="balkje"><span>${esc(pl.voornaam)}</span><i style="--w:${x.pct ?? 0}%"></i><b>${zelf ? `${Math.round(x.min)}'` : x.pct == null ? '–' : x.pct + '%'}</b></div>`).join('')}</div>
       <p class="zacht klein">Percentage van de mogelijke speeltijd in de wedstrijden waarbij het kind er was. Gemiste wedstrijden tellen niet mee${seizoen.some(({ x }) => Object.keys(x.gemist).length) ? `: ${seizoen.filter(({ x }) => Object.keys(x.gemist).length).map(({ pl, x }) => `${esc(pl.voornaam)} (${gemistTekst(x.gemist)})`).join(', ')}` : ''}.</p>`;
     // Besluit 106: bij een eigen schema ook de posities dit seizoen
-    const seizoenBlok = zelf ? tabel + CC.posTabel(S, teamId) : tabel;
+    const seizoenBlok = !CC.zietMinuten() ? '' : zelf ? tabel + CC.posTabel(S, teamId) : tabel; // Besluit 116: alleen de trainer
     // Nog geen wedstrijd: uitleggen wat hier komt, met de KNVB-speelduur van dit team (Besluit 60)
     if (!a) { const c0 = CC.categorie(M.wedCat(S, teamId));
       return `${h.leeg('Nog geen wedstrijd gepland', 'timer')}<p class="zacht klein midden">Zodra er een (oefen)wedstrijd in de planning staat, maak je hier het wisselschema. ${esc(c0.leeftijd)}: ${esc(c0.vorm)}, ${esc(c0.speelduur)}${c0.timeout ? ', met een time-out halverwege elke helft' : ''} (KNVB).</p>` + (opties.alleenSchema ? '' : seizoenBlok); }

@@ -1036,7 +1036,7 @@
     const gespr = S.gesprekken.filter((g) => g.spelerId === pl.id).sort((a, b) => String(b.datum).localeCompare(String(a.datum))); // nieuwste eerst (Besluit 81)
     const sp = M.speeltijdStand ? M.speeltijdStand(S, pl) : null;
     const dp = staf && M.doelpuntenSeizoen ? M.doelpuntenSeizoen(S, pl.id) : 0;
-    const kopSub = [CC.tn(pl.teamId), sp && sp.pct != null ? `${sp.pct}% speeltijd` : '', dp ? `${dp} ${dp === 1 ? 'doelpunt' : 'doelpunten'}` : '', staf && CC.zicht('beoordeling') ? (CC.laatsteVerslag && CC.laatsteVerslag(S, pl.id) ? `gesprek gehad (${CC.laatsteVerslag(S, pl.id).m.naam.toLowerCase()})` : '') : ''].filter(Boolean).join(' · ');
+    const kopSub = [CC.tn(pl.teamId), sp && sp.pct != null && CC.zietMinuten() ? `${sp.pct}% speeltijd` : '', dp ? `${dp} ${dp === 1 ? 'doelpunt' : 'doelpunten'}` : '', staf && CC.zicht('beoordeling') ? (CC.laatsteVerslag && CC.laatsteVerslag(S, pl.id) ? `gesprek gehad (${CC.laatsteVerslag(S, pl.id).m.naam.toLowerCase()})` : '') : ''].filter(Boolean).join(' · ');
     const oudersBlok = staf && ouders.length ? `${h.sectie(ouders.length > 1 ? 'Ouders' : 'Ouder')}<div class="lijst">${ouders.map((o) => CC.contactRij(o)).join('')}</div>` : '';
     // Positie (Besluit 71): keeper of veldspeler. Bepaalt de vaardigheden in het ontwikkelgesprek en wie op doel staat.
     const posBlok = staf ? `<div class="zelfrij posrij"><span><b>Positie</b></span><span class="niveaus">${[['', 'Veldspeler'], ['keeper', 'Keeper']].map(([k, l]) => `<button type="button" class="${(pl.positie || '') === k ? 'aan' : ''}" data-act="zetPositie" data-id="${pl.id}" data-v="${k}" aria-pressed="${(pl.positie || '') === k}">${l}</button>`).join('')}</span></div>` : '';
@@ -1096,7 +1096,7 @@
     const ouders = pl.ouders.map((o) => M.persoon(S, o)).filter(Boolean);
     const v = M.komend(S, t.id, 6).find((x) => !x.afgelast);
     const sp = M.speeltijdStand ? M.speeltijdStand(S, pl) : null;
-    const sub = [CC.tn(pl.teamId), pl.positie === 'keeper' ? 'keeper' : '', sp && sp.pct != null ? `${sp.pct}% speeltijd` : ''].filter(Boolean).join(' · ');
+    const sub = [CC.tn(pl.teamId), pl.positie === 'keeper' ? 'keeper' : '', sp && sp.pct != null && CC.zietMinuten() ? `${sp.pct}% speeltijd` : ''].filter(Boolean).join(' · ');
     const volgt = CC.volgtSpelers(t.id);
     let cijfers = '';
     if (volgt) {
@@ -1114,6 +1114,8 @@
       ${acties ? `<div class="lijst">${acties}</div>` : ''}
       <button class="knop licht" data-act="open" data-view="speler" data-id="${pl.id}">Alles over ${esc(pl.voornaam)} ${icon('chevron-right')}</button>`);
   });
+  // Besluit 116: minuten en speeltijd ziet alleen de trainer (niet de timekeeper, teamleider of ouder)
+  CC.zietMinuten = () => (CC.rol() || {}).rol === 'trainer';
   CC.on('zetPositie', (el) => { const pl = M.speler(S, el.dataset.id); if (el.dataset.v) pl.positie = el.dataset.v; else delete pl.positie; CC.save(); CC.render(); CC.toast(el.dataset.v ? `${pl.voornaam} staat nu als keeper` : `${pl.voornaam} staat nu als veldspeler`); });
   CC.kaartIc = (e) => (e.kaart === 'herinnering' ? 'mail' : `<span class="kaart ${e.kaart}${e.geaccepteerd ? ' vaag' : ''}">${e.tweedeGeel ? '2' : '1'}</span>`);
   CC.kaartTitel = (e) => (e.kaart === 'herinnering' ? 'Vriendelijke herinnering' : e.kaart === 'geel' ? 'Gele kaart' : e.tweedeGeel ? 'Rode kaart (tweede gele)' : 'Rode kaart');

@@ -17,16 +17,17 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 116 | De timekeeper slaat de wedstrijd echt op; minuten en speeltijd ziet alleen de trainer | ✅ geldt |  |
 | 115 | "Vervanger nodig" naar teamleider en coördinator (HO alleen als terugval); coördinator in de rondleiding | ✅ geldt |  |
 | 114 | De demo is één verhaal (een week bij de democlub); het bestuur kiest de hoofdstukken; afmelden gebeurt echt | ✅ geldt |  |
 | 113 | Drie lagen: tabblad → venster → pagina; spelerskaart, trainerkaart en "Aangekomen bij" als venster, vegen om te sluiten | ✅ geldt |  |
 | 112 | Anoniem tellen welke schermen gebruikt worden; overzicht voor de clubbeheerder | ✅ geldt |  |
 | 111 | App-controle: dubbel tikken, Beperk beweging, kleur statusbalk, notch op de inlogpagina | ✅ geldt |  |
 | 110 | Verzamelen voor wedstrijden is clubbeleid, per leeftijd | ✅ geldt |  |
-| 109 | Posities in procenten van de gespeelde minuten | ✅ geldt |  |
+| 109 | Posities in procenten van de gespeelde minuten | ◐ deels herzien | door 116 (alleen de trainer ziet de procenten en minuten) |
 | 108 | Verzameltijd per team: thuis en uit zoveel minuten voor de aftrap | ◐ deels herzien | door 110 (geen instelling per team meer: clubregel per leeftijd) |
 | 107 | Elk bericht komt aan (push of e-mail, ook antwoorden) en je ziet hoe; teamleider zet oefenwedstrijden in | ✅ geldt |  |
-| 106 | Eigen wisselschema voor selectieteams (opstelling 1-4-3-3, wissels, minuten en posities); speelvorm per team | ✅ geldt |  |
+| 106 | Eigen wisselschema voor selectieteams (opstelling 1-4-3-3, wissels, minuten en posities); speelvorm per team | ◐ deels herzien | door 116 (de timekeeper houdt het bij en slaat het op; minuten alleen voor de trainer) |
 | 105 | Aanwezigheid: pas een kleur en signaal vanaf 6 keer gemeten | ✅ geldt |  |
 | 104 | Rol wisselen met één tik in de kop, met per rol wat er wacht | ✅ geldt |  |
 | 103 | Automatisch bewaren in formulieren; Rollen opgeschoond | ✅ geldt |  |
@@ -649,6 +650,13 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 116 — De timekeeper slaat de wedstrijd echt op; minuten ziet alleen de trainer
+*Besloten 24 oktober 2026, na de eerste wedstrijd van het O12 talententeam (6-2 tegen DCG O13-3). De moeder die timekeeper was, hield tijden, posities, wissels en doelpunten bij; dat werkte goed en blijft zo.*
+- **Gevonden fout:** de database liet een ouder aan een wedstrijd alleen *vervanger* en *begeleider* wijzigen. Doelpunten, uitslag, klok en wissels van de timekeeper werden geweigerd; alleen het uitslagbericht aan de ouders kwam aan. De trainer zag daardoor niets terug.
+- **Opgelost (migratie 029):** wie bij een wedstrijd de taak **Timekeeper** of **Trainer-coach** heeft, mag van een dag ervoor tot een dag erna opslaan wat hij bijhoudt: het wisselschema (klok, wissels, posities), de aanwezigheid, de speeltijd, de doelpunten en de uitslag. Andere velden van de wedstrijd (tijd, tegenstander, adres) blijven voor de staf.
+- **Minuten en speeltijd ziet alleen de trainer:** niet de teamleider, de timekeeper of de ouders. De timekeeper ziet het veld, de klok en de wissels; de teamleider ziet op de wedstrijddag het wisselschema zonder minuten. Op de spelerskaart en spelerpagina staat het speeltijdpercentage alleen voor de trainer.
+- **24-10 hersteld (script):** uitslag 6-2 met de makers uit het bericht bij de wedstrijd gezet. De tegenstander speelde met onze spelers, dus iedereen heeft even lang gespeeld: alle 16 spelers 60 minuten (eenmalig, geen aparte knop, want dit is niet standaard).
+
 ## Besluit 115 — "Vervanger nodig" gaat naar de coördinator; coördinator in de rondleiding
 *Besloten 23 oktober 2026, na een voorbeeld. Gevonden bij het maken van de demostap: de app volgde Besluit 95 hier nog niet.*
 - **Trainer kan niet (vervanger zoeken):** het bericht "Vervanger nodig" (met pushmelding) gaat naar de **teamleider en de coördinator van dat team**. Alleen als het team geen coördinator heeft, gaat het naar de **HO** (terugval, Besluit 95). Eerder ging het altijd naar teamleider en HO, en kreeg de coördinator niets.
@@ -699,6 +707,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Wie stelt het in:** de clubbeheerder (Regels). Het hoort bij de organisatie (coördinator, Besluit 95), maar clubregels kan nu alleen de clubbeheerder opslaan; zie Nog te bespreken.
 
 ## Besluit 109 — Posities in procenten
+> **◐ Deels herzien door Besluit 116: alleen de trainer ziet de procenten en minuten** (zie Register).
 *Besloten 18 oktober 2026. Vult Besluit 106 aan.*
 - Per speler zie je per positie welk **percentage van zijn gespeelde minuten** hij daar stond (*Rechtsback 60% (120') · Spits 40% (80')*), bij Speeltijd → *Posities dit seizoen*.
 - Bij het kiezen van een speler voor een plek staan zijn twee meest gespeelde posities erbij (*rechtsback 60%, spits 40%*).
@@ -723,6 +732,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - Techniek: de server (Edge Function *melding*) legt per bericht en per antwoord vast wie een pushmelding en wie een e-mail kreeg (rij *bezorgd*; alleen de server mag die schrijven, migratie 027).
 
 ## Besluit 106 — Eigen wisselschema voor selectieteams; speelvorm per team
+> **◐ Deels herzien door Besluit 116: de timekeeper houdt het schema bij en slaat het op; minuten alleen voor de trainer** (zie Register).
 *Besloten 17 oktober 2026. Aanleiding: het O12 talententeam van DCG speelt in de O13-competitie (11 tegen 11) en de trainer kiest zelf wie speelt (training, inzet, coachbaarheid, aanwezigheid). Vult Besluit 33, 39 en 60 aan.*
 - **Speelvorm per team:** de clubbeheerder kiest op de teampagina *Speelt wedstrijden als* (bijv. O13, 11 tegen 11, 2 × 30 minuten). Dat bepaalt speelduur, aantal in het veld en de vaste taken: vanaf O13 een **vlagger** bij elke wedstrijd en bij thuiswedstrijden een **scheidsrechter** (geen spelbegeleider). Leeg = zoals de teamnaam.
 - **Zelf maken of eerlijk voorstel:** bij Speeltijd kiest de trainer *Eerlijk voorstel* (zoals nu) of *Zelf maken*. Alleen waar de club afwijken toestaat (standaard: selectieteams). Breedteteams houden de eerlijke verdeling.
