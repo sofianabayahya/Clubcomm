@@ -788,6 +788,22 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'voorstel timekeeper');
   });
 
+  // Besluit 118: keuze- en filterknoppen, balkjes en de rolwissel minimaal 44 pt tikvlak
+  test('tikvlakken minimaal 44 pt', async ({ page }) => {
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(3).click(); // Peter: HJO
+    await page.locator('[data-act="magischeLink"]').click();
+    for (const tab of ['teams', 'inzicht']) {
+      await page.evaluate((t) => { CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'hjo')); CC.go(t); }, tab);
+      const klein = await page.evaluate(() => [...document.querySelectorAll('#app .seg button, #app .chipknop, #app button.staaf')].filter((e) => e.getBoundingClientRect().height < 44).length);
+      expect(klein, tab).toBe(0);
+    }
+    // De rolwissel: ook een tik net eronder is raak
+    expect(await page.evaluate(() => { const r = document.querySelector('.rolknop').getBoundingClientRect(); const e = document.elementFromPoint(r.left + 8, r.bottom + 12); return !!(e && e.closest('.rolknop')); })).toBe(true);
+  });
+
   test('spelerskaart: teamleider', async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
