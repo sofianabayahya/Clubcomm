@@ -3,6 +3,12 @@
 Wat we tijdens de pilot vinden, met de oorzaak en het patroon erachter. Doel: dezelfde soort fout niet twee keer maken.
 Besluiten staan in `besluiten.md`; dit is het logboek van fouten. Nieuwste bovenaan.
 
+## 24 oktober 2026 (eerste wedstrijd O12 talententeam)
+
+| Wat de gebruiker zag | Oorzaak | Opgelost | Patroon |
+|---|---|---|---|
+| De timekeeper (een moeder) hield tijden, posities, wissels en doelpunten bij en het uitslagbericht ging naar de ouders, maar de trainer zag de uitslag, doelpunten en wissels niet terug | De database liet een ouder aan een wedstrijd alleen vervanger en begeleider wijzigen (beveiliging in de database); de timekeeper-taak gaf geen schrijfrechten. De app toonde alleen een korte melding "niet alles is opgeslagen" | Migratie 029: timekeeper en trainer-coach mogen op de wedstrijddag hun werk opslaan (Besluit 116); uitslag van 24-10 met een script hersteld | **Demo verbergt het / één persoon per rol:** in de demo en de tests is de timekeeper staf of geldt de beveiliging niet; pas met een echte ouder als timekeeper kwam het boven |
+
 ## 23 oktober 2026 (demo als verhaal)
 
 | Wat we zagen | Oorzaak | Opgelost | Patroon |

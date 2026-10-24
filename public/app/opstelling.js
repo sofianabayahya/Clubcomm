@@ -23,6 +23,7 @@
     const er = week.filter((x) => ['aanwezig', 'telaat'].includes(M.status(S, pl, x).code)).length;
     // Besluit 109: waar hij speelde, in procenten van zijn minuten (de twee meest gespeelde posities)
     const pos = M.posVerdeling(S, pl.id).slice(0, 2).map((x) => `${M.posNaam('1-4-3-3', x.pos).toLowerCase()} ${x.pct}%`).join(', ');
+    if (!CC.zietMinuten()) return week.length ? `${er} van ${week.length} trainingen deze week` : ''; // Besluit 116: minuten alleen voor de trainer
     return `${week.length ? `${er} van ${week.length} trainingen deze week · ` : ''}${Math.round(M.speeltijdStand(S, pl).min)}' dit seizoen${pos ? ` · ${pos}` : ''}`;
   };
 
@@ -54,7 +55,8 @@
       ${minutenBlok(S, sch)}${einde}${lezen ? '' : `<button class="linkknop" data-act="zelfOpnieuw" data-id="${a.id}">Opnieuw beginnen</button>`}`;
   };
   // Minuten en posities in deze wedstrijd (volgens opstelling en wissels)
-  const minutenBlok = (S, sch) => { M.zelfAfleiden(sch); const mins = M.schemaMinuten(sch);
+  // Besluit 116: alleen de trainer ziet de minuten
+  const minutenBlok = (S, sch) => { if (!CC.zietMinuten()) return ''; M.zelfAfleiden(sch); const mins = M.schemaMinuten(sch);
     const rijen = Object.keys(mins).sort((x, y) => mins[y] - mins[x] || naam(S, x).localeCompare(naam(S, y)));
     if (!rijen.length) return '';
     return `<details class="uitklap"><summary>Minuten deze wedstrijd</summary><div class="lijst compact">${rijen.map((id) => { const pos = [...new Set(sch.pos.map((x) => x[id]).filter(Boolean))];
