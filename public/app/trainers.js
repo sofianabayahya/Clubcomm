@@ -243,7 +243,7 @@
 
   // ---------- Clubbeheerder: de vragen aanpassen (Regels) ----------
   // Besluit 100: welk pakket gebruikt de club?
-  const pakketBlok = (S) => `${h.sectie('Pakket')}<form data-submit="pakketOk" class="kaartje codeform"><fieldset class="vinkjes"><legend>Wat gebruikt de club?</legend>
+  const pakketBlok = (S) => `${h.sectie('Pakket')}<form data-submit="pakketOk" class="kaartje codeform"><fieldset class="vinkjes enkel"><legend>Wat gebruikt de club?</legend>
     <label><input type="radio" name="p" value="" ${CC.pakketTrainers(S) ? '' : 'checked'}> Alles: communicatie en organisatie (ouders, teams, planning) en trainers begeleiden</label>
     <label><input type="radio" name="p" value="trainers" ${CC.pakketTrainers(S) ? 'checked' : ''}> Alleen Trainers begeleiden (${esc(S.club.labels.hjo)}, technisch coördinator en trainers; geen ouders)</label></fieldset>
     <button class="knop licht klein">Opslaan</button></form>`;
