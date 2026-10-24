@@ -19,7 +19,7 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
 ## Waar staat wat
 | Bestand | Inhoud |
 |---|---|
-| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bovenaan het **Register** (status per besluit), onderaan **Afgewezen ideeën**. Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 118). |
+| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bovenaan het **Register** (status per besluit), onderaan **Afgewezen ideeën**. Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 119). |
 | `docs/app-controle.md` | **Controlelijst voor schermen** (uit het starterspakket van de gebruiker, mijnrijlesplanner): technieken met vakterm, vaste normen en ontwerpregels. Gebruiken bij elke controle of nieuw scherm. |
 | `docs/pilotlog.md` | **Fouten uit de pilot met oorzaak en patroon** (momentopname, opslaan, demo verbergt het, één persoon per rol, buiten de app, rommelige gegevens). Bij elke wijziging langs deze patronen lopen. |
 | `docs/plan-van-aanpak.md` | **Van pilot naar product:** A product af (ook op schaal: 50 teams) → B beschrijven (handboek) → C prijs en groei → D verkopen → E invoeren. Met planning t/m januari 2027. |
@@ -50,7 +50,7 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
 
 ## Testen
 - Lokaal: `npm install && npm start` → http://localhost:5000/?demo (of `cd public && python3 -m http.server 5050`).
-- Zonder netwerk naar Supabase: `supabase/tests/fake-supabase.js` (nagebootste client, code 123456); rechten per rol: `supabase/tests/rls_test.sql`.
+- Zonder netwerk naar Supabase: `supabase/tests/fake-supabase.js` (nagebootste client, code 123456); rechten per rol: **`select * from priv.rechtentest() where not ok;`** (Besluit 119, migratie 030: 32 controles tegen de echte regels, alles wordt teruggedraaid; draait ook elke nacht, alarm via `rpc/gezondheid`). Wijzig je rechten of komt er een nieuwe soort gegevens bij: controle erbij en test draaien vóór het online gaat. (Het oude `rls_test.sql` is vervangen.)
 - **Altijd ook de echte, bijna lege club testen** (teamnaam ≠ teamcode, weinig spelers, geen telefoonnummers), niet alleen de demo.
 - **Automatische tests (Besluit 88):** `npm test` (map `tests/`: servermotor + elke rol doorklikken in demo én kleine nagebootste club + afmelden/rooster). Draaien ook vanzelf op GitHub (Actions "Tests"); **rood = niet samenvoegen met main**. Nieuwe functie of gevonden fout → test erbij. Lokaal met Chromium uit `/opt/pw-browsers` (niet `playwright install`).
 - **Bewaking:** UptimeRobot op mijnclubcomm.nl en op `rpc/gezondheid` (automaat laatste 35 min gedraaid; migratie 022).
