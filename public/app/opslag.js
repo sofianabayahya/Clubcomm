@@ -8,7 +8,7 @@
   const leeg = () => ({
     v: 8, gen: '', club: {}, teams: [], people: [], players: [], acts: [], afm: [], pres: {}, lang: [], gesprekken: [], msgs: [],
     vervoer: {}, taken: [], opgave: [], aanm: [], beoord: {}, notities: {}, speeltijd: { min: {}, schema: {}, keeper: {}, mogelijk: {} }, wijzigingen: [],
-    demo: {}, materiaal: {}, mails: [], trainerLog: [], trainerGesprekken: [], ontwGesprek: [], ontwVoorb: {}, ontwVerslag: {}, ontwNotitie: {}, teamVaardig: {}, teamKeuze: {}, bezorgd: {}, sigSinds: {}, signaalAfgedaan: [],
+    demo: {}, materiaal: {}, mails: [], trainerLog: [], trainerGesprekken: [], ontwGesprek: [], ontwVoorb: {}, ontwVerslag: {}, ontwNotitie: {}, teamVaardig: {}, teamKeuze: {}, bezorgd: {}, wedVoorstel: {}, sigSinds: {}, signaalAfgedaan: [],
     gezienInfo: {}, mijlpaalGezien: {}, autoVerstuurd: {}, beoordGedeeld: {}, beoordGezien: {},
     trainerDossier: {}, trainerKennis: {}, trainerAdmin: {}, trainerNotities: {}, begeleidMomenten: [], begeleidZelf: {}, begelHoVerslag: {},
     // voorkomt dat de demo-onderdelen voorbeelddata toevoegen
@@ -63,6 +63,8 @@
     ['speeltijdMogelijk', 'speeltijd.mogelijk', 'speeltijd', (k, v, I) => ({ team: I.teamVanSpeler(k), speler: k })],
     ['speeltijdKeeper', 'speeltijd.keeper', 'speeltijd', (k, v, I) => ({ team: I.teamVanSpeler(k), speler: k })],
     ['speeltijdSchema', 'speeltijd.schema', 'act', (k, v, I) => ({ team: I.teamVanAct(k), act: k })],
+    // Besluit 117: wat de timekeeper bijhield maar niet mocht opslaan, als voorstel voor de trainer (uitslag, doelpunten, wisselschema)
+    ['wedVoorstel', 'wedVoorstel', 'team', (k, v, I) => ({ team: I.teamVanAct(k), act: k })],
     // Besluit 99: trainersdossier (sleutel = persoon). Kennismaking: de trainer zelf; traject: HO schrijft, trainer leest;
     // VOG en diploma: organisatie (coördinator); notities: alleen de HO.
     ['trainerKennis', 'trainerKennis', 'trainerzelf', (k) => ({ persoon: k })],
