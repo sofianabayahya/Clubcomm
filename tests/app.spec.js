@@ -763,6 +763,31 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'speeltijd alleen trainer');
   });
 
+  // Besluit 117: mocht de timekeeper niet opslaan, dan gaat het als voorstel naar de trainer, die het met één tik overneemt
+  test('voorstel timekeeper: doorsturen en overnemen', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(0).click(); // Sanne: ouder
+    await page.locator('[data-act="magischeLink"]').click();
+    const aid = await page.evaluate(() => { const S = CC.S(), M = CC.m; const a = M.komend(S, 'O10-1').find((x) => M.isWed(x) && !x.afgelast);
+      const goals = [{ id: 'g1', wij: true, spelerId: S.players.find((p) => p.voornaam === 'Jesse').id }, { id: 'g2', wij: true }, { id: 'g3', wij: false }];
+      const n = CC.wedVoorstel(S, [{ soort: 'acts', id: a.id, data: { ...a, goals, uitslag: a.thuis ? '2-1' : '1-2', uitslagKlaar: true } }, { soort: 'pres', id: a.id + '|_', data: {} }], CC.me().id);
+      CC.save(); window.__n = n; return a.id; });
+    expect(await page.evaluate(() => window.__n)).toBe(1);
+    expect(await page.evaluate((id) => { const S = CC.S(), M = CC.m; const a = M.act(S, id); return CC.scorebord(S, a, M.team(S, a.teamId)); }, aid)).toContain('Doorgestuurd naar');
+    // De trainer ziet het op Home en neemt het over
+    await page.evaluate(() => { CC.zetSessie(CC.S().demo.mark); CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer')); CC.go('home'); });
+    await page.locator('#app [data-act="voorstelZien"]').first().click();
+    await expect(page.locator('#sheet .groot-cijfer')).toBeVisible();
+    await page.locator('#sheet [data-act="voorstelOver"]').click();
+    const na = await page.evaluate((id) => { const S = CC.S(); const a = CC.m.act(S, id); return { goals: (a.goals || []).length, klaar: !!a.uitslagKlaar, voorstel: !!S.wedVoorstel[id], pres: !!S.pres[id] }; }, aid);
+    expect(na).toEqual({ goals: 3, klaar: true, voorstel: false, pres: true });
+    await expect(page.locator('#app [data-act="voorstelZien"]')).toHaveCount(0);
+    await controleer(page, fouten, 'voorstel timekeeper');
+  });
+
   test('spelerskaart: teamleider', async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
@@ -885,6 +910,28 @@ test.describe('Kleine club (echte versie, nagebootste database)', () => {
     await page.locator('#sheet form[data-submit="bevestigAfmelden"] button.knop').first().click();
     await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'afm' && r.data.spelerId === 's2').length, { message: 'afmelding opgeslagen in de database' }).toBe(1);
     await controleer(page, fouten, 'ouder na afmelden');
+  });
+
+  // Besluit 117: in de echte versie weigert de database de uitslag van een ouder → voorstel in de database → trainer neemt over
+  test('timekeeper mag niet opslaan: voorstel naar de trainer', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await nepDatabase(page);
+    await page.evaluate(() => { const db = JSON.parse(sessionStorage.getItem('fake-sb-db')); const d = CC.date.vandaag();
+      const a = { id: 'w-test', teamId: 'O12-1', soort: 'wedstrijd', datum: d, tijd: '00:01', eind: '00:02', thuis: true, tegen: 'Testclub O12-2', afgelast: false };
+      db.rows['dcg|acts|w-test'] = { club_id: 'dcg', soort: 'acts', id: 'w-test', scope: 'team', team_id: 'O12-1', speler_id: null, persoon_id: null, act_id: 'w-test', data: a };
+      sessionStorage.setItem('fake-sb-db', JSON.stringify(db)); });
+    await inloggen(page, 'amin@test.nl');
+    await page.evaluate(() => { sessionStorage.setItem('fake-sb-weiger', JSON.stringify(['acts'])); const S = CC.S(); const a = CC.m.act(S, 'w-test');
+      a.goals = [{ id: 'g1', wij: true, spelerId: 's2' }, { id: 'g2', wij: false }, { id: 'g3', wij: true, spelerId: null }]; a.uitslag = '2-1'; a.uitslagKlaar = true; CC.save(); });
+    await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'wedVoorstel').length, { message: 'voorstel in de database' }).toBe(1);
+    await expect(page.locator('#toast')).toContainText('Doorgestuurd');
+    // Trainer (beheerder is ook trainer van O12-1) neemt over
+    await page.evaluate(() => { sessionStorage.removeItem('fake-sb-weiger'); CC.logout(); });
+    await inloggen(page, 'admin@test.nl');
+    await page.evaluate(() => { CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer')); CC.go('home'); });
+    await page.locator('#app [data-act="voorstelOver"]').first().click();
+    await expect.poll(async () => { const db = await nepDb(page); return [db.rows['dcg|acts|w-test'].data.uitslag, Object.values(db.rows).filter((r) => r.soort === 'wedVoorstel').length]; }, { message: 'overgenomen en voorstel weg' }).toEqual(['2-1', 0]);
+    await controleer(page, fouten, 'voorstel overnemen');
   });
 
   // Besluit 100: een club met alleen Trainers begeleiden (zoals de test bij een tweede club): HO, TC en één trainer, geen ouders

@@ -48,7 +48,7 @@
   const sync = async () => {
     if (!L.pid) return;
     if (L.bezig) { L.opnieuw = true; return; }
-    L.bezig = true; let geweigerd = 0, offline = false;
+    L.bezig = true; let geweigerd = 0, offline = false; const afgewezen = [];
     try {
       const nu = CC.naarRijen(CC.S(), club); const nieuw = []; const berichten = [];
       nu.forEach((r, k) => {
@@ -74,7 +74,7 @@
         for (const x of stuk) {
           const { error: e2 } = await sb.from('rij').upsert(x.r, { onConflict: 'club_id,soort,id' });
           if (!e2) L.snap.set(x.k, x.j);
-          else if (RECHTEN.test(e2.message + ' ' + e2.code)) { L.geweigerd.set(x.k, x.j); geweigerd++; console.warn('Niet opgeslagen', x.k, e2.message); }
+          else if (RECHTEN.test(e2.message + ' ' + e2.code)) { L.geweigerd.set(x.k, x.j); geweigerd++; afgewezen.push(x.r); console.warn('Niet opgeslagen', x.k, e2.message); }
           else { offline = true; break; }
         }
       }
@@ -94,7 +94,10 @@
       }
     } catch (e) { console.warn(e); offline = true; }
     L.bezig = false;
-    if (geweigerd) CC.toast('Niet alles is opgeslagen: daarvoor heb je geen rechten', 'fout');
+    // Besluit 117: wedstrijdgegevens (uitslag, doelpunten, wisselschema) die je niet mocht opslaan, gaan als voorstel naar de trainer
+    const doorgestuurd = afgewezen.length && CC.wedVoorstel ? CC.wedVoorstel(CC.S(), afgewezen, L.pid) : 0;
+    if (doorgestuurd) { geweigerd -= doorgestuurd; CC.save(); CC.render(); CC.toast('Doorgestuurd naar de trainer. Je hoeft niets meer te doen.'); L.opnieuw = true; }
+    if (geweigerd > 0) CC.toast('Niet alles is opgeslagen: daarvoor heb je geen rechten. Laat het de trainer weten.', 'fout');
     if (offline) { CC.toast('Geen verbinding. We proberen het zo opnieuw.', 'fout'); clearTimeout(L.timer); L.timer = setTimeout(() => { L.timer = null; sync(); }, 15000); }
     if (L.opnieuw) { L.opnieuw = false; sync(); }
   };

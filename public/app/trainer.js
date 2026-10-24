@@ -139,6 +139,8 @@
   // ---------- Scorebord (Besluit 62): thuis en uit, wie scoorde, uitslag naar de ouders ----------
   // Alleen op de wedstrijddag (of als er al gescoord is). De timekeeper en de trainer houden het bij.
   CC.scorebord = (S, a, t) => {
+    const vs = (S.wedVoorstel || {})[a.id]; const doorMij = vs && vs.act && CC.me() && vs.door === CC.me().id && !M.stafVan(S, a.teamId).includes(vs.door);
+    if (doorMij) a = Object.assign({}, a, vs.act); // Besluit 117: wat je doorstuurde blijft voor jou zichtbaar
     if (a.datum !== D.vandaag() && !(a.goals || []).length && !zonderUitslag(S, a.teamId).includes(a)) return '';
     const ons = `${S.club.naam}${t ? ' ' + t.naam : ''}`; const thuisNaam = a.thuis ? ons : (a.tegen || 'Tegenstander'); const uitNaam = a.thuis ? (a.tegen || 'Tegenstander') : ons;
     const st = M.stand(a); const g = a.goals || [];
@@ -147,7 +149,8 @@
       return `<span class="chip ${x.wij ? 'groen' : 'grijs'}">⚽ ${tussenstand} ${x.wij ? esc(x.spelerId ? (M.speler(S, x.spelerId) || {}).voornaam || '' : x.eigen ? 'eigen doelpunt tegenstander' : 'wij') : 'tegen'}${a.uitslagKlaar ? '' : `<button class="chip-x" data-act="goalWeg" data-a="${a.id}" data-g="${x.id}" aria-label="Doelpunt weghalen">${icon('x')}</button>`}</span>`; }).join('')}</div>` : '';
     const einde = a.uitslagKlaar ? `<p class="klein zacht">${icon('circle-check')} Uitslag opgeslagen${a.uitslagVerstuurd ? ' en naar de ouders gestuurd' : ''}. <button class="linkknop" data-act="uitslagHeropen" data-a="${a.id}">Aanpassen</button></p>`
       : `<button class="knop licht vol" data-act="uitslagKlaar" data-a="${a.id}">${icon('flag')}Einde wedstrijd: uitslag opslaan</button>`;
-    return `<div class="kaartje scorebord"><div class="sb-rij">${kant('thuis', thuisNaam, st.thuis)}<span class="sb-streep">–</span>${kant('uit', uitNaam, st.uit)}</div>${lijst}${einde}</div>`;
+    const door = doorMij ? `<div class="info groen">${icon('circle-check')}<span><b>Doorgestuurd naar ${esc(CC.trainerNaam(S, a.teamId))}.</b> De uitslag, de doelpunten en de wissels staan klaar voor de trainer. Je hoeft niets meer te doen. Bedankt!</span></div>` : '';
+    return `<div class="kaartje scorebord"><div class="sb-rij">${kant('thuis', thuisNaam, st.thuis)}<span class="sb-streep">–</span>${kant('uit', uitNaam, st.uit)}</div>${lijst}${doorMij ? '' : einde}${door}</div>`;
   };
   CC.on('goal', (el) => {
     const S = CC.S(); const a = M.act(S, el.dataset.a); const wij = (el.dataset.kant === 'thuis') === !!a.thuis;
@@ -209,6 +212,43 @@
     S.acts.filter((a) => M.isWed(a) && !a.afgelast && new Date(`${a.datum}T${a.eind || a.tijd}`).getTime() + 2 * 3600e3 < Date.now() && a.datum >= D.addDays(D.vandaag(), -3) && M.stafVan(S, a.teamId).includes(me.id)
       && (!S.pres[a.id] || (S.speeltijd.schema[a.id] && !S.speeltijd.schema[a.id].bevestigd))).forEach((a) => { wedstrijdVastleggen(S, a, me.id); n++; });
     return n > 0; };
+  // ---------- Besluit 117: voorstel van de timekeeper (vangnet als opslaan niet mocht) ----------
+  const VS_VELDEN = ['goals', 'uitslag', 'uitslagKlaar', 'uitslagVerstuurd', 'uitslagAuto'];
+  CC.trainerNaam = (S, tid) => { const t = M.team(S, tid); const p = t && M.persoon(S, t.trainerId); return p ? `${p.naam.split(' ')[0]} (trainer)` : 'de trainer'; };
+  // Geweigerde rijen (uit live.js) → voorstel per wedstrijd. Alleen wedstrijdgegevens; aantal verwerkte rijen terug.
+  CC.wedVoorstel = (S, rijen, pid) => { let n = 0; S.wedVoorstel = S.wedVoorstel || {};
+    rijen.forEach((r) => { if (!['acts', 'speeltijdSchema'].includes(r.soort)) return; const a = M.act(S, r.id); if (!a || !M.isWed(a)) return;
+      const v = S.wedVoorstel[a.id] || (S.wedVoorstel[a.id] = { actId: a.id }); v.door = pid; v.tijd = new Date().toISOString();
+      if (r.soort === 'acts') v.act = Object.fromEntries(VS_VELDEN.filter((k) => k in r.data).map((k) => [k, r.data[k]])); else v.schema = r.data;
+      n++; });
+    return n; };
+  const vsStand = (a, v) => M.stand(Object.assign({}, a, v.act || {}));
+  CC.voorstelRijen = (S, tid) => (CC.zietMinuten() ? Object.values(S.wedVoorstel || {}) : []).map((v) => ({ v, a: M.act(S, v.actId) })).filter(({ a }) => a && a.teamId === tid).map(({ v, a }) => {
+    const st = vsStand(a, v); const wie = M.persoon(S, v.door); const goals = ((v.act || {}).goals || []).length; const wis = ((v.schema || {}).wissels || []).length;
+    return h.rij({ ic: 'flag', titel: v.act ? `Uitslag van ${D.relatief(a.datum).toLowerCase()}: ${st.thuis}-${st.uit}` : `Wisselschema van ${D.relatief(a.datum).toLowerCase()}`, sub: [`Bijgehouden door ${esc(wie ? wie.naam.split(' ')[0] : 'een ouder')}`, goals ? `${goals} doelpunten` : '', wis ? `${wis} wissels` : ''].filter(Boolean).join(' · '),
+      kleur: 'blauw', rechts: `<button class="knop klein" data-act="voorstelOver" data-id="${a.id}" data-stop="1">Overnemen</button>`, act: 'voorstelZien', attrs: `data-id="${a.id}"` }); });
+  CC.on('voorstelZien', (el) => { const S = CC.S(); const v = (S.wedVoorstel || {})[el.dataset.id]; const a = M.act(S, el.dataset.id); if (!v || !a) return;
+    const st = vsStand(a, v); const wie = M.persoon(S, v.door); const g = (v.act || {}).goals || [];
+    const chips = g.map((x, i) => { const tus = g.slice(0, i + 1); const w = tus.filter((y) => y.wij).length, z = tus.length - w; const ts = a.thuis ? `${w}-${z}` : `${z}-${w}`;
+      return `<span class="chip ${x.wij ? 'groen' : 'grijs'}">⚽ ${ts} ${x.wij ? esc(x.spelerId ? (M.speler(S, x.spelerId) || {}).voornaam || '' : x.eigen ? 'eigen doelpunt tegenstander' : 'wij') : 'tegen'}</span>`; }).join('');
+    const wis = ((v.schema || {}).wissels || []).slice().sort((x, y) => x.min - y.min);
+    CC.sheet(v.act ? 'Uitslag overnemen' : 'Wisselschema overnemen', `<p class="zacht klein kaart-sub">${h.actTitel(S, a)} · ${D.kort(a.datum)} · bijgehouden door ${esc(wie ? wie.naam : 'een ouder')}</p>
+      ${v.act ? `<p class="groot-cijfer">${st.thuis} – ${st.uit}</p>${chips ? `<div class="sb-goals">${chips}</div>` : ''}` : ''}
+      ${wis.length ? `${h.sectie('Wissels')}<div class="lijst compact">${wis.map((w) => h.rij({ ic: 'arrow-left-right', titel: `${esc((M.speler(S, w.in) || {}).voornaam || '')} erin, ${esc((M.speler(S, w.uit) || {}).voornaam || '')} eruit`, rechts: `<b>${w.min}'</b>` })).join('')}</div>` : ''}
+      <p class="zacht klein">Aanwezigheid en speeltijd rekent de app hieruit, zoals altijd.</p>
+      <button class="knop vol" data-act="voorstelOver" data-id="${a.id}">${icon('circle-check')}Overnemen</button><button class="linkknop" data-act="voorstelWeg" data-id="${a.id}">Niet overnemen</button>`); });
+  // Speeltijd van een al vastgelegd schema terugdraaien (zodat overnemen niet dubbel telt)
+  const speeltijdTerug = (S, a, sch) => { if (!sch || !sch.bevestigd) return; if (sch.zelf) M.zelfAfleiden(sch);
+    const kb = S.speeltijd.keeper || {}; if (sch.keepers && sch.keepers[0] && komtNog(S, a, sch.keepers[0]) && kb[sch.keepers[0]]) kb[sch.keepers[0]] -= 1;
+    const len = M.schemaLengtes(sch); sch.blokken.forEach((b, i) => b.forEach((id) => { if (komtNog(S, a, id)) S.speeltijd.min[id] = Math.max(0, (S.speeltijd.min[id] || 0) - len[i]); }));
+    const mog = S.speeltijd.mogelijk || {}; (sch.spelers || [...new Set(sch.blokken.flat())]).filter((id) => komtNog(S, a, id)).forEach((id) => { mog[id] = Math.max(0, (mog[id] || 0) - (sch.wedMin || len.reduce((x, y) => x + y, 0))); }); };
+  CC.on('voorstelOver', (el) => { const S = CC.S(); const v = (S.wedVoorstel || {})[el.dataset.id]; const a = M.act(S, el.dataset.id); if (!v || !a) return;
+    if (v.act) Object.assign(a, v.act);
+    if (v.schema) { speeltijdTerug(S, a, S.speeltijd.schema[a.id]); S.speeltijd.schema[a.id] = Object.assign({}, v.schema, { bevestigd: false }); }
+    const voorbij = new Date(`${a.datum}T${a.eind || a.tijd}`).getTime() < Date.now();
+    if (a.uitslagKlaar || voorbij) wedstrijdVastleggen(S, a, CC.me().id);
+    delete S.wedVoorstel[a.id]; CC.save(); CC.closeSheet(); CC.render(); CC.toast('Overgenomen'); });
+  CC.on('voorstelWeg', (el) => { const S = CC.S(); delete (S.wedVoorstel || {})[el.dataset.id]; CC.save(); CC.closeSheet(); CC.render(); CC.toast('Niet overgenomen'); });
   CC.on('uitslagHeropen', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.a); a.uitslagKlaar = false; CC.save(); CC.render(); });
   CC.on('kiesStWed', (el) => { CC.ui.seg.stWed = el.value; CC.render(); });
   CC.on('minderBlok', (el) => { const k = `minder_${el.dataset.a}`; const l = (CC.ui.seg[k] || '').split(',').filter(Boolean); const i = l.indexOf(el.dataset.s); if (i >= 0) l.splice(i, 1); else l.push(el.dataset.s); CC.ui.seg[k] = l.join(','); CC.render(); });
@@ -314,7 +354,8 @@
         // Besluit 85: afmelding na het maken van het wisselschema
         S.acts.filter((a) => a.teamId === tid && M.isWed(a) && !a.afgelast && (a.datum === D.vandaag() || a.datum === D.addDays(D.vandaag(), 1))).forEach((a) => { const weg = CC.schemaWeg(S, a);
           if (weg.length) acties.push(h.rij({ ic: 'triangle-alert', titel: 'Wisselschema klopt niet meer', sub: `${weg.map((pl) => esc(pl.voornaam)).join(', ')} ${weg.length === 1 ? 'komt' : 'komen'} niet · ${h.actTitel(S, a)} ${a.datum === D.vandaag() ? 'vandaag' : 'morgen'}`, act: 'naarWedstrijd', attrs: `data-id="${a.id}"`, kleur: 'oranje' })); });
-        zonderUitslag(S, tid).forEach((a) => acties.push(h.rij({ ic: 'flag', titel: 'Uitslag nog opslaan', sub: `${h.actTitel(S, a)} · ${D.kort(a.datum)} · dan krijgen de ouders de uitslag en kloppen de doelpunten`, act: 'naarWedstrijd', attrs: `data-id="${a.id}"`, kleur: 'oranje' })));
+        CC.voorstelRijen(S, tid).forEach((r) => acties.push(r));
+        zonderUitslag(S, tid).filter((a) => !(S.wedVoorstel || {})[a.id]).forEach((a) => acties.push(h.rij({ ic: 'flag', titel: 'Uitslag nog opslaan', sub: `${h.actTitel(S, a)} · ${D.kort(a.datum)} · dan krijgen de ouders de uitslag en kloppen de doelpunten`, act: 'naarWedstrijd', attrs: `data-id="${a.id}"`, kleur: 'oranje' })));
         acties.push(...CC.signaalRegels(S, tid, true));
         // Herinnering: training van een eerdere dag waarvan de aanwezigheid nog niet is ingevuld, zolang het nog kan.
         // Besluit 81: meer dan één? Dan één regel met het aantal, die een lijstje opent.

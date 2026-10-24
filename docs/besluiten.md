@@ -17,6 +17,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 117 | Vangnet: mag de timekeeper iets niet opslaan, dan gaat het als voorstel naar de trainer (één tik overnemen) | ✅ geldt |  |
 | 116 | De timekeeper slaat de wedstrijd echt op; minuten en speeltijd ziet alleen de trainer | ✅ geldt |  |
 | 115 | "Vervanger nodig" naar teamleider en coördinator (HO alleen als terugval); coördinator in de rondleiding | ✅ geldt |  |
 | 114 | De demo is één verhaal (een week bij de democlub); het bestuur kiest de hoofdstukken; afmelden gebeurt echt | ✅ geldt |  |
@@ -649,6 +650,15 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 117 — Vangnet: wat de timekeeper niet mag opslaan, gaat als voorstel naar de trainer
+*Besloten 24 oktober 2026, na een voorbeeld. Wens van de trainer: de timekeeper hoeft na de wedstrijd niets meer te regelen, en de trainer is ook met andere dingen bezig.*
+- **Wanneer:** alleen als de database iets weigert (na Besluit 116 een uitzondering, bijv. een ouder die invalt zonder de taak in de app, of te laat opslaat), en alleen voor **wedstrijdgegevens**: uitslag, doelpunten en het wisselschema (wissels, posities).
+- **De timekeeper** ziet bij de score: *"Doorgestuurd naar [trainer]. … Je hoeft niets meer te doen. Bedankt!"* Het uitslagbericht aan de ouders gaat zoals altijd meteen.
+- **De trainer** ziet onder *Actie nodig*: *"Uitslag van za 31 okt: 6-2 · bijgehouden door … · 6 doelpunten · 5 wissels"* met **Overnemen**. Tik op de regel: venster met stand, doelpunten en wissels, *Overnemen* of *Niet overnemen*. Na overnemen rekent de app aanwezigheid en speeltijd uit (een eerder vastgelegd schema wordt eerst teruggedraaid, zodat niets dubbel telt).
+- Aanwezigheid gaat niet mee in het voorstel (andere ouders mogen elkaars aanwezigheid niet zien); de app rekent die zelf uit.
+- Andere dingen die niet lukken: een korte melding *"Niet alles is opgeslagen … Laat het de trainer weten."*
+- Techniek: rij `wedVoorstel` per wedstrijd (scope team), `CC.wedVoorstel` in `trainer.js`, aanroep in `live.js` bij een geweigerde rij.
 
 ## Besluit 116 — De timekeeper slaat de wedstrijd echt op; minuten ziet alleen de trainer
 *Besloten 24 oktober 2026, na de eerste wedstrijd van het O12 talententeam (6-2 tegen DCG O13-3). De moeder die timekeeper was, hield tijden, posities, wissels en doelpunten bij; dat werkte goed en blijft zo.*

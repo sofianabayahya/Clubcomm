@@ -32,7 +32,10 @@
       delete() { q.op = 'delete'; return b; },
       then(ok, fail) {
         let res;
-        if (q.op === 'upsert') { q.payload.forEach((r) => { db.rows[`${r.club_id}|${r.soort}|${r.id}`] = JSON.parse(JSON.stringify(r)); }); bewaar(); res = { data: null, error: null }; }
+        // Tests (Besluit 117): sessionStorage 'fake-sb-weiger' = lijst soorten die de database weigert (zoals de rechtenregels doen)
+        const weiger = (() => { try { return JSON.parse(sessionStorage.getItem('fake-sb-weiger') || 'null'); } catch (e) { return null; } })();
+        if (q.op === 'upsert' && weiger && q.payload.some((r) => weiger.includes(r.soort))) res = { data: null, error: { message: 'Je mag alleen vervangerId, begeleiderId wijzigen', code: 'P0001' } };
+        else if (q.op === 'upsert') { q.payload.forEach((r) => { db.rows[`${r.club_id}|${r.soort}|${r.id}`] = JSON.parse(JSON.stringify(r)); }); bewaar(); res = { data: null, error: null }; }
         else if (q.op === 'delete') { Object.entries(db.rows).forEach(([k, r]) => { if (q.filters.every((f) => f(r))) delete db.rows[k]; }); bewaar(); res = { data: null, error: null }; }
         else { let rs = Object.values(db.rows).filter((r) => q.filters.every((f) => f(r))); rs.sort((x, y) => (x.soort + x.id).localeCompare(y.soort + y.id)); if (q.range) rs = rs.slice(q.range[0], q.range[1] + 1); res = { data: JSON.parse(JSON.stringify(rs)), error: null }; }
         return Promise.resolve(res).then(ok, fail);
