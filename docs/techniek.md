@@ -13,7 +13,7 @@
   - coördinator: de teams van de eigen groep; HJO/beheerder: de hele club;
   - contactgegevens (e-mail, telefoon) apart: staf ziet alleen die van ouders uit de eigen teams.
 - Extra bewaking: niemand kan zichzelf rollen geven; berichten van een ander kun je alleen als gelezen markeren of beantwoorden; ouders kunnen trainingen niet verplaatsen.
-- Test: `supabase/tests/rls_test.sql` (draait per rol wat iemand ziet en wat geweigerd wordt).
+- Test: `select * from priv.rechtentest() where not ok;` (migratie 030, Besluit 119): per rol wat iemand mag lezen en schrijven, alles teruggedraaid; draait elke nacht en laat `rpc/gezondheid` falen bij een afwijking.
 - Migraties: `supabase/migrations/001…021` (009: vastgezet nieuws leesbaar voor nieuwe ouders van het team; 010: telefoonnummer bij aanmelden; 011: geen dubbele aanmelding voor hetzelfde kind; 012: pushmeldingen; 013: berichten als gesprekken, archief; 014: leegmaken alleen bij nieuwe club; 015: foutregistratie; 016: kijk van de trainer (beoordeling) alleen voor de staf; 017: ontwikkelgegevens verhuizen mee met de speler; 018: en verdwijnen bij uitschrijven; 019: automatisch werk vanaf de server; 020: onthouden wanneer iemand een bericht las; 021: wie pushmeldingen aan heeft, voor de staf).
 
 ## Inloggen

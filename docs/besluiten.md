@@ -17,6 +17,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 119 | Rechtentest per rol tegen de echte database, elke nacht, met alarm via de bewaking | ✅ geldt |  |
 | 118 | Tikvlakken minimaal 44 pt: keuze- en filterknoppen, balkjes, rolwissel, profielknop | ✅ geldt |  |
 | 117 | Vangnet: mag de timekeeper iets niet opslaan, dan gaat het als voorstel naar de trainer (één tik overnemen) | ✅ geldt |  |
 | 116 | De timekeeper slaat de wedstrijd echt op; minuten en speeltijd ziet alleen de trainer | ✅ geldt |  |
@@ -651,6 +652,13 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 119 — Rechtentest per rol, elke nacht
+*Besloten 24 oktober 2026, na de beoordeling (betrouwbaarheid 6,5). Aanleiding: drie fouten deze week (chauffeur, coördinator, timekeeper) die de demo en de app-tests niet lieten zien, omdat die de echte rechtenregels niet kennen.*
+- **`priv.rechtentest()`** (migratie 030) maakt in de database een testclub met HJO, coördinator, trainer, teamleider, ouders en een timekeeper, probeert per rol 32 acties (lezen en schrijven) en vergelijkt dat met wat hoort. Alles wordt aan het eind teruggedraaid: er blijft niets achter.
+- **Elke nacht om 03:23 (Nederlandse tijd)** draait hij vanzelf. De uitkomst staat in het logboek (`automaat_log`, club *rechtentest*). Vindt hij een afwijking, dan geeft de bewaking (`rpc/gezondheid`, UptimeRobot) de volgende ochtend alarm, met welke controle fout ging.
+- **Bij elke wijziging aan rechten of een nieuwe soort gegevens:** een controle erbij in de test, en de test draaien vóór het online gaat.
+- Eerste run 24-10: 32 controles, alles goed.
 
 ## Besluit 118 — Tikvlakken minimaal 44 pt
 *Besloten 24 oktober 2026, na de beoordeling (toegankelijkheid 6,5) en een voorbeeld. Norm uit `docs/app-controle.md`.*
