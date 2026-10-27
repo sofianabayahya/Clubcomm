@@ -107,7 +107,7 @@
     let start = null; let dy = 0; let sh = null;
     const host = () => document.getElementById('sheet');
     document.addEventListener('touchstart', (e) => {
-      sh = e.target.closest && e.target.closest('#sheet .sheet'); if (!sh || e.touches.length !== 1 || window.matchMedia('(min-width: 1100px)').matches) { sh = null; return; } // groot scherm: venster in het midden, niet vegen
+      sh = e.target.closest && e.target.closest('#sheet .sheet'); if (!sh || e.touches.length !== 1 || window.matchMedia('(min-width: 900px)').matches) { sh = null; return; } // groot scherm: venster in het midden, niet vegen
       const body = e.target.closest('.sheet-body');
       if (body && body.scrollTop > 0) { sh = null; return; }
       if (e.target.closest('input, textarea, select, .veld')) { sh = null; return; }
