@@ -424,7 +424,7 @@
     CC.haalGebruik(28).then((rijen) => { CC.ui.gebruik = { rijen, tijd: Date.now() }; CC.render(); }, () => { CC.ui.gebruik = { rijen: [], fout: 'Kon het gebruik niet ophalen.', tijd: Date.now() }; CC.render(); }); }, true);
   CC.rollen.beheerder = {
     context(S) { return { titel: S.club.naam, sub: 'Clubbeheerder' }; },
-    tabs(S) { return [['home', 'Home', 'house'], ['seizoen', 'Seizoen', 'calendar'], ['regels', 'Regels', 'sliders-horizontal'], ['rollen', 'Rollen', 'user-cog'], ['modules', 'Modules', 'puzzle']]; },
+    tabs(S) { return [['home', 'Home', 'house'], ['seizoen', 'Seizoen', 'calendar'], ['regels', 'Regels', 'sliders-horizontal'], ['rollen', 'Rollen', 'user-cog'], ['berichten', 'Berichten', 'message-circle', M.ongelezen(S, CC.me().id)]]; },
     schermen: {
       home(S) {
         const i = S.club.ingericht;
@@ -435,7 +435,7 @@
             ${stap(i.vakanties, 'Schoolvakanties', `Regio ${S.club.regio} · ${S.club.vakanties.length} vakanties`, 'seizoen')}
             ${stap(i.regels, 'Regels', `Afmelden ${S.club.inst.deadlineTraining} uur voor training · ${(S.club.inst.waarschuwingen || M.KAART_STD.waarschuwingen).breedte} herinneringen, daarna geel/rood`, 'regels')}
             ${stap(i.rollen, 'Rollen', `${S.club.labels.hjo}${S.club.coordinatorAan ? ' + ' + S.club.labels.coordinator : ''}`, 'rollen')}
-            ${stap(i.modules, 'Modules', Object.entries(S.club.modules).filter(([, v]) => v).map(([k]) => k).join(', '), 'modules')}
+            ${stap(i.modules, 'Modules', Object.entries(S.club.modules).filter(([, v]) => v).map(([k]) => k).join(', '), 'regels')}
           </div>
           ${CC.gebruikBlok(S)}
           ${h.sectie('Later')}<div class="lijst">${h.rij({ ic: 'upload', titel: 'Import uit Sportlink', sub: 'Eén keer per seizoen; ouders krijgen dan automatisch een uitnodiging', kleur: '', act: 'demoMelding', attrs: 'data-tekst="Komt na de pilot (Besluit 2)"' })}</div>`;
@@ -452,9 +452,10 @@
           ${h.sectie('Fases')}<p class="zacht klein">Het seizoen is verdeeld in fases, zoals de competitie. Bij elke nieuwe fase begint de kaartenteller opnieuw (Besluit 15).</p>
           <div class="lijst">${blokken.map((b, k) => `<div class="rij"><span class="rij-tekst"><b>${esc(b.naam)}</b><small>tot ${D.kort(b.tot)} · ${Math.round((D.dagen(b.van, b.tot) + 1) / 7)} weken</small></span><input type="date" class="kort" value="${b.van}" data-change="faseDatum" data-k="${k}" aria-label="Start ${esc(b.naam)}" ${k === 0 ? 'disabled' : ''}></div>`).join('')}</div>`;
       },
+      // 27-10: Modules staat bovenaan Regels (het tabblad Modules is Berichten geworden)
       regels(S) {
         const i = S.club.inst;
-        return `<form data-submit="regelsOk" class="codeform">
+        return `${h.sectie('Modules')}${CC.rollen.beheerder.schermen.modules(S)}<form data-submit="regelsOk" class="codeform">
           ${h.sectie('Privacy')}<div class="kaartje"><label for="r-pc">Contact voor privacyvragen (e-mailadres, staat in de privacyverklaring)</label><input id="r-pc" name="pc" type="email" value="${esc(S.club.privacyContact || '')}" placeholder="bijv. secretaris@club.nl"></div>
           ${h.sectie('Afmelden')}<div class="kaartje"><div class="twee"><div><label for="r-dt">Training: uur van tevoren</label><input id="r-dt" name="dt" type="number" min="0" max="48" value="${i.deadlineTraining}"></div><div><label for="r-dw">Wedstrijd: uur van tevoren</label><input id="r-dw" name="dw" type="number" min="0" max="96" value="${i.deadlineWedstrijd}"></div></div></div>
           ${(() => { const w = i.waarschuwingen || M.KAART_STD.waarschuwingen; const tl = i.telaat || M.KAART_STD.telaat; const veld = (id, naam, lab, v, max) => `<div><label for="${id}">${lab}</label><input id="${id}" name="${naam}" type="number" min="0" max="${max}" value="${v}"></div>`; return `${h.sectie('Kaarten (afmelden)')}<div class="kaartje"><p class="klein">Te laat afgemeld = geel · twee keer geel = rood · niet afgemeld = direct rood. Rood: de trainer of ${esc(S.club.labels.hjo)} neemt contact op en kan de kaart accepteren.</p><p class="klein"><b>Vriendelijke herinneringen per seizoen</b> (daarna kaarten)</p><div class="twee">${veld('r-wb', 'wb', 'Breedte', w.breedte, 5)}${veld('r-ws', 'ws', 'Selectie', w.selectie, 5)}</div></div>
@@ -488,6 +489,7 @@
           <div class="lijst">${S.people.filter((p) => p.rollen.some((r) => r.rol !== 'ouder')).sort((a, b) => a.naam.localeCompare(b.naam)).map((p) => h.rij({ ic: h.avatar(p.naam), titel: esc(p.naam), sub: p.rollen.filter((r) => r.rol !== 'ouder').map((r) => `${esc(CC.rolNaam(r))}${r.teamId ? ' ' + esc(CC.tn(r.teamId)) : r.groep ? ' ' + esc(r.groep) : (r.bouwen || []).length ? ' (' + esc(r.bouwen.join(', ')) + ')' : ''}`).join(' · '), act: 'rollenPersoon', attrs: `data-id="${p.id}"` })).join('')}</div>
           <p class="zacht klein">Tik op een naam om een rol te koppelen, weg te halen of het werkgebied te kiezen.</p>`;
       },
+      berichten: (S) => CC.berichtenScherm(S, {}),
       modules(S) {
         const m = S.club.modules;
         const rij = (k, titel, sub, uit) => `<label class="rij schakel ${uit ? 'uit' : ''}"><span class="rij-tekst"><b>${titel}</b><small>${sub}</small></span><input type="checkbox" ${m[k] ? 'checked' : ''} ${uit ? 'disabled' : ''} data-change="module" data-k="${k}"><i></i></label>`;

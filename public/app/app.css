@@ -699,3 +699,21 @@ small.bewaard.ok { color: var(--groen); } small.bewaard.fout { color: var(--rood
 
 /* "Beperk beweging" (iPhone: Toegankelijkheid → Beweging): geen schuivende vensters of overgangen */
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+/* 27-10: lange schermen als onderwerpen (Regels, Inzicht) */
+.uitklap.onderwerp { margin-top: 0; }
+.uitklap.onderwerp summary { min-height: 44px; font-size: 16px; }
+.uitklap.onderwerp[open] { padding-bottom: 12px; }
+/* 27-10: laptop (vanaf 1100 px, niet in de rondleiding): menu als kolom links, inhoud breder in het midden.
+   .inhoud.breed is voor schermen die de hele breedte nodig hebben (trainingen ontwerpen, inrichten). */
+@media (min-width: 1100px) {
+  body:not(.rl) #app { max-width: none; margin: 0; padding-left: 232px; }
+  body:not(.rl) .nav { top: 0; bottom: 0; left: 0; transform: none; width: 232px; max-width: none; flex-direction: column; justify-content: flex-start; gap: 4px; padding: 84px 12px 16px; border-top: 0; border-right: 1px solid var(--lijn); }
+  body:not(.rl) .nav button { flex: none; height: 48px; flex-direction: row; justify-content: flex-start; gap: 12px; padding: 0 14px; border-radius: 12px; font-size: 15px; }
+  body:not(.rl) .nav button.aan { background: var(--blauw-l); }
+  body:not(.rl) .nav button.aan::before { display: none; }
+  body:not(.rl) .nav .badge { position: static; margin-left: auto; }
+  body:not(.rl) .kop { padding-left: 32px; padding-right: 32px; }
+  body:not(.rl) .inhoud { max-width: 820px; margin: 0 auto; padding: 24px 32px 40px; }
+  body:not(.rl) .inhoud.breed { max-width: 1280px; }
+  body:not(.rl) .toast { left: calc(50% + 116px); bottom: 24px; }
+}

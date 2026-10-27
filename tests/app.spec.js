@@ -309,6 +309,7 @@ test.describe('Demo', () => {
     // Clubbeheerder: pakket kiezen
     await page.evaluate(() => CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'beheerder')));
     await page.locator('nav.nav button[data-tab="regels"]').click();
+    await page.locator('details:has(form[data-submit="pakketOk"]) > summary').click(); // 27-10: Regels is ingeklapt
     await page.locator('form[data-submit="pakketOk"] input[value="trainers"]').check();
     await page.locator('form[data-submit="pakketOk"] button').click();
     expect(await page.evaluate(() => CC.S().club.pakket)).toBe('trainers');
@@ -470,7 +471,7 @@ test.describe('Demo', () => {
     expect(na.seizoen).not.toBe('grijs'); // Heel seizoen telt alles op en heeft wel een kleur
     expect(na.signalen).toBe(0);
     await page.evaluate(() => { CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer')); });
-    await page.locator('nav >> text=Aanwezigheid').click();
+    await page.locator('nav >> text=Planning').click();
     await page.evaluate(() => { CC.ui.seg.aanwModus = 'overzicht'; CC.render(); });
     await expect(page.locator('#app')).toContainText('keer gemeten deze fase');
     await controleer(page, fouten, 'nieuwe fase');
@@ -492,7 +493,7 @@ test.describe('Demo', () => {
       const a = { id: 'a-test-zelf', teamId: t.id, soort: 'wedstrijd', datum: D.vandaag(), tijd: '10:00', eind: '11:15', thuis: true, tegen: 'Testclub O13-1', veld: '', adres: '', verzamel: '09:30', tenue: '', begeleiderId: null, uitslag: null, afgelast: false };
       S.acts.push(a); CC.ui.seg.stWed = a.id; CC.save(); return { id: a.id, team: t.id };
     });
-    await page.locator('nav >> text=Speeltijd').click();
+    await page.locator('nav >> text=Wedstrijd').click();
     await page.locator('[data-act="zetWisselwijze"][data-val="zelf"]').click();
     await expect(page.locator('#app')).toContainText('11 tegen 11');
     await page.locator('[data-act="zelfNieuw"]').click();
@@ -1166,4 +1167,48 @@ test('tekentool: tekenen, opslaan en opnieuw tonen', async ({ page }) => {
   await expect(page.locator('.tegel svg')).toHaveCount(1);
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem('cc-tekentool-test'))[0].data.items.length)).toBe(3);
   expect(fouten).toEqual([]);
+});
+
+// 27-10: de kop noemt de clubnaam niet twee keer (HJO en clubbeheerder hebben de club al als titel)
+test('kop: clubnaam niet dubbel bij de HJO', async ({ page }) => {
+  await page.goto('/?demo');
+  await page.evaluate(() => localStorage.clear());
+  await page.goto('/?demo');
+  await page.locator('[data-act="demoLogin"][data-pid]').nth(3).click();
+  await page.locator('[data-act="magischeLink"]').click();
+  const kop = await page.locator('header.kop .kop-tekst').innerText();
+  const club = await page.evaluate(() => CC.S().club.naam);
+  expect(kop.split(club).length - 1).toBe(1);
+});
+
+// 27-10: Home links en Berichten rechts bij elke rol; ouder: alleen Berichten heeft een getal; Regels en Inzicht ingeklapt; laptop: menu links
+test('tabbladen gelijk, één keer signaleren, lange schermen ingeklapt, laptop-menu', async ({ page }) => {
+  const fouten = volgFouten(page);
+  await page.goto('/?demo');
+  await page.evaluate(() => localStorage.clear());
+  await page.goto('/?demo');
+  await page.locator('[data-act="demoLogin"]').first().click();
+  await page.locator('[data-act="magischeLink"]').click();
+  const r = await page.evaluate(() => {
+    const S = CC.S(); const uit = {};
+    S.people.forEach((p) => p.rollen.forEach((rol, i) => { if (uit[rol.rol]) return; CC.zetSessie(p.id); CC.wisselRol(i); const t = CC.rollen[rol.rol].tabs(S).filter(Boolean); uit[rol.rol] = { eerste: t[0][0], laatste: t[t.length - 1][0], namen: t.map((x) => x[1]) }; }));
+    return uit;
+  });
+  for (const [rol, t] of Object.entries(r)) { expect(t.eerste, rol).toBe('home'); expect(t.laatste, rol).toBe('berichten'); }
+  expect(r.trainer.namen).toEqual(['Home', 'Planning', 'Wedstrijd', 'Spelers', 'Berichten']);
+  // ouder: geen getal op Vervoer en Taken
+  await page.evaluate(() => { const S = CC.S(); const p = S.people.find((x) => x.rollen.some((r) => r.rol === 'ouder')); CC.zetSessie(p.id); CC.wisselRol(p.rollen.findIndex((r) => r.rol === 'ouder')); });
+  expect(await page.locator('nav.nav button[data-tab="vervoer"] .badge, nav.nav button[data-tab="taken"] .badge').count()).toBe(0);
+  // clubbeheerder: Regels ingeklapt, Modules staat erin
+  await page.evaluate(() => { const S = CC.S(); const p = S.people.find((x) => x.rollen.some((r) => r.rol === 'beheerder')); CC.zetSessie(p.id); CC.wisselRol(p.rollen.findIndex((r) => r.rol === 'beheerder')); });
+  await page.locator('nav.nav button[data-tab="regels"]').click();
+  expect(await page.locator('#app details.onderwerp').count()).toBeGreaterThan(5);
+  expect(await page.locator('#app details.onderwerp[open]').count()).toBe(0);
+  await page.locator('#app details.onderwerp > summary', { hasText: 'Modules' }).click();
+  await expect(page.locator('#app input[data-change="module"]').first()).toBeVisible();
+  // laptop: menu als kolom links
+  await page.setViewportSize({ width: 1366, height: 860 });
+  const nav = await page.locator('nav.nav').boundingBox();
+  expect(nav.x).toBe(0); expect(nav.height).toBeGreaterThan(800);
+  await controleer(page, fouten, 'tabbladen');
 });
