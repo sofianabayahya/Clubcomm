@@ -1387,8 +1387,12 @@ test('trainingsmodule: training voorbereiden en eigen vorm (echte versie)', asyn
   await page.locator('[data-act="terug"]').click();
   await expect(page.locator('.tr-rij')).toHaveCount(2);
   await expect(page.locator('#app')).toContainText('Skills passeren in kruisvorm');
+  // Onderdeel dupliceren (vraag 27-10)
+  await page.locator('.tr-rij').nth(1).click();
+  await page.locator('#sheet [data-act="tpDupliceer"]').click();
+  await expect(page.locator('.tr-rij')).toHaveCount(3);
   await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'trainingsplannen').map((r) => `${r.scope}|${r.persoon_id}|${r.act_id}|${r.data.onderdelen.length}|${r.data.leerdoelen.join()}`).join(), { message: 'training in de database' })
-    .toBe('eigen|p-beheer|tTest|2|ll-1v1-aanvallend');
+    .toBe('eigen|p-beheer|tTest|3|ll-1v1-aanvallend');
   await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'vormen').map((r) => `${r.scope}|${r.persoon_id}|${r.data.naam}`).join()).toBe('eigen|p-beheer|Skills passeren in kruisvorm');
   // Vormen-lijst onder Training
   await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();

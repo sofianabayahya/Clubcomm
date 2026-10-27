@@ -105,13 +105,16 @@
       ${v ? `<label class="schakel"><span>Gebruiken als spacing</span><input type="checkbox" name="spacing" ${o.spacing ? 'checked' : ''}><i></i></label>` : ''}
       <button class="knop vol">Klaar</button></form>
       <div class="knoppen">${i > 0 ? `<button class="knop licht" data-act="tpSchuif" data-id="${el.dataset.id}" data-i="${i}" data-r="-1">↑ Omhoog</button>` : ''}${i < p.onderdelen.length - 1 ? `<button class="knop licht" data-act="tpSchuif" data-id="${el.dataset.id}" data-i="${i}" data-r="1">↓ Omlaag</button>` : ''}
-        ${v ? `<button class="knop licht" data-act="vormOpen" data-id="${v.id}">${icon('pencil')}Vorm openen</button>` : ''}<button class="knop licht" data-act="tpOnderdeelWeg" data-id="${el.dataset.id}" data-i="${i}" style="color:var(--rood)">${icon('trash-2')}Weghalen</button></div>`);
+        ${v ? `<button class="knop licht" data-act="vormOpen" data-id="${v.id}">${icon('pencil')}Vorm openen</button>` : ''}<button class="knop licht" data-act="tpDupliceer" data-id="${el.dataset.id}" data-i="${i}">${icon('repeat')}Dupliceren</button><button class="knop licht" data-act="tpOnderdeelWeg" data-id="${el.dataset.id}" data-i="${i}" style="color:var(--rood)">${icon('trash-2')}Weghalen</button></div>`);
   });
   CC.on('tpOnderdeelOk', (f) => { const S = CC.S(); const p = plan(S, f.dataset.id); const o = p && p.onderdelen[Number(f.dataset.i)]; if (!o) return;
     o.min = Number(f.min.value) || 0; o.notitie = f.notitie.value.trim(); if (f.naam) o.naam = f.naam.value.trim() || 'Spacing'; if (f.spacing) o.spacing = f.spacing.checked;
     CC.save(); CC.closeSheet(); CC.render(); });
   CC.on('tpSchuif', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); const i = Number(el.dataset.i), j = i + Number(el.dataset.r); if (!p || j < 0 || j >= p.onderdelen.length) return;
     [p.onderdelen[i], p.onderdelen[j]] = [p.onderdelen[j], p.onderdelen[i]]; CC.save(); CC.closeSheet(); CC.render(); });
+  // Dupliceren: hetzelfde onderdeel er direct onder (bijv. dezelfde vorm in variant B, of nog een keer spacing)
+  CC.on('tpDupliceer', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); const i = Number(el.dataset.i); if (!p || !p.onderdelen[i]) return;
+    p.onderdelen.splice(i + 1, 0, { ...JSON.parse(JSON.stringify(p.onderdelen[i])), id: nieuwId('o') }); CC.save(); CC.closeSheet(); CC.render(); CC.toast('Gedupliceerd'); });
   CC.on('tpOnderdeelWeg', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); if (!p) return; p.onderdelen.splice(Number(el.dataset.i), 1); CC.save(); CC.closeSheet(); CC.render(); });
   CC.on('tpSpacing', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); if (!p) return; p.onderdelen.push({ id: nieuwId('o'), spacing: true, naam: 'Hooghouden', min: 2 }); CC.save(); CC.render(); });
 
