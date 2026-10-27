@@ -231,23 +231,53 @@
   const pct = (k, s) => (k && k.totaal ? Math.round((100 * (k[s] || 0)) / k.totaal) : 0);
   const mmss = (ms) => { const t = Math.round((ms || 0) / 1000); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`; };
   const klokStand = (k) => { if (!k) return null; const x = { ...k }; if (k.huidig && k.sinds) { const d = Date.now() - k.sinds; x[k.huidig] = (x[k.huidig] || 0) + d; x.totaal = (x.totaal || 0) + d; if (k.huidig === 'uitleg') x.langsteUitleg = Math.max(x.langsteUitleg || 0, (k.uitlegNu || 0) + d); } return x; };
+  // Besluit 129: observeren = tijdens de wedstrijd of training alleen kijken, tikken en kort typen. Bovenaan klok (helft en
+  // minuut) en turven; "Wat zie je?" bewaart een notitie met minuut en onderwerp; de aandachtspunten vink je na afloop af.
+  const wklokStand = (w) => { if (!w || !w.deel) return { deel: '', min: 0 }; if (w.deel === 'rust' || w.deel === 'einde') return { deel: w.deel, min: 0 };
+    return { deel: w.deel, min: Math.max(1, Math.floor((Date.now() - (w.start || Date.now())) / 60000) + 1) }; };
+  const wklokTekst = (w) => { const k = wklokStand(w); return !k.deel ? 'Nog niet begonnen' : k.deel === 'rust' ? 'Rust' : k.deel === 'einde' ? 'Afgelopen' : `${k.deel === 'h1' ? '1e' : '2e'} helft · ${k.min}'`; };
+  const WVOLGEND = { '': ['h1', 'Start 1e helft'], h1: ['rust', 'Rust'], rust: ['h2', 'Start 2e helft'], h2: ['einde', 'Einde'], einde: null };
+  const huidigDeel = (m) => { const d = ((m.obs || {}).wklok || {}).deel; return d === 'rust' ? 'rust' : d === 'h2' || d === 'einde' ? 'h2' : 'h1'; };
   CC.views.begelObs = (S, p) => {
-    const m = vind(S, p.id); const z = zelf(S)[m.id] || {}; const k = klokStand(m.obs.klok);
-    const klokHtml = m.soort === 'training' ? `<div class="kaartje klok" data-klok="${m.id}"><p class="klein"><b>Leertijd-klok</b> <small class="zacht">tik aan wat er nu gebeurt</small></p>
-        <div class="klokknoppen">${[['spelen', 'Spelen'], ['uitleg', 'Uitleg'], ['wissel', 'Wisselen']].map(([s, l]) => `<button class="knop ${m.obs.klok && m.obs.klok.huidig === s ? '' : 'licht'}" data-act="klokTik" data-id="${m.id}" data-s="${s}">${l}</button>`).join('')}<button class="knop licht" data-act="klokTik" data-id="${m.id}" data-s="">Stop</button></div>
-        <p class="klein" data-klokstand>${klokTekst(k)}</p></div>` : '';
-    const voor = m.voor || {}; const plan = m.plan || {};
+    const m = vind(S, p.id); const k = klokStand(m.obs.klok); const wed = m.soort === 'wedstrijd';
+    const voor = m.voor || {}; const plan = m.plan || {}; const w = m.obs.wklok || {}; const deel = huidigDeel(m);
+    const momenten = (m.obs.momenten || []).map((x, i) => ({ ...x, i })).reverse();
+    const groepNaam = (g) => ((CC.OBS[m.soort].find((o) => o.k === g) || {}).t || '').replace(/^\d+\.\s*/, '');
+    const bovenaan = wed ? `<div class="kaartje obs-plak"><div class="obs-klok"><b data-wklok="${m.id}">${wklokTekst(w)}</b>${WVOLGEND[w.deel || ''] ? `<button class="knop klein" data-act="wklokVerder" data-id="${m.id}">${WVOLGEND[w.deel || ''][1]}</button>` : ''}</div>
+        <div class="obs-turf">${TURF.map((t) => `<button data-act="obsTurf" data-id="${m.id}" data-d="${deel}" data-t="${t}"><span>${((m.obs.turf || {})[deel] || {})[t] || 0}</span>${t}</button>`).join('')}</div>
+        <p class="zacht klein">Turven telt bij: ${esc((DELEN.find((d) => d[0] === deel) || [, ''])[1])}</p></div>`
+      : `<div class="kaartje klok" data-klok="${m.id}"><p class="klein"><b>Leertijd-klok</b> <small class="zacht">tik aan wat er nu gebeurt</small></p>
+        <div class="klokknoppen">${[['spelen', 'Spelen'], ['uitleg', 'Uitleg'], ['wissel', 'Wisselen']].map(([s2, l]) => `<button class="knop ${m.obs.klok && m.obs.klok.huidig === s2 ? '' : 'licht'}" data-act="klokTik" data-id="${m.id}" data-s="${s2}">${l}</button>`).join('')}<button class="knop licht" data-act="klokTik" data-id="${m.id}" data-s="">Stop</button></div>
+        <p class="klein" data-klokstand>${klokTekst(k)}</p></div>`;
+    const totaalTurf = wed ? `<details class="uitklap"><summary>Turven per helft</summary><table class="tabel"><tr><th></th>${TURF.map((t) => `<th>${t}</th>`).join('')}</tr>${DELEN.map(([d, l]) => `<tr><td>${l}</td>${TURF.map((t) => `<td>${((m.obs.turf || {})[d] || {})[t] || 0}</td>`).join('')}</tr>`).join('')}</table></details>` : '';
     return { titel: `Observatie · ${titelM(S, m)}`, html: `
+      ${bovenaan}
+      <form class="kaartje codeform" data-submit="obsMoment" data-id="${m.id}">
+        <label for="om-t"><b>Wat zie je?</b> <small class="zacht">${wed ? 'de minuut komt er vanzelf bij' : 'kort, je vult het na afloop aan'}</small></label>
+        <textarea id="om-t" name="tekst" rows="2" required placeholder="${wed ? 'Bijv. geeft in de rust één punt: vrije man zoeken' : 'Bijv. lange uitleg bij de tweede vorm'}"></textarea>
+        <fieldset class="obs-groepen"><legend class="zacht klein">Onderwerp (mag leeg)</legend>${CC.OBS[m.soort].map((o) => `<label class="tr-chip"><input type="radio" name="k" value="${o.k}"><span>${esc(o.t.replace(/^\d+\.\s*/, '').replace(/ in de wedstrijd| handelen/, ''))}</span></label>`).join('')}</fieldset>
+        <button class="knop vol">Bewaar notitie</button></form>
+      ${momenten.length ? `<div class="kaartje"><b>Notities (${momenten.length})</b><div class="obs-notities">${momenten.map((x) => `<div class="obs-notitie"><b>${x.fase === 'rust' ? 'rust' : x.min ? `${esc(String(x.min))}'` : ''}</b><span>${esc(x.coach)}${x.spelers ? ` → ${esc(x.spelers)}` : ''}${x.k ? `<small>${esc(groepNaam(x.k))}</small>` : x.soort ? `<small>${esc(x.soort)}</small>` : ''}</span><button class="icoonknop" data-act="obsMomentWeg" data-id="${m.id}" data-i="${x.i}" aria-label="Notitie weghalen">${icon('trash-2')}</button></div>`).join('')}</div></div>` : ''}
       <div class="kaartje klein"><b>Doel:</b> ${esc(voor.doel || '—')}<br><b>Leerdoel trainer:</b> ${esc(plan.leerdoel || voor.leerdoel || '—')}${plan.focus ? `<br><b>Jouw focus:</b> ${esc(plan.focus)}` : ''}</div>
-      ${klokHtml}
-      <p class="zacht klein">✓ zichtbaar · ~ deels zichtbaar · – niet zichtbaar · leeg = niet op gelet</p>
-      ${CC.OBS[m.soort].map((o) => `${h.sectie(o.t)}<div class="obslijst">${o.p.map((v, i) => { const sl = `${o.k}${i}`; const w = m.obs.punten[sl];
-        return `<div class="obspunt"><p>${esc(v)}</p><div class="tekens">${TEKEN.map(([c, t, l]) => `<button class="${w === c ? 'aan' : ''}" data-act="obsTeken" data-id="${m.id}" data-sl="${sl}" data-c="${c}" aria-label="${l}">${t}</button>`).join('')}</div>
-          <input data-input="obsNotitie" data-id="${m.id}" data-sl="${sl}" value="${esc(m.obs.notities[sl] || '')}" placeholder="Korte observatie" aria-label="Korte observatie"></div>`; }).join('')}</div>`).join('')}
-      ${m.soort === 'wedstrijd' ? `${h.sectie('Turven: wat zegt de coach?')}<div class="turf">${DELEN.map(([d, l]) => `<div><b>${l}</b>${TURF.map((t) => `<button data-act="obsTurf" data-id="${m.id}" data-d="${d}" data-t="${t}">${t} <span>${((m.obs.turf || {})[d] || {})[t] || 0}</span></button>`).join('')}</div>`).join('')}</div>` : ''}
-      ${momentenHtml(m) ? `${h.sectie('Momenten (evaluatieformulier)')}${momentenHtml(m)}` : ''}
+      ${h.sectie(wed ? 'Na afloop: aandachtspunten afvinken' : 'Aandachtspunten afvinken')}
+      <p class="zacht klein">✓ zichtbaar · ~ deels zichtbaar · – niet zichtbaar · leeg = niet op gelet. Je notities staan per onderwerp al klaar.</p>
+      ${CC.OBS[m.soort].map((o) => { const n = o.p.filter((v, i) => m.obs.punten[`${o.k}${i}`]).length; const nt = (m.obs.momenten || []).filter((x) => x.k === o.k);
+        return `<details class="uitklap"><summary>${esc(o.t)} <span class="zacht klein">${n} van ${o.p.length}${nt.length ? ` · ${nt.length} notitie${nt.length === 1 ? '' : 's'}` : ''}</span></summary>
+        ${nt.length ? `<ul class="obs-bij">${nt.map((x) => `<li>${x.min ? `${esc(String(x.min))}' ` : ''}${esc(x.coach)}</li>`).join('')}</ul>` : ''}
+        <div class="obslijst">${o.p.map((v, i) => { const sl = `${o.k}${i}`; const ww = m.obs.punten[sl];
+        return `<div class="obspunt"><p>${esc(v)}</p><div class="tekens">${TEKEN.map(([c, t, l]) => `<button class="${ww === c ? 'aan' : ''}" data-act="obsTeken" data-id="${m.id}" data-sl="${sl}" data-c="${c}" aria-label="${l}">${t}</button>`).join('')}</div>
+          <input data-input="obsNotitie" data-id="${m.id}" data-sl="${sl}" value="${esc(m.obs.notities[sl] || '')}" placeholder="Korte observatie" aria-label="Korte observatie"></div>`; }).join('')}</div></details>`; }).join('')}
+      ${totaalTurf}
       <p class="zacht klein">Alles wordt meteen bewaard. De vier vakken (sterk, ontwikkelpunt, effect, afspraak) vul je in het reflectiegesprek in.</p>` };
   };
+  CC.on('wklokVerder', (el) => { const S = CC.S(); const m = vind(S, el.dataset.id); const w = m.obs.wklok || (m.obs.wklok = {}); const v = WVOLGEND[w.deel || '']; if (!v) return;
+    w.deel = v[0]; w.start = Date.now(); CC.save(); CC.render(); });
+  CC.on('obsMoment', (f) => { const S = CC.S(); const m = vind(S, f.dataset.id); const tekst = f.tekst.value.trim(); if (!tekst) return;
+    const k = (f.querySelector('input[name="k"]:checked') || {}).value || ''; const st = wklokStand(m.obs.wklok);
+    (m.obs.momenten || (m.obs.momenten = [])).push({ fase: m.soort === 'wedstrijd' ? huidigDeel(m) : '', min: st.min || '', k, coach: tekst, tijd: new Date().toISOString() });
+    CC.save(); CC.render(); CC.toast('Notitie bewaard'); });
+  CC.on('obsMomentWeg', (el) => { const S = CC.S(); const m = vind(S, el.dataset.id); (m.obs.momenten || []).splice(Number(el.dataset.i), 1); CC.save(); CC.render(); });
+  setInterval(() => { const e = document.querySelector('[data-wklok]'); if (!e) return; const m = vind(CC.S(), e.dataset.wklok); if (m) e.textContent = wklokTekst(m.obs.wklok); }, 15000);
   const klokTekst = (k) => (k && k.totaal ? `Voetballen ${mmss(k.spelen)} (${pct(k, 'spelen')}%) · uitleg ${mmss(k.uitleg)} · wisselen ${mmss(k.wissel)} · langste uitleg ${mmss(k.langsteUitleg)} · ${k.overgangen || 0} overgangen${k.overgangen ? `, gemiddeld ${mmss((k.wissel || 0) / k.overgangen)}` : ''}` : 'Nog niet gestart.');
   // Klok: elke tik sluit het vorige stuk af
   CC.on('klokTik', (el) => { const S = CC.S(); const m = vind(S, el.dataset.id); const k = m.obs.klok || (m.obs.klok = { spelen: 0, uitleg: 0, wissel: 0, totaal: 0, langsteUitleg: 0, overgangen: 0, huidig: '', sinds: 0, uitlegNu: 0 });
