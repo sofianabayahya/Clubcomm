@@ -1324,3 +1324,21 @@ test('tekentool: rail, menu Veld en pijl met boog en langer maken', async ({ pag
   await expect(page.locator('.tegel svg path[d*=" Q "]')).toHaveCount(2); // tegel tekent de boog
   expect(fouten).toEqual([]);
 });
+
+// Besluit 127: gebogen pijl als vaste soort (de boog groeit mee bij het trekken)
+test('tekentool: loopactie met boog', async ({ page }) => {
+  const fouten = volgFouten(page);
+  await page.setViewportSize({ width: 1366, height: 820 });
+  await page.goto('/tekenen'); await page.evaluate(() => localStorage.clear()); await page.goto('/tekenen');
+  await page.locator('#nieuw').click();
+  await page.locator('[data-rail="pijlen"]').click();
+  await page.locator('[data-draw-tool][aria-label="Loopactie met boog"]').click();
+  const v = await page.locator('#drawSvg').boundingBox();
+  await page.mouse.move(v.x + v.width * 0.3, v.y + v.height * 0.6); await page.mouse.down();
+  await page.mouse.move(v.x + v.width * 0.6, v.y + v.height * 0.6, { steps: 5 }); await page.mouse.up();
+  await page.locator('#drawSave').click();
+  await expect(page.locator('#drawOverlay')).toBeHidden();
+  const p = await page.evaluate(() => JSON.parse(localStorage.getItem('cc-tekentool-test'))[0].data.items[0]);
+  expect(p.k).toBe('run'); expect(p.cy).toBeLessThan(p.y1 - 40);
+  expect(fouten).toEqual([]);
+});

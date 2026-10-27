@@ -61,6 +61,7 @@
       { group: "Pijlen en lijnen", items: [
         { t: "arrow", k: "run", label: "Loopactie (stippel)", key: "L" }, { t: "arrow", k: "pass", label: "Pass", key: "P" },
         { t: "arrow", k: "dribble", label: "Dribbel", key: "R" }, { t: "arrow", k: "shot", label: "Schot", key: "S" },
+        { t: "arrow", k: "run", boog: true, label: "Loopactie met boog" }, { t: "arrow", k: "pass", boog: true, label: "Pass met boog" },
         { t: "wall", label: "Muur / lijn" } ] },
       { group: "Volgorde en markeren", items: [ { t: "num", label: "Nummer" }, { t: "zone", label: "Vak markeren" }, { t: "text", label: "Tekst (bv. 5P)" } ] }
     ];
@@ -265,7 +266,8 @@
       else if (t.t === "dish") s += '<ellipse rx="13" ry="6" fill="' + DISH[t.c] + '" stroke="#555"/>';
       else if (t.t === "goal"){ var gw = t.s === "M" ? 34 : 17; s += '<rect x="' + (-gw / 2) + '" y="-6" width="' + gw + '" height="12" fill="#ddd" stroke="#777"/>'; }
       else if (t.t === "arrow"){
-        s += t.k === "dribble" ? '<path d="M0 14 L3 10 L-3 6 L3 2 L-3 -2 L0 -6" stroke="#111" stroke-width="2" fill="none"/>' :
+        if (t.boog) s += '<path d="M-6 14 Q-10 -2 0 -6" stroke="#111" stroke-width="2" fill="none"' + (t.k === "run" ? ' stroke-dasharray="3 3"' : '') + '/>';
+        else s += t.k === "dribble" ? '<path d="M0 14 L3 10 L-3 6 L3 2 L-3 -2 L0 -6" stroke="#111" stroke-width="2" fill="none"/>' :
           '<line x1="0" y1="14" x2="0" y2="-6" stroke="#111" stroke-width="' + (t.k === "shot" ? 4 : 2) + '"' + (t.k === "run" ? ' stroke-dasharray="3 3"' : '') + '/>';
         s += '<path d="M-5 -6 L0 -14 L5 -6 Z" fill="#111"/>';
       }
@@ -513,7 +515,7 @@
             : (t.t === "hatzone" ? { t: "zone", hz: true, x1: p.x, y1: p.y, x2: p.x, y2: p.y } : { t: t.t, x1: p.x, y1: p.y, x2: p.x, y2: p.y });
           if (t.t === "zone") it.maat = true;
           st.items.push(it);
-          st.drag = { mode: "draw", i: st.items.length - 1 };
+          st.drag = { mode: "draw", i: st.items.length - 1, boog: !!t.boog };
         } else {
           var sp = snapPt(p.x, p.y, -1, evt); st.guides = null;
           var obj = { t: t.t, x: sp.x, y: sp.y };
@@ -577,7 +579,11 @@
         }
         st.drag.moved = true; render(); evt.preventDefault(); return;
       }
-      if (st.drag.mode === "draw"){ var e2 = snapPt(p.x, p.y, st.drag.i, evt); it.x2 = e2.x; it.y2 = e2.y; }
+      if (st.drag.mode === "draw"){
+        var e2 = snapPt(p.x, p.y, st.drag.i, evt); it.x2 = e2.x; it.y2 = e2.y;
+        // Gebogen pijl (Besluit 127): de boog groeit mee, een derde van de lengte opzij (links van de looprichting).
+        if (st.drag.boog){ var bx = it.x2 - it.x1, by = it.y2 - it.y1; it.cx = Math.round((it.x1 + it.x2) / 2 + by * 0.35); it.cy = Math.round((it.y1 + it.y2) / 2 - bx * 0.35); }
+      }
       else {
         var dx = p.x - st.drag.last.x, dy = p.y - st.drag.last.y;
         if (st.drag.raw){
