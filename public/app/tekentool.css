@@ -78,3 +78,39 @@
 .draw-nummers.dicht { padding: 4px 10px; }
 .draw-nummers.dicht .draw-nr-klap { min-height: 44px; }
 @media (max-width: 899px) { .draw-nr-vorm { min-width: 0; } }
+/* Besluit 126 (ontwerp A): smalle rail, uitklapmenu naast de rail, Veld/Opstelling/⚙ in de bovenbalk */
+.draw-body { position: relative; }
+.draw-tools { width: 84px; padding: 8px 6px; gap: 4px; align-items: center; }
+.draw-rail { width: 70px; min-height: 60px; border: 0; border-radius: 12px; background: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font: 600 12px/1.2 inherit; font-family: inherit; color: var(--ink); cursor: pointer; padding: 4px 2px; }
+.draw-rail:hover { background: var(--surface-alt); }
+.draw-rail.active { background: #DFF3FF; box-shadow: inset 0 0 0 2px #00B3FF; color: #0b4f7a; }
+.draw-rail-ic { display: flex; align-items: center; justify-content: center; height: 34px; }
+.draw-rail-ic svg { width: 32px; height: 32px; }
+.draw-fly { position: absolute; left: 92px; top: 8px; z-index: 6; background: var(--surface); border-radius: 14px; box-shadow: 0 12px 32px rgba(11,37,69,.28); padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 10px; max-width: calc(100% - 110px); }
+.draw-fly-h { display: flex; align-items: center; gap: 8px; } .draw-fly-h b { font-size: 15px; }
+.draw-fly-x { margin-left: auto; width: 44px; height: 44px; border: 0; border-radius: 10px; background: none; font: 700 22px sans-serif; color: var(--ink-muted); cursor: pointer; }
+.draw-fly-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+.draw-fly-grid .draw-tool { width: 52px; height: 52px; aspect-ratio: auto; }
+.draw-fly .draw-nummers { margin: 0; padding: 8px 0 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; }
+.draw-nr-titel { font-size: 14px; }
+.draw-menus { display: flex; gap: 8px; }
+.draw-menu { position: relative; }
+.draw-menu > summary { list-style: none; min-height: 44px; display: flex; align-items: center; gap: 4px; padding: 0 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); font: 600 14px inherit; font-family: inherit; cursor: pointer; white-space: nowrap; }
+.draw-menu > summary::-webkit-details-marker { display: none; }
+.draw-menu[open] > summary { border-color: var(--accent); }
+.draw-menu-lijst { position: absolute; top: calc(100% + 6px); left: 0; z-index: 20; min-width: 220px; background: var(--surface); border-radius: 12px; box-shadow: 0 12px 32px rgba(11,37,69,.28); padding: 8px; display: flex; flex-direction: column; gap: 4px; }
+.draw-menu-rechts .draw-menu-lijst { left: auto; right: 0; min-width: 300px; }
+.draw-menu-lijst > button { min-height: 44px; text-align: left; padding: 0 12px; border: 0; border-radius: 8px; background: none; font: 600 14px inherit; font-family: inherit; color: var(--ink); cursor: pointer; }
+.draw-menu-lijst > button:hover, .draw-menu-lijst > button.active { background: #DFF3FF; }
+.draw-menu-lijst small { color: var(--ink-muted); font-size: 12px; padding: 4px 12px; }
+.draw-menu-lijst .draw-zoom { padding: 6px 8px; }
+.draw-menu-lijst .draw-clear { margin: 6px 8px 2px; }
+.draw-grepen circle { filter: drop-shadow(0 1px 2px rgba(0,0,0,.35)); }
+@media (max-width: 899px) {
+  .draw-tools { width: auto; max-height: none; flex-direction: row; overflow-x: auto; overflow-y: hidden; padding: 6px; border-bottom: 1px solid var(--border); }
+  .draw-rail { flex: none; width: 64px; }
+  .draw-fly { left: 8px; right: 8px; top: 82px; max-width: none; }
+  .draw-menus { flex-wrap: wrap; }
+  .draw-menu-lijst { left: 0; right: auto; }
+  .draw-menu-rechts .draw-menu-lijst { left: auto; right: 0; min-width: 260px; }
+}

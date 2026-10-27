@@ -109,6 +109,27 @@
       }
       return s;
     }
+    // Besluit 126: een pijl mag een boog hebben (controlepunt cx, cy; kwadratische bezier). Punt op de lijn bij t (0..1).
+    function punt(it, t){
+      var u = 1 - t;
+      return it.cx == null ? { x: it.x1 + (it.x2 - it.x1) * t, y: it.y1 + (it.y2 - it.y1) * t }
+        : { x: u * u * it.x1 + 2 * u * t * it.cx + t * t * it.x2, y: u * u * it.y1 + 2 * u * t * it.cy + t * t * it.y2 };
+    }
+    function lijnD(it){ return it.cx == null ? "M " + it.x1 + " " + it.y1 + " L " + it.x2 + " " + it.y2 : "M " + it.x1 + " " + it.y1 + " Q " + it.cx + " " + it.cy + " " + it.x2 + " " + it.y2; }
+    // Dribbel als golflijn langs de (eventueel gebogen) lijn; de laatste 22 punten recht, voor de pijlpunt.
+    function wavyIt(it){
+      var N = 60, pts = [{ p: punt(it, 0), l: 0 }], len = 0, i, j = 1;
+      for (i = 1; i <= N; i++){ var q = punt(it, i / N), v = pts[i - 1].p; len += Math.sqrt((q.x - v.x) * (q.x - v.x) + (q.y - v.y) * (q.y - v.y)); pts.push({ p: q, l: len }); }
+      var stop = Math.max(0, len - 22), steps = Math.max(4, Math.floor(stop / 7)), d = "M " + it.x1 + " " + it.y1;
+      for (i = 1; i <= steps; i++){
+        var doel = stop * i / steps; while (j < N && pts[j].l < doel) j++;
+        var a0 = pts[j - 1], a1 = pts[j], fr = a1.l > a0.l ? (doel - a0.l) / (a1.l - a0.l) : 0;
+        var x = a0.p.x + (a1.p.x - a0.p.x) * fr, y = a0.p.y + (a1.p.y - a0.p.y) * fr, tx = a1.p.x - a0.p.x, ty = a1.p.y - a0.p.y, tl = Math.sqrt(tx * tx + ty * ty) || 1;
+        var off = Math.sin(i * Math.PI / 2) * 7;
+        d += " L " + (x - ty / tl * off).toFixed(1) + " " + (y + tx / tl * off).toFixed(1);
+      }
+      return d + " L " + it.x2 + " " + it.y2;
+    }
     function wavy(x1, y1, x2, y2){
       var dx = x2 - x1, dy = y2 - y1, len = Math.sqrt(dx * dx + dy * dy) || 1, ux = dx / len, uy = dy / len, px = -uy, py = ux;
       var steps = Math.max(4, Math.floor((len - 22) / 7)), d = "M " + x1 + " " + y1, i;
@@ -157,11 +178,20 @@
           return '<line' + a + hl + ' x1="' + it.x1 + '" y1="' + it.y1 + '" x2="' + it.x2 + '" y2="' + it.y2 + '" stroke="#111" stroke-width="8" stroke-linecap="round"/>';
         case "arrow":
           var common = ' stroke="#111" fill="none" marker-end="url(#drawHead)"';
-          if (it.k === "dribble") return '<path' + a + hl + ' d="' + wavy(it.x1, it.y1, it.x2, it.y2) + '" stroke-width="3"' + common + '/>';
-          return '<line' + a + hl + ' x1="' + it.x1 + '" y1="' + it.y1 + '" x2="' + it.x2 + '" y2="' + it.y2 + '"' + common +
-            ' stroke-width="' + (it.k === "shot" ? 6 : 3) + '"' + (it.k === "run" ? ' stroke-dasharray="10 8"' : '') + '/>';
+          // Brede onzichtbare lijn eronder: een pijl is makkelijker aan te klikken.
+          var zicht = it.k === "dribble" ? '<path d="' + wavyIt(it) + '" stroke-width="3"' + common + '/>'
+            : '<path d="' + lijnD(it) + '"' + common + ' stroke-width="' + (it.k === "shot" ? 6 : 3) + '"' + (it.k === "run" ? ' stroke-dasharray="10 8"' : '') + '/>';
+          return '<g' + a + hl + '><path d="' + lijnD(it) + '" stroke="transparent" stroke-width="18" fill="none"/>' + zicht + '</g>';
       }
       return "";
+    }
+    // Grepen bij een gekozen pijl of lijn: uiteinden slepen = langer, korter of draaien; middelste greep = boog.
+    function grepenSvg(){
+      var it = st.sel != null && !(st.multi && st.multi.length > 1) ? st.items[st.sel] : null;
+      if (!it || (it.t !== "arrow" && it.t !== "wall")) return "";
+      var g = function(h, x, y, midden){ return '<circle data-h="' + h + '" cx="' + Math.round(x) + '" cy="' + Math.round(y) + '" r="' + (midden ? 9 : 10) + '" fill="' + (midden ? "#00B3FF" : "#fff") + '" stroke="' + (midden ? "#fff" : "#00B3FF") + '" stroke-width="3" style="cursor:' + (midden ? "grab" : "move") + '"/>'; };
+      var m = punt(it, 0.5);
+      return '<g class="draw-grepen">' + g("1", it.x1, it.y1) + g("2", it.x2, it.y2) + (it.t === "arrow" ? g("c", m.x, m.y, true) : "") + '</g>';
     }
     function render(){
       var f = FIELDS[st.field], svg = el("drawSvg");
@@ -176,6 +206,7 @@
         (st.guides && st.drag ? '<g pointer-events="none">' +
           (st.guides.x != null ? '<line x1="' + st.guides.x + '" y1="0" x2="' + st.guides.x + '" y2="' + f.h + '" stroke="#00B3FF" stroke-width="2" stroke-dasharray="8 6"/>' : '') +
           (st.guides.y != null ? '<line x1="0" y1="' + st.guides.y + '" x2="' + f.w + '" y2="' + st.guides.y + '" stroke="#00B3FF" stroke-width="2" stroke-dasharray="8 6"/>' : '') + '</g>' : '') +
+        grepenSvg() +
         (st.drag && st.drag.mode === "box" ? '<rect pointer-events="none" x="' + Math.min(st.drag.x0, st.drag.x1) + '" y="' + Math.min(st.drag.y0, st.drag.y1) + '" width="' + Math.abs(st.drag.x1 - st.drag.x0) + '" height="' + Math.abs(st.drag.y1 - st.drag.y0) + '" fill="rgba(0,179,255,.12)" stroke="#00B3FF" stroke-width="2" stroke-dasharray="6 5"/>' : '');
       if (st.multi) st.multi = st.multi.filter(function(i){ return i < st.items.length; });
       var meer = !!st.multi && st.multi.length > 1;
@@ -187,6 +218,7 @@
       el("drawNumber").hidden = !it || it.t !== "shirt"; // spelers: via de nummerbalk
       renderNummers();
       el("drawEditText").hidden = !it || it.t !== "text";
+      if (el("drawRecht")) el("drawRecht").hidden = !it || it.t !== "arrow" || it.cx == null;
       el("drawMaat").hidden = !it || it.t !== "zone";
       if (it && it.t === "zone") el("drawMaat").textContent = it.maat === true ? "Maat verbergen" : "Maat tonen";
       // Kleur achteraf wijzigen: spelers, hoedjes en schijfjes (ook meerdere tegelijk, zelfde soort).
@@ -201,13 +233,17 @@
       Array.prototype.forEach.call(document.querySelectorAll("[data-draw-tool]"), function(b){
         b.classList.toggle("active", st.tool != null && b.getAttribute("data-draw-tool") === String(st.tool));
       });
+      renderRail();
       // Selecteren licht op als er geen gereedschap aan staat; de muis laat zien wat er gebeurt.
       var selKnop = document.querySelector("[data-draw-select]");
       if (selKnop) selKnop.classList.toggle("active", st.tool == null);
       var dsvg = el("drawSvg");
       if (dsvg.classList){ dsvg.classList.toggle("plaatsen", st.tool != null); dsvg.classList.toggle("kiezen", st.tool == null); }
       Array.prototype.forEach.call(document.querySelectorAll("[data-draw-field]"), function(b){ b.classList.toggle("active", b.getAttribute("data-draw-field") === st.field); });
-      el("drawHint").textContent = st.tool != null
+      var gk = st.sel != null && !meer ? st.items[st.sel] : null;
+      el("drawHint").textContent = gk && (gk.t === "arrow" || gk.t === "wall") && st.tool == null
+        ? (gk.t === "arrow" ? "Sleep een wit bolletje om de pijl langer, korter of schuin te maken. Sleep het blauwe bolletje in het midden voor een boog (terug naar het midden = weer recht)." : "Sleep een wit bolletje om de lijn langer of korter te maken.")
+        : st.tool != null
         ? (/arrow|wall|zone/.test(toolDef(st.tool).t) ? (toolDef(st.tool).t === "hatzone" ? "Sleep een rechthoek: op elke hoek komt een " + lastHat + " hoedje. Rechtermuisklik of nog een keer op de knop = stoppen." : "Sleep over het veld om te tekenen. Rechtermuisklik of nog een keer op de knop = stoppen.") : "Klik op het veld om neer te zetten. Rechtermuisklik, nog een keer op de knop of Esc = stoppen.")
         : "Klik iets aan om het te verplaatsen of te verwijderen. Sleep over een lege plek om meerdere tegelijk te selecteren (Shift+klik = toevoegen, Cmd/Ctrl+A = alles).";
     }
@@ -238,50 +274,113 @@
       else if (t.t === "zone") s += '<rect x="-12" y="-10" width="24" height="20" fill="rgba(245,124,0,.2)" stroke="#F57C00" stroke-width="2" stroke-dasharray="4 3"/>';
       return s + '</svg>';
     }
+    /* Besluit 126 (ontwerp A): smalle rail met één knop per soort; de varianten (kleuren, soorten pijlen) staan in een
+       uitklapmenu. De knop onthoudt de laatst gekozen variant. Veld, opstelling en instellingen staan in de bovenbalk. */
+    var RAIL = [
+      { id: "spelers", naam: "Spelers", soort: /^p$/ }, { id: "bal", naam: "Bal", soort: /^ball$/ },
+      { id: "hoedjes", naam: "Hoedjes", soort: /^(cone|hatzone)$/ }, { id: "schijfjes", naam: "Schijfjes", soort: /^dish$/ },
+      { id: "doelen", naam: "Doelen", soort: /^(goal|board)$/ }, { id: "pijlen", naam: "Pijlen", soort: /^(arrow|wall)$/ },
+      { id: "markeren", naam: "Markeren", soort: /^(num|zone|text)$/ }
+    ];
+    var railLaatst = {}, railOpen = null;
+    function railTools(r){ return flatTools().map(function(t, n){ return r.soort.test(t.t) ? n : -1; }).filter(function(n){ return n !== -1; }); }
+    function railVan(n){ var t = flatTools()[n]; return t ? RAIL.find(function(r){ return r.soort.test(t.t); }) : null; }
+    function laatste(r){ var l = railTools(r); return railLaatst[r.id] != null && l.indexOf(railLaatst[r.id]) !== -1 ? railLaatst[r.id] : l[r.id === "hoedjes" ? 1 : 0]; }
+    function toolKnop(n){
+      var t = flatTools()[n], key = t.key || (t.t === "cone" ? "H" : "");
+      return '<button type="button" class="draw-tool" data-draw-tool="' + n + '" title="' + t.label + (key ? " (toets " + key + ")" : "") + '" aria-label="' + t.label + '">' +
+        toolIcon(t) + (t.key ? '<span class="draw-key">' + t.key + '</span>' : '') + '</button>';
+    }
+    function sluitMenus(){
+      if (railOpen){ railOpen = null; var f = el("drawFly"); if (f) f.hidden = true; renderRail(); }
+      Array.prototype.forEach.call(document.querySelectorAll(".draw-menu[open]"), function(d){ d.open = false; });
+    }
+    function openRail(id){
+      var r = RAIL.find(function(x){ return x.id === id; }), l = railTools(r), f = el("drawFly");
+      if (l.length === 1){ sluitMenus(); st.tool = l[0]; st.sel = null; render(); return; }
+      if (railOpen === id){ sluitMenus(); return; }
+      railOpen = id;
+      // Meteen de laatst gebruikte variant kiezen: één tik op Hoedjes = verder met dezelfde kleur.
+      // Is er iets gekozen (bijv. een speler voor een ander nummer), dan blijft die gekozen.
+      if ((st.sel == null && !(st.multi && st.multi.length > 1)) && (st.tool == null || railVan(st.tool) !== r)){ st.tool = laatste(r); }
+      el("drawFlyH").textContent = r.naam;
+      el("drawFlyGrid").innerHTML = l.map(toolKnop).join("");
+      el("drawNummers").hidden = id !== "spelers";
+      var knop = document.querySelector('[data-rail="' + id + '"]'), body = f.parentNode;
+      f.hidden = false;
+      if (window.matchMedia("(min-width: 900px)").matches){
+        var top = knop.getBoundingClientRect().top - body.getBoundingClientRect().top;
+        f.style.top = Math.max(8, Math.min(top, body.clientHeight - f.offsetHeight - 8)) + "px";
+      } else f.style.top = "";
+      render();
+    }
+    function renderRail(){
+      Array.prototype.forEach.call(document.querySelectorAll("[data-rail]"), function(b){
+        var r = RAIL.find(function(x){ return x.id === b.getAttribute("data-rail"); });
+        var aan = railOpen === r.id || (st && st.tool != null && railVan(st.tool) === r);
+        b.classList.toggle("active", !!aan); b.setAttribute("aria-expanded", railOpen === r.id ? "true" : "false");
+        b.querySelector(".draw-rail-ic").innerHTML = toolIcon(flatTools()[laatste(r)]);
+      });
+      var vk = el("drawVeldNaam"); if (vk && st) vk.textContent = FIELDS[st.field].label;
+    }
     function buildTools(){
-      var idx = 0;
       el("drawTools").innerHTML =
-        '<button type="button" class="draw-select" data-draw-select title="Selecteren (Esc)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3l14 8-6 1.6L10 19z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Selecteren<small>Esc</small></button>' +
-        TOOLS.map(function(g){
-          return '<div class="draw-group"><div class="draw-group-h">' + g.group + '</div><div class="draw-grid">' +
-            g.items.map(function(t){
-              var key = t.key || (t.t === "cone" ? "H" : "");
-              var h = '<button type="button" class="draw-tool" data-draw-tool="' + idx + '" title="' + t.label + (key ? " (toets " + key + ")" : "") + '" aria-label="' + t.label + '">' +
-                toolIcon(t) + (t.key ? '<span class="draw-key">' + t.key + '</span>' : '') + '</button>'; idx++; return h; }).join("") +
-            '</div></div>';
-        }).join("") +
-        '<div class="draw-group"><div class="draw-group-h">Veldvorm</div><div class="draw-fields">' +
-        Object.keys(FIELDS).map(function(k){ return '<button type="button" data-draw-field="' + k + '">' + FIELDS[k].label + '</button>'; }).join("") + '</div></div>' +
-        '<div class="draw-group"><div class="draw-group-h">Opstellingen</div><div class="draw-fields">' +
-        [["212", "", "6 tegen 6 (2-1-2)"], ["212", "t", "2-1-2 tegenstander"], ["331", "", "8 tegen 8 (3-3-1)"], ["331", "t", "3-3-1 tegenstander"]].map(function(x){
-          return '<button type="button" data-draw-form="' + x[0] + '|' + x[1] + '">' + x[2] + '</button>'; }).join("") + '</div></div>' +
-        '<label class="draw-zoom"><input type="checkbox" id="drawMagneet"' + (magneet ? ' checked' : '') + '> Magneet: netjes uitlijnen<small>Hoedjes en spelers springen op één lijn met wat er al staat. Houd Alt/Option ingedrukt om vrij te plaatsen.</small></label>' +
-        '<label class="draw-zoom"><input type="checkbox" id="drawZoom" checked> Opslaan ingezoomd op de spelers<small>Het plaatje toont alleen het stuk waar je getekend hebt. Tekenen doe je gewoon op het hele veld.</small></label>' +
-        '<button type="button" class="draw-clear" id="drawClear">Alles wissen</button>';
-      Array.prototype.forEach.call(document.querySelectorAll("[data-draw-tool]"), function(b){
-        // Nog een keer op dezelfde knop tikken = stoppen met neerzetten.
-        b.addEventListener("click", function(){ pickTool(Number(b.getAttribute("data-draw-tool"))); });
-      });
-      document.querySelector("[data-draw-select]").addEventListener("click", function(){ st.tool = null; render(); });
-      Array.prototype.forEach.call(document.querySelectorAll("[data-draw-field]"), function(b){
-        b.addEventListener("click", function(){ snapshot(); st.field = b.getAttribute("data-draw-field"); st.sel = null; render(); });
-      });
-      el("drawZoom").addEventListener("change", function(){ if (st) st.zoom = this.checked; });
-      el("drawMagneet").addEventListener("change", function(){ magneet = this.checked; try { localStorage.setItem("art-draw-magneet", magneet ? "aan" : "uit"); } catch(e){} });
-      Array.prototype.forEach.call(document.querySelectorAll("[data-draw-form]"), function(b){
-        b.addEventListener("click", function(){ var x = b.getAttribute("data-draw-form").split("|"); zetOpstelling(x[0], x[1] === "t"); });
-      });
-      if (!el("drawNummers")){
-        var nb = document.createElement("div"); nb.id = "drawNummers"; nb.className = "draw-nummers";
-        var stage = el("drawSvg").parentNode; stage.insertBefore(nb, stage.firstChild);
-        nb.addEventListener("click", function(e){
+        '<button type="button" class="draw-rail draw-rail-kies" data-draw-select title="Kiezen en verplaatsen (Esc)"><span class="draw-rail-ic"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M5 3l14 8-6 1.6L10 19z" fill="currentColor"/></svg></span><span>Kies</span></button>' +
+        RAIL.map(function(r){ return '<button type="button" class="draw-rail" data-rail="' + r.id + '" aria-haspopup="true"><span class="draw-rail-ic"></span><span>' + r.naam + '</span></button>'; }).join("");
+      // Uitklapmenu (één voor alle soorten) naast de rail; bij Spelers met de nummerbalk.
+      if (!el("drawFly")){
+        var f = document.createElement("div"); f.id = "drawFly"; f.className = "draw-fly"; f.hidden = true;
+        f.innerHTML = '<div class="draw-fly-h"><b id="drawFlyH"></b><button type="button" class="draw-fly-x" aria-label="Menu sluiten">×</button></div><div class="draw-fly-grid" id="drawFlyGrid"></div><div id="drawNummers" class="draw-nummers"></div>';
+        el("drawTools").parentNode.appendChild(f);
+        f.addEventListener("click", function(e){
           if (!st) return;
+          if (e.target.closest(".draw-fly-x")){ sluitMenus(); return; }
+          var tk = e.target.closest("[data-draw-tool]");
+          if (tk){ var n = Number(tk.getAttribute("data-draw-tool")), r = railVan(n); railLaatst[r.id] = n; pickTool(n, true); if (r.id !== "spelers") sluitMenus(); return; }
           if (e.target.closest("[data-klap]")){ nrDicht = !nrDicht; try { localStorage.setItem("cc-draw-nummers", nrDicht ? "dicht" : "open"); } catch(x){} renderNummers(); return; }
           var v = e.target.closest("[data-vorm]");
           if (v){ var c = v.getAttribute("data-vorm"); st.vormen[c] = vormVan(c) === "c" ? "t" : "c"; spelerIconen(); render(); return; }
-          var b = e.target.closest("[data-nr]"); if (!b) return; var x = b.getAttribute("data-nr").split("|"); tikNummer(x[0], Number(x[1])); });
+          var b = e.target.closest("[data-nr]"); if (!b) return; var x = b.getAttribute("data-nr").split("|"); tikNummer(x[0], Number(x[1]));
+        });
       }
-      el("drawClear").addEventListener("click", function(){ if (!st.items.length) return; snapshot(); st.items = []; st.sel = null; st.num = 0; render(); });
+      // Bovenbalk: Veld, Opstelling en instellingen (⚙), vóór Ongedaan maken.
+      if (!el("drawVeldMenu")){
+        var menus = document.createElement("div"); menus.className = "draw-menus";
+        menus.innerHTML =
+          '<details class="draw-menu" id="drawVeldMenu"><summary>Veld: <b id="drawVeldNaam"></b> ▾</summary><div class="draw-menu-lijst">' +
+            Object.keys(FIELDS).map(function(k){ return '<button type="button" data-draw-field="' + k + '">' + FIELDS[k].label + '</button>'; }).join("") + '</div></details>' +
+          '<details class="draw-menu"><summary>Opstelling ▾</summary><div class="draw-menu-lijst">' +
+            [["212", "", "6 tegen 6 (2-1-2)"], ["212", "t", "2-1-2 tegenstander"], ["331", "", "8 tegen 8 (3-3-1)"], ["331", "t", "3-3-1 tegenstander"]].map(function(x){
+              return '<button type="button" data-draw-form="' + x[0] + '|' + x[1] + '">' + x[2] + '</button>'; }).join("") +
+            '<small>Voor 11 tegen 11: kies de nummers bij Spelers.</small></div></details>' +
+          '<details class="draw-menu draw-menu-rechts"><summary aria-label="Instellingen" title="Instellingen">⚙</summary><div class="draw-menu-lijst">' +
+            '<label class="draw-zoom"><input type="checkbox" id="drawMagneet"' + (magneet ? ' checked' : '') + '> Magneet: netjes uitlijnen<small>Hoedjes en spelers springen op één lijn met wat er al staat. Houd Alt/Option ingedrukt om vrij te plaatsen.</small></label>' +
+            '<label class="draw-zoom"><input type="checkbox" id="drawZoom" checked> Opslaan ingezoomd op de spelers<small>Het plaatje toont alleen het stuk waar je getekend hebt.</small></label>' +
+            '<button type="button" class="draw-clear" id="drawClear">Alles wissen</button></div></details>';
+        var act = el("drawUndo").parentNode; act.insertBefore(menus, el("drawUndo"));
+        Array.prototype.forEach.call(menus.querySelectorAll("details"), function(d){
+          d.addEventListener("toggle", function(){ if (d.open) Array.prototype.forEach.call(menus.querySelectorAll("details[open]"), function(o){ if (o !== d) o.open = false; }); });
+        });
+        Array.prototype.forEach.call(menus.querySelectorAll("[data-draw-field]"), function(b){
+          b.addEventListener("click", function(){ snapshot(); st.field = b.getAttribute("data-draw-field"); st.sel = null; sluitMenus(); render(); });
+        });
+        Array.prototype.forEach.call(menus.querySelectorAll("[data-draw-form]"), function(b){
+          b.addEventListener("click", function(){ var x = b.getAttribute("data-draw-form").split("|"); sluitMenus(); zetOpstelling(x[0], x[1] === "t"); });
+        });
+        el("drawZoom").addEventListener("change", function(){ if (st) st.zoom = this.checked; });
+        el("drawMagneet").addEventListener("change", function(){ magneet = this.checked; try { localStorage.setItem("art-draw-magneet", magneet ? "aan" : "uit"); } catch(e){} });
+        el("drawClear").addEventListener("click", function(){ if (!st.items.length) return; snapshot(); st.items = []; st.sel = null; st.num = 0; sluitMenus(); render(); });
+      }
+      // Knop "Recht maken" bij een gebogen pijl
+      if (!el("drawRecht")){
+        var rb = document.createElement("button"); rb.type = "button"; rb.className = "btn ghost small"; rb.id = "drawRecht"; rb.textContent = "Recht maken"; rb.hidden = true;
+        el("drawSelBar").insertBefore(rb, el("drawDelete"));
+        rb.addEventListener("click", function(){ var it = st.items[st.sel]; if (!it || it.cx == null) return; snapshot(); delete it.cx; delete it.cy; render(); });
+      }
+      document.querySelector("[data-draw-select]").addEventListener("click", function(){ sluitMenus(); st.tool = null; render(); });
+      Array.prototype.forEach.call(document.querySelectorAll("[data-rail]"), function(b){
+        b.addEventListener("click", function(){ openRail(b.getAttribute("data-rail")); });
+      });
     }
 
     /* Magneet: bij neerzetten en slepen springt een hoedje/speler horizontaal of verticaal op één lijn met wat er al
@@ -367,9 +466,10 @@
     function renderNummers(){
       var bak = el("drawNummers"); if (!bak) return;
       var gk = gekozenSpeler();
-      bak.classList.toggle("dicht", nrDicht);
-      var kop = '<button type="button" class="draw-nr-klap" data-klap aria-expanded="' + !nrDicht + '"><b>Rugnummers</b>' + (nrDicht ? '<small>tik om te openen</small>' : '') + '<span aria-hidden="true">' + (nrDicht ? '▾' : '▴') + '</span></button>';
-      if (nrDicht){ bak.innerHTML = kop; return; }
+      var inMenu = !!(bak.closest && bak.closest(".draw-fly")), dicht = nrDicht && !inMenu;
+      bak.classList.toggle("dicht", dicht);
+      var kop = inMenu ? '<b class="draw-nr-titel">Rugnummers</b>' : '<button type="button" class="draw-nr-klap" data-klap aria-expanded="' + !dicht + '"><b>Rugnummers</b>' + (dicht ? '<small>tik om te openen</small>' : '') + '<span aria-hidden="true">' + (dicht ? '▾' : '▴') + '</span></button>';
+      if (dicht){ bak.innerHTML = kop; return; }
       bak.innerHTML = kop + NR_TEAMS.map(function(tm){
         var kleur = tm[0], ink = TEAM[kleur].ink, fill = TEAM[kleur].fill;
         var zonder = st.items.filter(function(x){ return x.t === "p" && x.c === kleur && !x.n; }).length;
@@ -387,19 +487,23 @@
     }
 
     // Knop kiezen; nog een keer dezelfde knop = stoppen. Hoedjeskleur onthouden voor "Vak met hoedjes" en toets H.
-    function pickTool(n){
-      var t = flatTools()[n];
+    function pickTool(n, vast){
+      var t = flatTools()[n], r = railVan(n); if (r) railLaatst[r.id] = n;
       if (t && t.t === "cone" && t.c !== lastHat){
         lastHat = t.c;
         var hz = document.querySelector('[data-draw-tool="' + flatTools().map(function(x){ return x.t; }).indexOf("hatzone") + '"]');
         if (hz) hz.innerHTML = toolIcon({ t: "hatzone" }) + '<span class="draw-key">V</span>';
+        railLaatst.hoedjes = n;
       }
-      st.tool = st.tool === n ? null : n; st.sel = null; render();
+      st.tool = st.tool === n && !vast ? null : n; st.sel = null; render();
     }
     function onDown(evt){
       if (evt.button === 2) return; // rechtermuisknop = stoppen (zie contextmenu)
       if (!st) return;
       var p = svgPt(evt), target = evt.target.closest("[data-i]");
+      sluitMenus();
+      var greep = evt.target.closest("[data-h]");
+      if (greep && st.sel != null){ snapshot(); st.drag = { mode: "greep", i: st.sel, h: greep.getAttribute("data-h"), moved: false }; evt.preventDefault(); return; }
       if (st.tool != null && !(target && !isDragTool(toolDef(st.tool)))){
         var t = toolDef(st.tool);
         snapshot();
@@ -458,8 +562,20 @@
       if (st.drag.mode === "box"){ st.drag.x1 = p.x; st.drag.y1 = p.y; render(); evt.preventDefault(); return; }
       if (st.drag.mode === "group"){
         var gdx = p.x - st.drag.last.x, gdy = p.y - st.drag.last.y;
-        st.multi.forEach(function(j){ var g = st.items[j]; if ("x" in g){ g.x += gdx; g.y += gdy; } else { g.x1 += gdx; g.y1 += gdy; g.x2 += gdx; g.y2 += gdy; } });
+        st.multi.forEach(function(j){ var g = st.items[j]; if ("x" in g){ g.x += gdx; g.y += gdy; } else { g.x1 += gdx; g.y1 += gdy; g.x2 += gdx; g.y2 += gdy; if (g.cx != null){ g.cx += gdx; g.cy += gdy; } } });
         st.drag.last = p; st.drag.moved = true; render(); evt.preventDefault(); return;
+      }
+      if (st.drag.mode === "greep"){
+        if (st.drag.h === "c"){
+          // De greep blijft onder de muis: controlepunt = 2 x greep - helft van begin + eind. Bijna recht = weer recht.
+          var mx = (it.x1 + it.x2) / 2, my = (it.y1 + it.y2) / 2;
+          if (Math.abs(p.x - mx) + Math.abs(p.y - my) < 10){ delete it.cx; delete it.cy; }
+          else { it.cx = Math.round(2 * p.x - mx); it.cy = Math.round(2 * p.y - my); }
+        } else {
+          var e3 = snapPt(p.x, p.y, st.drag.i, evt);
+          if (st.drag.h === "1"){ it.x1 = e3.x; it.y1 = e3.y; } else { it.x2 = e3.x; it.y2 = e3.y; }
+        }
+        st.drag.moved = true; render(); evt.preventDefault(); return;
       }
       if (st.drag.mode === "draw"){ var e2 = snapPt(p.x, p.y, st.drag.i, evt); it.x2 = e2.x; it.y2 = e2.y; }
       else {
@@ -468,7 +584,7 @@
           // Vrije positie bijhouden en die laten "plakken", zodat je ook weer los kunt trekken van de lijn.
           st.drag.raw.x += dx; st.drag.raw.y += dy;
           var q = snapPt(st.drag.raw.x, st.drag.raw.y, st.drag.i, evt); it.x = q.x; it.y = q.y;
-        } else { it.x1 += dx; it.y1 += dy; it.x2 += dx; it.y2 += dy; }
+        } else { it.x1 += dx; it.y1 += dy; it.x2 += dx; it.y2 += dy; if (it.cx != null){ it.cx += dx; it.cy += dy; } }
         st.drag.last = p; st.drag.moved = true;
       }
       render(); evt.preventDefault();
@@ -485,7 +601,7 @@
         st.multi = gekozen.length > 1 ? gekozen : null; st.sel = gekozen.length === 1 ? gekozen[0] : null;
         st.drag = null; render(); return;
       }
-      if (st.drag.mode === "group"){ if (!st.drag.moved) st.undo.pop(); st.drag = null; render(); return; }
+      if (st.drag.mode === "group" || st.drag.mode === "greep"){ if (!st.drag.moved) st.undo.pop(); st.drag = null; st.guides = null; render(); return; }
       var it = st.items[st.drag.i];
       // Te kort getrokken lijnen/vakken (per ongeluk klikken) weer weghalen.
       if (st.drag.mode === "draw" && Math.abs(it.x2 - it.x1) + Math.abs(it.y2 - it.y1) < 12){ st.items.splice(st.drag.i, 1); st.undo.pop(); }
@@ -515,7 +631,7 @@
       if (!st.items.length) return null;
       var x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
       st.items.forEach(function(it){
-        ("x" in it ? [[it.x, it.y]] : [[it.x1, it.y1], [it.x2, it.y2]]).forEach(function(q){
+        ("x" in it ? [[it.x, it.y]] : [[it.x1, it.y1], [it.x2, it.y2]].concat(it.cx != null ? [[punt(it, 0.5).x, punt(it, 0.5).y]] : [])).forEach(function(q){
           x0 = Math.min(x0, q[0]); y0 = Math.min(y0, q[1]); x1 = Math.max(x1, q[0]); y1 = Math.max(y1, q[1]);
         });
       });
@@ -598,7 +714,7 @@
         snapshot(); var nieuw = [];
         st.multi.forEach(function(j){
           var c = JSON.parse(JSON.stringify(st.items[j]));
-          if ("x" in c){ c.x += 24; c.y += 24; } else { c.x1 += 24; c.y1 += 24; c.x2 += 24; c.y2 += 24; }
+          if ("x" in c){ c.x += 24; c.y += 24; } else { c.x1 += 24; c.y1 += 24; c.x2 += 24; c.y2 += 24; if (c.cx != null){ c.cx += 24; c.cy += 24; } }
           if (c.t === "p" && !TEAM[c.c].letter) c.n = 1 + st.items.reduce(function(mx, x){ return x.t === "p" && x.c === c.c ? Math.max(mx, x.n || 0) : mx; }, 0);
           if (c.t === "num") c.n = ++st.num;
           st.items.push(c); nieuw.push(st.items.length - 1);
@@ -608,7 +724,7 @@
       var it = st.sel != null ? st.items[st.sel] : null; if (!it) return;
       snapshot();
       var c = JSON.parse(JSON.stringify(it));
-      if ("x" in c){ c.x += 24; c.y += 24; } else { c.x1 += 24; c.y1 += 24; c.x2 += 24; c.y2 += 24; }
+      if ("x" in c){ c.x += 24; c.y += 24; } else { c.x1 += 24; c.y1 += 24; c.x2 += 24; c.y2 += 24; if (c.cx != null){ c.cx += 24; c.cy += 24; } }
       if (c.t === "p" && !TEAM[c.c].letter) c.n = 1 + st.items.reduce(function(mx, x){ return x.t === "p" && x.c === c.c ? Math.max(mx, x.n || 0) : mx; }, 0);
       if (c.t === "num") c.n = ++st.num;
       st.items.push(c); st.sel = st.items.length - 1; render();
@@ -635,6 +751,7 @@
       if (!st || el("drawOverlay").hidden) return;
       if (/INPUT|TEXTAREA|SELECT/.test((e.target.tagName || ""))) return;
       if (e.key === "Delete" || e.key === "Backspace"){ removeSel(); e.preventDefault(); }
+      else if (e.key === "Escape" && (railOpen || document.querySelector(".draw-menu[open]"))){ sluitMenus(); e.stopPropagation(); }
       else if (e.key === "Escape"){ if (st.tool != null){ st.tool = null; render(); } else { st.sel = null; st.multi = null; render(); } e.stopPropagation(); }
       else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "a"){ st.tool = null; st.sel = null; st.multi = st.items.map(function(x, j){ return j; }); render(); e.preventDefault(); }
       else if ((e.metaKey || e.ctrlKey) && (e.key.toLowerCase() === "y" || (e.shiftKey && e.key.toLowerCase() === "z"))){ redo(); e.preventDefault(); }
