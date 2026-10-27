@@ -2,6 +2,8 @@
 
 *27 oktober 2026. Antwoord op "Ontwikkelvoorstel ClubComm – Methodologische trainingsmodule 2.0". Dit is een **voorstel, geen besluit**. Er is niets gebouwd of gemigreerd. Database, rechten en productieschermen blijven ongewijzigd tot het akkoord. ART blijft ongewijzigd. Achtergrond en audit: `docs/trainingsmodule.md`. De voorbeeldschermen zijn verzonnen voorbeelden.*
 
+
+*◐ Deels herzien door `docs/trainingsmodule-profielen.md` (27-10): de soort `begrip` gaat op in het opleidingsprofiel; leerdoelen staan niet in de vormversie maar in een aparte `vormkoppeling`.*
 ---
 
 ## 1. Vergelijking: ART, ClubComm nu en 2.0
