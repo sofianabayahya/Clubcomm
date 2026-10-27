@@ -753,3 +753,22 @@ small.bewaard.ok { color: var(--groen); } small.bewaard.fout { color: var(--rood
 /* Vorm: telefoon = tekening, gegevens, varianten; laptop = tekening en varianten links, gegevens rechts */
 .tr-vorm .tr-a { order: 1; } .tr-vorm .tr-b { order: 2; } .tr-vorm .tr-c { order: 3; }
 @media (min-width: 1100px) { body:not(.rl) .tr-lay.tr-vorm { grid-template-areas: "a b" "c b"; } body:not(.rl) .tr-vorm .tr-a { grid-area: a; } body:not(.rl) .tr-vorm .tr-b { grid-area: b; } body:not(.rl) .tr-vorm .tr-c { grid-area: c; } }
+/* Besluit 129: observeren tijdens de wedstrijd (klok, turven, snelle notities) */
+.obs-plak { background: #0b2545; color: #fff; display: flex; flex-direction: column; gap: 10px; }
+.obs-plak .zacht { color: #c9d6e6; }
+.obs-klok { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.obs-klok b { font-size: 20px; }
+.obs-klok .knop { background: #ffffff22; color: #fff; border-color: transparent; }
+.obs-turf { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.obs-turf button { min-height: 60px; border: 0; border-radius: 12px; background: #fff; color: #0b2545; font: inherit; font-weight: 700; font-size: 13px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer; }
+.obs-turf button span { font-size: 20px; color: var(--blauw); }
+.obs-groepen { border: 0; padding: 0; margin: 0; } .obs-groepen legend { padding: 0; margin-bottom: 6px; }
+.obs-notities { display: flex; flex-direction: column; }
+.obs-notitie { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-top: 1px solid var(--lijn); font-size: 16px; }
+.obs-notitie:first-child { border-top: 0; }
+.obs-notitie > b { min-width: 40px; color: var(--blauw-d); }
+.obs-notitie > span { flex: 1; } .obs-notitie small { display: block; color: var(--zacht); font-size: 14px; }
+.obs-bij { margin: 0 0 8px; padding-left: 18px; color: var(--zacht); font-size: 15px; }
+.codeform label.tr-chip, form label.tr-chip { display: inline-flex; width: auto; margin: 0 6px 6px 0; }
+.obs-groepen, .tr-chips { display: flex !important; flex-direction: row !important; flex-wrap: wrap; align-items: center; gap: 0; }
+.obs-groepen legend, .tr-chips legend { width: 100%; }

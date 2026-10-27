@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 128)
+Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 129)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -17,6 +17,7 @@ Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 128)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 129 | Observeren: klok en turven bovenaan, snelle notities met minuut en onderwerp, aandachtspunten na afloop | ✅ geldt |  |
 | 128 | Trainingsmodule (proef): eigen oefenvormen en trainingen met spacing, varianten en aantallen | ✅ geldt |  |
 | 127 | Tekentool: loopactie en pass met boog als vaste soort | ✅ geldt |  |
 | 126 | Tekentool clean (rail met menu's, Veld/Opstelling/⚙ boven) en pijlen met boog en aanpasbare lengte | ✅ geldt |  |
@@ -46,7 +47,7 @@ Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 128)
 | 102 | Snelle winsten: dringend bovenaan, Observeren op de dag zelf, unieke knopnamen | ✅ geldt |  |
 | 101 | Voorgesprek als voormeting: eigen vragen voor training en wedstrijd | ✅ geldt |  |
 | 100 | Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden" | ◐ deels herzien | door 101 (vragen kort en uitgebreid per soort) |
-| 99 | Trainers begeleiden via een traject, met de KNVB-begeleidingscyclus; tabblad Trainers | ◐ deels herzien | door 100 (vragenlijst kort of uitgebreid per niveau; notities gedeeld per bouw met de TC); door 101 (vragenlijst vooraf per soort) |
+| 99 | Trainers begeleiden via een traject, met de KNVB-begeleidingscyclus; tabblad Trainers | ◐ deels herzien | door 100 (vragenlijst kort of uitgebreid per niveau; notities gedeeld per bouw met de TC); door 101 (vragenlijst vooraf per soort); 129 (observeren: snelle notities tijdens, aandachtspunten na afloop) |
 | 98 | Verantwoordelijkheid: iedere rol doet zijn eigen werk, de laag erboven is het vangnet | ✅ geldt |  |
 | 97 | Bouwen, werkgebied en focus, signalen die ertoe doen, trainersdossier | ◐ deels herzien | door 99 (traject per trainer in plaats van 2 + 2; tabblad Trainers; VOG en diploma bij de coördinator); door 100 (werkgebied bij de rol, rol TC gebouwd) |
 | 96 | Eén aanspreekpunt: de clubbeheerder (van de club) en de ClubComm-adviseur (van ons) | ◐ deels herzien | door 120 (startlijst en Inrichten voor de clubbeheerder, Mijn clubs voor de adviseur; meekijken alleen met toestemming) |
@@ -661,6 +662,16 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 129 — Observeren: tijdens de wedstrijd alleen kijken, tikken en kort typen; aandachtspunten na afloop
+*Besloten 27 oktober 2026, na een voorbeeld (`docs/onderzoek/begeleiding/`). Aanleiding: het wedstrijdbezoek van 24-10 bleef bijna leeg, omdat het observatiescherm ruim 6 schermen lang was (13 punten met elk drie knoppen en een tekstveld, turven onderaan). Werkt Besluit 99 (observatie zonder schaal) verder uit.*
+- **Bovenaan (wedstrijd):**
+  - de klok met helft en minuut (*Start 1e helft → Rust → Start 2e helft → Einde*);
+  - vier grote turfknoppen (Vraag, Directief, Correctie, Compliment) die tellen bij het lopende deel.
+  - Bij een training blijft de leertijd-klok bovenaan staan.
+- **Wat zie je?** Een korte notitie, met één tik een onderwerp (wedstrijddoel, leersituatie, coachgedrag, pedagogisch). De minuut en de helft komen er vanzelf bij. De notities staan in een lijst, nieuwste eerst, en kunnen weg.
+- **Na afloop:** de aandachtspunten (✓ ~ –) staan ingeklapt per onderwerp. Elk onderwerp toont hoeveel punten zijn afgevinkt en hoeveel notities erbij horen; de notities staan erin klaar. Turven per helft ingeklapt onderaan.
+- Gegevens: notities in `obs.momenten` (zoals bij het evaluatieformulier, nu met onderwerp `k`), klok in `obs.wklok`. Het A4 en het delen met de trainer blijven gelijk. Het scherm is nu ± 2 schermen lang (was 6,5).
 
 ## Besluit 128 — Trainingsmodule in ClubComm (proef): eigen oefenvormen en trainingen met spacing
 *Besloten 27 oktober 2026, na een voorbeeld (`docs/onderzoek/trainingsmodule-2/tr-*.png`) met de training van de initiatiefnemer van die dag. Eerste bouwstap van Besluit 121 (fase 1). Module **Trainingen (proef)**, aan voor DCG.*

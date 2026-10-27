@@ -251,10 +251,19 @@ test.describe('Demo', () => {
     await page.locator('#app [data-act="begelVragen"]').click();
     // Observeren: tekens en turven
     await page.locator('#app [data-act="open"][data-view="begelObs"]').click();
-    await page.locator('#app [data-act="obsTeken"][data-sl="coach0"][data-c="d"]').click();
+    // Besluit 129: klok en turven bovenaan, snelle notitie met minuut en onderwerp, aandachtspunten ingeklapt (na afloop)
     await page.locator('#app [data-act="obsTurf"][data-d="h1"][data-t="Vraag"]').click();
+    await page.locator('#app [data-act="wklokVerder"]').click(); // start 1e helft
+    await expect(page.locator('#app [data-wklok]')).toContainText("1e helft · 1'");
+    await page.fill('#om-t', 'Roept veel directief van de zijlijn');
+    await page.locator('#app form[data-submit="obsMoment"] label.tr-chip', { hasText: 'Coachgedrag' }).click();
+    await page.locator('#app form[data-submit="obsMoment"] button').click();
+    await expect(page.locator('#app .obs-notitie')).toContainText('Roept veel directief');
+    await page.locator('#app summary', { hasText: 'Coachgedrag' }).click();
+    await expect(page.locator('#app .obs-bij')).toContainText('Roept veel directief');
+    await page.locator('#app [data-act="obsTeken"][data-sl="coach0"][data-c="d"]').click();
     const id = await page.evaluate(() => CC.S().begeleidMomenten.at(-1).id);
-    expect(await page.evaluate((i) => CC.S().begeleidMomenten.find((m) => m.id === i).obs, id)).toMatchObject({ punten: { coach0: 'd' }, turf: { h1: { Vraag: 1 } } });
+    expect(await page.evaluate((i) => CC.S().begeleidMomenten.find((m) => m.id === i).obs, id)).toMatchObject({ punten: { coach0: 'd' }, turf: { h1: { Vraag: 1 } }, momenten: [{ fase: 'h1', min: 1, k: 'coach', coach: 'Roept veel directief van de zijlijn' }] });
     await page.evaluate((i) => CC.open('begelMoment', { id: i }), id);
     // Reflectiegesprek: ontwikkelpunt is verplicht en komt in het dossier
     await page.locator('#app summary', { hasText: 'Reflectiegesprek' }).click();
