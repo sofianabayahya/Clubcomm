@@ -1147,3 +1147,23 @@ test('evaluatie: leeg observatieformulier op papier', async ({ page }) => {
   await expect(page.locator('#afdruk table.turf').last()).not.toContainText('1.');
   await controleer(page, fouten, 'evaluatie papier');
 });
+
+// Trainingsmodule, stap 3: testscherm van de tekentool (/tekenen), alleen op het toestel
+test('tekentool: tekenen, opslaan en opnieuw tonen', async ({ page }) => {
+  const fouten = volgFouten(page);
+  await page.setViewportSize({ width: 1366, height: 820 });
+  await page.goto('/tekenen'); await page.evaluate(() => localStorage.clear()); await page.goto('/tekenen');
+  await page.locator('#nieuw').click();
+  await expect(page.locator('#drawOverlay')).toBeVisible();
+  const veld = await page.locator('#drawSvg').boundingBox();
+  await page.keyboard.press('1');
+  await page.mouse.click(veld.x + veld.width * 0.3, veld.y + veld.height * 0.4);
+  await page.mouse.click(veld.x + veld.width * 0.5, veld.y + veld.height * 0.5);
+  await page.keyboard.press('H');
+  await page.mouse.click(veld.x + veld.width * 0.7, veld.y + veld.height * 0.3);
+  await page.locator('#drawSave').click();
+  await expect(page.locator('#drawOverlay')).toBeHidden();
+  await expect(page.locator('.tegel svg')).toHaveCount(1);
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('cc-tekentool-test'))[0].data.items.length)).toBe(3);
+  expect(fouten).toEqual([]);
+});

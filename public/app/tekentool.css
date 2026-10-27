@@ -1,0 +1,61 @@
+/* ClubComm — opmaak van de tekentool (overgenomen uit ART, in ClubComm-kleuren). Zie app/tekentool.js. */
+#drawOverlay { --surface: #ffffff; --surface-alt: #f5f7fa; --border: #dfe6ee; --ink: #0b2545; --ink-muted: #5b6b7f;
+  --accent: #0869c2; --accent-ink: #ffffff; --low: #c62828; --low-soft: #f3c4c4; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--ink); }
+#drawOverlay.overlay { position: fixed; inset: 0; background: rgba(11, 20, 32, .55); z-index: 80; display: flex; justify-content: center; }
+#drawOverlay.overlay[hidden] { display: none; }
+#drawOverlay .btn { font-family: inherit; font-weight: 600; font-size: 14px; padding: 10px 16px; min-height: 44px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--ink); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+#drawOverlay .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+#drawOverlay .btn.ghost { background: transparent; }
+#drawOverlay .btn.small { padding: 8px 12px; font-size: 14px; }
+#drawOverlay .btn:disabled { opacity: .5; }
+  #drawOverlay{ z-index:60; align-items:stretch; padding:0; }
+  .draw-app{ background:var(--surface); width:100%; max-width:1400px; margin:0 auto; display:flex; flex-direction:column; height:100%; }
+  @media (min-width:900px){ #drawOverlay{ padding:24px; align-items:center; } .draw-app{ height:92vh; border-radius:18px; overflow:hidden; } }
+  .draw-top{ display:flex; align-items:center; gap:10px; padding:10px 14px; padding-top:calc(10px + env(safe-area-inset-top,0px)); border-bottom:1px solid var(--border); }
+  .draw-title{ font:700 19px inherit; flex:1; }
+  .draw-top-act{ display:flex; gap:8px; }
+  .draw-body{ flex:1; min-height:0; display:flex; }
+  .draw-tools{ width:300px; flex:0 0 auto; overflow-y:auto; padding:12px 14px; border-right:1px solid var(--border); display:flex; flex-direction:column; gap:12px; }
+  .draw-group-h{ font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; color:var(--ink-muted); margin-bottom:6px; }
+  .draw-grid{ display:grid; grid-template-columns:repeat(6, 1fr); gap:6px; }
+  .draw-selbar{ flex-wrap:wrap; justify-content:center; }
+  .draw-tool{ aspect-ratio:1 / 1; border-radius:10px; border:1px solid var(--border); background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; }
+  /* Precies één knop "aan": Selecteren of het gekozen gereedschap. Zelfde blauw als het selectievak. */
+  .draw-tool.active{ background:#DFF3FF; border:3px solid #00B3FF; box-shadow:0 0 0 2px rgba(0,179,255,.25); }
+  .draw-tool{ position:relative; }
+  .draw-key{ position:absolute; right:2px; bottom:1px; font:700 9.5px inherit; color:#556; line-height:1; }
+  @media (pointer:coarse){ .draw-key{ display:none; } }
+  .draw-selcount{ font:700 13px inherit; color:#00B3FF; align-self:center; padding:0 6px; }
+  .draw-zoom{ display:flex; gap:8px; align-items:flex-start; font-size:14px; font-weight:600; flex-wrap:wrap; cursor:pointer; }
+  .draw-zoom input{ width:18px; height:18px; margin-top:1px; }
+  .draw-zoom small{ flex-basis:100%; font-weight:400; font-size:12px; color:var(--ink-muted); padding-left:26px; }
+  .draw-phone{ background:#FFF4D6; color:#4a3a00; font-size:13.5px; padding:8px 14px; border-bottom:1px solid var(--border); display:flex; gap:10px; align-items:center; }
+  .draw-phone button{ margin-left:auto; background:none; border:none; font:700 18px sans-serif; color:inherit; cursor:pointer; }
+  .draw-select{ font:700 14px inherit; padding:9px 12px; border-radius:10px; border:1px solid var(--border); background:var(--surface-alt); color:var(--ink); cursor:pointer; display:flex; align-items:center; gap:8px; }
+  .draw-select svg{ width:18px; height:18px; flex:0 0 auto; }
+  .draw-select small{ margin-left:auto; font-weight:600; color:var(--ink-muted); }
+  .draw-select.active{ background:#DFF3FF; border:3px solid #00B3FF; color:#0b2230; box-shadow:0 0 0 2px rgba(0,179,255,.25); }
+  .draw-select.active small{ color:#33617a; }
+  #drawSvg.plaatsen{ cursor:crosshair; }
+  #drawSvg.kiezen{ cursor:default; }
+  #drawSvg.kiezen [data-i]{ cursor:move; }
+  .draw-fields{ display:flex; flex-wrap:wrap; gap:6px; }
+  .draw-fields button, .draw-clear{ font:600 13px inherit; padding:7px 10px; border-radius:999px; border:1px solid var(--border); background:var(--surface-alt); color:var(--ink); cursor:pointer; }
+  .draw-fields button.active{ background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+  .draw-clear{ color:var(--low); align-self:flex-start; }
+  .draw-stage{ flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:12px; background:#3f8a41; position:relative; }
+  #drawSvg{ width:100%; height:100%; max-height:calc(100% - 40px); touch-action:none; user-select:none; cursor:crosshair; }
+  .draw-hint{ color:#fff; font-size:13px; opacity:.9; }
+  .draw-kleur{ display:inline-flex; gap:6px; align-items:center; padding:0 4px; }
+  .draw-swatch{ width:26px; height:26px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 1px #888; cursor:pointer; padding:0; }
+  .draw-swatch.active{ box-shadow:0 0 0 3px #00B3FF; }
+  .draw-selbar{ display:flex; gap:8px; background:var(--surface); padding:6px; border-radius:12px; box-shadow:0 2px 10px rgba(11,37,69,.18); }
+  /* Telefoon en smalle schermen: gereedschap boven het veld, knoppen bovenaan mogen naar een tweede regel */
+  @media (max-width:899px){
+    .draw-body{ flex-direction:column; }
+    .draw-tools{ width:auto; max-height:40%; border-right:none; border-bottom:1px solid var(--border); }
+    .draw-grid{ grid-template-columns:repeat(8, 1fr); }
+    .draw-top{ flex-wrap:wrap; }
+    .draw-top-act{ flex-wrap:wrap; }
+  }

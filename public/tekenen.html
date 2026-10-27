@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#ffffff">
+  <title>Tekentool · ClubComm</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <!-- ClubComm — testscherm van de tekentool (trainingsmodule, stap 3). Los, geen login.
+       Tekeningen blijven alleen op dit toestel (localStorage); er gaat niets naar de database. -->
+  <link rel="stylesheet" href="app/tekentool.css">
+  <style>
+    :root { --blauw: #0869c2; --inkt: #0b2545; --zacht: #5b6b7f; --lijn: #dfe6ee; --vlak: #fff; --achter: #f5f7fa; --rood: #c62828; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--achter); color: var(--inkt); font-size: 16px; line-height: 1.45; }
+    header.kop { background: #fff; border-bottom: 1px solid var(--lijn); padding: 12px 16px; padding-top: calc(12px + env(safe-area-inset-top, 0px)); display: flex; align-items: center; gap: 10px; }
+    header.kop img { width: 32px; height: 32px; border-radius: 8px; }
+    header.kop b { font-size: 17px; display: block; } header.kop small { color: var(--zacht); font-size: 13px; }
+    main { max-width: 1100px; margin: 0 auto; padding: 16px 16px calc(40px + env(safe-area-inset-bottom, 0px)); }
+    .uitleg { background: #fff; border: 1px solid var(--lijn); border-radius: 14px; padding: 14px 16px; margin-bottom: 14px; }
+    .uitleg p { margin: 0 0 8px; } .uitleg p:last-child { margin: 0; }
+    .zacht { color: var(--zacht); font-size: 14px; }
+    .knop { font: inherit; font-weight: 700; min-height: 48px; padding: 10px 18px; border-radius: 12px; border: 0; background: var(--blauw); color: #fff; cursor: pointer; }
+    .knop.licht { background: #fff; color: var(--blauw); border: 1px solid var(--lijn); }
+    .knop.klein { min-height: 44px; padding: 8px 14px; font-size: 14px; }
+    .tegels { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-top: 14px; }
+    .tegel { background: #fff; border: 1px solid var(--lijn); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+    .tegel .beeld { display: block; width: 100%; border: 0; padding: 0; background: #2f7d32; cursor: pointer; }
+    .tegel .beeld svg { display: block; width: 100%; height: auto; }
+    .tegel .onder { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px; }
+    .tegel .weg { background: none; border: 0; color: var(--rood); font: inherit; font-weight: 600; min-height: 44px; cursor: pointer; }
+    .leeg { text-align: center; color: var(--zacht); padding: 30px 10px; border: 2px dashed var(--lijn); border-radius: 14px; margin-top: 14px; }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+  </style>
+</head>
+<body>
+  <header class="kop"><img src="assets/clubcomm-icon.png" alt=""><div><b>Tekentool</b><small>Testscherm · trainingsmodule</small></div></header>
+  <main>
+    <div class="uitleg">
+      <p><b>Probeer de tekentool.</b> Teken een oefenvorm: veld, spelers, hoedjes, doelen en pijlen. Op een laptop gaat het het snelst (muis en sneltoetsen); op de telefoon kun je kleine dingen aanpassen.</p>
+      <p class="zacht">Dit is een los testscherm. Je tekeningen blijven alleen op dit toestel en gaan niet naar de database. Tik op een tekening om hem verder te bewerken.</p>
+    </div>
+    <button class="knop" id="nieuw">+ Nieuwe tekening</button>
+    <div id="lijst"></div>
+  </main>
+<div class="overlay" id="drawOverlay" hidden>
+  <div class="draw-app" role="dialog" aria-modal="true" aria-label="Tekentool">
+    <div class="draw-top">
+      <button type="button" class="btn ghost small" id="drawCancel">Annuleren</button>
+      <b class="draw-title">Tekentool</b>
+      <div class="draw-top-act">
+        <button type="button" class="btn ghost small" id="drawUndo" title="Ongedaan maken (Ctrl/Cmd+Z)">Ongedaan maken</button>
+        <button type="button" class="btn ghost small" id="drawRedo" title="Opnieuw (Ctrl/Cmd+Shift+Z)">Opnieuw</button>
+        <button type="button" class="btn primary small" id="drawSave">Opslaan</button>
+      </div>
+    </div>
+    <div class="draw-phone" id="drawPhone" hidden><span><b>Tip:</b> uittekenen gaat het snelst op een laptop (grotere knoppen, muis en sneltoetsen). Op de telefoon kun je wel kleine dingen aanpassen.</span><button type="button" id="drawPhoneX" aria-label="Tip sluiten">&times;</button></div>
+    <div class="draw-body">
+      <aside class="draw-tools" id="drawTools"></aside>
+      <div class="draw-stage">
+        <div class="draw-hint" id="drawHint"></div>
+        <svg id="drawSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1050 680" role="img" aria-label="Veld"></svg>
+        <div class="draw-selbar" id="drawSelBar" hidden>
+          <span class="draw-selcount" id="drawSelCount" hidden></span>
+          <button type="button" class="btn ghost small" id="drawDup" title="Dupliceren (Ctrl/Cmd+D)">Dupliceren</button>
+          <button type="button" class="btn ghost small" id="drawEditText">Tekst wijzigen</button>
+          <button type="button" class="btn ghost small" id="drawNumber">Rugnummer +1</button>
+          <button type="button" class="btn ghost small" id="drawRotate">Draaien</button>
+          <button type="button" class="btn ghost small" id="drawMaat">Maat verbergen</button>
+          <span class="draw-kleur" id="drawKleur" hidden></span>
+          <button type="button" class="btn ghost small" id="drawDelete" style="color:var(--low); border-color:var(--low-soft);">Verwijderen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="app/tekentool.js"></script>
+  <script>
+    (function () {
+      var SLEUTEL = 'cc-tekentool-test';
+      var lees = function () { try { return JSON.parse(localStorage.getItem(SLEUTEL)) || []; } catch (e) { return []; } };
+      var schrijf = function (l) { try { localStorage.setItem(SLEUTEL, JSON.stringify(l)); } catch (e) { /* privévenster */ } };
+      function teken() {
+        var l = lees(); var el = document.getElementById('lijst');
+        if (!l.length) { el.innerHTML = '<div class="leeg">Nog geen tekeningen. Tik op <b>+ Nieuwe tekening</b>.</div>'; return; }
+        el.innerHTML = '<div class="tegels">' + l.map(function (t, i) {
+          return '<div class="tegel"><button class="beeld" data-i="' + i + '" aria-label="Tekening ' + (i + 1) + ' bewerken">' + DrawTool.staticSvg(t.data) + '</button>' +
+            '<div class="onder"><span class="zacht">Tekening ' + (i + 1) + ' · ' + new Date(t.tijd).toLocaleString('nl-NL', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) + '</span>' +
+            '<button class="weg" data-weg="' + i + '">Verwijderen</button></div></div>';
+        }).join('') + '</div>';
+      }
+      function bewerk(i) {
+        var l = lees(); var start = i == null ? null : l[i].data;
+        DrawTool.open(start, function (blob, data) {
+          var l2 = lees(); var rij = { data: data, tijd: new Date().toISOString() };
+          if (i == null) l2.unshift(rij); else l2[i] = rij;
+          schrijf(l2); teken();
+        });
+      }
+      document.getElementById('nieuw').addEventListener('click', function () { bewerk(null); });
+      document.getElementById('lijst').addEventListener('click', function (e) {
+        var b = e.target.closest('[data-i]'); if (b) return bewerk(Number(b.dataset.i));
+        var w = e.target.closest('[data-weg]'); if (w && window.confirm('Tekening ' + (Number(w.dataset.weg) + 1) + ' verwijderen? Dit kan niet ongedaan worden.')) { var l = lees(); l.splice(Number(w.dataset.weg), 1); schrijf(l); teken(); }
+      });
+      teken();
+    })();
+  </script>
+</body>
+</html>
