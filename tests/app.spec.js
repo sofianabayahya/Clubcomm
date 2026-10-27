@@ -1384,5 +1384,14 @@ test('trainingsmodule: training voorbereiden en eigen vorm (echte versie)', asyn
   await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
   await page.locator('[data-act="seg"][data-val="vormen"]').click();
   await expect(page.locator('.tr-kaart')).toHaveCount(1);
+  // 27-10 (melding): tekening aanpassen terwijl de app de gegevens ververst; de tekening moet toch bewaard worden
+  await page.locator('.tr-kaart').click();
+  await page.locator('[data-act="vormTeken"]').click();
+  await page.locator('[data-rail="spelers"]').click();
+  await page.locator('[data-nr="rood|6"]').click();
+  await page.evaluate(() => CC.ververs());
+  await page.locator('#drawSave').click();
+  await expect(page.locator('#drawOverlay')).toBeHidden();
+  await expect.poll(async () => { const r = Object.values((await nepDb(page)).rows).find((x) => x.soort === 'vormen'); return r && r.data.tekening ? r.data.tekening.items.length : 0; }, { message: 'tekening in de database' }).toBe(1);
   await controleer(page, fouten, 'trainingsmodule');
 });

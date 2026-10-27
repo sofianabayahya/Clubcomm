@@ -199,7 +199,8 @@
 
   // Tekening maken of aanpassen (hoofdtekening of variant) met de tekentool
   const tekenOpen = (t, klaar) => { if (!window.DrawTool) { CC.toast('De tekentool is niet geladen', 'fout'); return; } window.DrawTool.open(t || null, (blob, data) => { klaar(data); CC.save(); CC.render(); }); };
-  CC.on('vormTeken', (el) => { const v = vorm(CC.S(), el.dataset.id); if (v) tekenOpen(v.tekening, (d) => { v.tekening = d; }); });
+  // Na het tekenen de vorm opnieuw opzoeken: de app kan de gegevens intussen ververst hebben (anders gaat de tekening verloren)
+  CC.on('vormTeken', (el) => { const id = el.dataset.id; const v = vorm(CC.S(), id); if (v) tekenOpen(v.tekening, (d) => { const nu = vorm(CC.S(), id); if (nu) nu.tekening = d; }); });
 
   // Variant: naam, tekst en eigen tekening
   CC.on('vormVariant', (el) => {
@@ -216,7 +217,8 @@
     CC.save(); CC.closeSheet(); CC.render(); });
   CC.on('vormVariantTeken', (el) => { const v = vorm(CC.S(), el.dataset.id); const x = v && v.varianten[Number(el.dataset.i)]; if (!x) return; CC.closeSheet();
     // Een nieuwe variant begint met de hoofdtekening, zodat je alleen het verschil tekent
-    tekenOpen(x.tekening || v.tekening, (d) => { x.tekening = d; }); });
+    const id = el.dataset.id, i = Number(el.dataset.i);
+    tekenOpen(x.tekening || v.tekening, (d) => { const nu = vorm(CC.S(), id); if (nu && nu.varianten[i]) nu.varianten[i].tekening = d; }); });
   CC.on('vormVariantWeg', (el) => { const v = vorm(CC.S(), el.dataset.id); if (!v) return; v.varianten.splice(Number(el.dataset.i), 1); CC.save(); CC.closeSheet(); CC.render(); });
 
   // Bij andere aantallen: per groepsgrootte een korte opzet

@@ -119,7 +119,8 @@
     if (!L.pid || document.hidden) return;
     if (!dwing && Date.now() - L.geladen < 20000) return;
     const actief = document.activeElement; const typt = actief && /INPUT|TEXTAREA|SELECT/.test(actief.tagName);
-    const sheet = document.getElementById('sheet'); if (!dwing && (typt || (sheet && !sheet.hidden))) return;
+    // Niet verversen tijdens typen, met een venster open of tijdens het tekenen (de tekentool is een eigen scherm)
+    const sheet = document.getElementById('sheet'); const tekent = document.getElementById('drawOverlay'); if (!dwing && (typt || (sheet && !sheet.hidden) || (tekent && !tekent.hidden))) return;
     if (!allesOpgeslagen()) { CC.save(); return; }
     const voor = L.snap; const bezVoor = JSON.stringify(CC.S().bezorgd || {}); // Besluit 107: ook als alleen "hoe kwam het aan" veranderde
     try {
