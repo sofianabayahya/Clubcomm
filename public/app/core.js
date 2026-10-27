@@ -237,9 +237,9 @@
     const R = CC.rollen[rol.rol];
     const tabs = R.tabs(S).filter(Boolean);
     if (!tabs.find((t) => t[0] === ui.tab)) ui.tab = 'home';
-    let kop, kopSub = null, inhoud, terug = false;
+    let kop, kopSub = null, inhoud, terug = false, breed = false; // breed: scherm gebruikt op de laptop de hele breedte (Besluit 122)
     try {
-      if (ui.view && CC.views[ui.view.naam]) { const v = CC.views[ui.view.naam](S, ui.view); kop = v.titel; kopSub = v.sub == null ? null : v.sub; inhoud = v.html; terug = true; }
+      if (ui.view && CC.views[ui.view.naam]) { const v = CC.views[ui.view.naam](S, ui.view); kop = v.titel; kopSub = v.sub == null ? null : v.sub; inhoud = v.html; terug = true; breed = !!v.breed; }
       else inhoud = R.schermen[ui.tab](S);
     } catch (err) { console.error(err); if (CC.meldFout) CC.meldFout(err, 'scherm'); inhoud = h.leeg(`Er ging iets mis op dit scherm: ${esc(err.message)}`, 'circle-alert'); }
     // 27-10: lange schermen (Regels van de clubbeheerder, Inzicht) als onderwerpen die je openklapt
@@ -262,7 +262,7 @@
         </div>
         <button class="profielknop" data-act="profiel" aria-label="Profiel">${h.avatar(me.naam)}${me.rollen.length > 1 ? `<span class="rolstip">${esc(CC.rolNaam(rol)[0])}</span>` : ''}</button>
       </header>
-      <main class="inhoud">${inhoud}</main>
+      <main class="inhoud${breed ? ' breed' : ''}">${inhoud}</main>
       <nav class="nav" aria-label="Hoofdmenu">${tabs.map(([id, label, ic, n]) => `<button class="${ui.tab === id ? 'aan' : ''}" data-act="tab" data-tab="${id}" ${ui.tab === id ? 'aria-current="page"' : ''}>${icon(ic)}<span>${label}</span>${h.badge(n)}</button>`).join('')}</nav>`;
     if (open.size) app.querySelectorAll('details > summary').forEach((sum) => { if (open.has(blokNaam(sum))) sum.parentElement.open = true; });
     document.title = 'ClubComm';

@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 127)
+Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 128)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -17,6 +17,7 @@ Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 127)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 128 | Trainingsmodule (proef): eigen oefenvormen en trainingen met spacing, varianten en aantallen | ✅ geldt |  |
 | 127 | Tekentool: loopactie en pass met boog als vaste soort | ✅ geldt |  |
 | 126 | Tekentool clean (rail met menu's, Veld/Opstelling/⚙ boven) en pijlen met boog en aanpasbare lengte | ✅ geldt |  |
 | 125 | Tekentool: rondje of driehoek per team kiezen; nummerbalk in- en uitklappen | ◐ deels herzien | door 126 (in- en uitklappen = het menu Spelers openen en sluiten) |
@@ -660,6 +661,20 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 128 — Trainingsmodule in ClubComm (proef): eigen oefenvormen en trainingen met spacing
+*Besloten 27 oktober 2026, na een voorbeeld (`docs/onderzoek/trainingsmodule-2/tr-*.png`) met de training van de initiatiefnemer van die dag. Eerste bouwstap van Besluit 121 (fase 1). Module **Trainingen (proef)**, aan voor DCG.*
+- **Planning → training:** blok *Training* met *Training voorbereiden of vastleggen*. Een training heeft:
+  - thema, leerdoelen (uit het opleidingsprofiel van de club), aantal spelers en keepers;
+  - een **opbouw**: vormen en **spacing**-blokken in volgorde (spacing = loslaten, bijv. hooghouden 2 min, of een andere vorm als spacing). Een gekleurde balk toont de verdeling van de minuten; tik op een onderdeel voor minuten, notitie, volgorde of weghalen;
+  - *Eerdere training*: de opbouw van een vorige training overnemen en aanpassen (geen aparte sjablonen);
+  - *Training is gegeven* en **Wat doe je de volgende keer anders?**
+- **Planning → Vormen:** mijn oefenvormen met tekening (de tekentool zit nu in de app zelf), soort (droog, spacing, positiespel, partijvorm), spelers en keepers van–tot, minuten, leerdoelen, organisatie, coachpunten, *wat ik de volgende keer anders doe*, **varianten** (bijv. A en B, elk met eigen tekening) en **bij andere aantallen** (per groepsgrootte hoe je de vorm opzet).
+- **Vorm kiezen** gaat op het aantal spelers en keepers van de training: eerst wat past (of waar je dat aantal voor beschreef), de rest ingeklapt.
+- **Rechten:** scope `eigen` (alleen de maker leest en schrijft); geen rechtenwijziging. Rechtentest uitgebreid tot 37 controles (migratie 031): de teamleider en de HO zien de vormen en trainingen van de trainer niet.
+- **Laptop:** twee kolommen (training: opbouw links, terugblik rechts; vorm: tekening en varianten links, gegevens rechts).
+- **Eerste inhoud:** de training van 27 okt (*Passeren (dreigen)*, 11 spelers, 9 onderdelen met spacing) met vijf vormen, als voorbeeld om zelf aan te passen; tekeningen zijn een eerste versie.
+- **Later** (zie Later / ideeën): een leerlijn die een training voorstelt, de module voor AVV Swift (trainers begeleiden), delen met de teamstaf.
 
 ## Besluit 127 — Tekentool: gebogen pijl als vaste soort
 *Besloten 27 oktober 2026 (voorstel na Besluit 126, akkoord van de initiatiefnemer).*
@@ -1928,6 +1943,8 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 
 ## Later / ideeën
 
+- **Leerlijn die een training voorstelt, die je altijd aanpast** (vraag 27-10, Besluit 128): als de methodiek per week is uitgeschreven, zet ClubComm bij elke training het thema en de leerdoelen van de lijn klaar als **concept**, met passende vormen uit Mijn vormen. De trainer past aan op de opkomst en op wat er in de wedstrijd gebeurde ("ClubComm signaleert, mensen beslissen"). Advies: dit, niet alles zelf intikken en niet een vaste lijn.
+- **Trainingsmodule voor AVV Swift** (27-10): trainers in het pakket Trainers begeleiden krijgen ook *Training* (zonder planning: training op datum), en de HO ziet bij een begeleidingsmoment de training van die dag.
 - **Startopstelling bewaren in de tekentool** (idee 27-10, Besluit 124): je eigen beginpositie (bijv. 1-4-3-3 met tegenstander) met één tik bij elke nieuwe tekening. Nog niet besloten.
 - **Reismiddel bij de routeknop** (idee 27-10, Besluit 121): in het profiel één keer kiezen *auto · OV · fiets*; de routeknop opent de kaarten-app meteen zo. Geen adres bewaren. Eerst een voorbeeld.
 - **Huiswerk en filmpjes** (idee 24 sep 2026): de trainer deelt oefeningen voor thuis (een filmpje of een link) per team of per speler, gekoppeld aan de vaardigheden uit de beoordeling ("werken aan: aannemen"). Kind of ouder kan aangeven "gedaan". Eerst met links naar YouTube/Vimeo (geen eigen opslag). Filmpjes waarin kinderen te zien zijn alleen met toestemming van de ouders (AVG).

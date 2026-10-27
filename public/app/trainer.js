@@ -380,16 +380,19 @@
       },
       aanwezigheid(S) {
         const tid = CC.teamId(); const modus = h.segVal('aanwModus', 'opnemen');
-        if (modus === 'overzicht') return h.seg('aanwModus', [['opnemen', 'Opnemen'], ['overzicht', 'Overzicht']], 'opnemen') + CC.overzichtHtml(S, tid);
+        // Besluit 128: met de module Trainingen ook het segment Vormen (eigen oefenvormen)
+        const segs = [['opnemen', 'Opnemen'], ['overzicht', 'Overzicht'], ...(CC.trainingAan && CC.trainingAan(S) ? [['vormen', 'Vormen']] : [])];
+        if (modus === 'overzicht') return h.seg('aanwModus', segs, 'opnemen') + CC.overzichtHtml(S, tid);
+        if (modus === 'vormen' && segs.length > 2) return h.seg('aanwModus', segs, 'opnemen') + CC.vormenLijst(S);
         const ma = (() => { const d = D.parse(D.vandaag()); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return D.iso(d); })();
         // Besluit 91: alleen dagen die nog iets vragen: vandaag en later, en eerdere dagen zolang je de aanwezigheid nog kunt invullen
         const acts = M.acts(S, tid, D.addDays(ma, -7), D.addDays(ma, 13)).filter((a) => a.datum >= D.vandaag() || kanOpnemen(a));
         const standaard = (acts.find((a) => a.datum === D.vandaag()) || acts.filter((a) => a.datum <= D.vandaag()).pop() || acts[0]);
         const kies = h.segVal('aanwAct', standaard && standaard.id);
         const a = acts.find((x) => x.id === kies) || standaard;
-        return `${h.seg('aanwModus', [['opnemen', 'Opnemen'], ['overzicht', 'Overzicht']], 'opnemen')}
+        return `${h.seg('aanwModus', segs, 'opnemen')}
           <div class="weekstrook" role="tablist">${acts.map((x) => { const d = D.parse(x.datum); return `<button role="tab" aria-selected="${x.id === a.id}" class="${x.id === a.id ? 'aan' : ''} ${x.afgelast ? 'afg' : ''} ${x.datum === D.vandaag() ? 'vandaag' : ''} ${S.pres[x.id] ? 'gedaan' : ''}" data-act="seg" data-key="aanwAct" data-val="${x.id}"><small>${D.DAG_KORT[d.getDay()]}</small><b>${d.getDate()}</b><small>${x.soort === 'training' ? 'T' : 'W'}</small></button>`; }).join('')}</div>
-          ${a ? `<div class="kaart-kop los">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${h.actSub(S, a)}</small></div></div>${!a.afgelast && a.adres && (a.soort === 'activiteit' || (M.isWed(a) && !a.thuis)) ? `<div class="knoppen">${h.adresRegel(a.adres)}</div>` : ''}${CC.opnemenHtml(S, a)}${CC.kanNietBlok && D.start(a) > new Date() ? CC.kanNietBlok(S, a) : ''}` : ''}
+          ${a ? `<div class="kaart-kop los">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${h.actSub(S, a)}</small></div></div>${!a.afgelast && a.adres && (a.soort === 'activiteit' || (M.isWed(a) && !a.thuis)) ? `<div class="knoppen">${h.adresRegel(a.adres)}</div>` : ''}${CC.opnemenHtml(S, a)}${CC.trainingBlok ? CC.trainingBlok(S, a) : ''}${CC.kanNietBlok && D.start(a) > new Date() ? CC.kanNietBlok(S, a) : ''}` : ''}
           ${CC.mag('planning') ? `<button class="knop licht vol" data-act="planningAanpassen">${icon('calendar-plus')}Planning aanpassen of iets toevoegen (activiteit, oefenwedstrijd)</button>` : ''}`;
       },
       berichten: (S) => CC.berichtenScherm(S, { nieuw: true }),
