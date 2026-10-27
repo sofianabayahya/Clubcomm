@@ -63,9 +63,18 @@
 /* Nummerbalk (27-10): rugnummers per team, tikvlak 44 px */
 .draw-nummers { align-self: stretch; width: 100%; max-width: 100%; box-sizing: border-box; min-width: 0; display: flex; flex-direction: column; gap: 6px; background: #fff; border: 1px solid #d7dee8; border-radius: 12px; padding: 8px 10px; margin-bottom: 8px; color: #0b1f33; font-size: 14px; }
 .draw-nr-rij { display: flex; align-items: center; gap: 8px; }
-.draw-nr-rij > b { flex: none; min-width: 112px; font-size: 14px; }
+
 .draw-nr-knoppen { min-width: 0; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: thin; }
 .draw-nr { flex: none; min-width: 44px; height: 44px; border-radius: 10px; border: 1px solid #c9d3df; background: #fff; font-weight: 700; font-size: 16px; color: #0b1f33; cursor: pointer; }
 .draw-nr.leeg { border-style: dashed; font-weight: 600; font-size: 14px; padding: 0 10px; }
 .draw-nummers small { color: #5b6b7d; font-size: 13px; }
 @media (max-width: 899px) { .draw-nr-rij { flex-direction: column; align-items: stretch; gap: 4px; } .draw-nr-rij > b { min-width: 0; } .draw-nr-knoppen { flex-wrap: wrap; overflow: visible; } }
+/* Besluit 125: rondje/driehoek wisselen per team en de balk in- en uitklappen */
+.draw-nr-vorm { flex: none; display: flex; align-items: center; gap: 6px; min-width: 112px; min-height: 44px; padding: 0 8px; border: 1px solid transparent; border-radius: 10px; background: none; font: inherit; font-weight: 700; font-size: 14px; color: #0b1f33; cursor: pointer; text-align: left; }
+.draw-nr-vorm:hover { border-color: #c9d3df; background: #f5f8fb; }
+.draw-nr-vorm small { color: #5b6b7d; font-size: 14px; margin-left: auto; }
+.draw-nr-klap { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 36px; padding: 0 4px; border: 0; background: none; font: inherit; color: #0b1f33; cursor: pointer; text-align: left; }
+.draw-nr-klap b { font-size: 14px; } .draw-nr-klap small { color: #5b6b7d; font-size: 13px; } .draw-nr-klap span { margin-left: auto; font-size: 16px; color: #5b6b7d; }
+.draw-nummers.dicht { padding: 4px 10px; }
+.draw-nummers.dicht .draw-nr-klap { min-height: 44px; }
+@media (max-width: 899px) { .draw-nr-vorm { min-width: 0; } }

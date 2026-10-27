@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 124)
+Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 125)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -17,6 +17,7 @@ Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 124)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 125 | Tekentool: rondje of driehoek per team kiezen; nummerbalk in- en uitklappen | ✅ geldt |  |
 | 124 | Tekentool: nummerbalk (rugnummers 1–11 en zonder nummer per team, op hun plek in de 1-4-3-3) en rood schijfje | ✅ geldt |  |
 | 123 | Opleidingsprofiel als gegevens; DCG-fundament ingevoerd (rest open), KNVB-standaard als bestand | ✅ geldt |  |
 | 122 | Tabbladen gelijk (Home links, Berichten rechts), één keer signaleren, Regels en Inzicht ingeklapt, laptop met menu links | ✅ geldt |  |
@@ -657,6 +658,11 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 125 — Tekentool: rondje of driehoek per team zelf kiezen; nummerbalk in- en uitklappen
+*Besloten 27 oktober 2026 (verzoek van de initiatiefnemer).*
+- **Vorm per team:** in de nummerbalk tik je op het symbool (● of ▲) voor *Eigen team* of *Tegenstander*; dat team wisselt tussen rondje en driehoek. Dat geldt voor de spelers op het veld, de knoppen links en de tegel. De keuze wordt bewaard bij de tekening (`vormen`); trainer en keeper blijven driehoek.
+- **Nummerbalk in- en uitklappen:** de kop *Rugnummers* klapt de balk in tot één regel en weer uit. Het apparaat onthoudt de keuze.
 
 ## Besluit 124 — Tekentool: nummerbalk voor rugnummers en een rood schijfje
 *Besloten 27 oktober 2026, na een voorbeeld (`docs/onderzoek/trainingsmodule-2/t-nummerbalk.png`). Aanleiding: voor de juiste rugnummers moest je eerst 1 t/m 10 neerzetten en de rest weer verwijderen, voor beide teams; een speler zonder nummer kon niet.*
