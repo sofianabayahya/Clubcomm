@@ -1,0 +1,114 @@
+{
+  "schema": "clubcomm-profiel",
+  "v": 1,
+  "id": "dcg",
+  "naam": "DCG-opleidingslijn",
+  "modus": "eigen",
+  "basis": null,
+  "versie": 1,
+  "status": "concept",
+  "bijgewerkt": "2026-10-27",
+  "bron": "Fundament van de initiatiefnemer (uitgewerkt in ChatGPT), ingevoerd 27-10-2026. Niet de definitieve, volledige methodiek.",
+  "onderdelen": {
+    "visie": {
+      "status": "eigen",
+      "titel": "Samen op reis – De route naar jouw beste ik",
+      "uitgangspunt": "Niemand bereikt de top alleen.",
+      "tekst": [
+        "We leiden spelers op om voetbalsituaties te herkennen, begrijpen, beslissingen te nemen en deze technisch en tactisch uit te voeren.",
+        "We ontwikkelen spelers individueel en als onderdeel van een team."
+      ],
+      "waardenNaam": "Teamkompas",
+      "waarden": [
+        { "id": "w-helpen", "naam": "Elkaar helpen" },
+        { "id": "w-luisteren", "naam": "Luisteren" },
+        { "id": "w-praten", "naam": "Praten" },
+        { "id": "w-vertrouwen", "naam": "Vertrouwen" },
+        { "id": "w-positief", "naam": "Positief blijven" },
+        { "id": "w-samen", "naam": "Samen oplossen" },
+        { "id": "w-iedereen", "naam": "Iedereen doet mee" }
+      ]
+    },
+    "doelgroep": {
+      "status": "eigen",
+      "naam": "DCG O13 Talententeam",
+      "geboortejaar": 2015,
+      "fase": "Overgang van 8 tegen 8 naar 11 tegen 11",
+      "aandacht": ["Positie-inzicht", "Veldbezetting", "Handelingssnelheid", "Samenwerking"],
+      "noot": "Spelers niet te vroeg vastzetten op één positie.",
+      "trainingen": { "perWeek": 3, "minuten": 75 }
+    },
+    "teamfuncties": {
+      "status": "eigen",
+      "items": [
+        { "id": "tf-aanvallen", "naam": "Aanvallen" },
+        { "id": "tf-verdedigen", "naam": "Verdedigen" },
+        { "id": "tf-omsch-va", "naam": "Omschakelen van verdedigen naar aanvallen" },
+        { "id": "tf-omsch-av", "naam": "Omschakelen van aanvallen naar verdedigen" }
+      ],
+      "noot": "Binnen deze teamfuncties komen samenhangende spelprincipes en leerdoelen."
+    },
+    "spelprincipes": { "status": "leeg", "items": [], "noot": "Wordt nog uitgewerkt." },
+    "leerlijnen": {
+      "status": "eigen",
+      "naam": "Individuele voetbalvaardigheden (universele leerlijnen)",
+      "items": [
+        { "id": "ll-1v1-aanvallend", "naam": "1v1 aanvallend", "kern": "manipuleren" },
+        { "id": "ll-aannemen", "naam": "Aannemen en meenemen", "kern": "voorbereiden" },
+        { "id": "ll-passen", "naam": "Passen", "kern": "helpen" },
+        { "id": "ll-vrijkomen", "naam": "Vrijkomen", "kern": "timen" },
+        { "id": "ll-1v1-verdedigen", "naam": "1v1 verdedigen en bal veroveren", "kern": "controleren" },
+        { "id": "ll-6", "naam": null, "kern": null, "status": "controleren", "noot": "Zesde leerlijn: nog te controleren en vast te stellen." }
+      ]
+    },
+    "leerdoelenPerLeeftijd": { "status": "leeg", "items": [], "noot": "Wordt nog uitgewerkt." },
+    "methodiek": {
+      "status": "eigen",
+      "fasen": [
+        { "id": "f-orientatie", "naam": "Oriëntatie" },
+        { "id": "f-oefenleer", "naam": "Oefenleer" },
+        { "id": "f-toepassing", "naam": "Toepassing" }
+      ],
+      "uitgangspunten": [
+        "Spelers leren door relevante, herkenbare voetbalsituaties.",
+        "We combineren technische, inzichtelijke en teamtactische ontwikkeling.",
+        "We werken met herhaling, variatie en oplopende complexiteit.",
+        "Trainingen zijn gekoppeld aan de speelwijze en aan waarneembare voetbalproblemen."
+      ]
+    },
+    "trainingsopbouw": { "status": "leeg", "sjablonen": [], "noot": "Trainingssjablonen worden nog uitgewerkt." },
+    "periodisering": {
+      "status": "deels",
+      "principes": [
+        "Geen systeem waarin een trainer een volledige maand alleen één thema behandelt.",
+        "Cyclisch werken, met hoofdthema's en contrathema's.",
+        "Een leerdoel komt regelmatig terug, in verschillende contexten en spelsituaties."
+      ],
+      "open": ["Definitief weekprogramma", "Herhalingsfrequentie", "Verdeling van de trainingsonderdelen"]
+    },
+    "themalessen": {
+      "status": "eigen",
+      "duurMinuten": 15,
+      "werkwijze": ["Herkenbare wedstrijdbeelden", "Vragen", "Tactische voorbeelden", "Actieve betrokkenheid"],
+      "onderwerpen": [
+        "Opbouwen tegen twee of drie drukzettende spelers",
+        "De rol van de nummer 6",
+        "Vrijlopen en aanspeelbaar worden",
+        "Passlijnen herkennen",
+        "Jagen en de bal terugveroveren",
+        "Positiewisselingen en het bezetten van vrijgekomen ruimtes"
+      ],
+      "noot": "Voorbeelden van onderwerpen, geen vaste lijst."
+    },
+    "evaluatie": { "status": "leeg", "vragen": [], "noot": "Evaluatievragen en kwaliteitscriteria worden nog vastgesteld." },
+    "termen": {
+      "status": "eigen",
+      "items": [
+        { "id": "t-jagen", "term": "Jagen", "betekenis": "Actief drukzetten" },
+        { "id": "t-lokken", "term": "Lokken", "betekenis": "De tegenstander bewust aantrekken" },
+        { "id": "t-loeren", "term": "Loeren", "betekenis": "Kansen en passlijnen herkennen en benutten" },
+        { "id": "t-terugwinnen", "term": "Direct terugwinnen", "betekenis": "Na balverlies onmiddellijk proberen de bal terug te veroveren" }
+      ]
+    }
+  }
+}

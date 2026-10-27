@@ -8,7 +8,7 @@
   const leeg = () => ({
     v: 8, gen: '', club: {}, teams: [], people: [], players: [], acts: [], afm: [], pres: {}, lang: [], gesprekken: [], msgs: [],
     vervoer: {}, taken: [], opgave: [], aanm: [], beoord: {}, notities: {}, speeltijd: { min: {}, schema: {}, keeper: {}, mogelijk: {} }, wijzigingen: [],
-    demo: {}, materiaal: {}, mails: [], trainerLog: [], trainerGesprekken: [], ontwGesprek: [], ontwVoorb: {}, ontwVerslag: {}, ontwNotitie: {}, teamVaardig: {}, teamKeuze: {}, bezorgd: {}, wedVoorstel: {}, sigSinds: {}, signaalAfgedaan: [],
+    demo: {}, materiaal: {}, mails: [], trainerLog: [], trainerGesprekken: [], ontwGesprek: [], ontwVoorb: {}, ontwVerslag: {}, ontwNotitie: {}, teamVaardig: {}, teamKeuze: {}, bezorgd: {}, profielen: {}, wedVoorstel: {}, sigSinds: {}, signaalAfgedaan: [],
     gezienInfo: {}, mijlpaalGezien: {}, autoVerstuurd: {}, beoordGedeeld: {}, beoordGezien: {},
     trainerDossier: {}, trainerKennis: {}, trainerAdmin: {}, trainerNotities: {}, begeleidMomenten: [], begeleidZelf: {}, begelHoVerslag: {},
     // voorkomt dat de demo-onderdelen voorbeelddata toevoegen
@@ -119,6 +119,8 @@
     // Besluit 107: hoe een bericht aankwam (push of e-mail). Alleen de server schrijft deze rijen; de app leest ze alleen
     // (ze komen niet terug in naarRijen, dus de app slaat ze nooit op en haalt ze nooit weg).
     S.bezorgd = {}; lijst('bezorgd').forEach((r) => { S.bezorgd[r.id] = r.data; });
+    // Besluit 123: opleidingsprofielen van de club (alleen lezen; de app schrijft ze nooit terug, zie supabase/profielen/README.md)
+    S.profielen = {}; lijst('profiel').forEach((r) => { S.profielen[r.id] = r.data; });
     const contact = {}; lijst('contact').forEach((r) => { contact[r.id] = r.data; });
     S.people = lijst('people').map((r) => ({ email: '', tel: '', ...r.data, ...(contact[r.id] || {}) }));
     lijst('pres').forEach((r) => { const [aid, sid] = r.id.split('|'); const p = S.pres[aid] || (S.pres[aid] = { s: {} }); if (sid === '_') Object.assign(p, r.data, { s: p.s }); else p.s[sid] = r.data.v; });

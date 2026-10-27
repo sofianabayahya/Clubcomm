@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 122)
+Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 123)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -17,6 +17,7 @@ Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 122)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 123 | Opleidingsprofiel als gegevens; DCG-fundament ingevoerd (rest open), KNVB-standaard als bestand | ✅ geldt |  |
 | 122 | Tabbladen gelijk (Home links, Berichten rechts), één keer signaleren, Regels en Inzicht ingeklapt, laptop met menu links | ✅ geldt |  |
 | 121 | Richting trainingsmodule: opleidingsprofiel per club (standaard KNVB), vorm ≠ uitvoering, bouwen in fases, ClubComm stelt voor en de trainer kiest | ✅ geldt |  |
 | 120 | Inrichten: clubbeheerder op de laptop met startlijst; ClubComm-adviseur met overzicht van alle clubs | ✅ geldt |  |
@@ -655,6 +656,24 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 123 — Opleidingsprofiel als gegevens: het DCG-fundament staat erin, de rest blijft open
+*Besloten 27 oktober 2026. Bron: het fundament van de DCG-methodiek dat de initiatiefnemer aanleverde (eerder uitgewerkt in ChatGPT). Werkt Besluit 121 uit. Opbouw: `supabase/profielen/README.md`.*
+- **Een profiel is gegevens, geen code.** Onderdelen: visie · doelgroep · teamfuncties · spelprincipes · leerlijnen · leerdoelen per leeftijd · methodiek · trainingsopbouw · periodisering · themalessen · evaluatie · termen. Elk onderdeel heeft een status (*gecontroleerd · controleren · eigen · deels · overgenomen · leeg*). Elk item heeft een vaste id die nooit verandert. Een nieuw onderdeel toevoegen vraagt geen databasewijziging.
+- **DCG** (eigen profiel, concept, versie 1) staat in de database van DCG (soort `profiel`, scope `hjo`: HO/clubbeheerder en coördinator). Alleen wat de initiatiefnemer aanleverde staat erin:
+  - visie *Samen op reis – De route naar jouw beste ik* met het Teamkompas (7 waarden);
+  - doelgroep (O13 Talententeam, 2015, overgang 8v8 → 11v11, 3 × 75 min);
+  - vier teamfuncties;
+  - vijf leerlijnen, de zesde *nog te controleren*;
+  - methodiek oriëntatie · oefenleer · toepassing;
+  - principes van de periodisering (*deels*: weekprogramma, herhalingsfrequentie en verdeling staan open);
+  - themalessen van 15 minuten;
+  - vier eigen termen.
+  
+  **Leeg** (nog uit te werken, niets zelf ingevuld): spelprincipes, leerdoelen per leeftijd, trainingssjablonen, evaluatie.
+- **KNVB-standaard** (AVV Swift, nieuwe clubs): bestand `supabase/profielen/knvb-2026.1.json`, alles *controleren* of *leeg* tot de vergelijking met de officiële KNVB-documenten.
+- **De app leest profielen alleen** (`S.profielen`) en schrijft ze nooit terug of weg (met test). Trainers zien het profiel pas met de trainingsmodule (scope `trainersclub`, Besluit 121 fase 2).
+- **Een scherm Opleidingsprofiel** voor de HO komt na een voorbeeld.
 
 ## Besluit 122 — Tabbladen gelijk bij elke rol, één keer signaleren, lange schermen ingeklapt, laptop met menu links
 *Besloten 27 oktober 2026, op verzoek "per direct" na de app-analyse (`docs/onderzoek/app-analyse-2026-10-27.md`).*
