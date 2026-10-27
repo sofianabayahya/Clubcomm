@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 123)
+Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 124)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -17,6 +17,7 @@ Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 123)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 124 | Tekentool: nummerbalk (rugnummers 1–11 en zonder nummer per team, op hun plek in de 1-4-3-3) en rood schijfje | ✅ geldt |  |
 | 123 | Opleidingsprofiel als gegevens; DCG-fundament ingevoerd (rest open), KNVB-standaard als bestand | ✅ geldt |  |
 | 122 | Tabbladen gelijk (Home links, Berichten rechts), één keer signaleren, Regels en Inzicht ingeklapt, laptop met menu links | ✅ geldt |  |
 | 121 | Richting trainingsmodule: opleidingsprofiel per club (standaard KNVB), vorm ≠ uitvoering, bouwen in fases, ClubComm stelt voor en de trainer kiest | ✅ geldt |  |
@@ -656,6 +657,17 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 124 — Tekentool: nummerbalk voor rugnummers en een rood schijfje
+*Besloten 27 oktober 2026, na een voorbeeld (`docs/onderzoek/trainingsmodule-2/t-nummerbalk.png`). Aanleiding: voor de juiste rugnummers moest je eerst 1 t/m 10 neerzetten en de rest weer verwijderen, voor beide teams; een speler zonder nummer kon niet.*
+- **Nummerbalk boven het veld:** per team (*Eigen team* rood, *Tegenstander* geel) de knoppen 1–11 en *+ Zonder nummer*.
+  - Tik een nummer: die speler staat meteen op zijn plek in de 1-4-3-3 (eigen team verdedigt onder of links, de tegenstander gedraaid). Nog een keer tikken = weg. Gekleurde knop = staat op het veld.
+  - *+ Zonder nummer* zet bij elke tik een speler zonder cijfer neer, met het aantal erbij.
+  - Is er een speler gekozen, dan krijgt die het getikte nummer (heeft een teamgenoot het al, dan ruilen ze) of *Zonder nummer*. De knop *Rugnummer +1* is daarmee weg voor spelers.
+  - Telefoon: de knoppen lopen over twee regels; tikvlak 44 px.
+- **Rood schijfje** (flap) erbij. Het rode hoedje bestond al.
+- **Fout hersteld:** op `/tekenen` stond de knoppenbalk onder het veld altijd open; nu alleen als je iets kiest.
+- De ART-app zelf is niet aangepast.
 
 ## Besluit 123 — Opleidingsprofiel als gegevens: het DCG-fundament staat erin, de rest blijft open
 *Besloten 27 oktober 2026. Bron: het fundament van de DCG-methodiek dat de initiatiefnemer aanleverde (eerder uitgewerkt in ChatGPT). Werkt Besluit 121 uit. Opbouw: `supabase/profielen/README.md`.*
@@ -1886,6 +1898,7 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 
 ## Later / ideeën
 
+- **Startopstelling bewaren in de tekentool** (idee 27-10, Besluit 124): je eigen beginpositie (bijv. 1-4-3-3 met tegenstander) met één tik bij elke nieuwe tekening. Nog niet besloten.
 - **Reismiddel bij de routeknop** (idee 27-10, Besluit 121): in het profiel één keer kiezen *auto · OV · fiets*; de routeknop opent de kaarten-app meteen zo. Geen adres bewaren. Eerst een voorbeeld.
 - **Huiswerk en filmpjes** (idee 24 sep 2026): de trainer deelt oefeningen voor thuis (een filmpje of een link) per team of per speler, gekoppeld aan de vaardigheden uit de beoordeling ("werken aan: aannemen"). Kind of ouder kan aangeven "gedaan". Eerst met links naar YouTube/Vimeo (geen eigen opslag). Filmpjes waarin kinderen te zien zijn alleen met toestemming van de ouders (AVG).
 - **Fondsenwerving en teamkas** (idee 24 sep 2026, zoals bij Spond): acties voor het team of de club (bijv. een toernooi, nieuwe trainingspakken), bijdragen via een betaallink (bijv. Tikkie of Mollie), met een teller "zoveel opgehaald". Alleen via de penningmeester of het bestuur; eerst uitzoeken wat de club wil en mag. Mogelijk ook een verdienmodel voor ClubComm.

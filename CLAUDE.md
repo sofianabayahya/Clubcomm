@@ -1,7 +1,7 @@
 # ClubComm
 
 Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoer, berichten, kaarten, speeltijd.
-**Pilot:** RKSV DCG (Amsterdam, Sportpark Ookmeer), team **O12 talententeam** (code `O12-1`, selectie), 16 spelers (een 17e twijfelt nog). Database sinds 25-09 leeg op dit team na (Besluit 38). **Tweede club (10-10): AVV Swift** (club-id `swift`), alleen het pakket Trainers begeleiden: de gebruiker is daar HO + clubbeheerder (eigen e-mailadres), plus een TC en trainers. De gebruiker (Sofian) is trainer, ouder (zijn kind speelt in het team) en clubbeheerder, met twee teamleiders. Wedstrijden vanaf fase 2 (za 31 okt 2026).
+**Pilot:** RKSV DCG (Amsterdam, Sportpark Ookmeer), team **O13 talententeam** (sinds 27-10; interne code `O12-1`, leeftijd O12 / geboortejaar 2015, speelt O13, selectie), 16 spelers (een 17e twijfelt nog). Database sinds 25-09 leeg op dit team na (Besluit 38). **Tweede club (10-10): AVV Swift** (club-id `swift`), alleen het pakket Trainers begeleiden: de gebruiker is daar HO + clubbeheerder (eigen e-mailadres), plus een TC en trainers. De gebruiker (Sofian) is trainer, ouder (zijn kind speelt in het team) en clubbeheerder, met twee teamleiders. Wedstrijden vanaf fase 2 (za 31 okt 2026).
 
 ## Werkafspraken met de gebruiker
 - De gebruiker is beginner: altijd **eenvoudig Nederlands**, één stap tegelijk, uitleg waar je klikt.
@@ -19,7 +19,7 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
 ## Waar staat wat
 | Bestand | Inhoud |
 |---|---|
-| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bovenaan het **Register** (status per besluit), onderaan **Afgewezen ideeën**. Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 123). |
+| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bovenaan het **Register** (status per besluit), onderaan **Afgewezen ideeën**. Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 124). |
 | `docs/app-controle.md` | **Controlelijst voor schermen** (uit het starterspakket van de gebruiker, mijnrijlesplanner): technieken met vakterm, vaste normen en ontwerpregels. Gebruiken bij elke controle of nieuw scherm. |
 | `docs/pilotlog.md` | **Fouten uit de pilot met oorzaak en patroon** (momentopname, opslaan, demo verbergt het, één persoon per rol, buiten de app, rommelige gegevens). Bij elke wijziging langs deze patronen lopen. |
 | `docs/plan-van-aanpak.md` | **Van pilot naar product:** A product af (ook op schaal: 50 teams) → B beschrijven (handboek) → C prijs en groei → D verkopen → E invoeren. Met planning t/m januari 2027. |

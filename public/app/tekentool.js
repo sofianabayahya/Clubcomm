@@ -43,7 +43,7 @@
         '<path d="M ' + (-r * 0.35) + ' ' + (-r * 0.45) + ' L ' + (r * 0.35) + ' ' + (-r * 0.45) + ' L ' + (r * 0.55) + ' ' + (r * 0.15) + ' L 0 ' + (r * 0.55) + ' L ' + (-r * 0.55) + ' ' + (r * 0.15) + ' Z" fill="none" stroke="#b9b9b9" stroke-width="' + (0.9 * k) + '"/>' +
         '<path d="M ' + (-r * 0.55) + ' ' + (r * 0.62) + ' A ' + r + ' ' + r + ' 0 0 0 ' + (r * 0.62) + ' ' + (r * 0.5) + '" fill="none" stroke="rgba(0,0,0,.18)" stroke-width="' + (1.6 * k) + '"/>';
     }
-    var DISH = { wit: "#F4F4F4", geel: "#F2C200", oranje: "#F57C00", roze: "#E0409A" };
+    var DISH = { wit: "#F4F4F4", geel: "#F2C200", oranje: "#F57C00", roze: "#E0409A", rood: "#D91E1E" };
     var TOOLS = [
       { group: "Spelers", items: [
         { t: "p", c: "rood", label: "Speler rood (rondje)", key: "1" }, { t: "p", c: "lichtblauw", label: "Speler lichtblauw (rondje)", key: "2" },
@@ -55,7 +55,7 @@
         { t: "cone", c: "rood", label: "Hoedje rood" }, { t: "cone", c: "geel", label: "Hoedje geel" },
         { t: "cone", c: "groen", label: "Hoedje groen" }, { t: "cone", c: "roze", label: "Hoedje roze" },
         { t: "dish", c: "wit", label: "Schijfje wit" }, { t: "dish", c: "geel", label: "Schijfje geel" },
-        { t: "dish", c: "oranje", label: "Schijfje oranje" }, { t: "dish", c: "roze", label: "Schijfje roze" },
+        { t: "dish", c: "oranje", label: "Schijfje oranje" }, { t: "dish", c: "roze", label: "Schijfje roze" }, { t: "dish", c: "rood", label: "Schijfje rood" },
         { t: "goal", s: "M", label: "Pupillendoel (5x2 m)", key: "D" }, { t: "goal", s: "S", label: "Minidoel (2x1 m)", key: "M" },
         { t: "board", label: "Kaatsbord" } ] },
       { group: "Pijlen en lijnen", items: [
@@ -180,7 +180,8 @@
       el("drawSelCount").textContent = meer ? st.multi.length + " geselecteerd" : "";
       var it = !meer && st.sel != null ? st.items[st.sel] : null;
       el("drawRotate").hidden = !it || (it.t !== "goal" && it.t !== "board");
-      el("drawNumber").hidden = !it || !((it.t === "p" && !TEAM[it.c].letter) || it.t === "shirt");
+      el("drawNumber").hidden = !it || it.t !== "shirt"; // spelers: via de nummerbalk
+      renderNummers();
       el("drawEditText").hidden = !it || it.t !== "text";
       el("drawMaat").hidden = !it || it.t !== "zone";
       if (it && it.t === "zone") el("drawMaat").textContent = it.maat === true ? "Maat verbergen" : "Maat tonen";
@@ -266,6 +267,11 @@
       Array.prototype.forEach.call(document.querySelectorAll("[data-draw-form]"), function(b){
         b.addEventListener("click", function(){ var x = b.getAttribute("data-draw-form").split("|"); zetOpstelling(x[0], x[1] === "t"); });
       });
+      if (!el("drawNummers")){
+        var nb = document.createElement("div"); nb.id = "drawNummers"; nb.className = "draw-nummers";
+        var stage = el("drawSvg").parentNode; stage.insertBefore(nb, stage.firstChild);
+        nb.addEventListener("click", function(e){ var b = e.target.closest("[data-nr]"); if (!b || !st) return; var x = b.getAttribute("data-nr").split("|"); tikNummer(x[0], Number(x[1])); });
+      }
       el("drawClear").addEventListener("click", function(){ if (!st.items.length) return; snapshot(); st.items = []; st.sel = null; st.num = 0; render(); });
     }
 
@@ -306,6 +312,56 @@
         st.items.push(q[2] === "K" ? { t: "p", c: "keeper", x: Math.round(x), y: Math.round(y) } : { t: "p", c: kleur, n: ++n, x: Math.round(x), y: Math.round(y) });
       });
       st.tool = null; st.sel = null; render();
+    }
+
+    /* Nummerbalk (27-10, ClubComm): per team de rugnummers 1-11 en "zonder nummer". Een nummer tikken zet die speler
+       meteen op zijn plek in de 1-4-3-3 (eigen team rood, verdedigt onder of links; tegenstander geel, gedraaid).
+       Nog een keer tikken = weg. Is er een speler gekozen, dan krijgt die het nummer (of geen nummer). */
+    var NR_PLEK = { 1: [0.5, 0.94], 2: [0.85, 0.78], 3: [0.62, 0.81], 4: [0.38, 0.81], 5: [0.15, 0.78], 6: [0.5, 0.7],
+      8: [0.7, 0.63], 10: [0.3, 0.63], 7: [0.82, 0.56], 9: [0.5, 0.54], 11: [0.18, 0.56] };
+    var NR_TEAMS = [["rood", "Eigen team", "●"], ["geel", "Tegenstander", "▲"]];
+    function plekOpVeld(fx, fy, tegen){
+      var f = FIELDS[st.field], m = 30, staand = /^(staand|f8|f6|half)$/.test(st.field);
+      if (tegen){ fx = 1 - fx; fy = 1 - fy; }
+      return staand ? { x: Math.round(m + fx * (f.w - 2 * m)), y: Math.round(m + fy * (f.h - 2 * m)) }
+        : { x: Math.round(m + (1 - fy) * (f.w - 2 * m)), y: Math.round(m + fx * (f.h - 2 * m)) };
+    }
+    function gekozenSpeler(){
+      var it = st.sel != null && !(st.multi && st.multi.length > 1) ? st.items[st.sel] : null;
+      return it && it.t === "p" && TEAM[it.c] && !TEAM[it.c].letter ? it : null;
+    }
+    function tikNummer(kleur, n){
+      var tegen = kleur === "geel", gk = gekozenSpeler();
+      snapshot();
+      if (gk){
+        // Gekozen speler krijgt dit nummer; had een teamgenoot het al, dan ruilen ze.
+        if (n){ var ander = st.items.find(function(x){ return x !== gk && x.t === "p" && x.c === gk.c && x.n === n; }); if (ander) ander.n = gk.n || 0; }
+        gk.n = n || 0; render(); return;
+      }
+      if (!n){
+        var k = st.items.filter(function(x){ return x.t === "p" && x.c === kleur && !x.n; }).length;
+        var q = plekOpVeld(0.2 + (k % 7) * 0.1, 0.66 - Math.floor(k / 7) * 0.08, tegen);
+        st.items.push({ t: "p", c: kleur, x: q.x, y: q.y }); render(); return;
+      }
+      var i = st.items.findIndex(function(x){ return x.t === "p" && x.c === kleur && x.n === n; });
+      if (i !== -1){ st.items.splice(i, 1); st.sel = null; st.multi = null; render(); return; }
+      var pl = NR_PLEK[n] || [0.5, 0.6], p = plekOpVeld(pl[0], pl[1], tegen);
+      st.items.push({ t: "p", c: kleur, n: n, x: p.x, y: p.y }); render();
+    }
+    function renderNummers(){
+      var bak = el("drawNummers"); if (!bak) return;
+      var gk = gekozenSpeler();
+      bak.innerHTML = NR_TEAMS.map(function(tm){
+        var kleur = tm[0], ink = TEAM[kleur].ink, fill = TEAM[kleur].fill;
+        var zonder = st.items.filter(function(x){ return x.t === "p" && x.c === kleur && !x.n; }).length;
+        var knop = function(n){
+          var aan = gk ? gk.c === kleur && (gk.n || 0) === n : st.items.some(function(x){ return x.t === "p" && x.c === kleur && x.n === n; });
+          return '<button type="button" class="draw-nr' + (aan ? ' aan' : '') + '" data-nr="' + kleur + '|' + n + '"' + (aan ? ' style="background:' + fill + ';color:' + ink + ';border-color:' + fill + '"' : '') +
+            ' aria-pressed="' + aan + '" aria-label="' + tm[1] + ' nummer ' + n + '">' + n + '</button>';
+        };
+        return '<div class="draw-nr-rij"><b>' + tm[2] + ' ' + tm[1] + '</b><div class="draw-nr-knoppen">' + [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(knop).join("") +
+          '<button type="button" class="draw-nr leeg" data-nr="' + kleur + '|0">' + (gk ? 'Zonder nummer' : '+ Zonder nummer' + (zonder ? ' (' + zonder + ')' : '')) + '</button></div></div>';
+      }).join("") + '<small>' + (gk ? 'Tik een nummer: de gekozen speler krijgt dat nummer.' : 'Tik een nummer: de speler staat meteen op zijn plek (1-4-3-3). Nog een keer tikken = weg. Daarna slepen waar je wilt.') + '</small>';
     }
 
     // Knop kiezen; nog een keer dezelfde knop = stoppen. Hoedjeskleur onthouden voor "Vak met hoedjes" en toets H.

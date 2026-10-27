@@ -17,7 +17,7 @@
 | **Testen** | `npm test` (50 tests) + nachtelijke **rechtentest** (Besluit 119). | Elke nieuwe soort krijgt controles in de rechtentest. |
 
 ## 2. Stap 3 gedaan: tekentool in een los testscherm
-- `public/app/tekentool.js` = het `DrawTool`-blok uit ART, ongewijzigd, met twee kleine aansluitingen (`esc`, melding bij een fout).
+- `public/app/tekentool.js` = het `DrawTool`-blok uit ART, met twee kleine aansluitingen (`esc`, melding bij een fout); in ClubComm uitgebreid met de nummerbalk en een rood schijfje (Besluit 124).
 - `public/app/tekentool.css` = de opmaak uit ART in ClubComm-kleuren, met de telefoonregel.
 - **`/tekenen`** = testscherm: nieuwe tekening, tegels (getekend met `staticSvg`), opnieuw bewerken, verwijderen. Alleen op het eigen toestel, niets in de database.
 - Getest: laptop (12 items met sneltoetsen, opslaan, tegel) en telefoon (390 px), geen fouten.
