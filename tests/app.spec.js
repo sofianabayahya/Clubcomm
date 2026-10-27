@@ -1235,6 +1235,7 @@ test('tekentool: nummerbalk en rood schijfje', async ({ page }) => {
   await page.goto('/tekenen'); await page.evaluate(() => localStorage.clear()); await page.goto('/tekenen');
   await page.locator('#nieuw').click();
   await expect(page.locator('#drawSelBar')).toBeHidden();
+  await page.locator('[data-rail="spelers"]').click(); // Besluit 126: nummers staan in het menu Spelers
   for (const n of [1, 3, 4, 6, 9, 10]) await page.locator(`[data-nr="rood|${n}"]`).click();
   await page.locator('[data-nr="rood|4"]').click(); // weg
   await page.locator('[data-nr="geel|0"]').click();
@@ -1242,11 +1243,15 @@ test('tekentool: nummerbalk en rood schijfje', async ({ page }) => {
   await expect(page.locator('[data-nr="rood|3"]')).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('[data-nr="rood|4"]')).toHaveAttribute('aria-pressed', 'false');
   await expect(page.locator('[data-nr="geel|0"]')).toContainText('(2)');
-  // speler 9 kiezen en nummer 11 geven
+  // speler 9 kiezen en nummer 11 geven (menu dicht, speler aanklikken, menu Spelers weer open)
+  await page.locator('.draw-fly-x').click();
+  await page.locator('[data-draw-select]').click();
   await page.locator('#drawSvg g[data-i]', { has: page.locator('text', { hasText: /^9$/ }) }).click();
+  await page.locator('[data-rail="spelers"]').click();
   await page.locator('[data-nr="rood|11"]').click();
   await expect(page.locator('#drawSelBar')).toBeVisible();
-  // rood schijfje bestaat
+  // rood schijfje bestaat (menu Schijfjes)
+  await page.locator('[data-rail="schijfjes"]').click();
   await expect(page.locator('[data-draw-tool][aria-label="Schijfje rood"]')).toHaveCount(1);
   await page.locator('#drawSave').click();
   await expect(page.locator('#drawOverlay')).toBeHidden();
@@ -1256,26 +1261,84 @@ test('tekentool: nummerbalk en rood schijfje', async ({ page }) => {
 });
 
 // Besluit 125: rondje/driehoek per team wisselen (wordt bewaard bij de tekening) en de nummerbalk in- en uitklappen
-test('tekentool: vorm per team wisselen en nummerbalk inklappen', async ({ page }) => {
+test('tekentool: vorm per team wisselen, menu Spelers open en dicht', async ({ page }) => {
   const fouten = volgFouten(page);
   await page.setViewportSize({ width: 1366, height: 820 });
   await page.goto('/tekenen'); await page.evaluate(() => localStorage.clear()); await page.goto('/tekenen');
   await page.locator('#nieuw').click();
+  await page.locator('[data-rail="spelers"]').click();
   await page.locator('[data-nr="rood|6"]').click();
   await expect(page.locator('#drawSvg g[data-i] circle')).toHaveCount(1);
   await page.locator('[data-vorm="rood"]').click();
   await expect(page.locator('#drawSvg g[data-i] circle')).toHaveCount(0);
   await expect(page.locator('#drawSvg g[data-i] path')).toHaveCount(1);
-  // inklappen: nummers weg, kop blijft; uitklappen: terug
-  await page.locator('[data-klap]').click();
-  await expect(page.locator('[data-nr="rood|6"]')).toHaveCount(0);
-  await page.locator('[data-klap]').click();
-  await expect(page.locator('[data-nr="rood|6"]')).toHaveCount(1);
+  // Besluit 126: de nummers zitten in het menu Spelers; menu dicht = nummers weg, rail-knop = weer open
+  await page.locator('.draw-fly-x').click();
+  await expect(page.locator('[data-nr="rood|6"]')).toBeHidden();
+  await page.locator('[data-rail="spelers"]').click();
+  await expect(page.locator('[data-nr="rood|6"]')).toBeVisible();
   await page.locator('#drawSave').click();
   await expect(page.locator('#drawOverlay')).toBeHidden();
   const d = await page.evaluate(() => JSON.parse(localStorage.getItem('cc-tekentool-test'))[0].data);
   expect(d.vormen).toEqual({ rood: 't' });
   // de tegel tekent het ook als driehoek
   await expect(page.locator('.tegel svg path[d^="M 0 -16"]')).toHaveCount(1);
+  expect(fouten).toEqual([]);
+});
+
+// Besluit 126: ontwerp A (rail + menu's) en pijlen met boog en aanpasbare lengte
+test('tekentool: rail, menu Veld en pijl met boog en langer maken', async ({ page }) => {
+  const fouten = volgFouten(page);
+  await page.setViewportSize({ width: 1366, height: 820 });
+  await page.goto('/tekenen'); await page.evaluate(() => localStorage.clear()); await page.goto('/tekenen');
+  await page.locator('#nieuw').click();
+  // rail: 8 knoppen; Hoedjes onthoudt de laatst gekozen kleur
+  await expect(page.locator('#drawTools .draw-rail')).toHaveCount(8);
+  await page.locator('[data-rail="hoedjes"]').click();
+  await page.locator('[data-draw-tool][aria-label="Hoedje rood"]').click();
+  await expect(page.locator('#drawFly')).toBeHidden();
+  await page.locator('[data-rail="hoedjes"]').click();
+  await expect(page.locator('[data-draw-tool][aria-label="Hoedje rood"]')).toHaveClass(/active/);
+  await page.keyboard.press('Escape');
+  // Veld via de bovenbalk
+  await page.locator('#drawVeldMenu summary').click();
+  await page.locator('#drawVeldMenu [data-draw-field="vak"]').click();
+  await expect(page.locator('#drawVeldNaam')).toHaveText('Vak');
+  // pass tekenen, kiezen, boog maken en eind verslepen
+  await page.locator('[data-rail="pijlen"]').click();
+  await page.locator('[data-draw-tool][aria-label="Pass"]').click();
+  const v = await page.locator('#drawSvg').boundingBox();
+  const x1 = v.x + v.width * 0.3, x2 = v.x + v.width * 0.6, y = v.y + v.height * 0.5;
+  await page.mouse.move(x1, y); await page.mouse.down(); await page.mouse.move(x2, y, { steps: 5 }); await page.mouse.up();
+  await page.locator('[data-draw-select]').click();
+  await page.mouse.click((x1 + x2) / 2, y);
+  const c = await page.locator('[data-h="c"]').boundingBox();
+  await page.mouse.move(c.x + c.width / 2, c.y + c.height / 2); await page.mouse.down(); await page.mouse.move(c.x + c.width / 2, c.y - 60, { steps: 5 }); await page.mouse.up();
+  const e = await page.locator('[data-h="2"]').boundingBox();
+  await page.mouse.move(e.x + e.width / 2, e.y + e.height / 2); await page.mouse.down(); await page.mouse.move(e.x + 120, e.y + e.height / 2, { steps: 5 }); await page.mouse.up();
+  await page.locator('#drawSave').click();
+  await expect(page.locator('#drawOverlay')).toBeHidden();
+  const p = await page.evaluate(() => JSON.parse(localStorage.getItem('cc-tekentool-test'))[0].data.items.find((x) => x.t === 'arrow'));
+  expect(p.cy).toBeLessThan(p.y1 - 40); // boog naar boven
+  expect(p.x2 - p.x1).toBeGreaterThan(300); // langer gemaakt
+  await expect(page.locator('.tegel svg path[d*=" Q "]')).toHaveCount(2); // tegel tekent de boog
+  expect(fouten).toEqual([]);
+});
+
+// Besluit 127: gebogen pijl als vaste soort (de boog groeit mee bij het trekken)
+test('tekentool: loopactie met boog', async ({ page }) => {
+  const fouten = volgFouten(page);
+  await page.setViewportSize({ width: 1366, height: 820 });
+  await page.goto('/tekenen'); await page.evaluate(() => localStorage.clear()); await page.goto('/tekenen');
+  await page.locator('#nieuw').click();
+  await page.locator('[data-rail="pijlen"]').click();
+  await page.locator('[data-draw-tool][aria-label="Loopactie met boog"]').click();
+  const v = await page.locator('#drawSvg').boundingBox();
+  await page.mouse.move(v.x + v.width * 0.3, v.y + v.height * 0.6); await page.mouse.down();
+  await page.mouse.move(v.x + v.width * 0.6, v.y + v.height * 0.6, { steps: 5 }); await page.mouse.up();
+  await page.locator('#drawSave').click();
+  await expect(page.locator('#drawOverlay')).toBeHidden();
+  const p = await page.evaluate(() => JSON.parse(localStorage.getItem('cc-tekentool-test'))[0].data.items[0]);
+  expect(p.k).toBe('run'); expect(p.cy).toBeLessThan(p.y1 - 40);
   expect(fouten).toEqual([]);
 });

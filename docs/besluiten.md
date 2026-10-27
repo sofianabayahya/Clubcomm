@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 125)
+Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 127)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -17,8 +17,10 @@ Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 125)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
-| 125 | Tekentool: rondje of driehoek per team kiezen; nummerbalk in- en uitklappen | ✅ geldt |  |
-| 124 | Tekentool: nummerbalk (rugnummers 1–11 en zonder nummer per team, op hun plek in de 1-4-3-3) en rood schijfje | ✅ geldt |  |
+| 127 | Tekentool: loopactie en pass met boog als vaste soort | ✅ geldt |  |
+| 126 | Tekentool clean (rail met menu's, Veld/Opstelling/⚙ boven) en pijlen met boog en aanpasbare lengte | ✅ geldt |  |
+| 125 | Tekentool: rondje of driehoek per team kiezen; nummerbalk in- en uitklappen | ◐ deels herzien | door 126 (in- en uitklappen = het menu Spelers openen en sluiten) |
+| 124 | Tekentool: nummerbalk (rugnummers 1–11 en zonder nummer per team, op hun plek in de 1-4-3-3) en rood schijfje | ◐ deels herzien | door 126 (de nummerbalk staat in het menu Spelers) |
 | 123 | Opleidingsprofiel als gegevens; DCG-fundament ingevoerd (rest open), KNVB-standaard als bestand | ✅ geldt |  |
 | 122 | Tabbladen gelijk (Home links, Berichten rechts), één keer signaleren, Regels en Inzicht ingeklapt, laptop met menu links | ✅ geldt |  |
 | 121 | Richting trainingsmodule: opleidingsprofiel per club (standaard KNVB), vorm ≠ uitvoering, bouwen in fases, ClubComm stelt voor en de trainer kiest | ✅ geldt |  |
@@ -659,12 +661,34 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 127 — Tekentool: gebogen pijl als vaste soort
+*Besloten 27 oktober 2026 (voorstel na Besluit 126, akkoord van de initiatiefnemer).*
+- In het menu *Pijlen* staan nu ook **Loopactie met boog** en **Pass met boog**. Bij het trekken groeit de boog mee (een derde van de lengte opzij, links van de looprichting). Daarna aanpassen met de bolletjes zoals in Besluit 126.
+
+## Besluit 126 — Tekentool clean (ontwerp A) en pijlen met boog en aanpasbare lengte
+*Besloten 27 oktober 2026, na analyse en drie ontwerpen (`docs/onderzoek/tekentool/`); de initiatiefnemer koos het advies: ontwerp A met de contextbalk uit B.*
+- **Smalle rail links** met één knop per soort: *Kies · Spelers · Bal · Hoedjes · Schijfjes · Doelen · Pijlen · Markeren*.
+  - Een knop opent een klein menu met de varianten (kleuren, soorten pijlen).
+  - De knop onthoudt de laatst gekozen variant: één tik op *Hoedjes* = verder met dezelfde kleur.
+  - Esc of klikken op het veld sluit het menu.
+- **De nummerbalk zit in het menu Spelers** (eigen team, tegenstander, zonder nummer, rondje ⇄ driehoek). Een gekozen speler blijft gekozen als je het menu opent, zodat je zijn nummer kunt wijzigen.
+- **Bovenbalk:** *Veld ▾*, *Opstelling ▾* en ⚙ (magneet, inzoomen bij opslaan, alles wissen). Het veld krijgt zo de meeste ruimte. Sneltoetsen werken zoals voorheen.
+- **Pijlen en lijnen aanpassen:** kies een pijl of lijn.
+  - Sleep een wit bolletje aan een uiteinde om hem langer, korter of schuin te maken (met magneet).
+  - Sleep het blauwe bolletje in het midden om de pijl een **boog** te geven; terug naar het midden of *Recht maken* = weer recht.
+  - Een dribbel volgt de boog.
+  - Bewaard als controlepunt (`cx`, `cy`); oude tekeningen blijven werken.
+  - Pijlen zijn makkelijker aan te klikken (brede, onzichtbare rand).
+- Telefoon: de rail ligt bovenaan als rij, het menu eronder.
+
 ## Besluit 125 — Tekentool: rondje of driehoek per team zelf kiezen; nummerbalk in- en uitklappen
+> **◐ Deels herzien door Besluit 126 (in- en uitklappen = het menu Spelers openen en sluiten)** (zie Register).
 *Besloten 27 oktober 2026 (verzoek van de initiatiefnemer).*
 - **Vorm per team:** in de nummerbalk tik je op het symbool (● of ▲) voor *Eigen team* of *Tegenstander*; dat team wisselt tussen rondje en driehoek. Dat geldt voor de spelers op het veld, de knoppen links en de tegel. De keuze wordt bewaard bij de tekening (`vormen`); trainer en keeper blijven driehoek.
 - **Nummerbalk in- en uitklappen:** de kop *Rugnummers* klapt de balk in tot één regel en weer uit. Het apparaat onthoudt de keuze.
 
 ## Besluit 124 — Tekentool: nummerbalk voor rugnummers en een rood schijfje
+> **◐ Deels herzien door Besluit 126 (de nummerbalk staat in het menu Spelers)** (zie Register).
 *Besloten 27 oktober 2026, na een voorbeeld (`docs/onderzoek/trainingsmodule-2/t-nummerbalk.png`). Aanleiding: voor de juiste rugnummers moest je eerst 1 t/m 10 neerzetten en de rest weer verwijderen, voor beide teams; een speler zonder nummer kon niet.*
 - **Nummerbalk boven het veld:** per team (*Eigen team* rood, *Tegenstander* geel) de knoppen 1–11 en *+ Zonder nummer*.
   - Tik een nummer: die speler staat meteen op zijn plek in de 1-4-3-3 (eigen team verdedigt onder of links, de tegenstander gedraaid). Nog een keer tikken = weg. Gekleurde knop = staat op het veld.
