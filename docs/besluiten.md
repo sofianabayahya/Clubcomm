@@ -660,6 +660,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Start van een nieuwe club:** (1) de adviseur maakt de club aan → (2) de clubbeheerder krijgt een uitnodiging en opent ClubComm op de laptop → (3) het eerste gesprek doen ze samen; daarna gaat de clubbeheerder zelf verder met de **startlijst**: club en pakket · seizoen en vakanties · bouwen en teams · rooster · staf · rollen · spelers en ouders · regels · opleidingsprofiel · proefweek met één team · iedereen uitnodigen. Stoppen en later verder kan; alles wordt bewaard.
 - **Eén app, geen aparte beheer-app.** De schermen van de clubbeheerder heten **Inrichten** (niet "dashboard", Besluit 8). Op de laptop (vanaf 1100 px) staan ze breed: links de onderwerpen, in het midden het werk, rechts de stand (*Klaar voor gebruik?*: teams met rooster, teams met trainer, spelers met ouder). Op de telefoon blijft alles werken.
 - **Mijn clubs (adviseur):** één overzicht met per club pakket, stand van de inrichting, clubbeheerder, gebruik (4 weken) en wat aandacht vraagt. **Alleen aantallen, geen namen van spelers of ouders.** In een club meekijken kan alleen als de clubbeheerder het toestaat, voor een afgesproken periode (verwerkersovereenkomst).
+- **Klaar voor gebruik? blijft na de start** (aanvulling 27-10): ook na de inrichting ziet de clubbeheerder dit blok als vaste controle per seizoen, alleen met wat aandacht vraagt (bijv. "4 teams zonder rooster voor het nieuwe seizoen"). Is alles in orde, dan één regel "Alles staat klaar".
 - **Naam:** ClubComm-**adviseur** (niet "manager": afgewezen in Besluit 96).
 - **Volgorde:** (1) na 31 okt: Regels en Rollen overzichtelijk (stond al bij "layout naar een 9") = begin van Inrichten → (2) laptopindeling met startlijst → (3) december: account voor de adviseur met *Mijn clubs* (rechtenwijziging: één account bij meerdere clubs; controles in de rechtentest vóór het online gaat, Besluit 119). Elk scherm eerst een voorbeeld.
 
@@ -1843,7 +1844,6 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 
 ## Later / ideeën
 
-- **Klaar voor gebruik? als vaste seizoenscontrole** (idee 27-10, Besluit 120): het blok blijft na de start zichtbaar voor de clubbeheerder, bijv. "4 teams zonder rooster voor het nieuwe seizoen". Nog niet besloten.
 - **Huiswerk en filmpjes** (idee 24 sep 2026): de trainer deelt oefeningen voor thuis (een filmpje of een link) per team of per speler, gekoppeld aan de vaardigheden uit de beoordeling ("werken aan: aannemen"). Kind of ouder kan aangeven "gedaan". Eerst met links naar YouTube/Vimeo (geen eigen opslag). Filmpjes waarin kinderen te zien zijn alleen met toestemming van de ouders (AVG).
 - **Fondsenwerving en teamkas** (idee 24 sep 2026, zoals bij Spond): acties voor het team of de club (bijv. een toernooi, nieuwe trainingspakken), bijdragen via een betaallink (bijv. Tikkie of Mollie), met een teller "zoveel opgehaald". Alleen via de penningmeester of het bestuur; eerst uitzoeken wat de club wil en mag. Mogelijk ook een verdienmodel voor ClubComm.
 - **Beloningen** (punten, contributie terugverdienen) als optionele module die de HJO per club of team aanzet.
