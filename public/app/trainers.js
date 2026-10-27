@@ -62,7 +62,8 @@
   };
   // De trainer in het pakket: zijn begeleiding en Berichten (geen spelers, aanwezigheid of afmelden)
   const origTrTabs = CC.rollen.trainer.tabs; const origTrHome = CC.rollen.trainer.schermen.home;
-  CC.rollen.trainer.tabs = (S) => (CC.pakketTrainers(S) ? [['home', 'Home', 'house'], origTrTabs(S).find((x) => x[0] === 'berichten')] : origTrTabs(S));
+  // Besluit 130: met de module Trainingen ook in het pakket het tabblad Training (trainingen op datum, zonder planning)
+  CC.rollen.trainer.tabs = (S) => (CC.pakketTrainers(S) ? [['home', 'Home', 'house'], CC.trainingAan && CC.trainingAan(S) ? ['aanwezigheid', 'Training', 'list-checks'] : null, origTrTabs(S).find((x) => x[0] === 'berichten')].filter(Boolean) : origTrTabs(S));
   CC.rollen.trainer.schermen.home = (S) => { if (!CC.pakketTrainers(S)) return origTrHome(S);
     const acties = CC.trainerActiesExtra(S); const me = CC.me();
     return `${acties.length ? `${h.sectie('Actie nodig')}<div class="lijst">${acties.join('')}</div>` : ''}${h.sectie('Mijn ontwikkeling')}${heeftOntw(S, me) ? CC.views.mijnOntw(S, { opHome: true }).html : '<p class="zacht klein">Hier komt je begeleiding te staan zodra de club die met je afspreekt.</p>'}`; };

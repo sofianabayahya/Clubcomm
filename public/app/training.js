@@ -16,6 +16,8 @@
   const plan = (S, actId) => plannen(S).find((p) => p.actId === actId && p.eigenaar === ik());
   const nieuwId = (p) => `${p}${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`;
 
+  // Een training hoort bij een activiteit uit de planning, of staat los op een datum (clubs zonder planning, bijv. pakket Trainers begeleiden)
+  const actVan = (S, p) => M.act(S, p.actId) || { id: p.actId, teamId: p.teamId, datum: p.datum, soort: 'training', los: true, tijd: '', eind: '' };
   // Leerdoelen komen uit het opleidingsprofiel van de club (Besluit 123); zonder profiel: geen keuze
   const profiel = (S) => { const p = S.profielen || {}; return p[S.club.id] || p[S.club.profiel] || Object.values(p)[0] || null; };
   const leerdoelen = (S) => { const pr = profiel(S); const l = pr && pr.onderdelen && pr.onderdelen.leerlijnen; return l ? (l.items || []).filter((x) => x.naam) : []; };
@@ -24,7 +26,7 @@
   const tekening = (t) => (t && window.DrawTool ? window.DrawTool.staticSvg(t) : '');
   const mini = (v, spacing) => (spacing && !(v && v.tekening) ? '<span class="tr-mini sp">spacing</span>' : `<span class="tr-mini">${v && v.tekening ? tekening(v.tekening) : icon('pencil')}</span>`);
   const bereik = (a, b, woord) => (a == null && b == null ? '' : `${a != null ? a : '?'}${b != null && b !== a ? `–${b}` : ''} ${woord}`);
-  const verwacht = (S, a) => M.spelers(S, a.teamId).filter((pl) => M.status(S, pl, a).code === 'verwacht').length;
+  const verwacht = (S, a) => (a.teamId ? M.spelers(S, a.teamId) : []).filter((pl) => M.status(S, pl, a).code === 'verwacht').length;
   // Past de vorm bij dit aantal? En wat schreef de trainer voor precies dit aantal?
   const past = (v, n, k) => (v.spelersMin == null || n >= v.spelersMin) && (v.spelersMax == null || n <= v.spelersMax) && (k == null || v.keepersMax == null || k <= v.keepersMax);
   const voorAantal = (v, n, k) => (v.aantallen || []).find((x) => Number(x.spelers) === n && (x.keepers == null || k == null || Number(x.keepers) === k));
@@ -40,14 +42,15 @@
   CC.on('tpNieuw', (el) => {
     const S = CC.S(); const a = M.act(S, el.dataset.id); if (!a) return;
     if (!plan(S, a.id)) plannen(S).push({ id: nieuwId('tp'), actId: a.id, teamId: a.teamId, datum: a.datum, eigenaar: ik(), thema: '', leerdoelen: [], onderdelen: [], spelers: verwacht(S, a), keepers: null });
-    CC.save(); CC.open('trainingsplan', { id: a.id });
+    // In het tabblad Training blijft de training op dezelfde plek staan (Besluit 130)
+    CC.save(); if (el.dataset.inline) CC.render(); else CC.open('trainingsplan', { id: a.id });
   });
 
   // ---------- Training (pagina) ----------
   const balk = (S, p) => { const o = (p.onderdelen || []).filter((x) => Number(x.min) > 0); if (!o.length) return '';
     return `<div class="tr-balk" aria-hidden="true">${o.map((x) => { const v = x.vormId && vorm(S, x.vormId); const k = x.spacing ? 'spacing' : (v && v.soort) || 'droog'; return `<i style="flex:${Number(x.min)};background:${KLEUR[k] || KLEUR.droog}"></i>`; }).join('')}</div>`; };
   CC.views.trainingsplan = (S, prm) => {
-    const a = M.act(S, prm.id); const p = a && plan(S, a.id);
+    const p = plan(S, prm.id); const a = p ? actVan(S, p) : null;
     if (!a || !p) return { titel: 'Training', html: h.leeg('Deze training bestaat niet meer.') };
     const d = D.parse(a.datum); const n = Number(p.spelers) || 0, k = p.keepers == null || p.keepers === '' ? null : Number(p.keepers);
     const min = (p.onderdelen || []).reduce((t, o) => t + (Number(o.min) || 0), 0);
@@ -139,7 +142,44 @@
     if (!p.thema) p.thema = van.thema; if (!(p.leerdoelen || []).length) p.leerdoelen = (van.leerdoelen || []).slice();
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Opbouw overgenomen'); });
 
-  // ---------- Mijn vormen (Planning → Vormen) ----------
+  // ---------- Tabblad Training (Besluit 130): de week met de training bovenaan, aanwezigheid in een venster; Vormen ----------
+  CC.trainingTab = (S) => {
+    const tid = CC.teamId(); const kop = h.seg('trSeg', [['week', 'Week'], ['vormen', 'Vormen']], 'week');
+    if (h.segVal('trSeg', 'week') === 'vormen') return kop + CC.vormenLijst(S);
+    const acts = tid && CC.weekActs ? CC.weekActs(S, tid) : [];
+    if (!acts.length) return kop + losLijst(S);
+    const standaard = acts.find((a) => a.datum === D.vandaag() && a.soort === 'training') || acts.find((a) => a.datum >= D.vandaag() && a.soort === 'training') || acts.find((a) => a.datum === D.vandaag()) || acts[0];
+    const a = acts.find((x) => x.id === h.segVal('aanwAct', standaard.id)) || standaard;
+    const sp = M.spelers(S, a.teamId); const pr = S.pres[a.id];
+    const aanw = a.afgelast ? '' : pr ? `${Object.values(pr.s || {}).filter((v) => v === 'a' || v === 'l').length} van ${sp.length} aanwezig · aanpassen` : `${verwacht(S, a)} van ${sp.length} verwacht`;
+    const p = a.soort === 'training' ? plan(S, a.id) : null;
+    return `${kop}
+      <div class="weekstrook" role="tablist">${acts.map((x) => { const d = D.parse(x.datum); return `<button role="tab" aria-selected="${x.id === a.id}" class="${x.id === a.id ? 'aan' : ''} ${x.afgelast ? 'afg' : ''} ${x.datum === D.vandaag() ? 'vandaag' : ''} ${plan(S, x.id) ? 'gedaan' : ''}" data-act="seg" data-key="aanwAct" data-val="${x.id}"><small>${D.DAG_KORT[d.getDay()]}</small><b>${d.getDate()}</b><small>${x.soort === 'training' ? 'T' : 'W'}</small></button>`; }).join('')}</div>
+      <div class="kaart-kop los">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${h.actSub(S, a)}</small></div></div>${!a.afgelast && a.adres && (a.soort === 'activiteit' || (M.isWed(a) && !a.thuis)) ? `<div class="knoppen">${h.adresRegel(a.adres)}</div>` : ''}
+      ${aanw ? `<button class="knop licht vol tr-aanw" data-act="aanwVenster" data-id="${a.id}">${icon('clipboard-check')}Aanwezigheid · ${aanw} ▾</button>` : ''}
+      ${a.soort !== 'training' ? (S.club.modules.speeltijd && M.isWed(a) ? `<button class="knop vol" data-act="naarWedstrijd" data-id="${a.id}">${icon('trophy')}Naar de wedstrijd</button>` : '')
+        : p ? CC.views.trainingsplan(S, { id: a.id }).html : `<button class="knop vol" data-act="tpNieuw" data-id="${a.id}" data-inline="1">${icon('pencil')}Training voorbereiden of vastleggen</button>`}
+      ${CC.kanNietBlok && D.start(a) > new Date() ? CC.kanNietBlok(S, a) : ''}
+      ${CC.mag('planning') ? `<button class="knop licht vol" data-act="planningAanpassen">${icon('calendar-plus')}Planning aanpassen of iets toevoegen</button>` : ''}`;
+  };
+  // Aanwezigheid opnemen in een venster; het venster tekent mee als je een naam aantikt, en sluit na Opslaan
+  CC.on('aanwVenster', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.id); if (!a) return; const d = D.parse(a.datum);
+    CC.sheet(`Aanwezigheid · ${D.DAG_KORT[d.getDay()]} ${d.getDate()} ${D.MAAND[d.getMonth()]}`, `<div data-aanw-venster="${a.id}">${CC.opnemenHtml(S, a)}</div>`, { groot: true }); });
+  const render0 = CC.render;
+  CC.render = (...x) => { render0(...x); const v = document.querySelector('#sheet:not([hidden]) [data-aanw-venster]'); if (v) { const S = CC.S(); const a = M.act(S, v.dataset.aanwVenster); if (a) v.innerHTML = CC.opnemenHtml(S, a); } };
+  document.addEventListener('click', (e) => { if (e.target.closest('#sheet [data-aanw-venster] [data-act="opslaanAanwezigheid"]')) setTimeout(() => { CC.closeSheet(); CC.render(); }, 0); }, true);
+
+  // Zonder planning (bijv. pakket Trainers begeleiden): trainingen op datum
+  const losLijst = (S) => { const l = plannen(S).filter((p) => p.eigenaar === ik()).sort((x, y) => String(y.datum).localeCompare(String(x.datum)));
+    return `<button class="knop vol" data-act="tpLosNieuw">${icon('plus')}Nieuwe training</button>
+      ${l.length ? `<div class="kaartje"><div class="tr-lijst">${l.map((p) => { const v = (p.onderdelen || []).map((o) => o.vormId && vorm(S, o.vormId)).find(Boolean); const min = (p.onderdelen || []).reduce((t, o) => t + (Number(o.min) || 0), 0);
+        return `<button type="button" class="tr-rij" data-act="open" data-view="trainingsplan" data-id="${esc(p.actId)}">${mini(v)}<span class="tr-t"><b>${esc(p.thema || 'Training')}</b><small>${D.kort(p.datum)} · ${(p.onderdelen || []).length} onderdelen · ${min} min</small></span></button>`; }).join('')}</div></div>`
+        : h.leeg('Nog geen trainingen. Maak je eerste training: kies een datum en zet er vormen en spacing in.', 'list-checks')}`; };
+  CC.on('tpLosNieuw', () => CC.sheet('Nieuwe training', `<form data-submit="tpLosOk" class="codeform"><label for="tl-d">Datum</label><input id="tl-d" name="datum" type="date" required value="${D.vandaag()}"><button class="knop vol">Maken</button></form>`));
+  CC.on('tpLosOk', (f) => { const S = CC.S(); const id = nieuwId('tp'); plannen(S).push({ id, actId: id, los: true, teamId: CC.teamId ? CC.teamId() : null, datum: f.datum.value, eigenaar: ik(), thema: '', leerdoelen: [], onderdelen: [], spelers: null, keepers: null });
+    CC.save(); CC.closeSheet(); CC.open('trainingsplan', { id }); });
+
+  // ---------- Mijn vormen (Training → Vormen) ----------
   CC.vormenLijst = (S) => {
     const f = h.segVal('vormSoort', 'alle'); const l = mijnVormen(S).filter((v) => f === 'alle' || v.soort === f).sort((x, y) => x.naam.localeCompare(y.naam));
     return `${h.seg('vormSoort', [['alle', 'Alle'], ...SOORTEN.filter(([k]) => k !== 'spacing')], 'alle')}

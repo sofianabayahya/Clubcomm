@@ -1365,9 +1365,19 @@ test('trainingsmodule: training voorbereiden en eigen vorm (echte versie)', asyn
   await inloggen(page, 'admin@test.nl');
   await page.evaluate(() => { const S = CC.S(); CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer'));
     S.acts.push({ id: 'tTest', teamId: 'O12-1', soort: 'training', datum: CC.date.vandaag(), tijd: '18:30', eind: '19:45' }); CC.save(); CC.render(); });
+  // Besluit 130: tabblad Training; aanwezigheid in een venster, training staat op dezelfde plek
+  await expect(page.locator('nav.nav button[data-tab="aanwezigheid"]')).toContainText('Training');
   await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
   await page.locator('.weekstrook [data-val="tTest"]').click();
+  await page.locator('[data-act="aanwVenster"]').click();
+  await expect(page.locator('#sheet [data-aanw-venster]')).toBeVisible();
+  await page.locator('#sheet [data-act="tikSpeler"]').first().click();
+  await expect(page.locator('#sheet [data-aanw-venster]')).toBeVisible();
+  await page.locator('#sheet [data-act="opslaanAanwezigheid"]').click();
+  await expect(page.locator('#sheet')).toBeHidden();
+  await expect(page.locator('[data-act="aanwVenster"]')).toContainText('aanwezig');
   await page.locator('[data-act="tpNieuw"]').click();
+  await expect(page.locator('#tp-th')).toBeVisible();
   await page.fill('#tp-th', 'Dreigen en passeren'); await page.locator('#tp-th').press('Tab');
   await page.locator('label.tr-chip', { hasText: '1v1 aanvallend' }).click();
   await page.locator('[data-act="tpSpacing"]').click();
@@ -1380,7 +1390,7 @@ test('trainingsmodule: training voorbereiden en eigen vorm (echte versie)', asyn
   await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'trainingsplannen').map((r) => `${r.scope}|${r.persoon_id}|${r.act_id}|${r.data.onderdelen.length}|${r.data.leerdoelen.join()}`).join(), { message: 'training in de database' })
     .toBe('eigen|p-beheer|tTest|2|ll-1v1-aanvallend');
   await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'vormen').map((r) => `${r.scope}|${r.persoon_id}|${r.data.naam}`).join()).toBe('eigen|p-beheer|Skills passeren in kruisvorm');
-  // Vormen-lijst onder Planning
+  // Vormen-lijst onder Training
   await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
   await page.locator('[data-act="seg"][data-val="vormen"]').click();
   await expect(page.locator('.tr-kaart')).toHaveCount(1);
@@ -1394,4 +1404,28 @@ test('trainingsmodule: training voorbereiden en eigen vorm (echte versie)', asyn
   await expect(page.locator('#drawOverlay')).toBeHidden();
   await expect.poll(async () => { const r = Object.values((await nepDb(page)).rows).find((x) => x.soort === 'vormen'); return r && r.data.tekening ? r.data.tekening.items.length : 0; }, { message: 'tekening in de database' }).toBe(1);
   await controleer(page, fouten, 'trainingsmodule');
+});
+
+// Besluit 130: club zonder planning (pakket Trainers begeleiden, zoals AVV Swift): tabbladen Home · Training · Berichten, trainingen op datum
+test('trainingsmodule: training op datum zonder planning (pakket Trainers begeleiden)', async ({ page }) => {
+  const fouten = volgFouten(page);
+  await nepDatabase(page);
+  await page.evaluate(() => { const db = JSON.parse(sessionStorage.getItem('fake-sb-db'));
+    Object.keys(db.rows).filter((k) => db.rows[k].soort === 'acts').forEach((k) => delete db.rows[k]);
+    db.rows['dcg|club|club'].data.pakket = 'trainers';
+    db.rows['dcg|club|club'].data.modules = { ...(db.rows['dcg|club|club'].data.modules || {}), training: true };
+    sessionStorage.setItem('fake-sb-db', JSON.stringify(db)); });
+  await inloggen(page, 'admin@test.nl');
+  await page.evaluate(() => { CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer')); CC.render(); });
+  await expect(page.locator('nav.nav button')).toHaveText(['Home', 'Training', 'Berichten'].map((t) => new RegExp(t)));
+  await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
+  await page.locator('[data-act="tpLosNieuw"]').click();
+  await page.fill('#tl-d', '2026-11-03');
+  await page.locator('#sheet button.knop').click();
+  await page.fill('#tp-th', 'Vrijlopen'); await page.locator('#tp-th').press('Tab');
+  await page.locator('[data-act="tpSpacing"]').click();
+  await page.locator('[data-act="terug"]').click();
+  await expect(page.locator('.tr-rij')).toContainText('Vrijlopen');
+  await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'trainingsplannen').map((r) => `${r.scope}|${r.persoon_id}|${r.data.los}|${r.data.datum}|${r.data.onderdelen.length}`).join()).toBe('eigen|p-beheer|true|2026-11-03|1');
+  await controleer(page, fouten, 'training op datum');
 });
