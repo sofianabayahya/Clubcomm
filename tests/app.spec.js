@@ -1212,3 +1212,18 @@ test('tabbladen gelijk, één keer signaleren, lange schermen ingeklapt, laptop-
   expect(nav.x).toBe(0); expect(nav.height).toBeGreaterThan(800);
   await controleer(page, fouten, 'tabbladen');
 });
+
+// Besluit 123: het opleidingsprofiel van de club wordt gelezen, maar nooit door de app overschreven of weggehaald
+test('opleidingsprofiel: de app leest het en laat het staan', async ({ page }) => {
+  const fouten = volgFouten(page);
+  await nepDatabase(page);
+  const profiel = JSON.parse(require('fs').readFileSync(require('path').join(__dirname, '..', 'supabase', 'profielen', 'dcg.json'), 'utf8'));
+  await page.evaluate((data) => { const db = JSON.parse(sessionStorage.getItem('fake-sb-db')); db.rows['dcg|profiel|dcg'] = { club_id: 'dcg', soort: 'profiel', id: 'dcg', scope: 'hjo', data }; sessionStorage.setItem('fake-sb-db', JSON.stringify(db)); }, profiel);
+  await inloggen(page, 'admin@test.nl');
+  expect(await page.evaluate(() => CC.S().profielen.dcg.onderdelen.leerlijnen.items.length)).toBe(6);
+  // iets opslaan: het profiel blijft in de database
+  await page.evaluate(() => { CC.S().club.privacyContact = 'test@test.nl'; CC.save(); });
+  await expect.poll(async () => Object.values((await nepDb(page)).rows).find((r) => r.soort === 'club').data.privacyContact).toBe('test@test.nl');
+  expect((await nepDb(page)).rows['dcg|profiel|dcg']).toBeTruthy();
+  await controleer(page, fouten, 'profiel');
+});

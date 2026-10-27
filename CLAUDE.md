@@ -19,7 +19,7 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
 ## Waar staat wat
 | Bestand | Inhoud |
 |---|---|
-| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bovenaan het **Register** (status per besluit), onderaan **Afgewezen ideeën**. Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 122). |
+| `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bovenaan het **Register** (status per besluit), onderaan **Afgewezen ideeën**. Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 123). |
 | `docs/app-controle.md` | **Controlelijst voor schermen** (uit het starterspakket van de gebruiker, mijnrijlesplanner): technieken met vakterm, vaste normen en ontwerpregels. Gebruiken bij elke controle of nieuw scherm. |
 | `docs/pilotlog.md` | **Fouten uit de pilot met oorzaak en patroon** (momentopname, opslaan, demo verbergt het, één persoon per rol, buiten de app, rommelige gegevens). Bij elke wijziging langs deze patronen lopen. |
 | `docs/plan-van-aanpak.md` | **Van pilot naar product:** A product af (ook op schaal: 50 teams) → B beschrijven (handboek) → C prijs en groei → D verkopen → E invoeren. Met planning t/m januari 2027. |
@@ -39,6 +39,7 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
   - `opstelling.js`: eigen wisselschema (Besluit 106): opstelling 1-4-3-3, wissels, klok, minuten en posities; omgerekend naar blokken (`M.zelfAfleiden`). Speelvorm per team: `team.speelCat` (`M.wedCat`); keuze van de staf in `S.teamKeuze`.
   - `adres.js`: adres aanvullen via PDOK (velden met `data-adres`). `push.js`: pushmeldingen aanzetten en keuzes (Besluit 53); tonen in `sw.js`. `onderhoud.js`: foutregistratie en zelf verversen bij een nieuwe versie (`versie.json`, gemaakt door `versie-maken.js` bij elke publicatie; Besluit 63).
   - Modules: `autoberichten.js` (Communicatieplan, noodberichten, herinneringen activiteiten), `afwezig.js`, `trainerafw.js`, `beoordeling.js` (+ `gesprek.js`: voorbereiding en gesprekspagina ontwikkelgesprek), `materiaal.js`, `meehelpen.js`, `waardering.js`, `hjofilter.js`, `agenda.js`.
+  - **Opleidingsprofielen (Besluit 123):** methodiek als gegevens, niet in de code. Opbouw en KNVB-standaard: `supabase/profielen/`; het DCG-profiel staat in de database (soort `profiel`); de app leest ze in `S.profielen` en schrijft ze nooit terug.
   - `tekenen.html` (los, `/tekenen`): testscherm van de **tekentool** voor oefenvormen (`app/tekentool.js` + `.css`, overgenomen uit de ART-app); alleen op het toestel. Audit, voorstel en open vragen: `docs/trainingsmodule.md`.
   - `evaluatie.html` (los, `/evaluatie`): evaluatieformulier praktijkbegeleiding coach, gegevens alleen op het toestel, PDF via printen (Besluit 93).
   - `live.js`: echte versie (Supabase: inloggen met e-mailcode, laden, automatisch opslaan, beheer).

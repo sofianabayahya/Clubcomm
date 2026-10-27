@@ -1,0 +1,35 @@
+{
+  "schema": "clubcomm-profiel",
+  "v": 1,
+  "id": "knvb",
+  "naam": "KNVB-standaard",
+  "modus": "standaard",
+  "basis": null,
+  "versie": "2026.1",
+  "status": "concept",
+  "bijgewerkt": "2026-10-27",
+  "bron": "Opzet op basis van eerdere kennis. Elk onderdeel moet nog vergeleken worden met de officiële KNVB-documenten; tot dan ziet geen trainer het.",
+  "onderdelen": {
+    "visie": { "status": "controleren", "tekst": ["Leren door te voetballen; van wedstrijd naar training en terug."] },
+    "doelgroep": { "status": "leeg" },
+    "teamfuncties": {
+      "status": "controleren",
+      "items": [
+        { "id": "tf-opbouwen", "naam": "Opbouwen" },
+        { "id": "tf-scoren", "naam": "Scoren" },
+        { "id": "tf-storen", "naam": "Storen" },
+        { "id": "tf-voorkomen", "naam": "Doelpunten voorkomen" },
+        { "id": "tf-omschakelen", "naam": "Omschakelen" }
+      ]
+    },
+    "spelprincipes": { "status": "leeg", "items": [] },
+    "leerlijnen": { "status": "leeg", "items": [] },
+    "leerdoelenPerLeeftijd": { "status": "leeg", "items": [] },
+    "methodiek": { "status": "controleren", "uitgangspunten": ["Voetbalprobleem uit de wedstrijd → oefenvorm(en) → partijvorm."] },
+    "trainingsopbouw": { "status": "leeg", "sjablonen": [] },
+    "periodisering": { "status": "leeg" },
+    "themalessen": { "status": "leeg" },
+    "evaluatie": { "status": "controleren", "vragen": ["Werd er veel gevoetbald?", "Kwam het voetbalprobleem vaak terug?", "Was er weerstand?", "Was er plezier?"] },
+    "termen": { "status": "leeg", "items": [] }
+  }
+}
