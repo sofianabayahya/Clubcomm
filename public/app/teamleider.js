@@ -15,7 +15,7 @@
     tabs(S) {
       const me = CC.me(); const tid = CC.teamId(); const a = volgendeWedstrijd(S, tid);
       let open = 0; if (a && S.club.modules.taken) { const t = takenInfo(S, a); open = t.t.length - t.bezet ? 1 : 0; }
-      return [['home', 'Home', 'house'], ['wedstrijd', 'Wedstrijd', 'trophy', open], ['berichten', 'Berichten', 'message-circle', M.ongelezen(S, me.id)], ['team', 'Team', 'users', openAanm(S, tid).length]];
+      return [['home', 'Home', 'house'], ['wedstrijd', 'Wedstrijd', 'trophy', open], ['team', 'Team', 'users', openAanm(S, tid).length], ['berichten', 'Berichten', 'message-circle', M.ongelezen(S, me.id)]];
     },
     schermen: {
       home(S) {

@@ -19,8 +19,9 @@
     context(S) { const k = CC.kind(); const kids = CC.kinderen(); return k ? { titel: `${k.voornaam} · ${CC.tn(k.teamId)}`, sub: S.club.naam, act: kids.length > 1 ? 'kiesKind' : null } : { titel: 'ClubComm', sub: S.club.naam }; },
     tabs(S) {
       const me = CC.me(); const k = CC.kind();
-      return [['home', 'Home', 'house'], ['planning', 'Planning', 'calendar-days'], S.club.modules.vervoer && ['vervoer', 'Vervoer', 'car', k && zoektPlek(S, k) ? zoektPlek(S, k).wie.length : 0],
-        ['berichten', 'Berichten', 'message-circle', CC.ongelezenRol(S)], S.club.modules.taken && ['taken', 'Taken', 'list-checks', k ? openTaken(S, k.teamId).length : 0]];
+      return [['home', 'Home', 'house'], ['planning', 'Planning', 'calendar-days'], S.club.modules.vervoer && ['vervoer', 'Vervoer', 'car'],
+        // 27-10: één keer signaleren: vervoer en taken staan al onder Actie nodig op Home, dus alleen Berichten krijgt een getal
+        S.club.modules.taken && ['taken', 'Taken', 'list-checks'], ['berichten', 'Berichten', 'message-circle', CC.ongelezenRol(S)]];
     },
     schermen: {
       home(S) {

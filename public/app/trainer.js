@@ -334,7 +334,8 @@
   CC.on('naarWedstrijd', (el) => { CC.ui.seg.stWed = el.dataset.id; CC.go('speeltijd'); });
   CC.rollen.trainer = {
     context(S) { const t = M.team(S, CC.teamId()); return { titel: t.naam, sub: `Trainer · ${S.club.naam}` }; },
-    tabs(S) { const me = CC.me(); return [['home', 'Home', 'house'], ['aanwezigheid', 'Aanwezigheid', 'clipboard-check'], ['berichten', 'Berichten', 'message-circle', M.ongelezen(S, me.id)], ['spelers', 'Spelers', 'users'], S.club.modules.speeltijd && ['speeltijd', 'Speeltijd', 'timer']]; },
+    tabs(S) { const me = CC.me(); // 27-10: logische volgorde, Home links en Berichten rechts; Planning = de week (aanwezigheid, straks de trainingsvoorbereiding), Wedstrijd = wisselschema en speeltijd
+      return [['home', 'Home', 'house'], ['aanwezigheid', 'Planning', 'calendar-days'], S.club.modules.speeltijd && ['speeltijd', 'Wedstrijd', 'trophy'], ['spelers', 'Spelers', 'users'], ['berichten', 'Berichten', 'message-circle', M.ongelezen(S, me.id)]]; },
     schermen: {
       home(S) {
         const tid = CC.teamId(); const t = M.team(S, tid); const me = CC.me();

@@ -242,6 +242,8 @@
       if (ui.view && CC.views[ui.view.naam]) { const v = CC.views[ui.view.naam](S, ui.view); kop = v.titel; kopSub = v.sub == null ? null : v.sub; inhoud = v.html; terug = true; }
       else inhoud = R.schermen[ui.tab](S);
     } catch (err) { console.error(err); if (CC.meldFout) CC.meldFout(err, 'scherm'); inhoud = h.leeg(`Er ging iets mis op dit scherm: ${esc(err.message)}`, 'circle-alert'); }
+    // 27-10: lange schermen (Regels van de clubbeheerder, Inzicht) als onderwerpen die je openklapt
+    if (!ui.view && ((rol.rol === 'beheerder' && ui.tab === 'regels') || ui.tab === 'inzicht')) inhoud = CC.klapSecties(inhoud, ui.tab === 'inzicht');
     const ctx = R.context(S);
     const me = CC.me();
     // Besluit 103: wat je hebt opengeklapt, blijft open na opnieuw tekenen (op hetzelfde scherm)
@@ -618,6 +620,28 @@
   const blok = (titel, ms, render, sleutel) => (ms.length ? `${h.sectie(titel)}${meer(sleutel, ms, render)}` : '');
   const inklap = (titel, ms, render, sleutel) => (ms.length ? `<details class="uitklap blok"><summary>${titel} (${ms.length})</summary>${meer(sleutel, ms, render)}</details>` : '');
 
+  // Elk kopje (.sectie-kop) wordt een uitklapblok met alles wat eronder staat, tot het volgende kopje.
+  // Een formulier dat met kopjes begint, wordt van binnen zo ingedeeld; de knop Opslaan blijft altijd zichtbaar.
+  CC.klapSecties = (html, eersteOpen) => {
+    const t = document.createElement('template'); t.innerHTML = html; let n = 0;
+    const groepeer = (bak) => {
+      let blok = null;
+      [...bak.children].forEach((el) => {
+        if (el.matches('.sectie-kop')) {
+          blok = document.createElement('details'); blok.className = 'uitklap onderwerp'; if (eersteOpen && n === 0) blok.open = true; n++;
+          const sum = document.createElement('summary'); const kop = el.querySelector('h3'); sum.innerHTML = `<b>${kop ? kop.innerHTML : ''}</b>`; blok.append(sum);
+          el.replaceWith(blok); [...el.children].filter((c) => c !== kop).forEach((c) => blok.append(c)); return;
+        }
+        if (el.matches('form') && el.firstElementChild && el.firstElementChild.matches('.sectie-kop')) { groepeer(el); blok = null; return; }
+        if (el.matches('button.vol, button[type="submit"]') && bak.nodeType === 1 && bak.matches('form')) { blok = null; return; }
+        if (blok) blok.append(el);
+      });
+    };
+    groepeer(t.content);
+    return t.innerHTML;
+  };
+  // Een verplicht of fout veld in een dichtgeklapt blok: klap het open, anders blokkeert Opslaan zonder dat je ziet waarom
+  document.addEventListener('invalid', (e) => { const d = e.target.closest && e.target.closest('details'); if (d) d.open = true; }, true);
   CC.berichtenScherm = (S, opties = {}) => {
     const me = CC.me(); const staf = isStaf();
     const tab = h.segVal('berichten', 'persoonlijk');

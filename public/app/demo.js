@@ -67,7 +67,11 @@
   const klik = (sel) => { const el = document.querySelector(sel); if (el) el.click(); };
   const segKlik = (tekst) => { const b = [...document.querySelectorAll('#app [data-act="seg"]')].find((x) => x.innerText.trim().startsWith(tekst)); if (b) b.click(); };
   // Wat de gele rand omlijnt
-  const sectie = (titel) => () => { const k = [...document.querySelectorAll('#app .sectie-kop')].find((x) => x.innerText.trim().toLowerCase().startsWith(titel.toLowerCase())); return k ? [k, k.nextElementSibling].filter(Boolean) : []; };
+  // Een kopje, of een ingeklapt onderwerp (Regels, Inzicht): dat klapt de rondleiding open
+  const sectie = (titel) => () => {
+    const t = titel.toLowerCase(); const k = [...document.querySelectorAll('#app .sectie-kop')].find((x) => x.innerText.trim().toLowerCase().startsWith(t)); if (k) return [k, k.nextElementSibling].filter(Boolean);
+    const d = [...document.querySelectorAll('#app details.onderwerp')].find((x) => x.querySelector('summary').innerText.trim().toLowerCase().startsWith(t)); if (d) { d.open = true; return [d]; } return [];
+  };
   const el = (sel) => () => { const e = document.querySelector(sel); return e ? [e] : []; };
   const rijMet = (tekst) => () => { const e = [...document.querySelectorAll('#app .rij')].find((x) => x.innerText.includes(tekst)); return e ? [e] : []; };
   // Het eerste doel dat iets vindt (de demo rekent vanaf vandaag; niet elke dag staat er hetzelfde)
