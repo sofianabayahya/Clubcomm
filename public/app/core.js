@@ -242,6 +242,7 @@
       if (ui.view && CC.views[ui.view.naam]) { const v = CC.views[ui.view.naam](S, ui.view); kop = v.titel; kopSub = v.sub == null ? null : v.sub; inhoud = v.html; terug = true; breed = !!v.breed; }
       else inhoud = R.schermen[ui.tab](S);
     } catch (err) { console.error(err); if (CC.meldFout) CC.meldFout(err, 'scherm'); inhoud = h.leeg(`Er ging iets mis op dit scherm: ${esc(err.message)}`, 'circle-alert'); }
+    if (!ui.view && R.breed && R.breed(S, ui.tab)) breed = true;
     // 27-10: lange schermen (Regels van de clubbeheerder, Inzicht) als onderwerpen die je openklapt
     if (!ui.view && ((rol.rol === 'beheerder' && ui.tab === 'regels') || ui.tab === 'inzicht')) inhoud = CC.klapSecties(inhoud, ui.tab === 'inzicht');
     const ctx = R.context(S);

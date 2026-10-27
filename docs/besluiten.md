@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 129)
+Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 130)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -17,14 +17,15 @@ Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 129)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 130 | Trainer: eigen tabblad Training (week met de training bovenaan, aanwezigheid in een venster, Vormen); ook bij AVV Swift, daar trainingen op datum | ✅ geldt |  |
 | 129 | Observeren: klok en turven bovenaan, snelle notities met minuut en onderwerp, aandachtspunten na afloop | ✅ geldt |  |
-| 128 | Trainingsmodule (proef): eigen oefenvormen en trainingen met spacing, varianten en aantallen | ✅ geldt |  |
+| 128 | Trainingsmodule (proef): eigen oefenvormen en trainingen met spacing, varianten en aantallen | ◐ deels herzien | door 130 (de training staat in het tabblad Training, niet meer onder Planning) |
 | 127 | Tekentool: loopactie en pass met boog als vaste soort | ✅ geldt |  |
 | 126 | Tekentool clean (rail met menu's, Veld/Opstelling/⚙ boven) en pijlen met boog en aanpasbare lengte | ✅ geldt |  |
 | 125 | Tekentool: rondje of driehoek per team kiezen; nummerbalk in- en uitklappen | ◐ deels herzien | door 126 (in- en uitklappen = het menu Spelers openen en sluiten) |
 | 124 | Tekentool: nummerbalk (rugnummers 1–11 en zonder nummer per team, op hun plek in de 1-4-3-3) en rood schijfje | ◐ deels herzien | door 126 (de nummerbalk staat in het menu Spelers) |
 | 123 | Opleidingsprofiel als gegevens; DCG-fundament ingevoerd (rest open), KNVB-standaard als bestand | ✅ geldt |  |
-| 122 | Tabbladen gelijk (Home links, Berichten rechts), één keer signaleren, Regels en Inzicht ingeklapt, laptop met menu links | ✅ geldt |  |
+| 122 | Tabbladen gelijk (Home links, Berichten rechts), één keer signaleren, Regels en Inzicht ingeklapt, laptop met menu links | ◐ deels herzien | door 130 (trainer met module Trainingen: Training in plaats van Planning) |
 | 121 | Richting trainingsmodule: opleidingsprofiel per club (standaard KNVB), vorm ≠ uitvoering, bouwen in fases, ClubComm stelt voor en de trainer kiest | ✅ geldt |  |
 | 120 | Inrichten: clubbeheerder op de laptop met startlijst; ClubComm-adviseur met overzicht van alle clubs | ✅ geldt |  |
 | 119 | Rechtentest per rol tegen de echte database, elke nacht, met alarm via de bewaking | ✅ geldt |  |
@@ -663,6 +664,20 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 130 — Trainer: een eigen tabblad Training; aanwezigheid in een venster
+*Besloten 27 oktober 2026: de initiatiefnemer koos uit twee voorbeelden "oplossing 2" ("ik wil echt dat training een aparte plek krijgt"). Schermafbeeldingen: `docs/onderzoek/trainingsmodule-2/tab-training.png` en `tab-aanwezigheid.png`. Geldt als de module **Trainingen** aan staat; zonder de module blijft het zoals in Besluit 122.*
+- **Tabbalk trainer:** Home · **Training** · Wedstrijd · Spelers · Berichten (Training komt op de plek van Planning).
+- **Training → Week:**
+  - de week (weekstrook) met bovenaan de gekozen training: standaard die van vandaag, anders de eerstvolgende;
+  - **één knop *Aanwezigheid · 10 van 12 verwacht ▾*** (na opslaan: *10 van 12 aanwezig · aanpassen*). Tik erop, dan opent een **venster** met de namen; *Opslaan* sluit het venster. Zo staat de training zelf bovenaan en is aanwezigheid één tik;
+  - daaronder meteen de training (thema, opbouw, terugblik) of de knop *Training voorbereiden of vastleggen*; die opent op dezelfde plek, niet op een aparte pagina;
+  - bij een wedstrijd: *Naar de wedstrijd*; afmelden voor de trainer (*Ik kan niet*) en *Planning aanpassen* blijven hier.
+- **Training → Vormen:** Mijn vormen (was Planning → Vormen).
+- **Spelers:** onderaan *Aanwezigheid: overzicht* (ingeklapt), dat stond eerst onder Planning.
+- **AVV Swift (pakket Trainers begeleiden):** tabbladen Home · **Training** · Berichten. Daar is geen planning, dus **trainingen op datum**: *Nieuwe training* → datum kiezen → dezelfde trainingspagina. Een lijst toont je trainingen, nieuwste eerst. De module zet de clubbeheerder aan (Regels → Modules); voor Swift heeft de initiatiefnemer erom gevraagd.
+- **Laptop:** het tabblad Training gebruikt de brede indeling (opbouw links, terugblik rechts).
+- Gegevens en rechten blijven gelijk (scope `eigen`); een training op datum heeft `los: true` en een `datum` in plaats van een activiteit.
+
 ## Besluit 129 — Observeren: tijdens de wedstrijd alleen kijken, tikken en kort typen; aandachtspunten na afloop
 *Besloten 27 oktober 2026, na een voorbeeld (`docs/onderzoek/begeleiding/`). Aanleiding: het wedstrijdbezoek van 24-10 bleef bijna leeg, omdat het observatiescherm ruim 6 schermen lang was (13 punten met elk drie knoppen en een tekstveld, turven onderaan). Werkt Besluit 99 (observatie zonder schaal) verder uit.*
 - **Bovenaan (wedstrijd):**
@@ -674,6 +689,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - Gegevens: notities in `obs.momenten` (zoals bij het evaluatieformulier, nu met onderwerp `k`), klok in `obs.wklok`. Het A4 en het delen met de trainer blijven gelijk. Het scherm is nu ± 2 schermen lang (was 6,5).
 
 ## Besluit 128 — Trainingsmodule in ClubComm (proef): eigen oefenvormen en trainingen met spacing
+*◐ Deels herzien door Besluit 130: de training en Vormen staan in het eigen tabblad Training.*
 *Besloten 27 oktober 2026, na een voorbeeld (`docs/onderzoek/trainingsmodule-2/tr-*.png`) met de training van de initiatiefnemer van die dag. Eerste bouwstap van Besluit 121 (fase 1). Module **Trainingen (proef)**, aan voor DCG.*
 - **Planning → training:** blok *Training* met *Training voorbereiden of vastleggen*. Een training heeft:
   - thema, leerdoelen (uit het opleidingsprofiel van de club), aantal spelers en keepers;
@@ -744,6 +760,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Een scherm Opleidingsprofiel** voor de HO komt na een voorbeeld.
 
 ## Besluit 122 — Tabbladen gelijk bij elke rol, één keer signaleren, lange schermen ingeklapt, laptop met menu links
+*◐ Deels herzien door Besluit 130: met de module Trainingen heeft de trainer Training in plaats van Planning.*
 *Besloten 27 oktober 2026, op verzoek "per direct" na de app-analyse (`docs/onderzoek/app-analyse-2026-10-27.md`).*
 - **Home altijd links, Berichten altijd rechts**, bij elke rol.
 - **Trainer:** Home · **Planning** (was Aanwezigheid: de week, aanwezigheid opnemen; hier komt straks ook de trainingsvoorbereiding en de vormenbank, Besluit 121) · **Wedstrijd** (was Speeltijd: wisselschema, scorebord, speeltijd dit seizoen) · Spelers · Berichten. Zelfde woorden als bij de teamleider en de coördinator.
@@ -1955,7 +1972,7 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 ## Later / ideeën
 
 - **Leerlijn die een training voorstelt, die je altijd aanpast** (vraag 27-10, Besluit 128): als de methodiek per week is uitgeschreven, zet ClubComm bij elke training het thema en de leerdoelen van de lijn klaar als **concept**, met passende vormen uit Mijn vormen. De trainer past aan op de opkomst en op wat er in de wedstrijd gebeurde ("ClubComm signaleert, mensen beslissen"). Advies: dit, niet alles zelf intikken en niet een vaste lijn.
-- **Trainingsmodule voor AVV Swift** (27-10): trainers in het pakket Trainers begeleiden krijgen ook *Training* (zonder planning: training op datum), en de HO ziet bij een begeleidingsmoment de training van die dag.
+- **HO ziet de training bij een begeleidingsmoment** (27-10; de rest van het idee *Trainingsmodule voor AVV Swift* is Besluit 130): bij een begeleidingsmoment ziet de HO de training van die dag. Vraagt een rechtenwijziging (nu scope `eigen`), dus eerst akkoord.
 - **Startopstelling bewaren in de tekentool** (idee 27-10, Besluit 124): je eigen beginpositie (bijv. 1-4-3-3 met tegenstander) met één tik bij elke nieuwe tekening. Nog niet besloten.
 - **Reismiddel bij de routeknop** (idee 27-10, Besluit 121): in het profiel één keer kiezen *auto · OV · fiets*; de routeknop opent de kaarten-app meteen zo. Geen adres bewaren. Eerst een voorbeeld.
 - **Huiswerk en filmpjes** (idee 24 sep 2026): de trainer deelt oefeningen voor thuis (een filmpje of een link) per team of per speler, gekoppeld aan de vaardigheden uit de beoordeling ("werken aan: aannemen"). Kind of ouder kan aangeven "gedaan". Eerst met links naar YouTube/Vimeo (geen eigen opslag). Filmpjes waarin kinderen te zien zijn alleen met toestemming van de ouders (AVG).

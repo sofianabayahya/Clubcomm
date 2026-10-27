@@ -3,6 +3,12 @@
 Wat we tijdens de pilot vinden, met de oorzaak en het patroon erachter. Doel: dezelfde soort fout niet twee keer maken.
 Besluiten staan in `besluiten.md`; dit is het logboek van fouten. Nieuwste bovenaan.
 
+## 27 oktober 2026 (eerste dag trainingsmodule)
+
+| Wat de gebruiker zag | Oorzaak | Opgelost | Patroon |
+|---|---|---|---|
+| Een aangepaste tekening van een oefenvorm werd niet opgeslagen (tekstwijzigingen wel) | De app ververst elke 30 seconden alle gegevens. Tijdens het tekenen werd de vorm vervangen door een nieuwe kopie; bij Opslaan kwam de tekening in de oude kopie, die niet meer bewaard werd | Na het tekenen de vorm opnieuw opzoeken; niet verversen zolang de tekentool open is; test die tijdens het tekenen ververst | **Momentopname / verversen**: een handeling die langer duurt (tekenen, een venster) mag nooit een oude kopie van de gegevens vasthouden. Altijd opnieuw opzoeken op id na de handeling |
+
 ## 24 oktober 2026 (eerste wedstrijd O12 talententeam)
 
 | Wat de gebruiker zag | Oorzaak | Opgelost | Patroon |

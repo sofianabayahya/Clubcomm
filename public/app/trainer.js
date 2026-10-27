@@ -334,8 +334,9 @@
   CC.on('naarWedstrijd', (el) => { CC.ui.seg.stWed = el.dataset.id; CC.go('speeltijd'); });
   CC.rollen.trainer = {
     context(S) { const t = M.team(S, CC.teamId()); return { titel: t.naam, sub: `Trainer · ${S.club.naam}` }; },
+    breed: (S, tab) => tab === 'aanwezigheid' && !!(CC.trainingAan && CC.trainingAan(S)), // Besluit 130: Training op de laptop breed
     tabs(S) { const me = CC.me(); // 27-10: logische volgorde, Home links en Berichten rechts; Planning = de week (aanwezigheid, straks de trainingsvoorbereiding), Wedstrijd = wisselschema en speeltijd
-      return [['home', 'Home', 'house'], ['aanwezigheid', 'Planning', 'calendar-days'], S.club.modules.speeltijd && ['speeltijd', 'Wedstrijd', 'trophy'], ['spelers', 'Spelers', 'users'], ['berichten', 'Berichten', 'message-circle', M.ongelezen(S, me.id)]]; },
+      return [['home', 'Home', 'house'], (CC.trainingAan && CC.trainingAan(S) ? ['aanwezigheid', 'Training', 'list-checks'] : ['aanwezigheid', 'Planning', 'calendar-days']), S.club.modules.speeltijd && ['speeltijd', 'Wedstrijd', 'trophy'], ['spelers', 'Spelers', 'users'], ['berichten', 'Berichten', 'message-circle', M.ongelezen(S, me.id)]]; },
     schermen: {
       home(S) {
         const tid = CC.teamId(); const t = M.team(S, tid); const me = CC.me();
@@ -379,6 +380,7 @@
           ${h.actieBlok(acties, 'nieuwe berichten, aanmeldingen, aanwezigheid die nog open staat of spelers die vaak afwezig zijn')}`;
       },
       aanwezigheid(S) {
+        if (CC.trainingAan && CC.trainingAan(S)) return CC.trainingTab(S); // Besluit 130: tabblad Training
         const tid = CC.teamId(); const modus = h.segVal('aanwModus', 'opnemen');
         // Besluit 128: met de module Trainingen ook het segment Vormen (eigen oefenvormen)
         const segs = [['opnemen', 'Opnemen'], ['overzicht', 'Overzicht'], ...(CC.trainingAan && CC.trainingAan(S) ? [['vormen', 'Vormen']] : [])];
@@ -386,7 +388,7 @@
         if (modus === 'vormen' && segs.length > 2) return h.seg('aanwModus', segs, 'opnemen') + CC.vormenLijst(S);
         const ma = (() => { const d = D.parse(D.vandaag()); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return D.iso(d); })();
         // Besluit 91: alleen dagen die nog iets vragen: vandaag en later, en eerdere dagen zolang je de aanwezigheid nog kunt invullen
-        const acts = M.acts(S, tid, D.addDays(ma, -7), D.addDays(ma, 13)).filter((a) => a.datum >= D.vandaag() || kanOpnemen(a));
+        const acts = CC.weekActs(S, tid);
         const standaard = (acts.find((a) => a.datum === D.vandaag()) || acts.filter((a) => a.datum <= D.vandaag()).pop() || acts[0]);
         const kies = h.segVal('aanwAct', standaard && standaard.id);
         const a = acts.find((x) => x.id === kies) || standaard;
@@ -402,7 +404,8 @@
           ${(() => { const open = S.aanm.filter((x) => x.teamId === tid && x.status === 'open').length; return open ? `<div class="lijst">${h.rij({ ic: 'user-check', titel: `${open} aanmelding${open > 1 ? 'en' : ''} om goed te keuren`, sub: M.team(S, tid).teamleiderId ? 'Meestal doet de teamleider dit; jij kunt het ook' : 'Jij keurt goed (dit team heeft geen teamleider)', act: 'open', attrs: 'data-view="aanmeldingen"' })}</div>` : ''; })()}
           ${(() => { const F = CC.spelerFilter(S, tid, true); return `${F.bar}<div class="lijst">${F.lijst.map(({ pl, vs, b }) => h.rij({ ic: h.avatar(pl.voornaam), titel: esc(M.naam(S, pl)), sub: [pl.positie === 'keeper' ? 'keeper' : '', vs && vs.code !== 'verwacht' ? h.chip(vs) : '', b ? `beoordeeld (${esc(b.m.naam.toLowerCase())})` : 'nog niet beoordeeld'].filter(Boolean).join(' · '), act: 'spelerKaart', attrs: `data-id="${pl.id}"` })).join('') || h.leeg('Nog geen spelers')}</div>`; })()}
           ${!(M.team(S, tid) || {}).teamleiderId && CC.pushBlok ? CC.pushBlok(S, tid) : ''}
-          ${CC.materiaalStatus && S.club.modules.materiaal ? `${h.sectie('Team')}<div class="lijst">${CC.materiaalStatus(S, tid)}</div>` : ''}`;
+          ${CC.materiaalStatus && S.club.modules.materiaal ? `${h.sectie('Team')}<div class="lijst">${CC.materiaalStatus(S, tid)}</div>` : ''}
+          ${CC.trainingAan && CC.trainingAan(S) ? `<details class="uitklap"><summary>Aanwezigheid: overzicht</summary>${CC.overzichtHtml(S, tid)}</details>` : ''}`;
       },
       speeltijd: (S) => CC.speeltijdHtml(S, CC.teamId()),
     },
@@ -413,6 +416,9 @@
   // Overzicht per speler (trainer + teamleider)
   // Besluit 86: de enige plek voor de cijfers. Eerst wie aandacht vraagt (onder de norm, kaarten of langdurig afwezig),
   // de rest van het team ingeklapt.
+  // Besluit 91: alleen dagen die nog iets vragen: vandaag en later, en eerdere dagen zolang je de aanwezigheid nog kunt invullen
+  CC.weekActs = (S, tid) => { const ma = (() => { const d = D.parse(D.vandaag()); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return D.iso(d); })();
+    return M.acts(S, tid, D.addDays(ma, -7), D.addDays(ma, 13)).filter((a) => a.datum >= D.vandaag() || kanOpnemen(a)); };
   CC.overzichtHtml = (S, tid) => {
     const per = M.periode(S, h.segVal('ovPer', 'blok')); const t = M.team(S, tid);
     const rijen = M.spelers(S, tid).map((pl) => { const st = M.stats(S, pl, per); return { pl, st, k: M.kaarten(S, pl), z: M.zone(S, st, tid) }; }).sort((a, b) => (a.st.pct ?? 101) - (b.st.pct ?? 101));
