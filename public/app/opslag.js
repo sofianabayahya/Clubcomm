@@ -8,7 +8,7 @@
   const leeg = () => ({
     v: 8, gen: '', club: {}, teams: [], people: [], players: [], acts: [], afm: [], pres: {}, lang: [], gesprekken: [], msgs: [],
     vervoer: {}, taken: [], opgave: [], aanm: [], beoord: {}, notities: {}, speeltijd: { min: {}, schema: {}, keeper: {}, mogelijk: {} }, wijzigingen: [],
-    demo: {}, materiaal: {}, mails: [], trainerLog: [], trainerGesprekken: [], ontwGesprek: [], ontwVoorb: {}, ontwVerslag: {}, ontwNotitie: {}, teamVaardig: {}, teamKeuze: {}, bezorgd: {}, profielen: {}, wedVoorstel: {}, sigSinds: {}, signaalAfgedaan: [],
+    demo: {}, materiaal: {}, mails: [], trainerLog: [], trainerGesprekken: [], ontwGesprek: [], ontwVoorb: {}, ontwVerslag: {}, ontwNotitie: {}, teamVaardig: {}, teamKeuze: {}, bezorgd: {}, profielen: {}, vormen: [], trainingsplannen: [], wedVoorstel: {}, sigSinds: {}, signaalAfgedaan: [],
     gezienInfo: {}, mijlpaalGezien: {}, autoVerstuurd: {}, beoordGedeeld: {}, beoordGezien: {},
     trainerDossier: {}, trainerKennis: {}, trainerAdmin: {}, trainerNotities: {}, begeleidMomenten: [], begeleidZelf: {}, begelHoVerslag: {},
     // voorkomt dat de demo-onderdelen voorbeelddata toevoegen
@@ -40,6 +40,9 @@
     ['trainerLog', 'teamstaf', (r) => ({ team: r.teamId, act: r.actId })],
     ['trainerGesprekken', 'hjo', () => ({})],
     ['ontwGesprek', 'team', (r) => ({ team: r.teamId, speler: r.spelerId || null })],
+    // Besluit 128: eigen oefenvormen en trainingen van de trainer (scope eigen: alleen de maker leest en schrijft)
+    ['vormen', 'eigen', (r) => ({ persoon: r.eigenaar, team: r.teamId || null })],
+    ['trainingsplannen', 'eigen', (r) => ({ persoon: r.eigenaar, team: r.teamId || null, act: r.actId || null })],
     ['signaalAfgedaan', 'teamstaf', (r) => ({ team: r.teamId, speler: r.spelerId || null }), (r) => `${r.sleutel}|${r.tijd}`],
   ];
   // Objecten met één rij per sleutel: [soort, pad, scope, velden(sleutel, waarde) ]

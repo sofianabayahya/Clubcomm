@@ -1342,3 +1342,38 @@ test('tekentool: loopactie met boog', async ({ page }) => {
   expect(p.k).toBe('run'); expect(p.cy).toBeLessThan(p.y1 - 40);
   expect(fouten).toEqual([]);
 });
+
+// Besluit 128: trainingsmodule (proef) in de echte versie: training voorbereiden, spacing, nieuwe vorm met leerdoel uit het profiel.
+// Alles komt in de database met scope 'eigen' op naam van de trainer.
+test('trainingsmodule: training voorbereiden en eigen vorm (echte versie)', async ({ page }) => {
+  const fouten = volgFouten(page);
+  await nepDatabase(page);
+  const profiel = JSON.parse(require('fs').readFileSync(require('path').join(__dirname, '..', 'supabase', 'profielen', 'dcg.json'), 'utf8'));
+  await page.evaluate((data) => { const db = JSON.parse(sessionStorage.getItem('fake-sb-db'));
+    db.rows['dcg|profiel|dcg'] = { club_id: 'dcg', soort: 'profiel', id: 'dcg', scope: 'hjo', data };
+    db.rows['dcg|club|club'].data.modules = { ...(db.rows['dcg|club|club'].data.modules || {}), training: true };
+    sessionStorage.setItem('fake-sb-db', JSON.stringify(db)); }, profiel);
+  await inloggen(page, 'admin@test.nl');
+  await page.evaluate(() => { const S = CC.S(); CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer'));
+    S.acts.push({ id: 'tTest', teamId: 'O12-1', soort: 'training', datum: CC.date.vandaag(), tijd: '18:30', eind: '19:45' }); CC.save(); CC.render(); });
+  await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
+  await page.locator('.weekstrook [data-val="tTest"]').click();
+  await page.locator('[data-act="tpNieuw"]').click();
+  await page.fill('#tp-th', 'Dreigen en passeren'); await page.locator('#tp-th').press('Tab');
+  await page.locator('label.tr-chip', { hasText: '1v1 aanvallend' }).click();
+  await page.locator('[data-act="tpSpacing"]').click();
+  await page.locator('[data-act="tpVormKiezen"]').click();
+  await page.locator('#sheet [data-act="vormNieuw"]').click();
+  await page.fill('#v-n', 'Skills passeren in kruisvorm'); await page.locator('#v-n').press('Tab');
+  await page.locator('[data-act="terug"]').click();
+  await expect(page.locator('.tr-rij')).toHaveCount(2);
+  await expect(page.locator('#app')).toContainText('Skills passeren in kruisvorm');
+  await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'trainingsplannen').map((r) => `${r.scope}|${r.persoon_id}|${r.act_id}|${r.data.onderdelen.length}|${r.data.leerdoelen.join()}`).join(), { message: 'training in de database' })
+    .toBe('eigen|p-beheer|tTest|2|ll-1v1-aanvallend');
+  await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'vormen').map((r) => `${r.scope}|${r.persoon_id}|${r.data.naam}`).join()).toBe('eigen|p-beheer|Skills passeren in kruisvorm');
+  // Vormen-lijst onder Planning
+  await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
+  await page.locator('[data-act="seg"][data-val="vormen"]').click();
+  await expect(page.locator('.tr-kaart')).toHaveCount(1);
+  await controleer(page, fouten, 'trainingsmodule');
+});

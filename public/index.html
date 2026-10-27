@@ -11,12 +11,45 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="ClubComm">
   <link rel="stylesheet" href="app/app.css">
+  <link rel="stylesheet" href="app/tekentool.css">
 </head>
 <body>
   <!-- ClubComm (ontwerp volgens docs/besluiten.md). -->
   <div id="app"></div>
   <div id="sheet" hidden></div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <!-- Tekentool (Besluit 121/128): zelfde opmaak als /tekenen -->
+<div class="overlay" id="drawOverlay" hidden>
+  <div class="draw-app" role="dialog" aria-modal="true" aria-label="Tekentool">
+    <div class="draw-top">
+      <button type="button" class="btn ghost small" id="drawCancel">Annuleren</button>
+      <b class="draw-title">Tekentool</b>
+      <div class="draw-top-act">
+        <button type="button" class="btn ghost small" id="drawUndo" title="Ongedaan maken (Ctrl/Cmd+Z)">Ongedaan maken</button>
+        <button type="button" class="btn ghost small" id="drawRedo" title="Opnieuw (Ctrl/Cmd+Shift+Z)">Opnieuw</button>
+        <button type="button" class="btn primary small" id="drawSave">Opslaan</button>
+      </div>
+    </div>
+    <div class="draw-phone" id="drawPhone" hidden><span><b>Tip:</b> uittekenen gaat het snelst op een laptop (grotere knoppen, muis en sneltoetsen). Op de telefoon kun je wel kleine dingen aanpassen.</span><button type="button" id="drawPhoneX" aria-label="Tip sluiten">&times;</button></div>
+    <div class="draw-body">
+      <aside class="draw-tools" id="drawTools"></aside>
+      <div class="draw-stage">
+        <div class="draw-hint" id="drawHint"></div>
+        <svg id="drawSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1050 680" role="img" aria-label="Veld"></svg>
+        <div class="draw-selbar" id="drawSelBar" hidden>
+          <span class="draw-selcount" id="drawSelCount" hidden></span>
+          <button type="button" class="btn ghost small" id="drawDup" title="Dupliceren (Ctrl/Cmd+D)">Dupliceren</button>
+          <button type="button" class="btn ghost small" id="drawEditText">Tekst wijzigen</button>
+          <button type="button" class="btn ghost small" id="drawNumber">Rugnummer +1</button>
+          <button type="button" class="btn ghost small" id="drawRotate">Draaien</button>
+          <button type="button" class="btn ghost small" id="drawMaat">Maat verbergen</button>
+          <span class="draw-kleur" id="drawKleur" hidden></span>
+          <button type="button" class="btn ghost small" id="drawDelete" style="color:var(--low); border-color:var(--low-soft);">Verwijderen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
   <script src="app/vendor/icons.js"></script>
   <script src="app/vendor/qrcode.js"></script>
   <script src="app/vendor/supabase.js"></script>
@@ -43,6 +76,8 @@
   <script src="app/trainers.js"></script>
   <script src="app/begeleiding.js"></script>
   <script src="app/opstelling.js"></script>
+  <script src="app/tekentool.js"></script>
+  <script src="app/training.js"></script>
   <script src="app/adres.js"></script>
   <script src="app/push.js"></script>
   <script src="app/live.js"></script>

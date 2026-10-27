@@ -717,3 +717,39 @@ small.bewaard.ok { color: var(--groen); } small.bewaard.fout { color: var(--rood
   body:not(.rl) .inhoud.breed { max-width: 1280px; }
   body:not(.rl) .toast { left: calc(50% + 116px); bottom: 24px; }
 }
+/* Besluit 128: trainingsmodule (training en vormen); op de laptop twee kolommen */
+.tr-lay { display: flex; flex-direction: column; gap: 12px; }
+.tr-kol { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+@media (min-width: 1100px) { body:not(.rl) .tr-lay { display: grid; grid-template-columns: 1.15fr 1fr; gap: 20px; align-items: start; } }
+.tr-kop { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.tr-balk { display: flex; height: 12px; border-radius: 99px; overflow: hidden; gap: 2px; margin: 4px 0 2px; }
+.tr-balk i { display: block; height: 100%; }
+.tr-lijst { display: flex; flex-direction: column; }
+.tr-rij { display: flex; gap: 10px; align-items: center; width: 100%; min-height: 60px; padding: 8px 0; border: 0; border-top: 1px solid var(--lijn); background: none; text-align: left; font: inherit; color: var(--inkt); cursor: pointer; }
+.tr-lijst .tr-rij:first-child { border-top: 0; }
+.tr-mini { width: 64px; height: 46px; flex: none; border-radius: 8px; overflow: hidden; background: #2f7d32; display: grid; place-items: center; color: #fff; }
+.tr-mini svg { width: 100%; height: 100%; }
+.tr-mini.sp { background: var(--oranje-l, #fff4e5); color: #8a4b00; font-size: 12px; font-weight: 700; }
+.tr-t { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.tr-t b { font-size: 16px; } .tr-t small { color: var(--zacht); font-size: 14px; }
+.tr-t .tr-ld { color: #137333; font-weight: 600; }
+.tr-min { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; font-weight: 700; white-space: nowrap; }
+.tr-min .st { font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: #fff4e5; color: #8a4b00; }
+.tr-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 12px; margin: 0 6px 6px 0; border: 1px solid var(--lijn); border-radius: 999px; background: var(--vlak); font-weight: 600; font-size: 15px; cursor: pointer; }
+.tr-chip input { width: 18px; height: 18px; accent-color: var(--blauw); }
+.tr-chip:has(input:checked) { background: var(--blauw-l); border-color: transparent; color: var(--blauw-d); }
+.tr-groot { background: #2f7d32; border-radius: 12px; overflow: hidden; min-height: 120px; display: grid; place-items: center; color: #fff; }
+.tr-groot svg { display: block; width: 100%; height: auto; }
+.tr-groot .leeg { color: #fff; } .tr-groot .leeg p { color: #fff; }
+.tr-groot.klein { margin-top: 6px; }
+.tr-raster { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+.tr-kaart { display: flex; flex-direction: column; border: 1px solid var(--lijn); border-radius: 14px; overflow: hidden; background: var(--vlak); padding: 0; text-align: left; font: inherit; color: var(--inkt); cursor: pointer; }
+.tr-teken { background: #2f7d32; aspect-ratio: 3 / 2; display: grid; place-items: center; color: #fff; overflow: hidden; }
+.tr-teken svg { width: 100%; height: 100%; }
+.tr-kaart .tr-t { padding: 10px 12px 12px; }
+.drie { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.tr-chips { border: 0; padding: 0; margin: 0; } .tr-chips legend { font-size: 13px; font-weight: 700; color: var(--zacht); margin-bottom: 6px; padding: 0; }
+.tr-mini .ic, .tr-teken .ic { width: 22px; height: 22px; opacity: .8; }
+/* Vorm: telefoon = tekening, gegevens, varianten; laptop = tekening en varianten links, gegevens rechts */
+.tr-vorm .tr-a { order: 1; } .tr-vorm .tr-b { order: 2; } .tr-vorm .tr-c { order: 3; }
+@media (min-width: 1100px) { body:not(.rl) .tr-lay.tr-vorm { grid-template-areas: "a b" "c b"; } body:not(.rl) .tr-vorm .tr-a { grid-area: a; } body:not(.rl) .tr-vorm .tr-b { grid-area: b; } body:not(.rl) .tr-vorm .tr-c { grid-area: c; } }
