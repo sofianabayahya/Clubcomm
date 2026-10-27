@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
+Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 120)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -17,6 +17,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 120 | Inrichten: clubbeheerder op de laptop met startlijst; ClubComm-adviseur met overzicht van alle clubs | ✅ geldt |  |
 | 119 | Rechtentest per rol tegen de echte database, elke nacht, met alarm via de bewaking | ✅ geldt |  |
 | 118 | Tikvlakken minimaal 44 pt: keuze- en filterknoppen, balkjes, rolwissel, profielknop | ✅ geldt |  |
 | 117 | Vangnet: mag de timekeeper iets niet opslaan, dan gaat het als voorstel naar de trainer (één tik overnemen) | ✅ geldt |  |
@@ -25,7 +26,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 | 114 | De demo is één verhaal (een week bij de democlub); het bestuur kiest de hoofdstukken; afmelden gebeurt echt | ✅ geldt |  |
 | 113 | Drie lagen: tabblad → venster → pagina; spelerskaart, trainerkaart en "Aangekomen bij" als venster, vegen om te sluiten | ✅ geldt |  |
 | 112 | Anoniem tellen welke schermen gebruikt worden; overzicht voor de clubbeheerder | ✅ geldt |  |
-| 111 | App-controle: dubbel tikken, Beperk beweging, kleur statusbalk, notch op de inlogpagina | ✅ geldt |  |
+| 111 | App-controle: dubbel tikken, Beperk beweging, kleur statusbalk, notch op de inlogpagina | ◐ deels herzien | door 120 (laptop met kolommen voor de schermen van de clubbeheerder) |
 | 110 | Verzamelen voor wedstrijden is clubbeleid, per leeftijd | ✅ geldt |  |
 | 109 | Posities in procenten van de gespeelde minuten | ◐ deels herzien | door 116 (alleen de trainer ziet de procenten en minuten) |
 | 108 | Verzameltijd per team: thuis en uit zoveel minuten voor de aftrap | ◐ deels herzien | door 110 (geen instelling per team meer: clubregel per leeftijd) |
@@ -40,7 +41,7 @@ Laatst bijgewerkt: 10 oktober 2026 (t/m Besluit 99; principe 10)
 | 99 | Trainers begeleiden via een traject, met de KNVB-begeleidingscyclus; tabblad Trainers | ◐ deels herzien | door 100 (vragenlijst kort of uitgebreid per niveau; notities gedeeld per bouw met de TC); door 101 (vragenlijst vooraf per soort) |
 | 98 | Verantwoordelijkheid: iedere rol doet zijn eigen werk, de laag erboven is het vangnet | ✅ geldt |  |
 | 97 | Bouwen, werkgebied en focus, signalen die ertoe doen, trainersdossier | ◐ deels herzien | door 99 (traject per trainer in plaats van 2 + 2; tabblad Trainers; VOG en diploma bij de coördinator); door 100 (werkgebied bij de rol, rol TC gebouwd) |
-| 96 | Eén aanspreekpunt: de clubbeheerder (van de club) en de ClubComm-adviseur (van ons) | ✅ geldt |  |
+| 96 | Eén aanspreekpunt: de clubbeheerder (van de club) en de ClubComm-adviseur (van ons) | ◐ deels herzien | door 120 (startlijst en Inrichten voor de clubbeheerder, Mijn clubs voor de adviseur; meekijken alleen met toestemming) |
 | 95 | Twee lijnen: voetbal (HO) en organisatie (coördinator) | ◐ deels herzien | door 96 (clubbeheerder en ClubComm-adviseur), 97 (bouwen, focus, dossier; nieuwe bouwvolgorde), 99 (traject per trainer in plaats van 2 + 2 voor iedereen) |
 | 94 | Training afgelasten met eigen toelichting | ◐ deels herzien | door 95 (de HJO-knop Afgelasten ligt nu bij de coördinator) |
 | 93 | Evaluatieformulier praktijkbegeleiding coach (testcase, mijnclubcomm.nl/evaluatie) | ◐ deels herzien | door 95 (wordt later de module Trainers begeleiden in de app), 97 (in het trainersdossier) |
@@ -653,6 +654,15 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 120 — Inrichten: de clubbeheerder op de laptop met een startlijst, de ClubComm-adviseur met een overzicht van alle clubs
+*Besloten 27 oktober 2026, na een voorbeeld (laptop; `docs/onderzoek/inrichten/`). Aanleiding: de app is groot geworden en elke club heeft eigen wensen; inrichten moet goed te beheren zijn. Werkt Besluit 96 uit en herziet Besluit 111 voor de schermen van de clubbeheerder.*
+- **Allebei, elk met een eigen taak.** De **ClubComm-adviseur** (van ons) maakt een club aan (naam, pakket, e-mailadres van de clubbeheerder), begeleidt de inrichting en ziet hoe het met elke club gaat. De **clubbeheerder** (van de club) richt de eigen club in en houdt die bij.
+- **Start van een nieuwe club:** (1) de adviseur maakt de club aan → (2) de clubbeheerder krijgt een uitnodiging en opent ClubComm op de laptop → (3) het eerste gesprek doen ze samen; daarna gaat de clubbeheerder zelf verder met de **startlijst**: club en pakket · seizoen en vakanties · bouwen en teams · rooster · staf · rollen · spelers en ouders · regels · opleidingsprofiel · proefweek met één team · iedereen uitnodigen. Stoppen en later verder kan; alles wordt bewaard.
+- **Eén app, geen aparte beheer-app.** De schermen van de clubbeheerder heten **Inrichten** (niet "dashboard", Besluit 8). Op de laptop (vanaf 1100 px) staan ze breed: links de onderwerpen, in het midden het werk, rechts de stand (*Klaar voor gebruik?*: teams met rooster, teams met trainer, spelers met ouder). Op de telefoon blijft alles werken.
+- **Mijn clubs (adviseur):** één overzicht met per club pakket, stand van de inrichting, clubbeheerder, gebruik (4 weken) en wat aandacht vraagt. **Alleen aantallen, geen namen van spelers of ouders.** In een club meekijken kan alleen als de clubbeheerder het toestaat, voor een afgesproken periode (verwerkersovereenkomst).
+- **Naam:** ClubComm-**adviseur** (niet "manager": afgewezen in Besluit 96).
+- **Volgorde:** (1) na 31 okt: Regels en Rollen overzichtelijk (stond al bij "layout naar een 9") = begin van Inrichten → (2) laptopindeling met startlijst → (3) december: account voor de adviseur met *Mijn clubs* (rechtenwijziging: één account bij meerdere clubs; controles in de rechtentest vóór het online gaat, Besluit 119). Elk scherm eerst een voorbeeld.
+
 ## Besluit 119 — Rechtentest per rol, elke nacht
 *Besloten 24 oktober 2026, na de beoordeling (betrouwbaarheid 6,5). Aanleiding: drie fouten deze week (chauffeur, coördinator, timekeeper) die de demo en de app-tests niet lieten zien, omdat die de echte rechtenregels niet kennen.*
 - **`priv.rechtentest()`** (migratie 030) maakt in de database een testclub met HJO, coördinator, trainer, teamleider, ouders en een timekeeper, probeert per rol 32 acties (lezen en schrijven) en vergelijkt dat met wat hoort. Alles wordt aan het eind teruggedraaid: er blijft niets achter.
@@ -717,6 +727,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - Techniek: tabel `schermgebruik`, functies `tel_scherm` en `schermgebruik_overzicht` (migratie 028).
 
 ## Besluit 111 — App-controle (normen uit het starterspakket van de trainer)
+> **◐ Deels herzien door Besluit 120 (laptop met kolommen voor de schermen van de clubbeheerder)** (zie Register).
 *Besloten 23 oktober 2026. ClubComm nagelopen met `docs/app-controle.md` (technieken, normen en ontwerpregels uit mijnrijlesplanner).*
 - **Dubbel tikken telt één keer:** dezelfde knop binnen 0,35 seconde, of hetzelfde formulier binnen 1,5 seconde, doet maar één keer iets (geen dubbel bericht, geen twee blokken verder in het wisselschema). Snel op verschillende knoppen tikken blijft werken.
 - **Beperk beweging:** staat die instelling op de telefoon aan, dan schuiven vensters en overgangen niet meer.
@@ -871,6 +882,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Bouwvolgorde (vervangt die van Besluit 95):** (1) bouwen als clubindeling · (2) focus voor de HO, rapport Trainers per bouw · (3) trainer niet gekomen (app signaleert, coördinator of HO bevestigt, push) · (4) trainersdossier en module Trainers begeleiden met het evaluatieformulier, volglijst, werkdruk · (5) rol technisch coördinator met werkgebied · (6) de nieuwe signalen, stap voor stap.
 
 ## Besluit 96 — Eén aanspreekpunt: de clubbeheerder (van de club) en de ClubComm-adviseur (van ons)
+> **◐ Deels herzien door Besluit 120 (Inrichten met startlijst voor de clubbeheerder, Mijn clubs voor de adviseur)** (zie Register).
 *Besloten 10 oktober 2026. Vult Besluit 12 en 95 aan.*
 - **Clubbeheerder:** **één persoon per club** die aan de knoppen van ClubComm draait (rollen, taken, modules, regels, seizoen). Dat kan de voorzitter zijn, een coördinator of de verenigingsmanager; vaak een dubbele rol. Hij is het **enige aanspreekpunt** van de club voor ClubComm, zodat er altijd één communicatielijn is.
 - **ClubComm-adviseur** (van ons, de aanbieder; naar het voorbeeld van de verenigingsadviseur van de KNVB): biedt ClubComm aan, richt de app samen met de clubbeheerder in, leert het hem aan en is zijn vaste contact. Loopt de clubbeheerder ergens tegenaan of wil de club iets aanpassen, dan belt hij de ClubComm-adviseur en gaan ze samen in gesprek.
@@ -1831,6 +1843,7 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 
 ## Later / ideeën
 
+- **Klaar voor gebruik? als vaste seizoenscontrole** (idee 27-10, Besluit 120): het blok blijft na de start zichtbaar voor de clubbeheerder, bijv. "4 teams zonder rooster voor het nieuwe seizoen". Nog niet besloten.
 - **Huiswerk en filmpjes** (idee 24 sep 2026): de trainer deelt oefeningen voor thuis (een filmpje of een link) per team of per speler, gekoppeld aan de vaardigheden uit de beoordeling ("werken aan: aannemen"). Kind of ouder kan aangeven "gedaan". Eerst met links naar YouTube/Vimeo (geen eigen opslag). Filmpjes waarin kinderen te zien zijn alleen met toestemming van de ouders (AVG).
 - **Fondsenwerving en teamkas** (idee 24 sep 2026, zoals bij Spond): acties voor het team of de club (bijv. een toernooi, nieuwe trainingspakken), bijdragen via een betaallink (bijv. Tikkie of Mollie), met een teller "zoveel opgehaald". Alleen via de penningmeester of het bestuur; eerst uitzoeken wat de club wil en mag. Mogelijk ook een verdienmodel voor ClubComm.
 - **Beloningen** (punten, contributie terugverdienen) als optionele module die de HJO per club of team aanzet.
