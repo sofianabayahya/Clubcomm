@@ -72,3 +72,33 @@
 - *Meer:* fase, speelrichting, omschakeling. Combineerbaar, met de knop *Wis*. Wat niet past, staat ingeklapt onderaan.
 - Leeftijd volgt vanzelf uit het team.
 - Materiaal en favoriete zoekopdrachten: later, bij de clubbank.
+
+---
+
+# Versie 2 (27-10-2026): verfijningen na de methodologische beoordeling
+*Voorbeelden: `v2-classificatie.png`, `v2-kijk.png` (de tekening is een plaatsvervanger), `v2-training.png`, `v2-terugblik.png`. Oranje omlijnd = nieuw ten opzichte van versie 1. Nog geen besluit; bouwen pas na akkoord.*
+
+| # | Verfijning | Datamodel | Telefoon |
+|---|---|---|---|
+| 1 | 8 hoofdtypes blijven; **Patroon / tactisch**; afwerkvorm zelfstandig; **functioneel / linietactisch** als aanvullende aanduiding; omschakeling met richting | `type: 'patroon'`, `aanduiding: ['functioneel']`, `omschakeling: null \| 'av' \| 'va' \| 'beide'` (was ja/nee) | Chip *+ functioneel / linietactisch*. Omschakeling: *geen · aanval → verdediging · verdediging → aanval · beide* |
+| 2 | Fase bij de uitvoering; vorm heeft een **aanbevolen fase** (optioneel); A1/B1 en A2/B2 stellen voor | Vorm: `faseAdvies` (optioneel). Onderdeel: `fase` alleen als de trainer kiest. Voorstel = `faseAdvies` → anders sjabloon (x1 = oefenleer, x2 en partij = toepassing) | Gestippeld label *oefenleer · voorstel*; doorgetrokken als de trainer het vastzet |
+| 3 | Weerstand: getallen uit de aantallen, **perspectief uit het hoofdleerdoel** | `aantal: {aanval, verdediging, neutraal, keepers}`. Het profiel geeft per leerdoel `kant: 'aanval' \| 'verdediging'`. Neutralen tellen mee met de partij in balbezit. `weerstandExtra` passief/afleiding/wisselend → dan geen over- of ondertal | *Vanuit de verdedigers: 2 tegen 4 · ondertal*. Kant onbekend → alleen *3+1 tegen 2*. Passief → *passieve weerstand* |
+| 4 | DCG-profiel klaar voor **8 spelprincipes** (2 per teamfunctie) en **leerdoelen als observeerbaar gedrag** | `spelprincipes.items`: 8 vaste plekken (`sp-aan-1`…`sp-omav-2`, `teamfunctie`, `naam: null`, status *leeg*). Nieuw `leerdoelen.items`: `{id, gedrag, leerlijn?, spelprincipe?, kant}`. Trainers zien lege plekken niet | Niets nieuws, tot de inhoud is vastgesteld |
+| 5 | **Sjabloon 75 min** als pilot: start 8 · A1 6 · S 3 · A2 10 · B1 6 · S 3 · B2 10 · partij 22 · ombouw 7 | In het profiel `trainingsopbouw.sjablonen` (nu leeg) → *DCG 75*. Onderdeel krijgt `blok` (start, A1, S, A2, B1, B2, P). Ombouw = één regel zonder inhoud | *Opbouw · sjabloon DCG 75*: lege plekken met **+**, minuten aanpasbaar. **Spacing blijft vrij in te vullen**: geen leerdoel en geen vaste functie tot de definitie er is |
+| 6 | 6e leerlijn niet definitief | `ll-6` blijft status *controleren* (niet kiesbaar), met `kandidaten: ['beschermen/vrijmaken', 'schieten/afronden']` | Niets |
+| 7 | **Gepland ≠ uitgevoerd**; alleen het **hoofdleerdoel** krijgt minuten | Onderdeel: `min` (gepland) en `minUit` (uitgevoerd, na *Training is gegeven*; 0 = niet gedaan). Minuten tellen alleen voor het hoofdleerdoel van dat onderdeel. Secundair telt als *ook geraakt × keer*. Start, spacing en ombouw tellen niet mee | In de terugblik: *Hoeveel minuten echt?*, ingevuld met gepland. Ingeklapt: *maand: minuten per hoofdleerdoel* |
+| 8 | **Concept** mag onvolledig; **publiceren** in de vormenbank heeft minimale eisen | `status: 'concept' \| 'gepubliceerd'`. Eisen bij publiceren (5): naam, tekening of organisatie, hoofdtype, aantallen, hoofdleerdoel | Eigen vormen: nergens verplicht. *Delen met de club* (later) toont wat nog mist |
+
+## Spacing eerst definiëren (vragen voor de methodiek)
+Wat moet spacing doen? Mogelijke betekenissen:
+- **loslaten:** het geleerde even laten rusten, zodat het beter beklijft;
+- **herstel:** fysiek laag;
+- **contrast:** iets heel anders, bijvoorbeeld hooghouden of bowlen;
+- **spelend leren:** een klein spel met een winnaar.
+
+Pas als dat vaststaat, krijgt spacing een eigen soort of eigen regels. Tot die tijd: naam, minuten en notitie, of een vorm.
+
+## Bewust niet (geen extra schermen of verplichtingen)
+- Geen apart classificatiescherm (het blok staat in *Bewerken*).
+- Geen apart periodiseringsscherm (één ingeklapt blok in Training).
+- Geen verplichte velden voor eigen vormen.
