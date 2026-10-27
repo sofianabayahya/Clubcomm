@@ -64,7 +64,11 @@
         { t: "wall", label: "Muur / lijn" } ] },
       { group: "Volgorde en markeren", items: [ { t: "num", label: "Nummer" }, { t: "zone", label: "Vak markeren" }, { t: "text", label: "Tekst (bv. 5P)" } ] }
     ];
-    var st = null; // { field, items, tool, sel, drag, undo, onSave, num }
+    var st = null; // { field, items, tool, sel, drag, undo, onSave, num, vormen }
+    // Besluit 125: per tekening kiezen welk team een rondje of een driehoek is ({ rood: "t", geel: "c" }); trainer en keeper blijven driehoek.
+    function vormVan(c){ var tm = TEAM[c] || TEAM.rood; return !tm.letter && st && st.vormen && st.vormen[c] ? st.vormen[c] : tm.shape; }
+    // Besluit 125: de nummerbalk in- en uitklappen (onthouden op dit apparaat)
+    var nrDicht = (function(){ try { return localStorage.getItem("cc-draw-nummers") === "dicht"; } catch(e){ return false; } })();
     var lastHat = "oranje"; // kleur voor "Vak met hoedjes" en sneltoets H
     function flatTools(){ var flat = []; TOOLS.forEach(function(g){ flat = flat.concat(g.items); }); return flat; }
     function isDragTool(t){ return /arrow|wall|zone|hatzone/.test(t.t); }
@@ -124,10 +128,10 @@
         case "p":
           var tm = TEAM[it.c] || TEAM.rood, lab = tm.letter || (it.n ? String(it.n) : "");
           // Spelers een kwart kleiner dan eerst, zodat doelen in verhouding zichtbaar blijven.
-          var shape = tm.shape === "c" ? '<circle r="12.5" fill="' + tm.fill + '" stroke="#fff" stroke-width="2"/>'
+          var vorm = vormVan(it.c), shape = vorm === "c" ? '<circle r="12.5" fill="' + tm.fill + '" stroke="#fff" stroke-width="2"/>'
             : '<path d="M 0 -16 L 14.5 10 L -14.5 10 Z" fill="' + tm.fill + '" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>';
           return '<g' + a + hl + ' transform="translate(' + it.x + ' ' + it.y + ')">' + shape +
-            (lab ? '<text y="' + (tm.shape === "c" ? 4.5 : 7) + '" text-anchor="middle" font-family="Arial" font-weight="700" font-size="' + (lab.length > 1 ? 10.5 : 13) + '" fill="' + tm.ink + '">' + esc(lab) + '</text>' : '') + '</g>';
+            (lab ? '<text y="' + (vorm === "c" ? 4.5 : 7) + '" text-anchor="middle" font-family="Arial" font-weight="700" font-size="' + (lab.length > 1 ? 10.5 : 13) + '" fill="' + tm.ink + '">' + esc(lab) + '</text>' : '') + '</g>';
         case "board":
           return '<g' + a + hl + ' transform="translate(' + it.x + ' ' + it.y + ') rotate(' + (it.r || 0) + ')"><rect x="-36" y="-8" width="72" height="16" rx="2" fill="#3b3b3b" stroke="#fff" stroke-width="2.5"/></g>';
         case "text":
@@ -212,7 +216,7 @@
       var s = '<svg viewBox="-20 -20 40 40" width="34" height="34" aria-hidden="true">';
       if (t.t === "p"){
         var tm = TEAM[t.c];
-        s += tm.shape === "c" ? '<circle r="12" fill="' + tm.fill + '" stroke="#333" stroke-width="1"/>' : '<path d="M 0 -14 L 13 10 L -13 10 Z" fill="' + tm.fill + '" stroke="#333" stroke-width="1"/>';
+        s += vormVan(t.c) === "c" ? '<circle r="12" fill="' + tm.fill + '" stroke="#333" stroke-width="1"/>' : '<path d="M 0 -14 L 13 10 L -13 10 Z" fill="' + tm.fill + '" stroke="#333" stroke-width="1"/>';
         if (tm.letter) s += '<text y="8" text-anchor="middle" font-size="12" font-weight="700" font-family="Arial" fill="#fff">' + tm.letter + '</text>';
       }
       else if (t.t === "board") s += '<rect x="-15" y="-5" width="30" height="10" rx="2" fill="#3b3b3b"/>';
@@ -270,7 +274,12 @@
       if (!el("drawNummers")){
         var nb = document.createElement("div"); nb.id = "drawNummers"; nb.className = "draw-nummers";
         var stage = el("drawSvg").parentNode; stage.insertBefore(nb, stage.firstChild);
-        nb.addEventListener("click", function(e){ var b = e.target.closest("[data-nr]"); if (!b || !st) return; var x = b.getAttribute("data-nr").split("|"); tikNummer(x[0], Number(x[1])); });
+        nb.addEventListener("click", function(e){
+          if (!st) return;
+          if (e.target.closest("[data-klap]")){ nrDicht = !nrDicht; try { localStorage.setItem("cc-draw-nummers", nrDicht ? "dicht" : "open"); } catch(x){} renderNummers(); return; }
+          var v = e.target.closest("[data-vorm]");
+          if (v){ var c = v.getAttribute("data-vorm"); st.vormen[c] = vormVan(c) === "c" ? "t" : "c"; spelerIconen(); render(); return; }
+          var b = e.target.closest("[data-nr]"); if (!b) return; var x = b.getAttribute("data-nr").split("|"); tikNummer(x[0], Number(x[1])); });
       }
       el("drawClear").addEventListener("click", function(){ if (!st.items.length) return; snapshot(); st.items = []; st.sel = null; st.num = 0; render(); });
     }
@@ -348,10 +357,20 @@
       var pl = NR_PLEK[n] || [0.5, 0.6], p = plekOpVeld(pl[0], pl[1], tegen);
       st.items.push({ t: "p", c: kleur, n: n, x: p.x, y: p.y }); render();
     }
+    // Knoppen bij Spelers (links) tonen dezelfde vorm als op het veld
+    function spelerIconen(){
+      Array.prototype.forEach.call(document.querySelectorAll("[data-draw-tool]"), function(b){
+        var t = toolDef(Number(b.getAttribute("data-draw-tool")));
+        if (t && t.t === "p") b.innerHTML = toolIcon(t) + (t.key ? '<span class="draw-key">' + t.key + '</span>' : '');
+      });
+    }
     function renderNummers(){
       var bak = el("drawNummers"); if (!bak) return;
       var gk = gekozenSpeler();
-      bak.innerHTML = NR_TEAMS.map(function(tm){
+      bak.classList.toggle("dicht", nrDicht);
+      var kop = '<button type="button" class="draw-nr-klap" data-klap aria-expanded="' + !nrDicht + '"><b>Rugnummers</b>' + (nrDicht ? '<small>tik om te openen</small>' : '') + '<span aria-hidden="true">' + (nrDicht ? '▾' : '▴') + '</span></button>';
+      if (nrDicht){ bak.innerHTML = kop; return; }
+      bak.innerHTML = kop + NR_TEAMS.map(function(tm){
         var kleur = tm[0], ink = TEAM[kleur].ink, fill = TEAM[kleur].fill;
         var zonder = st.items.filter(function(x){ return x.t === "p" && x.c === kleur && !x.n; }).length;
         var knop = function(n){
@@ -359,9 +378,12 @@
           return '<button type="button" class="draw-nr' + (aan ? ' aan' : '') + '" data-nr="' + kleur + '|' + n + '"' + (aan ? ' style="background:' + fill + ';color:' + ink + ';border-color:' + fill + '"' : '') +
             ' aria-pressed="' + aan + '" aria-label="' + tm[1] + ' nummer ' + n + '">' + n + '</button>';
         };
-        return '<div class="draw-nr-rij"><b>' + tm[2] + ' ' + tm[1] + '</b><div class="draw-nr-knoppen">' + [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(knop).join("") +
+        var vorm = vormVan(kleur);
+        return '<div class="draw-nr-rij"><button type="button" class="draw-nr-vorm" data-vorm="' + kleur + '" title="Rondje of driehoek wisselen" aria-label="' + tm[1] + ': ' + (vorm === "c" ? "rondje" : "driehoek") + ', tik om te wisselen">' +
+          '<svg viewBox="-16 -16 32 32" width="22" height="22" aria-hidden="true">' + (vorm === "c" ? '<circle r="11" fill="' + fill + '" stroke="#333" stroke-width="1"/>' : '<path d="M 0 -12 L 11 8 L -11 8 Z" fill="' + fill + '" stroke="#333" stroke-width="1"/>') + '</svg>' +
+          '<span>' + tm[1] + '</span><small aria-hidden="true">⇄</small></button><div class="draw-nr-knoppen">' + [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(knop).join("") +
           '<button type="button" class="draw-nr leeg" data-nr="' + kleur + '|0">' + (gk ? 'Zonder nummer' : '+ Zonder nummer' + (zonder ? ' (' + zonder + ')' : '')) + '</button></div></div>';
-      }).join("") + '<small>' + (gk ? 'Tik een nummer: de gekozen speler krijgt dat nummer.' : 'Tik een nummer: de speler staat meteen op zijn plek (1-4-3-3). Nog een keer tikken = weg. Daarna slepen waar je wilt.') + '</small>';
+      }).join("") + '<small>' + (gk ? 'Tik een nummer: de gekozen speler krijgt dat nummer.' : 'Tik een nummer: de speler staat meteen op zijn plek (1-4-3-3). Nog een keer tikken = weg. Tik op ● of ▲ om rondje en driehoek te wisselen.') + '</small>';
     }
 
     // Knop kiezen; nog een keer dezelfde knop = stoppen. Hoedjeskleur onthouden voor "Vak met hoedjes" en toets H.
@@ -532,9 +554,10 @@
 
     function open(initial, onSave){
       st = { field: (initial && FIELDS[initial.field]) ? initial.field : "liggend", items: initial && initial.items ? JSON.parse(JSON.stringify(initial.items)) : [],
-             tool: null, sel: null, drag: null, undo: [], redo: [], onSave: onSave, num: 0, zoom: !(initial && initial.zoom === false) };
+             tool: null, sel: null, drag: null, undo: [], redo: [], onSave: onSave, num: 0, vormen: initial && initial.vormen ? JSON.parse(JSON.stringify(initial.vormen)) : {}, zoom: !(initial && initial.zoom === false) };
       st.items.forEach(function(it){ if (it.t === "num") st.num = Math.max(st.num, it.n); });
       if (!el("drawTools").innerHTML) buildTools();
+      spelerIconen();
       el("drawZoom").checked = st.zoom;
       // Telefoon of tablet: advies om op de laptop te tekenen (sluitbaar).
       el("drawPhone").hidden = !window.matchMedia("(max-width: 899px), (pointer: coarse)").matches;
@@ -603,6 +626,7 @@
     el("drawSave").addEventListener("click", function(){
       var b = el("drawSave"); b.disabled = true;
       var data = { field: st.field, items: st.items, zoom: st.zoom };
+      if (Object.keys(st.vormen || {}).length) data.vormen = st.vormen;
       toBlob().then(function(blob){ var cb = st.onSave; close(); cb(blob, data); })
         .catch(function(err){ console.error(err); showToast("Tekening opslaan mislukt"); })
         .then(function(){ b.disabled = false; });
@@ -630,7 +654,7 @@
     function staticSvg(json){
       if (!json || !FIELDS[json.field]) return "";
       var saved = st;
-      st = { field: json.field, items: json.items || [], sel: null, zoom: json.zoom !== false };
+      st = { field: json.field, items: json.items || [], sel: null, zoom: json.zoom !== false, vormen: json.vormen || {} };
       try {
         var f = FIELDS[st.field], b = (st.zoom ? contentBox() : null) || { x: 0, y: 0, w: f.w, h: f.h }, u = "s" + (++svgSeq);
         var inner = '<defs><pattern id="drawNet" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#e9e9e9"/><path d="M0 0 L6 6 M6 0 L0 6" stroke="#9a9a9a" stroke-width="1"/></pattern>' +

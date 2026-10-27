@@ -1254,3 +1254,28 @@ test('tekentool: nummerbalk en rood schijfje', async ({ page }) => {
   expect(items).toEqual(['geel', 'geel', 'rood1', 'rood10', 'rood11', 'rood3', 'rood6']);
   expect(fouten).toEqual([]);
 });
+
+// Besluit 125: rondje/driehoek per team wisselen (wordt bewaard bij de tekening) en de nummerbalk in- en uitklappen
+test('tekentool: vorm per team wisselen en nummerbalk inklappen', async ({ page }) => {
+  const fouten = volgFouten(page);
+  await page.setViewportSize({ width: 1366, height: 820 });
+  await page.goto('/tekenen'); await page.evaluate(() => localStorage.clear()); await page.goto('/tekenen');
+  await page.locator('#nieuw').click();
+  await page.locator('[data-nr="rood|6"]').click();
+  await expect(page.locator('#drawSvg g[data-i] circle')).toHaveCount(1);
+  await page.locator('[data-vorm="rood"]').click();
+  await expect(page.locator('#drawSvg g[data-i] circle')).toHaveCount(0);
+  await expect(page.locator('#drawSvg g[data-i] path')).toHaveCount(1);
+  // inklappen: nummers weg, kop blijft; uitklappen: terug
+  await page.locator('[data-klap]').click();
+  await expect(page.locator('[data-nr="rood|6"]')).toHaveCount(0);
+  await page.locator('[data-klap]').click();
+  await expect(page.locator('[data-nr="rood|6"]')).toHaveCount(1);
+  await page.locator('#drawSave').click();
+  await expect(page.locator('#drawOverlay')).toBeHidden();
+  const d = await page.evaluate(() => JSON.parse(localStorage.getItem('cc-tekentool-test'))[0].data);
+  expect(d.vormen).toEqual({ rood: 't' });
+  // de tegel tekent het ook als driehoek
+  await expect(page.locator('.tegel svg path[d^="M 0 -16"]')).toHaveCount(1);
+  expect(fouten).toEqual([]);
+});
