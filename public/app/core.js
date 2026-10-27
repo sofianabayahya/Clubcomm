@@ -256,7 +256,7 @@
         ${terug ? `<button class="icoonknop" data-act="terug" aria-label="Terug">${icon('chevron-left')}</button>` : `<img class="kop-logo" src="assets/clubcomm-icon.png" alt="">`}
         <div class="kop-tekst" ${!terug && ctx.act ? `data-act="${ctx.act}" role="button" tabindex="0"` : ''}>
           <b>${terug ? esc(kop) : esc(ctx.titel)}${!terug && ctx.act ? icon('chevron-down', 'klein') : ''}</b>
-          <small>${terug ? esc(kopSub != null ? kopSub : ctx.titel) : me.rollen.length > 1 ? `<button class="rolknop" data-act="rolMenu" aria-haspopup="true" aria-label="Wissel van rol (nu ${esc(CC.rolNaam(rol))})">${esc(CC.rolNaam(rol))}${icon('chevron-down', 'klein')}</button> · ${esc(S.club.naam)}` : esc(ctx.sub)}</small>
+          <small>${terug ? esc(kopSub != null ? kopSub : ctx.titel) : me.rollen.length > 1 ? `<button class="rolknop" data-act="rolMenu" aria-haspopup="true" aria-label="Wissel van rol (nu ${esc(CC.rolNaam(rol))})">${esc(CC.rolNaam(rol))}${icon('chevron-down', 'klein')}</button>${ctx.titel === S.club.naam ? '' : ` · ${esc(S.club.naam)}`}` : esc(ctx.sub)}</small>
         </div>
         <button class="profielknop" data-act="profiel" aria-label="Profiel">${h.avatar(me.naam)}${me.rollen.length > 1 ? `<span class="rolstip">${esc(CC.rolNaam(rol)[0])}</span>` : ''}</button>
       </header>

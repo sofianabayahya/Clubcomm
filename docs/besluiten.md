@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 120)
+Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 121)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -17,6 +17,7 @@ Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 120)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 121 | Richting trainingsmodule: opleidingsprofiel per club (standaard KNVB), vorm ≠ uitvoering, bouwen in fases, ClubComm stelt voor en de trainer kiest | ✅ geldt |  |
 | 120 | Inrichten: clubbeheerder op de laptop met startlijst; ClubComm-adviseur met overzicht van alle clubs | ✅ geldt |  |
 | 119 | Rechtentest per rol tegen de echte database, elke nacht, met alarm via de bewaking | ✅ geldt |  |
 | 118 | Tikvlakken minimaal 44 pt: keuze- en filterknoppen, balkjes, rolwissel, profielknop | ✅ geldt |  |
@@ -653,6 +654,16 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 121 — Richting trainingsmodule: methodiek per club, vormenbank in fases, ClubComm stelt voor en de trainer kiest
+*Besloten 27 oktober 2026 (de initiatiefnemer liet de keuze aan ons: "doe wat je denkt dat goed is"). Uitwerking en voorbeeldschermen: `docs/trainingsmodule-2.md`, `docs/trainingsmodule-profielen.md`, `docs/trainingsmodule-markt.md` (marktanalyse KNVB Rinus, 360Player, coachbetter, The Coaching Manual, planet.training, YouCoach) en `docs/onderzoek/trainingsmodule-2/`.*
+- **Eén trainingsmodule, meerdere opleidingsprofielen.** Standaard: KNVB (AVV Swift). Een club kan een eigen versie of een helemaal eigen opleidingslijn maken (DCG). Geen methodiek vast in de code: de KNVB-standaard is een gegevensbestand met een versie; elke club krijgt een eigen kopie in de eigen clubgegevens (de clubscheiding blijft zonder uitzondering). Per onderdeel een status: *gecontroleerd · nog te controleren · eigen · leeg*; trainers zien alleen *gecontroleerd* en *eigen*.
+- **Vorm ≠ uitvoering.** Een vorm in de bank heeft versies die niet meer wijzigen; een uitvoering op een training is een momentopname met een verwijzing naar de bron. Leerdoelen staan niet in de vorm, maar in een aparte koppeling per profiel (meerdere mogelijk). Delen = een nieuwe versie met een andere scope.
+- **Volgorde:** fase 0 (na 31 okt) laden per soort → fase 1 vormen met tekening en fases, makkelijker/basis/moeilijker, Mijn vormen en Team, training voorbereiden (tijdlijn, materiaal, **training van vorige week kopiëren**), KNVB-profiel als bestand → fase 2 clubbrede bank met goedkeuren door de HO (nieuwe scope `trainersclub`: migratie + controles in de rechtentest), signaal bij de opkomst, assistent zonder AI, media als link, eigen profiel in de database → fase 3 HO-overzicht met periodisering, korte uitleg bij het leerdoel van een trainer, werkpunt van een kind ↔ leerdoel (alleen de trainer van het team).
+- **Opkomst:** ClubComm weet wie zich afmeldde en **stelt** een aangepaste organisatie voor; de trainer kiest (*Voorstel bekijken · Laat zo*). Nooit vanzelf wijzigen.
+- **HO-overzicht:** per leerdoel *gepland · uitgevoerd · geëvalueerd*, altijd met de zin dat dit **aanbod** is, geen bewijs van wat spelers beheersen. Per trainer ondersteuning via de trainerkaart, geen ranglijst.
+- **De databank werkt altijd zonder AI.** AI is later hooguit een hulp bovenop de filters.
+- **Elk scherm eerst een voorbeeld; elke wijziging aan database of rechten eerst apart akkoord** (Besluit 119: controles vóór het online gaat).
 
 ## Besluit 120 — Inrichten: de clubbeheerder op de laptop met een startlijst, de ClubComm-adviseur met een overzicht van alle clubs
 *Besloten 27 oktober 2026, na een voorbeeld (laptop; `docs/onderzoek/inrichten/`). Aanleiding: de app is groot geworden en elke club heeft eigen wensen; inrichten moet goed te beheren zijn. Werkt Besluit 96 uit en herziet Besluit 111 voor de schermen van de clubbeheerder.*
@@ -1844,6 +1855,7 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 
 ## Later / ideeën
 
+- **Reismiddel bij de routeknop** (idee 27-10, Besluit 121): in het profiel één keer kiezen *auto · OV · fiets*; de routeknop opent de kaarten-app meteen zo. Geen adres bewaren. Eerst een voorbeeld.
 - **Huiswerk en filmpjes** (idee 24 sep 2026): de trainer deelt oefeningen voor thuis (een filmpje of een link) per team of per speler, gekoppeld aan de vaardigheden uit de beoordeling ("werken aan: aannemen"). Kind of ouder kan aangeven "gedaan". Eerst met links naar YouTube/Vimeo (geen eigen opslag). Filmpjes waarin kinderen te zien zijn alleen met toestemming van de ouders (AVG).
 - **Fondsenwerving en teamkas** (idee 24 sep 2026, zoals bij Spond): acties voor het team of de club (bijv. een toernooi, nieuwe trainingspakken), bijdragen via een betaallink (bijv. Tikkie of Mollie), met een teller "zoveel opgehaald". Alleen via de penningmeester of het bestuur; eerst uitzoeken wat de club wil en mag. Mogelijk ook een verdienmodel voor ClubComm.
 - **Beloningen** (punten, contributie terugverdienen) als optionele module die de HJO per club of team aanzet.
@@ -1923,6 +1935,11 @@ Bewust niet gedaan, met de reden. Komt een van deze toch terug, zeg dan dat het 
 | Tenue bij de wedstrijd | Bijna altijd hetzelfde | 33 |
 | Signaal "planning loopt af" | De planning staat het hele seizoen klaar | 73 |
 | SMS-knop | Weinig gebruikt | 40 |
+| Animaties op het tactiekbord | Veel werk, weinig winst voor een training op het veld; twee of drie fases als losse tekeningen zeggen hetzelfde | 121 |
+| Video's uploaden bij oefenvormen | Opslag kost geld en beelden met kinderen vallen onder de AVG; een link (YouTube, KNVB Rinus) volstaat | 121 |
+| Trainingen die vanzelf klaarstaan of zich vanzelf aanpassen aan de opkomst | ClubComm signaleert, mensen beslissen; de trainer kiest het voorstel | 121 |
+| Leerplatform met cursussen en certificaten voor trainers | De KNVB (Rinus, opleidingen) doet dat al; ClubComm verwijst met links bij het leerdoel | 121 |
+| Vertrektijd berekenen vanaf het thuisadres, met drukte | Thuisadressen van gezinnen bewaren is gevoelig (AVG), drukte kan alleen met een betaalde dienst (zie Google Maps, Besluit 43), bij uitwedstrijden verzamelt het team vaak bij de club; de routeknop opent de kaarten-app al met de actuele drukte | 121 |
 | Google Maps voor adressen | Betaalaccount en wat je typt gaat naar Google | 43 |
 | Berichten verwijderen door ontvangers | Archiveren is veiliger | 57 |
 | Zelfbeoordeling van de coach en een rapportcijfer in de evaluatie | Geen tijd in de bijeenkomst; geen cijfer | 93 |

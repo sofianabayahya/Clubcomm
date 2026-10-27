@@ -1167,3 +1167,15 @@ test('tekentool: tekenen, opslaan en opnieuw tonen', async ({ page }) => {
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem('cc-tekentool-test'))[0].data.items.length)).toBe(3);
   expect(fouten).toEqual([]);
 });
+
+// 27-10: de kop noemt de clubnaam niet twee keer (HJO en clubbeheerder hebben de club al als titel)
+test('kop: clubnaam niet dubbel bij de HJO', async ({ page }) => {
+  await page.goto('/?demo');
+  await page.evaluate(() => localStorage.clear());
+  await page.goto('/?demo');
+  await page.locator('[data-act="demoLogin"][data-pid]').nth(3).click();
+  await page.locator('[data-act="magischeLink"]').click();
+  const kop = await page.locator('header.kop .kop-tekst').innerText();
+  const club = await page.evaluate(() => CC.S().club.naam);
+  expect(kop.split(club).length - 1).toBe(1);
+});
