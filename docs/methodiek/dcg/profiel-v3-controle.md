@@ -412,9 +412,13 @@ Jaar → Fase → Week → Training → Praktijktest → Herhaling/aanpassing
 - Geen onbewezen vaste percentages voor Ball Mastery, geïsoleerde techniek, no-sided, SSG of wedstrijdvormen.
 - De drie trainingen vormen samen één leerweek, zonder rigide vaste dagindeling; de methodische route volgt het leerdoel.
 
-**Weekformat:** Fase · Week · Leeftijd · Centraal voetbalprobleem · Hoofdgereedschap 1 · Hoofdgereedschap 2 · Handelingsketen · Beoogd leerniveau · Gewenst gedrag · Relevante informatie · Training 1 – leerroute · Training 2 – leerroute · Training 3 – leerroute · Technische onderbouw/Ball Mastery · Transfermoment · Observatiecriteria · Eén aanpassing volgende cyclus
+**Weekformat:** Fase · Week · Leeftijd · Centraal voetbalprobleem · Contrathema (optioneel) · Hoofdgereedschap 1 · Hoofdgereedschap 2 · Handelingsketen · Beoogd leerniveau · Gewenst gedrag · Relevante informatie · Training 1 – leerroute · Training 2 – leerroute · Training 3 – leerroute · Technische onderbouw/Ball Mastery · Transfermoment · Observatiecriteria · Eén aanpassing volgende cyclus
 
-**Open:** Contrathema: niet in het kerndocument; keuze van de initiatiefnemer of het als optioneel veld blijft.
+**Contrathema (optioneel):** Hoofdthema voor de primair te coachen partij; contrathema: een relevant tegenovergesteld voetbalprobleem voor de andere partij.
+
+- Optioneel; geen verplicht veld en geen eigen evaluatie.
+- Gekoppeld aan de week; verschijnt bij de trainingen als voorstel.
+- Niet iedere oefenvorm krijgt een eigen contrathema.
 
 ## Evaluatie
 Ontwerpen → Uitvoeren → Observeren → Analyseren → Eén gerichte aanpassing → Opnieuw aanbieden

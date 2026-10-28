@@ -16,7 +16,10 @@
   const weekPlan = (S, tid, datum) => T().plannen(S).find((p) => p.week && p.id === weekId(tid, datum) && p.eigenaar === T().ik()) || null;
   const nieuwWeek = (S, tid, datum, bron) => { const p = { id: weekId(tid, datum), week: true, teamId: tid, datum: maandag(datum), eigenaar: T().ik(), methodiek: {}, wedstrijd: null, ...(bron ? { bron } : {}) }; T().plannen(S).push(p); return p; };
   // Methodiek van een training: eerst wat bij de training zelf staat, aangevuld met het weekplan
-  const methodiek = (S, p) => { if (!p) return {}; const a = T().actVan(S, p); const w = a.datum ? weekPlan(S, p.teamId || a.teamId, a.datum) : null; return { ...((w && w.methodiek) || {}), ...(p.methodiek || {}) }; };
+  const methodiek = (S, p) => { if (!p) return {}; const a = T().actVan(S, p); const w = a.datum ? weekPlan(S, p.teamId || a.teamId, a.datum) : null; const wm = (w && w.methodiek) || {}, pm = p.methodiek || {}; const m = { ...wm, ...pm };
+    // Contrathema (optioneel): hoort bij de week en verschijnt als voorstel, tenzij bij deze training zelf gekozen
+    if (!pm.contraGekozen && !pm.contra && !pm.contraTekst) { m.contra = wm.contra || null; m.contraTekst = wm.contraTekst || ''; }
+    return m; };
 
   // ---------- Status: berekend, nooit ingevuld ----------
   // Gegeven = training is gegeven; Uitgewerkt = elke plek heeft een vorm (spacing: een naam of vorm) en elke vorm een tekening of organisatie; anders Gepland
@@ -43,6 +46,7 @@
       <div class="tr-meth-kop"><b>${pr ? `${esc(pr.id.slice(3))} · ${esc(pr.naam)}` : esc(m.probleemTekst || 'Voetbalprobleem nog kiezen')}</b>${tel ? '' : `<button class="icoonknop" data-act="tpMethodiek" data-id="${esc(a.id)}" aria-label="Methodiek aanpassen">${icon('pencil')}</button>`}</div>
       <small>${[A ? `A ${esc(T().ldNaam(S, A))}` : '', B ? `B ${esc(T().ldNaam(S, B))}` : ''].filter(Boolean).join(' · ')}${(m.niveaus || []).length ? ` <span class="tr-niv">${esc(nv(S, m.niveaus))}</span>` : ''}</small>
       ${m.gedrag ? `<p class="tr-gedrag"><b>Gedrag:</b> ${esc(m.gedrag)}</p>` : ''}
+      ${m.contra || m.contraTekst ? `<small class="tr-contra">Contrathema (andere partij): ${esc((probleem(S, m.contra) || {}).naam || m.contraTekst)}${m.contraGekozen ? '' : ' · <i>voorstel</i>'}</small>` : ''}
       ${vorig ? `<p class="tr-vorig"><b>Voorstel van ${esc(T().dagNaam(T().actVan(S, vorig)))}:</b> ${esc(vorig.anders)} <small>(niet automatisch doorgevoerd)</small></p>` : ''}
       ${rest || (w && w.methodiek && w.methodiek.week) ? `<details class="tr-meth-meer"><summary>Onderbouwing (weekformat)</summary><div class="tr-meth-r">${w && w.methodiek && w.methodiek.week ? rij('Fase · week', `${w.methodiek.fase || ''} ${w.methodiek.week}`.trim()) : ''}${rest}</div></details>` : ''}
     </div>`; };
@@ -52,6 +56,7 @@
     const lds = T().leerdoelen(S).map((l) => [l.id, l.naam]);
     CC.sheet('Methodiek van deze training', `<form class="codeform" data-autosave="tpMeth" data-id="${esc(el.dataset.id)}">
       <label>Centraal voetbalprobleem</label>${sel('probleem', problemen(S).map((x) => [x.id, `${x.id.slice(3)} · ${x.naam}`]), m.probleem)}
+      <label>Contrathema (optioneel, voor de andere partij)</label>${sel('contra', problemen(S).map((x) => [x.id, `${x.id.slice(3)} · ${x.naam}`]), m.contra, 'Geen')}
       <div class="twee"><div><label>Hoofdgereedschap A</label>${sel('hg1', lds, T().blokDoel(S, p, 'A'))}</div><div><label>Hoofdgereedschap B</label>${sel('hg2', lds, T().blokDoel(S, p, 'B'))}</div></div>
       <fieldset class="tr-chips"><legend>Beoogd leerniveau (één of twee)</legend>${T().niveaus(S).map((x) => `<label class="tr-chip"><input type="checkbox" name="niv" value="${esc(x.id)}" ${(m.niveaus || []).includes(x.id) ? 'checked' : ''}><span>${esc(x.naam)}</span></label>`).join('')}</fieldset>
       <label for="pm-g">Gewenst gedrag (één zin)</label><textarea id="pm-g" name="gedrag" rows="2">${esc(m.gedrag || '')}</textarea>
@@ -66,6 +71,7 @@
   CC.autosave.tpMeth = (f) => { const S = CC.S(); const p = T().plan(S, f.dataset.id); if (!p) return;
     const m = p.methodiek = { ...(p.methodiek || {}) };
     ['probleem', 'keten'].forEach((k) => { m[k] = f.elements[k].value || null; });
+    const c = f.elements.contra.value || null; if (c !== (methodiek(S, p).contra || null) || m.contraGekozen) { m.contra = c; m.contraGekozen = true; }
     ['gedrag', 'informatie', 'route', 'transfer', 'onderbouw', 'observatie'].forEach((k) => { m[k] = f.elements[k].value.trim(); });
     m.niveaus = [...f.querySelectorAll('input[name="niv"]:checked')].map((x) => x.value);
     p.blokDoel = { ...(p.blokDoel || {}), A: f.elements.hg1.value || null, B: f.elements.hg2.value || null };
@@ -99,13 +105,13 @@
     const geladen = T().plannen(S).filter((p) => p.bron && p.eigenaar === T().ik()).length;
     const rijen = weken.map((w) => { const m = w.methodiek || {}; const pr = probleem(S, m.probleem); const tr = T().plannen(S).filter((p) => !p.week && p.eigenaar === T().ik() && (p.teamId || '') === (w.teamId || '') && T().actVan(S, p).datum && maandag(T().actVan(S, p).datum) === w.datum);
       const wd = w.wedstrijd && (w.wedstrijd.punten || []); const d = D.parse(w.datum);
-      return `<tr><th>wk ${D.weeknr(w.datum)}<br><small>${d.getDate()} ${D.MAAND[d.getMonth()]}</small></th><td>${pr ? esc(pr.naam) : esc(m.probleemTekst || '—')}</td><td>${[m.hg1, m.hg2].filter(Boolean).map((x) => esc(T().ldNaam(S, x) || x)).join(' · ') || '—'}</td><td>${(m.niveaus || []).length ? `<span class="tr-niv">${esc(nv(S, m.niveaus))}</span>` : ''}</td><td>${tr.map((p) => CC.trStatus(S, p)).join('')}</td><td>${wd && wd.length ? `${wd.filter((x) => x.uitkomst).length}/${wd.length} beoordeeld` : ''}</td></tr>`; }).join('');
+      return `<tr><th>wk ${D.weeknr(w.datum)}<br><small>${d.getDate()} ${D.MAAND[d.getMonth()]}</small></th><td>${pr ? esc(pr.naam) : esc(m.probleemTekst || '—')}${m.contra || m.contraTekst ? `<br><small class="zacht">contra: ${esc((probleem(S, m.contra) || {}).naam || m.contraTekst)}</small>` : ''}</td><td>${[m.hg1, m.hg2].filter(Boolean).map((x) => esc(T().ldNaam(S, x) || x)).join(' · ') || '—'}</td><td>${(m.niveaus || []).length ? `<span class="tr-niv">${esc(nv(S, m.niveaus))}</span>` : ''}</td><td>${tr.map((p) => CC.trStatus(S, p)).join('')}</td><td>${wd && wd.length ? `${wd.filter((x) => x.uitkomst).length}/${wd.length} beoordeeld` : ''}</td></tr>`; }).join('');
     return `<div class="kaartje tr-fase"><div class="tr-kop"><b>Periodisering${weken.length ? ` · ${weken.length} weken` : ''}</b><div class="knoppen"><button class="knop" data-act="perLaden">${icon('list-checks')}Periodisering laden…</button>${geladen ? `<button class="knop licht" data-act="perTerug">Terugdraaien…</button>` : ''}</div></div>
       ${rijen ? `<div class="tr-tabel"><table><thead><tr><th>Week</th><th>Centraal probleem</th><th>Hoofdgereedschappen</th><th>Leerniveau</th><th>Trainingen</th><th>Wedstrijd</th></tr></thead><tbody>${rijen}</tbody></table></div>`
         : '<small class="zacht">Nog geen periodisering. Laad je planning uit Excel (opslaan als CSV), of vul per training de methodiek in.</small>'}</div>`; };
 
   // CSV (Excel: Opslaan als → CSV, puntkomma of komma). Eén regel per training of wedstrijd.
-  const KOLOMMEN = ['datum', 'soort', 'fase', 'week', 'probleem', 'gereedschapA', 'gereedschapB', 'keten', 'leerniveau', 'gedrag', 'informatie', 'leerroute', 'transfer', 'onderbouw', 'observatie', 'model'];
+  const KOLOMMEN = ['datum', 'soort', 'fase', 'week', 'probleem', 'contrathema', 'gereedschapA', 'gereedschapB', 'keten', 'leerniveau', 'gedrag', 'informatie', 'leerroute', 'transfer', 'onderbouw', 'observatie', 'model'];
   const csvLezen = (txt) => { txt = txt.replace(/^﻿/, ''); const eerste = txt.split(/\r?\n/)[0] || ''; const sep = (eerste.match(/;/g) || []).length >= (eerste.match(/,/g) || []).length ? ';' : ',';
     const rijen = []; let r = [], v = '', q = false;
     for (let i = 0; i < txt.length; i++) { const c = txt[i];
@@ -130,10 +136,10 @@
       const acts = M.acts(S, tid, datum, datum).filter((a) => !a.afgelast && (soort === 'wedstrijd' ? M.isWed(a) : a.soort === 'training'));
       if (!acts.length) { uit.push({ i, r, datum, soort, actie: 'overslaan', reden: `geen ${soort} van ${CC.tn(tid)} op deze dag in de kalender` }); return; }
       const a = acts[0];
-      const pr = zoekProbleem(S, r.probleem), A = zoekLd(S, r.gereedschapA), B = zoekLd(S, r.gereedschapB), niv = zoekNiveaus(S, r.leerniveau), keten = zoekKeten(S, r.keten);
-      if (r.probleem && !pr) fout.push(`probleem "${r.probleem}" onbekend (tekst blijft staan)`); if (r.gereedschapA && !A) fout.push(`gereedschap A "${r.gereedschapA}" onbekend`); if (r.gereedschapB && !B) fout.push(`gereedschap B "${r.gereedschapB}" onbekend`);
+      const pr = zoekProbleem(S, r.probleem), contra = zoekProbleem(S, r.contrathema), A = zoekLd(S, r.gereedschapA), B = zoekLd(S, r.gereedschapB), niv = zoekNiveaus(S, r.leerniveau), keten = zoekKeten(S, r.keten);
+      if (r.probleem && !pr) fout.push(`probleem "${r.probleem}" onbekend (tekst blijft staan)`); if (r.contrathema && !contra) fout.push(`contrathema "${r.contrathema}" onbekend (tekst blijft staan)`); if (r.gereedschapA && !A) fout.push(`gereedschap A "${r.gereedschapA}" onbekend`); if (r.gereedschapB && !B) fout.push(`gereedschap B "${r.gereedschapB}" onbekend`);
       if (r.leerniveau && !niv.length) fout.push(`leerniveau "${r.leerniveau}" onbekend`);
-      const m = { probleem: pr, probleemTekst: r.probleem, hg1: A, hg2: B, keten, ketenTekst: r.keten, niveaus: niv, gedrag: r.gedrag, informatie: r.informatie, route: r.leerroute, transfer: r.transfer, onderbouw: r.onderbouw, observatie: soort === 'training' ? r.observatie : '', fase: r.fase, week: r.week };
+      const m = { probleem: pr, probleemTekst: r.probleem, contra, contraTekst: r.contrathema, hg1: A, hg2: B, keten, ketenTekst: r.keten, niveaus: niv, gedrag: r.gedrag, informatie: r.informatie, route: r.leerroute, transfer: r.transfer, onderbouw: r.onderbouw, observatie: soort === 'training' ? r.observatie : '', fase: r.fase, week: r.week };
       if (soort === 'wedstrijd') { const punten = String(r.observatie || '').split('|').map((x) => x.trim()).filter(Boolean).slice(0, 3); const w = weekPlan(S, tid, datum);
         const al = w && w.wedstrijd && w.wedstrijd.actId === a.id && (w.wedstrijd.punten || []).length;
         uit.push({ i, r, datum, soort, a, m, punten, actie: al ? 'overslaan' : punten.length ? 'observatie' : 'niets', reden: al ? 'heeft al observatiepunten' : punten.length ? `${punten.length} observatiepunt${punten.length === 1 ? '' : 'en'}` : 'geen observatiepunten', fout }); return; }

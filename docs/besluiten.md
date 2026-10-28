@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 133)
+Laatst bijgewerkt: 28 oktober 2026 (t/m Besluit 133)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -675,7 +675,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
   - mengpaneel, handelingsketens, 15 ontwerpprincipes;
   - periodisering met het weekformat, de evaluatiekaart;
   - twee sjablonen (spacing en afwisselend), spacing gedefinieerd;
-  - fasen optioneel naast de leerniveaus; contrathema open.
+  - fasen optioneel naast de leerniveaus; **contrathema optioneel** (zie onder).
 
   De invoer in de database gebeurt met een controlesom en een terugdraai-script, na akkoord.
 - **Methodiekblok per training:** compact (probleem, A/B, beoogd leerniveau, één regel gewenst gedrag); het volledige weekformat klapt uit (*Onderbouwing*). Op de telefoon staat het blok vóór de oefeningen.
@@ -696,6 +696,10 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
   - pas na **Toevoegen** schrijft de app, met de rechten van de trainer (scope `eigen`); geen oefenvormen of tekeningen.
   - **Terugdraaien** verwijdert alleen concepten die niet zijn aangepast en niet gegeven (stempel bij het laden).
   - Een leeg sjabloon met de echte data staat in `docs/methodiek/dcg/periodisering-sjabloon-o13.csv` en kan ook in de app worden gedownload.
+- **Contrathema (optioneel, besloten 28-10):** een hoofdthema voor de primair te coachen partij en een relevant tegenovergesteld voetbalprobleem voor de andere partij.
+  - Hoort bij de **week** (CSV-kolom `contrathema`) en verschijnt bij de trainingen als **voorstel**; de trainer kan het per training kiezen of op *Geen* zetten.
+  - Niet iedere oefenvorm krijgt een contrathema; **geen verplicht veld en geen eigen evaluatie**.
+- **Excel en CSV:** Excel blijft het inhoudelijke document (uitgewerkt met ChatGPT); CSV met puntkomma's is alleen het invoerformaat. De definitieve periodisering en oefeningen worden pas geladen als ze klaar zijn.
 - **Observatiepunten bij de wedstrijd:**
   - max. 3, gekoppeld aan het weekprobleem;
   - *Gezien / Deels / Niet gezien / Niet beoordeeld*;
@@ -2114,7 +2118,6 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 ---
 
 ## Nog te bespreken
-- **Contrathema** (Besluit 133): staat niet in het kerndocument; optioneel veld of laten vallen?
 - **Wat is spacing inhoudelijk?** (Besluit 131) Loslaten (het geleerde laten rusten), herstel, contrast of spelend leren? Pas daarna krijgt spacing een eigen soort of regels.
 - **De 8 spelprincipes voor O13 en de leerdoelen als observeerbaar gedrag** (Besluit 131): de plekken staan klaar in het DCG-profiel; de inhoud stelt de initiatiefnemer vast.
 - **6e leerlijn:** beschermen/vrijmaken of schieten/afronden (Besluit 131).

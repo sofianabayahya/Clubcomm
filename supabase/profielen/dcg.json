@@ -1085,6 +1085,11 @@
           "bron": "voetbalproblemen"
         },
         {
+          "id": "contra",
+          "naam": "Contrathema (optioneel)",
+          "bron": "voetbalproblemen"
+        },
+        {
           "id": "hg1",
           "naam": "Hoofdgereedschap 1",
           "bron": "leerlijnen"
@@ -1141,9 +1146,15 @@
           "naam": "Eén aanpassing volgende cyclus"
         }
       ],
-      "open": [
-        "Contrathema: niet in het kerndocument; keuze van de initiatiefnemer of het als optioneel veld blijft."
-      ]
+      "contrathema": {
+        "omschrijving": "Hoofdthema voor de primair te coachen partij; contrathema: een relevant tegenovergesteld voetbalprobleem voor de andere partij.",
+        "regels": [
+          "Optioneel; geen verplicht veld en geen eigen evaluatie.",
+          "Gekoppeld aan de week; verschijnt bij de trainingen als voorstel.",
+          "Niet iedere oefenvorm krijgt een eigen contrathema."
+        ],
+        "bron": "Eigen DCG-keuze, naast het kerndocument."
+      }
     },
     "evaluatie": {
       "status": "eigen",

@@ -838,6 +838,7 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .tr-meth-kop { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 15px; }
 .tr-meth small { color: var(--zacht); font-size: 14px; }
 .tr-gedrag, .tr-vorig { margin: 0; font-size: 14px; }
+.tr-meth .tr-contra { font-size: 13px; }
 .tr-vorig { background: #fff4e5; border-radius: 8px; padding: 4px 8px; }
 .tr-meth-meer summary { cursor: pointer; font-size: 14px; color: var(--blauw); font-weight: 600; min-height: 32px; display: flex; align-items: center; }
 .tr-meth-r { display: grid; grid-template-columns: 150px 1fr; gap: 4px 12px; font-size: 14px; padding: 4px 0; }

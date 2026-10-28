@@ -1440,6 +1440,10 @@ test('trainingsmodule: training op datum zonder planning (pakket Trainers begele
   await page.locator('#sheet [data-act="sluitRender"]').click();
   await page.locator('[data-act="tpSpacing"]').click();
   await expect(page.locator('.tr-pzij .tr-dag')).toContainText('Vrijlopen');
+  // Zoals Swift (KNVB-standaard, geen eigen profiel): niets van de DCG-methodiek (Besluit 133)
+  await expect(page.locator('.tr-meth, .tr-methknop, .tr-stat, .tr-contra, .tr-niv')).toHaveCount(0);
+  await page.locator('[data-act="seg"][data-val="lijn"]').click();
+  await expect(page.locator('[data-act="perLaden"], .tr-fase')).toHaveCount(0);
   await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'trainingsplannen').map((r) => `${r.scope}|${r.persoon_id}|${r.data.los}|${r.data.datum}|${r.data.onderdelen.length}`).join()).toBe('eigen|p-beheer|true|2026-11-03|1');
   await controleer(page, fouten, 'training op datum');
 });
@@ -1567,13 +1571,14 @@ test('trainingsmodule: periodisering laden, methodiek, evaluatie en observatiepu
     // Eigen voorbereiding op p3: mag nooit overschreven worden
     S.trainingsplannen = [{ id: 'eigen-p3', actId: 'p3', teamId: 'O12-1', datum: d.d3, eigenaar: CC.me().id, thema: 'Eigen training', leerdoelen: [], onderdelen: [{ id: 'x', spacing: true, naam: 'Hooghouden', min: 3 }] }];
     CC.save(); CC.render(); return d; });
-  const csv = ['datum;soort;fase;week;probleem;gereedschapA;gereedschapB;keten;leerniveau;gedrag;informatie;leerroute;transfer;onderbouw;observatie;model',
-    `${d.d0};training;Fase 1;wk;2;Aannemen en meenemen;Passen;Timen → voorbereiden → helpen;Herkennen-Kiezen;Kijkt vóór ontvangst;Drukrichting;Gerichte vorm → SSG;Partij;;;`,
-    `${d.d1};training;Fase 1;wk;2;Aannemen;Passen;;Kiezen;Iets;;;;;;`,
-    `${d.d2};training;Fase 1;wk;2;Aannemen en meenemen;Passen;;Kiezen;Kiest vooruit of terug;;;;;;afwisselend`,
-    `${d.d3};training;Fase 1;wk;2;Passen;Vrijkomen;;Afstemmen;Mag niet over eigen training heen;;;;;;`,
-    `${d.d4};wedstrijd;Fase 1;wk;2;;;;;;;;;;Speelt na aanname vooruit? | Komt de 2e speler op tijd vrij?;`,
-    `${d.d5};training;Fase 1;wk;1;Vrijkomen;Aannemen;;Uitvoeren;Komt vrij op het juiste moment;;;;;;`].join('\n');
+  // Contrathema (optioneel) als laatste kolom: kolommen gaan op naam
+  const csv = ['datum;soort;fase;week;probleem;gereedschapA;gereedschapB;keten;leerniveau;gedrag;informatie;leerroute;transfer;onderbouw;observatie;model;contrathema',
+    `${d.d0};training;Fase 1;wk;2;Aannemen en meenemen;Passen;Timen → voorbereiden → helpen;Herkennen-Kiezen;Kijkt vóór ontvangst;Drukrichting;Gerichte vorm → SSG;Partij;;;;Bestaat niet`,
+    `${d.d1};training;Fase 1;wk;2;Aannemen;Passen;;Kiezen;Iets;;;;;;;`,
+    `${d.d2};training;Fase 1;wk;2;Aannemen en meenemen;Passen;;Kiezen;Kiest vooruit of terug;;;;;;afwisselend;6`,
+    `${d.d3};training;Fase 1;wk;2;Passen;Vrijkomen;;Afstemmen;Mag niet over eigen training heen;;;;;;;`,
+    `${d.d4};wedstrijd;Fase 1;wk;2;;;;;;;;;;Speelt na aanname vooruit? | Komt de 2e speler op tijd vrij?;;`,
+    `${d.d5};training;Fase 1;wk;1;Vrijkomen;Aannemen;;Uitvoeren;Komt vrij op het juiste moment;;;;;;;`].join('\n');
   await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
   await page.locator('[data-act="seg"][data-val="lijn"]').click();
   await page.locator('[data-act="perLaden"]').click();
@@ -1583,6 +1588,7 @@ test('trainingsmodule: periodisering laden, methodiek, evaluatie en observatiepu
   await expect(page.locator('.tr-pv tr.observatie')).toHaveCount(1);
   await expect(page.locator('.tr-pv tr.overslaan')).toHaveCount(2);
   await expect(page.locator('#sheet')).toContainText('heeft al een voorbereiding (blijft zoals hij is)');
+  await expect(page.locator('#sheet')).toContainText('contrathema "Bestaat niet" onbekend');
   await page.locator('[data-act="perToevoegen"]').click();
   const rijen = async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'trainingsplannen');
   await expect.poll(async () => (await rijen()).filter((r) => r.data.bron === 'dcg-o13-fase1' && !r.data.week).map((r) => `${r.act_id}|${r.data.sjabloon}|${r.data.onderdelen.filter((o) => o.vormId).length}`).sort().join()).toBe('p0|dcg-75|0,p2|dcg-75-afwisselend|0,p5|dcg-75|0');
@@ -1592,6 +1598,7 @@ test('trainingsmodule: periodisering laden, methodiek, evaluatie en observatiepu
   await page.locator('.weekstrook [data-val="p2"]').click();
   await expect(page.locator('.tr-meth')).toContainText('Vooruitgang creëren');
   await expect(page.locator('.tr-meth .tr-gedrag')).toContainText('Kiest vooruit of terug');
+  await expect(page.locator('.tr-meth .tr-contra')).toHaveText('Contrathema (andere partij): Vooruitgang van de tegenstander voorkomen · voorstel');
   await expect(page.locator('.tr-plankop .tr-stat')).toHaveText('Gepland');
   await expect(page.locator('.tr-pmid .tr-gkop')).toContainText(['Start', 'A · Aannemen en meenemen ▾', 'B · Passen ▾', 'A · terugkeer', 'B · terugkeer', 'Partij']);
   await expect(page.locator('.tr-pmid .tr-niv.vs').first()).toContainText('Kiezen · voorstel');
@@ -1625,6 +1632,8 @@ test('trainingsmodule: periodisering laden, methodiek, evaluatie en observatiepu
   await page.locator('.weekstrook [data-val="p2"]').click();
   await page.locator('.tr-meth [data-act="tpMethodiek"]').click();
   await page.fill('#pm-g', 'Zelf aangepast'); await page.locator('#pm-g').press('Tab');
+  await page.locator('#sheet select[name="contra"]').selectOption('');
+  await expect.poll(async () => { const m = ((await rijen()).find((x) => x.act_id === 'p2').data.methodiek) || {}; return `${m.contra}|${m.contraGekozen}`; }).toBe('null|true');
   await page.locator('#sheet [data-act="sluitRender"]').click();
   await page.locator('[data-act="seg"][data-val="lijn"]').click();
   await page.locator('[data-act="perTerug"]').click();
