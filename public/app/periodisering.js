@@ -110,6 +110,28 @@
       ${rijen ? `<div class="tr-tabel"><table><thead><tr><th>Week</th><th>Centraal probleem</th><th>Hoofdgereedschappen</th><th>Leerniveau</th><th>Trainingen</th><th>Wedstrijd</th></tr></thead><tbody>${rijen}</tbody></table></div>`
         : '<small class="zacht">Nog geen periodisering. Laad je planning uit Excel (opslaan als CSV), of vul per training de methodiek in.</small>'}</div>`; };
 
+  // ---------- Besluit 135: "Je zit in" en het weekthema (voor elke club; met periodisering komt de week uit Excel) ----------
+  const weekVoorstel = (S, tid, datum) => { const w = datum ? weekPlan(S, tid, datum) : null; return (w && w.methodiek) || {}; };
+  CC.trWeekDoel = (S, p, b) => { if (!p || p.week) return null; const a = T().actVan(S, p); const m = weekVoorstel(S, p.teamId || a.teamId, a.datum); return (b === 'A' ? m.hg1 : m.hg2) || null; };
+  CC.trJeZitIn = (S, a) => { if (!a || !a.datum) return ''; const m = weekVoorstel(S, a.teamId || (CC.teamId && CC.teamId()), a.datum);
+    const pr = probleem(S, m.probleem); const thema = pr ? pr.naam : m.probleemTekst || m.thema || '';
+    const ab = [m.hg1 && `A ${T().ldNaam(S, m.hg1) || ''}`, m.hg2 && `B ${T().ldNaam(S, m.hg2) || ''}`].filter(Boolean).join(' · ');
+    return `<button type="button" class="tr-zitin" data-act="trNaarLijn">${icon('flag')}<span><b>Week ${D.weeknr(a.datum)}${m.fase ? ` · ${esc(m.fase)}` : ''}</b> · ${thema || ab ? `${esc(thema)}${thema && ab ? ' · ' : ''}${esc(ab)}` : '<i>nog geen weekthema</i>'}</span><small>Lijn ›</small></button>`; };
+  CC.on('trNaarLijn', () => { (CC.ui.seg = CC.ui.seg || {}).trSeg = 'lijn'; CC.render(); window.scrollTo(0, 0); });
+  // Weekthema met A en B (clubs zonder periodisering): niet verplicht; komt als voorstel bij de trainingen van die week
+  CC.trWeekthema = (S) => { if (actief(S)) return ''; const tid = CC.teamId && CC.teamId(); const nu = maandag(D.vandaag());
+    const weken = Array.from({ length: 7 }, (_, i) => D.addDays(nu, (i - 1) * 7));
+    const rijen = weken.map((w) => { const m = weekVoorstel(S, tid, w); const d = D.parse(w); const ab = [m.hg1, m.hg2].filter(Boolean).map((x) => esc(T().ldNaam(S, x) || '')).join(' · ');
+      return `<button type="button" class="tr-rij ${w === nu ? 'aan' : ''}" data-act="trWeekBewerk" data-w="${w}"><span class="tr-code">wk ${D.weeknr(w)}</span><span class="tr-t"><b>${esc(m.thema || (ab ? 'Geen thema' : 'Nog leeg'))}</b><small>${d.getDate()} ${D.MAAND[d.getMonth()]}${ab ? ` · ${ab}` : ''}</small></span>${icon('pencil')}</button>`; }).join('');
+    return `<div class="kaartje tr-weken"><b>Weekthema</b><small class="zacht">Niet verplicht. Wat je hier per week kiest, komt als voorstel bij de trainingen van die week (A en B, bovenaan bij Plannen en Week).</small><div class="tr-lijst">${rijen}</div></div>`; };
+  CC.on('trWeekBewerk', (el) => { const S = CC.S(); const w = el.dataset.w; const tid = CC.teamId && CC.teamId(); const m = weekVoorstel(S, tid, w); const lds = T().leerdoelen(S).map((l) => [l.id, l.naam]);
+    CC.sheet(`Week ${D.weeknr(w)}`, `<form class="codeform" data-autosave="trWeek" data-w="${w}">
+      <label for="tw-t">Thema van de week</label><input id="tw-t" name="thema" value="${esc(m.thema || '')}" placeholder="Bijv. opbouwen onder druk">
+      ${lds.length ? `<div class="twee"><div><label>Hoofdleerdoel A</label>${sel('hg1', lds, m.hg1)}</div><div><label>Hoofdleerdoel B</label>${sel('hg2', lds, m.hg2)}</div></div>
+      <p class="zacht klein">Een training die zelf al A of B heeft, houdt die.</p>` : ''}<button type="button" class="knop vol" data-act="sluitRender">Klaar</button></form>`); });
+  CC.autosave.trWeek = (f) => { const S = CC.S(); const tid = CC.teamId && CC.teamId(); const w = weekPlan(S, tid, f.dataset.w) || nieuwWeek(S, tid, f.dataset.w);
+    w.methodiek = { ...(w.methodiek || {}), thema: f.elements.thema.value.trim(), hg1: f.elements.hg1 ? f.elements.hg1.value || null : null, hg2: f.elements.hg2 ? f.elements.hg2.value || null : null }; };
+
   // CSV (Excel: Opslaan als → CSV, puntkomma of komma). Eén regel per training of wedstrijd.
   const KOLOMMEN = ['datum', 'soort', 'fase', 'week', 'probleem', 'contrathema', 'gereedschapA', 'gereedschapB', 'keten', 'leerniveau', 'gedrag', 'informatie', 'leerroute', 'transfer', 'onderbouw', 'observatie', 'model'];
   const csvLezen = (txt) => { txt = txt.replace(/^﻿/, ''); const eerste = txt.split(/\r?\n/)[0] || ''; const sep = (eerste.match(/;/g) || []).length >= (eerste.match(/,/g) || []).length ? ';' : ',';

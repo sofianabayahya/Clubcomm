@@ -308,6 +308,40 @@ test.describe('Demo', () => {
   });
 
   // Besluit 100: pakket "Alleen Trainers begeleiden", technisch coördinator met werkgebied, vragenlijst per niveau, evaluatie overnemen
+  // Besluit 134: een moment dat voorbij is zonder observatie: verplaatsen (vragenlijst blijft) of niet doorgegaan
+  test('begeleidingsmoment: verlopen moment verplaatsen of niet doorgegaan', async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"][data-pid]').nth(3).click();
+    await page.locator('[data-act="magischeLink"]').click();
+    await page.evaluate(() => { const S = CC.S(); const D = CC.date; CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'hjo'));
+      const m = S.begeleidMomenten.find((x) => x.id === 'bm-demo2'); m.datum = D.addDays(D.vandaag(), -1); m.soort = 'training';
+      S.begeleidZelf[m.id] = { trainerId: m.trainerId, v: { doel: 'Opbouwen' }, ingevuld: new Date().toISOString() }; CC.save(); CC.render(); });
+    // Te doen op de Home: één regel
+    await expect(page.locator('#app .rij', { hasText: 'niet afgerond' })).toHaveCount(1);
+    await page.locator('#app .rij', { hasText: 'niet afgerond' }).click();
+    await expect(page.locator('#app .oranje-rand')).toContainText('de vragenlijst die de trainer al invulde blijft bewaard');
+    const voor = await page.evaluate(() => CC.S().msgs.length);
+    await page.locator('#app .oranje-rand [data-act="begelVerplaats"]').click();
+    await page.locator('#sheet [data-act="begelVerplaatsOk"]').first().click();
+    const m = await page.evaluate(() => CC.S().begeleidMomenten.find((x) => x.id === 'bm-demo2'));
+    expect(m.datum >= await page.evaluate(() => CC.date.vandaag())).toBe(true); expect(m.actId).toBeTruthy(); expect(m.verplaatst.length).toBe(1);
+    expect(await page.evaluate(() => CC.S().begeleidZelf['bm-demo2'].v.doel)).toBe('Opbouwen');
+    expect(await page.evaluate((n) => CC.S().msgs.slice(n).map((x) => x.onderwerp), voor)).toEqual([expect.stringMatching(/^Begeleidingsmoment verplaatst naar/)]);
+    await expect(page.locator('#app .oranje-rand')).toHaveCount(0);
+    // Opnieuw voorbij: niet doorgegaan → telt niet meer mee, de plek in het traject komt vrij
+    await page.evaluate(() => { const S = CC.S(); S.begeleidMomenten.find((x) => x.id === 'bm-demo2').datum = CC.date.addDays(CC.date.vandaag(), -2); CC.render(); });
+    await page.locator('#app .oranje-rand [data-act="begelVervalt"]').click();
+    await expect(page.locator('#app .info')).toContainText('Niet doorgegaan');
+    await page.locator('nav.nav button[data-tab="home"]').click();
+    await expect(page.locator('#app .rij', { hasText: 'niet afgerond' })).toHaveCount(0);
+    await page.locator('nav.nav button[data-tab="trainers"]').click();
+    await expect(page.locator('#app .kaartje.traject', { hasText: 'Dennis Peters' }).locator('li[data-act="begelInplannen"]').first()).toBeVisible();
+    await controleer(page, fouten, 'moment verplaatsen');
+  });
+
   test('technisch coördinator, werkgebied en pakket Alleen Trainers begeleiden', async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
@@ -1444,8 +1478,48 @@ test('trainingsmodule: training op datum zonder planning (pakket Trainers begele
   await expect(page.locator('.tr-meth, .tr-methknop, .tr-stat, .tr-contra, .tr-niv')).toHaveCount(0);
   await page.locator('[data-act="seg"][data-val="lijn"]').click();
   await expect(page.locator('[data-act="perLaden"], .tr-fase')).toHaveCount(0);
+  await expect(page.locator('.tr-weken')).toBeVisible(); // weekthema werkt ook zonder leerdoelen (alleen het thema)
   await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'trainingsplannen').map((r) => `${r.scope}|${r.persoon_id}|${r.data.los}|${r.data.datum}|${r.data.onderdelen.length}`).join()).toBe('eigen|p-beheer|true|2026-11-03|1');
   await controleer(page, fouten, 'training op datum');
+});
+
+// Besluit 135: volgorde op de laptop, "Je zit in" en weekthema bij een club met het KNVB-profiel (geen periodisering)
+test('trainingsmodule: volgorde, je zit in en weekthema (KNVB-profiel)', async ({ page }) => {
+  const fouten = volgFouten(page);
+  await nepDatabase(page);
+  const profiel = JSON.parse(require('fs').readFileSync(require('path').join(__dirname, '..', 'supabase', 'profielen', 'knvb-2026.1.json'), 'utf8'));
+  // Het KNVB-profiel heeft nog geen leerlijnen; voor deze test één leerlijn erbij (zoals een club die het profiel aanvult)
+  profiel.onderdelen.leerlijnen = { status: 'eigen', items: [{ id: 'll-test', naam: 'Passen', kant: 'aanval' }] };
+  await page.evaluate((data) => { const db = JSON.parse(sessionStorage.getItem('fake-sb-db'));
+    db.rows['dcg|profiel|dcg'] = { club_id: 'dcg', soort: 'profiel', id: 'dcg', scope: 'hjo', data };
+    db.rows['dcg|club|club'].data.modules = { ...(db.rows['dcg|club|club'].data.modules || {}), training: true };
+    sessionStorage.setItem('fake-sb-db', JSON.stringify(db)); }, profiel);
+  await page.setViewportSize({ width: 1366, height: 900 });
+  await inloggen(page, 'admin@test.nl');
+  const datum = await page.evaluate(() => { const S = CC.S(); const D = CC.date; CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer'));
+    S.acts.push({ id: 'tW', teamId: 'O12-1', soort: 'training', datum: D.addDays(D.vandaag(), 1), tijd: '18:30', eind: '19:45' }); CC.save(); CC.render(); return D.addDays(D.vandaag(), 1); });
+  await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
+  await expect(page.locator('#app .seg button, #app [data-key="trSeg"]')).toHaveText(['Lijn', 'Plannen', 'Week', 'Vormen']);
+  await page.locator('.weekstrook [data-val="tW"]').click();
+  await expect(page.locator('.tr-zitin')).toContainText('nog geen weekthema');
+  await expect(page.locator('.tr-pzij .tr-maand')).toHaveCount(0);
+  await page.locator('.tr-zitin').click();
+  await expect(page.locator('.tr-weken')).toBeVisible();
+  await expect(page.locator('.tr-fase')).toHaveCount(0);
+  const ma = await page.evaluate((d) => { const x = CC.date.parse(d); return CC.date.addDays(d, -((x.getDay() + 6) % 7)); }, datum);
+  await page.locator(`[data-act="trWeekBewerk"][data-w="${ma}"]`).click();
+  await page.fill('#tw-t', 'Vrijlopen'); await page.locator('#tw-t').press('Tab');
+  const ld = await page.locator('#sheet select[name="hg1"] option').nth(1).getAttribute('value');
+  await page.locator('#sheet select[name="hg1"]').selectOption(ld);
+  await page.locator('#sheet [data-act="sluitRender"]').click();
+  await expect(page.locator('.tr-weken')).toContainText('Vrijlopen');
+  await page.locator('[data-act="seg"][data-val="plannen"]').click();
+  await expect(page.locator('.tr-zitin')).toContainText('Vrijlopen');
+  await page.locator('[data-act="tpNieuw"]').click();
+  // A komt als voorstel uit de week; de training heeft het niet zelf opgeslagen
+  expect(await page.evaluate((x) => { const S = CC.S(); const p = CC.tr.plan(S, 'tW'); return [CC.tr.blokDoel(S, p, 'A') === x, !(p.blokDoel || {}).A]; }, ld)).toEqual([true, true]);
+  await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'trainingsplannen' && r.data.week).map((r) => `${r.scope}|${r.data.methodiek.thema}`).join()).toBe('eigen|Vrijlopen');
+  await controleer(page, fouten, 'weekthema');
 });
 
 // Besluit 131: classificatie (weerstand vanuit het hoofdleerdoel), sjabloon DCG 75 met fase-voorstel, gepland en uitgevoerd, filters
@@ -1499,10 +1573,14 @@ test('trainingsmodule: classificatie, sjabloon, fase, minuten per leerdoel en fi
   await page.locator('#sheet label.tr-chip', { hasText: 'Oefenleer' }).click();
   await page.locator('#sheet form button.knop').click();
   await expect(page.locator('.tr-pmid .tr-rij').nth(1).locator('.tr-niv')).toHaveText('Kiezen');
+  // Besluit 135: evalueren gebeurt in Week; het maandoverzicht staat alleen in Lijn
+  await expect(page.locator('.tr-pzij form[data-autosave="tpTerug"], .tr-pzij .tr-maand')).toHaveCount(0);
+  await page.locator('[data-act="trNaarWeek"]').click();
   // Gegeven: echte minuten; alleen het hoofdleerdoel krijgt minuten
   await page.locator('form[data-autosave="tpTerug"] label.schakel').click();
   await expect(page.locator('.tr-uit input')).toHaveValue('6');
   await page.fill('.tr-uit input', '4'); await page.locator('.tr-uit input').press('Tab');
+  await page.locator('[data-act="seg"][data-val="lijn"]').click();
   await expect(page.locator('.tr-mlijst')).toContainText('1v1 verdedigen');
   await expect(page.locator('.tr-mlijst div', { hasText: '1v1 verdedigen' })).toContainText('4 min');
   await expect(page.locator('.tr-maand')).toContainText('uitgevoerd 4 van 6 min gepland');
@@ -1609,8 +1687,8 @@ test('trainingsmodule: periodisering laden, methodiek, evaluatie en observatiepu
   await page.locator('#perBestand').setInputFiles({ name: 'dcg-o13-fase1.csv', mimeType: 'text/csv', buffer: Buffer.from(csv, 'utf8') });
   await expect(page.locator('.tr-pv tr.concept')).toHaveCount(0);
   await page.locator('#sheet [data-act="sluit"].knop').click();
-  // Evaluatie p0 (afgelopen): drie vragen open, de rest onder Verdiepende analyse; aanpassing als voorstel bij p2
-  await page.locator('[data-act="seg"][data-val="plannen"]').click();
+  // Evaluatie p0 (afgelopen, in Week): drie vragen open, de rest onder Verdiepende analyse; aanpassing als voorstel bij p2
+  await page.locator('[data-act="seg"][data-val="week"]').click();
   await page.locator('.weekstrook [data-val="p0"]').click();
   await page.locator('form[data-autosave="tpTerug"] label.schakel').click();
   await expect(page.locator('form[data-autosave="tpTerug"] > .tr-ev')).toHaveCount(3);
