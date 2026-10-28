@@ -829,6 +829,27 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
   #printvak .pv-sp { border-top: 1px solid #ccd; padding-top: 4pt; margin: 6pt 0 0; color: #444; }
   #printvak .tr-legenda { font-size: 8pt; color: #555; }
 }
+/* Besluit 133: methodiek, leerniveau, status, evaluatiekaart, observatiepunten, periodisering laden */
+.tr-stat { display: inline-block; font-size: 12px; font-weight: 700; border-radius: 999px; padding: 1px 8px; margin-left: 6px; vertical-align: middle; white-space: nowrap; }
+.tr-stat.g { background: #fff4e5; color: #8a4b00; } .tr-stat.u { background: var(--blauw-l); color: var(--blauw-d); } .tr-stat.v { background: var(--groen-l); color: var(--groen); }
+.tr-niv { display: inline-block; font-size: 12px; font-weight: 700; border-radius: 999px; padding: 0 8px; background: #ede9fe; color: #5b21b6; white-space: nowrap; }
+.tr-niv.vs { background: none; border: 1px dashed #a78bfa; }
+.tr-meth { border: 1px solid var(--lijn); border-radius: 12px; padding: 8px 12px; display: flex; flex-direction: column; gap: 4px; background: var(--grond); }
+.tr-meth-kop { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 15px; }
+.tr-meth small { color: var(--zacht); font-size: 14px; }
+.tr-gedrag, .tr-vorig { margin: 0; font-size: 14px; }
+.tr-vorig { background: #fff4e5; border-radius: 8px; padding: 4px 8px; }
+.tr-meth-meer summary { cursor: pointer; font-size: 14px; color: var(--blauw); font-weight: 600; min-height: 32px; display: flex; align-items: center; }
+.tr-meth-r { display: grid; grid-template-columns: 150px 1fr; gap: 4px 12px; font-size: 14px; padding: 4px 0; }
+.tr-meth-r span { color: var(--zacht); }
+@media (max-width: 520px) { .tr-meth-r { grid-template-columns: 1fr; } .tr-meth-r b { margin-bottom: 4px; } }
+.tr-methknop { justify-content: flex-start; }
+.tr-ev { display: flex; flex-direction: column; gap: 4px; margin: 4px 0; } .tr-ev b { font-size: 14px; }
+.tr-diep { box-shadow: none; border: 1px solid var(--lijn); }
+.tr-obsw, .tr-bespreek { gap: 6px; }
+.tr-fase table { border-collapse: collapse; width: 100%; font-size: 14px; } .tr-fase th, .tr-fase td { text-align: left; padding: 7px 6px; border-bottom: 1px solid var(--lijn); vertical-align: top; }
+.tr-pv { border-collapse: collapse; width: 100%; font-size: 14px; } .tr-pv th, .tr-pv td { text-align: left; padding: 6px; border-bottom: 1px solid var(--lijn); }
+.tr-pv tr.concept td:last-child, .tr-pv tr.observatie td:last-child { color: var(--groen); font-weight: 600; } .tr-pv tr.overslaan td:last-child { color: var(--zacht); } .tr-pv tr.fout td:last-child { color: var(--rood); font-weight: 600; }
 /* Besluit 129: observeren tijdens de wedstrijd (klok, turven, snelle notities) */
 .obs-plak { background: #0b2545; color: #fff; display: flex; flex-direction: column; gap: 10px; }
 .obs-plak .zacht { color: #c9d6e6; }

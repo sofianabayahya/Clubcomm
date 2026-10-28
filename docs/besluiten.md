@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 132)
+Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 133)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -17,6 +17,7 @@ Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 132)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 133 | DCG-methodiek als profiel v3 (kerndocument leidend); methodiekblok compact; leerniveau per blok; status berekend; evaluatiekaart (3 open + verdiepend); periodisering laden uit CSV met voorbeeld; observatiepunten bij de wedstrijd; uitgebreide vormvelden | ✅ geldt |  |
 | 132 | Training: Week (telefoon, controleren) · Plannen (laptop: vormen · training in blokken · week) · Vormen · Lijn; vorm in Rinus-stijl met *Zet in een training…* en materiaal uit de tekening; printen; kopiëren naar een andere dag | ✅ geldt |  |
 | 131 | Oefenvormen geclassificeerd (8 hoofdtypes, weerstand vanuit het hoofdleerdoel, omschakeling met richting), opbouw in blokken met sjabloon DCG 75 en fase-voorstel, gepland en uitgevoerd, filters; laptop vanaf 900 px | ◐ deels herzien | door 132 (geen leerdoel-chips meer in de kop van een training; vorm opent in Rinus-stijl) |
 | 130 | Trainer: eigen tabblad Training (week met de training bovenaan, aanwezigheid in een venster, Vormen); ook bij AVV Swift, daar trainingen op datum | ◐ deels herzien | door 132 (Training heeft Week · Plannen · Vormen · Lijn; de training staat op de laptop in Plannen) |
@@ -665,6 +666,42 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 133 — DCG-methodiek in ClubComm: profiel v3, periodisering als concepten, evaluatie en observatie
+*Besloten 28 oktober 2026, na de audit (`docs/methodiek/dcg/audit-2026-10-28.md`) en vijf voorbeelden, beoordeeld met ChatGPT (`docs/onderzoek/periodisering-o13/stap2/`). **Het kerndocument van 26-09-2026 is leidend** (`docs/methodiek/dcg/`); het geldt **alleen voor DCG**, andere clubs volgen de KNVB. De Excel-periodisering van de initiatiefnemer blijft de inhoudelijke bron; ClubComm neemt die over en spreekt haar niet tegen.*
+- **Profiel v3** (`supabase/profielen/dcg.json`):
+  - 6 gereedschappen (Afwerken – benutten als `ll-6`), Ball Mastery als onderbouw;
+  - 8 voetbalproblemen volledig uitgewerkt, 5 leerniveaus, 5 leeromgevingen;
+  - mengpaneel, handelingsketens, 15 ontwerpprincipes;
+  - periodisering met het weekformat, de evaluatiekaart;
+  - twee sjablonen (spacing en afwisselend), spacing gedefinieerd;
+  - fasen optioneel naast de leerniveaus; contrathema open.
+
+  De invoer in de database gebeurt met een controlesom en een terugdraai-script, na akkoord.
+- **Methodiekblok per training:** compact (probleem, A/B, beoogd leerniveau, één regel gewenst gedrag); het volledige weekformat klapt uit (*Onderbouwing*). Op de telefoon staat het blok vóór de oefeningen.
+- **Leerniveau per blok:** gestippeld als voorstel (uit de periodisering), vastgezet door de trainer. De fase staat ingeklapt in het venster van een onderdeel.
+- **Status wordt berekend:**
+  - *Gegeven* = training is gegeven;
+  - *Uitgewerkt* = elke plek gevuld en elke vorm met tekening of organisatie;
+  - anders *Gepland*.
+
+  Een lege training is nooit *Uitgewerkt*.
+- **Evaluatie** (in de bestaande terugblik, geen tweede systeem):
+  - open: *Probleem ontstaan?*, *Gewenst gedrag zichtbaar?*, *Weerstand*, *Wat doen we de volgende keer anders?*;
+  - de rest onder **Verdiepende analyse**; alles optioneel;
+  - de aanpassing staat bij de volgende training met hetzelfde probleem als **voorstel**, nooit automatisch doorgevoerd.
+- **Periodisering laden** (Lijn), uit Excel opgeslagen als CSV:
+  - ClubComm toont eerst per regel welke **echte activiteit van het gekozen team** een concept krijgt;
+  - geen training op die dag → overgeslagen; al een voorbereiding → overgeslagen (nooit overschreven); dubbel → één keer; lege regel → niets; onbekende waarden → gemeld (de tekst blijft staan);
+  - pas na **Toevoegen** schrijft de app, met de rechten van de trainer (scope `eigen`); geen oefenvormen of tekeningen.
+  - **Terugdraaien** verwijdert alleen concepten die niet zijn aangepast en niet gegeven (stempel bij het laden).
+  - Een leeg sjabloon met de echte data staat in `docs/methodiek/dcg/periodisering-sjabloon-o13.csv` en kan ook in de app worden gedownload.
+- **Observatiepunten bij de wedstrijd:**
+  - max. 3, gekoppeld aan het weekprobleem;
+  - *Gezien / Deels / Niet gezien / Niet beoordeeld*;
+  - in de week erna als **bespreekpunt** zichtbaar (Plannen, rechts); geen automatische conclusie.
+- **Vorm:** *Uitgebreid (optioneel)*, ingeklapt: leeromgeving, *als de vorm vastloopt*, ideaal aantal / minimum / minimumvariant. Bij DCG weerstand *geen / gestuurd / beperkt / volledig*.
+- **Swift en andere clubs:** niets verandert. Alles hangt aan het DCG-profiel (de module verschijnt alleen als het profiel voetbalproblemen en leerniveaus heeft).
 
 ## Besluit 132 — Training op de laptop: Plannen, vorm in Rinus-stijl, printen, kopiëren en de Lijn
 *Besloten 28 oktober 2026 ("bouw maar in de volgorde"), na een schermopname van KNVB Rinus en voorbeelden (`docs/onderzoek/training-laptop/`). Aanleiding: op de laptop stond alles onder elkaar (thema, vijf leerdoel-chips, spelers, opbouw, maandminuten, terugblik, knoppen); trainingen maak je op de laptop en controleer je op de telefoon.*
@@ -2077,6 +2114,7 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 ---
 
 ## Nog te bespreken
+- **Contrathema** (Besluit 133): staat niet in het kerndocument; optioneel veld of laten vallen?
 - **Wat is spacing inhoudelijk?** (Besluit 131) Loslaten (het geleerde laten rusten), herstel, contrast of spelend leren? Pas daarna krijgt spacing een eigen soort of regels.
 - **De 8 spelprincipes voor O13 en de leerdoelen als observeerbaar gedrag** (Besluit 131): de plekken staan klaar in het DCG-profiel; de inhoud stelt de initiatiefnemer vast.
 - **6e leerlijn:** beschermen/vrijmaken of schieten/afronden (Besluit 131).
