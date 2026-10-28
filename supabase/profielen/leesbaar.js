@@ -1,0 +1,23 @@
+// Maakt een leesbare controleversie (markdown) van een opleidingsprofiel: node supabase/profielen/leesbaar.js dcg > docs/methodiek/dcg/profiel-controle.md
+const p = require(`./${process.argv[2] || 'dcg'}.json`); const o = p.onderdelen; const L = [];
+const naam = (id) => ((o.leerlijnen.items.find((x) => x.id === id) || {}).naam || id);
+const lijst = (a) => (a || []).map((x) => `  - ${x}`).join('\n');
+L.push(`# ${p.naam}: controleversie profiel v${p.versie} (${p.bijgewerkt})`, '', `*Gemaakt uit \`supabase/profielen/${p.id}.json\`. Status: ${p.status}. Bron: ${p.bron}*`, '');
+L.push('## Visie', `**${o.visie.titel}**. ${o.visie.kern || ''}`, '', `Cyclus: ${(o.visie.cyclus || []).join(' → ')}`, '');
+L.push('## Zes gereedschappen', '| Gereedschap | Kern | Principe | Spelersvraag | Kant |', '|---|---|---|---|---|');
+o.leerlijnen.items.forEach((x) => L.push(`| ${x.naam} (\`${x.id}\`) | ${x.kern} | ${x.principe || ''} | ${x.spelersvraag || ''} | ${x.kant || ''} |`));
+L.push('', `*${o.leerlijnen.noot}*`, '', `## ${o.technischeOnderbouw.naam}`, o.technischeOnderbouw.noot, '', ...o.technischeOnderbouw.lagen.map((x) => `- **${x.naam}:** ${x.vraag}`), '');
+L.push('## Acht voetbalproblemen');
+o.voetbalproblemen.items.forEach((x) => { L.push(`### ${x.id.slice(3)}. ${x.naam}`, `**Definitie:** ${x.definitie}`, '', `**Centrale vraag:** ${x.centraleVraag}`, '', `**Gereedschappen:** primair ${x.gereedschappen.primair.map(naam).join(', ') || (x.gereedschappen.context ? 'context (bepaald door het nieuwe probleem)' : '–')}${x.gereedschappen.ondersteunend.length ? `; ondersteunend ${x.gereedschappen.ondersteunend.map(naam).join(', ')}` : ''}`, '', '**Waarnemen:**', lijst(x.waarnemen), '', '**Keuze WAT:**', lijst(x.keuzeWat), '', '**Keuze HOE:**', lijst(x.keuzeHoe), '', `**Oplossingen:** ${x.oplossingen.join('; ')}`, '', `**Complexiteit:** ${x.complexiteit}`, '', `**O12-eindbeeld:** ${x.eindbeeldO12}`, ...(x.noot ? ['', `*${x.noot}*`] : []), ''); });
+L.push('## Vijf leerniveaus', ...o.leerniveaus.items.map((x) => `- **${x.naam}:** ${x.omschrijving}`), '', `*${o.leerniveaus.noot}*`, '');
+L.push('## Leeromgevingen', ...o.leeromgevingen.items.map((x) => `- **${x.naam}:** ${x.geschiktVoor}`), '');
+L.push('## Mengpaneel', ...o.mengpaneel.knoppen.map((x) => `- **${x.naam}**${x.opties.length ? `: ${x.opties.join(', ')}` : ''}`), '', `Complexiteit: ${o.mengpaneel.complexiteit}`, '');
+L.push('## Handelingsketens', ...o.handelingsketens.items.map((x) => `- ${x.naam} (${x.stappen.map(naam).join(' → ')})`), '');
+L.push('## Ontwerpprincipes', ...o.ontwerpprincipes.items.map((x, i) => `${i + 1}. ${x}`), '');
+L.push('## Methodische fasen (eigen keuze, optioneel)', o.methodiek.fasen.map((x) => x.naam).join(' · '), '', `*${o.methodiek.noot}*`, '');
+L.push('## Trainingsopbouw', ...o.trainingsopbouw.sjablonen.map((s) => `- **${s.naam}:** ${s.blokken.map((b) => `${b.blok === 'start' ? 'start' : b.blok} ${b.min}`).join(' · ')} · ${s.overig.naam.toLowerCase()} ${s.overig.min} = ${s.blokken.reduce((t, b) => t + b.min, 0) + s.overig.min} min`), '', `**Spacing:** ${o.trainingsopbouw.spacing.definitie}`, ...o.trainingsopbouw.spacing.modellen.map((m) => `- ${m.naam}: ${m.volgorde}`), '');
+L.push('## Periodisering', o.periodisering.model.join(' → '), '', ...o.periodisering.principes.map((x) => `- ${x}`), '', `**Weekformat:** ${o.periodisering.weekformat.map((x) => x.naam).join(' · ')}`, '', ...(o.periodisering.contrathema ? [`**Contrathema (optioneel):** ${o.periodisering.contrathema.omschrijving}`, '', ...o.periodisering.contrathema.regels.map((x) => `- ${x}`)] : []), ...(o.periodisering.open ? ['', `**Open:** ${o.periodisering.open.join(' ')}`] : []), '');
+L.push('## Evaluatie', o.evaluatie.cyclus.join(' → '), '', ...o.evaluatie.vragen.map((x) => `- ${x.vraag} (${x.schaal.join(' / ')})${x.alleenBijTerugkeer ? ' *alleen bij terugkeer*' : ''}`), `- ${o.evaluatie.wijziging}`, '');
+L.push('## Nog leeg', ...Object.entries(o).filter(([, v]) => v.status === 'leeg').map(([k]) => `- ${k}`), '');
+L.push('## Termen', ...o.termen.items.map((x) => `- **${x.term}:** ${x.betekenis}`));
+console.log(L.join('\n'));

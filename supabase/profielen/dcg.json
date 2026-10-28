@@ -5,10 +5,10 @@
   "naam": "DCG-opleidingslijn",
   "modus": "eigen",
   "basis": null,
-  "versie": 2,
+  "versie": 3,
   "status": "concept",
-  "bijgewerkt": "2026-10-27",
-  "bron": "Fundament van de initiatiefnemer (uitgewerkt in ChatGPT), ingevoerd 27-10-2026. Niet de definitieve, volledige methodiek.",
+  "bijgewerkt": "2026-10-28",
+  "bron": "Methodologisch model leren voetballen, kerndocument v1.0 (26-09-2026), met de uitwerkingen Acht universele voetbalproblemen, HO-spoor en Trainersspoor (docs/methodiek/dcg/). Het kerndocument is leidend. Alleen voor DCG; andere clubs volgen de KNVB.",
   "onderdelen": {
     "visie": {
       "status": "eigen",
@@ -48,7 +48,19 @@
           "id": "w-iedereen",
           "naam": "Iedereen doet mee"
         }
-      ]
+      ],
+      "cyclus": [
+        "Voetbalprobleem",
+        "Waarnemen",
+        "Keuze WAT",
+        "Keuze HOE",
+        "Gereedschap(pen)",
+        "Uitvoering",
+        "Effect",
+        "Nieuwe situatie"
+      ],
+      "kern": "Voetballen is het voortdurend oplossen van veranderende voetbalproblemen. Een voetbalhandeling is gereedschap; een voetbalprobleem vraagt de speler te herkennen welk gereedschap, of welke combinatie, nodig is.",
+      "praktisch": "Waarnemen → kiezen → handelen → effect → opnieuw waarnemen."
     },
     "doelgroep": {
       "status": "eigen",
@@ -65,7 +77,12 @@
       "trainingen": {
         "perWeek": 3,
         "minuten": 75
-      }
+      },
+      "leeftijdsfase": {
+        "O12": "Speler + mede-/tegenstanders + ruimte + richting: welke oplossing past bij wat ik waarneem? Overgang: techniek blijft, herkennen, kiezen en combineren worden belangrijker.",
+        "O13+": "Teamtaak + positie + samenwerking + speelwijze: hoe stem ik mijn individuele handelen af binnen het team?"
+      },
+      "ontwikkelprincipe": "Herhalen → variëren → complexiteit verhogen → opnieuw tegenkomen."
     },
     "teamfuncties": {
       "status": "eigen",
@@ -88,6 +105,722 @@
         }
       ],
       "noot": "Binnen deze teamfuncties komen samenhangende spelprincipes en leerdoelen."
+    },
+    "leerlijnen": {
+      "status": "eigen",
+      "naam": "Zes universele voetbalvaardigheden (gereedschappen)",
+      "items": [
+        {
+          "id": "ll-1v1-aanvallend",
+          "naam": "1v1 aanvallend",
+          "kern": "manipuleren",
+          "kant": "aanval",
+          "omschrijving": "Tegenstander beïnvloeden om ruimte, tijd of vervolgvoordeel te creëren.",
+          "principe": "Manipuleer → herken reactie → profiteer.",
+          "spelersvraag": "Hoe beïnvloed ik mijn tegenstander en krijg ik voordeel?",
+          "technischeOnderbouw": "Balcontrole, binnen-/buitenkant, zool, richtings- en tempowisselingen, schijnbewegingen, stop-start, versnellen en beschermen."
+        },
+        {
+          "id": "ll-aannemen",
+          "naam": "Aannemen en meenemen",
+          "kern": "voorbereiden",
+          "kant": "aanval",
+          "omschrijving": "Het eerste contact helpt de volgende voetbalhandeling.",
+          "principe": "Het eerste contact begint met kijken.",
+          "spelersvraag": "Helpt mijn eerste contact mijn volgende actie?",
+          "technischeOnderbouw": "Waarnemen: balbaan, drukrichting, vrije ruimte, medespeler en vervolgactie."
+        },
+        {
+          "id": "ll-passen",
+          "naam": "Passen",
+          "kern": "helpen",
+          "kant": "aanval",
+          "omschrijving": "De pass geeft de volgende speler of het team voordeel.",
+          "principe": "Een goede pass bereidt de volgende voetbalhandeling voor.",
+          "spelersvraag": "Kan mijn pass de volgende speler voordeel geven?",
+          "technischeOnderbouw": "Positie, moment, richting en snelheid; voet/loop; beide voeten; verschillende afstanden."
+        },
+        {
+          "id": "ll-vrijkomen",
+          "naam": "Vrijkomen",
+          "kern": "timen",
+          "kant": "aanval",
+          "omschrijving": "Op het juiste moment een bruikbare positie innemen of verlaten.",
+          "principe": "Niet bewegen om te bewegen. Bewegen omdat de situatie daarom vraagt.",
+          "spelersvraag": "Wanneer en waar moet ik bewegen?"
+        },
+        {
+          "id": "ll-1v1-verdedigen",
+          "naam": "1v1 verdedigen en bal veroveren",
+          "kern": "controleren",
+          "kant": "verdediging",
+          "omschrijving": "Mogelijkheden beperken en het moment herkennen om in te grijpen.",
+          "principe": "Goed verdedigen begint niet met afpakken, maar met controleren.",
+          "spelersvraag": "Moet ik wachten, vertragen of ingrijpen?"
+        },
+        {
+          "id": "ll-6",
+          "naam": "Afwerken",
+          "kern": "benutten",
+          "kant": "aanval",
+          "omschrijving": "Het scoringsmoment herkennen en een passende oplossing uitvoeren.",
+          "principe": "Goed afwerken begint niet bij het schot, maar bij het herkennen van het scoringsmoment.",
+          "spelersvraag": "Is dit mijn scoringsmoment en hoe benut ik het?",
+          "noot": "Vaste id 'll-6' (bestond al als lege plek); vastgesteld in het kerndocument van 26-09-2026."
+        }
+      ],
+      "noot": "Waarnemen, kiezen, timing, communicatie en uitvoering zijn kwaliteitsdimensies door alle zes gereedschappen heen; geen extra universele vaardigheden."
+    },
+    "technischeOnderbouw": {
+      "status": "eigen",
+      "naam": "Technische onderbouw / Ball Mastery",
+      "noot": "Geen zevende universele vaardigheid, maar een technische onderbouw onder de gereedschapskist. Geen vast percentage per training.",
+      "lagen": [
+        {
+          "id": "to-balbeheersing",
+          "naam": "Balbeheersing",
+          "vraag": "Kan de speler de bal gecontroleerd manipuleren?"
+        },
+        {
+          "id": "to-uitvoering",
+          "naam": "Technische uitvoering",
+          "vraag": "Kan hij een specifieke handeling kwalitatief uitvoeren?"
+        },
+        {
+          "id": "to-toepassing",
+          "naam": "Functionele toepassing",
+          "vraag": "Herkent hij wanneer, waarom en hoe de handeling in voetbal nodig is?"
+        }
+      ],
+      "onderhoud": [
+        "Thuisopdrachten",
+        "Korte activaties",
+        "Toetsmomenten",
+        "Gericht technisch blok wanneer uitvoering de functionele oplossing beperkt"
+      ]
+    },
+    "voetbalproblemen": {
+      "status": "eigen",
+      "items": [
+        {
+          "id": "vp-1",
+          "naam": "Bal behouden onder druk",
+          "teamfunctie": "tf-aanvallen",
+          "definitie": "De speler of het team heeft balbezit terwijl de tegenstander probeert de bal te veroveren. De speler leert controle te behouden zonder balbezit als doel op zichzelf te zien.",
+          "centraleVraag": "Hoe behouden we controle over de bal wanneer de tegenstander druk geeft?",
+          "waarnemen": [
+            "Van waar en met welke snelheid komt de druk?",
+            "Hoeveel tijd en ruimte heb ik?",
+            "Waar ligt ruimte weg van de druk?",
+            "Welke medespeler kan helpen?",
+            "Hoe komt de bal aan en hoeveel contacten heb ik nodig?",
+            "Kan ik na het behouden ook opnieuw voordeel creëren?"
+          ],
+          "keuzeWat": [
+            "Beschermen",
+            "Wegdraaien",
+            "Tegenstander passeren",
+            "Meenemen uit druk",
+            "Direct kaatsen",
+            "Vrije speler inspelen",
+            "Tegenstander binden en daarna spelen",
+            "Tijdelijk opnieuw beginnen"
+          ],
+          "keuzeHoe": [
+            "Lichaam tussen bal en tegenstander",
+            "Eerste contact van druk af",
+            "Tempowisseling",
+            "Passende voet",
+            "Juiste balsnelheid",
+            "Lichaamshouding vooraf voorbereiden",
+            "Beweging van medespeler timen"
+          ],
+          "gereedschappen": {
+            "primair": [
+              "ll-1v1-aanvallend",
+              "ll-aannemen",
+              "ll-passen",
+              "ll-vrijkomen"
+            ],
+            "ondersteunend": []
+          },
+          "oplossingen": [
+            "Beschermen en loskomen",
+            "Open draaien",
+            "Kaatsen",
+            "Derde speler gebruiken",
+            "Uit druk dribbelen",
+            "Tegenstander binden",
+            "Steun onder de bal creëren"
+          ],
+          "complexiteit": "1v1 → 2v1 → 2v2 → 3v2/3v3 → 4v3/4v4 → vrij klein spel → 8v8 → 11v11.",
+          "eindbeeldO12": "De speler raakt onder druk niet automatisch in paniek of speelt niet automatisch terug. Hij herkent waar de druk vandaan komt, kan zelf of via een medespeler controle behouden en probeert daarna opnieuw voordeel te creëren."
+        },
+        {
+          "id": "vp-2",
+          "naam": "Vooruitgang creëren",
+          "teamfunctie": "tf-aanvallen",
+          "definitie": "Vanuit balbezit terrein, tegenstanders of druk overwinnen zodat de bal in een gunstiger positie dichter bij het doel komt.",
+          "centraleVraag": "Hoe komen we voorbij de druk en dichter bij het doel?",
+          "waarnemen": [
+            "Is er vrije ruimte vóór mij?",
+            "Kan ik zelf indribbelen?",
+            "Welke tegenstander blokkeert vooruitgang?",
+            "Is een medespeler vóór of achter de druk bereikbaar?",
+            "Welke passinglijn is open of kan ik openen?",
+            "Beweegt iemand in een ruimte die straks bereikbaar wordt?",
+            "Wat gebeurt er als ik een tegenstander eerst bind?"
+          ],
+          "keuzeWat": [
+            "Indribbelen",
+            "Passeren",
+            "Vooruit inspelen",
+            "In de ruimte spelen",
+            "Via een medespeler combineren",
+            "Zijwaarts/terug spelen om een nieuwe vooruitmogelijkheid te creëren",
+            "Tegenstander binden"
+          ],
+          "keuzeHoe": [
+            "Met snelheid indribbelen",
+            "Tempowisseling",
+            "Juiste moment van pass",
+            "Passende balsnelheid",
+            "Op juiste voet/in loop spelen",
+            "Eerste contact vooruit",
+            "Lichaam openen",
+            "Loopactie voor/achter druk"
+          ],
+          "gereedschappen": {
+            "primair": [
+              "ll-1v1-aanvallend",
+              "ll-aannemen",
+              "ll-passen",
+              "ll-vrijkomen"
+            ],
+            "ondersteunend": []
+          },
+          "oplossingen": [
+            "Indribbelen",
+            "Tegenstander passeren",
+            "Vrije speler vooruit vinden",
+            "Achter druk spelen",
+            "Kaats",
+            "Derde man",
+            "Binden en spelen",
+            "Dieptespel",
+            "Combinatie door een linie"
+          ],
+          "complexiteit": "1v1 met richting → 2v1 → 2v2 → 3v2 → 3v3 met eindzone → 4v3/4v4 → meerdere zones/lijnen → 8v8 → grotere afstanden richting 11v11.",
+          "eindbeeldO12": "De speler kijkt eerst of hij zelf vooruit kan en herkent daarna combinatiemogelijkheden. Hij begrijpt dat vooruitgang kan ontstaan door dribbelen, passeren, passen of bewegen en dat soms een omweg nodig is om later wél vooruit te komen.",
+          "noot": "Vooruit spelen is geen dogma. Het doel is vooruitgang/voordeel. Een zijwaartse of terugwaartse pass kan de beste oplossing zijn wanneer die een nieuwe mogelijkheid creëert om vervolgens wél druk te overwinnen."
+        },
+        {
+          "id": "vp-3",
+          "naam": "Voordeel uitspelen",
+          "teamfunctie": "tf-aanvallen",
+          "definitie": "Een reeds ontstaan voordeel — in speler, ruimte, positie, snelheid of aantal — herkennen en benutten voordat de tegenstander kan herstellen.",
+          "centraleVraag": "Waar hebben we voordeel en hoe benutten we dat op tijd?",
+          "waarnemen": [
+            "Hebben we een vrije speler?",
+            "Hebben we numeriek overtal?",
+            "Staat iemand achter of naast de druk?",
+            "Is er veel ruimte voor een speler?",
+            "Is een tegenstander uit positie?",
+            "Kan de tegenstander nog herstellen?",
+            "Waar ligt het grootste vervolgvoordeel?"
+          ],
+          "keuzeWat": [
+            "Zelf doorgaan",
+            "Verdediger binden",
+            "Vrije speler gebruiken",
+            "Bal in ruimte spelen",
+            "Tempo verhogen",
+            "Direct spelen",
+            "Voordeel verplaatsen naar andere ruimte"
+          ],
+          "keuzeHoe": [
+            "Juiste timing",
+            "Voldoende balsnelheid",
+            "Medespeler op juiste voet/in loop bedienen",
+            "Loopactie breed/diep",
+            "Verdediger daadwerkelijk laten kiezen",
+            "Eerste contact in richting van voordeel"
+          ],
+          "gereedschappen": {
+            "primair": [
+              "ll-1v1-aanvallend",
+              "ll-aannemen",
+              "ll-passen",
+              "ll-vrijkomen"
+            ],
+            "ondersteunend": [
+              "ll-6"
+            ]
+          },
+          "oplossingen": [
+            "2v1 uitspelen",
+            "Binden en spelen",
+            "Overlap/underlap als toepassing",
+            "Kaats",
+            "Derde man",
+            "Vrije speler vinden",
+            "Snelle spelverplaatsing",
+            "Doorlopen na pass"
+          ],
+          "complexiteit": "2v1 → 3v2 → 2v2 met tijdelijk voordeel → 3v3+1 → 4v3 → overgangssituaties → vrij spel waarin voordeel spontaan ontstaat → 8v8/11v11.",
+          "eindbeeldO12": "De speler herkent niet alleen wie vrij staat, maar leert waar het grootste voordeel ligt en handelt voordat de tegenstander herstelt. Hij begrijpt dat het soms nodig is eerst een tegenstander te binden voordat een medespeler werkelijk vrij is.",
+          "noot": "Een 2v1 is de situatie, voordeel uitspelen is het probleem, binden-en-spelen is een mogelijke oplossing, en de zes leerlijnen leveren het gereedschap."
+        },
+        {
+          "id": "vp-4",
+          "naam": "Een scoringskans creëren",
+          "teamfunctie": "tf-aanvallen",
+          "definitie": "Vanuit balbezit een situatie creëren waarin de speler zelf of een medespeler vanuit een kansrijke positie doelgericht kan afwerken.",
+          "centraleVraag": "Hoe maken we van ons voordeel een echte mogelijkheid om te scoren?",
+          "waarnemen": [
+            "Waar ligt ruimte richting/in het scoringsgebied?",
+            "Welke verdediger kan worden uitgespeeld of gebonden?",
+            "Wie kan in scoringspositie komen?",
+            "Waar staat de keeper?",
+            "Welke loopactie opent ruimte?",
+            "Kan ik zelf schieten of moet ik nog een handeling/combinatie maken?"
+          ],
+          "keuzeWat": [
+            "1v1 aangaan",
+            "Combinatie zoeken",
+            "Diepte gebruiken",
+            "Terugleggen",
+            "Voorzet/pass vanaf zijkant",
+            "Tegenstander binden",
+            "Zelf doorlopen",
+            "Medespeler vrijspelen",
+            "Al direct afwerken als het moment er is"
+          ],
+          "keuzeHoe": [
+            "Tempo verhogen/verlagen",
+            "Eerste contact richting doel",
+            "Pass op juiste voet of in loop",
+            "Loopactie voor/achter verdediger",
+            "Juiste moment van laatste pass",
+            "Schijnactie of dribbel om schot/passlijn te openen"
+          ],
+          "gereedschappen": {
+            "primair": [
+              "ll-1v1-aanvallend",
+              "ll-aannemen",
+              "ll-passen",
+              "ll-vrijkomen",
+              "ll-6"
+            ],
+            "ondersteunend": []
+          },
+          "oplossingen": [
+            "1v1 winnen",
+            "2v1 richting doel",
+            "Kaats",
+            "Derde man",
+            "Diepteloop",
+            "Teruggetrokken bal",
+            "Pass door/achter verdediging",
+            "Ruimte voor schutter creëren"
+          ],
+          "complexiteit": "1v1 naar doel → 2v1 naar doel → 2v2 → 3v2 → 3v3/4v3 met doel → vrij klein spel → 8v8 met echte scoringszones → 11v11-context.",
+          "eindbeeldO12": "De speler herkent wanneer balbezit kan worden omgezet in doelgevaar en kan met dribbel, pass of beweging zichzelf of een medespeler in een betere scoringspositie brengen."
+        },
+        {
+          "id": "vp-5",
+          "naam": "Een scoringskans benutten",
+          "teamfunctie": "tf-aanvallen",
+          "definitie": "Een ontstane scoringsmogelijkheid herkennen en met een passende keuze en uitvoering omzetten in een doelpoging met zo groot mogelijke kans op succes.",
+          "centraleVraag": "Is dit het moment om te scoren en welke oplossing past?",
+          "waarnemen": [
+            "Waar staat de keeper?",
+            "Welke delen van het doel zijn beschikbaar?",
+            "Waar komt verdedigende druk vandaan?",
+            "Hoe komt de bal aan?",
+            "Heb ik tijd voor een extra contact?",
+            "Staat een medespeler aantoonbaar beter?"
+          ],
+          "keuzeWat": [
+            "Direct schieten",
+            "Eerste contact en schieten",
+            "Keeper uitspelen",
+            "Bal verder meenemen",
+            "Andere speler bedienen",
+            "Schot uitstellen"
+          ],
+          "keuzeHoe": [
+            "Plaatsen of kracht",
+            "Laag/hoog",
+            "Korte/verre hoek",
+            "Direct/na contact",
+            "Linker/rechtervoet",
+            "Vroeg schieten of keeper verder laten komen"
+          ],
+          "gereedschappen": {
+            "primair": [
+              "ll-6",
+              "ll-aannemen"
+            ],
+            "ondersteunend": [
+              "ll-1v1-aanvallend",
+              "ll-passen",
+              "ll-vrijkomen"
+            ]
+          },
+          "oplossingen": [
+            "Directe afwerking",
+            "Eerste contact + schot",
+            "1v1 met keeper",
+            "Teruggelegde bal afwerken",
+            "Rebound",
+            "Na dribbel schieten",
+            "Extra pass naar beter gepositioneerde speler"
+          ],
+          "complexiteit": "Ongehinderd gericht afwerken → vanuit beweging/pass → keeper → verdediger + keeper → numerieke wedstrijdsituaties → vrij spel.",
+          "eindbeeldO12": "De speler herkent het scoringsmoment, kijkt naar keeper en druk en kan techniek, richting, timing en voet aanpassen. Hij begrijpt ook wanneer níét schieten de betere keuze is."
+        },
+        {
+          "id": "vp-6",
+          "naam": "Vooruitgang van de tegenstander voorkomen",
+          "teamfunctie": "tf-verdedigen",
+          "definitie": "De tegenstander zodanig beïnvloeden dat hij niet of minder gemakkelijk richting ons doel kan spelen, dribbelen of combineren.",
+          "centraleVraag": "Hoe beperken we de mogelijkheden van de tegenstander en winnen we tijd of positie?",
+          "waarnemen": [
+            "Waar wil de tegenstander naartoe?",
+            "Waar liggen doel en gevaarlijke ruimte?",
+            "Hoe is zijn balcontrole?",
+            "Welke kant kan ik afsluiten/aanbieden?",
+            "Waar staan mijn medespelers?",
+            "Heb ik dekking?",
+            "Moet ik direct druk geven of eerst vertragen?"
+          ],
+          "keuzeWat": [
+            "Benaderen",
+            "Sturen",
+            "Vertragen",
+            "Afstand houden",
+            "Passinglijn beïnvloeden",
+            "Tegenstander naar minder gevaarlijke ruimte dwingen",
+            "Herstellen",
+            "Duel aangaan als moment ontstaat"
+          ],
+          "keuzeHoe": [
+            "Snel afstand verkleinen en gecontroleerd afremmen",
+            "Lichaamshouding",
+            "Hoek van benaderen",
+            "Juiste afstand",
+            "Meebewegen",
+            "Explosief herstellen"
+          ],
+          "gereedschappen": {
+            "primair": [
+              "ll-1v1-verdedigen"
+            ],
+            "ondersteunend": []
+          },
+          "oplossingen": [
+            "Binnenkant sluiten",
+            "Naar zijlijn sturen",
+            "Tijd winnen",
+            "Tegenstander ophouden tot hulp komt",
+            "Diepte beschermen",
+            "Passinglijn dichtzetten als onderdeel van de gekozen positie"
+          ],
+          "complexiteit": "1v1 met richting → 1v1 grote ruimte → 1v2 vertragen → 2v2 → 2v3/3v3 → kleine partij → 8v8/11v11 met teamcontext.",
+          "eindbeeldO12": "De speler jaagt niet blind op de bal, maar kan gevaar herkennen, gecontroleerd druk geven, sturen of vertragen en begrijpt dat tijd winnen soms een succesvolle verdedigende handeling is.",
+          "noot": "Waarnemen en afstemmen bepalen de kwaliteit."
+        },
+        {
+          "id": "vp-7",
+          "naam": "De bal veroveren",
+          "teamfunctie": "tf-verdedigen",
+          "definitie": "Het moment herkennen waarop de tegenstander voldoende beperkt of kwetsbaar is om daadwerkelijk in te grijpen en opnieuw controle over de bal te verkrijgen.",
+          "centraleVraag": "Wanneer kan ik van controleren naar veroveren gaan?",
+          "waarnemen": [
+            "Is de eerste aanname slecht?",
+            "Ligt de bal te ver van de voet?",
+            "Staat de tegenstander met rug naar speelrichting?",
+            "Vertraagt/stopt hij?",
+            "Is de bal onderweg?",
+            "Is hij richting beperkte ruimte gestuurd?",
+            "Is er steun van een medespeler?",
+            "Wat gebeurt er direct ná een eventuele verovering?"
+          ],
+          "keuzeWat": [
+            "Instappen",
+            "Duel aangaan",
+            "Onderscheppen",
+            "Druk verhogen",
+            "Nog wachten",
+            "Gezamenlijk vastzetten",
+            "Na winst bal controleren of direct voordeel benutten"
+          ],
+          "keuzeHoe": [
+            "Explosief moment kiezen",
+            "Voet/lichaam tussen speler en bal",
+            "Contact functioneel gebruiken",
+            "Passlijn lezen",
+            "Na balwinst eerste handeling voorbereiden"
+          ],
+          "gereedschappen": {
+            "primair": [
+              "ll-1v1-verdedigen"
+            ],
+            "ondersteunend": []
+          },
+          "oplossingen": [
+            "Instappen na slechte aanname",
+            "Onderscheppen",
+            "Duel winnen",
+            "Tegenstander vastzetten",
+            "Bal afpakken na sturen",
+            "Tweede bal winnen"
+          ],
+          "complexiteit": "1v1 → 2v1 verdedigend → 2v2 → 3v3 → overgangsvormen → vrij spel → 8v8/11v11.",
+          "eindbeeldO12": "De speler herkent steeds beter wanneer wachten verandert in ingrijpen, kan daadwerkelijk balbezit proberen te herstellen en schakelt na winst onmiddellijk over naar het nieuwe aanvallende probleem.",
+          "noot": "Bal raken is niet hetzelfde als bal veroveren. De verovering is pas functioneel wanneer het team opnieuw invloed/controle over de bal heeft of onmiddellijk voordeel kan benutten. Na winst schakelt de speler onmiddellijk naar de aanvallende gereedschappen."
+        },
+        {
+          "id": "vp-8",
+          "naam": "De nieuwe situatie na balwinst of balverlies oplossen",
+          "teamfunctie": null,
+          "definitie": "Na een wisseling van balbezit zo snel mogelijk herkennen dat de spelintentie is veranderd en onmiddellijk handelen naar het nieuwe voetbalprobleem.",
+          "centraleVraag": "Wat vraagt de nieuwe situatie nú van mij?",
+          "waarnemen": [
+            "Na balwinst: is de tegenstander uit organisatie? Kunnen we onmiddellijk vooruit? Is er ruimte om te dribbelen? Staat iemand vrij/diep? Is direct voordeel mogelijk of moeten we eerst controle krijgen?",
+            "Na balverlies: waar is de bal? Wie kan direct invloed uitoefenen? Kan de tegenstander vooruit? Waar ligt direct gevaar? Zijn er medespelers dichtbij? Kunnen we veroveren of moeten we eerst vertragen/herstellen?"
+          ],
+          "keuzeWat": [
+            "Na balwinst: direct vooruit, indribbelen, vrije speler gebruiken, kans creëren, bal eerst veilig controleren, tempo uit situatie halen als direct voordeel ontbreekt",
+            "Na balverlies: direct druk, bal proberen terugwinnen, vooruitgang vertragen, passinglijn/ruimte beïnvloeden, herstellen richting gevaarlijke ruimte"
+          ],
+          "keuzeHoe": [],
+          "gereedschappen": {
+            "primair": [],
+            "ondersteunend": [],
+            "context": true
+          },
+          "oplossingen": [
+            "Counterpress/direct herwinnen",
+            "Vertragen en herstellen",
+            "Eerste pass vooruit",
+            "Indribbelen in vrije ruimte",
+            "Direct 2v1 benutten",
+            "Eerst balbezit veiligstellen"
+          ],
+          "complexiteit": "1v1 wisselend balbezit → 2v2 met onmiddellijke omschakeling → 3v2/2v3 schakelvorm → 3 teams → kleine partijen → 8v8/11v11.",
+          "eindbeeldO12": "De speler blijft na winst of verlies niet hangen in de vorige handeling, maar oriënteert zich opnieuw en probeert direct een passend antwoord te geven op de veranderde situatie.",
+          "teamfuncties": [
+            "tf-omsch-va",
+            "tf-omsch-av"
+          ],
+          "noot": "Er bestaat geen apart 'omschakelgereedschap'. Na balwinst worden de aanvallende gereedschappen actief; na balverlies vooral 1v1 verdedigen/bal veroveren. Het onderscheidende leerdoel is de snelheid waarmee de speler de verandering herkent en een nieuwe passende keuze maakt."
+        }
+      ],
+      "noot": "De acht problemen beschrijven waarvoor de gereedschappen in het spel nodig zijn. We plannen vanuit een probleem, niet vanuit een oefening of los technisch thema. De matrix probleem × gereedschap is geen trainingspercentage."
+    },
+    "leerniveaus": {
+      "status": "eigen",
+      "items": [
+        {
+          "id": "ln-uitvoeren",
+          "naam": "Uitvoeren",
+          "omschrijving": "De speler ontwikkelt de uitvoering van een handeling. Relatief weinig informatie of weerstand, zodat veel kwalitatieve herhalingen mogelijk zijn. No-sided of tijdelijk geïsoleerde vormen zijn toegestaan wanneer uitvoering het primaire leerprobleem is."
+        },
+        {
+          "id": "ln-herkennen",
+          "naam": "Herkennen",
+          "omschrijving": "De speler leert relevante informatie zien: drukrichting, lichaamshouding tegenstander, ruimte, medespeler, doel/keeper, balbaan. De handeling krijgt betekenis doordat zij gekoppeld wordt aan een waarneembaar signaal."
+        },
+        {
+          "id": "ln-kiezen",
+          "naam": "Kiezen",
+          "omschrijving": "Er bestaan minimaal twee functionele oplossingen. De speler bepaalt WAT passend is en vervolgens HOE hij dit uitvoert (bijv. 2v1: zelf doorgaan of samenwerken)."
+        },
+        {
+          "id": "ln-afstemmen",
+          "naam": "Afstemmen",
+          "omschrijving": "De keuze van één speler beïnvloedt die van anderen. Timing, onderlinge afstand, loopactie, dekking en communicatie worden belangrijker (bijv. 2v2, 3v2, 3v3, 4v3)."
+        },
+        {
+          "id": "ln-aanpassen",
+          "naam": "Aanpassen",
+          "omschrijving": "Het probleem wordt niet vooraf aangekondigd. Meerdere problemen kunnen ontstaan en veranderen. De speler moet zelfstandig waarnemen, kiezen, handelen, het effect lezen en opnieuw aanpassen (vrijere partijen, 8v8/11v11)."
+        }
+      ],
+      "noot": "Een denkkader, geen rigide trap. Whole-part-whole is mogelijk: vanuit spel terug naar een vereenvoudigde situatie en daarna terug naar spel. De volgorde volgt het leerprobleem. Het leerniveau beschrijft het beoogde leerproces, geen bewezen beheersing. Los van de methodische fasen."
+    },
+    "leeromgevingen": {
+      "status": "eigen",
+      "items": [
+        {
+          "id": "lo-geisoleerd",
+          "naam": "Geïsoleerde/technische vorm",
+          "geschiktVoor": "Weinig informatie/weerstand; uitvoering en veel kwalitatieve herhalingen."
+        },
+        {
+          "id": "lo-nosided",
+          "naam": "No-sided spelvorm",
+          "geschiktVoor": "Geen vaste aanvalsrichting of te verdedigen doel; balbezit, vrijspelen, passinglijnen en druk ontwijken."
+        },
+        {
+          "id": "lo-gericht",
+          "naam": "Gerichte/positionele spelvorm",
+          "geschiktVoor": "Duidelijke richting, lijn, zone of progressiedoel zonder volledig vrije wedstrijd; een specifiek probleem frequent laten ontstaan."
+        },
+        {
+          "id": "lo-ssg",
+          "naam": "Small-sided game",
+          "geschiktVoor": "Verkleinde wedstrijdvorm met richting en doel/eindzone; keuzes, samenwerking, omschakeling en toepassing."
+        },
+        {
+          "id": "lo-wedstrijd",
+          "naam": "Wedstrijdvorm",
+          "geschiktVoor": "Vrijere context waarin meerdere problemen tegelijk ontstaan; transfer en zelfstandige toepassing."
+        }
+      ],
+      "noot": "Geen omgeving is automatisch beter. De kwaliteit wordt bepaald door de aansluiting tussen leerdoel en leeromgeving."
+    },
+    "mengpaneel": {
+      "status": "eigen",
+      "knoppen": [
+        {
+          "id": "mp-ruimte",
+          "naam": "Ruimte",
+          "opties": [
+            "groter/kleiner",
+            "langer/breder",
+            "zones"
+          ]
+        },
+        {
+          "id": "mp-aantallen",
+          "naam": "Aantallen",
+          "opties": [
+            "gelijk",
+            "overtal",
+            "ondertal",
+            "neutraal"
+          ]
+        },
+        {
+          "id": "mp-richting",
+          "naam": "Richting",
+          "opties": [
+            "geen richting",
+            "lijn/eindzone",
+            "kleine doelen",
+            "grote doelen"
+          ]
+        },
+        {
+          "id": "mp-weerstand",
+          "naam": "Weerstand",
+          "opties": [
+            "geen",
+            "gestuurd",
+            "beperkt",
+            "volledig"
+          ]
+        },
+        {
+          "id": "mp-tijd",
+          "naam": "Tijd",
+          "opties": [
+            "natuurlijke tijdsdruk",
+            "expliciete tijdsdruk"
+          ]
+        },
+        {
+          "id": "mp-start",
+          "naam": "Startpositie/startmoment",
+          "opties": []
+        },
+        {
+          "id": "mp-regels",
+          "naam": "Regels/scoring",
+          "opties": []
+        },
+        {
+          "id": "mp-informatie",
+          "naam": "Informatie/variabiliteit",
+          "opties": []
+        },
+        {
+          "id": "mp-rol",
+          "naam": "Rolwisseling/perspectief",
+          "opties": []
+        }
+      ],
+      "complexiteit": "aantallen × ruimte × richting × weerstand × regels × tijdsdruk × informatie (ontwerpmodel, geen formule).",
+      "principes": [
+        "Verander bij evaluatie bij voorkeur één dominante variabele tegelijk.",
+        "Maak een vorm niet moeilijker omdat moeilijker beter is, maar omdat extra complexiteit het volgende leerprobleem oproept.",
+        "Maak een vorm eenvoudiger wanneer de omgeving het bedoelde gedrag onmogelijk maakt.",
+        "Een constraint maakt gedrag waarschijnlijker zonder de oplossing volledig voor te schrijven.",
+        "Eerst omgeving ontwerpen, dan observeren en gericht beïnvloeden.",
+        "Dezelfde oefenvorm kan een ander leerdoel hebben wanneer ruimte, aantallen, richting, regels of coachaccent veranderen."
+      ]
+    },
+    "handelingsketens": {
+      "status": "eigen",
+      "items": [
+        {
+          "id": "hk-aannemen-passen",
+          "naam": "Voorbereiden → helpen",
+          "stappen": [
+            "ll-aannemen",
+            "ll-passen"
+          ]
+        },
+        {
+          "id": "hk-1v1-passen",
+          "naam": "Manipuleren → helpen",
+          "stappen": [
+            "ll-1v1-aanvallend",
+            "ll-passen"
+          ]
+        },
+        {
+          "id": "hk-vrij-aannemen-passen",
+          "naam": "Timen → voorbereiden → helpen",
+          "stappen": [
+            "ll-vrijkomen",
+            "ll-aannemen",
+            "ll-passen"
+          ]
+        },
+        {
+          "id": "hk-controleren-veroveren",
+          "naam": "Controleren → bal veroveren → aanvallende oplossing",
+          "stappen": [
+            "ll-1v1-verdedigen"
+          ]
+        }
+      ],
+      "noot": "Periodisering legt niet alleen vast welke gereedschappen terugkomen, maar ook hoe ze functioneel met elkaar verbonden worden."
+    },
+    "ontwerpprincipes": {
+      "status": "eigen",
+      "items": [
+        "Begin bij het voetbalprobleem, niet bij de oefening.",
+        "Beschrijf vooraf het gewenste observeerbare gedrag.",
+        "Bepaal welke informatie en echte keuzes nodig zijn.",
+        "Kies bij voorkeur maximaal twee hoofdgereedschappen als coachaccent.",
+        "Een constraint maakt gewenst gedrag waarschijnlijker zonder de oplossing volledig voor te schrijven.",
+        "Moeilijker is niet automatisch beter.",
+        "Vereenvoudig wanneer doelgedrag nauwelijks kan ontstaan.",
+        "Verhoog gericht de uitdaging wanneer succes vanzelf ontstaat.",
+        "Verander bij evaluatie bij voorkeur één dominante variabele tegelijk.",
+        "Coach niet alles; oefenontwerp en coaching werken samen.",
+        "Leg ideaal aantal, minimumaantal en minimumvariant vast.",
+        "Neem per vorm ALS DE VORM VASTLOOPT op: waarschijnlijk probleem → eerste interventie.",
+        "Regels dienen het leerdoel; geen automatische twee-contactenregel.",
+        "Keer na vereenvoudiging terug naar vrijer voetbal om transfer te bekijken.",
+        "Een oefening moet gewenst gedrag niet alleen toestaan; de organisatie moet het functioneel aantrekkelijk maken."
+      ],
+      "noot": "Visuele hulpmiddelen, pionnen, lijnen en zones kunnen tijdelijk informatie verduidelijken. Verwijder ze daarna waar mogelijk om te toetsen of het gedrag zelfstandig blijft bestaan."
     },
     "spelprincipes": {
       "status": "leeg",
@@ -143,53 +876,6 @@
       ],
       "noot": "Acht voorlopige spelprincipes voor O13, twee per teamfunctie. De inhoud stellen we nog vast; lege plekken zien trainers niet."
     },
-    "leerlijnen": {
-      "status": "eigen",
-      "naam": "Individuele voetbalvaardigheden (universele leerlijnen)",
-      "items": [
-        {
-          "id": "ll-1v1-aanvallend",
-          "naam": "1v1 aanvallend",
-          "kern": "manipuleren",
-          "kant": "aanval"
-        },
-        {
-          "id": "ll-aannemen",
-          "naam": "Aannemen en meenemen",
-          "kern": "voorbereiden",
-          "kant": "aanval"
-        },
-        {
-          "id": "ll-passen",
-          "naam": "Passen",
-          "kern": "helpen",
-          "kant": "aanval"
-        },
-        {
-          "id": "ll-vrijkomen",
-          "naam": "Vrijkomen",
-          "kern": "timen",
-          "kant": "aanval"
-        },
-        {
-          "id": "ll-1v1-verdedigen",
-          "naam": "1v1 verdedigen en bal veroveren",
-          "kern": "controleren",
-          "kant": "verdediging"
-        },
-        {
-          "id": "ll-6",
-          "naam": null,
-          "kern": null,
-          "status": "controleren",
-          "noot": "Zesde leerlijn: nog niet definitief. We vergelijken beschermen/vrijmaken met schieten/afronden.",
-          "kandidaten": [
-            "Beschermen / vrijmaken",
-            "Schieten / afronden"
-          ]
-        }
-      ]
-    },
     "leerdoelenPerLeeftijd": {
       "status": "leeg",
       "items": [],
@@ -224,14 +910,15 @@
         "We combineren technische, inzichtelijke en teamtactische ontwikkeling.",
         "We werken met herhaling, variatie en oplopende complexiteit.",
         "Trainingen zijn gekoppeld aan de speelwijze en aan waarneembare voetbalproblemen."
-      ]
+      ],
+      "noot": "Methodische fasen (oriëntatie, oefenleer, toepassing) zijn een eigen keuze naast het kerndocument: optioneel, los van de vijf leerniveaus. Het leerniveau is het hoofdlabel."
     },
     "trainingsopbouw": {
       "status": "eigen",
       "sjablonen": [
         {
           "id": "dcg-75",
-          "naam": "DCG 75",
+          "naam": "DCG 75 – spacing",
           "minuten": 75,
           "blokken": [
             {
@@ -277,27 +964,321 @@
           "overig": {
             "naam": "Ombouw, wissels, afsluiting",
             "min": 7
+          },
+          "model": "spacing"
+        },
+        {
+          "id": "dcg-75-afwisselend",
+          "naam": "DCG 75 – afwisselend",
+          "model": "interleaving",
+          "minuten": 75,
+          "blokken": [
+            {
+              "blok": "start",
+              "naam": "Start",
+              "min": 8
+            },
+            {
+              "blok": "A1",
+              "min": 7,
+              "fase": "f-oefenleer"
+            },
+            {
+              "blok": "B1",
+              "min": 7,
+              "fase": "f-oefenleer"
+            },
+            {
+              "blok": "A2",
+              "min": 12,
+              "fase": "f-toepassing"
+            },
+            {
+              "blok": "B2",
+              "min": 12,
+              "fase": "f-toepassing"
+            },
+            {
+              "blok": "P",
+              "naam": "Partij",
+              "min": 22,
+              "fase": "f-toepassing"
+            }
+          ],
+          "overig": {
+            "naam": "Ombouw, wissels, afsluiting",
+            "min": 7
           }
         }
       ],
       "spacing": {
-        "definitie": null,
-        "noot": "Wat spacing inhoudelijk is (loslaten, herstel, contrast of spelend leren), stellen we nog vast. Tot dan: vrij in te vullen, telt voor geen leerdoel."
+        "definitie": "Spelers laten een vaardigheid tijdelijk los en krijgen deze later opnieuw aangeboden. De onderbreking kan een andere activiteit zijn (bijv. gouden bewegingen, een kort spel) of een tweede vaardigheid.",
+        "modellen": [
+          {
+            "id": "spacing",
+            "naam": "Spacing met een andere prikkel",
+            "volgorde": "A1 → spacing → A2 → B1 → spacing → B2 → partij",
+            "noot": "De spacing-activiteit is bewust anders dan het leeraccent ervoor en erna."
+          },
+          {
+            "id": "interleaving",
+            "naam": "Afwisselend oefenen (interleaving)",
+            "volgorde": "A1 → B1 → A2 → B2 → partij",
+            "noot": "Vaardigheid B onderbreekt A, en omgekeerd. Geen aparte spacing-blokken."
+          }
+        ],
+        "regels": [
+          "Spacing telt voor geen leerdoel.",
+          "De trainer kiest het model dat past bij de spelers en het leerdoel.",
+          "Evaluatie: was het gedrag bij terugkeer opnieuw zichtbaar?"
+        ],
+        "onderbouwing": "Kerndocument §15: onderzoek naar blocked versus random practice bij kinderen is onvoldoende eenduidig voor één universele oefenvolgorde; daarom doelafhankelijke variatie en transfer toetsen."
       },
-      "noot": "Pilot: twee vaardigheden (A en B), elk eerst oefenleer en dan toepassing, met spacing ertussen, en een partij. De tijden zijn een voorstel en blijven per training aanpasbaar."
+      "noot": "Pilot: twee hoofdgereedschappen (A en B), met spacing of afwisselend oefenen, en een partij. De tijden zijn een voorstel en blijven per training aanpasbaar."
     },
     "periodisering": {
-      "status": "deels",
-      "principes": [
-        "Geen systeem waarin een trainer een volledige maand alleen één thema behandelt.",
-        "Cyclisch werken, met hoofdthema's en contrathema's.",
-        "Een leerdoel komt regelmatig terug, in verschillende contexten en spelsituaties."
+      "status": "eigen",
+      "model": [
+        "Jaar",
+        "Fase",
+        "Week",
+        "Training",
+        "Praktijktest",
+        "Herhaling/aanpassing"
       ],
-      "open": [
-        "Definitief weekprogramma",
-        "Herhalingsfrequentie",
-        "Verdeling van de trainingsonderdelen"
-      ]
+      "principes": [
+        "Periodisering is niet het verdelen van losse thema's over een kalender, maar het organiseren van herhaalde leerervaringen.",
+        "Herhalen, spreiden, variëren, complexiteit verhogen, gereedschappen verbinden en transfer controleren.",
+        "Herhaling hoeft niet dezelfde oefening te betekenen: hetzelfde probleem kan op een ander leerniveau of in een andere omgeving terugkomen.",
+        "We vermijden zowel eindeloos identieke herhaling als willekeurige variatie.",
+        "Geen onbewezen vaste percentages voor Ball Mastery, geïsoleerde techniek, no-sided, SSG of wedstrijdvormen.",
+        "De drie trainingen vormen samen één leerweek, zonder rigide vaste dagindeling; de methodische route volgt het leerdoel."
+      ],
+      "niveaus": {
+        "jaar": "Bewaken dat de zes gereedschappen en acht problemen herhaald en verdiept terugkomen, technische onderbouw onderhouden wordt, verschillende leerniveaus worden geraakt, handelingsketens ontstaan en transfer zichtbaar wordt.",
+        "fase": "Een beperkt aantal samenhangende leerproblemen staat centraal. Dezelfde problemen keren in verschillende vormen en complexiteitsniveaus terug.",
+        "week": "De fase wordt vertaald naar meerdere leerervaringen.",
+        "training": "Leg minimaal vast: voetbalprobleem, gewenst gedrag, relevante informatie, leerniveau, twee hoofdgereedschappen, handelingsketen, leeromgeving, transfermoment en evaluatiecriterium."
+      },
+      "routes": [
+        "Technische onderbouw → gerichte toepassing → SSG/wedstrijd",
+        "Spel → probleem herkennen → vereenvoudigen → terug naar spel",
+        "No-sided → gerichte vorm → wedstrijdvorm",
+        "SSG → technische interventie → gewijzigde SSG"
+      ],
+      "weekformat": [
+        {
+          "id": "fase",
+          "naam": "Fase"
+        },
+        {
+          "id": "week",
+          "naam": "Week"
+        },
+        {
+          "id": "leeftijd",
+          "naam": "Leeftijd"
+        },
+        {
+          "id": "probleem",
+          "naam": "Centraal voetbalprobleem",
+          "bron": "voetbalproblemen"
+        },
+        {
+          "id": "contra",
+          "naam": "Contrathema (optioneel)",
+          "bron": "voetbalproblemen"
+        },
+        {
+          "id": "hg1",
+          "naam": "Hoofdgereedschap 1",
+          "bron": "leerlijnen"
+        },
+        {
+          "id": "hg2",
+          "naam": "Hoofdgereedschap 2",
+          "bron": "leerlijnen"
+        },
+        {
+          "id": "keten",
+          "naam": "Handelingsketen",
+          "bron": "handelingsketens"
+        },
+        {
+          "id": "niveau",
+          "naam": "Beoogd leerniveau",
+          "bron": "leerniveaus"
+        },
+        {
+          "id": "gedrag",
+          "naam": "Gewenst gedrag"
+        },
+        {
+          "id": "informatie",
+          "naam": "Relevante informatie"
+        },
+        {
+          "id": "route1",
+          "naam": "Training 1 – leerroute"
+        },
+        {
+          "id": "route2",
+          "naam": "Training 2 – leerroute"
+        },
+        {
+          "id": "route3",
+          "naam": "Training 3 – leerroute"
+        },
+        {
+          "id": "onderbouw",
+          "naam": "Technische onderbouw/Ball Mastery"
+        },
+        {
+          "id": "transfer",
+          "naam": "Transfermoment"
+        },
+        {
+          "id": "observatie",
+          "naam": "Observatiecriteria"
+        },
+        {
+          "id": "aanpassing",
+          "naam": "Eén aanpassing volgende cyclus"
+        }
+      ],
+      "contrathema": {
+        "omschrijving": "Hoofdthema voor de primair te coachen partij; contrathema: een relevant tegenovergesteld voetbalprobleem voor de andere partij.",
+        "regels": [
+          "Optioneel; geen verplicht veld en geen eigen evaluatie.",
+          "Gekoppeld aan de week; verschijnt bij de trainingen als voorstel.",
+          "Niet iedere oefenvorm krijgt een eigen contrathema."
+        ],
+        "bron": "Eigen DCG-keuze, naast het kerndocument."
+      }
+    },
+    "evaluatie": {
+      "status": "eigen",
+      "cyclus": [
+        "Ontwerpen",
+        "Uitvoeren",
+        "Observeren",
+        "Analyseren",
+        "Eén gerichte aanpassing",
+        "Opnieuw aanbieden"
+      ],
+      "vooraf": [
+        "Probleem",
+        "Gewenst gedrag",
+        "Informatie",
+        "Echte keuzes",
+        "Hoofdgereedschappen",
+        "Dominante ontwerpvariabele",
+        "Beoogde transfer"
+      ],
+      "vragen": [
+        {
+          "id": "ev-probleem",
+          "vraag": "Probleem vaak genoeg ontstaan?",
+          "schaal": [
+            "ja",
+            "deels",
+            "nee"
+          ]
+        },
+        {
+          "id": "ev-gedrag",
+          "vraag": "Gewenst gedrag zichtbaar?",
+          "schaal": [
+            "ja",
+            "deels",
+            "nee"
+          ]
+        },
+        {
+          "id": "ev-informatie",
+          "vraag": "Relevante informatie herkend?",
+          "schaal": [
+            "ja",
+            "deels",
+            "nee"
+          ]
+        },
+        {
+          "id": "ev-keuzes",
+          "vraag": "Echte keuzes aanwezig?",
+          "schaal": [
+            "ja",
+            "deels",
+            "nee"
+          ]
+        },
+        {
+          "id": "ev-weerstand",
+          "vraag": "Weerstand",
+          "schaal": [
+            "te laag",
+            "passend",
+            "te hoog"
+          ]
+        },
+        {
+          "id": "ev-ruimte",
+          "vraag": "Ruimte",
+          "schaal": [
+            "te klein",
+            "passend",
+            "te groot"
+          ]
+        },
+        {
+          "id": "ev-aantallen",
+          "vraag": "Aantallen",
+          "schaal": [
+            "hielpen",
+            "neutraal",
+            "belemmerden"
+          ]
+        },
+        {
+          "id": "ev-regels",
+          "vraag": "Regels",
+          "schaal": [
+            "lokten gedrag uit",
+            "nauwelijks",
+            "werkten tegen"
+          ]
+        },
+        {
+          "id": "ev-transfer",
+          "vraag": "Transfer naar vrij spel",
+          "schaal": [
+            "duidelijk",
+            "gedeeltelijk",
+            "niet zichtbaar"
+          ]
+        },
+        {
+          "id": "ev-terugkeer",
+          "vraag": "Gedrag bij terugkeer opnieuw zichtbaar?",
+          "schaal": [
+            "ja",
+            "deels",
+            "nee"
+          ],
+          "alleenBijTerugkeer": true
+        },
+        {
+          "id": "ev-volgende",
+          "vraag": "Volgende training",
+          "schaal": [
+            "behouden",
+            "één variabele aanpassen",
+            "ander complexiteitsniveau"
+          ]
+        }
+      ],
+      "wijziging": "Volgende keer: één concrete wijziging.",
+      "noot": "Veldmaten zijn geen absolute waarheid: de juiste maat is de maat waarbij het bedoelde probleem en de gewenste keuzes daadwerkelijk ontstaan. Evaluatie per oefenvorm en per training."
     },
     "themalessen": {
       "status": "eigen",
@@ -318,11 +1299,6 @@
       ],
       "noot": "Voorbeelden van onderwerpen, geen vaste lijst."
     },
-    "evaluatie": {
-      "status": "leeg",
-      "vragen": [],
-      "noot": "Evaluatievragen en kwaliteitscriteria worden nog vastgesteld."
-    },
     "termen": {
       "status": "eigen",
       "items": [
@@ -334,7 +1310,7 @@
         {
           "id": "t-lokken",
           "term": "Lokken",
-          "betekenis": "De tegenstander bewust aantrekken"
+          "betekenis": "Een tegenstander bewust naar jezelf of naar de bal toe laten komen, zodat ergens anders ruimte of een vrije speler ontstaat."
         },
         {
           "id": "t-loeren",

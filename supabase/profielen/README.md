@@ -21,3 +21,8 @@ Een **opleidingsprofiel** beschrijft de methodiek van een club: visie, doelgroep
 
 ## Nieuwe onderdelen toevoegen
 Een nieuw onderdeel = een nieuwe sleutel onder `onderdelen` met een `status`. Geen databasewijziging nodig.
+
+## DCG-profiel versie 3 (28-10-2026)
+Opgebouwd uit het kerndocument (`docs/methodiek/dcg/`, alleen DCG). Nieuwe onderdelen naast de bestaande: `technischeOnderbouw`, `voetbalproblemen` (8, met de matrix probleem × gereedschap), `leerniveaus` (5), `leeromgevingen` (5), `mengpaneel`, `handelingsketens`, `ontwerpprincipes`; `periodisering` met het weekformat, `evaluatie` met de evaluatiekaart, `trainingsopbouw` met twee sjablonen (spacing en afwisselend) en de definitie van spacing. Geen id is veranderd (`ll-6` = Afwerken).
+
+Leesbare controleversie maken: `node supabase/profielen/leesbaar.js dcg > docs/methodiek/dcg/profiel-v3-controle.md`.
