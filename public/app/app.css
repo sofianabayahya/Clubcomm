@@ -340,8 +340,9 @@ pre.code { background: var(--vlak2); border: 1px solid var(--lijn); border-radiu
 /* Besluit 113: greep bovenaan, venster naar beneden vegen om te sluiten */
 .greep { width: 40px; height: 5px; border-radius: 3px; background: #b8c2ce; margin: 8px auto 4px; flex-shrink: 0; }
 .kaart-sub { margin-top: -6px; }
-/* Besluit 113: op de laptop (vanaf 1100 px) staat het venster in het midden; zonder greep (sluiten met kruisje, Esc of ernaast klikken) */
-@media (min-width: 1100px) {
+/* Besluit 113: op de laptop (vanaf 900 px, Besluit 131) staat het venster in het midden; zonder greep (sluiten met kruisje, Esc of ernaast klikken) */
+@media (min-width: 900px) {
+  .sheet.groot { max-width: 760px; }
   .sheet, .sheet.groot { top: 50%; bottom: auto; transform: translate(-50%, -50%); max-height: 85vh; border-radius: 20px; padding-bottom: 0; box-shadow: 0 20px 60px rgba(11, 20, 32, .25); animation: verschijn .15s ease-out; }
   .sheet .greep { display: none; }
   .sheet-kop { padding-top: 14px; }
@@ -703,9 +704,9 @@ small.bewaard.ok { color: var(--groen); } small.bewaard.fout { color: var(--rood
 .uitklap.onderwerp { margin-top: 0; }
 .uitklap.onderwerp summary { min-height: 44px; font-size: 16px; }
 .uitklap.onderwerp[open] { padding-bottom: 12px; }
-/* 27-10: laptop (vanaf 1100 px, niet in de rondleiding): menu als kolom links, inhoud breder in het midden.
+/* 27-10: laptop (vanaf 900 px sinds Besluit 131, niet in de rondleiding): menu als kolom links, inhoud breder in het midden.
    .inhoud.breed is voor schermen die de hele breedte nodig hebben (trainingen ontwerpen, inrichten). */
-@media (min-width: 1100px) {
+@media (min-width: 900px) {
   body:not(.rl) #app { max-width: none; margin: 0; padding-left: 232px; }
   body:not(.rl) .nav { top: 0; bottom: 0; left: 0; transform: none; width: 232px; max-width: none; flex-direction: column; justify-content: flex-start; gap: 4px; padding: 84px 12px 16px; border-top: 0; border-right: 1px solid var(--lijn); }
   body:not(.rl) .nav button { flex: none; height: 48px; flex-direction: row; justify-content: flex-start; gap: 12px; padding: 0 14px; border-radius: 12px; font-size: 15px; }
@@ -752,7 +753,34 @@ small.bewaard.ok { color: var(--groen); } small.bewaard.fout { color: var(--rood
 .tr-mini .ic, .tr-teken .ic { width: 22px; height: 22px; opacity: .8; }
 /* Vorm: telefoon = tekening, gegevens, varianten; laptop = tekening en varianten links, gegevens rechts */
 .tr-vorm .tr-a { order: 1; } .tr-vorm .tr-b { order: 2; } .tr-vorm .tr-c { order: 3; }
-@media (min-width: 1100px) { body:not(.rl) .tr-lay.tr-vorm { grid-template-areas: "a b" "c b"; } body:not(.rl) .tr-vorm .tr-a { grid-area: a; } body:not(.rl) .tr-vorm .tr-b { grid-area: b; } body:not(.rl) .tr-vorm .tr-c { grid-area: c; } }
+@media (min-width: 1100px) { body:not(.rl) .tr-lay.tr-vorm { grid-template-areas: "a b" "c b"; grid-template-rows: auto 1fr; } body:not(.rl) .tr-vorm .tr-c { align-self: start; } body:not(.rl) .tr-vorm .tr-a { grid-area: a; } body:not(.rl) .tr-vorm .tr-b { grid-area: b; } body:not(.rl) .tr-vorm .tr-c { grid-area: c; } }
+/* Besluit 131: blokken, fase, classificatie, filters, minuten per leerdoel */
+.tr-code { width: 40px; flex: none; font-weight: 800; color: var(--blauw); font-size: 15px; }
+.tr-mini.leeg { background: none; border: 1.5px dashed var(--lijn); color: var(--blauw); }
+.tr-mini.leeg .ic { opacity: 1; }
+.tr-fase { display: inline-block; font-size: 12px; font-weight: 600; border: 1px dashed #94a3b8; border-radius: 999px; padding: 0 7px; color: var(--zacht); white-space: nowrap; }
+.tr-fase.vast { border-style: solid; border-color: transparent; background: var(--blauw-l); color: var(--blauw-d); }
+.tr-overig { min-height: 44px; cursor: pointer; }
+.tr-uit { cursor: default; }
+.tr-uit input { width: 72px !important; flex: none; min-height: 44px; text-align: center; }
+.tr-cls { display: flex; flex-direction: column; gap: 6px; border-top: 1px solid var(--lijn); border-bottom: 1px solid var(--lijn); padding: 10px 0 12px; margin: 4px 0; }
+.tr-cls-kop { font-size: 17px; }
+.tr-num { display: flex; align-items: center; gap: 6px 8px; flex-wrap: wrap; font-size: 15px; }
+.tr-num input { width: 60px !important; flex: none; min-height: 44px; text-align: center; }
+.tr-auto { background: var(--groen-l); color: var(--groen); border-radius: 10px; padding: 8px 10px; font-size: 15px; font-weight: 600; }
+.tr-lbl { align-self: center; }
+.tr-precies { box-shadow: none; padding: 0; background: none; }
+.tr-labels { margin-top: 2px; }
+.tr-tekst { white-space: pre-line; }
+.tr-zoek { width: 100%; min-height: 44px; border: 1px solid var(--lijn); border-radius: 12px; padding: 0 12px; font-size: 16px; background: var(--vlak); color: var(--inkt); }
+.tr-filters { margin: 2px 0; }
+.tr-wis { border: 0; background: none; color: var(--blauw); }
+.tr-mlijst { display: flex; flex-direction: column; gap: 8px; padding: 2px 0 10px; }
+.tr-mlijst div { display: grid; grid-template-columns: 1fr 70px; grid-template-areas: "n m" "b m"; align-items: center; gap: 2px 10px; font-size: 15px; }
+.tr-mlijst span { grid-area: n; } .tr-mlijst b { grid-area: m; text-align: right; }
+.tr-mlijst i { grid-area: b; display: block; height: 8px; border-radius: 4px; background: var(--blauw); }
+.tr-mlijst i.nul { background: var(--rood); width: 6px !important; }
+.tr-maand > small { display: block; padding-bottom: 12px; }
 /* Besluit 129: observeren tijdens de wedstrijd (klok, turven, snelle notities) */
 .obs-plak { background: #0b2545; color: #fff; display: flex; flex-direction: column; gap: 10px; }
 .obs-plak .zacht { color: #c9d6e6; }

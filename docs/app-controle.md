@@ -8,7 +8,7 @@ Gebruik: plak de prompt onderaan in een andere app-thread en voeg dit bestand to
 
 ## 1. Werkwijze bij de controle
 
-1. Bekijk elk scherm op een telefoon van 390 px breed (touch) en op een laptop vanaf 1100 px.
+1. Bekijk elk scherm op een telefoon van 390 px breed (touch) en op een laptop vanaf 900 px.
 2. Loop per scherm de technieken (deel 2) en de normen (deel 3) na.
 3. Geef per punt aan of het er al is, er nog niet is, of hier niet past. Leg uit waarom.
 4. Voor elk voorstel: eerst een voorbeeld (een screenshot), met voordelen, nadelen en je advies. Pas bouwen na een ja.
@@ -46,7 +46,7 @@ Gebruik: plak de prompt onderaan in een andere app-thread en voeg dit bestand to
 - Gebruik vertrouwde patronen: tabbalk onderin, terug linksboven, venster van onder, swipe om te sluiten.
 - Privacy (AVG): alleen de nodige gegevens, een bewaartermijn, een wisknop en verwerkersovereenkomsten.
 - Beveiliging: ga per pagina na wie hem mag zien. Persoonlijke links zijn lang en willekeurig.
-- Laptop: de app werkt ook goed vanaf 1100 px, met twee kolommen waar dat zinnig is.
+- Laptop: de app werkt ook goed vanaf 900 px (menu links), met twee kolommen vanaf 1100 px waar dat zinnig is.
 
 ## 4. Ontwerpregels (sofians denkwijze, voor elke app)
 

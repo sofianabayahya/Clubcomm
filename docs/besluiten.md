@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 130)
+Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 131)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -17,15 +17,16 @@ Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 130)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 131 | Oefenvormen geclassificeerd (8 hoofdtypes, weerstand vanuit het hoofdleerdoel, omschakeling met richting), opbouw in blokken met sjabloon DCG 75 en fase-voorstel, gepland en uitgevoerd, filters; laptop vanaf 900 px | ✅ geldt |  |
 | 130 | Trainer: eigen tabblad Training (week met de training bovenaan, aanwezigheid in een venster, Vormen); ook bij AVV Swift, daar trainingen op datum | ✅ geldt |  |
 | 129 | Observeren: klok en turven bovenaan, snelle notities met minuut en onderwerp, aandachtspunten na afloop | ✅ geldt |  |
-| 128 | Trainingsmodule (proef): eigen oefenvormen en trainingen met spacing, varianten en aantallen | ◐ deels herzien | door 130 (de training staat in het tabblad Training, niet meer onder Planning) |
+| 128 | Trainingsmodule (proef): eigen oefenvormen en trainingen met spacing, varianten en aantallen | ◐ deels herzien | door 130 (de training staat in het tabblad Training) en 131 (soort → vormtype, vorm opent als venster) |
 | 127 | Tekentool: loopactie en pass met boog als vaste soort | ✅ geldt |  |
 | 126 | Tekentool clean (rail met menu's, Veld/Opstelling/⚙ boven) en pijlen met boog en aanpasbare lengte | ✅ geldt |  |
 | 125 | Tekentool: rondje of driehoek per team kiezen; nummerbalk in- en uitklappen | ◐ deels herzien | door 126 (in- en uitklappen = het menu Spelers openen en sluiten) |
 | 124 | Tekentool: nummerbalk (rugnummers 1–11 en zonder nummer per team, op hun plek in de 1-4-3-3) en rood schijfje | ◐ deels herzien | door 126 (de nummerbalk staat in het menu Spelers) |
-| 123 | Opleidingsprofiel als gegevens; DCG-fundament ingevoerd (rest open), KNVB-standaard als bestand | ✅ geldt |  |
-| 122 | Tabbladen gelijk (Home links, Berichten rechts), één keer signaleren, Regels en Inzicht ingeklapt, laptop met menu links | ◐ deels herzien | door 130 (trainer met module Trainingen: Training in plaats van Planning) |
+| 123 | Opleidingsprofiel als gegevens; DCG-fundament ingevoerd (rest open), KNVB-standaard als bestand | ◐ deels herzien | door 131 (DCG-profiel versie 2: kant per leerlijn, 8 plekken spelprincipes, sjabloon DCG 75) |
+| 122 | Tabbladen gelijk (Home links, Berichten rechts), één keer signaleren, Regels en Inzicht ingeklapt, laptop met menu links | ◐ deels herzien | door 130 (trainer met module Trainingen: Training in plaats van Planning) en 131 (laptop vanaf 900 px) |
 | 121 | Richting trainingsmodule: opleidingsprofiel per club (standaard KNVB), vorm ≠ uitvoering, bouwen in fases, ClubComm stelt voor en de trainer kiest | ✅ geldt |  |
 | 120 | Inrichten: clubbeheerder op de laptop met startlijst; ClubComm-adviseur met overzicht van alle clubs | ✅ geldt |  |
 | 119 | Rechtentest per rol tegen de echte database, elke nacht, met alarm via de bewaking | ✅ geldt |  |
@@ -34,7 +35,7 @@ Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 130)
 | 116 | De timekeeper slaat de wedstrijd echt op; minuten en speeltijd ziet alleen de trainer | ✅ geldt |  |
 | 115 | "Vervanger nodig" naar teamleider en coördinator (HO alleen als terugval); coördinator in de rondleiding | ✅ geldt |  |
 | 114 | De demo is één verhaal (een week bij de democlub); het bestuur kiest de hoofdstukken; afmelden gebeurt echt | ✅ geldt |  |
-| 113 | Drie lagen: tabblad → venster → pagina; spelerskaart, trainerkaart en "Aangekomen bij" als venster, vegen om te sluiten | ✅ geldt |  |
+| 113 | Drie lagen: tabblad → venster → pagina; spelerskaart, trainerkaart en "Aangekomen bij" als venster, vegen om te sluiten | ◐ deels herzien | door 131 (venster in het midden vanaf 900 px) |
 | 112 | Anoniem tellen welke schermen gebruikt worden; overzicht voor de clubbeheerder | ✅ geldt |  |
 | 111 | App-controle: dubbel tikken, Beperk beweging, kleur statusbalk, notch op de inlogpagina | ◐ deels herzien | door 120 (laptop met kolommen voor de schermen van de clubbeheerder); 122 (laptop: menu als kolom links) |
 | 110 | Verzamelen voor wedstrijden is clubbeleid, per leeftijd | ✅ geldt |  |
@@ -664,6 +665,44 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 131 — Oefenvormen classificeren, opbouw in blokken, gepland en uitgevoerd
+*Besloten 27 oktober 2026, na een voorstel van ChatGPT, onze reactie en een methodologische beoordeling door de initiatiefnemer ("ja, ook het profiel, bouw het maar"). Uitwerking en voorbeelden: `docs/onderzoek/vormtypes/` (versie 2). Werkt binnen de bestaande trainingsmodule: geen nieuwe tekentool, geen nieuwe tabel, geen rechtenwijziging (scope `eigen`).*
+- **Vormtype: 8 hoofdtypes** (catalogus `public/app/vormtypes.js`, vaste id's, gelijk voor alle clubs):
+  - Droog / techniek, Passeer- en duelvorm, Rondo, Positiespel, Partijvorm, Afwerkvorm (zelfstandig), Patroon / tactisch, Keeper;
+  - de zestien categorieën staan onder *Meer precies*;
+  - **functioneel / linietactisch** is een aparte aanvullende aanduiding;
+  - schakelvorm is geen type maar een kenmerk.
+- **Weerstand:** ClubComm berekent de verhouding uit de aantallen (aanval, verdediging, neutraal, keepers). Het perspectief volgt uit de **kant van het hoofdleerdoel**:
+  - bij een verdedigend leerdoel: *vanuit verdedigers: 2 tegen 4 · ondertal*;
+  - neutralen spelen mee met de partij in balbezit;
+  - *passief*, *met afleiding* en *wisselend* kies je zelf (dan geen over- of ondertal);
+  - perspectief onbekend → alleen de aantallen.
+- **Spelcontext:** speelrichting (geen, één, twee), met doelen, en **omschakeling: geen · aanval → verdediging · verdediging → aanval · beide**.
+- **Leerdoelen per profiel:** de eerste tik is het hoofdleerdoel (★), daarna = ook. Ze worden opgeslagen per profiel (`koppelingen.dcg`), zodat DCG en Swift niet mengen. Oude vormen (soort, leerdoelen) blijven geldig.
+- **Fase hoort bij de uitvoering:**
+  - een vorm kan een *aanbevolen fase* hebben (optioneel);
+  - in de training staat de fase als **voorstel** (gestippeld): de aanbevolen fase van de vorm, anders die van het sjabloon (A1/B1 oefenleer, A2/B2 en partij toepassing);
+  - de trainer zet hem vast als hij wil (doorgetrokken).
+- **Opbouw in blokken met sjabloon DCG 75** (pilot, uit het profiel, alle tijden aanpasbaar): start 8 · A1 6 · S 3 · A2 10 · B1 6 · S 3 · B2 10 · partij 22 · ombouw, wissels en afsluiting 7.
+  - Lege plekken vul je met *Kies een vorm*.
+  - Een onderdeel kan een **variant** (context vorm) kiezen.
+  - Bovenaan staat *A = …, B = …* (het hoofdleerdoel van het blok).
+- **Spacing** blijft vrij in te vullen en telt voor geen leerdoel, tot de definitie er is (zie Nog te bespreken).
+- **Gepland ≠ uitgevoerd:** na *Training is gegeven* vul je per vorm de echte minuten in (staat op gepland; 0 = niet gedaan).
+  - Alleen het **hoofdleerdoel** krijgt minuten. Start, spacing en ombouw tellen niet mee.
+  - Secundaire leerdoelen tellen als *ook geraakt, x keer*.
+  - In Training staat ingeklapt: *maand: minuten per hoofdleerdoel* (een leerdoel met 0 minuten is rood).
+- **Vorm als venster:** tikken op een vorm opent eerst een kijkkaart (tekening, labels, leerdoel, organisatie, coachpunten, varianten), met *Bewerken* en *Dupliceren*. De classificatie staat in *Bewerken*; alles mag leeg blijven.
+- **Mijn vormen:** zoeken (ook op synoniemen, bijv. "ssg"), filterchips (type, weerstand, leerdoel, past bij X spelers, ≤ 10 min, met keepers; *Meer:* fase, speelrichting, omschakeling) die je kunt combineren, en *Wis*.
+- **Concept en publiceren:** eigen vormen mogen onvolledig zijn. Voor publiceren in de vormenbank (later) gelden 5 eisen: naam, tekening of organisatie, vormtype, aantallen, hoofdleerdoel (`CC.vormMist`).
+- **DCG-profiel versie 2** (script `2026-10-27_dcg_profiel_v2.sql`):
+  - kant per leerlijn;
+  - 8 lege plekken voor spelprincipes (2 per teamfunctie; trainers zien ze niet);
+  - leerdoelen als observeerbaar gedrag (structuur, nog leeg);
+  - sjabloon DCG 75;
+  - 6e leerlijn blijft *controleren*, met de kandidaten *beschermen/vrijmaken* en *schieten/afronden*.
+- **Laptop vanaf 900 px** (was 1100): menu links, venster in het midden; grote vensters zijn 760 px breed. Twee kolommen blijven vanaf 1100 px.
+
 ## Besluit 130 — Trainer: een eigen tabblad Training; aanwezigheid in een venster
 *Besloten 27 oktober 2026: de initiatiefnemer koos uit twee voorbeelden "oplossing 2" ("ik wil echt dat training een aparte plek krijgt"). Schermafbeeldingen: `docs/onderzoek/trainingsmodule-2/tab-training.png` en `tab-aanwezigheid.png`. Geldt als de module **Trainingen** aan staat; zonder de module blijft het zoals in Besluit 122.*
 - **Tabbalk trainer:** Home · **Training** · Wedstrijd · Spelers · Berichten (Training komt op de plek van Planning).
@@ -689,7 +728,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - Gegevens: notities in `obs.momenten` (zoals bij het evaluatieformulier, nu met onderwerp `k`), klok in `obs.wklok`. Het A4 en het delen met de trainer blijven gelijk. Het scherm is nu ± 2 schermen lang (was 6,5).
 
 ## Besluit 128 — Trainingsmodule in ClubComm (proef): eigen oefenvormen en trainingen met spacing
-*◐ Deels herzien door Besluit 130: de training en Vormen staan in het eigen tabblad Training.*
+*◐ Deels herzien door Besluit 130: de training en Vormen staan in het eigen tabblad Training. ◐ Deels herzien door Besluit 131: de soort is een vormtype (8 hoofdtypes) en een vorm opent eerst als venster.*
 *Besloten 27 oktober 2026, na een voorbeeld (`docs/onderzoek/trainingsmodule-2/tr-*.png`) met de training van de initiatiefnemer van die dag. Eerste bouwstap van Besluit 121 (fase 1). Module **Trainingen (proef)**, aan voor DCG.*
 - **Planning → training:** blok *Training* met *Training voorbereiden of vastleggen*. Een training heeft:
   - thema, leerdoelen (uit het opleidingsprofiel van de club), aantal spelers en keepers;
@@ -742,6 +781,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - De ART-app zelf is niet aangepast.
 
 ## Besluit 123 — Opleidingsprofiel als gegevens: het DCG-fundament staat erin, de rest blijft open
+*◐ Deels herzien door Besluit 131: DCG-profiel versie 2 (kant per leerlijn, plekken voor 8 spelprincipes, sjabloon DCG 75).*
 *Besloten 27 oktober 2026. Bron: het fundament van de DCG-methodiek dat de initiatiefnemer aanleverde (eerder uitgewerkt in ChatGPT). Werkt Besluit 121 uit. Opbouw: `supabase/profielen/README.md`.*
 - **Een profiel is gegevens, geen code.** Onderdelen: visie · doelgroep · teamfuncties · spelprincipes · leerlijnen · leerdoelen per leeftijd · methodiek · trainingsopbouw · periodisering · themalessen · evaluatie · termen. Elk onderdeel heeft een status (*gecontroleerd · controleren · eigen · deels · overgenomen · leeg*). Elk item heeft een vaste id die nooit verandert. Een nieuw onderdeel toevoegen vraagt geen databasewijziging.
 - **DCG** (eigen profiel, concept, versie 1) staat in de database van DCG (soort `profiel`, scope `hjo`: HO/clubbeheerder en coördinator). Alleen wat de initiatiefnemer aanleverde staat erin:
@@ -760,7 +800,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Een scherm Opleidingsprofiel** voor de HO komt na een voorbeeld.
 
 ## Besluit 122 — Tabbladen gelijk bij elke rol, één keer signaleren, lange schermen ingeklapt, laptop met menu links
-*◐ Deels herzien door Besluit 130: met de module Trainingen heeft de trainer Training in plaats van Planning.*
+*◐ Deels herzien door Besluit 130: met de module Trainingen heeft de trainer Training in plaats van Planning. ◐ Deels herzien door Besluit 131: laptop vanaf 900 px.*
 *Besloten 27 oktober 2026, op verzoek "per direct" na de app-analyse (`docs/onderzoek/app-analyse-2026-10-27.md`).*
 - **Home altijd links, Berichten altijd rechts**, bij elke rol.
 - **Trainer:** Home · **Planning** (was Aanwezigheid: de week, aanwezigheid opnemen; hier komt straks ook de trainingsvoorbereiding en de vormenbank, Besluit 121) · **Wedstrijd** (was Speeltijd: wisselschema, scorebord, speeltijd dit seizoen) · Spelers · Berichten. Zelfde woorden als bij de teamleider en de coördinator.
@@ -839,6 +879,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Gevonden fout (meegenomen):** een chauffeur die alleen ouder is, zag het bericht "X rijdt niet mee" niet in de app (de ouderrol verbergt persoonlijke berichten van andere ouders, Besluit 79). Die berichten zijn nu gemarkeerd als rit-bericht en staan altijd bij de ouder. Zie `pilotlog.md`.
 
 ## Besluit 113 — Drie lagen: tabblad → venster → pagina (spelerskaart)
+*◐ Deels herzien door Besluit 131: het venster staat in het midden vanaf 900 px (was 1100).*
 *Besloten 23 oktober 2026, na een voorbeeld op telefoonformaat. Vraag van de trainer: zoveel mogelijk op één scherm, zoals in mijnrijlesplanner.*
 - **Vaste regel voor elk scherm:** **tabblad** = wat je dagelijks ziet (lijsten, overzicht) · **venster** (van onder) = snel kijken of één ding doen, past op één scherm, daarna sta je weer op dezelfde plek · **pagina** (terug linksboven) = alles over één ding, lang of om te lezen. **Nooit een venster op een venster**; uit een venster ga je hooguit door naar de pagina ("Alles over … →").
 - **Spelerskaart:** tik op een speler in een lijst (trainer: Spelers en Aanwezigheid; teamleider: Team) → venster met team, speeltijd, de cijfers (aanwezig, te laat, kaarten), de volgende activiteit, de ouders (bellen, appen, mailen) en de acties *Contact vastleggen* en *Ontwikkelgesprek*. Onderaan **Alles over [naam]** naar de spelerpagina. Een teamleider die geen spelerszaken volgt, ziet geen cijfers en acties (zoals op de pagina). Signalen openen nog steeds de pagina (daar hoort de hele geschiedenis bij).
@@ -1970,6 +2011,8 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 ---
 
 ## Later / ideeën
+- **Favoriete zoekopdrachten en materiaal als filter** (voorstel ChatGPT 27-10, Besluit 131): pas bij een gedeelde vormenbank van de club; met minder dan 50 eigen vormen is het overkill.
+- **Spelprincipes ook bij de wedstrijdobservatie** (idee 27-10, Besluit 131): als de 8 spelprincipes vaststaan, dezelfde lijst als onderwerp bij een observatie (Besluit 129). Dan zie je wat je in de training aanbood naast wat je in de wedstrijd terugzag.
 
 - **Leerlijn die een training voorstelt, die je altijd aanpast** (vraag 27-10, Besluit 128): als de methodiek per week is uitgeschreven, zet ClubComm bij elke training het thema en de leerdoelen van de lijn klaar als **concept**, met passende vormen uit Mijn vormen. De trainer past aan op de opkomst en op wat er in de wedstrijd gebeurde ("ClubComm signaleert, mensen beslissen"). Advies: dit, niet alles zelf intikken en niet een vaste lijn.
 - **HO ziet de training bij een begeleidingsmoment** (27-10; de rest van het idee *Trainingsmodule voor AVV Swift* is Besluit 130): bij een begeleidingsmoment ziet de HO de training van die dag. Vraagt een rechtenwijziging (nu scope `eigen`), dus eerst akkoord.
@@ -2001,6 +2044,9 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 ---
 
 ## Nog te bespreken
+- **Wat is spacing inhoudelijk?** (Besluit 131) Loslaten (het geleerde laten rusten), herstel, contrast of spelend leren? Pas daarna krijgt spacing een eigen soort of regels.
+- **De 8 spelprincipes voor O13 en de leerdoelen als observeerbaar gedrag** (Besluit 131): de plekken staan klaar in het DCG-profiel; de inhoud stelt de initiatiefnemer vast.
+- **6e leerlijn:** beschermen/vrijmaken of schieten/afronden (Besluit 131).
 
 - **Clubregels ook door de coördinator (Besluit 110):** verzamelen voor wedstrijden hoort bij de organisatie, maar alleen de clubbeheerder kan clubregels opslaan (rechten in de database). Bij DCG is dat geen probleem; bij een club met een aparte coördinator een deel van de regels voor de coördinator openzetten.
 
@@ -2030,6 +2076,9 @@ Bewust niet gedaan, met de reden. Komt een van deze toch terug, zeg dan dat het 
 
 | Idee | Waarom niet | Besluit |
 |---|---|---|
+| Zestien oefenvormtypes als één keuzelijst op het scherm | Ze overlappen: ze mengen vorm, inhoud en weerstand (een 4 tegen 4 is partijvorm, SSG én wedstrijdvorm). Te veel keuze voor een vrijwilliger; ze staan nu onder *Meer precies* | 131 |
+| Weerstand (over- en ondertal) zelf laten kiezen | Volgt uit de aantallen en het hoofdleerdoel; zelf kiezen kost een extra stap en kan niet kloppen | 131 |
+| Methodische fase vast aan een vorm | Dezelfde vorm is in de ene training oefenleer en in de andere toepassing; de fase hoort bij de uitvoering (een vorm mag wel een aanbevolen fase hebben) | 131 |
 | Bijhouden of een e-mail geopend is (open-tracking) | Klopt vaak niet: iPhones melden elke e-mail als geopend, andere blokkeren het; dan krijg je cijfers waar je niet op kunt vertrouwen. We laten zien hoe het aankwam, niet of het geopend is | 107 |
 | Eigen naam aanpassen in het Profiel (of naam in de kennismaking) | Niet nodig (10-10): de club zet de naam goed bij het inrichten; bij een fout past de clubbeheerder hem aan (Besluit 45) | 45, 100 |
 | Afmelden namens de ouder (door teamleider) | Informatie gaat van de bron de app in; geen taak voor een ander | 34 |
