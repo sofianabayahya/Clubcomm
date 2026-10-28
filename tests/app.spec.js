@@ -1519,6 +1519,18 @@ test('trainingsmodule: volgorde, je zit in en weekthema (KNVB-profiel)', async (
   // A komt als voorstel uit de week; de training heeft het niet zelf opgeslagen
   expect(await page.evaluate((x) => { const S = CC.S(); const p = CC.tr.plan(S, 'tW'); return [CC.tr.blokDoel(S, p, 'A') === x, !(p.blokDoel || {}).A]; }, ld)).toEqual([true, true]);
   await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'trainingsplannen' && r.data.week).map((r) => `${r.scope}|${r.data.methodiek.thema}`).join()).toBe('eigen|Vrijlopen');
+  // Lege training: printen en kopiëren kan nog niet
+  await expect(page.locator('.tr-pmid [data-act="tpPrint"]')).toBeDisabled();
+  await expect(page.locator('.tr-pmid [data-act="tpKopieNaar"]')).toBeDisabled();
+  // Team zonder spelers (zoals Swift): geen knop Aanwezigheid in Week
+  await page.locator('[data-act="seg"][data-val="week"]').click();
+  await expect(page.locator('.tr-aanw')).toHaveCount(1);
+  await page.evaluate(() => { const S = CC.S(); S.players = S.players.filter((x) => x.teamId !== 'O12-1'); CC.render(); });
+  await expect(page.locator('.tr-aanw')).toHaveCount(0);
+  // Telefoon: geen 'sleep' (werkt daar niet)
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.locator('[data-act="seg"][data-val="plannen"]').click();
+  await expect(page.locator('#planBank + small')).toHaveText('Tik op + (komt op de eerste passende lege plek).');
   await controleer(page, fouten, 'weekthema');
 });
 

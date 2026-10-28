@@ -140,7 +140,7 @@
     return `<div class="kaartje tr-midden" data-drop-plan="${a.id}">
       <div class="tr-plankop"><div><h2>${esc(dagNaam(a))} · ${esc(p.thema || 'Training')} <button class="icoonknop" data-act="tpKopBewerk" data-id="${a.id}" aria-label="Thema en aantallen aanpassen">${icon('pencil')}</button>${CC.trStatus ? CC.trStatus(S, p) : ''}</h2>
         <small class="zacht">${[a.tijd ? `${a.tijd}${a.eind ? `–${a.eind}` : ''}` : '', n ? `${n} spelers${p.spelers == null || p.spelers === '' ? (S.pres[a.id] ? ' aanwezig' : ' verwacht') : ''}` : '', k ? `${k} keeper${k === 1 ? '' : 's'}` : '', p.sjabloon ? `sjabloon ${esc((sj.find((x) => x.id === p.sjabloon) || { naam: '' }).naam)}` : ''].filter(Boolean).join(' · ')}</small></div>
-        <div class="knoppen"><button class="knop licht" data-act="tpKopieNaar" data-id="${a.id}">${icon('repeat')}Kopiëren naar…</button><button class="knop licht" data-act="tpPrint" data-id="${a.id}">${icon('printer')}Printen</button><button class="knop licht" data-act="tpMeer" data-id="${a.id}" aria-label="Meer">⋯</button></div></div>
+        <div class="knoppen"><button class="knop licht" data-act="tpKopieNaar" data-id="${a.id}" ${(p.onderdelen || []).length ? '' : 'disabled'}>${icon('repeat')}Kopiëren naar…</button><button class="knop licht" data-act="tpPrint" data-id="${a.id}" ${(p.onderdelen || []).length ? '' : 'disabled'}>${icon('printer')}Printen</button><button class="knop licht" data-act="tpMeer" data-id="${a.id}" aria-label="Meer">⋯</button></div></div>
       ${CC.trMethodiek ? CC.trMethodiek(S, p, a) : ''}
       ${balk(S, p)}
       ${gr || `<p class="zacht">Nog leeg. ${sj.length ? 'Begin met het sjabloon van de club, een eerdere training, of zet' : 'Zet'} vormen en spacing in de volgorde van de training.</p>`}
@@ -317,7 +317,7 @@
     const standaard = acts.find((a) => a.datum === D.vandaag() && a.soort === 'training') || acts.find((a) => a.datum >= D.vandaag() && a.soort === 'training') || acts.find((a) => a.datum === D.vandaag()) || acts[0];
     const a = acts.find((x) => x.id === h.segVal('aanwAct', standaard.id)) || standaard;
     const sp = M.spelers(S, a.teamId); const pr = S.pres[a.id];
-    const aanw = a.afgelast ? '' : pr ? `${Object.values(pr.s || {}).filter((v) => v === 'a' || v === 'l').length} van ${sp.length} aanwezig · aanpassen` : `${verwacht(S, a)} van ${sp.length} verwacht`;
+    const aanw = a.afgelast || !sp.length ? '' : pr ? `${Object.values(pr.s || {}).filter((v) => v === 'a' || v === 'l').length} van ${sp.length} aanwezig · aanpassen` : `${verwacht(S, a)} van ${sp.length} verwacht`;
     const p = a.soort === 'training' ? plan(S, a.id) : null;
     return `${kop}${strook(S, acts, a)}${CC.trJeZitIn ? CC.trJeZitIn(S, a) : ''}
       <div class="kaart-kop los">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${h.actSub(S, a)}</small></div></div>${!a.afgelast && a.adres && (a.soort === 'activiteit' || (M.isWed(a) && !a.thuis)) ? `<div class="knoppen">${h.adresRegel(a.adres)}</div>` : ''}
@@ -333,7 +333,7 @@
     return `<div class="kaartje tr-weekkaart"><div class="tr-kop"><b>${esc(p.thema || 'Training')} · ${totaal(p)} min</b>${CC.trStatus ? CC.trStatus(S, p) : doelen ? `<small class="zacht">${doelen}</small>` : ''}</div>${CC.trMethodiek ? CC.trMethodiek(S, p, a, true) : ''}${balk(S, p)}
       ${(p.onderdelen || []).length ? `<div class="tr-lijst">${p.onderdelen.map((o, i) => { const v = o.vormId && vorm(S, o.vormId); const var_ = v && o.variant != null && (v.varianten || [])[o.variant] ? ` · ${esc(v.varianten[o.variant].naam || String.fromCharCode(65 + Number(o.variant)))}` : '';
         return `<button type="button" class="tr-rij tr-wrij" ${v ? `data-act="vormOpen" data-id="${v.id}"` : `data-act="tpOnderdeel" data-id="${a.id}" data-i="${i}"`}>${o.blok ? `<span class="tr-code">${esc(code(o))}</span>` : ''}${leegSlot(o) ? `<span class="tr-mini leeg">${icon('plus')}</span>` : mini(v, o.spacing)}<span class="tr-t"><b>${esc(v ? v.naam : o.spacing ? o.naam || 'Spacing' : o.naam || 'Nog leeg')}${var_}</b></span><span class="tr-min">${Number(o.min) || 0}′</span></button>`; }).join('')}</div>` : '<p class="zacht">Nog geen opbouw.</p>'}
-      <div class="knoppen"><button class="knop licht" data-act="open" data-view="trainingsplan" data-id="${esc(a.id)}">${icon('pencil')}Aanpassen</button><button class="knop licht" data-act="tpPrint" data-id="${esc(a.id)}">${icon('printer')}Printen</button></div></div>`; };
+      <div class="knoppen"><button class="knop licht" data-act="open" data-view="trainingsplan" data-id="${esc(a.id)}">${icon('pencil')}Aanpassen</button><button class="knop licht" data-act="tpPrint" data-id="${esc(a.id)}" ${(p.onderdelen || []).length ? '' : 'disabled'}>${icon('printer')}Printen</button></div></div>`; };
   // Plannen (laptop): links je vormen, in het midden de training in blokken, rechts de week en de maand
   const plannenHtml = (S, acts) => {
     const tr = acts.filter((x) => x.soort === 'training' && !x.afgelast); if (!tr.length) return h.leeg('Geen trainingen in deze periode.', 'list-checks');
@@ -358,7 +358,7 @@
   const bankKolom = (S, p, a) => { const f = pf(); const n = aantalSp(S, p, a);
     return `<div class="kaartje"><b>Mijn vormen</b><input id="planZoek" class="tr-zoek" type="search" placeholder="Zoek een vorm…" aria-label="Zoek een vorm" value="${esc(f.q || '')}">
       <div class="chips">${n ? `<button class="chipknop ${f.past ? 'aan' : ''}" aria-pressed="${!!f.past}" data-act="pfZet" data-k="past">past bij ${n}</button>` : ''}${['A', 'B'].filter((b) => blokDoel(S, p, b)).map((b) => `<button class="chipknop ${f.doel === b ? 'aan' : ''}" aria-pressed="${f.doel === b}" data-act="pfZet" data-k="doel" data-w="${b}">${b} = ${esc(ldNaam(S, blokDoel(S, p, b)))}</button>`).join('')}</div>
-      <div id="planBank" data-id="${a.id}">${bankLijst(S, p, a)}</div><small class="zacht">Sleep een vorm naar een plek, of tik op + (komt op de eerste passende lege plek).</small>
+      <div id="planBank" data-id="${a.id}">${bankLijst(S, p, a)}</div><small class="zacht">${groot() ? 'Sleep een vorm naar een plek, of tik op +' : 'Tik op +'} (komt op de eerste passende lege plek).</small>
       <button class="knop licht vol" data-act="vormNieuw" data-plan="${a.id}">${icon('plus')}Nieuwe vorm</button></div>`; };
   CC.on('pfZet', (el) => { const f = pf(); if (el.dataset.k === 'past') f.past = !f.past; else f.doel = f.doel === el.dataset.w ? null : el.dataset.w; CC.render(); });
   document.addEventListener('input', (e) => { if (e.target.id !== 'planZoek') return; pf().q = e.target.value; const b = document.getElementById('planBank'); const S = CC.S(); const p = b && plan(S, b.dataset.id); if (p) b.innerHTML = bankLijst(S, p, actVan(S, p)); });
