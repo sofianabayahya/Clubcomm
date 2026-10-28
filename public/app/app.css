@@ -781,6 +781,54 @@ small.bewaard.ok { color: var(--groen); } small.bewaard.fout { color: var(--rood
 .tr-mlijst i { grid-area: b; display: block; height: 8px; border-radius: 4px; background: var(--blauw); }
 .tr-mlijst i.nul { background: var(--rood); width: 6px !important; }
 .tr-maand > small { display: block; padding-bottom: 12px; }
+/* Besluit 132: Plannen op de laptop (vormen · training · week), vorm in Rinus-stijl, Lijn, printen */
+.tr-plan { display: grid; grid-template-columns: 1fr; grid-template-areas: "mid" "zij" "bank"; gap: 14px; align-items: start; margin-top: 10px; }
+.tr-pmid { grid-area: mid; min-width: 0; } .tr-pzij { grid-area: zij; display: flex; flex-direction: column; gap: 12px; min-width: 0; } .tr-pbank { grid-area: bank; min-width: 0; }
+@media (min-width: 900px) { body:not(.rl) .tr-plan { grid-template-columns: 1fr 290px; grid-template-areas: "mid zij" "mid bank"; grid-template-rows: auto 1fr; } body:not(.rl) .tr-pbank { align-self: start; } }
+@media (min-width: 1280px) { body:not(.rl) .tr-plan { grid-template-columns: 290px 1fr 290px; grid-template-areas: "bank mid zij"; } body:not(.rl) .tr-pbank { position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow: auto; } }
+.tr-plankop { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
+.tr-plankop .knop, .tr-rv-r .knop { white-space: nowrap; }
+.tr-plankop h2 { font-size: 20px; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.tr-groep { border: 1px solid var(--lijn); border-radius: 12px; padding: 4px 10px 2px; }
+.tr-gkop { font-size: 15px; font-weight: 700; border: 0; background: none; padding: 8px 0; min-height: 44px; text-align: left; color: var(--inkt); cursor: default; font-family: inherit; }
+button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.tr-B { color: #137333; } .tr-gkop.tr-P { color: #0b4f7a; }
+.tr-drop { outline: 2px dashed var(--blauw); outline-offset: 2px; border-radius: 8px; }
+.tr-bk { display: flex; align-items: center; gap: 4px; border-top: 1px solid var(--lijn); cursor: grab; }
+.tr-bk:first-child { border-top: 0; }
+.tr-bk-t { display: flex; gap: 10px; align-items: center; flex: 1; min-width: 0; border: 0; background: none; padding: 6px 0; text-align: left; font: inherit; color: var(--inkt); cursor: pointer; min-height: 56px; }
+.tr-bk .tr-t b { font-size: 15px; }
+.tr-dag.aan { background: var(--blauw-l); border-radius: 10px; padding-left: 8px; }
+.tr-weekkaart .tr-rij { min-height: 52px; }
+.sheet.xl { max-width: 760px; }
+@media (min-width: 900px) { .sheet.xl { max-width: min(1120px, 94vw); } }
+.tr-rv { display: flex; flex-direction: column; gap: 14px; }
+.tr-rv-l { display: flex; flex-direction: column; gap: 8px; }
+.tr-rv-r { display: flex; flex-direction: column; gap: 8px; }
+.tr-rv-r ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
+@media (min-width: 900px) { .sheet.xl .tr-rv { display: grid; grid-template-columns: 1.1fr 1fr; gap: 22px; align-items: start; } .sheet.xl .tr-rv-l { position: sticky; top: 0; background: #5fb87a; padding: 14px; border-radius: 14px; } .sheet.xl .tr-legenda { color: #fff; } }
+.tr-soort { font-style: italic; color: var(--zacht); font-size: 14px; }
+.tr-meta { display: flex; flex-wrap: wrap; gap: 6px 16px; font-weight: 600; font-size: 15px; color: var(--inkt); }
+.tr-meta span + span::before { content: ''; }
+.tr-legenda { font-size: 13px; color: var(--zacht); margin: 0; }
+.tr-mat { display: flex; flex-wrap: wrap; gap: 18px; }
+.tr-mat div { display: flex; flex-direction: column; align-items: center; min-width: 56px; }
+.tr-mat b { font-size: 22px; } .tr-mat small { color: var(--zacht); font-size: 13px; }
+.tr-ook { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.tr-ook .tr-t b { font-size: 14px; }
+.tr-tabel { overflow-x: auto; }
+.tr-lijn table { border-collapse: collapse; width: 100%; font-size: 14px; }
+.tr-lijn th, .tr-lijn td { padding: 8px 6px; text-align: center; border-bottom: 1px solid var(--lijn); white-space: nowrap; }
+.tr-lijn tbody th { text-align: left; font-weight: 600; white-space: normal; min-width: 120px; }
+.tr-lijn th.rood { color: var(--rood); }
+.tr-lijn .nu { background: var(--blauw-l); }
+@media print {
+  #printvak .pv-ond { display: grid; grid-template-columns: 7.5cm 1fr; gap: 10pt; break-inside: avoid; border-top: 1px solid #ccd; padding-top: 6pt; margin-top: 6pt; }
+  #printvak .pv-tek svg { width: 100%; height: auto; }
+  #printvak .pv-ond p { margin: 0 0 3pt; } #printvak .pv-ond ul { margin: 0 0 4pt; padding-left: 14pt; }
+  #printvak .pv-meta { color: #555; font-size: 9.5pt; }
+  #printvak .pv-sp { border-top: 1px solid #ccd; padding-top: 4pt; margin: 6pt 0 0; color: #444; }
+  #printvak .tr-legenda { font-size: 8pt; color: #555; }
+}
 /* Besluit 129: observeren tijdens de wedstrijd (klok, turven, snelle notities) */
 .obs-plak { background: #0b2545; color: #fff; display: flex; flex-direction: column; gap: 10px; }
 .obs-plak .zacht { color: #c9d6e6; }
