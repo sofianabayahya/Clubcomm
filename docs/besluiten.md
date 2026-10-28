@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 131)
+Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 132)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -17,8 +17,9 @@ Laatst bijgewerkt: 27 oktober 2026 (t/m Besluit 131)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
-| 131 | Oefenvormen geclassificeerd (8 hoofdtypes, weerstand vanuit het hoofdleerdoel, omschakeling met richting), opbouw in blokken met sjabloon DCG 75 en fase-voorstel, gepland en uitgevoerd, filters; laptop vanaf 900 px | ✅ geldt |  |
-| 130 | Trainer: eigen tabblad Training (week met de training bovenaan, aanwezigheid in een venster, Vormen); ook bij AVV Swift, daar trainingen op datum | ✅ geldt |  |
+| 132 | Training: Week (telefoon, controleren) · Plannen (laptop: vormen · training in blokken · week) · Vormen · Lijn; vorm in Rinus-stijl met *Zet in een training…* en materiaal uit de tekening; printen; kopiëren naar een andere dag | ✅ geldt |  |
+| 131 | Oefenvormen geclassificeerd (8 hoofdtypes, weerstand vanuit het hoofdleerdoel, omschakeling met richting), opbouw in blokken met sjabloon DCG 75 en fase-voorstel, gepland en uitgevoerd, filters; laptop vanaf 900 px | ◐ deels herzien | door 132 (geen leerdoel-chips meer in de kop van een training; vorm opent in Rinus-stijl) |
+| 130 | Trainer: eigen tabblad Training (week met de training bovenaan, aanwezigheid in een venster, Vormen); ook bij AVV Swift, daar trainingen op datum | ◐ deels herzien | door 132 (Training heeft Week · Plannen · Vormen · Lijn; de training staat op de laptop in Plannen) |
 | 129 | Observeren: klok en turven bovenaan, snelle notities met minuut en onderwerp, aandachtspunten na afloop | ✅ geldt |  |
 | 128 | Trainingsmodule (proef): eigen oefenvormen en trainingen met spacing, varianten en aantallen | ◐ deels herzien | door 130 (de training staat in het tabblad Training) en 131 (soort → vormtype, vorm opent als venster) |
 | 127 | Tekentool: loopactie en pass met boog als vaste soort | ✅ geldt |  |
@@ -665,7 +666,37 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 132 — Training op de laptop: Plannen, vorm in Rinus-stijl, printen, kopiëren en de Lijn
+*Besloten 28 oktober 2026 ("bouw maar in de volgorde"), na een schermopname van KNVB Rinus en voorbeelden (`docs/onderzoek/training-laptop/`). Aanleiding: op de laptop stond alles onder elkaar (thema, vijf leerdoel-chips, spelers, opbouw, maandminuten, terugblik, knoppen); trainingen maak je op de laptop en controleer je op de telefoon.*
+- **Training heeft vier knoppen: Week · Plannen · Vormen · Lijn.** Op de telefoon opent Training op *Week*, op de laptop (vanaf 900 px) op *Plannen*.
+- **Week (telefoon, controleren):**
+  - de dag, aanwezigheid in een venster;
+  - de training als lijst (code, tekening, naam, minuten). Tik op een vorm = de vorm groot;
+  - *Aanpassen* en *Printen*;
+  - na afloop de terugblik.
+- **Plannen (laptop):**
+  - midden: de training in blokken **Start · A · B · Partij**, met per blok het leerdoel (*A · 1v1 aanvallend ▾*, zelf te kiezen, anders van de eerste vorm);
+  - **de kop is één regel** (dag · thema ✎ · tijd · spelers · sjabloon): de vijf leerdoel-chips zijn weg, en het aantal spelers komt uit de aanwezigheid (zelf overschrijven kan);
+  - knoppen: *Kopiëren naar…*, *Printen*, *⋯* (eerdere training overnemen, leegmaken);
+  - rechts: deze week, **na de training** (de terugblik verschijnt pas na afloop) en de maand in minuten per hoofdleerdoel;
+  - **Mijn vormen** ernaast: zoeken, *past bij x*, *A = …*; **slepen** naar een plek, of **+** (komt op de eerste passende lege plek: het blok met hetzelfde leerdoel, anders de eerste lege plek).
+- **Vorm in Rinus-stijl (venster, op de laptop breed):**
+  - links de tekening op groen met een legenda (pijlen), rechts de kaart: soort, meta-regel (afmeting, spelers, minuten, weerstand, richting);
+  - knoppen **Zet in een training…**, Dupliceren, Printen, Bewerken;
+  - **Doel** (hoofdleerdoel + een zin), Organisatie en spelregels en Coachpunten (één punt per regel), **Makkelijker / Moeilijker** (varianten krijgen een richting);
+  - **materiaal geteld uit de tekening** (ballen, hoedjes, schijfjes, doelen, kaatsborden, hesjes = spelers die niet rood, trainer of keeper zijn);
+  - *Ook voor dit leerdoel*.
+- **Zet in een training…:** kies een dag (komende 4 weken, of trainingen op datum). Een lege training krijgt eerst het sjabloon van de club; de vorm komt op de eerste passende plek.
+- **Printen:**
+  - een A4 per training: kop, materiaal (het meeste dat tegelijk nodig is), per onderdeel de tekening met organisatie, coachpunten en materiaal;
+  - en een A4 per vorm.
+- **Kopiëren naar…:** de hele training naar een andere dag (een gevulde training vraagt eerst *Vervangen?*), of naar een losse datum. Gegeven, terugblik en echte minuten gaan niet mee.
+- **Lijn:** de opleidingslijn per week (8 weken): minuten per hoofdleerdoel, vet = uitgevoerd, grijs = alleen gepland, rood = het leerdoel kwam 4 weken niet aan bod. Daaronder per week de trainingen met A en B.
+- **Niet overgenomen van Rinus** (zie Afgewezen ideeën): shirtjes met cijfers en de sterren voor *Voetbal echt*.
+- Ook gerepareerd: de eindtijd van een training werd verkeerd gelezen (*75 van 60 min* stond er daardoor nooit).
+
 ## Besluit 131 — Oefenvormen classificeren, opbouw in blokken, gepland en uitgevoerd
+*◐ Deels herzien door Besluit 132: de leerdoel-chips in de kop van een training zijn weg (leerdoel per blok), en een vorm opent in Rinus-stijl.*
 *Besloten 27 oktober 2026, na een voorstel van ChatGPT, onze reactie en een methodologische beoordeling door de initiatiefnemer ("ja, ook het profiel, bouw het maar"). Uitwerking en voorbeelden: `docs/onderzoek/vormtypes/` (versie 2). Werkt binnen de bestaande trainingsmodule: geen nieuwe tekentool, geen nieuwe tabel, geen rechtenwijziging (scope `eigen`).*
 - **Vormtype: 8 hoofdtypes** (catalogus `public/app/vormtypes.js`, vaste id's, gelijk voor alle clubs):
   - Droog / techniek, Passeer- en duelvorm, Rondo, Positiespel, Partijvorm, Afwerkvorm (zelfstandig), Patroon / tactisch, Keeper;
@@ -704,6 +735,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Laptop vanaf 900 px** (was 1100): menu links, venster in het midden; grote vensters zijn 760 px breed. Twee kolommen blijven vanaf 1100 px.
 
 ## Besluit 130 — Trainer: een eigen tabblad Training; aanwezigheid in een venster
+*◐ Deels herzien door Besluit 132: Training heeft Week · Plannen · Vormen · Lijn; op de laptop maak je de training in Plannen.*
 *Besloten 27 oktober 2026: de initiatiefnemer koos uit twee voorbeelden "oplossing 2" ("ik wil echt dat training een aparte plek krijgt"). Schermafbeeldingen: `docs/onderzoek/trainingsmodule-2/tab-training.png` en `tab-aanwezigheid.png`. Geldt als de module **Trainingen** aan staat; zonder de module blijft het zoals in Besluit 122.*
 - **Tabbalk trainer:** Home · **Training** · Wedstrijd · Spelers · Berichten (Training komt op de plek van Planning).
 - **Training → Week:**
@@ -2011,6 +2043,7 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 ---
 
 ## Later / ideeën
+- **Veldmaat als label bij een vorm** (voorstel 28-10, Besluit 132, nog geen antwoord): bijv. *¼ veld*, afgeleid uit het veld dat je in de tekentool kiest.
 - **Favoriete zoekopdrachten en materiaal als filter** (voorstel ChatGPT 27-10, Besluit 131): pas bij een gedeelde vormenbank van de club; met minder dan 50 eigen vormen is het overkill.
 - **Spelprincipes ook bij de wedstrijdobservatie** (idee 27-10, Besluit 131): als de 8 spelprincipes vaststaan, dezelfde lijst als onderwerp bij een observatie (Besluit 129). Dan zie je wat je in de training aanbood naast wat je in de wedstrijd terugzag.
 
@@ -2076,6 +2109,8 @@ Bewust niet gedaan, met de reden. Komt een van deze toch terug, zeg dan dat het 
 
 | Idee | Waarom niet | Besluit |
 |---|---|---|
+| Shirtjes met cijfers in de tekening (zoals Rinus) | De initiatiefnemer kiest de rondjes en driehoeken; die zijn kleiner en duidelijker | 132 |
+| Sterren "Voetbal echt" bij een vorm (zoals Rinus) | Een oordeel zonder vaste maat; het leerdoel, de weerstand en de fase zeggen al hoe wedstrijdecht een vorm is | 132 |
 | Zestien oefenvormtypes als één keuzelijst op het scherm | Ze overlappen: ze mengen vorm, inhoud en weerstand (een 4 tegen 4 is partijvorm, SSG én wedstrijdvorm). Te veel keuze voor een vrijwilliger; ze staan nu onder *Meer precies* | 131 |
 | Weerstand (over- en ondertal) zelf laten kiezen | Volgt uit de aantallen en het hoofdleerdoel; zelf kiezen kost een extra stap en kan niet kloppen | 131 |
 | Methodische fase vast aan een vorm | Dezelfde vorm is in de ene training oefenleer en in de andere toepassing; de fase hoort bij de uitvoering (een vorm mag wel een aanbevolen fase hebben) | 131 |
