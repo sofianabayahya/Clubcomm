@@ -94,7 +94,7 @@
       ${inTraject.length ? `<div class="clubregel"><span><b>${inTraject.length}</b> in traject</span><span><b>${klaar}/${totaal}</b> gedaan</span></div>${inTraject.map(kaart).join('')}` : h.leeg('Nog niemand in een traject', 'user-check')}`;
   };
   // De momenten van het plan als afvinklijst: wedstrijden, daaronder trainingen; klaar = groen, gepland = blauw, open = grijs
-  const trajectStappen = (S, pid, t) => { const mom = (S.begeleidMomenten || []).filter((m) => m.trainerId === pid).sort((a, b) => a.datum.localeCompare(b.datum));
+  const trajectStappen = (S, pid, t) => { const mom = (S.begeleidMomenten || []).filter((m) => m.trainerId === pid && !m.vervallen).sort((a, b) => a.datum.localeCompare(b.datum));
     const regels = [['wedstrijd', 'Wedstrijd'], ['training', 'Training']].flatMap(([soort, naam]) => { const l = mom.filter((m) => m.soort === soort); const n = Math.max(t.plan[soort] || 0, l.length);
       return Array.from({ length: n }, (_, i) => { const m = l[i];
         return m ? `<li class="${m.klaar ? 'ok' : 'half'}" data-act="open" data-view="begelMoment" data-id="${m.id}" role="button" tabindex="0">${icon(m.klaar ? 'circle-check' : 'clock')}<span>${naam} ${D.kort(m.datum)}</span></li>` : `<li data-act="begelInplannen" data-id="${pid}" data-soort="${soort}" role="button" tabindex="0">${icon('clock')}<span>${naam} <small class="zacht">· plannen</small></span></li>`; }); });
@@ -146,7 +146,7 @@
     const plan = t ? (t.plan.wedstrijd || 0) + (t.plan.training || 0) : 0;
     const cijfer = (w, l) => `<div class="cijfer"><b>${w}</b><small>${l}</small></div>`;
     const cijfers = [tel && cijfer(`${tel.afmeldingen}×`, 'afgemeld'), tel && cijfer(`${tel.telaat}×`, 'te laat'), t && cijfer(`${gedaan(S, tr.id)} / ${plan}`, 'momenten')].filter(Boolean);
-    const volgend = (S.begeleidMomenten || []).filter((m) => m.trainerId === tr.id && !m.klaar && m.datum >= D.vandaag()).sort((x, y) => x.datum.localeCompare(y.datum))[0];
+    const volgend = (S.begeleidMomenten || []).filter((m) => m.trainerId === tr.id && !m.klaar && !m.vervallen && m.datum >= D.vandaag()).sort((x, y) => x.datum.localeCompare(y.datum))[0];
     const info = [t && t.leerdoel ? `<p class="klein"><b>Leerdoel:</b> ${esc(t.leerdoel)}</p>` : '', volgend ? `<p class="klein"><b>Volgende moment:</b> ${volgend.soort === 'wedstrijd' ? 'wedstrijd' : 'training'} ${D.kort(volgend.datum)}</p>` : '',
       !t ? `<p class="klein">${plezier(S, tr.id) ? 'Traint vooral voor het plezier: geen traject.' : 'Nog geen traject.'}</p>` : ''].join('');
     const volgt = CC.trainerVolgt(S, tr.id);

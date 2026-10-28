@@ -85,10 +85,14 @@
     ]; };
   const faseRegel = (S, m) => fasen(S, m).map(([n, ok, half]) => `${ok ? '✓' : half ? '◐' : '○'} ${n}`).join(' · ');
   const titelM = (S, m) => `${m.soort === 'wedstrijd' ? 'Wedstrijd' : 'Training'} ${D.kort(m.datum)} · ${CC.tn(m.teamId)}`;
+  // Besluit 134: een moment dat voorbij is zonder observatie is 'verlopen' (verplaatsen of 'niet doorgegaan'); 'niet doorgegaan' telt nergens meer mee
+  const loopt = (m) => !m.klaar && !m.vervallen;
+  const verlopen = (S, m) => loopt(m) && m.datum < D.vandaag() && !fasen(S, m)[2][1];
+  CC.begelLoopt = loopt;
 
   // In het dossier (trainers.js roept dit aan)
   CC.begelBlok = (S, pid) => { const l = mom(S).filter((m) => m.trainerId === pid).sort((a, b) => b.datum.localeCompare(a.datum));
-    return `${l.length ? `<div class="lijst compact">${l.map((m) => h.rij({ ic: m.klaar ? 'circle-check' : m.soort === 'wedstrijd' ? 'trophy' : 'dumbbell', kleur: m.klaar ? 'groen' : '', titel: esc(titelM(S, m)), sub: faseRegel(S, m), act: 'open', attrs: `data-view="begelMoment" data-id="${m.id}"` })).join('')}</div>` : ''}
+    return `${l.length ? `<div class="lijst compact">${l.map((m) => h.rij({ ic: m.klaar ? 'circle-check' : m.soort === 'wedstrijd' ? 'trophy' : 'dumbbell', titel: esc(titelM(S, m)), sub: m.vervallen ? 'Niet doorgegaan' : verlopen(S, m) ? 'Voorbij en niet afgerond · verplaatsen of afsluiten' : faseRegel(S, m), kleur: m.klaar ? 'groen' : verlopen(S, m) ? 'oranje' : '', act: 'open', attrs: `data-view="begelMoment" data-id="${m.id}"` })).join('')}</div>` : ''}
       <button class="knop klein" data-act="begelNieuw" data-id="${pid}">${icon('plus')}Nieuw begeleidingsmoment</button>`; };
 
   // ---------- Nieuw moment ----------
@@ -111,7 +115,7 @@
   });
   // Vanaf de kaart in Trainers → Traject: kies de training (of wedstrijd) waar je gaat kijken; de trainer krijgt meteen de vragenlijst
   CC.on('begelInplannen', (el) => { const S = CC.S(); const tr = M.persoon(S, el.dataset.id); const soort = el.dataset.soort; const teams = tr.rollen.filter((r) => r.rol === 'trainer').map((r) => r.teamId);
-    const bezet = new Set(mom(S).map((m) => m.actId).filter(Boolean));
+    const bezet = new Set(mom(S).filter(loopt).map((m) => m.actId).filter(Boolean));
     const acts = S.acts.filter((a) => teams.includes(a.teamId) && !a.afgelast && !bezet.has(a.id) && (soort === 'wedstrijd' ? M.isWed(a) : a.soort === 'training') && a.datum >= D.vandaag() && a.datum <= D.addDays(D.vandaag(), 42)).sort((a, b) => (a.datum + a.tijd).localeCompare(b.datum + b.tijd));
     const t = dosT(S, tr.id) || {}; const voor = tr.naam.split(' ')[0];
     CC.sheet(`${soort === 'wedstrijd' ? 'Wedstrijd' : 'Training'} kiezen`, `<p class="zacht">Waar ga je kijken? ${esc(voor)} krijgt meteen de ${t.niveau === 'uitgebreid' ? 'uitgebreide' : 'korte'} vragenlijst om voor te bereiden.</p>
@@ -129,9 +133,12 @@
     const tr = M.persoon(S, m.trainerId) || { naam: '' }; const z = zelf(S)[m.id] || {}; const F = fasen(S, m); const huidig = F.findIndex(([, ok]) => !ok);
     const blok = (i, inhoud) => { const [n, ok, half] = F[i]; return `<details class="uitklap" ${i === (laatst[m.id] ?? huidig) ? 'open' : ''}><summary class="fase ${ok ? 'ok' : half ? 'half' : ''}">${icon(ok ? 'circle-check' : 'clock')}<b>${i + 1}. ${n}</b> <small>${ok ? 'klaar' : half ? 'bezig' : ''}</small></summary>${inhoud}</details>`; };
     const vragen = VRAGEN(m.soort, m.niveau);
-    return { titel: titelM(S, m), sub: tr.naam, html: `
-      ${m.klaar ? '' : `<button class="knop vol" data-act="open" data-view="begelObs" data-id="${m.id}">${icon('list-checks')}Observeren</button>`}
-      <div class="knoppen"><button class="knop licht klein" data-act="begelPrint" data-id="${m.id}" data-leeg="1">${icon('printer')}A4 leeg</button><button class="knop licht klein" data-act="begelPrint" data-id="${m.id}">${icon('printer')}A4 ingevuld</button><button class="knop licht klein" data-act="begelVragenPrint" data-id="${m.id}">${icon('printer')}Vragenlijst</button></div>
+    const vervallenKaart = m.vervallen ? `<div class="info">${icon('calendar-x')}<span>Niet doorgegaan (vastgelegd ${D.kort(m.vervallen.slice(0, 10))}). Telt niet mee in het traject. <button class="linkknop" data-act="begelTerug" data-id="${m.id}">Toch weer openen</button></span></div>`
+      : verlopen(S, m) ? `<div class="kaartje oranje-rand"><b>Dit moment was ${esc(D.lang(m.datum))} en is niet afgerond</b><p class="klein">Ging het niet door? Verplaats het naar een volgende ${m.soort}; ${z.ingevuld ? 'de vragenlijst die de trainer al invulde blijft bewaard' : 'wat al is ingevuld blijft bewaard'}.</p>
+        <div class="knoppen"><button class="knop klein" data-act="begelVerplaats" data-id="${m.id}">${icon('calendar-days')}Verplaatsen naar …</button><button class="knop licht klein" data-act="begelVervalt" data-id="${m.id}">Niet doorgegaan</button></div></div>` : '';
+    return { titel: titelM(S, m), sub: tr.naam, html: `${vervallenKaart}
+      ${m.klaar || m.vervallen ? '' : `<button class="knop vol" data-act="open" data-view="begelObs" data-id="${m.id}">${icon('list-checks')}Observeren</button>`}
+      <div class="knoppen"><button class="knop licht klein" data-act="begelPrint" data-id="${m.id}" data-leeg="1">${icon('printer')}A4 leeg</button><button class="knop licht klein" data-act="begelPrint" data-id="${m.id}">${icon('printer')}A4 ingevuld</button><button class="knop licht klein" data-act="begelVragenPrint" data-id="${m.id}">${icon('printer')}Vragenlijst</button>${loopt(m) && !verlopen(S, m) && !fasen(S, m)[2][1] ? `<button class="knop licht klein" data-act="begelVerplaats" data-id="${m.id}">${icon('calendar-days')}Verplaatsen</button>` : ''}</div>
       ${blok(0, `<form data-submit="begelVoorOk" data-autosave="begelVoor" data-id="${m.id}" class="codeform">
         <label>Thema</label><input name="thema" value="${esc(m.voor.thema)}" placeholder="Bijv. opbouwen onder druk">
         ${veldT('doel', m.soort === 'wedstrijd' ? 'Wedstrijddoel en voetbalprobleem' : 'Trainingsdoel en voetbalprobleem', m.voor.doel, 'Wat moeten spelers leren?')}
@@ -168,6 +175,27 @@
   CC.autosave.begelReflectie = (f) => { const S = CC.S(); const m = vind(S, f.dataset.id); const z = zelf(S)[m.id] || (zelf(S)[m.id] = { trainerId: m.trainerId });
     z.r = Object.fromEntries(REFLECTIE.map(([k]) => [k, f[k].value.trim()])); };
   const bewaar = (S, toast) => { CC.save(); CC.render(); CC.toast(toast || 'Opgeslagen'); };
+  // ---------- Verplaatsen of 'niet doorgegaan' (Besluit 134) ----------
+  CC.on('begelVerplaats', (el) => { const S = CC.S(); const m = vind(S, el.dataset.id); const tr = M.persoon(S, m.trainerId) || { naam: '', rollen: [] }; const teams = tr.rollen.filter((r) => r.rol === 'trainer').map((r) => r.teamId);
+    const bezet = new Set(mom(S).filter((x) => x !== m && loopt(x)).map((x) => x.actId).filter(Boolean));
+    const acts = S.acts.filter((a) => teams.includes(a.teamId) && !a.afgelast && !bezet.has(a.id) && a.id !== m.actId && (m.soort === 'wedstrijd' ? M.isWed(a) : a.soort === 'training') && a.datum >= D.vandaag() && a.datum <= D.addDays(D.vandaag(), 42)).sort((a, b) => (a.datum + a.tijd).localeCompare(b.datum + b.tijd));
+    CC.sheet('Moment verplaatsen', `<p class="zacht">Nu: ${esc(D.lang(m.datum))}. Kies de nieuwe ${m.soort}. Alles wat al is ingevuld blijft bewaard; ${esc(tr.naam.split(' ')[0])} krijgt één bericht met de nieuwe datum.</p>
+      ${acts.length ? `<div class="lijst">${acts.map((a) => h.rij({ ic: m.soort === 'wedstrijd' ? 'trophy' : 'dumbbell', titel: `${D.lang(a.datum)} · ${a.tijd}`, sub: esc([CC.tn(a.teamId), a.veld].filter(Boolean).join(' · ')), act: 'begelVerplaatsOk', attrs: `data-id="${m.id}" data-a="${a.id}"` })).join('')}</div>` : `<p class="zacht klein">Er staan de komende 6 weken geen ${m.soort === 'wedstrijd' ? 'wedstrijden' : 'trainingen'} van het team in ClubComm. Kies hieronder een datum.</p>`}
+      <form data-submit="begelVerplaatsOk" data-id="${m.id}" class="codeform"><label for="bv-d">Andere datum</label><input id="bv-d" name="d" type="date" min="${D.vandaag()}" required><button class="knop licht">Verplaatsen</button></form>`); });
+  CC.on('begelVerplaatsOk', (el) => { const S = CC.S(); const m = vind(S, el.dataset.id); const a = el.dataset.a ? M.act(S, el.dataset.a) : null; const datum = a ? a.datum : el.d && el.d.value;
+    if (!datum) return CC.toast('Kies een datum', 'fout');
+    (m.verplaatst = m.verplaatst || []).push({ van: m.datum, op: new Date().toISOString() });
+    m.datum = datum; m.actId = a ? a.id : null; if (a) m.teamId = a.teamId; delete m.herinnerd;
+    const tr = M.persoon(S, m.trainerId);
+    if (m.gevraagd && tr) bericht(S, m, `Begeleidingsmoment verplaatst naar ${D.kort(datum)}`, `Hoi ${tr.naam.split(' ')[0]},\n\nIk kom niet op ${D.lang(m.verplaatst[m.verplaatst.length - 1].van)}, maar op ${D.lang(datum)}${a ? ` om ${a.tijd}` : ''} kijken bij de ${m.soort}. ${(zelf(S)[m.id] || {}).ingevuld ? 'Je vragenlijst blijft staan; pas hem gerust nog aan.' : 'De vragenlijst staat nog op je Home.'}\n\nGroet, ${CC.me().naam}`);
+    CC.closeSheet(); bewaar(S, `Verplaatst naar ${D.kort(datum)}`); });
+  CC.on('begelVervalt', (el) => { const S = CC.S(); const m = vind(S, el.dataset.id); m.vervallen = new Date().toISOString(); bewaar(S, 'Vastgelegd: niet doorgegaan'); });
+  CC.on('begelTerug', (el) => { const S = CC.S(); const m = vind(S, el.dataset.id); delete m.vervallen; bewaar(S, 'Moment weer geopend'); });
+  // Te doen van de HO/TC: voorbije momenten die niet zijn afgerond (vanaf 3 gebundeld)
+  CC.begelVerlopen = (S) => { const l = mom(S).filter((m) => verlopen(S, m) && (!CC.inWerkgebied || CC.inWerkgebied(S, m.teamId))).sort((a, b) => a.datum.localeCompare(b.datum));
+    if (l.length >= 3) return [h.rij({ ic: 'calendar-x', titel: `${l.length} begeleidingsmomenten zijn voorbij en niet afgerond`, sub: 'Verplaatsen of afsluiten als niet doorgegaan', kleur: 'oranje', act: 'open', attrs: `data-view="begelMoment" data-id="${l[0].id}"` })];
+    return l.map((m) => { const tr = M.persoon(S, m.trainerId) || { naam: '' };
+      return h.rij({ ic: 'calendar-x', titel: `Begeleidingsmoment ${D.kort(m.datum)} niet afgerond`, sub: `${esc(tr.naam)} · ${m.soort} ${esc(CC.tn(m.teamId))} · verplaatsen of afsluiten`, kleur: 'oranje', act: 'open', attrs: `data-view="begelMoment" data-id="${m.id}"` }); }); };
   CC.on('begelVoorOk', (f) => { const S = CC.S(); const m = vind(S, f.dataset.id); laatst[m.id] = 0; m.voor = { thema: f.thema.value.trim(), doel: f.doel.value.trim(), leerdoel: f.leerdoel.value.trim(), hoDoel: f.hoDoel.value.trim() }; bewaar(S); });
   CC.on('begelPlanOk', (f) => { const S = CC.S(); const m = vind(S, f.dataset.id); laatst[m.id] = 1; m.plan = { leerdoel: f.leerdoel.value.trim(), focus: f.focus.value.trim(), feedback: f.feedback.value.trim() }; bewaar(S); });
   CC.on('begelVakkenOk', (f) => { const S = CC.S(); const m = vind(S, f.dataset.id);
@@ -192,7 +220,7 @@
   CC.begelHerinnering = (S) => { let veranderd = false; const morgen = D.addDays(D.vandaag(), 1);
     if (new Date().getHours() < 17) return false;
     mom(S).forEach((m) => { const z = zelf(S)[m.id] || {};
-      if (m.klaar || !m.gevraagd || z.ingevuld || m.herinnerd || m.datum !== morgen || Date.now() - new Date(m.gevraagd).getTime() < 12 * 3600e3) return;
+      if (m.klaar || m.vervallen || !m.gevraagd || z.ingevuld || m.herinnerd || m.datum !== morgen || Date.now() - new Date(m.gevraagd).getTime() < 12 * 3600e3) return;
       const tr = M.persoon(S, m.trainerId); if (!tr) return; const a = m.actId && M.act(S, m.actId);
       m.herinnerd = new Date().toISOString(); veranderd = true;
       S.msgs.push({ id: 'b' + Date.now() + Math.random().toString(36).slice(2, 6), van: 'systeem', soort: 'persoonlijk', bereik: m.teamId, onderwerp: `Herinnering: bereid je begeleidingsmoment voor (morgen)`,
@@ -311,7 +339,7 @@
   // ---------- De trainer: vragenlijst vooraf en reflectie achteraf (op zijn Home) ----------
   CC.begelActies = (S) => { const me = CC.me(); const uit = [];
     mom(S).filter((m) => m.trainerId === me.id).forEach((m) => { const z = zelf(S)[m.id] || {};
-      if (m.gevraagd && !z.ingevuld && !m.klaar) uit.push(h.rij({ ic: 'list-checks', titel: `Bereid je begeleidingsmoment voor (${D.kort(m.datum)})`, sub: z.v ? 'Je bent begonnen; je antwoorden zijn bewaard. Tik op Klaar als je klaar bent' : 'Een paar vragen vooraf, zodat het gesprek bij jou begint', kleur: 'blauw', act: 'begelZelf', attrs: `data-id="${m.id}"` }));
+      if (m.gevraagd && !z.ingevuld && loopt(m) && m.datum >= D.vandaag()) uit.push(h.rij({ ic: 'list-checks', titel: `Bereid je begeleidingsmoment voor (${D.kort(m.datum)})`, sub: z.v ? 'Je bent begonnen; je antwoorden zijn bewaard. Tik op Klaar als je klaar bent' : 'Een paar vragen vooraf, zodat het gesprek bij jou begint', kleur: 'blauw', act: 'begelZelf', attrs: `data-id="${m.id}"` }));
       if (m.gedeeld && !z.reflectieOp) uit.push(h.rij({ ic: 'message-circle', titel: `Je verslag staat klaar (${D.kort(m.datum)})`, sub: 'Lees het en vul je reflectie in (3 vragen)', kleur: 'blauw', act: 'open', attrs: `data-view="begelVerslag" data-id="${m.id}"` })); });
     return uit; };
   CC.on('begelZelf', (el) => { const S = CC.S(); const m = vind(S, el.dataset.id); const z = zelf(S)[m.id] || {};
@@ -337,14 +365,15 @@
   const vanTrainer = (S, pid) => mom(S).filter((m) => m.trainerId === pid).sort((a, b) => b.datum.localeCompare(a.datum));
   CC.begelMijn = (S, pid, opHome) => vanTrainer(S, pid).map((m) => { const z = zelf(S)[m.id] || {};
     // Op de Home staat een open taak al bij Actie nodig (één vaste plek); hier dan alleen de regel zonder knop
-    if (opHome && ((m.gedeeld && !z.reflectieOp) || (m.gevraagd && !m.klaar && !z.ingevuld))) return h.rij({ ic: 'calendar-days', titel: esc(titelM(S, m)), sub: 'Staat bovenaan bij Actie nodig', chevron: false });
+    if (opHome && ((m.gedeeld && !z.reflectieOp) || (m.gevraagd && loopt(m) && m.datum >= D.vandaag() && !z.ingevuld))) return h.rij({ ic: 'calendar-days', titel: esc(titelM(S, m)), sub: 'Staat bovenaan bij Actie nodig', chevron: false });
     if (m.gedeeld) return h.rij({ ic: 'clipboard-check', titel: esc(titelM(S, m)), sub: z.reflectieOp ? `Ontwikkelpunt: ${esc((m.vakken || {}).ontwikkelpunt || '')}` : 'Verslag staat klaar · reflectie nog invullen', kleur: z.reflectieOp ? '' : 'blauw', act: 'open', attrs: `data-view="begelVerslag" data-id="${m.id}"` });
+    if (m.vervallen) return h.rij({ ic: 'calendar-x', titel: esc(titelM(S, m)), sub: 'Niet doorgegaan', chevron: false });
     if (m.gevraagd && !m.klaar) return h.rij({ ic: 'list-checks', titel: esc(titelM(S, m)), sub: z.ingevuld ? 'Vragenlijst ingevuld · tik om aan te passen' : 'Vragenlijst nog invullen', kleur: z.ingevuld ? '' : 'blauw', act: 'begelZelf', attrs: `data-id="${m.id}"` });
     return h.rij({ ic: 'calendar-days', titel: esc(titelM(S, m)), sub: m.klaar ? 'Afgerond' : 'Gepland', chevron: false }); });
   CC.begelPrintMijn = (S, pid) => vanTrainer(S, pid).filter((m) => m.gedeeld).map((m) => { const z = zelf(S)[m.id] || {};
     return `<h2>${esc(titelM(S, m))}</h2>${VAKKEN.map(([k, t]) => `<p><b>${t}:</b> ${esc((m.vakken || {})[k] || '')}</p>`).join('')}${z.reflectieOp ? REFLECTIE.map(([k, t]) => `<p><b>${esc(t)}</b><br>${esc((z.r || {})[k] || '')}</p>`).join('') : ''}`; }).join('');
   // Verbeterplan 17-10: op de dag zelf bovenaan Home één tik naar het A4 (alleen wat in jouw werkgebied ligt)
-  CC.begelVandaag = (S) => { const l = mom(S).filter((m) => !m.klaar && m.datum === D.vandaag() && CC.inWerkgebied(S, m.teamId)).sort((a, b) => ((M.act(S, a.actId) || {}).tijd || '').localeCompare((M.act(S, b.actId) || {}).tijd || ''));
+  CC.begelVandaag = (S) => { const l = mom(S).filter((m) => loopt(m) && m.datum === D.vandaag() && CC.inWerkgebied(S, m.teamId)).sort((a, b) => ((M.act(S, a.actId) || {}).tijd || '').localeCompare((M.act(S, b.actId) || {}).tijd || ''));
     if (!l.length) return '';
     return `${h.sectie('Vandaag')}${l.map((m) => { const tr = M.persoon(S, m.trainerId) || { naam: '' }; const a = m.actId && M.act(S, m.actId);
       return `<button class="knop vol" data-act="open" data-view="begelObs" data-id="${m.id}">${icon('list-checks')}Observeren: ${esc(tr.naam)}${a ? ` · ${a.tijd}${a.veld ? ` · ${esc(a.veld.toLowerCase())}` : ''}` : ''}</button>
@@ -352,7 +381,7 @@
   // Home van de HO, Deze week: de begeleidingsmomenten die gepland staan
   // Wat vandaag is, staat al bovenaan bij Vandaag (begelVandaag); hier alleen de rest van de week
   CC.begelWeek = (S) => { const tot = D.addDays(D.vandaag(), 7);
-    return mom(S).filter((m) => !m.klaar && m.datum >= D.vandaag() && m.datum <= tot && !(m.datum === D.vandaag() && CC.inWerkgebied(S, m.teamId))).sort((a, b) => a.datum.localeCompare(b.datum)).map((m) => { const tr = M.persoon(S, m.trainerId) || { naam: '' };
+    return mom(S).filter((m) => loopt(m) && m.datum >= D.vandaag() && m.datum <= tot && !(m.datum === D.vandaag() && CC.inWerkgebied(S, m.teamId))).sort((a, b) => a.datum.localeCompare(b.datum)).map((m) => { const tr = M.persoon(S, m.trainerId) || { naam: '' };
       const a = m.actId && M.act(S, m.actId);
       return h.rij({ ic: 'user-check', titel: `${D.relatief(m.datum)}: begeleiding ${esc(tr.naam)}`, sub: `${m.soort === 'wedstrijd' ? 'Wedstrijd' : 'Training'} ${esc(CC.tn(m.teamId))}${a ? ` · ${a.tijd}` : ''} · ${fasen(S, m)[0][1] ? faseRegel(S, m) : 'voorbereiding nog invullen'}`, kleur: fasen(S, m)[0][1] ? '' : 'blauw', act: 'open', attrs: `data-view="begelMoment" data-id="${m.id}"` }); }); };
 

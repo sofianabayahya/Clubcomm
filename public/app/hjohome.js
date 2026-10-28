@@ -71,6 +71,7 @@
     else doen.push(...ts.map((x) => h.rij({ ic: 'user-cog', titel: esc(x.tekst), sub: esc(x.sub), kleur: 'oranje', act: 'open', attrs: `data-view="trainerDetail" data-id="${x.p.id}"` })));
     if (buiten) doen.push(h.rij({ ic: 'filter', titel: `${buiten} ${buiten === 1 ? 'signaal' : 'signalen'} buiten je focus`, sub: 'Trainers in een andere bouw', act: 'open', attrs: 'data-view="trainersRapport" data-filter="aandacht" data-alle="1"' }));
     if (CC.geenAanwRijen) doen.push(...CC.geenAanwRijen(S, S.teams.filter((t) => inFocus(S, f, t.id)).map((t) => t.id)));
+    if (CC.begelVerlopen) doen.push(...CC.begelVerlopen(S));
     groep('clubbesluit').filter((s) => CC.mag('clubbesluit', null, s.teamId)).forEach((s) => doen.push(CC.stapRij(S, s)));
     if (O.liggen.length) doen.push(h.rij({ ic: 'hourglass', titel: `${O.liggen.length} ${O.liggen.length === 1 ? 'spelerzaak blijft' : 'spelerzaken blijven'} liggen`, sub: `Langer dan ${i.liggenDagen} dagen zonder vastgelegd contact · ${esc(L.coordinator.toLowerCase())}`, kleur: 'oranje', act: 'open', attrs: 'data-view="signalen" data-soort="liggen"' }));
     // Deze week: wanneer kun je gaan kijken? Eén regel per dag
