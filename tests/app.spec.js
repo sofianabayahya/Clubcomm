@@ -1466,7 +1466,7 @@ test('trainingsmodule: classificatie, sjabloon, fase, minuten per leerdoel en fi
   await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
   await page.locator('.weekstrook [data-val="tTest"]').click();
   await page.locator('[data-act="tpNieuw"]').click();
-  await page.locator('[data-act="tpSjabloon"]').click();
+  await page.locator('[data-act="tpSjabloon"][data-s="dcg-75"]').click();
   // Besluit 132: op de laptop opent Training op Plannen (vormen · training · week)
   await expect(page.locator('.tr-plan')).toBeVisible();
   await expect(page.locator('.tr-pmid .tr-code')).toHaveText(['Start', 'A1', 'S', 'A2', 'B1', 'S', 'B2', 'P', '·']);
