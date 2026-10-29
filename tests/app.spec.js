@@ -1512,6 +1512,9 @@ test('trainingsmodule: training op datum zonder planning (pakket Trainers begele
   await page.locator('#sheet [data-act="sluitRender"]').click();
   await page.locator('[data-act="tpSpacing"]').click();
   await expect(page.locator('.tr-pzij .tr-dag')).toContainText('Vrijlopen');
+  // Besluit 142: zonder begin- en eindtijd alleen de som, geen waarschuwing
+  await expect(page.locator('.tr-pmid .tr-tijd')).toContainText('Geen begin- en eindtijd in de kalender');
+  await expect(page.locator('.tr-pmid .tr-twaarsch')).toHaveCount(0);
   // Zoals Swift (KNVB-standaard, geen eigen profiel): niets van de DCG-methodiek (Besluit 133)
   await expect(page.locator('.tr-meth, .tr-methknop, .tr-stat, .tr-contra, .tr-niv')).toHaveCount(0);
   await page.locator('[data-act="seg"][data-val="lijn"]').click();
@@ -1529,6 +1532,78 @@ test('trainingsmodule: training op datum zonder planning (pakket Trainers begele
   await expect(page.locator('.tr-toep, .tr-diep')).toHaveCount(0);
   await expect(page.locator('#app .seg button, #app [data-key="trSeg"]')).toContainText(['Vormenbank']);
   await controleer(page, fouten, 'training op datum');
+});
+
+// Besluit 142: tijd vóór de training. Veldtijd uit de kalender − organisatie = oefentijd; waarschuwing zonder blokkade; DCG en zonder profiel (zoals Swift)
+test('tijdsbalk: DCG-sjabloon 75 − 7 = 68, organisatie aanpassen, waarschuwing', { tag: ['@training', '@profiel'] }, async ({ page }) => {
+  const fouten = volgFouten(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await nepDatabase(page);
+  const profiel = JSON.parse(require('fs').readFileSync(require('path').join(__dirname, '..', 'supabase', 'profielen', 'dcg.json'), 'utf8'));
+  await page.evaluate((data) => { const db = JSON.parse(sessionStorage.getItem('fake-sb-db'));
+    db.rows['dcg|profiel|dcg'] = { club_id: 'dcg', soort: 'profiel', id: 'dcg', scope: 'hjo', data };
+    db.rows['dcg|club|club'].data.modules = { ...(db.rows['dcg|club|club'].data.modules || {}), training: true };
+    sessionStorage.setItem('fake-sb-db', JSON.stringify(db)); }, profiel);
+  await inloggen(page, 'admin@test.nl');
+  await page.evaluate(() => { const S = CC.S(); CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer'));
+    S.acts.push({ id: 'tT', teamId: 'O12-1', soort: 'training', datum: CC.date.addDays(CC.date.vandaag(), 1), tijd: '17:15', eind: '18:30' }); CC.save(); CC.render(); });
+  await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
+  await page.locator('[data-act="seg"][data-val="plannen"]').click();
+  await page.locator('.weekstrook [data-val="tT"]').click();
+  await page.locator('[data-act="tpNieuw"]').click();
+  await page.locator('[data-act="tpSjabloon"][data-s="dcg-75"]').click();
+  // 68 + 7 = 75: past precies; de organisatie telt niet dubbel
+  await expect(page.locator('.tr-pmid .tr-tijd-r')).toHaveText(/75\s*veldtijd\s*−\s*7 organisatie ✎\s*=\s*68\s*oefentijd/);
+  await expect(page.locator('.tr-pmid .tr-tok')).toHaveText('✓ 68 van 68 min ingepland · past precies');
+  // Organisatie naar 10: keuzes uit eigen waarden (het sjabloon), geen vaste norm; daarna 3 te veel, de partij valt erbuiten
+  await page.locator('.tr-orgknop').click();
+  await expect(page.locator('#sheet [data-act="tpOverigZet"]')).toHaveText(['7 · sjabloon DCG 75 – spacing']);
+  await page.fill('#ov-m', '10');
+  await page.locator('#sheet form button.knop').click();
+  await expect(page.locator('.tr-pmid .tr-tijd-r')).toContainText('65');
+  await expect(page.locator('.tr-pmid .tr-twaarsch')).toContainText('68 van 65 min ingepland: 3 te veel.');
+  await expect(page.locator('.tr-pmid .tr-twaarsch')).toContainText('In de organisatietijd valt: P Partij (laatste 3 min).');
+  await expect(page.locator('.tr-pmid .tr-tbar .tr-over')).toHaveCount(1);
+  if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/tijd-dcg.png`, fullPage: true });
+  await expect.poll(async () => { const r = Object.values((await nepDb(page)).rows).find((x) => x.soort === 'trainingsplannen'); return r ? `${r.data.overig.naam}|${r.data.overig.min}|${r.data.onderdelen.reduce((t, o) => t + o.min, 0)}` : ''; }).toBe('Ombouw, wissels, afsluiting|10|68');
+  // Week: dezelfde tijd, alleen lezen
+  await page.locator('[data-act="seg"][data-val="week"]').click();
+  await page.locator('.weekstrook [data-val="tT"]').click();
+  await expect(page.locator('.tr-weekkaart .tr-tijd')).toContainText('3 te veel');
+  await expect(page.locator('.tr-weekkaart .tr-orgknop')).toHaveCount(0);
+  await controleer(page, fouten, 'tijdsbalk DCG');
+});
+
+test('tijdsbalk: club zonder profiel (zoals Swift), eigen veldtijd en organisatie', { tag: ['@training', '@kleineclub'] }, async ({ page }) => {
+  const fouten = volgFouten(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await nepDatabase(page);
+  await page.evaluate(() => { const db = JSON.parse(sessionStorage.getItem('fake-sb-db'));
+    db.rows['dcg|club|club'].data.modules = { ...(db.rows['dcg|club|club'].data.modules || {}), training: true };
+    sessionStorage.setItem('fake-sb-db', JSON.stringify(db)); });
+  await inloggen(page, 'admin@test.nl');
+  await page.evaluate(() => { const S = CC.S(); const D = CC.date; CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer'));
+    const d = D.addDays(D.vandaag(), 1); S.acts.push({ id: 'tS', teamId: 'O12-1', soort: 'training', datum: d, tijd: '19:00', eind: '20:00' });
+    S.trainingsplannen = [{ id: 'tp-s', actId: 'tS', teamId: 'O12-1', datum: d, eigenaar: CC.me().id, thema: 'Opbouwen onder druk', leerdoelen: [], spelers: null, keepers: null,
+      onderdelen: [{ id: 'o1', naam: 'Warming-up', min: 10 }, { id: 'o2', naam: 'Positiespel', min: 15 }, { id: 'o3', naam: 'Partij 8 tegen 8', min: 20 }] }];
+    CC.save(); CC.render(); });
+  await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
+  await page.locator('[data-act="seg"][data-val="plannen"]').click();
+  await page.locator('.weekstrook [data-val="tS"]').click();
+  // Zonder sjabloon geen organisatie: ClubComm vult niets in en vergelijkt met de veldtijd
+  await expect(page.locator('.tr-pmid .tr-orgknop')).toHaveText('+ organisatie');
+  await expect(page.locator('.tr-pmid .tr-tok')).toHaveText('✓ 45 van 60 min ingepland · nog 15 min vrij');
+  await page.locator('.tr-orgknop').click();
+  await expect(page.locator('#sheet [data-act="tpOverigZet"]')).toHaveCount(0);
+  await page.fill('#ov-m', '8');
+  await page.locator('#sheet form button.knop').click();
+  await expect(page.locator('.tr-pmid .tr-tok')).toHaveText('✓ 45 van 52 min ingepland · nog 7 min vrij');
+  await page.evaluate(() => { CC.tr.plan(CC.S(), 'tS').onderdelen[2].min = 30; CC.save(); CC.render(); });
+  await expect(page.locator('.tr-pmid .tr-twaarsch')).toContainText('55 van 52 min ingepland: 3 te veel.');
+  await expect(page.locator('.tr-pmid .tr-twaarsch')).toContainText('Partij 8 tegen 8 (laatste 3 min)');
+  if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/tijd-swift.png`, fullPage: true });
+  await expect.poll(async () => { const r = Object.values((await nepDb(page)).rows).find((x) => x.soort === 'trainingsplannen'); return r && r.data.overig ? `${r.data.overig.naam}|${r.data.overig.min}` : ''; }).toBe('Organisatie|8');
+  await controleer(page, fouten, 'tijdsbalk zonder profiel');
 });
 
 // Besluit 136: teams, trainingsdagen, trainer koppelen, wedstrijden plakken en trainingsschema laden (HO, pakket Trainers begeleiden)
@@ -1664,8 +1739,9 @@ test('trainingsmodule: classificatie, sjabloon, fase, minuten per leerdoel en fi
   await page.locator('[data-act="tpSjabloon"][data-s="dcg-75"]').click();
   // Besluit 132: op de laptop opent Training op Plannen (vormen · training · week)
   await expect(page.locator('.tr-plan')).toBeVisible();
-  await expect(page.locator('.tr-pmid .tr-code')).toHaveText(['Start', 'A1', 'S', 'A2', 'B1', 'S', 'B2', 'P', '·']);
-  await expect(page.locator('.tr-pmid')).toContainText('75 van 1 min');
+  // Besluit 142: de organisatie (7) staat in de tijdsbalk, niet meer als losse regel; hij telt niet bij de ingeplande minuten
+  await expect(page.locator('.tr-pmid .tr-code')).toHaveText(['Start', 'A1', 'S', 'A2', 'B1', 'S', 'B2', 'P']);
+  await expect(page.locator('.tr-pmid .tr-tijd-r')).toContainText('7 organisatie');
   // Besluit 133: met leerniveaus in het profiel staat het leerniveau in de regel (de fase zit ingeklapt in het venster)
   await expect(page.locator('.tr-pmid .tr-rij').nth(1).locator('.tr-fase')).toHaveCount(0);
   // Lege plek A1 vullen met een nieuwe vorm en die classificeren

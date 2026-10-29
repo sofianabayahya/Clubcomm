@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tijd · Plannen Swift (390 px)</title>
+<!-- Onderzoek tijdsplanning, geen app-code. Verzonnen voorbeeld bij AVV Swift: O15, 60 min (kalender 19:00–20:00), organisatie 8 (vorige keer), geen sjabloon, geen methodiek. -->
+<link rel="stylesheet" href="../../../public/app/app.css"><link rel="stylesheet" href="ontwerp.css"></head>
+<body><div class="scherm">
+  <div class="kopbalk"><div>Training<small>O15-2</small></div></div>
+  <div class="seg" role="tablist"><button>Week</button><button class="aan">Plannen</button><button>Vormenbank</button><button>Lijn</button></div>
+  <div class="kaartje"><b style="font-size:19px">di 10 nov · Opbouwen onder druk ✎</b>
+    <small class="zacht klein">19:00–20:00 · 16 spelers verwacht</small></div>
+
+  <div class="tijd">
+    <div class="tijd-r"><span><b>60</b> veldtijd</span><span>− <span class="ed">8 organisatie ✎</span></span><span>= <b>52</b> oefentijd</span></div>
+    <div class="tbar" role="img" aria-label="45 minuten ingepland, 52 beschikbaar, 8 organisatie">
+      <i class="cSt" style="flex:10"></i><i class="cV" style="flex:15"></i><i class="cV" style="flex:20"></i><i class="vrij" style="flex:7"></i><i class="org" style="flex:8"></i>
+      <span class="grens" style="left:calc(52/60*100% - 1px)"></span></div>
+    <div class="tleg"><span>0</span><span>oefentijd 52 │ organisatie 8</span><span>60</span></div>
+    <div class="tok">✓ 45 van 52 min ingepland · nog 7 min vrij</div>
+  </div>
+
+  <div class="kaartje">
+    <div class="oplek"><span class="c">1</span><span><b>Warming-up met bal</b><br><small>Rondo</small></span><span>10′</span></div>
+    <div class="oplek"><span class="c">2</span><span><b>Positiespel 5 tegen 3</b><br><small>Positiespel</small></span><span>15′</span></div>
+    <div class="oplek"><span class="c">3</span><span><b>Partij 8 tegen 8 met doeltjes</b><br><small>Partijvorm</small></span><span>20′</span></div>
+    <div class="knoppen"><button class="knop licht">+ Vorm</button><button class="knop licht">+ Spacing</button></div>
+  </div>
+  <div class="kaartje"><span class="tag">Zelfde training, organisatie nog niet ingesteld</span>
+    <div class="tijd-r"><span><b>60</b> veldtijd</span><span>· <b>45</b> ingepland</span><span class="ed">+ organisatie</span></div>
+    <small class="zacht klein">Zonder organisatie vergelijkt ClubComm alleen met de veldtijd. ClubComm vult zelf niets in.</small></div>
+</div></body></html>
