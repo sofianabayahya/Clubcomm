@@ -876,3 +876,10 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .tr-zitin span { flex: 1; }
 .tr-zitin small { color: var(--blauw, #0869c2); font-weight: 600; white-space: nowrap; }
 .tr-zitin .ic { flex: none; color: var(--blauw, #0869c2); }
+/* Besluit 136: teams en trainingsdagen */
+.tb-or { color: #a84d08; font-weight: 600; }
+.tb-teams .knoppen { flex-wrap: wrap; }
+.tb-wed { width: 100%; border-collapse: collapse; font-size: 15px; }
+.tb-wed td { padding: 6px 4px; border-top: 1px solid var(--lijn); vertical-align: top; }
+.tb-wed tr.zacht td { color: var(--zacht, #55606d); }
+#wedPlakTekst, #schemaTekst { width: 100%; font: inherit; font-size: 15px; border: 1px solid var(--lijn); border-radius: 10px; padding: 8px; }

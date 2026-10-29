@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 28 oktober 2026 (t/m Besluit 135)
+Laatst bijgewerkt: 29 oktober 2026 (t/m Besluit 136)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -17,6 +17,7 @@ Laatst bijgewerkt: 28 oktober 2026 (t/m Besluit 135)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 136 | Teams, trainingsdagen en wedstrijden zelf beheren (clubbeheerder en HO): team toevoegen, trainer koppelen, trainingen pas in de kalender als er een trainer is, wedstrijden plakken van voetbal.nl, trainingsschema laden (vanaf een gekozen leeftijd) | ✅ geldt |  |
 | 135 | Tabblad Training in de volgorde van het werk (laptop: Lijn · Plannen · Week · Vormen), regel *Je zit in* (week, thema, A/B; tik = Lijn), geen dubbelingen (maandoverzicht alleen in Lijn, evalueren in Week), weekthema met A/B voor clubs zonder periodisering | ✅ geldt |  |
 | 134 | Trainers begeleiden (KNVB): begeleiden en ontwikkelen, niet beoordelen; begeleider (HO of TC met traject) ziet het hele seizoen de trainingen van de trainer, kijkt en geeft feedback; club beslist; invoeren per club in te stellen; trainer deelt zelf vormen in een clubbank. Gebouwd: moment verplaatsen en *niet doorgegaan*. Meekijken en clubbank: rechtenvoorstel, wacht op akkoord | ✅ geldt (deels gebouwd) |  |
 | 133 | DCG-methodiek als profiel v3 (kerndocument leidend); methodiekblok compact; leerniveau per blok; status berekend; evaluatiekaart (3 open + verdiepend); periodisering laden uit CSV met voorbeeld; observatiepunten bij de wedstrijd; uitgebreide vormvelden | ✅ geldt |  |
@@ -668,6 +669,17 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
 
 ---
+
+## Besluit 136 — Teams, trainingsdagen en wedstrijden zelf beheren; trainingen pas bij een trainer
+*Besloten 29 oktober 2026 ("bouw ze alle drie"), na voorbeelden (`docs/onderzoek/teams-zelf/`). Aanleiding: bij AVV Swift kon een nieuwe trainer (zondag O16-2) niet aan zijn team gekoppeld worden, omdat het team niet bestond, en teams, trainingsdagen en wedstrijden kon alleen Claude invoeren.*
+- **Wie:** de **clubbeheerder** (bovenaan *Seizoen*) én de **HO** (pakket Trainers begeleiden: onder *Trainers* de regels *Teams, trainingsdagen en wedstrijden* en *Trainer toevoegen*). Een TC niet.
+- **Teams en trainingsdagen:** knoppen bovenaan (*Team toevoegen*, *Trainingsschema laden*), daaronder per team trainer · dagen · aantal wedstrijden; ontbreekt iets, dan in oranje.
+- **Venster van een team:** naam, leeftijd, soort, trainer (kiezen of *Nieuwe trainer toevoegen* met dit team al gekozen), trainingsdagen (het bestaande roosterscherm), komende wedstrijden met *+ Wedstrijd* en *Wedstrijden plakken*.
+- **Trainingen pas als er een trainer is** (pakket Trainers begeleiden): het rooster wordt klaargezet; zodra een trainer aan het team wordt gekoppeld (venster, Rollen of Staflid toevoegen), komen de trainingen tot het eind van het seizoen in de kalender, vakanties overgeslagen. Zo staan er geen duizenden trainingen voor teams die ClubComm niet gebruiken (principe 10).
+- **Wedstrijden plakken:** het programma van voetbal.nl kopiëren en plakken, per team (want "Swift O15-1" kan ZA of ZO zijn). ClubComm leest datum, aftrap, tegenstander; het eigen team is de naam die in elke wedstrijd staat, eerst genoemd = thuis. Dubbele regels één keer; een wedstrijd op een dag waarop er al een staat, wordt overgeslagen. Eerst een voorbeeld.
+- **Trainingsschema laden:** de tabel uit Excel kopiëren en plakken (of een CSV kiezen). ClubComm herkent per dag de velden en per tijdvak de teams (gescheiden door "/"; opmerkingen tussen haakjes vallen weg; "JO19-ZO3" = JO19-3 ZO), voegt aansluitende tijdvakken samen en toont per team dagen, tijden en velden. **Kies de leeftijd** (bijv. *Vanaf O14*: alleen midden- en bovenbouw; de keuze wordt onthouden). Niet herkende regels staan apart en worden niet geladen. Nieuwe teams krijgen hun rooster (nog zonder trainingen); een team met trainingen wordt veilig bijgewerkt (afmeldingen blijven, Besluit 87).
+- **Tekst uit een PDF** werkt meestal, maar niet altijd (cellen die in de PDF tegen elkaar staan, vallen samen); Excel is betrouwbaarder.
+- **Ingevoerd voor Swift (29-10):** team JO16-2 ZO met trainer Fabian (wo en vr 18:15–19:30, veld 1; 53 trainingen) en 6 wedstrijden; 6 wedstrijden van JO15-1 ZA (`supabase/scripts/2026-10-29_swift_*`).
 
 ## Besluit 135 — Tabblad Training in de volgorde van het werk; "Je zit in"; weekthema
 *Besloten 28 oktober 2026 ("pak maar alles aan"), na de vraag van de initiatiefnemer: "wat is een logische volgorde, is het dubbel, hoe weet ik in welke leerlijn ik zit?" Herziet Besluit 132 deels.*
