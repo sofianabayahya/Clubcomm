@@ -19,7 +19,7 @@ Cyclus: Voetbalprobleem → Waarnemen → Keuze WAT → Keuze HOE → Gereedscha
 
 *Waarnemen, kiezen, timing, communicatie en uitvoering zijn kwaliteitsdimensies door alle zes gereedschappen heen; geen extra universele vaardigheden.*
 
-## Vaardigheden per gereedschap (concept, Besluit 137)
+## Vaardigheden per gereedschap (concept, Besluit 138)
 *Startlijst uit de eigen woorden van het kerndocument (Keuze WAT en oplossingen). Schrap of vul aan; de app gebruikt ze om vormen te zoeken.*
 
 - **1v1 aanvallend:** Passeren, Dreigen, Beschermen, Wegdraaien, Indribbelen, Uit druk dribbelen, Tegenstander binden

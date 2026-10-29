@@ -85,7 +85,7 @@ De rest (vormtype, speelrichting, omschakeling, fase, tags) gaat in **Meer kenme
 6. **Delen:** met wie wil je trainingen of de periodisering delen (assistent, vervanger, HO, trainers van andere teams), en alleen om te lezen of ook om aan te passen?
 7. **Titel:** wordt het hoofdthema de titel van de training?
 
-## 8b. Antwoorden (29-10, "beantwoord zelf de vragen") → Besluit 137
+## 8b. Antwoorden (29-10, "beantwoord zelf de vragen") → Besluit 138
 1. **Menu:** bovenbalk is het advies, maar het raakt de hele app → ClubComm-chat, eerst een voorbeeld.
 2. **Vaardigheden:** startlijst van 37 uit de eigen woorden van het kerndocument, in het DCG-profiel; jij schrapt of vult aan.
 3. **Groepsgrootte:** wordt een soort variant (*andere groepsgrootte*) in het nieuwe vormvenster.

@@ -245,7 +245,7 @@
     CC.sheet('Periodisering terugdraaien', `<p><b>${t.weg.length}</b> concept(en) worden verwijderd: niet aangepast en niet gegeven.</p><p><b>${t.blijft.length}</b> blijven staan, omdat je ze hebt aangepast of gegeven.</p>
       <div class="knoppen"><button class="knop rood" data-act="perTerugOk" ${t.weg.length ? '' : 'disabled'}>Verwijderen</button><button class="knop licht" data-act="sluit">Annuleren</button></div>`); });
   CC.on('perTerugOk', () => { const S = CC.S(); const weg = new Set(terugLijst(S).weg); S.trainingsplannen = T().plannen(S).filter((p) => !weg.has(p)); CC.save(); CC.closeSheet(); CC.render(); CC.toast(`${weg.size} concept(en) verwijderd`); });
-  // ---------- Besluit 137: Mijn lijn (één overzicht), vaststellen, afgelaste training ----------
+  // ---------- Besluit 138: Mijn lijn (één overzicht), vaststellen, afgelaste training ----------
   CC.trMethodiekActief = actief;
   const teamActs = (S, tid, van, tot) => M.acts(S, tid, van, tot).filter((a) => a.soort === 'training').sort((x, y) => `${x.datum}${x.tijd || ''}`.localeCompare(`${y.datum}${y.tijd || ''}`));
   const mijnWeken = (S, tid) => T().plannen(S).filter((p) => p.week && p.eigenaar === T().ik() && (p.teamId || '') === (tid || '')).sort((x, y) => String(x.datum).localeCompare(String(y.datum)));

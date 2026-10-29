@@ -1,6 +1,6 @@
 # Wat er in productie verandert (ronde 29-10), ter controle
 
-*Gebouwd en getest op de werkbranch `dcg-methodiek` (ook Besluit 137: Mijn lijn, vaststellen, afgelaste training, vorm kiezen vanuit de vaardigheid): **alle 66 automatische tests groen**, waaronder een nieuwe test die jouw eigen periodiseringsbestand laadt op een nagebootste kalender die gelijk is aan de echte. Er is **nog niets** online gezet en **niets** in de database gewijzigd. Elke stap hieronder krijgt een eigen akkoord.*
+*Gebouwd en getest op de werkbranch `dcg-methodiek` (ook Besluit 138: Mijn lijn, vaststellen, afgelaste training, vorm kiezen vanuit de vaardigheid): **alle 66 automatische tests groen**, waaronder een nieuwe test die jouw eigen periodiseringsbestand laadt op een nagebootste kalender die gelijk is aan de echte. Er is **nog niets** online gezet en **niets** in de database gewijzigd. Elke stap hieronder krijgt een eigen akkoord.*
 
 ## 1. Profiel v3: de definitieve wijzigingslijst (v1 → v3)
 Nagekeken: het profiel in de database is nog **exact v1** (controlesom `c550bf9a…`, gelijk aan de reservekopie). Het script werkt alleen in die situatie.

@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 28 oktober 2026 (t/m Besluit 135)
+Laatst bijgewerkt: 29 oktober 2026 (t/m Besluit 138)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -17,11 +17,12 @@ Laatst bijgewerkt: 28 oktober 2026 (t/m Besluit 135)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
-| 137 | Tabblad Training bij de DCG-methodiek: *Mijn lijn* als één overzicht per week (bolletjes per training, leerniveau begin → eind, uitgevoerde minuten), vaststellen, afgelaste training één keer signaleren (doorschuiven of laten vervallen), titel = hoofdthema, vaardigheden per gereedschap (profiel), lege plek opent *Vorm kiezen* gefilterd op gereedschap, vaardigheid en aantal spelers | ✅ geldt |  |
-| 136 | DCG-periodisering O13 invoeren: kolommen van het Excel-spoorboekje werken direct; hoofdthema, teamfunctie en ondersteunend gereedschap erbij (in de onderbouwing); contrathema gekoppeld aan één probleem (+ eventueel een ondersteunend) met behoud van de eigen tekst, nooit op losse woorden; handelingsketen vrije tekst; contra telt niet mee in de minuten | ✅ geldt |  |
-| 135 | Tabblad Training in de volgorde van het werk (laptop: Lijn · Plannen · Week · Vormen), regel *Je zit in* (week, thema, A/B; tik = Lijn), geen dubbelingen (maandoverzicht alleen in Lijn, evalueren in Week), weekthema met A/B voor clubs zonder periodisering | ◐ deels herzien | door 137 (Lijn bij de DCG-methodiek: één overzicht) |
+| 138 | Tabblad Training bij de DCG-methodiek: *Mijn lijn* als één overzicht per week (bolletjes per training, leerniveau begin → eind, uitgevoerde minuten), vaststellen, afgelaste training één keer signaleren (doorschuiven of laten vervallen), titel = hoofdthema, vaardigheden per gereedschap (profiel), lege plek opent *Vorm kiezen* gefilterd op gereedschap, vaardigheid en aantal spelers | ✅ geldt |  |
+| 137 | DCG-periodisering O13 invoeren: kolommen van het Excel-spoorboekje werken direct; hoofdthema, teamfunctie en ondersteunend gereedschap erbij (in de onderbouwing); contrathema gekoppeld aan één probleem (+ eventueel een ondersteunend) met behoud van de eigen tekst, nooit op losse woorden; handelingsketen vrije tekst; contra telt niet mee in de minuten | ✅ geldt |  |
+| 136 | Teams, trainingsdagen en wedstrijden zelf beheren (clubbeheerder en HO): team toevoegen, trainer koppelen, trainingen pas in de kalender als er een trainer is, wedstrijden plakken van voetbal.nl, trainingsschema laden (vanaf een gekozen leeftijd) | ✅ geldt |  |
+| 135 | Tabblad Training in de volgorde van het werk (laptop: Lijn · Plannen · Week · Vormen), regel *Je zit in* (week, thema, A/B; tik = Lijn), geen dubbelingen (maandoverzicht alleen in Lijn, evalueren in Week), weekthema met A/B voor clubs zonder periodisering | ◐ deels herzien | door 138 (Lijn bij de DCG-methodiek: één overzicht) |
 | 134 | Trainers begeleiden (KNVB): begeleiden en ontwikkelen, niet beoordelen; begeleider (HO of TC met traject) ziet het hele seizoen de trainingen van de trainer, kijkt en geeft feedback; club beslist; invoeren per club in te stellen; trainer deelt zelf vormen in een clubbank. Gebouwd: moment verplaatsen en *niet doorgegaan*. Meekijken en clubbank: rechtenvoorstel, wacht op akkoord | ✅ geldt (deels gebouwd) |  |
-| 133 | DCG-methodiek als profiel v3 (kerndocument leidend); methodiekblok compact; leerniveau per blok; status berekend; evaluatiekaart (3 open + verdiepend); periodisering laden uit CSV met voorbeeld; observatiepunten bij de wedstrijd; uitgebreide vormvelden | ◐ deels herzien | door 136 (contrathema, handelingsketen, extra kolommen) |
+| 133 | DCG-methodiek als profiel v3 (kerndocument leidend); methodiekblok compact; leerniveau per blok; status berekend; evaluatiekaart (3 open + verdiepend); periodisering laden uit CSV met voorbeeld; observatiepunten bij de wedstrijd; uitgebreide vormvelden | ◐ deels herzien | door 137 (contrathema, handelingsketen, extra kolommen) |
 | 132 | Training: Week (telefoon, controleren) · Plannen (laptop: vormen · training in blokken · week) · Vormen · Lijn; vorm in Rinus-stijl met *Zet in een training…* en materiaal uit de tekening; printen; kopiëren naar een andere dag | ◐ deels herzien | door 135 (volgorde op de laptop, geen weeklijst en maandoverzicht in Plannen, evalueren in Week) |
 | 131 | Oefenvormen geclassificeerd (8 hoofdtypes, weerstand vanuit het hoofdleerdoel, omschakeling met richting), opbouw in blokken met sjabloon DCG 75 en fase-voorstel, gepland en uitgevoerd, filters; laptop vanaf 900 px | ◐ deels herzien | door 132 (geen leerdoel-chips meer in de kop van een training; vorm opent in Rinus-stijl) |
 | 130 | Trainer: eigen tabblad Training (week met de training bovenaan, aanwezigheid in een venster, Vormen); ook bij AVV Swift, daar trainingen op datum | ◐ deels herzien | door 132 (Training heeft Week · Plannen · Vormen · Lijn; de training staat op de laptop in Plannen) |
@@ -671,7 +672,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
-## Besluit 137 — Tabblad Training bij de DCG-methodiek: Mijn lijn, vaststellen, afgelaste training, vorm kiezen vanuit de vaardigheid
+## Besluit 138 — Tabblad Training bij de DCG-methodiek: Mijn lijn, vaststellen, afgelaste training, vorm kiezen vanuit de vaardigheid
 *Besloten 29 oktober 2026. De initiatiefnemer vroeg om een analyse van het tabblad Training (`docs/onderzoek/trainingstab-2026-10-29.md`) en zei daarna: "beantwoord zelf de vragen, je weet hoe ik denk". Alles hieronder geldt **alleen bij de DCG-methodiek** (profiel met voetbalproblemen en leerniveaus); andere clubs merken er niets van. Herziet Besluit 135 deels (Lijn).*
 - **Lijn = Mijn lijn, één overzicht.** Per week één regel: voetbalprobleem, A en B, het leerniveau van begin tot eind van de week, een bolletje per training (○ gepland · ◐ uitgewerkt · ● gegeven · ✕ afgelast), de wedstrijd (beoordeeld x/3) en de echt uitgevoerde minuten. Tik op een week = Plannen. Ook weken met een eigen training zonder periodisering staan erin. *Per week* en de tabel met rode leerdoelen zijn weg (dubbel en alarm zonder reden); de minuten van deze maand staan ingeklapt eronder zodra er iets gegeven is.
 - **Vaststellen:** de trainer stelt de periodisering vast (*Vastgesteld 29 okt*). Dan kan er niet meer worden teruggedraaid; elke training blijft vrij aan te passen. *Weer concept* kan altijd.
@@ -685,7 +686,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
   - **Delen en overdragen:** de periodisering leesbaar voor de staf van het team en de HO; een training of periode overdragen aan een vervanger (eigen kopie, met de bron). Dit is een rechtenwijziging: ClubComm-chat (rechtenvoorstel Besluit 134).
   - **Menu op de laptop als bovenbalk** in plaats van de kolom links (Besluit 122): raakt de hele app, dus ClubComm-chat, eerst een voorbeeld.
 
-## Besluit 136 — DCG-periodisering O13 invoeren: extra velden, contraprobleem en vrije handelingsketen
+## Besluit 137 — DCG-periodisering O13 invoeren: extra velden, contraprobleem en vrije handelingsketen
 *Besloten 29 oktober 2026, na de controle van de conceptperiodisering (29-10 t/m 18-12, uitgewerkt met ChatGPT) tegen de echte kalender. Vult Besluit 133 aan. Alleen DCG; andere clubs merken er niets van (alles hangt aan het DCG-profiel).*
 - **Kolommen van het Excel-spoorboekje werken direct** (`centraal_voetbalprobleem`, `gereedschap_A`, `beoogd_leerniveau`, `wedstrijd_observatie_1..3` enz.); de oude kolomnamen blijven werken. Kolommen die ClubComm niet gebruikt (tijden, tegenstander, video/themales, opmerking, oefenvormen) worden genegeerd: **de kalender en de tijden veranderen nooit door de import.**
 - **Nieuw in de import en per training aan te passen:** *hoofdthema*, *teamfunctie* en *ondersteunend gereedschap* (één of meer; de eigen tekst blijft bewaard). Ze staan onder **Onderbouwing**; het compacte blok op de telefoon blijft gelijk.
@@ -695,8 +696,19 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Reparaties:** de kaart *Periodisering* in Lijn had dezelfde opmaaknaam als het fase-label (stippelrand, tekst brak niet af), waardoor de pagina op de telefoon breder werd dan het scherm; *Fase* stond dubbel in de onderbouwing; de waarschuwingen in het voorbeeld staan nu één keer per soort.
 - **Niet nu:** de dinsdagse Veo-besprekingen en themalessen blijven in het Excel-spoorboekje.
 
+## Besluit 136 — Teams, trainingsdagen en wedstrijden zelf beheren; trainingen pas bij een trainer
+*Besloten 29 oktober 2026 ("bouw ze alle drie"), na voorbeelden (`docs/onderzoek/teams-zelf/`). Aanleiding: bij AVV Swift kon een nieuwe trainer (zondag O16-2) niet aan zijn team gekoppeld worden, omdat het team niet bestond, en teams, trainingsdagen en wedstrijden kon alleen Claude invoeren.*
+- **Wie:** de **clubbeheerder** (bovenaan *Seizoen*) én de **HO** (pakket Trainers begeleiden: onder *Trainers* de regels *Teams, trainingsdagen en wedstrijden* en *Trainer toevoegen*). Een TC niet.
+- **Teams en trainingsdagen:** knoppen bovenaan (*Team toevoegen*, *Trainingsschema laden*), daaronder per team trainer · dagen · aantal wedstrijden; ontbreekt iets, dan in oranje.
+- **Venster van een team:** naam, leeftijd, soort, trainer (kiezen of *Nieuwe trainer toevoegen* met dit team al gekozen), trainingsdagen (het bestaande roosterscherm), komende wedstrijden met *+ Wedstrijd* en *Wedstrijden plakken*.
+- **Trainingen pas als er een trainer is** (pakket Trainers begeleiden): het rooster wordt klaargezet; zodra een trainer aan het team wordt gekoppeld (venster, Rollen of Staflid toevoegen), komen de trainingen tot het eind van het seizoen in de kalender, vakanties overgeslagen. Zo staan er geen duizenden trainingen voor teams die ClubComm niet gebruiken (principe 10).
+- **Wedstrijden plakken:** het programma van voetbal.nl kopiëren en plakken, per team (want "Swift O15-1" kan ZA of ZO zijn). ClubComm leest datum, aftrap, tegenstander; het eigen team is de naam die in elke wedstrijd staat, eerst genoemd = thuis. Dubbele regels één keer; een wedstrijd op een dag waarop er al een staat, wordt overgeslagen. Eerst een voorbeeld.
+- **Trainingsschema laden:** de tabel uit Excel kopiëren en plakken (of een CSV kiezen). ClubComm herkent per dag de velden en per tijdvak de teams (gescheiden door "/"; opmerkingen tussen haakjes vallen weg; "JO19-ZO3" = JO19-3 ZO), voegt aansluitende tijdvakken samen en toont per team dagen, tijden en velden. **Kies de leeftijd** (bijv. *Vanaf O14*: alleen midden- en bovenbouw; de keuze wordt onthouden). Niet herkende regels staan apart en worden niet geladen. Nieuwe teams krijgen hun rooster (nog zonder trainingen); een team met trainingen wordt veilig bijgewerkt (afmeldingen blijven, Besluit 87).
+- **Tekst uit een PDF** werkt meestal, maar niet altijd (cellen die in de PDF tegen elkaar staan, vallen samen); Excel is betrouwbaarder.
+- **Ingevoerd voor Swift (29-10):** team JO16-2 ZO met trainer Fabian (wo en vr 18:15–19:30, veld 1; 53 trainingen) en 6 wedstrijden; 6 wedstrijden van JO15-1 ZA (`supabase/scripts/2026-10-29_swift_*`).
+
 ## Besluit 135 — Tabblad Training in de volgorde van het werk; "Je zit in"; weekthema
-> **◐ Deels herzien door Besluit 137** (Lijn bij de DCG-methodiek: één overzicht *Mijn lijn*).
+> **◐ Deels herzien door Besluit 138** (Lijn bij de DCG-methodiek: één overzicht *Mijn lijn*).
 *Besloten 28 oktober 2026 ("pak maar alles aan"), na de vraag van de initiatiefnemer: "wat is een logische volgorde, is het dubbel, hoe weet ik in welke leerlijn ik zit?" Herziet Besluit 132 deels.*
 - **Volgorde op de laptop = de coachcyclus:** *Lijn* (waar zit ik) → *Plannen* (training invullen) → *Week* (de dag zelf: aanwezigheid, uitvoeren, evalueren) → *Vormen* (de bibliotheek). Training opent op de laptop nog steeds op *Plannen*; de telefoon houdt *Week · Plannen · Vormen · Lijn* en opent op *Week*.
 - **Regel "Je zit in"** bovenaan Plannen en Week (en bij trainingen op datum): *Week 45 · thema of voetbalprobleem · A … · B …*, uit het weekplan (periodisering of weekthema). Tik = naar Lijn. Leeg: *nog geen weekthema*.
@@ -720,7 +732,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Nog niet gebouwd (rechtenwijziging, wacht op akkoord):** meekijken (nieuwe leesregel voor trainingen: trainer + begeleider met traject dit seizoen; schrijven alleen de trainer), feedback in het dossier (bestaande scope), en de clubbank (nieuwe scope). Eerst het precieze rechtenvoorstel en voorbeelden, dan de rechtentest, dan pas de database.
 
 ## Besluit 133 — DCG-methodiek in ClubComm: profiel v3, periodisering als concepten, evaluatie en observatie
-> **◐ Deels herzien door Besluit 136** (contrathema met gekoppeld probleem en eigen tekst; handelingsketen vrije tekst; hoofdthema, teamfunctie en ondersteunend gereedschap).
+> **◐ Deels herzien door Besluit 137** (contrathema met gekoppeld probleem en eigen tekst; handelingsketen vrije tekst; hoofdthema, teamfunctie en ondersteunend gereedschap).
 *Besloten 28 oktober 2026, na de audit (`docs/methodiek/dcg/audit-2026-10-28.md`) en vijf voorbeelden, beoordeeld met ChatGPT (`docs/onderzoek/periodisering-o13/stap2/`). **Het kerndocument van 26-09-2026 is leidend** (`docs/methodiek/dcg/`); het geldt **alleen voor DCG**, andere clubs volgen de KNVB. De Excel-periodisering van de initiatiefnemer blijft de inhoudelijke bron; ClubComm neemt die over en spreekt haar niet tegen.*
 - **Profiel v3** (`supabase/profielen/dcg.json`):
   - 6 gereedschappen (Afwerken – benutten als `ll-6`), Ball Mastery als onderbouw;
@@ -2180,9 +2192,9 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 - **Wat is spacing inhoudelijk?** (Besluit 131) Loslaten (het geleerde laten rusten), herstel, contrast of spelend leren? Pas daarna krijgt spacing een eigen soort of regels.
 - **De 8 spelprincipes voor O13 en de leerdoelen als observeerbaar gedrag** (Besluit 131): de plekken staan klaar in het DCG-profiel; de inhoud stelt de initiatiefnemer vast.
 - ~~**6e leerlijn**~~ ✅ vastgesteld als *Afwerken – benutten* (kerndocument 26-09, profiel v3).
-- **Vaardigheden per gereedschap** (Besluit 137): startlijst van 37 in het DCG-profiel nakijken (schrappen of aanvullen).
-- **Menu op de laptop als bovenbalk** (Besluit 137, herziet 122 deels): voorbeeld maken in de ClubComm-chat; raakt alle rollen en clubs.
-- **Delen en overdragen van trainingen en periodisering** (Besluit 137): rechtenwijziging, samen met het rechtenvoorstel van Besluit 134.
+- **Vaardigheden per gereedschap** (Besluit 138): startlijst van 37 in het DCG-profiel nakijken (schrappen of aanvullen).
+- **Menu op de laptop als bovenbalk** (Besluit 138, herziet 122 deels): voorbeeld maken in de ClubComm-chat; raakt alle rollen en clubs.
+- **Delen en overdragen van trainingen en periodisering** (Besluit 138): rechtenwijziging, samen met het rechtenvoorstel van Besluit 134.
 
 - **Clubregels ook door de coördinator (Besluit 110):** verzamelen voor wedstrijden hoort bij de organisatie, maar alleen de clubbeheerder kan clubregels opslaan (rechten in de database). Bij DCG is dat geen probleem; bij een club met een aparte coördinator een deel van de regels voor de coördinator openzetten.
 

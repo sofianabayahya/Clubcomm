@@ -32,7 +32,7 @@
   };
   const ld = (S, id) => leerdoelen(S).find((l) => l.id === id) || null;
   const ldNaam = (S, id) => (ld(S, id) || {}).naam || '';
-  // Vaardigheden binnen een gereedschap (Besluit 137, alleen als het profiel ze heeft, zoals DCG)
+  // Vaardigheden binnen een gereedschap (Besluit 138, alleen als het profiel ze heeft, zoals DCG)
   const vaardigheden = (S, llId) => ((((ond(S, 'leerlijnen') || {}).items || []).find((x) => x.id === llId) || {}).vaardigheden || []);
   const vhNaam = (S, id) => { let n = ''; ((ond(S, 'leerlijnen') || {}).items || []).forEach((l) => (l.vaardigheden || []).forEach((x) => { if (x.id === id) n = x.naam; })); return n; };
   const methodiekActief = (S) => !!(CC.trMethodiekActief && CC.trMethodiekActief(S));
@@ -262,7 +262,7 @@
   CC.on('tpSpacing', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); if (!p) return; p.onderdelen.push({ id: nieuwId('o'), spacing: true, naam: 'Hooghouden', min: 2 }); CC.save(); CC.render(); });
 
   // Vorm kiezen: eerst wat past bij het aantal spelers en keepers van deze training; met data-i vul je een lege plek
-  // Vorm kiezen vanuit een plek (Besluit 137): gefilterd op het gereedschap van het blok, de vaardigheid en het aantal spelers
+  // Vorm kiezen vanuit een plek (Besluit 138): gefilterd op het gereedschap van het blok, de vaardigheid en het aantal spelers
   const vk = () => CC.ui.vk || (CC.ui.vk = {});
   const vkHtml = (S, id, i) => { const p = plan(S, id); if (!p) return ''; const a = actVan(S, p); const o = i != null ? p.onderdelen[Number(i)] : null; const f = vk();
     const n = aantalSp(S, p, a); const gs = f.gs === undefined ? (o && ['A', 'B'].includes(blokSoort(o.blok)) ? blokDoel(S, p, blokSoort(o.blok)) : null) : f.gs;
@@ -498,7 +498,7 @@
       (p.onderdelen || []).filter((o) => o.vormId && !o.spacing && o.blok !== 'start').forEach((o) => { const v = vorm(S, o.vormId); const pr = v && koppeling(S, v).primair; if (!pr) return;
         tel(w, pr, Number(o.min) || 0, p.gegeven ? (o.minUit != null ? Number(o.minUit) : Number(o.min) || 0) : null); }); });
     if (!lds.length) return `${CC.trWeekthema ? CC.trWeekthema(S) : ''}${h.leeg('Er staan nog geen leerdoelen in het opleidingsprofiel van de club. Daarom zie je hier nog geen minuten per leerdoel; het weekthema kun je al gebruiken.', 'list-checks')}`;
-    // Besluit 137: bij de methodiek (DCG) één overzicht; de minuten van deze maand ingeklapt eronder (alleen als er iets gegeven is)
+    // Besluit 138: bij de methodiek (DCG) één overzicht; de minuten van deze maand ingeklapt eronder (alleen als er iets gegeven is)
     if (methodiekActief(S) && CC.trMijnLijn) return `${CC.trMijnLijn(S)}${maandBlok(S, false)}`;
     return `${CC.trWeekthema ? CC.trWeekthema(S) : ''}<div class="kaartje tr-lijn"><b>Opleidingslijn · minuten per hoofdleerdoel</b><small class="zacht">Vet = uitgevoerd (training gegeven), grijs = alleen gepland. Rood = dit leerdoel kwam de afgelopen 4 weken niet aan bod.</small>
       <div class="tr-tabel"><table><thead><tr><th>Leerdoel</th>${weken.map((w) => `<th class="${w === nu ? 'nu' : ''}">wk ${D.weeknr(w)}</th>`).join('')}</tr></thead><tbody>
@@ -562,7 +562,7 @@
 
   CC.on('vormNieuw', (el) => {
     const S = CC.S(); const v = { id: nieuwId('v'), eigenaar: ik(), teamId: CC.teamId ? CC.teamId() : null, naam: 'Nieuwe vorm', type: null, status: 'concept', spelersMin: null, spelersMax: null, keepersMin: null, keepersMax: null, duur: 6, koppelingen: {}, organisatie: '', coach: '', anders: '', aantallen: [], varianten: [], tekening: null, gemaakt: new Date().toISOString() };
-    // Vanuit "Vorm kiezen" (Besluit 137): het gekozen gereedschap en de vaardigheid gaan mee
+    // Vanuit "Vorm kiezen" (Besluit 138): het gekozen gereedschap en de vaardigheid gaan mee
     if (el.dataset.gs) { v.koppelingen[profielId(S)] = { primair: el.dataset.gs, ook: [] }; v.leerdoelen = [el.dataset.gs]; if (el.dataset.vh) v.vaardigheden = [el.dataset.vh]; }
     vormen(S).push(v);
     // Vanuit een training: meteen in die training zetten (of op de lege plek waar je vandaan kwam)
