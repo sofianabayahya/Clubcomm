@@ -10,7 +10,7 @@
 ## Open pull requests
 | PR | Wat | Stand |
 |---|---|---|
-| (nieuw) | Besluit 141: trainingsmodule stap 1 (branch `bouw/trainingsmodule-stap1`): Lijn met weekdetail en *Beheer* (*Periodeplanning vastleggen*), Plannen *Stap x van y* en *Toepassing · partij*, Week met vier minutengetallen, leeg = *nog niet gecontroleerd*, *Klopt zoals gepland*, Transfer bij Toepassing; Vormenbank | Tests groen; wacht op akkoord. Niet samenvoegen of publiceren zonder akkoord |
+| #101 | Besluit 141: trainingsmodule stap 1 (branch `bouw/trainingsmodule-stap1`): Lijn met weekdetail en *Beheer* (*Periodeplanning vastleggen*), Plannen *Stap x van y* en *Toepassing · partij*, Week met vier minutengetallen, leeg = *nog niet gecontroleerd*, *Klopt zoals gepland*, Transfer bij Toepassing; Vormenbank | Tests groen; wacht op akkoord. Niet samenvoegen of publiceren zonder akkoord |
 
 ## Wacht op akkoord van de gebruiker
 - Stap 1 trainingsmodule beoordelen. Pas daarna stap 2 (weekevaluatie in Lijn, één nieuw veld op het weekplan) en stap 3 (herinnering na de training).
