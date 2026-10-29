@@ -1,155 +1,325 @@
-# Trainersontwikkeling AVV Swift: gap-analyse en ontwerp
+# Trainersontwikkeling AVV Swift: aangescherpt voorstel (ronde 3)
 
-*Onderzoek en ontwerp, 29-10-2026. **Geen besluit, geen bouwopdracht.** Inhoudelijke keuzes voor Swift = **Voorstel Spoor 2**; algemene softwareveranderingen = **Voorstel Spoor 3** (elk apart te besluiten). Er is niets gewijzigd aan code, database, rechten of productie. Voorbeeldschermen in deze map (`1-…` t/m `10-…`, telefoon 390 px en laptop 1280 px; verzonnen trainer "Daan", team JO15-1 ZO).*
+*Onderzoek, 29-10-2026. **Voorstel Spoor 2** (inhoud Swift) en **Voorstel Spoor 3** (algemene software). Dit is **geen besluit en geen bouwopdracht**. Er is niets gewijzigd aan code, database, rechten of productie. Eerdere rondes: `archief-ronde-1-en-2.md`. De schermen in deze map horen nog bij die rondes; nieuwe voorbeelden volgen in fase 2 (zie §7).*
 
-## 0. Bronnen: wat er was en wat ontbreekt
-| Bron | Status |
-|---|---|
-| Jeugdbeleidsplan AVV Swift | **Niet aanwezig** in het project of deze sessie. Nodig voor: leeftijdsdoelen, spelprincipes, teamtaken in Swift-woorden. |
-| Ontwikkelplan Voetbaltechnische Opleiding Bovenbouw 2026–2027 | **Niet aanwezig.** Gebruikt: alleen de vijf punten van de trainersscan die in de opdracht staan (opleiding, bekwaamheid, ambitie, ontwikkelbereidheid, beschikbaarheid). Schalen in het voorbeeld zijn verzonnen. |
-| Trainingsschema Swift 2026–2027 (pdf) | Aanwezig: teams trainen 2 tot 3 keer per week (bijv. JO15-1 ZO di en vr). |
-| KNVB-visie goede training, vier trainingsprincipes | knvb.nl was **niet bereikbaar** vanuit deze sessie (netwerk). Uit zoekresultaten van knvb.nl (kennisbank *Wat is een goede voetbalvorm*): (1) lijkt op de wedstrijd / voetbalecht, (2) veel herhalingen, (3) afgestemd op de spelers, het moet kunnen lukken, (4) situatie zo inrichten en bijsturen (veld, doelen, aantallen) dat het doel vaak terugkomt. **Werkhypothese: te controleren tegen de bron in jouw ontwikkelplan** voordat het in het Swift-profiel komt. |
+## 1. Bronnen
 
-## 1. Wat ClubComm nu ondersteunt
-| Vraag | Stand | Toelichting |
+Dit voorstel gebruikt alleen de bronnen hieronder. Wat er niet in staat, heet **open** en wordt niet als Swift-beleid vastgelegd.
+
+| Afkorting | Bron | Wat erin staat |
 |---|---|---|
-| Wat kan een trainer voorbereiden en opslaan? | **Bestaand** | Training per activiteit of op datum (`S.trainingsplannen`), blokken met vormen, thema, aantal spelers, gepland en uitgevoerd, evaluatie (Besluit 128–141). Bij Swift: module Trainingen aan, tabblad Training. |
-| Meerdere trainingen zelfstandig aanmaken? | **Bestaand** | Per activiteit in de week, of los op datum. |
-| Trainingsdagen en frequentie gekoppeld aan het team? | **Bestaand** | Teamrooster (Besluit 136/87): trainingen staan in de kalender zodra er een trainer is; Week toont ze. Trainingsschema laden uit Excel. |
-| Tekentool en Vormenbank voor trainers? | **Bestaand** | Eigen vormen met tekening, classificatie, varianten, aantallen; één oefenvormkiezer (Besluit 139). Vormen zijn alleen van de trainer zelf (scope `eigen`). |
-| Welke voorbereidingen mag een HJO/TJC zien? | **Ontbreekt** | Trainingen en vormen hebben scope `eigen`: alleen de trainer. Het rechtenvoorstel 032 (*begeleider kijkt mee*, scope `trainerplan`) ligt klaar, lokaal getest (56/56), **niet uitgevoerd**. |
-| Feedback van HJO/TJC op een training of vorm? | **Ontbreekt** | In 032 voorzien als veld *Feedback* bij een training (alleen lezen voor de trainer). Op een losse vorm: niet. |
-| Begeleidingsmomenten, reflectie, ontwikkelafspraken | **Bestaand** | Vijf fasen (KNVB-cyclus), vragenlijst vooraf (kort/uitgebreid), A4-observatie met ✓ / ~ / – en leertijd-klok, vier vakken met één ontwikkelpunt, delen, reflectie van de trainer (3 vragen, pas na delen), afronden. Ontwikkelpunt gaat naar het traject. |
-| Begeleiding koppelen aan een concrete training? | **Gedeeltelijk** | Een moment hangt aan een activiteit (`actId`), **niet** aan de trainingsvoorbereiding van de trainer. De observatie weet dus niet welk doel en welke vormen de trainer koos. |
-| Afspraak komt terug bij het volgende moment? | **Gedeeltelijk** | Het ontwikkelpunt staat in het traject en dossier; het volgende moment toont het niet vanzelf bij voorbereiding en gesprek. |
-| Ondersteuningsniveaus | **Gedeeltelijk** | Traject heeft *kort/uitgebreid* (vragenlijst). Geen trainersscan, geen niveau dat de begeleiding stuurt. Kennismaking vraagt diploma en ervaring. |
-| Observatievragen volgens KNVB-principes | **Gedeeltelijk** | Vaste vragen staan in de code (`CC.OBS`: trainingsdoel, organisatie, leersituatie creëren/beïnvloeden, pedagogisch). Niet per club in te stellen; geen *methodische samenhang*. |
-| Trainingsvoorbereiding met teamfunctie, teamtaak, probleem, gedrag, hoofdrolspelers, 5 W's | **Ontbreekt** | Er is een thema en (bij DCG) een methodiekblok uit het profiel. Swift heeft geen opleidingsprofiel. |
-| Dashboard HJO/TJC per trainer | **Gedeeltelijk** | Traject-lijst en dossier per trainer. Ontbreekt: voorbereide trainingen (rechten), open afspraken in één overzicht, *wat vraagt aandacht* (zie ook de Swift-analyse van 29-10: geen *Te doen* in het pakket). |
+| **BD** | *AVV Swift Beleidsdocument Jeugd & Technische vorming* (versie 4 juni 2025) | Missie, drie pijlers, kernwaarden, visie, spelprincipes onderbouw en bovenbouw, leerlijn in vijf fasen, taken van de HO en de trainer |
+| **OP** | *Ontwikkelplan Voetbaltechnische Opleiding Bovenbouw 2026-2027* (HJO bovenbouw, 19 pagina's) | Hoofdstuk 01–05: opdracht, eerste observaties, trainerskader, trainersscan, vier ontwikkelopgaven, opleidingsketen. **Hoofdstuk 06–12 staan alleen in de inhoudsopgave en zijn nog niet geschreven**: 06 Kwaliteitsstandaard trainingen, 07 Ontwikkeling trainerskader, 08 Periodisering & opleidingslijn, 09 Organisatie, 10 Meerjarenplan, 11 Actieplan, 12 Randvoorwaarden. |
+| **KNVB** | [knvb.nl, kennisbank 107 *Wat is een goede voetbalvorm*](https://www.knvb.nl/assist/trainersdashboard/kennisbank/107/wat-is-een-goede-voetbalvorm), door de gebruiker bevestigd | Vier gouden trainingsprincipes: Voetbalecht trainen · Veel prikkels en plezier · Organisatie en coaching · Afstemming op leeftijd, niveau en beleving |
 
-## 2. Ontwerp in het kort (zie de schermen)
-1. **Week met echte trainingsdagen** (`1-trainer-week`): de trainer kiest zelf een probleem van de week; per training *voorbereid / nog leeg*; een **voorstel** voor samenhang (herhalen met meer weerstand, contra-thema, iets uit de wedstrijd). Niets verplicht, geen maandthema.
-2. **Voorbereiding in zes keuzes** (`2-trainer-voorbereiden`): teamfunctie (Aanvallen/Verdedigen) → teamtaak → voetbalprobleem (eigen woorden) → gewenst gedrag → hoofdrolspelers → vormen, weerstand, coaching. **Alle lijsten komen uit het Swift-profiel** (gegevens), niet uit de code.
-3. **Doelstellingassistent** (`3-trainer-doelstelling`): Wie · Wat · Waar · Wanneer · Waarom uit zijn keuzes, een voorbeeldzin die hij altijd zelf aanpast (*Korter*, *Andere woorden*, *Zelf schrijven*). Het leeftijdsdoel uit het profiel staat ernaast. Opbouw van de zin met een vaste regel (geen AI nodig, geen automatische inhoud); later eventueel een taalassistent als apart besluit.
-4. **Vormen en delen** (`4-trainer-vormen-delen`): bestaande kiezer en tekentool. Voor een **aangekondigde observatie** een minimale voorbereiding: doelstelling + 2 vormen. Daarna *Delen met [begeleider]*.
-5. **Feedback vooraf** (`5-tjc-feedback-vooraf`): de begeleider leest (kan niet wijzigen) en geeft kort feedback; één bericht bij de training.
-6. **Observatie** (`6-observatie`): het bestaande A4, met de vragen per club uit het profiel: de vier KNVB-principes + **Swift: methodische samenhang**. ✓ / ~ / –, notities, leertijd. Geen cijfer.
-7. **Zelfreflectie** (`7-trainer-reflectie`): 3 korte vragen direct na de training, op Home, één herinnering na 24 uur (keuze B van 29-10). Niet bij elke training verplicht: alleen bij een begeleidingsmoment; bij andere trainingen optioneel.
-8. **Begeleidingsgesprek** (`8-gesprek-laptop`): trainer en begeleider **naast elkaar**, de vorige afspraak bovenaan (*zichtbaar?*), **één ontwikkelpunt**, afspraak en vervolgmoment. Geen dubbele invoer: de zelfreflectie en observatie worden getoond, niet opnieuw ingevuld.
-9. **Dashboard** (`9-dashboard-laptop`): per trainer momenten, voorbereid, laatste observatie en reflectie, open afspraak, volgende. Gesorteerd op **wat aandacht vraagt**, nooit op prestatie; geen totaalcijfer of ranglijst. Ontwikkeling = tijdlijn van ontwikkelpunten en ✓ / ~ / – per principe.
-10. **Trainersscan → ondersteuningsniveau** (`10-trainersscan`): vijf punten, een voorstel, **de HJO kiest**. Niveau stuurt de begeleiding (voorbeelden, vragen, frequentie), **niet de toegang**: iedere trainer houdt dezelfde functies.
+De documenten zelf staan **niet** in de repository: ze bevatten namen van echte personen. Hier staan alleen verwijzingen (bron + paragraaf).
 
-**Drie niveaus (Voorstel Spoor 2):**
-| | Startend | Ontwikkelend | Zelfstandig |
-|---|---|---|---|
-| Voorbereiding | zes keuzes met voorbeelden per stap, voorbeeldzin | keuzes zonder voorbeelden, methodische vragen (*waarom deze weerstand?*) | vrij, alleen doelstelling verplicht bij observatie |
-| Vormen | voorgestelde vormen bij het probleem (clubbank, na 032) | zelf kiezen, tip bij weerstand | zelf, delen met de club |
-| Begeleiding | vaker, korte cyclus (bijv. 1× per 3 weken) | per periode | op verzoek, verdieping |
+## 2. Wat de documenten zeggen over dit onderwerp
 
-## 3. Gap-analyse
-**3.1 Werkt nu al:** trainingen voorbereiden (meerdere, op de echte trainingsdagen), Vormenbank en tekentool, begeleidingsmoment in vijf fasen met observatie, reflectie en ontwikkelpunt, traject per trainer, uitnodigen.
+**Opdracht (OP 01).** De bovenbouw (O14 t/m O23, jongens en meiden) bouwt voort op het bestaande jeugdbeleid. Er komt geen nieuwe visie. Er zijn vier onderdelen:
+- een opleidingslijn vanaf O14;
+- de visie vertalen naar leeftijdsdoelen, periodisering en trainingen;
+- trainers structureel begeleiden;
+- kwaliteitsstandaarden en een gezamenlijke voetbaltaal.
 
-**3.2 Met bestaande onderdelen op te lossen:**
-- Week met echte trainingsdagen en een *probleem van de week*: het weekthema van Besluit 135 bestaat al voor clubs zonder periodisering.
-- Observatievragen per club: `CC.OBS` verplaatsen naar het opleidingsprofiel (zelfde opbouw, gegevens).
-- Afspraak terug bij het volgende moment: het ontwikkelpunt staat al in het traject; tonen bij voorbereiding en gesprek.
-- Zelfreflectie direct na de training: keuze B (al voorgesteld).
-- Gesprek naast elkaar: de gegevens bestaan al (observatie, vakken, reflectie); alleen een andere weergave.
+Centrale vraag: *"Hoe vertalen we de bestaande voetbalvisie van AVV Swift naar herkenbaar en kwalitatief opleidingsgedrag op ieder trainingsveld?"*
 
-**3.3 Echt nieuw:**
-- Trainingsvoorbereiding met teamfunctie, teamtaak, probleem, gedrag, hoofdrolspelers (velden in de training, lijsten uit het profiel).
-- Doelstellingassistent (5 W's, voorbeeldzin met een vaste regel).
-- Koppeling begeleidingsmoment ↔ trainingsvoorbereiding (`planId` bij het moment) en *delen met de begeleider*.
-- Feedback vooraf van de begeleider.
-- Trainersscan en ondersteuningsniveau.
-- Dashboard per trainer.
+**Eerste observaties (OP 02).** Wat opviel:
+- grote verschillen in trainingsopbouw;
+- geen gezamenlijk thema of periodisering;
+- de koppeling tussen een oefenvorm en een voetbalprobleem, teamfunctie, teamtaak of trainingsdoel was niet altijd herkenbaar;
+- verschillen in intensiteit, organisatie, coaching en effectieve trainingstijd.
 
-**3.4 Rollen en rechten (maat L, eerst voorstel en rechtentest):**
-- **Begeleider leest trainingen en vormen in een training** → rechtenvoorstel 032 (`trainerplan`, alleen lezen, alleen met traject, vinkje van de club). Aanvulling nodig: *alleen gedeelde trainingen* (keuze van de trainer) of *alle trainingen in het seizoen* (zoals 032 nu). Advies: alleen gedeelde trainingen; minder zicht, meer vertrouwen.
-- **Feedback van de begeleider** bij een training: in 032 voorzien.
-- **Trainersscan** = gegevens over een persoon, alleen HJO/TJC (scope `hoprive` bestaat al), niet zichtbaar voor de trainer. Privacy: doel, bewaartermijn (einde seizoen + 1?), opnemen in de privacyverklaring.
-- **TJC als eigen rol** (`tc`, bestaat al): bij Swift staat de TJC nu als HO met een bouw. Rechten per bouw: in 032 als *keuze voor later*.
+Volgens OP 02 moet een goede training deze **zes vragen** kunnen beantwoorden:
+1. Welk voetbalprobleem staat centraal?
+2. Welke teamfunctie en teamtaak horen daarbij?
+3. Wat is het trainingsdoel?
+4. Welk gedrag en welke voetbalhandelingen willen we verbeteren?
+5. Waarom past deze oefenvorm daarbij?
+6. Welke coachaccenten worden gebruikt?
 
-**3.5 Hoort bij het Swift-opleidingsprofiel (Spoor 2, gegevens):** teamfuncties en teamtaken in Swift-woorden; leeftijdsdoelen O14–O19; spelprincipes; voorbeelden van gewenst gedrag per leeftijd; observatievragen (KNVB-principes + methodische samenhang, met formulering); de drie niveaus en de schalen van de trainersscan; begeleidingsfrequentie per niveau.
+**Trainerskader (OP 03).**
+- **Bezetting:**
+  - VC3: 3×;
+  - VC2: 3×;
+  - VC1: 7×;
+  - VC4: 0×;
+  - zonder diploma: 12 trainers.
+- **Diploma:** *"Dit betekent niet automatisch dat een trainer zonder diploma geen goede trainer is, of dat een gediplomeerde trainer automatisch aan alle gewenste kwaliteitscriteria voldoet."*
+- **Trainersprofiel, vijf onderdelen:** Opleiding · Bekwaamheid · Ambitie · Ontwikkelbereidheid · Beschikbaarheid.
+- **Trainersscan in vijf stappen:**
+  1. korte vragenlijst;
+  2. persoonlijk profielgesprek;
+  3. veldobservatie;
+  4. trainersprofiel;
+  5. ontwikkelafspraak.
+- **Niet iedere trainer hoeft hetzelfde profiel te hebben** (ambitie verschilt).
 
-**3.6 Algemene ClubComm-functie (Spoor 3, voor elke club):** de zes keuzes als *structuur* (de inhoud uit het profiel), de doelstellingassistent, delen en feedback vooraf, koppeling moment ↔ training, observatievragen uit het profiel, ondersteuningsniveau en scan als *instrument*, het dashboard, de afspraak die terugkomt. Een club zonder deze profielonderdelen ziet de bestaande, eenvoudige voorbereiding (drie voorwaarden, `docs/architectuur.md`).
+**Ontwikkelopgaven (OP 04).**
+1. Van visie naar opleidingslijn.
+2. Van losse trainingen naar periodisering.
+3. Van individuele trainer naar trainersontwikkeling (*"op basis van niveau, ambitie en ontwikkelbehoefte"*).
+4. Van afspraken naar kwaliteitsborging: *"een gezamenlijke kwaliteitsstandaard … waarmee trainingen structureel kunnen worden voorbereid, geobserveerd en geëvalueerd"*.
 
-## 4. Open vragen
-1. Jeugdbeleidsplan en Ontwikkelplan Bovenbouw aanleveren (pdf of tekst in `docs/methodiek/swift/`).
-2. De vier KNVB-principes: welke formulering geldt bij Swift (bron)?
-3. Mag de begeleider **alle** trainingen zien, of alleen wat de trainer deelt?
-4. Trainersscan: wie vult in (HJO, TJC, samen met de trainer?) en ziet de trainer zijn niveau?
-5. Omschakelen: alleen Aanvallen/Verdedigen, of later ook de omschakeling als teamfunctie?
+**Opleidingsketen (OP 05).** Voetbalvisie → Spelprincipes → Leeftijdsdoelen → Periodisering → Trainingsdoel → Trainingsvorm + Coaching → Wedstrijd → Evaluatie.
 
-## 5. Voorgestelde volgorde (elk een eigen besluit)
-1. **Spoor 2:** Swift-profiel opstellen uit de twee documenten (lijsten, leeftijdsdoelen, observatievragen, niveaus).
-2. **Spoor 3, M:** *Wat moet ik nu doen?* (analyse 29-10) + zelfreflectie direct na de training (B) + afspraak terug bij het volgende moment.
-3. **Spoor 3, L:** rechtenvoorstel 032 bijwerken (*alleen gedeeld*) → akkoord → feedback vooraf en koppeling moment ↔ training.
-4. **Spoor 3, M:** trainingsvoorbereiding in zes keuzes + doelstellingassistent (met het Swift-profiel).
-5. **Spoor 3, M/L:** trainersscan en niveau (privacy), daarna het dashboard.
+**Beleidsdocument.**
+- **Missie en pijlers (BD 1.1):** met plezier beter leren voetballen in een veilige omgeving. Drie pijlers:
+  1. gelijke kansen;
+  2. een veilig pedagogisch klimaat;
+  3. spelen volgens de Swift-spelprincipes.
+- **Pedagogisch klimaat (BD 1.3):** veiligheid is topprioriteit; de "Gouden Driehoek" van trainer, speler en ouders.
+- **Kernwaarden (BD 2.1), zes:**
+  1. genieten van het spel;
+  2. altijd vooruit denken;
+  3. altijd beter worden;
+  4. leiderschap;
+  5. elkaar versterken;
+  6. respect.
+- **Visie (BD 2.2):**
+  - aanvallend en dominant voetbal met hoge intensiteit;
+  - spelprincipes leidend, niet het systeem;
+  - "spelerparadigma boven teamparadigma, opleiden gaat voor winnen";
+  - TIPS (Techniek, Inzicht, Persoonlijkheid, Snelheid);
+  - cognitieve en motorische vaardigheden.
+  - Over trainers: zij moeten *"zich gewaardeerd voelen"* en *"zichzelf ontwikkelen door opleiding"*.
+- **Spelprincipes bovenbouw (BD 2.4, "explicieter leren").**
+  - **Algemeen:**
+    - coach het team, niet de speler;
+    - train bewustwording (zone 14);
+    - geef spelers kaders in plaats van oplossingen;
+    - geen automatismen;
+    - vernieuw met mate;
+    - speel in zones;
+    - ontwikkel cognitieve snelheid.
+  - **Per teamfunctie: Aanvallen · Omschakelen** (verdedigen→aanvallen en aanvallen→verdedigen) **· Verdedigen.** Voorbeelden:
+    - elke 4e pass een dieptepass;
+    - de 3e man benutten;
+    - vijfsecondenregel;
+    - onderlinge afstand 15–25 m;
+    - ruimtes verdedigen.
+- **Leerlijn (BD 2.5):**
 
----
+  | Fase | Leeftijd | Kern |
+  |---|---|---|
+  | 3 | O13–O14 | 11:11 leren en ervaren, vanuit positie en linie |
+  | 4 | O14–O16 | Voetballen vanuit linies, naar vaste posities, 2–3 posities |
+  | 5 | O17–senioren | Een speelwijze perfectioneren, specialist |
 
-# Ronde 2: met de vastgestelde uitgangspunten (Spoor 2, 29-10)
-*Uitgangspunten: basisvoorbereiding alleen verplicht bij een aangekondigde observatie (probleem, doelstelling, oefenvormen); HJO/TJC geeft feedback vóór én na; overige trainingen vrijwillig; geen verplichte periodisering; KNVB-visie + Swift-spelprincipes, geen DCG-methodiek; één observatiestructuur met twee perspectieven. Schermen `s1-…` t/m `s4-…` (telefoon en laptop).*
+  Veldbezetting junioren: 1-4-3-3.
+- **Taken HO (BD 3.2.1):**
+  - trainersstaf samenstellen en begeleiden;
+  - trainers maken hun trainingsplanning *"in samenwerking met / onder toezicht van de HO"*;
+  - *"Evaluatie-/beoordelingsgesprekken met trainers en rapportage"*.
+- **Taken trainer bovenbouw (BD 3.2.2):** trainingen voorbereiden en leiden; *"het creëren van een optimaal leerklimaat [is] de belangrijkste taak"*.
+- **Technisch coördinatoren (BD 3.1):** alleen in de **onderbouw** (O8–O11), als *"spil tussen de trainers, coaches en de Hoofd Opleiding"*. Een **TJC bovenbouw komt in geen van beide documenten voor.**
 
-## Zes kwaliteitscriteria (Voorstel Spoor 2, te bevestigen)
-De vier KNVB-principes (werkhypothese, zie bronnen) + twee Swift-criteria. Trainer en begeleider gebruiken dezelfde zes, met ✓ / ~ / – en eigen notities; **geen totaalcijfer**.
-1. Lijkt op voetbal (KNVB) · 2. Veel herhalingen (KNVB) · 3. Past bij de spelers (KNVB) · 4. Coachen en bijsturen (KNVB) · 5. Methodische samenhang (Swift) · 6. Leerklimaat (Swift).
-*Als jouw ontwikkelplan andere zes noemt: die gaan voor; het zijn gegevens in het Swift-profiel.*
+## 3. Definitieve inhoudelijke keuzes voor Swift (Voorstel Spoor 2)
 
-## Gap-analyse (drie categorieën)
-| Onderdeel | Bestaat al | Bestaat gedeeltelijk | Moet worden ontwikkeld | Spoor |
+"Definitief" betekent: vastgesteld door Swift. Dit zijn de keuzes die **uit de bronnen volgen**, met de jouwe van 29-10. Wat de bronnen open laten, staat in §3.7.
+
+### 3.1 Zes observatiecriteria (de kwaliteitsstandaard, inhoud voor OP hoofdstuk 06)
+
+Trainer en begeleider gebruiken dezelfde zes criteria. Er is geen totaalcijfer.
+
+| # | Naam | Bron | Wat je ziet (omschrijving, voorstel) | Toets aan de documenten |
 |---|---|---|---|---|
-| Trainingen voorbereiden, meerdere, op echte trainingsdagen (2–3×/week) | ✓ planner, Week, rooster | | | 3 |
-| Vormenbank en tekentool, ook zonder observatie | ✓ | | | 3 |
-| Teamfunctie → teamtaak → voetbalprobleem kiezen | | thema / methodiekblok (alleen met profiel) | keuzes in de training, lijsten uit het profiel | 3 (structuur) · 2 (lijsten) |
-| Doelstellingassistent (5 W's, voorstelzin, altijd aanpasbaar) | | | ✓ vaste regels, geen AI | 3 · 2 (regels/voorbeelden) |
-| Minimale voorbereiding bij observatie (3 velden + check) | | vragenlijst vooraf (andere vragen) | ✓ | 3 · 2 (welke velden) |
-| Eén training delen met de begeleider | | | ✓ (zie rechten) | 3 (L) |
-| Voorfeedback van HJO/TJC | | | ✓ | 3 (L) |
-| Begeleidingsmoment gekoppeld aan de training | | `actId` (activiteit, niet de voorbereiding) | koppeling aan de trainingsvoorbereiding | 3 |
-| Veldobservatie | ✓ A4, ✓ / ~ / –, leertijd | vragen staan in de code | vragen uit het profiel (zes criteria) | 3 · 2 (criteria) |
-| Zelfreflectie trainer (3 vragen + optionele verdieping) | | 3 vragen, pas na delen | direct na de training, + optioneel de zes criteria | 3 · 2 (vragen) |
-| Feedback na de training | ✓ vier vakken | | | 3 |
-| Gesprek: twee perspectieven naast elkaar | | gegevens bestaan | weergave per criterium met *verschil* | 3 |
-| Ontwikkelafspraak | ✓ ontwikkelpunt (verplicht), afspraak-vak | | koppeling aan een criterium | 3 |
-| Vervolgobservatie plannen uit het rooster | ✓ plannen vanaf de kaart | afspraak komt niet terug | afspraak bovenaan het volgende moment en bij de trainer | 3 |
-| Ondersteuningsniveau (3) los van diploma | | traject *kort/uitgebreid*; diploma bij kennismaking | niveau + trainersscan; niveau stuurt hulp, niet functies | 3 · 2 (niveaus, scan) |
-| Dashboard | | zie hieronder | de ontbrekende verbindingen | 3 |
+| 1 | **Voetbalechtheid** | KNVB *Voetbalecht trainen* | Richting, doelen, tegenstander en beslissingen; het gekozen voetbalprobleem komt vaak terug. | Past bij BD 2.2 (aanvallend, spelprincipes leidend). |
+| 2 | **Veel herhalingen en plezier** | KNVB *Veel prikkels en plezier* | Veel balcontacten en beslissingen, weinig wachten, hoge intensiteit, spelers genieten. | BD 2.1 kernwaarde 1 (*genieten van het spel*), BD 2.2 (*hoogste intensiteit*). **Let op:** de KNVB zegt *prikkels*, jouw naam zegt *herhalingen*. Advies: **"Veel prikkels en plezier"** (KNVB-woord, breder: ook beslissingen en weerstand). |
+| 3 | **Organisatie en coaching** | KNVB, zelfde naam | Snel opgezet, effectieve trainingstijd, bijsturen (veld, aantallen, regels). Coaching volgens de Swift-afspraken: *coach het team, niet de speler*, *kaders in plaats van oplossingen*, vragen stellen. | BD 2.4 algemene spelprincipes; OP 02 (*organisatie, coaching, effectieve trainingstijd*). |
+| 4 | **Afstemming op de spelers** | KNVB *Afstemming op leeftijd, niveau en beleving* | Moeilijkheid past bij fase en niveau; het lukt vaak genoeg; uitdaging voor de beteren. | BD 2.5 leerlijn (fase 3–5), BD 1.2 (biologische leeftijd). Advies: de **KNVB-naam** gebruiken. |
+| 5 | **Methodische samenhang** | Swift | De zes vragen van OP 02 hangen samen: probleem → teamfunctie/teamtaak → doel → gedrag → vorm → coachaccenten. De opbouw loopt naar de partijvorm toe. | OP 02 (letterlijk), OP 04 opgave 2 en 4, OP 05 opleidingsketen. Sterk onderbouwd. |
+| 6 | **Veilig en positief leerklimaat** | Swift | Iedereen doet mee, positieve toon, fouten mogen, respect. | BD 1.1 pijler 2, BD 1.3, BD 3.2.2 (*optimaal leerklimaat de belangrijkste taak*), BD 2.1 kernwaarde 6. Sterk onderbouwd. |
 
-## Dashboard: wat er al is en wat ontbreekt
-| Vraag | Nu | Ontbrekende verbinding |
+**Schaal:** Zichtbaar · Gedeeltelijk zichtbaar · Niet zichtbaar · Niet beoordeeld. "Niet beoordeeld" is een echte keuze, geen leeg vak. Zo kun je eerlijk zeggen dat je iets niet hebt gezien.
+
+### 3.2 Voorbereiding
+- **Voorbereiden is altijd vrijwillig en onbeperkt.** Vormenbank en tekentool zijn altijd vrij te gebruiken.
+- **Alleen bij een geplande observatie** is een basis nodig:
+  - voetbalprobleem;
+  - concrete doelstelling;
+  - gekozen oefenvormen.
+- **Keuzelijsten (uit het profiel):**
+  - **Teamfuncties:** Aanvallen · Omschakelen · Verdedigen (BD 2.4; dit is ook de KNVB-indeling).
+  - **Teamtaken:** in KNVB-termen. De lijst moet eerst tegen de KNVB-bron worden gecontroleerd. Let op: het bestand `supabase/profielen/knvb-2026.1.json` noemt de teamtaken nu *teamfuncties* en heeft status *controleren*.
+  - **Bij elke teamfunctie:** de Swift-spelprincipes van BD 2.4 als hulp ("waar let ik op").
+- **De 5 W's** (Wie, Wat, Waar, Wanneer, Waarom) zijn een denksteun. **Hoofdrolspelers** zijn optioneel.
+- De zes vragen van OP 02 zijn de vaste volgorde van de voorbereiding.
+
+### 3.3 Trainersscan: twee delen (past op OP 03)
+
+| Deel | Wie vult in | Onderdelen | OP 03-onderdeel |
+|---|---|---|---|
+| **A. Zelf** | de trainer | opleiding en ervaring · ambitie · sterk in · begeleiding nodig bij · beschikbaarheid · ontwikkelbereidheid | Opleiding, Ambitie, Beschikbaarheid, Ontwikkelbereidheid (korte vragenlijst) |
+| **B. Begeleider** | de HJO (of een aangewezen begeleider, zie §3.7) | waargenomen bekwaamheid · ontwikkelpunten uit de observatie · passende ondersteuning · gezamenlijke ontwikkelafspraak | Bekwaamheid (veldobservatie), trainersprofiel, ontwikkelafspraak |
+
+De stappen in de app volgen OP 03:
+1. vragenlijst (deel A);
+2. profielgesprek;
+3. veldobservatie (de zes criteria);
+4. trainersprofiel (deel B);
+5. ontwikkelafspraak.
+
+### 3.4 Ondersteuningsniveau
+- **De namen:** Startend · Ontwikkelend · Zelfstandig/verdiepend.
+- **Zichtbaar voor de trainer.**
+- **Wat het is:** een ondersteuningsniveau, **geen beoordeling of rangorde**.
+- **Hoe het ontstaat:** het diploma bepaalt het niveau niet vanzelf (OP 03). Het niveau wordt in het profielgesprek besproken en kan later worden aangepast.
+- **Wat het stuurt:** alleen de hulp (voorbeelden, vragen, hoe vaak begeleiding), nooit welke functies iemand mag gebruiken.
+- De niveaus staan niet in OP. Ze zijn een Swift-aanvulling bij opgave 3 (*"op basis van niveau, ambitie en ontwikkelbehoefte"*).
+
+### 3.5 Delen en feedback
+1. De trainer deelt **één training**, niet het hele seizoen.
+2. **Voorfeedback** op de doelstelling en de oefenvormen, ook op de getekende vorm.
+3. Na de training: **zelfreflectie van de trainer** en **observatie van de begeleider**, op dezelfde zes criteria.
+4. Daarna **één ontwikkelafspraak**. Die komt bij het volgende moment terug.
+
+### 3.6 Geen verplichte periodisering
+OP 08 is nog niet geschreven. De opleidingsketen (OP 05) noemt periodisering wel, maar ClubComm maakt die **niet verplicht**. De bestaande weekfunctie (een thema per week, vrij te kiezen) is genoeg.
+
+### 3.7 Open: niet in de documenten, door Swift te beslissen
+1. **Formele vaststelling.** Wie stelt de zes criteria en de niveaus vast?
+   - BD 3.2.1: de HO ontwikkelt het beleid *"samen met de jeugdcommissie en voorzitter technische commissie"*.
+   - Advies: vaststellen in OP hoofdstuk 06 (kwaliteitsstandaard) en 07 (trainerskader).
+2. **TJC bovenbouw.** Deze functie staat niet in BD of OP; BD kent technisch coördinatoren alleen voor O8–O11. Wat mag een TJC: zelf observeren, voorfeedback geven, de trainersscan zien?
+3. **Beoordeling tegenover ontwikkeling.** BD 3.2.1 geeft de HO *"evaluatie-/beoordelingsgesprekken met trainers en rapportage"*. Dit voorstel houdt de begeleiding in ClubComm bewust **ontwikkelgericht** (geen cijfer, geen rangorde).
+   - Advies: het formele beoordelingsgesprek blijft **buiten** deze route. Anders durft een trainer minder eerlijk te reflecteren.
+4. **Leeftijdsdoelen O14–O19.** BD 2.5 geeft per fase alleen een korte kern (zie §2). Concrete leeftijdsdoelen zijn opgave 1 van OP 04 en zijn nog niet geschreven. Tot dan toont de app alleen de fasetekst.
+5. **Teamtaken in Swift-woorden.** BD noemt spelprincipes per teamfunctie, geen teamtaken. Voorstel: de KNVB-teamtaken gebruiken, met de Swift-spelprincipes ernaast.
+6. **Hoe vaak begeleiding per niveau.** Dat staat niet in OP en hoort in hoofdstuk 07.
+7. **Bewaartermijn** van scan, observaties en reflecties (privacy, zie §6).
+
+## 4. De gebruikersroute
+
+### 4.1 Trainer
+1. **Kennismaking en scan, deel A** (eenmalig, ongeveer 5 minuten): opleiding en ervaring, ambitie, sterk in, hulp nodig bij, beschikbaarheid, ontwikkelbereidheid.
+2. **Profielgesprek** met de HJO (buiten de app). Daarna ziet de trainer zijn **ondersteuningsniveau** en de eerste **ontwikkelafspraak** op Home.
+3. **Gewoon trainen.** In Week staan de echte trainingsdagen. Voorbereiden mag altijd, maar hoeft niet; Vormenbank en tekentool zijn altijd vrij.
+4. **Er is een observatie gepland.** Op Home verschijnt: *"Observatie di 12-11: bereid deze training voor"*. De training vraagt drie dingen:
+   - voetbalprobleem;
+   - doelstelling (met de 5 W's als hulp);
+   - oefenvormen.
+   Teamfunctie en teamtaak kies je uit een lijst. Hoofdrolspelers zijn optioneel.
+5. **Delen met [begeleider]:** één tik, alleen deze training. Daarna staat er *"Gedeeld"*. Delen intrekken kan altijd.
+6. **Voorfeedback lezen:** een korte reactie op het doel en de vormen. De trainer kan nog aanpassen.
+7. **De training geven.**
+8. **Zelfreflectie** direct na de training (op Home, één herinnering na 24 uur): de zes criteria op de vierpuntsschaal en een korte notitie.
+9. **Gesprek:** de twee perspectieven naast elkaar. Samen maken jullie één **ontwikkelafspraak** en kiezen jullie het **volgende moment** uit het rooster.
+10. **De afspraak komt terug:**
+    - op Home;
+    - bij de volgende voorbereiding;
+    - bovenaan het volgende moment.
+
+### 4.2 Begeleider (HJO, of TJC als Swift dat beslist)
+1. **Overzicht van trainers.** Ingedeeld op *wat aandacht vraagt*, nooit op prestatie. Per trainer:
+   - niveau;
+   - laatste moment;
+   - open afspraak;
+   - volgende moment;
+   - of de voorbereiding is gedeeld.
+2. **Scan, deel B** na het profielgesprek: waargenomen bekwaamheid, ontwikkelpunten, passende ondersteuning, ontwikkelafspraak en niveau.
+3. **Observatie plannen**: kies een training uit het rooster van het team. De trainer krijgt een melding.
+4. **Voorfeedback**: alleen lezen (de training, de vormen en de tekening). Eén korte reactie, met de vorige afspraak erbij.
+5. **Observatie op het veld** (telefoon): de zes criteria, notities en de leertijd-klok.
+6. **Gesprek** (laptop of telefoon):
+   - de vorige afspraak bovenaan;
+   - de twee perspectieven per criterium naast elkaar, met het verschil gemarkeerd;
+   - één ontwikkelafspraak;
+   - het volgende moment.
+7. **Niveau bijstellen** als dat nodig is: altijd in overleg en zichtbaar voor de trainer.
+
+## 5. Wat al bestaat en wat ontbreekt
+
+### 5.1 Bestaande ClubComm-functies die we hergebruiken
+
+| Onderdeel | Bestaand in ClubComm | Wat het hergebruik vraagt |
 |---|---|---|
-| Welke trainers zijn begeleid? | ✓ Traject-kaart (groen = klaar) | – |
-| Wanneer de laatste observatie? | ✓ in het dossier per trainer | in de lijst tonen (één regel) |
-| Welke voorbereiding is gedeeld? | ✗ (geen rechten) | na *delen*: *gedeeld ✓ / nog niet* bij het geplande moment |
-| Welke ontwikkelafspraak? | ✓ ontwikkelpunt in traject en dossier | in de lijst tonen + *terug bij het volgende moment* |
-| Wanneer vervolgbegeleiding? | ✓ volgende moment in de trainerkaart | *Te doen*: afspraak zonder vervolgmoment, moment voorbij en niet afgerond (analyse 29-10) |
+| Trainingen op echte trainingsdagen, voorbereiden, vrij | Planner, Week, teamrooster (Besluit 128–141, 136) | niets |
+| Vormenbank, tekentool, één kiezer | Besluit 139 | niets |
+| Begeleidingsmoment: vijf fasen, plannen, verplaatsen, niet doorgegaan | `begeleiding.js` | koppeling aan een training (nieuw veld) |
+| Observatie op het veld | A4-observatie, leertijd-klok, ✓ / ~ / – | vragen uit het profiel in plaats van `CC.OBS` in de code; vierpuntsschaal |
+| Feedback na afloop | vier vakken (sterk, ontwikkelpunt verplicht, effect, afspraak) | per criterium tonen |
+| Zelfreflectie | `REFLECTIE` (3 vragen, pas na delen) | eerder beschikbaar (keuze B), zes criteria |
+| Ontwikkelpunt naar traject en dossier | traject per trainer | tonen bij het volgende moment |
+| Kennismaking (diploma, ervaring) | traject-kennismaking | uitbreiden tot scan deel A |
+| Traject *kort/uitgebreid* | vragenlijst vooraf | vervangen door het ondersteuningsniveau |
+| Trainerkaart en dossier | `trainers.js` | dashboardregel per trainer |
+| Uitnodigen, functie "HJO bovenbouw" | Besluit 140 | niets |
+| Rechten trainer-gegevens | scopes `trainerzelf` (trainer schrijft) en `trainerdossier` (begeleider schrijft, trainer leest) | geschikt voor scan A en B; wel inperken, zie §6 |
+| Rechtenvoorstel meekijken | 032 (`.voorstel`, lokaal 56/56) | ombouwen naar *delen per training* |
 
-## Rechten en gegevens (huidige stand, gecontroleerd in de migraties)
-- **Trainingen en vormen:** scope `eigen` → alleen de trainer (en niemand anders, ook de beheerder niet).
-- **Traject, begeleidingsmomenten:** scope `trainerdossier` → de trainer leest, HO/clubbeheerder en begeleiders (HO/TC) lezen en schrijven; **zelfreflectie/vragenlijst** `trainerzelf` → trainer, HO/clubbeheerder, begeleiders; **eigen terugblik begeleider** `hoprive` → alleen HO/TC.
-- **Clubscheiding:** elke rij hoort bij één club; alle regels controleren de club (lokaal getest: 12/12).
-- **TC per bouw:** nog niet afgedwongen in de rechten (alleen in de schermen, *werkgebied*).
+### 5.2 Wat ontbreekt
+1. **Swift-opleidingsprofiel** (gegevens): criteria, schaal, teamfuncties en teamtaken, spelprincipes, leerlijnfases, reflectievragen, niveaus. Swift heeft nu geen profiel.
+2. **Profiel leesbaar voor trainers**: nu leest alleen de HO het (scope `hjo`). Dit is een rechtenwijziging.
+3. **Velden in de voorbereiding**: voetbalprobleem, teamfunctie, teamtaak, doelstelling, gedrag, coachaccenten en hoofdrolspelers (optioneel).
+4. **5W-assistent**: een voorbeeldzin met een vaste regel, die de trainer altijd zelf aanpast. Geen AI.
+5. **Koppeling moment ↔ training**: `planId` bij het moment, en *basis nodig* bij een geplande observatie.
+6. **Delen per training, intrekken, voorfeedback**: een rechtenwijziging (§6).
+7. **Observatie en reflectie op dezelfde zes criteria** met de vierpuntsschaal, en de weergave naast elkaar.
+8. **Afspraak komt terug**: op Home, in de voorbereiding en bij het volgende moment.
+9. **Trainersscan A en B** en het **ondersteuningsniveau** dat de hulp stuurt.
+10. **Dashboard** met *wat aandacht vraagt* (ook *Te doen* in het pakket Trainers, zie de Swift-analyse van 29-10).
 
-**Voorstel delen per training (Spoor 3, maat L, nog geen besluit):**
-- De trainer tikt *Delen met [begeleider]* bij **één** training. Alleen dan krijgt die training (en de vormen erin) een tweede, gedeelde vorm: scope `trainerplan` uit rechtenvoorstel 032, met de voorwaarde **gedeeld = waar** (nieuw ten opzichte van 032, dat alle trainingen van het seizoen toonde).
-- Leesrecht alleen voor begeleiders (HO/TC) **van dezelfde club** met een traject voor deze trainer; later per bouw.
-- Voorfeedback en feedback na: een aparte rij (zoals *Feedback van de begeleider* in 032) die de trainer leest maar niet wijzigt; de begeleider wijzigt de training nooit.
-- *Delen intrekken* zet het terug; niets wordt verwijderd.
-- Testen met `npm run test:veilig -- 032` + nieuwe controles (niet gedeeld = niet zichtbaar; andere club = niet zichtbaar; TC zonder traject = niet zichtbaar).
-- **Trainersscan en niveau:** gegevens over een persoon, scope `hoprive` (alleen HO/TC); bewaartermijn en privacyverklaring vastleggen vóór bouwen.
+## 6. Rechtenvoorstel (concreet, zonder implementatie; maat L)
 
-## Trainingsdagen en frequentie
-Het teamrooster zet de trainingen (2 of 3 per week) al in de kalender zodra er een trainer is (Besluit 136); de trainer ziet ze in Week en bereidt elke training los voor, met of zonder observatie. **Geen verplichte periodisering.** Wel een voorstel (niet verplicht) bij de tweede en derde training van de week: *herhalen met meer weerstand*, *contra-thema*, *iets uit de wedstrijd* (bestaand weekthema, Besluit 135).
+**Wat er nu is** (gecontroleerd in de migraties):
+- Trainingen en vormen hebben scope `eigen`: alleen de trainer ziet ze.
+- `trainerzelf`: trainer, clubbeheerder en elke HO/TC lezen **én schrijven**.
+- `trainerdossier`: de trainer leest; clubbeheerder en elke HO/TC lezen en schrijven.
+- `priv.cc_begeleider()` = iedere HO/TC van de club, **niet per trainer en niet per bouw**.
 
-## Wat bij welk spoor hoort
-- **Spoor 2 (inhoud, Swift-profiel):** teamfuncties en teamtaken in Swift-woorden, leeftijdsdoelen O14–O19, spelprincipes, voorbeelden van gewenst gedrag, regels en voorbeelden voor de doelstellingassistent, de zes criteria met formulering, de drie reflectievragen, niveaus en trainersscan, begeleidingsfrequentie per niveau.
-- **Spoor 3 (software, voor elke club):** keuzes in de training, doelstellingassistent als instrument, minimale voorbereiding bij observatie, delen per training + voorfeedback (rechten, L), koppeling moment ↔ training, observatie- en reflectievragen uit het profiel, gesprek met twee perspectieven, afspraak die terugkomt, niveau als instrument, dashboard-verbindingen.
+**Voorstel**
 
-## De vier schermen
-1. `s1-trainer-voorbereiden` (+ `-laptop`): startende trainer, drie basisvragen met hulp, 5 W's, *Delen met Sam* (alleen deze training).
-2. `s2-begeleider-voorfeedback` (+ `-laptop`): alleen lezen, chips + één zin; vorige afspraak bovenaan.
-3. `s3-perspectieven` (+ `-laptop`): ieder zijn eigen perspectief met dezelfde zes criteria; in het gesprek naast elkaar, *verschil* gemarkeerd.
-4. `s4-afspraak-vervolg` (+ `-laptop`): één ontwikkelafspraak (gekoppeld aan een criterium), vervolg kiezen uit het rooster, tijdlijn van afspraken.
+| # | Onderwerp | Regel | Waarom |
+|---|---|---|---|
+| R1 | **Training delen** | Nieuwe scope `gedeeld` (vervangt `trainerplan` uit 032). De trainer schrijft. De begeleider **leest alleen** als: (a) zijn persoon-id in `data.gedeeldMet` van die training staat, (b) hij in **deze club** de rol HO of TC heeft, en (c) de trainer nog trainer in de club is. | Alleen wat de trainer zelf deelt. Niet het hele seizoen. |
+| R2 | **Vormen in een gedeelde training** | Bij delen zet de app een **kopie** van de gebruikte vormen (met tekening) in de gedeelde training. De vormen zelf blijven `eigen`. | Geen tweede rechtenregel op vormen. De begeleider ziet precies wat gedeeld is. Nadeel: de kopie loopt achter tot de trainer opnieuw opslaat (de app doet dat bij elke opslag van een gedeelde training). |
+| R3 | **Intrekken** | De trainer haalt de naam uit `gedeeldMet`. De training valt dan terug naar alleen-eigen. Niets wordt verwijderd. | De trainer houdt de regie. |
+| R4 | **Koppeling aan een moment** | Het moment (in `trainerdossier`) krijgt `planId`. Het moment geeft **geen** leesrecht: zonder delen ziet de begeleider *"nog niet gedeeld"*. | Plannen is niet hetzelfde als inzage. |
+| R5 | **Voorfeedback en feedback** | Een eigen rij per moment in `trainerdossier`. De begeleider schrijft, de trainer leest. De begeleider wijzigt de training **nooit**. | Bestaande scope; er is geen nieuwe nodig. |
+| R6 | **Scan deel A** | Scope `trainerzelf` (de trainer schrijft; de begeleider leest na R8). | Bestaande scope. |
+| R7 | **Scan deel B en niveau** | Scope `trainerdossier` (de begeleider schrijft, de trainer leest). De trainer ziet zijn niveau, zoals jij wilt. | Bestaand; transparant. |
+| R8 | **Inperken wie meeleest** | In `trainerzelf` en `trainerdossier` vervalt *clubbeheerder*. In `trainerzelf` mag de begeleider **alleen lezen**, zodat de reflectie en scan A echt van de trainer blijven. Daarna, als Swift het wil: TC alleen voor de eigen bouw. | Nu leest een clubbeheerder zonder begeleidersrol reflecties en scans, en kan een begeleider de zelfreflectie van een trainer wijzigen. |
+| R9 | **HJO/TJC-bevoegdheid** | HJO = rol `hjo` (bestaat). TJC = rol `tc` met `bouwen` (bestaat, maar wordt nog niet afgedwongen). Bij Swift staat de TC nu als HO met een bouw; dat moet rol `tc` worden. Hoeveel een TJC mag, beslist Swift (§3.7). | Geen nieuwe rollen nodig. |
+| R10 | **Clubscheiding** | Elke regel controleert `club_id = priv.cc_club()`. **Eerst oplossen:** `priv.cc_club()` neemt bij een account in twee clubs een willekeurige club (`limit 1`). Jij zit zelf in DCG en Swift. | Zonder deze oplossing kun je de scheiding voor accounts in meer clubs niet garanderen. |
+
+**Privacy (welke gegevens, wie, hoe lang)**
+- **Gegevens:**
+  - scan A en B;
+  - niveau;
+  - observaties;
+  - reflecties;
+  - feedback;
+  - gedeelde trainingen.
+- **Wie ziet ze:**
+  - de trainer alles over zichzelf;
+  - HO en TC (na R8);
+  - nooit ouders, spelers of andere trainers.
+- **Hoe lang (voorstel):** het lopende seizoen plus één seizoen. Daarna verwijderen, of alleen de afspraken bewaren als de trainer dat wil. Vastleggen in de privacyverklaring vóór het bouwen.
+
+**Tests (vóór akkoord, lokaal):** `npm run test:veilig` met nieuwe controles:
+- niet gedeeld = niet zichtbaar;
+- gedeeld met A = niet zichtbaar voor B;
+- andere club = niet zichtbaar;
+- ingetrokken = niet meer zichtbaar;
+- de begeleider kan de training niet wijzigen;
+- de clubbeheerder zonder begeleidersrol ziet geen reflectie (R8);
+- een account in twee clubs ziet alleen de gekozen club (R10).
+
+Wat lokaal getest is, heet nog niet *gecontroleerd op productie*.
+
+## 7. Gefaseerde bouwvolgorde met afhankelijkheden
+
+| Fase | Wat | Spoor, maat | Hangt af van |
+|---|---|---|---|
+| **0** | Voorwaarden: `priv.cc_club()` bij meer clubs (R10); het profiel veilig leesbaar voor trainers | 3, L | – |
+| **1** | **Swift-profiel v1** uit de documenten: de zes criteria met omschrijving, schaal, teamfuncties, spelprincipes BD 2.4, leerlijnfases 3–5, reflectievragen, niveaus. De open punten uit §3.7 blijven gemarkeerd. | 2 (inhoud), 3 (laden) | vaststelling door Swift (§3.7.1) |
+| **2** | **Ontwerp van de hele begeleidingsroute**: voorbeeldschermen op 390 px en laptop, met de nieuwe criteria en schaal | 3, M (alleen ontwerp) | 1 (woorden) |
+| **3** | **Koppeling training ↔ moment**, delen per training, intrekken, voorfeedback (R1–R5, R8) | 3, L | 0, 2, jouw akkoord op de rechten |
+| **4** | **Observatie, reflectie (keuze B), gesprek naast elkaar, één afspraak die terugkomt** | 3, M | 1, 2. Hangt **niet** af van 3: dit kan ook eerst, met het bestaande `actId` |
+| **5** | **5W-assistent en de voorbereidingsvelden**; daarna **scan A/B en het niveau** dat de hulp stuurt (R6, R7, privacy) | 3, M en L | 1, 3 (velden bij de gedeelde training), privacytekst |
+| **6** | **Pilot** met 3 trainers (startend, ontwikkelend, zelfstandig), een periode van 6 weken, twee momenten per trainer, daarna evalueren | 2 | 3, 4 (5 mag gedeeltelijk) |
+
+**Advies:** fase 4 vóór fase 3. Dan levert het meteen iets op: betere observatie en reflectie, en de afspraak komt terug. Pas daarna komt de rechtenwijziging met alle tests. Dit wijkt af van jouw volgorde, dus jij kiest.
+
+**Bestaande gegevens:** oude observaties met de vragen uit de code blijven zoals ze zijn. Nieuwe momenten gebruiken de zes criteria. Er is geen omzetting van gegevens nodig.
