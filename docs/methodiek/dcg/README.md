@@ -10,3 +10,5 @@
 | `04-trainersspoor.md` | Trainersspoor: trainingsroute, coachvragen, evaluatiekaart | Praktisch werkdocument. Zijn voorlopige lijst van 12 problemen is vervangen door de 8 uit het kerndocument. |
 
 De database (het DCG-profiel) wordt op deze documenten gecontroleerd, niet andersom. Audit: `audit-2026-10-28.md`.
+
+**Aparte chat voor de methodiek (29-10-2026):** begin met `overdracht.md` in deze map.

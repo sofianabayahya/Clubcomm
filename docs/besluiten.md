@@ -689,6 +689,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Training invoeren bij een begeleidingsmoment:** per club in te stellen (verplicht of vrijwillig).
 - **Clubbank:** de trainer zet zelf een vorm in de bank van de club (zonder goedkeuring); alle trainers zien hem.
 - **Gebouwd 28-10: verplaatsen en niet doorgegaan.** Een moment dat voorbij is zonder observatie heet *verlopen*: op de pagina een kaart *Verplaatsen naar …* / *Niet doorgegaan*, bij de HO/TC één regel bij *Te doen* (vanaf 3 gebundeld). Verplaatsen bewaart alles wat al is ingevuld en stuurt de trainer **één bericht** met de nieuwe datum (alleen als hij de vragenlijst al had). Een toekomstig moment heeft de knop *Verplaatsen*. *Niet doorgegaan* telt nergens meer mee (traject, Deze week, herinnering, Home van de trainer) en kan weer geopend worden.
+- **Rechtenvoorstel klaar (29-10):** `docs/onderzoek/ho-ziet-training/rechtenvoorstel.md` en script `supabase/migrations/032_begeleider_kijkt_mee.sql.voorstel` (lokaal getest: rechtentest 56/56). Niet uitgevoerd.
 - **Nog niet gebouwd (rechtenwijziging, wacht op akkoord):** meekijken (nieuwe leesregel voor trainingen: trainer + begeleider met traject dit seizoen; schrijven alleen de trainer), feedback in het dossier (bestaande scope), en de clubbank (nieuwe scope). Eerst het precieze rechtenvoorstel en voorbeelden, dan de rechtentest, dan pas de database.
 
 ## Besluit 133 — DCG-methodiek in ClubComm: profiel v3, periodisering als concepten, evaluatie en observatie
