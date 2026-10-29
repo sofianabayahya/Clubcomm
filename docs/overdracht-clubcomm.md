@@ -10,7 +10,7 @@
 ## Open pull requests
 | PR | Wat | Stand |
 |---|---|---|
-| (nieuw) | Besluit 142: tijdsbalk vóór de training (veldtijd − organisatie = oefentijd, waarschuwing zonder blokkade), branch `bouw/tijdsbalk` | Tests groen; wacht op akkoord |
+| #102 | Besluit 142: tijdsbalk vóór de training (veldtijd − organisatie = oefentijd, waarschuwing zonder blokkade), branch `bouw/tijdsbalk` | Tests groen; wacht op akkoord |
 
 ## Wacht op akkoord van de gebruiker
 - De gebruiker test zelf week 45 (Lijn → do in Plannen → Week → Lijn). Pas daarna stap 2 (weekevaluatie) en stap 3 (herinnering).
