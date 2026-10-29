@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ontwerp Week (390 px)</title>
+<!-- Ontwerp, geen app-code. Do 5 nov na afloop. Minuten zijn een voorbeeld. -->
+<link rel="stylesheet" href="../../../public/app/app.css"><link rel="stylesheet" href="ontwerp.css"></head>
+<body><div class="scherm">
+  <div class="kopbalk"><div>Training<small>O13 talententeam</small></div></div>
+  <div class="seg" role="tablist"><button>Lijn</button><button>Plannen</button><button class="aan">Week</button><button>Vormenbank</button></div>
+  <div class="weekstrook"><button><small>di</small><b>3</b><small>T</small></button><button class="aan"><small>do</small><b>5</b><small>T</small></button><button><small>vr</small><b>6</b><small>T</small></button><button><small>za</small><b>7</b><small>W</small></button></div>
+
+  <div class="kaartje"><span class="tag">do 5 nov · afgelopen · 14 van 16 aanwezig</span>
+    <b>Vrije speler herkennen onder druk</b>
+    <small class="zacht klein">Week 45 · Vooruitgang creëren · A Passen · B Vrijkomen <span class="niv">Herkennen → Kiezen</span></small>
+    <label class="schakel"><span>Training is gegeven</span><input type="checkbox" checked><i></i></label></div>
+
+  <div class="kaartje"><b>Minuten: gepland en echt</b>
+    <table class="min"><tr><th></th><th>Onderdeel</th><th class="n">gepland</th><th class="n">echt</th></tr>
+      <tr><td>Start</td><td>Rondo 4 tegen 1</td><td class="n">8</td><td class="n"><input class="uit" value="8"></td></tr>
+      <tr class="telt"><td>A1</td><td>Kaatsen in driehoek</td><td class="n">6</td><td class="n"><input class="uit" value="6"></td></tr>
+      <tr><td>S</td><td>Hooghouden</td><td class="n">3</td><td class="n">3</td></tr>
+      <tr class="telt"><td>A2</td><td>3 tegen 1 naar lijn</td><td class="n">10</td><td class="n"><input class="uit" value="12"></td></tr>
+      <tr class="telt"><td>B1</td><td>Uit de schaduw komen</td><td class="n">6</td><td class="n"><input class="uit" value="6"></td></tr>
+      <tr><td>S</td><td>Hooghouden</td><td class="n">3</td><td class="n">3</td></tr>
+      <tr class="telt"><td>B2</td><td>4 tegen 2 positiespel</td><td class="n">10</td><td class="n"><input class="uit" value="8"></td></tr>
+      <tr class="telt"><td>P</td><td>Partij 6 tegen 6</td><td class="n">22</td><td class="n"><input class="uit" value="18"></td></tr>
+      <tr><td>·</td><td>Ombouw, wissels</td><td class="n">7</td><td class="n">7</td></tr></table>
+    <div class="tot"><div><b>75</b><small>gepland</small></div><div><b>71</b><small>uitgevoerd</small></div><div><b>50</b><small>telt voor leerlijn</small></div></div>
+    <small class="zacht klein"><b>Vet</b> = telt voor de leerlijn (A, B en partij). Start, spacing en ombouw tellen niet. Het gereedschap komt van het blok.</small></div>
+
+  <div class="kaartje"><b>Evaluatie</b>
+    <div class="tr-ev"><b>Probleem vaak genoeg ontstaan?</b><div class="chips"><button class="chipknop aan">ja</button><button class="chipknop">deels</button><button class="chipknop">nee</button></div></div>
+    <div class="tr-ev"><b>Gewenst gedrag zichtbaar?</b><div class="chips"><button class="chipknop aan">ja</button><button class="chipknop">deels</button><button class="chipknop">nee</button></div></div>
+    <div class="tr-ev"><b>Weerstand</b><div class="chips"><button class="chipknop">te laag</button><button class="chipknop aan">passend</button><button class="chipknop">te hoog</button></div></div>
+    <label class="klein" for="an"><b>Wat doen we de volgende keer anders?</b></label>
+    <textarea id="an" rows="2" style="font-size:16px;border:1px solid var(--lijn);border-radius:10px;padding:8px">Vrije speler pas na twee passes laten aanspelen</textarea>
+    <small class="zacht klein">Gaat vanzelf naar de weekevaluatie in Lijn. Niets dubbel invullen.</small></div>
+</div></body></html>
