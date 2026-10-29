@@ -13,13 +13,13 @@
 | **Berichten en automatisch werk** | `autoberichten.js`, `core.js` (berichten), `push.js`, `sw.js`; server: `supabase/functions/automaat`, `supabase/functions/melding` | 19, 36, 57, 75, 77, 79–82, 107 | `berichten\|ouder: verlopen` + `node --test tests/automaat.test.mjs` |
 | **Taken, vervoer, meehelpen, materiaal** | `taken.js`, `meehelpen.js`, `materiaal.js`, `waardering.js` | 17, 25, 28, 31, 64, 95, 98 | `taken:\|chauffeur` |
 | **Ontwikkelgesprekken en beoordeling** | `beoordeling.js`, `gesprek.js` | 23, 65–72, 101 | `spelerskaart` |
-| **Trainers begeleiden (HO, TC)** | `trainers.js`, `begeleiding.js`, `hjohome.js`, `hjofilter.js` (`CC.werkgebied` in `hjo.js`) | 42, 97, 99, 100, 129, 134, 140 | `trainers begeleiden\|begeleidingsmoment\|technisch coördinator\|HO-Home\|bouwen\|pakket Alleen` |
+| **Trainers begeleiden (HO, TC)** | `trainers.js`, `begeleiding.js`, `hjohome.js`, `hjofilter.js` (`CC.werkgebied` in `hjo.js`) | 42, 97, 99, 100, 129, 134, 140, 143 | `trainers begeleiden\|begeleidingsmoment\|technisch coördinator\|HO-Home\|bouwen\|pakket Alleen\|eigen reflectie` + `npm run test:veilig` |
 | **Trainingsmodule** | `training.js` (kiezer, Plannen, Week, Vormenbank), `periodisering.js` (methodiek, Lijn), `vormtypes.js` | 121, 128, 130–135, 137, 138, 139, 141, 142 | `trainingsmodule\|oefenvorm` + `tests/kiezer.spec.js` |
 | **Opleidingsprofielen** | `opslag.js` (leest `S.profielen`), `training.js` (`profiel`, `ond`); bron: `supabase/profielen/` | 121, 123, 133 | `opleidingsprofiel\|trainingsmodule` |
 | **Tekentool** | `tekentool.js` + `.css`, `tekenen.html` | 124–127 | `tekentool` |
 | **Demo en rondleiding** | `demo.js` (`STAPPEN`), `data.js` (democlub) | 89, 114 | `rondleiding\|uitnodiging\|demo:\|elke stap` |
 | **Schermen, tabbladen, vensters** | `core.js` (`CC.sheet`, `CC.toast`, `CC.on`), `index.html`, `app.css` | 30, 34, 102–104, 111, 113, 118, 122 | `tabbladen\|venster\|tikvlakken\|dubbel tikken\|rol wisselen\|automatisch bewaren` |
-| **Inloggen, opslag, rechten** ⚠️ altijd maat L | `live.js`, `opslag.js` (scopes), `core.js` (inloggen, privacy); `supabase/migrations/` | 1, 14, 24, 45, 52, 72, 119 | alle tests + rechtentest (zie onder) |
+| **Inloggen, opslag, rechten** ⚠️ altijd maat L | `live.js`, `opslag.js` (scopes), `core.js` (inloggen, privacy); `supabase/migrations/` | 1, 14, 24, 45, 52, 72, 119, 143 | alle tests + rechtentest (zie onder) |
 | **Inrichten en clubbeheer** | `hjo.js` (Regels, Rollen, Seizoen), `onderhoud.js` | 6, 12, 96, 112, 120 | `schermgebruik\|kop:` |
 | **Presentaties en handleidingen** | `docs/presentaties/` (`maak.js`, `shots*.js`) | 89, 114 | geen (handmatig) |
 
@@ -50,7 +50,7 @@
 - `public/index.html` + `public/app/*.js`: één webapp voor de telefoon (vanilla JS, geen build), installeerbaar (manifest + `sw.js`).
 - `data.js`: demodata en rekenregels. `opslag.js`: app-gegevens ↔ databaserijen. `core.js`: inloggen, kop, profiel, berichten, afmelden, planning aanpassen, privacy, feedback. `live.js`: echte versie (Supabase: inloggen met e-mailcode, laden, automatisch opslaan, beheer).
 - Schermen per rol: `ouder.js`, `trainer.js`, `teamleider.js`, `hjo.js` (ook clubbeheerder), `hjohome.js`; coördinator via `taken.js`.
-- `trainers.js`: scopes `trainerzelf`, `trainerdossier`, `hoprive` (migratie 024; 025: ook de TC, notities per bouw). Rol `tc`, werkgebied `bouwen` (`CC.werkgebied`), pakket *Alleen Trainers begeleiden* (`club.pakket = 'trainers'`, `CC.pakketTrainers`).
+- `trainers.js`: scopes `trainerzelf`, `trainerdossier`, `hoprive` (migratie 024; 025: ook de TC, notities per bouw). Besluit 143 (migratie 033): `trainerzelf` schrijft alleen de trainer zelf (HO/TC alleen *gevraagd*); `trainerzelf` en `trainerdossier` niet voor een beheerder zonder rol HO/TC; tests `begeleiding-eigenaarschap.sql` en `app-opslag.sql` (+ `tests/eigen-reflectie.spec.js`). Rol `tc`, werkgebied `bouwen` (`CC.werkgebied`), pakket *Alleen Trainers begeleiden* (`club.pakket = 'trainers'`, `CC.pakketTrainers`).
 - **Formulieren (Besluit 103):** lange formulieren krijgen `data-autosave="naam"` en `CC.autosave.naam(form)`; de knop heet *Klaar*. Knopnamen zijn uniek (`CC.on`; bewuste vervanging met `{ vervangt: true }`, Besluit 102).
 - `opstelling.js`: speelvorm per team `team.speelCat` (`M.wedCat`); keuze van de staf in `S.teamKeuze`.
 - `adres.js`: adres via PDOK (`data-adres`). `push.js`: pushmeldingen (Besluit 53). `onderhoud.js`: foutregistratie en zelf verversen (`versie.json` uit `versie-maken.js`, Besluit 63).

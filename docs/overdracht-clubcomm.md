@@ -5,19 +5,21 @@
 **Bijgewerkt:** 29-10-2026
 
 ## Stand
-- `main` = `2946205` (#101, Besluit 141). Productie draait die commit (Vercel READY, nagegaan 29-10). Besluit **142** zit in de pull request hieronder; het eerstvolgende vrije nummer daarna is **143**.
+- `main` = `b78b9d8` (#102, Besluit 142). Productie: in deze ronde niet opnieuw nagegaan. Besluit **143** zit in de pull request hieronder; het eerstvolgende vrije nummer daarna is **144**.
+- Productiedatabase (29-10, alleen gelezen): functioneel gelijk aan `main` (de md5 van alle `priv`-functies is gelijk, zonder commentaarregels). Het migratielogboek mist 027–030; die zijn toen via losse SQL toegepast.
 
 ## Open pull requests
 | PR | Wat | Stand |
 |---|---|---|
-| #102 | Besluit 142: tijdsbalk vóór de training (veldtijd − organisatie = oefentijd, waarschuwing zonder blokkade), branch `bouw/tijdsbalk` | Tests groen; wacht op akkoord |
+| (nieuw) | Besluit 143: de trainer is eigenaar van zijn eigen teksten; migratie 033; branch `bouw/eigen-reflectie-033` | Tests lokaal groen; **niet samenvoegen en 033 niet toepassen zonder akkoord** |
 
 ## Wacht op akkoord van de gebruiker
-- De gebruiker test zelf week 45 (Lijn → do in Plannen → Week → Lijn). Pas daarna stap 2 (weekevaluatie) en stap 3 (herinnering).
-- Rechtenvoorstel 032 (begeleider kijkt mee, clubbank): lokaal getest met `npm run test:veilig -- 032` (56/56).
-- Twee bevindingen uit de beveiligingstest (maat L): uitvoerrecht van drie `priv`-functies intrekken; `priv.cc_club()` bij een account in twee clubs.
+- PR Besluit 143, en daarna apart: 033 toepassen in productie (volgorde: eerst samenvoegen/publiceren, dan 033, dan controleren).
+- Rechtenvoorstel 032 (begeleider kijkt mee, clubbank): lokaal getest; samen met 033 in beide volgordes goed (56/56).
+- Bevinding: uitvoerrecht van drie `priv`-functies intrekken (onbereikbaar voor anon). De zorg over `priv.cc_club()` bij twee clubs klopte niet: een account hoort bij precies één club (getest 10/10).
 - Idee (L): bij een trainer zien of hij al heeft ingelogd.
 
 ## Volgende technische stap
+- Na Besluit 143: de bestaande observatie- en reflectiemodule verder (Spoor 2-route, stap 3), eerst bespreken.
 - Klein (S): de kaart omzetten naar testlabels; `npm run check` en `npm run test:veilig` in `CLAUDE.md`.
 - Voorstel (L): het opleidingsprofiel veilig leesbaar maken voor trainers (er is een onderzoeksbranch `onderzoek/profiel-leesrechten`).

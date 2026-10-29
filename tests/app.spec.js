@@ -404,7 +404,9 @@ test.describe('Demo', () => {
     expect(m.datum).toBe('2026-10-08');
     expect(m.vakken.ontwikkelpunt).toBe('Vaste coachmomenten');
     expect(m.obs.turf).toEqual({ h1: { Vraag: 1, Directief: 1 } });
-    expect(await page.evaluate((i) => CC.S().begeleidZelf[i].r.r1, id)).toBe('Ik riep minder');
+    // Besluit 143: de overgenomen reflectie is tekst van de begeleider (in het moment), niet de reflectie van de trainer
+    expect(m.reflectieBegeleider.r.r1).toBe('Ik riep minder');
+    expect(await page.evaluate((i) => (CC.S().begeleidZelf[i] || {}).r, id)).toBeUndefined();
     // De trainer in het pakket: alleen Home en Berichten
     await page.evaluate((d) => { CC.zetSessie(d); CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer')); }, dennis);
     await page.locator('nav.nav button[data-tab="home"]').click();
