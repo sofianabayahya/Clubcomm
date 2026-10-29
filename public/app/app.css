@@ -898,3 +898,4 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .kv-knop { min-height: 44px; }
 .kv-groep { margin: 14px 0 0; font-size: 16px; }
 .tr-rij.kv-sel { outline: 3px solid var(--blauw, #0869c2); outline-offset: 2px; border-radius: 10px; background: #eef4fb; }
+.tr-aanvul { width: 100%; margin: 8px 0; border: 1px solid var(--lijn); border-radius: var(--r); background: var(--vlak); min-height: 44px; }

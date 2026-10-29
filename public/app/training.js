@@ -560,6 +560,9 @@
     <div class="chips tr-filters">${actief(S).map(([k, w]) => `<button class="chipknop aan" data-act="vfWeg" data-k="${k}" aria-label="Filter weghalen: ${esc(filterNaam(S, k, k === 'past' || k === 'kort' || k === 'keepers' ? k : w))}">${esc(filterNaam(S, k, k === 'past' || k === 'kort' || k === 'keepers' ? k : w))} ✕</button>`).join('')}
       <button class="chipknop" data-act="vfOpen">${icon('plus')}Filter</button>${actief(S).length ? '<button class="chipknop tr-wis" data-act="vfWis">Wis</button>' : ''}</div>
     <button class="knop vol" data-act="vormNieuw">${icon('plus')}Nieuwe vorm</button>
+    ${(() => { // Besluit 137: één rustige regel zolang vormen nog geen aanbevolen leerniveau hebben (alleen met leerniveaus in het profiel)
+      const z = niveaus(S).length && !vf().niveau ? mijnVormen(S).filter((v) => !v.niveauAdvies).length : 0;
+      return z ? `<button type="button" class="tr-rij tr-aanvul" data-act="vfZet" data-k="niveau" data-w="zonder"><span class="tr-t"><b>${z} vorm${z === 1 ? '' : 'en'} zonder leerniveau</b><small>Aanvullen: dan weet ClubComm welke vorm bij welke plek past</small></span>${icon('chevron-right')}</button>` : ''; })()}
     <div id="vormResultaat">${resultaat(S)}</div>`;
   document.addEventListener('input', (e) => { if (e.target.id !== 'vormZoek') return; vf().q = e.target.value; const r = document.getElementById('vormResultaat'); if (r) r.innerHTML = resultaat(CC.S()); });
   // Filtervenster: chips werken meteen; de knop onderaan toont hoeveel vormen er overblijven

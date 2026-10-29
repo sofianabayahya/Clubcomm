@@ -1602,9 +1602,9 @@ test('trainingsmodule: oefenvorm kiezen in twee tikken met ongedaan maken', asyn
   // Filter 'nog geen leerniveau' in Vormen: alleen de vorm zonder aanbevolen leerniveau (Zes tegen zes)
   await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
   await page.locator('[data-act="seg"][data-val="vormen"]').click();
-  await page.locator('[data-act="vfOpen"]').click();
-  await page.locator('#sheet [data-act="vfZet"][data-k="niveau"][data-w="zonder"]').click();
-  await page.evaluate(() => CC.closeSheet());
+  await expect(page.locator('.tr-aanvul')).toContainText('1 vorm zonder leerniveau');
+  await page.locator('.tr-aanvul').click();
+  await expect(page.locator('.tr-aanvul')).toHaveCount(0);
   await expect(page.locator('#app .tr-kaart')).toHaveCount(1);
   await expect(page.locator('#app .tr-kaart')).toContainText('Zes tegen zes');
   await controleer(page, fouten, 'oefenvorm kiezen');
