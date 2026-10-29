@@ -45,7 +45,7 @@
   "koppelingen": { "dcg": { "primair": "ll-1v1-aanvallend", "ook": ["ll-passen"] } }
 }
 ```
-- **Catalogus van de types:** `supabase/catalogus/vormtypes.json` (schema `clubcomm-vormtypes` v1). Elk type heeft een vaste ID, een naam, een hoofdtype en synoniemen (zoeken op "SSG" vindt Partijvorm). Gelijk voor alle clubs, alleen lezen, net als de profielen (Besluit 123). Een nieuw type = een regel erbij, geen nieuwe code.
+- **Catalogus van de types:** `supabase/catalogus/vormtypes.json` *(voorstel; gebouwd als `public/app/vormtypes.js`, Besluit 131)* (schema `clubcomm-vormtypes` v1). Elk type heeft een vaste ID, een naam, een hoofdtype en synoniemen (zoeken op "SSG" vindt Partijvorm). Gelijk voor alle clubs, alleen lezen, net als de profielen (Besluit 123). Een nieuw type = een regel erbij, geen nieuwe code.
 - **Onbekende ID** (bijvoorbeeld uit een import): de vorm blijft geldig en toont *overig*.
 - **Weerstand** wordt berekend, niet opgeslagen:
   - 0 verdedigers = zonder;

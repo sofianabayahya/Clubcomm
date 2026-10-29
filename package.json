@@ -6,7 +6,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node --test tests/automaat.test.mjs && playwright test"
+    "test": "node --test tests/automaat.test.mjs tests/verwijzingen.test.mjs && playwright test"
   },
   "dependencies": {
     "express": "^4.18.2"
