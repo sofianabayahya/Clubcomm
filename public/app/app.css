@@ -896,3 +896,26 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .tb-wed td { padding: 6px 4px; border-top: 1px solid var(--lijn); vertical-align: top; }
 .tb-wed tr.zacht td { color: var(--zacht, #55606d); }
 #wedPlakTekst, #schemaTekst { width: 100%; font: inherit; font-size: 15px; border: 1px solid var(--lijn); border-radius: 10px; padding: 8px; }
+/* Besluit 139: één oefenvormkiezer; compacte regels, meer achter ⓘ */
+.toast .toast-knop { pointer-events: auto; background: none; border: 0; color: #8fc4ff; font: inherit; font-weight: 700; min-height: 44px; padding: 0 4px; margin-left: 6px; cursor: pointer; white-space: nowrap; }
+.kv-ctx { font-size: 15px; margin: 0; }
+.kv-groep { margin: 12px 0 2px; font-size: 16px; }
+.kv-scroll { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.kv-scroll::-webkit-scrollbar { display: none; }
+.kv-scroll .chipknop { flex: none; }
+.kv-scroll .tr-lbl { flex: none; align-self: center; }
+.kv-r { background: var(--vlak); border: 1px solid var(--lijn); border-radius: 12px; margin: 6px 0; }
+.kv-r.or { border-color: #e8c9a0; }
+.kv-rk { display: flex; align-items: center; }
+.kv-zet { flex: 1; min-width: 0; display: flex; gap: 10px; align-items: center; background: none; border: 0; padding: 8px 4px 8px 10px; min-height: 56px; text-align: left; font: inherit; color: inherit; cursor: pointer; border-radius: 12px; }
+.kv-zet .tr-t { flex: 1; min-width: 0; }
+@media (hover: hover) { .kv-zet:hover { background: var(--blauw-l, #eef4fb); } }
+.kv-w { display: block; font-size: 14px; color: var(--zacht); }
+.kv-w span + span::before { content: " · "; color: var(--zacht); }
+.kv-w span.o { color: #8a4b00; }
+.kv-meer { flex: none; width: 44px; height: 44px; margin-right: 4px; }
+.kv-uit { padding: 0 12px 10px; display: flex; flex-direction: column; gap: 6px; }
+.kv-noot { font-size: 14px; color: #8a4b00; margin: 0; }
+.kv-rest .tr-zoek { margin: 4px 0; }
+.kv-onder { margin-top: 10px; }
+.tr-aanvul { background: #fff8ec; border: 1px solid #f0d9b5; }

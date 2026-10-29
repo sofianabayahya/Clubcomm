@@ -65,6 +65,7 @@ for (const breed of [390, 1366]) test(`oefenvorm kiezen met profiel (DCG): geree
   await expect(page.locator('#sheet [data-act="vkZet"][data-k="gs"][data-w="ll-passen"]')).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('#sheet .tr-vh')).toContainText('Vooruit inspelen');
   await expect(page.locator('#sheet')).toContainText('Kiezen');
+  if (process.env.SHOTS && breed > 900) { await page.waitForTimeout(400); await page.screenshot({ path: `${process.env.SHOTS}/k5-dcg-laptop.png` }); }
   await expect(page.locator('#sheet')).toContainText('12 spelers');
   // Wat past bij het gereedschap en het aantal komt eerst; een ander gereedschap of te veel spelers komt later (of niet)
   let v = await volgorde(page);
@@ -112,4 +113,73 @@ test('oefenvorm kiezen zonder profiel (zoals Swift): dezelfde kiezer, zonder met
   await expect(page.locator('#sheet')).toBeHidden();
   const p = await plan(page); expect(p.onderdelen.map((o) => o.vormId).join()).toBe('v-groot');
   await controleer(page, fouten, 'kiezer zonder profiel');
+});
+
+// Besluit 139: twee tikken, niets uitgesloten, waarom (oranje), meer achter ⓘ, en ongedaan maken zonder iets anders kwijt te raken
+test('oefenvorm kiezen (Besluit 139): twee tikken, redenen, toch kiezen en ongedaan maken', async ({ page }) => {
+  const fouten = volgFouten(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await klaarzetten(page, true);
+  // Aanbevolen leerniveau bij een vorm en een training van vorige week met de rondo
+  await page.evaluate(() => { const S = CC.S(); S.vormen.find((v) => v.id === 'v-kaats').niveauAdvies = 'ln-kiezen'; S.vormen.find((v) => v.id === 'v-rondo').niveauAdvies = 'ln-uitvoeren';
+    S.vormen.find((v) => v.id === 'v-groot').minVariant = '4 tegen 4 zonder keepers';
+    S.trainingsplannen.push({ id: 'tp-vorig', actId: 'los-vorig', los: true, datum: CC.date.addDays(CC.date.vandaag(), -7), eigenaar: CC.me().id, onderdelen: [{ id: 'o-x', vormId: 'v-rondo', min: 10 }] });
+    const p = S.trainingsplannen.find((x) => x.actId === 'tKies'); p.onderdelen.find((o) => o.blok === 'B1').vormId = 'v-pass'; CC.save(); CC.render(); });
+  const voor = await plan(page);
+  // Tik 1: de lege plek. Redenen staan in één regel; wat minder past is oranje en staat eerst in die regel
+  await page.locator('.tr-midden .tr-rij', { hasText: 'A1' }).first().click();
+  await expect(page.locator('#sheet .sheet-kop h2')).toContainText('Kies oefenvorm · A1');
+  const rij = (id) => page.locator(`#sheet .kv-r:has([data-v="${id}"])`);
+  await expect(rij('v-kaats').locator('.kv-w')).toContainText('Kiezen ✓');
+  await expect(rij('v-rondo').locator('.kv-w .o')).toContainText('Uitvoeren');
+  await expect(rij('v-rondo').locator('.kv-w')).toContainText('vorige week ook');
+  expect((await volgorde(page)).slice(0, 2)).toEqual(['v-kaats', 'v-rondo']);
+  if (process.env.SHOTS) { await page.waitForTimeout(400); await page.screenshot({ path: `${process.env.SHOTS}/k1-dcg-tel.png` }); }
+  // Niets uitgesloten: te groot staat bij Past deels, met de reden; een ander gereedschap staat ingeklapt bij Alle andere vormen
+  await expect(page.locator('#sheet .kv-groep', { hasText: 'Past deels' })).toContainText('(1)');
+  await expect(rij('v-groot').locator('.kv-w .o')).toContainText('voor 16–20 sp');
+  await expect(page.locator('#sheet .kv-rest summary')).toContainText('Alle andere vormen (1)');
+  await expect(rij('v-pass').locator('.kv-w .o')).toContainText('ander gereedschap: 1v1 aanvallend');
+  // ⓘ = meer: de minimumvariant en bewust toch kiezen
+  await rij('v-groot').locator('[data-act="kvMeer"]').click();
+  await expect(rij('v-groot').locator('.kv-noot')).toContainText('Bij 12: 4 tegen 4 zonder keepers');
+  if (process.env.SHOTS) { await rij('v-groot').scrollIntoViewIfNeeded(); await page.screenshot({ path: `${process.env.SHOTS}/k2-dcg-meer.png` }); }
+  await rij('v-groot').locator('.kv-uit [data-act="tpVormErbij"]').click();
+  await expect(page.locator('#sheet')).toBeHidden();
+  await expect(page.locator('#toast')).toContainText('In A1 gezet');
+  if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/k3-gezet.png` });
+  let p = await plan(page); expect(p.onderdelen.find((o) => o.blok === 'A1').vormId).toBe('v-groot');
+  // Ongedaan maken: alleen A1 gaat terug, de rest (B1 met een vorm, minuten) blijft precies gelijk
+  await page.locator('#toast [data-act="tpOngedaan"]').click();
+  p = await plan(page); expect(JSON.stringify(p.onderdelen)).toBe(JSON.stringify(voor.onderdelen));
+  // Twee tikken: plek, vorm
+  await page.locator('.tr-midden .tr-rij', { hasText: 'A1' }).first().click();
+  await rij('v-kaats').locator('[data-act="tpVormErbij"]').first().click();
+  p = await plan(page); expect(p.onderdelen.find((o) => o.blok === 'A1').vormId).toBe('v-kaats');
+  // Vormen: één rustige regel om het aanbevolen leerniveau aan te vullen (2 van de 4 hebben er een); tik = filter 'nog geen leerniveau'
+  await page.locator('[data-act="seg"][data-val="vormen"]').click();
+  await page.locator('.tr-aanvul').click();
+  await expect(page.locator('.tr-kaart')).toHaveCount(2);
+  await page.locator('.tr-kaart', { hasText: 'Groot positiespel' }).click();
+  await page.locator('#sheet [data-act="vormBewerk"]').click();
+  await page.locator('[data-act="vormKies"][data-veld="niveauAdvies"][data-w="ln-afstemmen"]').click();
+  expect(await page.evaluate(() => CC.S().vormen.find((v) => v.id === 'v-groot').niveauAdvies)).toBe('ln-afstemmen');
+  await controleer(page, fouten, 'kiezer 139');
+});
+
+test('oefenvorm kiezen (Besluit 139) zonder profiel: achteraan toevoegen en ongedaan maken', async ({ page }) => {
+  const fouten = volgFouten(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await klaarzetten(page, false);
+  await page.evaluate(() => { const S = CC.S(); S.trainingsplannen.find((x) => x.actId === 'tKies').onderdelen.push({ id: 'o-eerst', vormId: 'v-kaats', min: 8 }); CC.save(); CC.render(); });
+  await page.locator('.tr-midden [data-act="tpVormKiezen"]').click();
+  await expect(page.locator('#sheet .kv-gs')).toHaveCount(0);
+  await expect(page.locator('#sheet .kv-groep').first()).toContainText('Past het best (3)');
+  if (process.env.SHOTS) { await page.waitForTimeout(400); await page.screenshot({ path: `${process.env.SHOTS}/k4-zonder-profiel-tel.png` }); }
+  await page.locator('#sheet .kv-r:has([data-v="v-rondo"]) [data-act="tpVormErbij"]').first().click();
+  await expect(page.locator('#toast')).toContainText('In de training gezet');
+  expect((await plan(page)).onderdelen.map((o) => o.vormId).join()).toBe('v-kaats,v-rondo');
+  await page.locator('#toast [data-act="tpOngedaan"]').click();
+  expect((await plan(page)).onderdelen.map((o) => o.vormId).join()).toBe('v-kaats');
+  await controleer(page, fouten, 'kiezer 139 zonder profiel');
 });
