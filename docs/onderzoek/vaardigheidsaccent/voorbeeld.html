@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voorbeeld vormpagina met trainingsopdracht</title>
+<!-- Onderzoek (geen app-code): voorbeeld van de vormpagina in de volgorde van het werk. Opent met de stijl van de app. -->
+<link rel="stylesheet" href="../../../public/app/app.css">
+<style>
+  body { margin: 0; background: var(--grond); }
+  .vb { max-width: 1180px; margin: 0 auto; padding: 12px 16px 40px; display: grid; gap: 12px; }
+  .kop { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 18px; padding: 6px 0; }
+  .opdracht { border-left: 4px solid var(--blauw); }
+  .opdracht .regel { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-weight: 700; }
+  .opdracht .code { color: var(--blauw); font-weight: 800; }
+  .doel { font-size: 16px; margin: 4px 0 0; }
+  .zacht { color: var(--zacht); }
+  .klein { font-size: 14px; }
+  .vs { border: 1px dashed #94a3b8; border-radius: 12px; padding: 8px 10px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .vs b { font-size: 14px; }
+  .knoppen { display: flex; flex-wrap: wrap; gap: 8px; }
+  .knop.licht { background: var(--blauw-l); color: var(--blauw-d); }
+  .teken { background: #2e7d32; border-radius: 12px; aspect-ratio: 4 / 3; display: block; width: 100%; }
+  .rij2 { display: grid; gap: 12px; }
+  .lbl { display: inline-block; font-size: 12px; font-weight: 700; border-radius: 999px; padding: 1px 8px; background: #ede9fe; color: #5b21b6; }
+  .lbl.c { background: #e0f2fe; color: #075985; } .lbl.w { background: #fff4e5; color: #8a4b00; }
+  .var { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-top: 1px solid var(--lijn); min-height: 44px; }
+  .var:first-of-type { border-top: 0; }
+  ul { margin: 4px 0 0; padding-left: 20px; } li { margin: 2px 0; }
+  details.uitklap summary { min-height: 44px; display: flex; align-items: center; font-weight: 700; cursor: pointer; }
+  .tr-niv { display: inline-block; font-size: 12px; font-weight: 700; border-radius: 999px; padding: 0 8px; background: #ede9fe; color: #5b21b6; }
+  @media (min-width: 900px) { .rij2 { grid-template-columns: 1.15fr 1fr; align-items: start; } .vb { padding-top: 20px; } }
+</style></head>
+<body><div class="vb">
+  <div class="kop">‹ Nieuwe vorm</div>
+
+  <!-- 1. Trainingsopdracht en doel (alleen als je vanuit een plek komt) -->
+  <section class="kaartje opdracht" aria-label="Trainingsopdracht">
+    <small class="zacht klein">Trainingsopdracht · di 3 nov · <span class="code">A1</span></small>
+    <div class="regel">Aannemen en meenemen · Gericht eerste contact <span class="tr-niv">Uitvoeren</span></div>
+    <p class="doel"><b>Doel van vandaag:</b> het eerste contact gaat bewust naar de vrije ruimte, zodat de volgende handeling meteen kan. <span class="zacht">✎</span></p>
+    <small class="zacht klein">Doelzin uit je profiel. Teamgedrag deze week (alleen context): <i>voor ontvangst kijken, eerste contact naar vrije ruimte</i></small>
+    <div class="vs" aria-label="Voorstel voor A1"><b>Voorstel A1:</b> Geïsoleerd · Geen weerstand · Droog/techniek
+      <div class="knoppen"><button class="knop licht">Overnemen</button><button class="knop licht">Zelf kiezen</button></div></div>
+  </section>
+
+  <div class="rij2">
+    <!-- 2. Tekening en praktische inhoud -->
+    <section class="kaartje" aria-label="Tekening en inhoud">
+      <label class="klein zacht" for="n">Naam</label>
+      <input id="n" value="Aannemen in driehoek" style="min-height:44px;font-size:16px;border:1px solid var(--lijn);border-radius:10px;padding:0 10px">
+      <svg class="teken" viewBox="0 0 400 300" role="img" aria-label="Tekening"><rect x="20" y="20" width="360" height="260" fill="none" stroke="#fff" stroke-width="3"/>
+        <circle cx="90" cy="230" r="10" fill="#e53935"/><circle cx="310" cy="230" r="10" fill="#e53935"/><circle cx="200" cy="80" r="10" fill="#e53935"/>
+        <line x1="90" y1="230" x2="195" y2="88" stroke="#fff" stroke-width="3" stroke-dasharray="8 6"/><line x1="205" y1="88" x2="305" y2="222" stroke="#fff" stroke-width="3"/></svg>
+      <b>Organisatie en spelregels</b>
+      <ul><li>Driehoek van 12 m, 3 spelers per driehoek</li><li>Schuine pass, aannemen en doorspelen</li><li>Na 2 minuten draairichting wisselen</li></ul>
+      <b>Coachpunten</b>
+      <ul><li>Kijk vóór de bal aankomt</li><li>Eerste contact weg van de pion, naar de vrije ruimte</li></ul>
+      <small class="zacht klein">12 spelers · 6 min · 20 × 20 m</small>
+    </section>
+
+    <div class="rij2" style="grid-template-columns:1fr">
+      <!-- 3. Varianten -->
+      <section class="kaartje" aria-label="Varianten">
+        <b>Varianten</b>
+        <div class="var"><span class="lbl">Technisch</span><span>Binnenkant meenemen, daarna buitenkant <small class="zacht">· makkelijker</small></span></div>
+        <div class="var"><span class="lbl c">Context</span><span>Pass van achteren, opendraaien <small class="zacht">· eigen tekening</small></span></div>
+        <div class="var"><span class="lbl w">Weerstand</span><span>Passieve verdediger achter de ontvanger <small class="zacht">· moeilijker</small></span></div>
+        <button class="knop licht">+ Variant</button>
+        <small class="zacht klein">Een variant gebruikt de hoofdtekening, tenzij de opstelling verandert.</small>
+      </section>
+      <!-- 4. Kenmerken en classificatie, ingeklapt -->
+      <section class="kaartje">
+        <details class="uitklap"><summary>Kenmerken · Aannemen · Gericht eerste contact · 3 tegen 0</summary><p class="klein zacht">Gereedschap, vaardigheden, aantallen, weerstand, vormtype, speelrichting, omschakeling, aanbevolen leerniveau, afmeting</p></details>
+        <details class="uitklap"><summary>Meer</summary><p class="klein zacht">Leeromgeving, als de vorm vastloopt, bij andere groepsgroottes, eigen woorden, wat ik de volgende keer anders doe</p></details>
+      </section>
+    </div>
+  </div>
+</div></body></html>
