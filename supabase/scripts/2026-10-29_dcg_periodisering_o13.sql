@@ -1,5 +1,5 @@
 -- Periodisering DCG O13 talententeam, 29-10 t/m 18-12 (Besluit 137): 22 conceptrainingen + 8 weekplannen (met de observatiepunten van 6 wedstrijden).
--- Gemaakt met de code van de app (periodisering laden, bestand docs/methodiek/dcg/periodisering-o13-import-CONCEPT.csv), eigenaar p-beheer, scope eigen. Uitgevoerd 29-10.
+-- Gemaakt met de code van de app (periodisering laden, bestand docs/methodiek/persoonlijk/periodisering-o13-import-CONCEPT.csv), eigenaar p-beheer, scope eigen. Uitgevoerd 29-10.
 -- Overschrijft nooit iets (on conflict do nothing). De trainingen van 27-10 en 29-10 (eigen voorbereiding) blijven zoals ze zijn.
 -- Terugdraaien: in de app Training -> Lijn -> Terugdraaien (alleen concepten die niet zijn aangepast en niet gegeven).
 -- deel 1

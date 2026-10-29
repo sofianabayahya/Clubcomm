@@ -1,4 +1,4 @@
--- VERVALLEN (28-10-2026): NIET UITVOEREN. Vervangen door profiel v3 uit het kerndocument (supabase/profielen/dcg.json, docs/methodiek/dcg/).
+-- VERVALLEN (28-10-2026): NIET UITVOEREN. Vervangen door profiel v3 uit het kerndocument (supabase/profielen/dcg.json, docs/methodiek/persoonlijk/).
 -- 27-10-2026 (Besluit 131): DCG-profiel versie 2. Alleen de onderdelen die veranderen; de rest van het profiel blijft zoals het is.
 -- Leerlijnen krijgen een kant (aanval/verdediging) en de kandidaten voor de 6e leerlijn; 8 lege plekken voor spelprincipes;
 -- leerdoelen als observeerbaar gedrag (nog leeg); sjabloon DCG 75 (pilot). Bron: supabase/profielen/dcg.json.

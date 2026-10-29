@@ -1,5 +1,7 @@
 # Trainingsmodule in ClubComm — audit en voorstel
 
+> *Historisch onderzoeksdocument. Niet leidend voor de actuele werking. Zie `docs/architectuur.md` en het besluitenregister (`docs/besluiten.md`).*
+
 *27 oktober 2026. Op basis van "trainingsmodule-voor-clubcomm.md" (uit de ART-app van de initiatiefnemer). Voorstel, nog geen besluit: de database wijzigt pas na akkoord, en elk scherm komt eerst als voorbeeld.*
 
 ## 1. Audit: wat ClubComm al heeft

@@ -1,5 +1,7 @@
 # Wat er in productie verandert (stap 3 → 4), ter goedkeuring
 
+> *Historisch onderzoeksdocument. Niet leidend voor de actuele werking. Zie `docs/architectuur.md` en het besluitenregister (`docs/besluiten.md`).*
+
 *Gebouwd en getest: 63 automatische tests groen (waarvan één nieuwe voor het laden, terugdraaien, de evaluatie en de observatiepunten). Er is **nog niets** online gezet en **niets** in de database gewijzigd.*
 
 ## A. Kalendercontrole: de echte trainingen van DCG O13 Talententeam (team `O12-1`)
