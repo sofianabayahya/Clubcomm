@@ -56,7 +56,7 @@ async function anderGereedschap(page, id) {
   await knop.click();
 }
 
-for (const breed of [390, 1366]) test(`oefenvorm kiezen met profiel (DCG): gereedschap, vaardigheid, leerniveau, aantal (${breed} px)`, async ({ page }) => {
+for (const breed of [390, 1366]) test(`oefenvorm kiezen met profiel (DCG): gereedschap, vaardigheid, leerniveau, aantal (${breed} px)`, { tag: ['@training', '@profiel'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await page.setViewportSize({ width: breed, height: 900 });
   await klaarzetten(page, true);
@@ -96,7 +96,7 @@ for (const breed of [390, 1366]) test(`oefenvorm kiezen met profiel (DCG): geree
   await controleer(page, fouten, 'kiezer DCG');
 });
 
-test('oefenvorm kiezen zonder profiel (zoals Swift): dezelfde kiezer, zonder methodiek', async ({ page }) => {
+test('oefenvorm kiezen zonder profiel (zoals Swift): dezelfde kiezer, zonder methodiek', { tag: ['@training', '@profiel'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await page.setViewportSize({ width: 390, height: 844 });
   await klaarzetten(page, false);
@@ -116,7 +116,7 @@ test('oefenvorm kiezen zonder profiel (zoals Swift): dezelfde kiezer, zonder met
 });
 
 // Besluit 139: twee tikken, niets uitgesloten, waarom (oranje), meer achter ⓘ, en ongedaan maken zonder iets anders kwijt te raken
-test('oefenvorm kiezen (Besluit 139): twee tikken, redenen, toch kiezen en ongedaan maken', async ({ page }) => {
+test('oefenvorm kiezen (Besluit 139): twee tikken, redenen, toch kiezen en ongedaan maken', { tag: ['@training', '@profiel'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await page.setViewportSize({ width: 390, height: 844 });
   await klaarzetten(page, true);
@@ -173,7 +173,7 @@ test('oefenvorm kiezen (Besluit 139): twee tikken, redenen, toch kiezen en onged
   await controleer(page, fouten, 'kiezer 139');
 });
 
-test('oefenvorm kiezen (Besluit 139) zonder profiel: achteraan toevoegen en ongedaan maken', async ({ page }) => {
+test('oefenvorm kiezen (Besluit 139) zonder profiel: achteraan toevoegen en ongedaan maken', { tag: ['@training', '@profiel'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await page.setViewportSize({ width: 390, height: 844 });
   await klaarzetten(page, false);
