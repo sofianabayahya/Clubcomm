@@ -918,7 +918,7 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .kv-noot { font-size: 14px; color: #8a4b00; margin: 0; }
 .kv-rest .tr-zoek { margin: 4px 0; }
 .kv-onder { margin-top: 10px; }
-/* Besluit 140: Lijn · Plannen · Week · Vormenbank (stap 1) */
+/* Besluit 141: Lijn · Plannen · Week · Vormenbank (stap 1) */
 .tr-wk.open { border-bottom: 0; }
 .tr-wdet { display: flex; flex-direction: column; gap: 6px; margin: 0 0 8px 48px; padding: 8px 0 8px 12px; border-left: 2px solid var(--lijn); font-size: 15px; }
 .tr-wdkop { font-size: 14px; margin-top: 4px; }

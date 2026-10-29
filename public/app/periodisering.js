@@ -258,7 +258,7 @@
     if (a.afgelast) return `<span class="tr-bol x" title="${dag}: afgelast">✕<i class="sr">${dag} afgelast</i></span>`;
     const st = p ? CC.trStatusVan(S, p) : null; const k = st === 'gegeven' ? 'gegeven' : st === 'uitgewerkt' ? 'uitgewerkt' : p ? 'gepland' : 'nog niet voorbereid';
     return `<span class="tr-bol ${st || ''}" title="${dag}: ${k}"><i class="sr">${dag} ${k}</i></span>`; };
-  // Stap x van y (Besluit 140): de plaats van deze training in de week, met het leerniveau uit de methodiek
+  // Stap x van y (Besluit 141): de plaats van deze training in de week, met het leerniveau uit de methodiek
   CC.trStap = (S, p, a) => { if (!actief(S) || !p || p.week || !a || !a.datum) return ''; const ma = maandag(a.datum);
     const tr = teamActs(S, p.teamId || a.teamId, ma, D.addDays(ma, 6)).filter((x) => !x.afgelast); const i = tr.findIndex((x) => x.id === a.id); if (i < 0 || tr.length < 2) return '';
     const n = nv(S, methodiek(S, p).niveaus); return `<small class="tr-stap"><b>Stap ${i + 1} van ${tr.length}</b>${n ? ` · <span class="tr-niv">${esc(n)}</span>` : ''}</small>`; };
@@ -309,7 +309,7 @@
         : rij('perVast', 'Periodeplanning vastleggen', 'Zet de datum van vandaag op de weekplannen. Trainingen worden <b>niet</b> vergrendeld: je kunt elke training blijven aanpassen. Geladen concepten verwijderen kan daarna niet meer.')) : ''}
       ${geladen && !vast ? rij('perTerug', 'Geladen concepten verwijderen…', 'Alleen concepten die je niet hebt aangepast en die niet zijn gegeven. Je ziet eerst hoeveel.') : ''}</div>`); });
   CC.on('perNaarWeek', (el) => { const g = (CC.ui.seg = CC.ui.seg || {}); g.trSeg = 'plannen'; g.aanwAct = el.dataset.id; CC.render(); window.scrollTo(0, 0); });
-  // Periodeplanning vastleggen (Besluit 138, naam Besluit 140): datum op de weekplannen; geen verwijderen meer; per training blijft alles aan te passen
+  // Periodeplanning vastleggen (Besluit 138, naam Besluit 141): datum op de weekplannen; geen verwijderen meer; per training blijft alles aan te passen
   CC.on('perVast', () => { const S = CC.S(); const tid = CC.teamId && CC.teamId(); mijnWeken(S, tid).forEach((w) => { w.vastgesteld = D.vandaag(); }); CC.save(); CC.closeSheet(); CC.render(); CC.toast('Periodeplanning vastgelegd; trainingen blijven aan te passen'); });
   CC.on('perConcept', () => { const S = CC.S(); const tid = CC.teamId && CC.teamId(); mijnWeken(S, tid).forEach((w) => { delete w.vastgesteld; }); CC.save(); CC.closeSheet(); CC.render(); });
   // Afgelaste training met een concept: één keer signaleren; jij kiest doorschuiven of laten vervallen

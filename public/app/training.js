@@ -170,7 +170,7 @@
       ${evVragen(S).length ? '<small class="zacht">Komt bij de volgende training met hetzelfde probleem als voorstel te staan (niet automatisch doorgevoerd).</small>' : ''}
       ${evalDiep(S, p, a)}
     </form>`; };
-  // Besluit 140: de vier getallen met hun echte betekenis (optie A: de berekening blijft zoals hij was)
+  // Besluit 141: de vier getallen met hun echte betekenis (optie A: de berekening blijft zoals hij was)
   const minutenKaart = (S, p) => { const m = CC.trMinuten(S, p); const gs = Object.entries(m.gs).sort((x, y) => y[1] - x[1]);
     const rij = (n, w, uitleg) => `<div class="tr-mrij"><span>${n}</span><b>${w}</b>${uitleg ? `<small class="zacht">${uitleg}</small>` : ''}</div>`;
     return `<div class="tr-minuten"><b>Minuten</b>
@@ -184,7 +184,7 @@
         <p class="klein"><b>Uitgevoerd in oefenvormen:</b> de oefenvormen zonder start en spacing; echte minuten, anders gepland. Dit getal staat ook in Lijn.</p>
         <p class="klein"><b>Toegerekend aan een gereedschap:</b> dezelfde minuten bij het hoofdgereedschap van de vorm (niet van het blok). Een vorm zonder hoofdgereedschap telt hier niet mee.</p>
         <p class="klein zacht">Minuten zijn een registratie van oefentijd, geen bewijs dat iets is geleerd.</p></details></div>`; };
-  // Besluit 140: Toepassing. De bestaande vraag Transfer naar vrij spel (zelfde antwoord, niet dubbel opgeslagen), bij de partij
+  // Besluit 141: Toepassing. De bestaande vraag Transfer naar vrij spel (zelfde antwoord, niet dubbel opgeslagen), bij de partij
   const TRANSFER = 'ev-transfer';
   const toepassing = (S, p, a) => { if (!p.gegeven) return ''; const q = evVragen(S).find((x) => x.id === TRANSFER); if (!q) return '';
     const w = (p.evaluatie || {})[q.id] || null; const m = CC.trMethodiekVan ? CC.trMethodiekVan(S, p) : p.methodiek || {};
@@ -392,7 +392,7 @@
         const k = koppeling(S, v); if (k.primair) r.min[k.primair] = (r.min[k.primair] || 0) + uit; if (uit) k.ook.forEach((x) => { r.ook[x] = (r.ook[x] || 0) + 1; }); }); });
     return r;
   };
-  // Besluit 140 (optie A): vier minutengetallen per training, zonder meer zekerheid te suggereren dan er is geregistreerd.
+  // Besluit 141 (optie A): vier minutengetallen per training, zonder meer zekerheid te suggereren dan er is geregistreerd.
   // Echte minuten = minUit; leeg (null) = nog niet gecontroleerd (dan telt de oefenvorm met de geplande minuten, zoals altijd).
   CC.trMinuten = (S, p) => { const o = p.onderdelen || []; const r = { gepland: totaal(p), duur: 0, zonderReg: totaal(p), vormen: 0, vormenOpen: 0, gs: {}, gsTotaal: 0, teControleren: 0, gecontroleerd: 0 };
     o.filter((x) => x.vormId && !x.spacing).forEach((x) => { if (x.minUit != null) { r.duur += Number(x.minUit) || 0; r.zonderReg -= Number(x.min) || 0; r.gecontroleerd++; } else r.teControleren++; });
@@ -585,7 +585,7 @@
       <div class="kaartje"><b>Per week</b><div class="tr-lijst">${weken.slice().reverse().filter((w) => perWeek[w]).map((w) => `<div class="tr-rij tr-uit"><span class="tr-t"><b>Week ${D.weeknr(w)}</b><small>${perWeek[w].sort((x, y) => String(actVan(S, x).datum).localeCompare(String(actVan(S, y).datum))).map((p) => `${esc(dagNaam(actVan(S, p)))}: ${esc(p.thema || 'training')}${blokDoelen(S, p) ? ` (${blokDoelen(S, p)})` : ''}${p.gegeven ? ' ✓' : ''}`).join(' · ')}</small></span></div>`).join('') || '<p class="zacht">Nog geen trainingen in deze weken.</p>'}</div></div>
       ${maandBlok(S, true)}`; };
 
-  // ---------- Vormenbank (Training → Vormenbank, Besluit 140): zoeken en filters die je kunt combineren ----------
+  // ---------- Vormenbank (Training → Vormenbank, Besluit 141): zoeken en filters die je kunt combineren ----------
   const vf = () => CC.ui.vf || (CC.ui.vf = {});
   const teamGrootte = (S) => { const tid = CC.teamId && CC.teamId(); return tid ? M.spelers(S, tid).length : 0; };
   const FILTERS = (S) => [

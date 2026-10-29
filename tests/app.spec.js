@@ -1518,7 +1518,7 @@ test('trainingsmodule: training op datum zonder planning (pakket Trainers begele
   await expect(page.locator('[data-act="perLaden"], .tr-per')).toHaveCount(0);
   await expect(page.locator('.tr-weken')).toBeVisible(); // weekthema werkt ook zonder leerdoelen (alleen het thema)
   await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'trainingsplannen').map((r) => `${r.scope}|${r.persoon_id}|${r.data.los}|${r.data.datum}|${r.data.onderdelen.length}`).join()).toBe('eigen|p-beheer|true|2026-11-03|1');
-  // Besluit 140: na afloop dezelfde minutenkaart; zonder de vraag Transfer in het profiel geen Toepassing
+  // Besluit 141: na afloop dezelfde minutenkaart; zonder de vraag Transfer in het profiel geen Toepassing
   await page.locator('[data-act="seg"][data-val="plannen"]').click();
   await page.locator('[data-act="tpLosNieuw"]').click();
   await page.fill('#tl-d', '2026-10-01');
@@ -1694,7 +1694,7 @@ test('trainingsmodule: classificatie, sjabloon, fase, minuten per leerdoel en fi
   await page.locator('[data-act="trNaarWeek"]').click();
   // Gegeven: echte minuten; alleen het hoofdleerdoel krijgt minuten
   await page.locator('form[data-autosave="tpTerug"] label.schakel').click();
-  // Besluit 140: leeg = nog niet gecontroleerd (gepland staat als grijs getal); gegeven betekent niet gecontroleerd
+  // Besluit 141: leeg = nog niet gecontroleerd (gepland staat als grijs getal); gegeven betekent niet gecontroleerd
   await expect(page.locator('.tr-uit input')).toHaveValue('');
   await expect(page.locator('.tr-uit input')).toHaveAttribute('placeholder', '6');
   await expect(page.locator('form[data-autosave="tpTerug"] .tr-stat')).toHaveText('Nog niet gecontroleerd');
@@ -1828,7 +1828,7 @@ test('trainingsmodule: periodisering laden, methodiek, evaluatie en observatiepu
   await page.locator('form[data-autosave="tpTerug"] label.schakel').click();
   await expect(page.locator('form[data-autosave="tpTerug"] > .tr-ev')).toHaveCount(3);
   await page.locator('[data-act="tpEval"][data-q="ev-probleem"][data-w="deels"]').click();
-  // Besluit 140: Transfer staat bij Toepassing (geen partijvorm: beoordeel het vrije spel elders); niet beoordeeld is geen negatief antwoord
+  // Besluit 141: Transfer staat bij Toepassing (geen partijvorm: beoordeel het vrije spel elders); niet beoordeeld is geen negatief antwoord
   await expect(page.locator('.tr-toep')).toContainText('Kwam het gewenste gedrag uit de eerdere trainingsblokken terug in het partijspel?');
   await expect(page.locator('.tr-toep')).toContainText('Geen partijvorm gebruikt');
   await expect(page.locator('.tr-toep [aria-pressed="true"]')).toHaveText('Niet beoordeeld');
@@ -1972,7 +1972,7 @@ test('trainingsmodule: DCG-periodisering O13 met hoofdthema, teamfunctie, contra
   await expect(page.locator('.tr-wk')).toHaveCount(8);
   await expect(page.locator('.tr-wk', { hasText: 'wk 45' }).locator('.tr-niv')).toHaveText('Uitvoeren → Afstemmen');
   await expect(page.locator('.tr-wk', { hasText: 'wk 45' }).locator('.tr-bol')).toHaveCount(3);
-  // Besluit 140: weekdetail met de opbouw van de week (wk 45: di → do → vr)
+  // Besluit 141: weekdetail met de opbouw van de week (wk 45: di → do → vr)
   // De week van vandaag (2 nov = wk 45) staat open; nog een tik klapt hem dicht
   await expect(page.locator('.tr-wk', { hasText: 'wk 45' })).toHaveAttribute('aria-expanded', 'true');
   await expect(page.locator('.tr-wdet .tr-stapknop')).toHaveCount(3);

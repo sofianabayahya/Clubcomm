@@ -80,7 +80,7 @@ Het tabblad Training heeft overal dezelfde vier onderdelen, met dezelfde beteken
 | **Lijn** | Ontwikkeling en opleidingsplanning | Plaats, naam, periode-overzicht per week | Wat er per week staat (thema, voetbalprobleem, leerniveau) |
 | **Plannen** | Voorbereiden | Een training opbouwen uit blokken, vormen kiezen, slepen op de laptop | Welke blokken, welk sjabloon, welke redenen bij een voorstel |
 | **Week** | Uitvoeren, terugkijken, evalueren | De training van vandaag bovenaan, aanwezigheid, evaluatie na afloop | Welke evaluatievragen en observatiepunten |
-| **Vormen** | Zoeken, maken, hergebruiken | Zoeken, filters, vorm openen en in een training zetten | Welke classificatie en filters (gereedschap, vaardigheid, leerniveau) |
+| **Vormenbank** | Zoeken, maken, hergebruiken | Zoeken, filters, vorm openen en in een training zetten | Welke classificatie en filters (gereedschap, vaardigheid, leerniveau) |
 
 **Regel:**
 - Een trainer die van club of profiel wisselt, vindt alles op dezelfde plek en bedient het op dezelfde manier.
