@@ -10,7 +10,7 @@
 ## Open pull requests
 | PR | Wat | Stand |
 |---|---|---|
-| (nieuw) | Fout (S): wedstrijd zonder verzameltijd toonde "Verzamelen undefined" (core, ouder, agenda, teamleider) + test los van de klok, branch `claude/intelligent-cannon-t4430r` | Tests groen (6 + 76); wacht op akkoord |
+| #104 | Fout (S): wedstrijd zonder verzameltijd toonde "Verzamelen undefined" (core, ouder, agenda, teamleider) + test los van de klok, branch `claude/intelligent-cannon-t4430r` | Tests groen (6 + 76); wacht op akkoord |
 
 ## Wacht op akkoord van de gebruiker
 - De gebruiker test zelf week 45 (Lijn → do in Plannen → Week → Lijn). Pas daarna stap 2 (weekevaluatie) en stap 3 (herinnering).
