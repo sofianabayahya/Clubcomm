@@ -225,6 +225,7 @@
     const t = rol.teamId && M.team(S, rol.teamId);
     // Het eerste aanspreekpunt van het team blijft; een tweede trainer of teamleider komt erbij
     if (t && rol.rol === 'trainer' && !t.trainerId) t.trainerId = p.id; if (t && rol.rol === 'teamleider' && !t.teamleiderId) t.teamleiderId = p.id;
+    if (t && rol.rol === 'trainer' && CC.trainingenKlaarzetten) CC.trainingenKlaarzetten(S, t);
     CC.save(); CC.closeSheet(); CC.render(); CC.toast(`Opgeslagen: ${p.naam.split(' ')[0]} is nu ${rolTekst(S, rol)}`);
   });
   // Besluit 100: werkgebied van een HO of TC aanpassen (bouwen aanvinken; niets aangevinkt = hele club)
@@ -246,12 +247,12 @@
       if (t.teamleiderId === p.id && r.rol === 'teamleider') t.teamleiderId = M.stafVan(S, t.id, ['teamleider']).find((x) => x !== p.id) || null; }
     CC.save(); CC.closeSheet(); CC.render(); CC.toast(`Rol weggehaald bij ${p.naam.split(' ')[0]}`); });
   // Staflid toevoegen (Besluit 42): de club legt trainer of teamleider vast; die logt in met dit e-mailadres en is meteen gekoppeld
-  CC.on('stafNieuw', () => { const S = CC.S(); CC.sheet('Staflid toevoegen', `<form data-submit="stafNieuwOk" class="codeform">
+  CC.on('stafNieuw', (el) => { const S = CC.S(); const voor = el && el.dataset && el.dataset.team; CC.sheet('Staflid toevoegen', `<form data-submit="stafNieuwOk" class="codeform">
       <label for="sn-n">Naam</label><input id="sn-n" name="n" required autocomplete="off" placeholder="Voor- en achternaam">
       <label for="sn-e">E-mailadres</label><input id="sn-e" name="e" type="email" required autocomplete="off" placeholder="Hiermee logt hij of zij in">
       <label for="sn-t">Telefoonnummer (mag leeg)</label><input id="sn-t" name="tel" type="tel" inputmode="tel" autocomplete="off" placeholder="06 12345678">
       <div class="twee"><div><label for="sn-r">Rol</label><select id="sn-r" name="r"><option value="trainer">Trainer</option>${CC.pakketTrainers && CC.pakketTrainers(S) ? '' : '<option value="teamleider">Teamleider</option>'}${S.club.coordinatorAan && !(CC.pakketTrainers && CC.pakketTrainers(S)) ? `<option value="coordinator">${esc(S.club.labels.coordinator)}</option>` : ''}<option value="hjo">${esc(S.club.labels.hjo)}</option><option value="tc">Technisch coördinator</option></select></div>
-      <div><label for="sn-team">Team (niet nodig voor ${esc(S.club.labels.hjo)} of TC)</label><select id="sn-team" name="team">${S.teams.map((t) => `<option value="${t.id}">${esc(t.naam)}</option>`).join('')}${S.club.coordinatorAan ? `<optgroup label="Groep (voor ${esc(S.club.labels.coordinator.toLowerCase())})">${(S.club.groepen || []).map((g) => `<option value="groep:${esc(g.naam)}">${esc(g.naam)}</option>`).join('')}</optgroup>` : ''}</select></div></div>
+      <div><label for="sn-team">Team (niet nodig voor ${esc(S.club.labels.hjo)} of TC)</label><select id="sn-team" name="team">${S.teams.map((t) => `<option value="${t.id}" ${t.id === voor ? 'selected' : ''}>${esc(t.naam)}</option>`).join('')}${S.club.coordinatorAan ? `<optgroup label="Groep (voor ${esc(S.club.labels.coordinator.toLowerCase())})">${(S.club.groepen || []).map((g) => `<option value="groep:${esc(g.naam)}">${esc(g.naam)}</option>`).join('')}</optgroup>` : ''}</select></div></div>
       <button class="knop">Toevoegen en uitnodigen</button>
       <p class="zacht klein">Hij of zij krijgt een welkomstmail met hoe je inlogt. Staat dit e-mailadres al in de club (bijv. als ouder), dan komt de rol erbij.</p></form>`); });
   CC.on('stafNieuwOk', (f) => {
@@ -267,6 +268,7 @@
     p.rollen.push(rol);
     const team = rol.teamId && M.team(S, rol.teamId);
     if (team && r === 'trainer' && !team.trainerId) team.trainerId = p.id; if (team && r === 'teamleider' && !team.teamleiderId) team.teamleiderId = p.id;
+    if (team && r === 'trainer' && CC.trainingenKlaarzetten) CC.trainingenKlaarzetten(S, team);
     const wat = `${CC.rolNaam(rol).toLowerCase()}${team ? ` van ${team.naam}` : rol.groep ? ` ${rol.groep}` : ''}`;
     S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'persoonlijk', welkom: true, bereik: p.naam, onderwerp: `Welkom bij ClubComm`, tekst: `Hoi ${p.naam.split(' ')[0]}! Je bent in ClubComm van ${S.club.naam} toegevoegd als ${wat}.\n\nInloggen: ga naar ${location.host}, vul ${email} in en typ de code van 6 cijfers uit de mail over. Je hoeft je niet aan te melden.\n\nTip: zet ClubComm op je beginscherm (iPhone: Delen → Zet op beginscherm).`, tijd: new Date().toISOString(), ontvangers: [p.id], gelezen: [], antw: [], urgent: false, gepland: null });
     CC.save(); CC.closeSheet(); CC.render();
@@ -317,6 +319,7 @@
         tekst: `Vanaf ${D.lang(vanaf)} traint ${plan.t.naam}:\n${plan.nieuw.map(roosterTekst).map((x) => '• ' + x).join('\n')}\n\nDe planning in ClubComm is al bijgewerkt.`, tijd: new Date().toISOString(), gepland: null, ontvangers: [...new Set([...ouders, ...M.stafVan(S, plan.t.id)])].filter((x) => x !== me.id), gelezen: [], antw: [], urgent: false }); });
     roosterWacht = null; CC.save(); CC.closeSheet(); CC.render(); CC.toast(`Rooster opgeslagen${items.length > 1 ? ` voor ${items.length} teams` : ''} · ${n} ${n === 1 ? 'training' : 'trainingen'} bijgewerkt`);
   };
+  CC.rooster = { plan: roosterPlan, toepassen: roosterToepassen, uitvoeren: roosterUitvoeren }; // Besluit 136 (teamsbeheer.js)
   CC.on('roosterBevestig', () => { const S = CC.S(); const w = roosterWacht; if (!w) return CC.closeSheet(); roosterUitvoeren(S, w.items.map((x) => ({ t: M.team(S, x.tid), nieuw: x.nieuw })), w.vanaf, w.bericht, true); });
   const vanafVeld = (S, standaard) => `<label for="rv-van">Vanaf</label><input id="rv-van" name="vanaf" type="date" min="${D.vandaag()}" max="${S.club.seizoen.eind}" value="${standaard}" required>
     <label class="vink"><input type="checkbox" name="bericht" checked><span>Stuur de ouders een bericht met het nieuwe rooster <small class="zacht">(alleen als er al een rooster was)</small></span></label>`;
@@ -340,6 +343,9 @@
   CC.on('roosterTeamOk', (f) => { const S = CC.S(); const t = M.team(S, f.dataset.team);
     const nieuw = [1, 2, 3, 4, 5, 6, 0].filter((d) => f[`aan-${d}`].checked).map((d) => ({ dag: d, tijd: f[`van-${d}`].value, eind: f[`tot-${d}`].value, veld: f[`veld-${d}`].value.trim() || 'Veld 1' }));
     if (nieuw.some((r) => !r.tijd || !r.eind || r.eind <= r.tijd)) return CC.toast('Controleer de tijden: "tot" moet na "van" liggen', 'fout');
+    // Besluit 136: pakket Trainers begeleiden, team zonder trainer en zonder trainingen: alleen het rooster klaarzetten
+    if (CC.pakketTrainers && CC.pakketTrainers(S) && !t.trainerId && !S.acts.some((a) => a.teamId === t.id && a.soort === 'training')) {
+      t.rooster = nieuw; CC.save(); CC.closeSheet(); CC.render(); return CC.toast('Trainingsdagen klaargezet; de trainingen komen in de kalender zodra er een trainer is'); }
     roosterUitvoeren(S, [{ t, nieuw }], leesVanaf(f), f.bericht.checked); });
   CC.on('excelImport', () => CC.sheet('Importeren uit Excel', `<p>Heb je de veldindeling al in Excel? Sla het blad op als <b>CSV</b> met deze kolommen:</p>
     <pre class="code">team;dag;van;tot;veld\nO10-1;woensdag;17:30;18:45;Veld 2\nO10-1;vrijdag;17:30;18:45;Veld 2\nO12-2;dinsdag;18:00;19:15;Veld 3</pre>

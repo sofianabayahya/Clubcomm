@@ -1483,6 +1483,61 @@ test('trainingsmodule: training op datum zonder planning (pakket Trainers begele
   await controleer(page, fouten, 'training op datum');
 });
 
+// Besluit 136: teams, trainingsdagen, trainer koppelen, wedstrijden plakken en trainingsschema laden (HO, pakket Trainers begeleiden)
+test('teams en trainingsdagen: team, rooster, trainer, wedstrijden plakken en schema laden', async ({ page }) => {
+  const fouten = volgFouten(page);
+  await nepDatabase(page);
+  await page.evaluate(() => { const db = JSON.parse(sessionStorage.getItem('fake-sb-db')); db.rows['dcg|club|club'].data.pakket = 'trainers'; sessionStorage.setItem('fake-sb-db', JSON.stringify(db)); });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await inloggen(page, 'admin@test.nl');
+  await page.evaluate(() => { CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'hjo')); CC.render(); });
+  await page.locator('#app .rij', { hasText: 'Teams, trainingsdagen en wedstrijden' }).click();
+  await expect(page.locator('.tb-teams')).toBeVisible();
+  // Team toevoegen (nog geen trainer) en trainingsdagen: alleen klaarzetten, nog geen trainingen
+  await page.locator('[data-act="teamNieuw"]').click();
+  await page.fill('#tn-n', 'JO16-2 ZO'); await page.locator('#sheet form[data-submit="teamNieuwOk"] button').click();
+  await expect(page.locator('#sheet')).toContainText('Nog geen trainingsdagen');
+  const tid = await page.evaluate(() => CC.S().teams.find((t) => t.naam === 'JO16-2 ZO').id);
+  await page.locator('#sheet [data-act="roosterTeam"]').click();
+  for (const d of [3, 5]) { await page.locator(`#sheet input[name="aan-${d}"]`).check(); await page.fill(`#sheet input[name="van-${d}"]`, '18:15'); await page.fill(`#sheet input[name="tot-${d}"]`, '19:30'); }
+  await page.locator('#sheet form[data-submit="roosterTeamOk"] button.knop').click();
+  expect(await page.evaluate((id) => { const S = CC.S(); return [S.teams.find((t) => t.id === id).rooster.length, S.acts.filter((a) => a.teamId === id).length]; }, tid)).toEqual([2, 0]);
+  // Trainer koppelen: de trainingen komen in de kalender
+  await page.locator('#app [data-act="teamBeheer"]', { hasText: 'JO16-2 ZO' }).click();
+  const trainer = await page.locator('#tb-t option').nth(1).getAttribute('value');
+  await page.locator('#tb-t').selectOption(trainer);
+  await expect.poll(() => page.evaluate((id) => CC.S().acts.filter((a) => a.teamId === id && a.soort === 'training').length, tid)).toBeGreaterThan(5);
+  await expect(page.locator('#sheet')).toContainText('trainingen in de kalender');
+  // Wedstrijden plakken (programma van voetbal.nl, met dubbele regels)
+  const jaar = new Date().getFullYear() + 1;
+  const prog = [`Zondag 1 november ${jaar}`, '9e ronde', 'Swift O16-2', 'Swift O16-2', '10:30', 'Kon. HFC O16-1 (zon)', 'Kon. HFC O16-1 (zon)',
+    `Zondag 22 november ${jaar}`, '12e ronde', "RODA '23 Rksv O16-1", "RODA '23  Rksv O16-1", '10:00', 'Swift O16-2', 'Swift O16-2',
+    `Zondag 22 november ${jaar}`, '12e ronde', "RODA '23 Rksv O16-1", '10:00', 'Swift O16-2'].join('\n');
+  await page.locator('#sheet [data-act="wedPlak"]').click();
+  await page.fill('#wedPlakTekst', prog);
+  await expect(page.locator('#wedPlakVb')).toContainText('Gevonden: 2 wedstrijden');
+  await expect(page.locator('#wedPlakVb')).toContainText('1 dubbel');
+  await page.locator('[data-act="wedPlakOk"]').click();
+  expect(await page.evaluate((id) => CC.S().acts.filter((a) => a.teamId === id && a.soort === 'wedstrijd').map((a) => `${a.tijd}|${a.thuis}|${a.tegen}`), tid)).toEqual(['10:30|true|Kon. HFC O16-1', "10:00|false|RODA '23 Rksv O16-1"]);
+  await page.locator('#sheet [data-act="wedPlak"]').click();
+  await page.fill('#wedPlakTekst', prog);
+  await expect(page.locator('[data-act="wedPlakOk"]')).toBeDisabled();
+  await page.locator('#sheet [data-act="teamBeheer"]').click();
+  await page.evaluate(() => CC.closeSheet());
+  // Trainingsschema laden (geplakt uit Excel): vanaf O14; JO19-ZO3 = JO19-3 ZO; bestaand team met trainer wordt veilig bijgewerkt
+  await page.locator('[data-act="schemaLaden"]').click();
+  await page.fill('#schemaTekst', ['MAANDAG\tVELD 1\tVELD 2', '17:00-17:45\tJO15-1 ZA / JO10-1\tJO16-1 ZA', '17:45-18:15\tJO15-1 ZA\tJO16-1 ZA', 'WOENSDAG\tVELD 1\tVELD 2', '18:15-19:30\tJO16-2 ZO\tJO19-ZO3 (keepers)'].join('\n'));
+  await page.locator('#sc-v').selectOption('14');
+  await expect(page.locator('#schemaVb')).toContainText('4 teams herkend');
+  await expect(page.locator('#schemaVb')).not.toContainText('JO10-1');
+  await expect(page.locator('#schemaVb tr', { hasText: 'JO16-2 ZO' })).toContainText('trainingen worden bijgewerkt');
+  await page.locator('[data-act="schemaOk"]').click();
+  expect(await page.evaluate(() => { const S = CC.S(); const t = (n) => S.teams.find((x) => x.naam === n); return [t('JO15-1 ZA').rooster.map((r) => `${r.dag} ${r.tijd}-${r.eind} ${r.veld}`).join(), !!t('JO19-3 ZO'), S.acts.filter((a) => a.teamId === t('JO15-1 ZA').id).length, S.club.schemaVanaf]; }))
+    .toEqual(['1 17:00-18:15 Veld 1', true, 0, 14]);
+  await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'teams').length).toBeGreaterThanOrEqual(4);
+  await controleer(page, fouten, 'teams en trainingsdagen');
+});
+
 // Besluit 135: volgorde op de laptop, "Je zit in" en weekthema bij een club met het KNVB-profiel (geen periodisering)
 test('trainingsmodule: volgorde, je zit in en weekthema (KNVB-profiel)', async ({ page }) => {
   const fouten = volgFouten(page);
