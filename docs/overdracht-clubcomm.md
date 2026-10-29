@@ -5,12 +5,12 @@
 **Bijgewerkt:** 29-10-2026
 
 ## Stand
-- `main` = `2946205` (#101, Besluit 141). Productie draait die commit (Vercel READY, nagegaan 29-10). Besluit **142** zit in de pull request hieronder; het eerstvolgende vrije nummer daarna is **143**.
+- `main` = `b78b9d8` (#102, Besluit 142). Het eerstvolgende vrije besluitnummer is **143**.
 
 ## Open pull requests
 | PR | Wat | Stand |
 |---|---|---|
-| #102 | Besluit 142: tijdsbalk vóór de training (veldtijd − organisatie = oefentijd, waarschuwing zonder blokkade), branch `bouw/tijdsbalk` | Tests groen; wacht op akkoord |
+| (nieuw) | Fout (S): wedstrijd zonder verzameltijd toonde "Verzamelen undefined" (core, ouder, agenda, teamleider) + test los van de klok, branch `claude/intelligent-cannon-t4430r` | Tests groen (6 + 76); wacht op akkoord |
 
 ## Wacht op akkoord van de gebruiker
 - De gebruiker test zelf week 45 (Lijn → do in Plannen → Week → Lijn). Pas daarna stap 2 (weekevaluatie) en stap 3 (herinnering).

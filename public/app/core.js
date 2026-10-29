@@ -186,7 +186,7 @@
       if (a.afgelast) return 'Afgelast';
       if (a.soort === 'training') return `${a.tijd}–${a.eind} · ${esc(a.veld)}`;
       if (a.soort === 'activiteit') return `${h.verzamelTekst(a) ? `${h.verzamelTekst(a)} · ` : ''}${a.tijd}–${a.eind}${a.plaats ? ' · ' + esc(a.plaats) : ''}`;
-      return `${h.verzamelTekst(a) || `Verzamelen ${a.verzamel}`} · aftrap ${a.tijd}${a.thuis ? ' · ' + esc(a.veld || '') : ''}`;
+      return `${h.verzamelTekst(a) ? `${h.verzamelTekst(a)} · ` : ''}aftrap ${a.tijd}${a.thuis ? ' · ' + esc(a.veld || '') : ''}`;
     },
     datumBlok(a) { const d = D.parse(a.datum); return `<span class="datum ${a.afgelast ? 'afg' : ''}"><small>${D.DAG_KORT[d.getDay()]}</small><b>${d.getDate()}</b><small>${D.MAAND[d.getMonth()]}</small></span>`; },
     reden: (r) => { const f = CC.REDENEN.find((x) => x[0] === r); return f ? icon(f[1]) : icon('ellipsis'); },
