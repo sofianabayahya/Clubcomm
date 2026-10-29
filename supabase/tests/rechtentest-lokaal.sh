@@ -37,5 +37,7 @@ rapport() { local naam="$1"; local uit="$2"; local n; n=$(printf '%s\n' "$uit" |
 rapport "rechten per rol (priv.rechtentest)" "$("${PSQL[@]}" -tAF'|' -c "select wie, test, verwacht, uitkomst, ok from priv.rechtentest()")"
 rapport "clubscheiding" "$("${PSQL[@]}" -tAF'|' -f supabase/tests/lokaal/clubscheiding.sql | grep '|')"
 rapport "vaste regels (RLS, search_path, anon)" "$("${PSQL[@]}" -tAF'|' -f supabase/tests/lokaal/statisch.sql)"
+# Extra controles (bijv. een onderzoek): EXTRA_SQL="supabase/tests/lokaal/onderzoek-begeleiding.sql" npm run test:veilig
+for x in ${EXTRA_SQL:-}; do rapport "extra: $(basename "$x")" "$("${PSQL[@]}" -tAF'|' -f "$x" | grep '|')"; done
 [ "$fout" -eq 0 ] && echo "Alle automatische beveiligingscontroles goed. Privacy (welke gegevens, wie ziet ze, hoe lang) blijft een handmatige stap: zie docs/kaart.md." || echo "Er zijn afwijkingen: niet samenvoegen."
 exit "$fout"

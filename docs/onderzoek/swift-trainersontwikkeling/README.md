@@ -281,7 +281,7 @@ OP 08 is nog niet geschreven. De opleidingsketen (OP 05) noemt periodisering wel
 | R7 | **Scan deel B en niveau** | Scope `trainerdossier` (de begeleider schrijft, de trainer leest). De trainer ziet zijn niveau, zoals jij wilt. | Bestaand; transparant. |
 | R8 | **Inperken wie meeleest** | In `trainerzelf` en `trainerdossier` vervalt *clubbeheerder*. In `trainerzelf` mag de begeleider **alleen lezen**, zodat de reflectie en scan A echt van de trainer blijven. Daarna, als Swift het wil: TC alleen voor de eigen bouw. | Nu leest een clubbeheerder zonder begeleidersrol reflecties en scans, en kan een begeleider de zelfreflectie van een trainer wijzigen. |
 | R9 | **HJO/TJC-bevoegdheid** | HJO = rol `hjo` (bestaat). TJC = rol `tc` met `bouwen` (bestaat, maar wordt nog niet afgedwongen). Bij Swift staat de TC nu als HO met een bouw; dat moet rol `tc` worden. Hoeveel een TJC mag, beslist Swift (§3.7). | Geen nieuwe rollen nodig. |
-| R10 | **Clubscheiding** | Elke regel controleert `club_id = priv.cc_club()`. **Eerst oplossen:** `priv.cc_club()` neemt bij een account in twee clubs een willekeurige club (`limit 1`). Jij zit zelf in DCG en Swift. | Zonder deze oplossing kun je de scheiding voor accounts in meer clubs niet garanderen. |
+| R10 | **Clubscheiding** | Elke regel controleert `club_id = priv.cc_club()`. *Correctie 29-10 (ronde 4):* de eerdere zorg over `limit 1` klopte niet. `auth_uid` is de primaire sleutel van `public.lid`, dus één account hoort bij precies één club (getest, 10/10 goed). Zie `docs/onderzoek/beveiliging-begeleiding.md`. | Blijft vaste controle. |
 
 **Privacy (welke gegevens, wie, hoe lang)**
 - **Gegevens:**
@@ -312,7 +312,7 @@ Wat lokaal getest is, heet nog niet *gecontroleerd op productie*.
 
 | Fase | Wat | Spoor, maat | Hangt af van |
 |---|---|---|---|
-| **0** | Voorwaarden: `priv.cc_club()` bij meer clubs (R10); het profiel veilig leesbaar voor trainers | 3, L | – |
+| **0** | Voorwaarden: herstel eigenaarschap zelfreflectie (zie ronde 4); het profiel veilig leesbaar voor trainers | 3, L | – |
 | **1** | **Swift-profiel v1** uit de documenten: de zes criteria met omschrijving, schaal, teamfuncties, spelprincipes BD 2.4, leerlijnfases 3–5, reflectievragen, niveaus. De open punten uit §3.7 blijven gemarkeerd. | 2 (inhoud), 3 (laden) | vaststelling door Swift (§3.7.1) |
 | **2** | **Ontwerp van de hele begeleidingsroute**: voorbeeldschermen op 390 px en laptop, met de nieuwe criteria en schaal | 3, M (alleen ontwerp) | 1 (woorden) |
 | **3** | **Koppeling training ↔ moment**, delen per training, intrekken, voorfeedback (R1–R5, R8) | 3, L | 0, 2, jouw akkoord op de rechten |
