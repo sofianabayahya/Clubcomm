@@ -527,6 +527,8 @@
     ['type', 'Vormtype', VT.types.map((t) => [t.id, t.naam])],
     ['weer', 'Weerstand', [['zonder', 'zonder'], ['ondertal', 'ondertal'], ['gelijk', 'gelijk'], ['overtal', 'overtal']]],
     ['ld', 'Leerdoel', leerdoelen(S).map((l) => [l.id, l.naam])],
+    // Besluit 137: aanbevolen leerniveau, met 'nog geen' om je vormen snel aan te vullen (alleen als het profiel leerniveaus heeft)
+    ...(niveaus(S).length ? [['niveau', 'Leerniveau', [['zonder', 'nog geen leerniveau'], ...niveaus(S).map((x) => [x.id, x.naam])]]] : []),
     ['tijd', 'Spelers en tijd', [teamGrootte(S) ? ['past', `past bij ${teamGrootte(S)} spelers`] : null, ['kort', '≤ 10 min'], ['keepers', 'met keepers']].filter(Boolean)],
   ];
   const MEER = (S) => [['fase', 'Aanbevolen fase', fasen(S).map((f) => [f.id, f.naam])], ['richting', 'Speelrichting', [['0', 'geen'], ['1', 'één'], ['2', 'twee']]],
@@ -541,6 +543,7 @@
     if (f.kort && !(Number(v.duur) > 0 && Number(v.duur) <= 10)) return false;
     if (f.keepers && !(Number(v.keepersMax) > 0 || Number((v.aantal || {}).keepers) > 0)) return false;
     if (f.fase && v.faseAdvies !== f.fase) return false;
+    if (f.niveau && (f.niveau === 'zonder' ? !!v.niveauAdvies : v.niveauAdvies !== f.niveau)) return false;
     if (f.richting != null && f.richting !== '' && String(v.richting) !== String(f.richting)) return false;
     if (f.omsch && v.omschakeling !== f.omsch) return false;
     if (!zonderPast && f.past && !past(v, teamGrootte(S), null)) return false;
