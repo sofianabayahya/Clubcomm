@@ -118,7 +118,37 @@
           "omschrijving": "Tegenstander beïnvloeden om ruimte, tijd of vervolgvoordeel te creëren.",
           "principe": "Manipuleer → herken reactie → profiteer.",
           "spelersvraag": "Hoe beïnvloed ik mijn tegenstander en krijg ik voordeel?",
-          "technischeOnderbouw": "Balcontrole, binnen-/buitenkant, zool, richtings- en tempowisselingen, schijnbewegingen, stop-start, versnellen en beschermen."
+          "technischeOnderbouw": "Balcontrole, binnen-/buitenkant, zool, richtings- en tempowisselingen, schijnbewegingen, stop-start, versnellen en beschermen.",
+          "vaardigheden": [
+            {
+              "id": "vh-passeren",
+              "naam": "Passeren"
+            },
+            {
+              "id": "vh-dreigen",
+              "naam": "Dreigen"
+            },
+            {
+              "id": "vh-beschermen",
+              "naam": "Beschermen"
+            },
+            {
+              "id": "vh-wegdraaien",
+              "naam": "Wegdraaien"
+            },
+            {
+              "id": "vh-indribbelen",
+              "naam": "Indribbelen"
+            },
+            {
+              "id": "vh-uit-druk-dribbelen",
+              "naam": "Uit druk dribbelen"
+            },
+            {
+              "id": "vh-tegenstander-binden",
+              "naam": "Tegenstander binden"
+            }
+          ]
         },
         {
           "id": "ll-aannemen",
@@ -128,7 +158,25 @@
           "omschrijving": "Het eerste contact helpt de volgende voetbalhandeling.",
           "principe": "Het eerste contact begint met kijken.",
           "spelersvraag": "Helpt mijn eerste contact mijn volgende actie?",
-          "technischeOnderbouw": "Waarnemen: balbaan, drukrichting, vrije ruimte, medespeler en vervolgactie."
+          "technischeOnderbouw": "Waarnemen: balbaan, drukrichting, vrije ruimte, medespeler en vervolgactie.",
+          "vaardigheden": [
+            {
+              "id": "vh-eerste-contact-vooruit",
+              "naam": "Eerste contact vooruit"
+            },
+            {
+              "id": "vh-eerste-contact-van-druk-af",
+              "naam": "Eerste contact van druk af"
+            },
+            {
+              "id": "vh-open-draaien",
+              "naam": "Open draaien"
+            },
+            {
+              "id": "vh-meenemen-uit-druk",
+              "naam": "Meenemen uit druk"
+            }
+          ]
         },
         {
           "id": "ll-passen",
@@ -138,7 +186,37 @@
           "omschrijving": "De pass geeft de volgende speler of het team voordeel.",
           "principe": "Een goede pass bereidt de volgende voetbalhandeling voor.",
           "spelersvraag": "Kan mijn pass de volgende speler voordeel geven?",
-          "technischeOnderbouw": "Positie, moment, richting en snelheid; voet/loop; beide voeten; verschillende afstanden."
+          "technischeOnderbouw": "Positie, moment, richting en snelheid; voet/loop; beide voeten; verschillende afstanden.",
+          "vaardigheden": [
+            {
+              "id": "vh-vooruit-inspelen",
+              "naam": "Vooruit inspelen"
+            },
+            {
+              "id": "vh-in-de-ruimte-spelen",
+              "naam": "In de ruimte spelen"
+            },
+            {
+              "id": "vh-kaatsen",
+              "naam": "Kaatsen"
+            },
+            {
+              "id": "vh-derde-man",
+              "naam": "Derde man"
+            },
+            {
+              "id": "vh-dieptespel",
+              "naam": "Dieptespel"
+            },
+            {
+              "id": "vh-spelverplaatsing",
+              "naam": "Spelverplaatsing"
+            },
+            {
+              "id": "vh-terugleggen",
+              "naam": "Terugleggen"
+            }
+          ]
         },
         {
           "id": "ll-vrijkomen",
@@ -147,7 +225,33 @@
           "kant": "aanval",
           "omschrijving": "Op het juiste moment een bruikbare positie innemen of verlaten.",
           "principe": "Niet bewegen om te bewegen. Bewegen omdat de situatie daarom vraagt.",
-          "spelersvraag": "Wanneer en waar moet ik bewegen?"
+          "spelersvraag": "Wanneer en waar moet ik bewegen?",
+          "vaardigheden": [
+            {
+              "id": "vh-vrijlopen",
+              "naam": "Vrijlopen"
+            },
+            {
+              "id": "vh-vrijmaken-uit-de-dekkingsschaduw",
+              "naam": "Vrijmaken uit de dekkingsschaduw"
+            },
+            {
+              "id": "vh-diepteloop",
+              "naam": "Diepteloop"
+            },
+            {
+              "id": "vh-steun-onder-de-bal",
+              "naam": "Steun onder de bal"
+            },
+            {
+              "id": "vh-doorlopen-na-pass",
+              "naam": "Doorlopen na pass"
+            },
+            {
+              "id": "vh-overlap-en-underlap",
+              "naam": "Overlap en underlap"
+            }
+          ]
         },
         {
           "id": "ll-1v1-verdedigen",
@@ -156,7 +260,37 @@
           "kant": "verdediging",
           "omschrijving": "Mogelijkheden beperken en het moment herkennen om in te grijpen.",
           "principe": "Goed verdedigen begint niet met afpakken, maar met controleren.",
-          "spelersvraag": "Moet ik wachten, vertragen of ingrijpen?"
+          "spelersvraag": "Moet ik wachten, vertragen of ingrijpen?",
+          "vaardigheden": [
+            {
+              "id": "vh-benaderen",
+              "naam": "Benaderen"
+            },
+            {
+              "id": "vh-sturen",
+              "naam": "Sturen"
+            },
+            {
+              "id": "vh-vertragen",
+              "naam": "Vertragen"
+            },
+            {
+              "id": "vh-passlijn-dichtzetten",
+              "naam": "Passlijn dichtzetten"
+            },
+            {
+              "id": "vh-instappen",
+              "naam": "Instappen"
+            },
+            {
+              "id": "vh-onderscheppen",
+              "naam": "Onderscheppen"
+            },
+            {
+              "id": "vh-duel-winnen",
+              "naam": "Duel winnen"
+            }
+          ]
         },
         {
           "id": "ll-6",
@@ -166,10 +300,37 @@
           "omschrijving": "Het scoringsmoment herkennen en een passende oplossing uitvoeren.",
           "principe": "Goed afwerken begint niet bij het schot, maar bij het herkennen van het scoringsmoment.",
           "spelersvraag": "Is dit mijn scoringsmoment en hoe benut ik het?",
-          "noot": "Vaste id 'll-6' (bestond al als lege plek); vastgesteld in het kerndocument van 26-09-2026."
+          "noot": "Vaste id 'll-6' (bestond al als lege plek); vastgesteld in het kerndocument van 26-09-2026.",
+          "vaardigheden": [
+            {
+              "id": "vh-direct-afwerken",
+              "naam": "Direct afwerken"
+            },
+            {
+              "id": "vh-eerste-contact-en-schieten",
+              "naam": "Eerste contact en schieten"
+            },
+            {
+              "id": "vh-1v1-met-de-keeper",
+              "naam": "1v1 met de keeper"
+            },
+            {
+              "id": "vh-teruggelegde-bal-afwerken",
+              "naam": "Teruggelegde bal afwerken"
+            },
+            {
+              "id": "vh-rebound",
+              "naam": "Rebound"
+            },
+            {
+              "id": "vh-extra-pass-naar-een-betere-positie",
+              "naam": "Extra pass naar een betere positie"
+            }
+          ]
         }
       ],
-      "noot": "Waarnemen, kiezen, timing, communicatie en uitvoering zijn kwaliteitsdimensies door alle zes gereedschappen heen; geen extra universele vaardigheden."
+      "noot": "Waarnemen, kiezen, timing, communicatie en uitvoering zijn kwaliteitsdimensies door alle zes gereedschappen heen; geen extra universele vaardigheden.",
+      "vaardighedenNoot": "Startlijst uit de eigen woorden van het kerndocument (Keuze WAT en oplossingen van de acht voetbalproblemen). Concept: de initiatiefnemer vult aan of schrapt."
     },
     "technischeOnderbouw": {
       "status": "eigen",
