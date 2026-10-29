@@ -918,3 +918,19 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .kv-noot { font-size: 14px; color: #8a4b00; margin: 0; }
 .kv-rest .tr-zoek { margin: 4px 0; }
 .kv-onder { margin-top: 10px; }
+/* Besluit 141: Lijn · Plannen · Week · Vormenbank (stap 1) */
+.tr-wk.open { border-bottom: 0; }
+.tr-wdet { display: flex; flex-direction: column; gap: 6px; margin: 0 0 8px 48px; padding: 8px 0 8px 12px; border-left: 2px solid var(--lijn); font-size: 15px; }
+.tr-wdkop { font-size: 14px; margin-top: 4px; }
+.tr-stapknop .tr-bol { flex: none; margin-right: 4px; }
+.tr-stapknop .ic { flex: none; color: var(--zacht); }
+.tr-stap { display: block; margin: 2px 0; font-size: 14px; }
+.tr-toephint { margin-left: 8px; }
+.tr-minuten, .tr-toep { display: flex; flex-direction: column; gap: 4px; margin: 8px 0; padding: 10px 12px; border: 1px solid var(--lijn); border-radius: var(--r-s); }
+.tr-mrij { display: grid; grid-template-columns: 1fr auto; gap: 0 8px; font-size: 15px; }
+.tr-mrij small { grid-column: 1 / -1; font-size: 13px; }
+.tr-toep p { margin: 2px 0; font-size: 16px; }
+.tr-verwacht { margin: 0; padding-left: 18px; font-size: 15px; }
+.tr-beheer small { margin: -4px 0 8px; }
+@media (max-width: 899px) { .tr-wdet { margin-left: 8px; } }
+.tr-uit input::placeholder { color: var(--zacht); font-style: italic; opacity: 1; }

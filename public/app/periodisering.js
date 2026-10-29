@@ -246,7 +246,7 @@
   // Terugdraaien: alleen concepten die niet zijn aangepast (stempel gelijk, niet gegeven); de rest blijft en wordt gemeld
   const terugLijst = (S) => { const l = T().plannen(S).filter((p) => p.bron && p.eigenaar === T().ik()); return { weg: l.filter((p) => p.stempel && p.stempel === stempel(p) && !p.gegeven && !(p.week && p.wedstrijd && (p.wedstrijd.punten || []).some((x) => x.uitkomst))), blijft: l.filter((p) => !(p.stempel && p.stempel === stempel(p)) || p.gegeven) }; };
   CC.on('perTerug', () => { const S = CC.S(); const t = terugLijst(S);
-    CC.sheet('Periodisering terugdraaien', `<p><b>${t.weg.length}</b> concept(en) worden verwijderd: niet aangepast en niet gegeven.</p><p><b>${t.blijft.length}</b> blijven staan, omdat je ze hebt aangepast of gegeven.</p>
+    CC.sheet('Geladen concepten verwijderen', `<p><b>${t.weg.length}</b> concept(en) worden verwijderd: niet aangepast en niet gegeven.</p><p><b>${t.blijft.length}</b> blijven staan, omdat je ze hebt aangepast of gegeven.</p>
       <div class="knoppen"><button class="knop rood" data-act="perTerugOk" ${t.weg.length ? '' : 'disabled'}>Verwijderen</button><button class="knop licht" data-act="sluit">Annuleren</button></div>`); });
   CC.on('perTerugOk', () => { const S = CC.S(); const weg = new Set(terugLijst(S).weg); S.trainingsplannen = T().plannen(S).filter((p) => !weg.has(p)); CC.save(); CC.closeSheet(); CC.render(); CC.toast(`${weg.size} concept(en) verwijderd`); });
   // ---------- Besluit 138: Mijn lijn (één overzicht), vaststellen, afgelaste training ----------
@@ -258,30 +258,62 @@
     if (a.afgelast) return `<span class="tr-bol x" title="${dag}: afgelast">✕<i class="sr">${dag} afgelast</i></span>`;
     const st = p ? CC.trStatusVan(S, p) : null; const k = st === 'gegeven' ? 'gegeven' : st === 'uitgewerkt' ? 'uitgewerkt' : p ? 'gepland' : 'nog niet voorbereid';
     return `<span class="tr-bol ${st || ''}" title="${dag}: ${k}"><i class="sr">${dag} ${k}</i></span>`; };
+  // Stap x van y (Besluit 141): de plaats van deze training in de week, met het leerniveau uit de methodiek
+  CC.trStap = (S, p, a) => { if (!actief(S) || !p || p.week || !a || !a.datum) return ''; const ma = maandag(a.datum);
+    const tr = teamActs(S, p.teamId || a.teamId, ma, D.addDays(ma, 6)).filter((x) => !x.afgelast); const i = tr.findIndex((x) => x.id === a.id); if (i < 0 || tr.length < 2) return '';
+    const n = nv(S, methodiek(S, p).niveaus); return `<small class="tr-stap"><b>Stap ${i + 1} van ${tr.length}</b>${n ? ` · <span class="tr-niv">${esc(n)}</span>` : ''}</small>`; };
+  CC.trMethodiekVan = methodiek;
+  // Minuten van een week (optie A): uitgevoerd in oefenvormen en toegerekend aan een gereedschap (zelfde regels als in Week)
+  const weekMin = (S, ps) => ps.filter((p) => p.gegeven && CC.trMinuten).map((p) => CC.trMinuten(S, p)).reduce((t, m) => { t.vormen += m.vormen; t.open += m.vormenNc; t.gsTotaal += m.gsTotaal; Object.entries(m.gs).forEach(([k, n]) => { t.gs[k] = (t.gs[k] || 0) + n; }); return t; }, { vormen: 0, open: 0, gsTotaal: 0, gs: {} });
+  const LW = () => CC.ui.lijnWeek;
   CC.trMijnLijn = (S) => { const tid = CC.teamId && CC.teamId(); const nu = maandag(D.vandaag());
     // Weken uit de periodisering, aangevuld met weken waarin je zelf een training hebt voorbereid (ook zonder periodisering)
     const wp = mijnWeken(S, tid); const extra = [...new Set(T().plannen(S).filter((p) => !p.week && p.eigenaar === T().ik() && (p.teamId || '') === (tid || '') && T().actVan(S, p).datum).map((p) => maandag(T().actVan(S, p).datum)))]
       .filter((d) => !wp.some((w) => w.datum === d)).map((d) => ({ datum: d, methodiek: null }));
     const weken = wp.concat(extra).sort((x, y) => String(x.datum).localeCompare(String(y.datum)));
-    const geladen = T().plannen(S).some((p) => p.bron && p.eigenaar === T().ik()); const vast = wp.find((w) => w.vastgesteld); const vd = vast && D.parse(vast.vastgesteld);
+    const vast = wp.find((w) => w.vastgesteld); const vd = vast && D.parse(vast.vastgesteld);
+    const openW = LW() !== undefined ? LW() : (weken.find((w) => w.datum === nu) || {}).datum || null;
     const rijen = weken.map((w) => { const acts = teamActs(S, tid, w.datum, D.addDays(w.datum, 6)); const ps = acts.map((a) => T().plan(S, a.id)).filter(Boolean);
       const m = w.methodiek || methodiek(S, ps[0]) || {}; const pr = probleem(S, m.probleem); if (!w.methodiek && !pr && ps[0]) m.probleemTekst = ps[0].thema;
       if (!w.methodiek && ps[0]) { m.hg1 = m.hg1 || T().blokDoel(S, ps[0], 'A'); m.hg2 = m.hg2 || T().blokDoel(S, ps[0], 'B'); } // Leerniveau van de week: van het begin van de eerste training tot het eind van de laatste
       const nl = ps.map((p) => (p.methodiek || {}).niveaus || []).filter((x) => x.length); const niv = nl.length ? [...new Set([nl[0][0], nl[nl.length - 1][nl[nl.length - 1].length - 1]])] : [];
-      const wd = w.wedstrijd && (w.wedstrijd.punten || []); const min = ps.reduce((t, p) => t + uitMin(S, p), 0);
+      const wd = w.wedstrijd && (w.wedstrijd.punten || []); const mn = weekMin(S, ps);
       const ab = [m.hg1 && `A ${T().ldNaam(S, m.hg1)}`, m.hg2 && `B ${T().ldNaam(S, m.hg2)}`].filter(Boolean).join(' · ');
-      const eerste = acts.find((a) => !a.afgelast) || acts[0];
-      return `<button type="button" class="tr-rij tr-wk ${w.datum === nu ? 'aan' : ''}" ${eerste ? `data-act="perNaarWeek" data-id="${esc(eerste.id)}"` : 'disabled'}><span class="tr-code">wk ${D.weeknr(w.datum)}</span>
+      const open = w.datum === openW;
+      return `<button type="button" class="tr-rij tr-wk ${w.datum === nu ? 'aan' : ''} ${open ? 'open' : ''}" data-act="perWeekOpen" data-w="${esc(w.datum)}" aria-expanded="${open}"><span class="tr-code">wk ${D.weeknr(w.datum)}</span>
         <span class="tr-t"><b>${esc(pr ? pr.naam : m.probleemTekst || '—')}</b><small>${esc(ab)}</small>${niv.length ? `<small><span class="tr-niv">${esc(nv(S, niv))}</span></small>` : ''}</span>
-        <span class="tr-wkst">${acts.map((a) => bol(S, a)).join('')}${wd && wd.length ? `<small>W ${wd.filter((x) => x.uitkomst).length}/${wd.length}</small>` : ''}${min ? `<small>${min} min</small>` : ''}</span></button>`; }).join('');
-    return `<div class="kaartje tr-per"><div class="tr-kop"><b>Mijn lijn${weken.length ? ` · ${weken.length} weken` : ''}${vast ? ` <span class="tr-stat v">Vastgesteld ${vd.getDate()} ${D.MAAND[vd.getMonth()]}</span>` : wp.length ? ' <span class="tr-stat g">Concept</span>' : ''}</b>
-      <div class="knoppen"><button class="knop ${wp.length ? 'licht' : ''}" data-act="perLaden">${icon('list-checks')}Periodisering laden…</button>${wp.length ? `<button class="knop licht" data-act="${vast ? 'perConcept' : 'perVast'}">${vast ? 'Weer concept' : 'Vaststellen'}</button>` : ''}${geladen && !vast ? '<button class="knop licht" data-act="perTerug">Terugdraaien…</button>' : ''}</div></div>
-      ${rijen ? `<div class="tr-lijst">${rijen}</div><small class="zacht tr-legenda2"><span class="tr-bol"></span> gepland · <span class="tr-bol uitgewerkt"></span> uitgewerkt · <span class="tr-bol gegeven"></span> gegeven · <span class="tr-bol x">✕</span> afgelast. Tik op een week om te plannen.</small>`
-        : '<small class="zacht">Nog geen periodisering. Laad je planning uit Excel (opslaan als CSV), of vul per training de methodiek in.</small>'}</div>`; };
+        <span class="tr-wkst">${acts.map((a) => bol(S, a)).join('')}${wd && wd.length ? `<small>W ${wd.filter((x) => x.uitkomst).length}/${wd.length}</small>` : ''}${mn.vormen ? `<small>${mn.vormen} min uitgevoerd${mn.open ? ', deels niet gecontroleerd' : ''}</small>` : ''}</span></button>
+        ${open ? weekDetail(S, w, m, acts, mn) : ''}`; }).join('');
+    const kop = `<b>Mijn lijn${weken.length ? ` · ${weken.length} weken` : ''}${vast ? ` <span class="tr-stat v">Vastgelegd ${vd.getDate()} ${D.MAAND[vd.getMonth()]}</span>` : wp.length ? ' <span class="tr-stat g">Concept</span>' : ''}</b>`;
+    return `<div class="kaartje tr-per"><div class="tr-kop">${kop}<div class="knoppen"><button class="knop ${wp.length ? 'licht' : ''}" data-act="perBeheer">${icon('list-checks')}Beheer ▾</button></div></div>
+      ${rijen ? `<div class="tr-lijst">${rijen}</div><small class="zacht tr-legenda2"><span class="tr-bol"></span> gepland · <span class="tr-bol uitgewerkt"></span> uitgewerkt · <span class="tr-bol gegeven"></span> gegeven · <span class="tr-bol x">✕</span> afgelast. Tik op een week voor de opbouw; tik op een training om te plannen.</small>`
+        : '<small class="zacht">Nog geen periodisering. Laad je planning uit Excel via Beheer, of vul per training de methodiek in.</small>'}</div>`; };
+  // Weekdetail: opbouw van de week (training voor training), de wedstrijd en de minuten met hun echte naam
+  const weekDetail = (S, w, m, acts, mn) => { const ond = ondersteunendVan(S, m); const wd = w.wedstrijd && (w.wedstrijd.punten || []); const wa = w.wedstrijd && M.act(S, w.wedstrijd.actId);
+    const stappen = acts.map((a) => { const p = T().plan(S, a.id); const d = D.parse(a.datum); const n = p ? nv(S, methodiek(S, p).niveaus) : '';
+      const st = a.afgelast ? 'afgelast' : p ? ({ gegeven: 'gegeven', uitgewerkt: 'uitgewerkt', gepland: 'gepland' })[CC.trStatusVan(S, p)] : 'nog niet voorbereid';
+            // Besluit 141: zolang er bij een gegeven training oefenvormen zijn zonder echte minuten; verdwijnt vanzelf na controleren
+      const nc = p && p.gegeven && (p.onderdelen || []).some((o) => o.vormId && !o.spacing && o.minUit == null);
+      return `<button type="button" class="tr-rij tr-stapknop" data-act="perNaarWeek" data-id="${esc(a.id)}">${bol(S, a)}<span class="tr-t"><b>${D.DAG_KORT[d.getDay()]} ${d.getDate()} ${D.MAAND[d.getMonth()]}${n ? ` · ${esc(n)}` : ''}</b><small>${esc([p && p.thema, st].filter(Boolean).join(' · '))}</small>${nc ? '<small><span class="tr-stat g tr-nc">Minuten nog niet gecontroleerd</span></small>' : ''}</span>${icon('chevron-right')}</button>`; }).join('');
+    const gs = Object.entries(mn.gs).sort((x, y) => y[1] - x[1]).map(([x, n]) => `${esc(T().ldNaam(S, x) || 'onbekend')} ${n}`).join(' · ');
+    return `<div class="tr-wdet">${ond ? `<small class="zacht">Ondersteunend: ${esc(ond)}</small>` : ''}
+      <b class="tr-wdkop">Opbouw van de week</b>${stappen ? `<div class="tr-lijst">${stappen}</div>` : '<small class="zacht">Geen trainingen in de kalender.</small>'}
+      ${wd && wd.length ? `<small>Wedstrijd${wa ? ` ${D.DAG_KORT[D.parse(wa.datum).getDay()]} ${D.parse(wa.datum).getDate()}` : ''}: ${wd.filter((x) => x.uitkomst).length} van ${wd.length} observatiepunten beoordeeld</small>` : ''}
+      ${mn.vormen ? `<small>Uitgevoerd in oefenvormen: <b>${mn.vormen} min</b>${mn.open ? ` (inclusief ${mn.open} nog niet gecontroleerde minuten)` : ''} · toegerekend aan een gereedschap: <b>${mn.gsTotaal} min</b>${gs ? ` (${gs})` : ''}</small>` : ''}</div>`; };
+  CC.on('perWeekOpen', (el) => { CC.ui.lijnWeek = LW() === el.dataset.w || (LW() === undefined && el.classList.contains('open')) ? null : el.dataset.w; CC.render(); });
+  // Beheer: wat je zelden doet, met wat het echt doet
+  CC.on('perBeheer', () => { const S = CC.S(); const tid = CC.teamId && CC.teamId(); const wp = mijnWeken(S, tid); const vast = wp.find((w) => w.vastgesteld);
+    const geladen = T().plannen(S).some((p) => p.bron && p.eigenaar === T().ik());
+    const rij = (act, tekst, uitleg, extra) => `<button class="knop licht vol" data-act="${act}" ${extra || ''}>${tekst}</button><small class="zacht">${uitleg}</small>`;
+    CC.sheet('Beheer periodisering', `<div class="knoppen kolom tr-beheer">
+      ${rij('perLaden', `${icon('list-checks')}Periodisering laden…`, 'Vult alleen trainingen zonder voorbereiding. Overschrijft nooit iets.')}
+      ${wp.length ? (vast ? rij('perConcept', 'Weer op concept zetten', `Vastgelegd op ${D.kort(vast.vastgesteld)}. Haalt die datum weg; daarna kun je geladen concepten weer verwijderen.`)
+        : rij('perVast', 'Periodeplanning vastleggen', 'Zet de datum van vandaag op de weekplannen. Trainingen worden <b>niet</b> vergrendeld: je kunt elke training blijven aanpassen. Geladen concepten verwijderen kan daarna niet meer.')) : ''}
+      ${geladen && !vast ? rij('perTerug', 'Geladen concepten verwijderen…', 'Alleen concepten die je niet hebt aangepast en die niet zijn gegeven. Je ziet eerst hoeveel.') : ''}</div>`); });
   CC.on('perNaarWeek', (el) => { const g = (CC.ui.seg = CC.ui.seg || {}); g.trSeg = 'plannen'; g.aanwAct = el.dataset.id; CC.render(); window.scrollTo(0, 0); });
-  // Vaststellen: het plan staat vast (geen terugdraaien); per training blijft alles aan te passen
-  CC.on('perVast', () => { const S = CC.S(); const tid = CC.teamId && CC.teamId(); mijnWeken(S, tid).forEach((w) => { w.vastgesteld = D.vandaag(); }); CC.save(); CC.render(); CC.toast('Periodisering vastgesteld'); });
-  CC.on('perConcept', () => { const S = CC.S(); const tid = CC.teamId && CC.teamId(); mijnWeken(S, tid).forEach((w) => { delete w.vastgesteld; }); CC.save(); CC.render(); });
+  // Periodeplanning vastleggen (Besluit 138, naam Besluit 141): datum op de weekplannen; geen verwijderen meer; per training blijft alles aan te passen
+  CC.on('perVast', () => { const S = CC.S(); const tid = CC.teamId && CC.teamId(); mijnWeken(S, tid).forEach((w) => { w.vastgesteld = D.vandaag(); }); CC.save(); CC.closeSheet(); CC.render(); CC.toast('Periodeplanning vastgelegd; trainingen blijven aan te passen'); });
+  CC.on('perConcept', () => { const S = CC.S(); const tid = CC.teamId && CC.teamId(); mijnWeken(S, tid).forEach((w) => { delete w.vastgesteld; }); CC.save(); CC.closeSheet(); CC.render(); });
   // Afgelaste training met een concept: één keer signaleren; jij kiest doorschuiven of laten vervallen
   const afgelast = (S) => { const tid = CC.teamId && CC.teamId(); return T().plannen(S).filter((p) => !p.week && p.eigenaar === T().ik() && p.methodiek && !p.gegeven && !p.afgelastKeuze && (p.teamId || '') === (tid || ''))
     .map((p) => ({ p, a: M.act(S, p.actId) })).filter((x) => x.a && x.a.afgelast).sort((x, y) => x.a.datum.localeCompare(y.a.datum)); };

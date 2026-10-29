@@ -382,8 +382,8 @@
       aanwezigheid(S) {
         if (CC.trainingAan && CC.trainingAan(S)) return CC.trainingTab(S); // Besluit 130: tabblad Training
         const tid = CC.teamId(); const modus = h.segVal('aanwModus', 'opnemen');
-        // Besluit 128: met de module Trainingen ook het segment Vormen (eigen oefenvormen)
-        const segs = [['opnemen', 'Opnemen'], ['overzicht', 'Overzicht'], ...(CC.trainingAan && CC.trainingAan(S) ? [['vormen', 'Vormen']] : [])];
+        // Besluit 128: met de module Trainingen ook het segment Vormenbank (eigen oefenvormen; naam Besluit 141)
+        const segs = [['opnemen', 'Opnemen'], ['overzicht', 'Overzicht'], ...(CC.trainingAan && CC.trainingAan(S) ? [['vormen', 'Vormenbank']] : [])];
         if (modus === 'overzicht') return h.seg('aanwModus', segs, 'opnemen') + CC.overzichtHtml(S, tid);
         if (modus === 'vormen' && segs.length > 2) return h.seg('aanwModus', segs, 'opnemen') + CC.vormenLijst(S);
         const ma = (() => { const d = D.parse(D.vandaag()); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return D.iso(d); })();

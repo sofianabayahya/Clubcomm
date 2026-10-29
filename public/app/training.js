@@ -132,39 +132,75 @@
     const sub = [o.spacing ? (o.naam ? 'spacing' : 'vrij in te vullen') : v ? [typeNaam(typeVan(v)), (CC.weerstand(S, v) || {}).kort].filter(Boolean).join(' · ') : o.blok === 'start' ? 'warming-up · kies een vorm' : 'kies een vorm', variant, o.notitie ? esc(o.notitie) : '', extra].filter(Boolean).join(' · ');
     return `<button type="button" class="tr-rij" data-act="${leegSlot(o) ? 'tpVormKiezen' : 'tpOnderdeel'}" data-id="${a.id}" data-i="${i}" data-drop-i="${i}">${metCode ? `<span class="tr-code">${esc(code(o))}</span>` : ''}${leegSlot(o) ? `<span class="tr-mini leeg">${icon('plus')}</span>` : mini(v, o.spacing)}<span class="tr-t"><b>${esc(naam)}</b><small>${sub}${o.spacing || leegSlot(o) && o.blok === 'start' ? '' : blokChip(S, o)}</small></span><span class="tr-min">${Number(o.min) || 0} min${v && n && !past(v, n, k) && !voorAantal(v, n, k) ? '<span class="st o">aantal</span>' : ''}</span></button>`;
   };
-  const GROEPNAAM = { start: 'Start', P: 'Partij', '': 'Opbouw' };
+  const GROEPNAAM = { start: 'Start', P: 'Toepassing · partij', '': 'Opbouw' };
   // Het midden van Plannen (en de trainingspagina): kop in één regel, opbouw in blokken
   const planMidden = (S, p, a) => {
     const n = aantalSp(S, p, a), k = p.keepers == null || p.keepers === '' ? null : Number(p.keepers); const metCode = (p.onderdelen || []).some((o) => o.blok); const sj = sjablonen(S);
     const duur = a.eind && a.tijd ? Math.round((opTijd(a.datum, a.eind) - opTijd(a.datum, a.tijd)) / 60000) : null;
     const gezien = {};
     const gr = groepen(p).map((g) => { const min = g.items.reduce((t, i) => t + (Number(p.onderdelen[i].min) || 0), 0); const terug = gezien[g.k]; gezien[g.k] = true;
-      const kop = g.k === 'A' || g.k === 'B' ? `<button type="button" class="tr-gkop tr-${g.k}" data-act="tpBlokDoel" data-id="${a.id}" data-b="${g.k}">${g.k}${terug ? ' · terugkeer' : ` · ${blokDoel(S, p, g.k) ? esc(ldNaam(S, blokDoel(S, p, g.k))) : 'kies een leerdoel'} ▾`}</button>` : `<b class="tr-gkop tr-${g.k || 'x'}">${GROEPNAAM[g.k] || 'Opbouw'}</b>`;
+      const kop = g.k === 'A' || g.k === 'B' ? `<button type="button" class="tr-gkop tr-${g.k}" data-act="tpBlokDoel" data-id="${a.id}" data-b="${g.k}">${g.k}${terug ? ' · terugkeer' : ` · ${blokDoel(S, p, g.k) ? esc(ldNaam(S, blokDoel(S, p, g.k))) : 'kies een leerdoel'} ▾`}</button>` : `<b class="tr-gkop tr-${g.k || 'x'}">${GROEPNAAM[g.k] || 'Opbouw'}</b>${g.k === 'P' && blokDoel(S, p, 'A') ? '<small class="zacht tr-toephint">kijk of A en B terugkomen</small>' : ''}`;
       return `<div class="tr-groep"><div class="tr-kop">${kop}<small class="zacht">${min} min</small></div><div class="tr-lijst">${g.items.map((i) => rijHtml(S, p, a, p.onderdelen[i], i, n, k, metCode)).join('')}</div></div>`; }).join('');
     return `<div class="kaartje tr-midden" data-drop-plan="${a.id}">
       <div class="tr-plankop"><div><h2>${esc(dagNaam(a))} · ${esc(p.thema || 'Training')} <button class="icoonknop" data-act="tpKopBewerk" data-id="${a.id}" aria-label="Thema en aantallen aanpassen">${icon('pencil')}</button>${CC.trStatus ? CC.trStatus(S, p) : ''}</h2>
-        <small class="zacht">${[a.tijd ? `${a.tijd}${a.eind ? `–${a.eind}` : ''}` : '', n ? `${n} spelers${p.spelers == null || p.spelers === '' ? (S.pres[a.id] ? ' aanwezig' : ' verwacht') : ''}` : '', k ? `${k} keeper${k === 1 ? '' : 's'}` : '', p.sjabloon ? `sjabloon ${esc((sj.find((x) => x.id === p.sjabloon) || { naam: '' }).naam)}` : ''].filter(Boolean).join(' · ')}</small></div>
+        ${CC.trStap ? CC.trStap(S, p, a) : ''}<small class="zacht">${[a.tijd ? `${a.tijd}${a.eind ? `–${a.eind}` : ''}` : '', n ? `${n} spelers${p.spelers == null || p.spelers === '' ? (S.pres[a.id] ? ' aanwezig' : ' verwacht') : ''}` : '', k ? `${k} keeper${k === 1 ? '' : 's'}` : '', p.sjabloon ? `sjabloon ${esc((sj.find((x) => x.id === p.sjabloon) || { naam: '' }).naam)}` : ''].filter(Boolean).join(' · ')}</small></div>
         <div class="knoppen"><button class="knop licht" data-act="tpKopieNaar" data-id="${a.id}" ${(p.onderdelen || []).length ? '' : 'disabled'}>${icon('repeat')}Kopiëren naar…</button><button class="knop licht" data-act="tpPrint" data-id="${a.id}" ${(p.onderdelen || []).length ? '' : 'disabled'}>${icon('printer')}Printen</button><button class="knop licht" data-act="tpMeer" data-id="${a.id}" aria-label="Meer">⋯</button></div></div>
       ${CC.trMethodiek ? CC.trMethodiek(S, p, a) : ''}
       ${balk(S, p)}
       ${gr || `<p class="zacht">Nog leeg. ${sj.length ? 'Begin met het sjabloon van de club, een eerdere training, of zet' : 'Zet'} vormen en spacing in de volgorde van de training.</p>`}
       ${(p.onderdelen || []).length ? '' : `${sj.map((s) => `<button class="knop vol" data-act="tpSjabloon" data-id="${a.id}" data-s="${esc(s.id)}">${icon('list-checks')}Sjabloon ${esc(s.naam)} (${(s.blokken || []).reduce((t, b) => t + (Number(b.min) || 0), 0) + ((s.overig || {}).min || 0)} min)</button>`).join('')}<button class="knop licht vol" data-act="tpKopie" data-id="${a.id}">${icon('repeat')}Eerdere training overnemen</button>`}
       ${p.overig ? `<button type="button" class="tr-rij tr-overig" data-act="tpOverig" data-id="${a.id}">${metCode ? '<span class="tr-code">·</span>' : ''}<span class="tr-t"><small>${esc(p.overig.naam || 'Ombouw, wissels, afsluiting')}</small></span><span class="tr-min">${Number(p.overig.min) || 0} min</span></button>` : ''}
-      <div class="tr-kop"><div class="knoppen"><button class="knop licht" data-act="tpVormKiezen" data-id="${a.id}">${icon('plus')}Vorm</button><button class="knop licht" data-act="tpSpacing" data-id="${a.id}">${icon('plus')}Spacing</button></div><span class="zacht klein"><b>${totaal(p)}</b>${duur ? ` van ${duur}` : ''} min</span></div>
+      <div class="tr-kop"><div class="knoppen"><button class="knop licht" data-act="tpVormKiezen" data-id="${a.id}">${icon('plus')}Vorm</button><button class="knop licht" data-act="tpSpacing" data-id="${a.id}">${icon('plus')}Spacing</button></div><span class="zacht klein"><b>${totaal(p)}</b>${duur ? ` van ${duur}` : ''} min gepland${(p.onderdelen || []).some((o) => !o.spacing) ? ` · ${(p.onderdelen || []).filter((o) => !o.spacing && o.vormId).length} van ${(p.onderdelen || []).filter((o) => !o.spacing).length} plekken ingevuld` : ''}</span></div>
       ${(p.onderdelen || []).some((o) => o.blok) ? `<small class="zacht">Gestippeld = voorstel. Tik op een regel voor minuten, ${niveaus(S).length ? 'leerniveau' : 'fase'} en variant.</small>` : ''}
     </div>`; };
   // Terugblik: pas na afloop (gegeven, echte minuten, wat anders)
   const terugblik = (S, p, a) => { const uit = p.gegeven ? (p.onderdelen || []).filter((o) => o.vormId && !o.spacing) : [];
     if (!afgelopen(a)) return `<div class="kaartje"><b>Na de training</b><small class="zacht">Hier vul je na afloop in of de training is gegeven, de echte minuten en wat je de volgende keer anders doet${a.eind ? ` (vanaf ${a.eind})` : ''}.</small></div>`;
+    const open = uit.filter((o) => o.minUit == null).length; const onz = uit.filter((o) => minStatus(S, p, o) === 'onzeker').length;
     return `<form class="kaartje codeform" data-autosave="tpTerug" data-id="${a.id}">
       <label class="schakel"><span>Training is gegeven</span><input type="checkbox" name="gegeven" ${p.gegeven ? 'checked' : ''}><i></i></label>
-      ${uit.length ? `<b>Hoeveel minuten echt?</b><small class="zacht">Staat op gepland; pas aan wat anders liep. 0 = niet gedaan.</small>
-        <div class="tr-lijst">${uit.map((o) => { const v = vorm(S, o.vormId); return `<div class="tr-rij tr-uit">${o.blok ? `<span class="tr-code">${esc(code(o))}</span>` : ''}<span class="tr-t"><b>${esc(v ? v.naam : 'Vorm')}</b><small>gepland ${Number(o.min) || 0} min</small></span><input name="uit-${esc(o.id)}" type="number" inputmode="numeric" min="0" max="120" aria-label="Minuten echt: ${esc(v ? v.naam : 'vorm')}" value="${o.minUit != null ? o.minUit : Number(o.min) || 0}"></div>`; }).join('')}</div>` : ''}
+      ${uit.length ? `<div class="tr-kop"><b>Hoeveel minuten echt?</b><span class="tr-stat ${open || onz ? 'g' : 'v'}">${open ? `Nog niet gecontroleerd${open < uit.length ? ` (${open} van ${uit.length})` : ''}` : onz ? 'Niet zeker gecontroleerd' : 'Gecontroleerd'}</span></div>
+        ${onz ? `<small class="zacht">Ingevuld vóór ${ZEKER_TEKST}: toen stonden de geplande minuten vooraf ingevuld. Gelijk aan gepland is daarom niet aantoonbaar gecontroleerd. Een afwijkend getal is wel door jou ingevuld.</small>` : ''}
+        <small class="zacht">Leeg = nog niet gecontroleerd; het grijze getal is gepland. Vul in wat echt liep (0 = niet gedaan)${open ? ', of kies Klopt zoals gepland' : ''}.</small>
+        <div class="tr-lijst">${uit.map((o) => { const v = vorm(S, o.vormId); return `<div class="tr-rij tr-uit">${o.blok ? `<span class="tr-code">${esc(code(o))}</span>` : ''}<span class="tr-t"><b>${esc(v ? v.naam : 'Vorm')}</b><small>gepland ${Number(o.min) || 0} min${o.blok === 'start' ? ' · telt niet voor de leerlijn' : ''}</small></span><input name="uit-${esc(o.id)}" type="number" inputmode="numeric" min="0" max="120" aria-label="Minuten echt: ${esc(v ? v.naam : 'vorm')}" placeholder="${Number(o.min) || 0}" value="${o.minUit != null ? o.minUit : ''}"></div>`; }).join('')}</div>
+        ${open ? `<button type="button" class="knop licht vol" data-act="tpKloptZo" data-id="${esc(a.id)}">${icon('check')}Klopt zoals gepland (${open} ${open === 1 ? 'vorm' : 'vormen'})</button>` : ''}` : ''}
+      ${p.gegeven ? minutenKaart(S, p) : ''}
+      ${toepassing(S, p, a)}
       ${evalKaart(S, p, a)}
       <label for="tp-an">${evVragen(S).length ? 'Wat doen we de volgende keer anders?' : 'Wat doe je de volgende keer anders?'}</label><textarea id="tp-an" name="anders" rows="3" placeholder="${evVragen(S).length ? 'Eén concrete wijziging, bijv. verdediger mag direct druk zetten' : 'Bijv. de 10 en de 6 als neutrale speler'}">${esc(p.anders || '')}</textarea>
       ${evVragen(S).length ? '<small class="zacht">Komt bij de volgende training met hetzelfde probleem als voorstel te staan (niet automatisch doorgevoerd).</small>' : ''}
       ${evalDiep(S, p, a)}
     </form>`; };
+  // Besluit 141: de vier getallen met hun echte betekenis (optie A: de berekening blijft zoals hij was)
+  const minutenKaart = (S, p) => { const m = CC.trMinuten(S, p); const gs = Object.entries(m.gs).sort((x, y) => y[1] - x[1]);
+    const rij = (n, w, ...uitleg) => `<div class="tr-mrij"><span>${n}</span><b>${w}</b>${uitleg.filter(Boolean).map((x) => `<small class="zacht">${x}</small>`).join('')}</div>`;
+    const ingevuld = m.reg + m.regOnzeker; const nc = (x) => (x ? `Inclusief ${x} nog niet gecontroleerde minuten (geteld als gepland)` : '');
+    return `<div class="tr-minuten"><b>Minuten</b>
+      ${rij('Geplande trainingsduur', `${m.gepland} min`)}
+      ${rij('Werkelijke trainingsduur', m.ok || m.onzeker ? `${ingevuld} min ingevuld` : 'nog niet gecontroleerd',
+        m.regOnzeker ? `Waarvan ${m.regOnzeker} min ingevuld vóór ${ZEKER_TEKST}: niet zeker of dat de echte minuten zijn` : '',
+        m.zonderReg > 0 ? `Niet geregistreerd: ${m.zonderReg} van ${m.gepland} geplande min (${m.ok || m.onzeker ? '' : 'oefenvormen, '}start zonder vorm, spacing, ombouw of lege plekken). Dit is dus niet de volledige trainingsduur.` : '')}
+      ${rij('Uitgevoerd in oefenvormen', `${m.vormen} min`, nc(m.vormenNc))}
+      ${rij('Toegerekend aan een gereedschap', `${m.gsTotaal} min`, gs.map(([x, n]) => `${esc(ldNaam(S, x) || 'onbekend')} ${n}`).join(' · '), nc(m.gsNc))}
+      <details class="uitklap"><summary>Wat betekenen deze getallen?</summary>
+        <p class="klein"><b>Geplande trainingsduur:</b> alle plekken en de ombouw samen.</p>
+        <p class="klein"><b>Werkelijke trainingsduur:</b> alleen wat echt is ingevuld. Start, spacing en ombouw horen bij de trainingsduur, maar tellen niet voor de leerlijn; spacing en ombouw vul je niet apart in. Daarom staat erbij hoeveel minuten niet zijn geregistreerd.</p>
+        <p class="klein"><b>Uitgevoerd in oefenvormen:</b> de oefenvormen zonder start en spacing; echte minuten, en waar die nog niet zijn gecontroleerd de geplande. Dit getal staat ook in Lijn.</p>
+        <p class="klein"><b>Toegerekend aan een gereedschap:</b> dezelfde minuten bij het hoofdgereedschap van de vorm (niet van het blok). Een vorm zonder hoofdgereedschap telt hier niet mee.</p>
+        <p class="klein zacht">Minuten zijn een registratie van oefentijd, geen bewijs dat iets is geleerd.</p></details></div>`; };
+  // Besluit 141: Toepassing. De bestaande vraag Transfer naar vrij spel (zelfde antwoord, niet dubbel opgeslagen), bij de partij
+  const TRANSFER = 'ev-transfer';
+  const toepassing = (S, p, a) => { if (!p.gegeven) return ''; const q = evVragen(S).find((x) => x.id === TRANSFER); if (!q) return '';
+    const w = (p.evaluatie || {})[q.id] || null; const m = CC.trMethodiekVan ? CC.trMethodiekVan(S, p) : p.methodiek || {};
+    const partij = (p.onderdelen || []).filter((o) => o.blok === 'P' && o.vormId).map((o) => vorm(S, o.vormId)).filter(Boolean);
+    const verwacht = ['A', 'B'].map((b) => { const ld = blokDoel(S, p, b); const vs = (p.onderdelen || []).filter((o) => blokSoort(o.blok) === b && o.vormId).map((o) => vorm(S, o.vormId)).filter(Boolean);
+      const vh = [...new Set(vs.flatMap((v) => v.vaardigheden || []))].map((x) => vhNaam(S, x)).filter(Boolean);
+      return ld || vh.length ? `<li><b>${b} · ${esc(ldNaam(S, ld) || 'geen gereedschap')}</b>${vh.length ? ` — ${esc(vh.join(', '))}` : ''}</li>` : ''; }).join('');
+    return `<div class="tr-toep"><b>Toepassing${partij.length ? ` · ${esc(partij.map((v) => v.naam).join(', '))}` : ''}</b>
+      <p>Kwam het gewenste gedrag uit de eerdere trainingsblokken terug in het partijspel?</p>
+      ${verwacht ? `<small class="zacht">Verwacht gedrag:</small><ul class="tr-verwacht">${verwacht}</ul>` : ''}${m.gedrag ? `<small class="zacht">Gewenst gedrag van de training: ${esc(m.gedrag)}</small>` : ''}
+      ${partij.length ? '' : '<small class="zacht">Geen partijvorm gebruikt. Beoordeel dan het vrije spel elders in de training.</small>'}
+      <div class="chips">${q.schaal.map((x) => `<button type="button" class="chipknop ${w === x ? 'aan' : ''}" aria-pressed="${w === x}" data-act="tpEval" data-id="${esc(a.id)}" data-q="${esc(q.id)}" data-w="${esc(x)}">${esc(x)}</button>`).join('')}<button type="button" class="chipknop ${w ? '' : 'aan'}" aria-pressed="${!w}" data-act="tpEval" data-id="${esc(a.id)}" data-q="${esc(q.id)}" data-w="">Niet beoordeeld</button></div></div>`; };
   // Evaluatiekaart uit het profiel (kerndocument §14): drie vragen open, de rest onder Verdiepende analyse; alles optioneel
   const evVragen = (S) => (ond(S, 'evaluatie') || {}).vragen || [];
   const EV_OPEN = ['ev-probleem', 'ev-gedrag', 'ev-weerstand'];
@@ -174,9 +210,12 @@
   const evalKaart = (S, p, a) => (p.gegeven ? evVragen(S).filter((q) => EV_OPEN.includes(q.id)).map((q) => evRij(p, a, q)).join('') : '');
   const evalDiep = (S, p, a) => { if (!p.gegeven) return ''; const l = evVragen(S).filter((q) => !EV_OPEN.includes(q.id) && (!q.alleenBijTerugkeer || terugkeer(p)));
     const ingevuld = l.filter((q) => (p.evaluatie || {})[q.id]).length;
-    return l.length ? `<details class="uitklap tr-diep" ${ingevuld ? 'open' : ''}><summary>Verdiepende analyse${ingevuld ? ` (${ingevuld})` : ''}</summary>${l.map((q) => evRij(p, a, q)).join('')}<p></p></details>` : ''; };
+    // Transfer staat bij Toepassing; hier hetzelfde antwoord ter info (één plek om te kiezen)
+    return l.length ? `<details class="uitklap tr-diep" ${ingevuld ? 'open' : ''}><summary>Verdiepende analyse${ingevuld ? ` (${ingevuld})` : ''}</summary>${l.map((q) => (q.id === TRANSFER ? `<div class="tr-ev"><b>${esc(q.vraag)}</b><small>${esc((p.evaluatie || {})[q.id] || 'Niet beoordeeld')} · kies bij Toepassing</small></div>` : evRij(p, a, q))).join('')}<p></p></details>` : ''; };
   CC.on('tpEval', (el) => { const p = plan(CC.S(), el.dataset.id); if (!p) return; p.evaluatie = p.evaluatie || {}; const q = el.dataset.q;
-    p.evaluatie[q] = p.evaluatie[q] === el.dataset.w ? null : el.dataset.w; CC.save(); CC.render(); });
+    const w = el.dataset.w || null; p.evaluatie[q] = w && p.evaluatie[q] !== w ? w : null; CC.save(); CC.render(); });
+  // Klopt zoals gepland: de geplande minuten worden expliciet de echte minuten (alleen wat nog niet gecontroleerd is)
+  CC.on('tpKloptZo', (el) => { const p = plan(CC.S(), el.dataset.id); if (!p) return; (p.onderdelen || []).forEach((o) => { if (o.vormId && !o.spacing && o.minUit == null) o.minUit = Number(o.min) || 0; }); CC.save(); CC.render(); });
   // Trainingspagina (telefoon via ✎, en trainingen op datum): het midden en de terugblik
   CC.views.trainingsplan = (S, prm) => {
     const p = plan(S, prm.id); const a = p ? actVan(S, p) : null;
@@ -350,28 +389,46 @@
   // ---------- Periodisering (Besluit 131): minuten per hoofdleerdoel, uitgevoerd ----------
   // Alleen vormen (geen start, spacing of ombouw); het hoofdleerdoel van de vorm krijgt de minuten, secundaire tellen als "ook geraakt".
   CC.minutenPerLeerdoel = (S, maand) => {
-    const r = { min: {}, ook: {}, gepland: 0, uit: 0, trainingen: 0 };
+    const r = { min: {}, ook: {}, gepland: 0, uit: 0, nc: 0, trainingen: 0 };
     plannen(S).filter((p) => p.eigenaar === ik() && p.gegeven && String(actVan(S, p).datum || '').slice(0, 7) === maand).forEach((p) => { r.trainingen++;
       (p.onderdelen || []).filter((o) => o.vormId && !o.spacing && o.blok !== 'start').forEach((o) => { const v = vorm(S, o.vormId); if (!v) return;
-        const uit = o.minUit != null ? Number(o.minUit) : Number(o.min) || 0; r.gepland += Number(o.min) || 0; r.uit += uit;
+        const uit = o.minUit != null ? Number(o.minUit) : Number(o.min) || 0; r.gepland += Number(o.min) || 0; r.uit += uit; if (minStatus(S, p, o) !== 'ok') r.nc += uit;
         const k = koppeling(S, v); if (k.primair) r.min[k.primair] = (r.min[k.primair] || 0) + uit; if (uit) k.ook.forEach((x) => { r.ook[x] = (r.ook[x] || 0) + 1; }); }); });
     return r;
   };
+  // Besluit 141 (optie A): vier minutengetallen per training, zonder meer zekerheid te suggereren dan er is geregistreerd.
+  // Status van de echte minuten per oefenvorm: 'open' = leeg (nog niet gecontroleerd); 'onzeker' = ingevuld bij een training van vóór
+  // ZEKER_VANAF en gelijk aan gepland (toen vulde het scherm de geplande minuten vooraf in, dus niet aan te tonen); anders 'ok'.
+  // Er wordt niets aan bestaande gegevens veranderd; de berekening (echt, anders gepland) blijft gelijk.
+  const ZEKER_VANAF = '2026-10-30';
+  const minStatus = (S, p, o) => { if (o.minUit == null) return 'open'; const d = String(actVan(S, p).datum || p.datum || '');
+    return d && d < ZEKER_VANAF && Number(o.minUit) === (Number(o.min) || 0) ? 'onzeker' : 'ok'; };
+  CC.trMinuten = (S, p) => { const o = p.onderdelen || [];
+    const r = { gepland: totaal(p), reg: 0, regOnzeker: 0, zonderReg: totaal(p), vormen: 0, vormenNc: 0, gs: {}, gsTotaal: 0, gsNc: 0, open: 0, onzeker: 0, ok: 0 };
+    o.filter((x) => x.vormId && !x.spacing).forEach((x) => { const st = minStatus(S, p, x); r[st]++; if (st === 'open') return;
+      r.zonderReg -= Number(x.min) || 0; if (st === 'ok') r.reg += Number(x.minUit) || 0; else r.regOnzeker += Number(x.minUit) || 0; });
+    if (!p.gegeven) return r;
+    o.filter((x) => x.vormId && !x.spacing && x.blok !== 'start').forEach((x) => { const uit = x.minUit != null ? Number(x.minUit) : Number(x.min) || 0; const nc = minStatus(S, p, x) !== 'ok';
+      r.vormen += uit; if (nc) r.vormenNc += uit;
+      const v = vorm(S, x.vormId); const pr = v && koppeling(S, v).primair; if (pr) { r.gs[pr] = (r.gs[pr] || 0) + uit; r.gsTotaal += uit; if (nc) r.gsNc += uit; } });
+    return r; };
+  CC.trMinStatus = minStatus;
+  const ZEKER_TEKST = (() => { const d = D.parse(ZEKER_VANAF); return `${d.getDate()} ${D.MAAND[d.getMonth()]}`; })();
   const maandBlok = (S, open) => {
     const nu = D.vandaag().slice(0, 7); const r = CC.minutenPerLeerdoel(S, nu); if (!r.trainingen) return '';
     const lds = leerdoelen(S).filter((l) => !String(l.id).startsWith('ld-')); const ids = [...new Set(lds.map((l) => l.id).concat(Object.keys(r.min)))];
     const max = Math.max(1, ...ids.map((x) => r.min[x] || 0)); const ook = Object.entries(r.ook);
-    return `<details class="uitklap tr-maand" ${open ? 'open' : ''}><summary>${D.MAAND[D.parse(`${nu}-01`).getMonth()]}: minuten per hoofdleerdoel</summary>
+    return `<details class="uitklap tr-maand" ${open ? 'open' : ''}><summary>${D.MAAND[D.parse(`${nu}-01`).getMonth()]}: minuten toegerekend aan een gereedschap</summary>
       <div class="tr-mlijst">${ids.sort((x, y) => (r.min[y] || 0) - (r.min[x] || 0)).map((x) => `<div><span>${esc(ldNaam(S, x) || 'Onbekend leerdoel')}</span><i style="width:${Math.max(2, Math.round(((r.min[x] || 0) / max) * 100))}%" class="${r.min[x] ? '' : 'nul'}"></i><b>${r.min[x] || 0} min</b></div>`).join('')}</div>
-      <small class="zacht">${r.trainingen} training${r.trainingen === 1 ? '' : 'en'} gegeven · uitgevoerd ${r.uit} van ${r.gepland} min gepland${ook.length ? ` · ook geraakt: ${ook.map(([x, n]) => `${esc(ldNaam(S, x))} ${n}×`).join(', ')}` : ''}</small></details>`;
+      <small class="zacht">${r.trainingen} training${r.trainingen === 1 ? '' : 'en'} gegeven · uitgevoerd in oefenvormen ${r.uit} van ${r.gepland} min gepland${r.nc ? `, inclusief ${r.nc} nog niet gecontroleerde minuten` : ''}${ook.length ? ` · ook geraakt: ${ook.map(([x, n]) => `${esc(ldNaam(S, x))} ${n}×`).join(', ')}` : ''}</small></details>`;
   };
 
-  // ---------- Tabblad Training (Besluit 130, 132): Week (controleren) · Plannen (laptop) · Vormen · Lijn ----------
+  // ---------- Tabblad Training (Besluit 130, 132, 140): Week (uitvoeren en evalueren) · Plannen (voorbereiden) · Vormenbank (oefenstof) · Lijn (ontwikkeling) ----------
   const groot = () => window.matchMedia && window.matchMedia('(min-width: 900px)').matches;
   CC.trainingTab = (S) => {
     const tid = CC.teamId(); const seg = h.segVal('trSeg', groot() ? 'plannen' : 'week');
     // Besluit 135: op de laptop in de volgorde van het werk (Lijn → Plannen → Week; Vormen = de bibliotheek); de telefoon begint bij Week
-    const kop = h.seg('trSeg', groot() ? [['lijn', 'Lijn'], ['plannen', 'Plannen'], ['week', 'Week'], ['vormen', 'Vormen']] : [['week', 'Week'], ['plannen', 'Plannen'], ['vormen', 'Vormen'], ['lijn', 'Lijn']], groot() ? 'plannen' : 'week');
+    const kop = h.seg('trSeg', groot() ? [['lijn', 'Lijn'], ['plannen', 'Plannen'], ['week', 'Week'], ['vormen', 'Vormenbank']] : [['week', 'Week'], ['plannen', 'Plannen'], ['vormen', 'Vormenbank'], ['lijn', 'Lijn']], groot() ? 'plannen' : 'week');
     if (seg === 'vormen') return kop + CC.vormenLijst(S);
     if (seg === 'lijn') return kop + lijnHtml(S);
     const acts = tid && CC.weekActs ? CC.weekActs(S, tid) : [];
@@ -393,7 +450,7 @@
   const strook = (S, acts, a) => `<div class="weekstrook" role="tablist">${acts.map((x) => { const d = D.parse(x.datum); return `<button role="tab" aria-selected="${x.id === a.id}" class="${x.id === a.id ? 'aan' : ''} ${x.afgelast ? 'afg' : ''} ${x.datum === D.vandaag() ? 'vandaag' : ''} ${plan(S, x.id) ? 'gedaan' : ''}" data-act="seg" data-key="aanwAct" data-val="${x.id}"><small>${D.DAG_KORT[d.getDay()]}</small><b>${d.getDate()}</b><small>${x.soort === 'training' ? 'T' : 'W'}</small></button>`; }).join('')}</div>`;
   // Week: de training om te controleren (code, tekening, naam, minuten); tik = de vorm groot
   const weekKaart = (S, p, a) => { const doelen = blokDoelen(S, p);
-    return `<div class="kaartje tr-weekkaart"><div class="tr-kop"><b>${esc(p.thema || 'Training')} · ${totaal(p)} min</b>${CC.trStatus ? CC.trStatus(S, p) : doelen ? `<small class="zacht">${doelen}</small>` : ''}</div>${CC.trMethodiek ? CC.trMethodiek(S, p, a, true) : ''}${balk(S, p)}
+    return `<div class="kaartje tr-weekkaart"><div class="tr-kop"><b>${esc(p.thema || 'Training')} · ${totaal(p)} min gepland</b>${CC.trStatus ? CC.trStatus(S, p) : doelen ? `<small class="zacht">${doelen}</small>` : ''}</div>${CC.trMethodiek ? CC.trMethodiek(S, p, a, true) : ''}${balk(S, p)}
       ${(p.onderdelen || []).length ? `<div class="tr-lijst">${p.onderdelen.map((o, i) => { const v = o.vormId && vorm(S, o.vormId); const var_ = v && o.variant != null && (v.varianten || [])[o.variant] ? ` · ${esc(v.varianten[o.variant].naam || String.fromCharCode(65 + Number(o.variant)))}` : '';
         return `<button type="button" class="tr-rij tr-wrij" ${v ? `data-act="vormOpen" data-id="${v.id}"` : `data-act="tpOnderdeel" data-id="${a.id}" data-i="${i}"`}>${o.blok ? `<span class="tr-code">${esc(code(o))}</span>` : ''}${leegSlot(o) ? `<span class="tr-mini leeg">${icon('plus')}</span>` : mini(v, o.spacing)}<span class="tr-t"><b>${esc(v ? v.naam : o.spacing ? o.naam || 'Spacing' : o.naam || 'Nog leeg')}${var_}</b></span><span class="tr-min">${Number(o.min) || 0}′</span></button>`; }).join('')}</div>` : '<p class="zacht">Nog geen opbouw.</p>'}
       <div class="knoppen"><button class="knop licht" data-act="open" data-view="trainingsplan" data-id="${esc(a.id)}">${icon('pencil')}Aanpassen</button><button class="knop licht" data-act="tpPrint" data-id="${esc(a.id)}" ${(p.onderdelen || []).length ? '' : 'disabled'}>${icon('printer')}Printen</button></div></div>`; };
@@ -419,7 +476,7 @@
     const l = mijnVormen(S).filter((v) => zoekTreft(S, v, f.q) && (!f.past || !n || past(v, n, null)) && (!doel || koppeling(S, v).primair === doel || koppeling(S, v).ook.includes(doel)) && (!doel || !f.vh || (v.vaardigheden || []).includes(f.vh))).sort((x, y) => x.naam.localeCompare(y.naam));
     return l.length ? l.map((v) => `<div class="tr-bk" draggable="true" data-drag-v="${v.id}"><button type="button" class="tr-bk-t" data-act="vormOpen" data-id="${v.id}">${mini(v)}<span class="tr-t"><b>${esc(v.naam)}</b><small>${[v.duur ? `${v.duur} min` : '', bereik(v.spelersMin, v.spelersMax, 'sp'), ldNaam(S, koppeling(S, v).primair)].filter(Boolean).join(' · ')}</small></span></button><button class="icoonknop" data-act="tpPlaats" data-id="${a.id}" data-v="${v.id}" aria-label="${esc(v.naam)} in de training zetten">${icon('plus')}</button></div>`).join('') : '<p class="zacht klein">Geen vorm gevonden.</p>'; };
   const bankKolom = (S, p, a) => { const f = pf(); const n = aantalSp(S, p, a);
-    return `<div class="kaartje"><b>Mijn vormen</b><input id="planZoek" class="tr-zoek" type="search" placeholder="Zoek een vorm…" aria-label="Zoek een vorm" value="${esc(f.q || '')}">
+    return `<div class="kaartje"><b>Vormenbank</b><input id="planZoek" class="tr-zoek" type="search" placeholder="Zoek een vorm…" aria-label="Zoek een vorm" value="${esc(f.q || '')}">
       <div class="chips">${n ? `<button class="chipknop ${f.past ? 'aan' : ''}" aria-pressed="${!!f.past}" data-act="pfZet" data-k="past">past bij ${n}</button>` : ''}${['A', 'B'].filter((b) => blokDoel(S, p, b)).map((b) => `<button class="chipknop ${f.doel === b ? 'aan' : ''}" aria-pressed="${f.doel === b}" data-act="pfZet" data-k="doel" data-w="${b}">${b} = ${esc(ldNaam(S, blokDoel(S, p, b)))}</button>`).join('')}</div>
       ${f.doel && vaardigheden(S, blokDoel(S, p, f.doel)).length ? `<div class="chips tr-vh">${vaardigheden(S, blokDoel(S, p, f.doel)).map((x) => `<button class="chipknop ${f.vh === x.id ? 'aan' : ''}" aria-pressed="${f.vh === x.id}" data-act="pfZet" data-k="vh" data-w="${esc(x.id)}">${esc(x.naam)}</button>`).join('')}</div>` : ''}
       <div id="planBank" data-id="${a.id}">${bankLijst(S, p, a)}</div><small class="zacht">${groot() ? 'Sleep een vorm naar een plek, of tik op +' : 'Tik op +'} (komt op de eerste passende lege plek).</small>
@@ -534,7 +591,7 @@
     if (!lds.length) return `${CC.trWeekthema ? CC.trWeekthema(S) : ''}${h.leeg('Er staan nog geen leerdoelen in het opleidingsprofiel van de club. Daarom zie je hier nog geen minuten per leerdoel; het weekthema kun je al gebruiken.', 'list-checks')}`;
     // Besluit 138: bij de methodiek (DCG) één overzicht; de minuten van deze maand ingeklapt eronder (alleen als er iets gegeven is)
     if (methodiekActief(S) && CC.trMijnLijn) return `${CC.trMijnLijn(S)}${maandBlok(S, false)}`;
-    return `${CC.trWeekthema ? CC.trWeekthema(S) : ''}<div class="kaartje tr-lijn"><b>Opleidingslijn · minuten per hoofdleerdoel</b><small class="zacht">Vet = uitgevoerd (training gegeven), grijs = alleen gepland. Rood = dit leerdoel kwam de afgelopen 4 weken niet aan bod.</small>
+    return `${CC.trWeekthema ? CC.trWeekthema(S) : ''}<div class="kaartje tr-lijn"><b>Opleidingslijn · minuten toegerekend aan een gereedschap</b><small class="zacht">Per oefenvorm (zonder start en spacing) bij het hoofdgereedschap van de vorm. Vet = uitgevoerd (training gegeven; echte minuten, anders gepland: inclusief nog niet gecontroleerde minuten), grijs = alleen gepland. Rood = dit leerdoel kwam de afgelopen 4 weken niet aan bod.</small>
       <div class="tr-tabel"><table><thead><tr><th>Leerdoel</th>${weken.map((w) => `<th class="${w === nu ? 'nu' : ''}">wk ${D.weeknr(w)}</th>`).join('')}</tr></thead><tbody>
       ${lds.map((l) => { const vier = weken.slice(3, 7).some((w) => (cel[`${w}|${l.id}`] || {}).u || (cel[`${w}|${l.id}`] || {}).g);
         return `<tr><th class="${vier ? '' : 'rood'}">${esc(l.naam)}</th>${weken.map((w) => { const c = cel[`${w}|${l.id}`]; return `<td class="${w === nu ? 'nu' : ''}">${c ? (c.uit ? `<b>${c.u}</b>` : `<span class="zacht">${c.g}</span>`) : ''}</td>`; }).join('')}</tr>`; }).join('')}
@@ -542,7 +599,7 @@
       <div class="kaartje"><b>Per week</b><div class="tr-lijst">${weken.slice().reverse().filter((w) => perWeek[w]).map((w) => `<div class="tr-rij tr-uit"><span class="tr-t"><b>Week ${D.weeknr(w)}</b><small>${perWeek[w].sort((x, y) => String(actVan(S, x).datum).localeCompare(String(actVan(S, y).datum))).map((p) => `${esc(dagNaam(actVan(S, p)))}: ${esc(p.thema || 'training')}${blokDoelen(S, p) ? ` (${blokDoelen(S, p)})` : ''}${p.gegeven ? ' ✓' : ''}`).join(' · ')}</small></span></div>`).join('') || '<p class="zacht">Nog geen trainingen in deze weken.</p>'}</div></div>
       ${maandBlok(S, true)}`; };
 
-  // ---------- Mijn vormen (Training → Vormen): zoeken en filters die je kunt combineren ----------
+  // ---------- Vormenbank (Training → Vormenbank, Besluit 141): zoeken en filters die je kunt combineren ----------
   const vf = () => CC.ui.vf || (CC.ui.vf = {});
   const teamGrootte = (S) => { const tid = CC.teamId && CC.teamId(); return tid ? M.spelers(S, tid).length : 0; };
   const FILTERS = (S) => [
@@ -668,7 +725,7 @@
   CC.views.vorm = (S, prm) => {
     const v = vorm(S, prm.id); if (!v || v.weg) return { titel: 'Vorm', html: h.leeg('Deze vorm bestaat niet meer.') };
     const num = (w) => (w == null ? '' : w);
-    return { titel: esc(v.naam), sub: 'Mijn vormen', breed: true, html: `
+    return { titel: esc(v.naam), sub: 'Vormenbank', breed: true, html: `
       <div class="tr-lay tr-vorm">
       <div class="tr-kol tr-a">
         <div class="tr-groot">${v.tekening ? tekening(v.tekening) : `<div class="leeg">${icon('pencil')}<p>Nog geen tekening</p></div>`}</div>
