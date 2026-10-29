@@ -1031,6 +1031,44 @@ test.describe('Kleine club (echte versie, nagebootste database)', () => {
     await expect(page.locator('#app [data-act="begelZelf"]')).toHaveCount(1);
   });
 
+  // Besluit 140: welkomst bij pakket Trainers begeleiden: de bedoeling en de functie van de HO in de mail; WhatsApp-seintje nu en later opnieuw
+  test('trainer uitnodigen (pakket Trainers begeleiden): welkomstmail met de bedoeling, WhatsApp nu en later', { tag: ['@kleineclub', '@begeleiden'] }, async ({ page }) => {
+    const fouten = volgFouten(page);
+    await nepDatabase(page);
+    await page.evaluate(() => {
+      const S = kleineClub(CC); S.club.pakket = 'trainers'; S.club.coordinatorAan = false; S.club.naam = 'Testclub'; S.club.labels = { ...S.club.labels, hjo: 'HO' }; S.players = [];
+      S.teams = [{ id: 'O15-2', naam: 'JO15-1 ZO', cat: 'O15', type: 'selectie', rooster: [], afwijking: {}, trainerId: null, teamleiderId: null }];
+      S.people = [{ id: 'p-ho', naam: 'Hanna Oost', email: 'ho@test.nl', tel: '', rollen: [{ rol: 'hjo' }, { rol: 'beheerder' }] }];
+      const rows = {}; CC.naarRijen(S, 'dcg').forEach((r) => { rows[`dcg|${r.soort}|${r.id}`] = r; });
+      sessionStorage.setItem('fake-sb-db', JSON.stringify({ rows, lid: {}, user: null }));
+    });
+    await inloggen(page, 'ho@test.nl');
+    await page.evaluate(() => { CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'hjo')); window.gedeeld = []; navigator.share = async (d) => { window.gedeeld.push(d.text); }; CC.open('teamsBeheer'); });
+    await page.locator('#app [data-act="stafNieuw"]').first().click();
+    await page.fill('#sn-n', 'Casper Jansen'); await page.fill('#sn-e', 'casper@test.nl'); await page.fill('#sn-f', 'HJO bovenbouw');
+    if (process.env.SHOTS) { await page.setViewportSize({ width: 390, height: 844 }); await page.waitForTimeout(300); await page.screenshot({ path: `${process.env.SHOTS}/w1-toevoegen.png` }); }
+    await page.locator('#sheet form[data-submit="stafNieuwOk"] button').click();
+    const welkom = await page.evaluate(() => CC.S().msgs.find((m) => m.welkom));
+    expect(welkom.onderwerp).toBe('Welkom bij ClubComm – Testclub');
+    for (const x of ['Hanna Oost, HJO bovenbouw, heeft je toegevoegd als trainer van JO15-1 ZO', 'ontwikkelen, niet om beoordelen', 'je begeleiders (HO en TC) en de clubbeheerder', 'Vul casper@test.nl in', 'HJO bovenbouw Testclub']) expect(welkom.tekst).toContain(x);
+    await page.locator('#sheet [data-act="stafDeel"]').click();
+    await expect.poll(() => page.evaluate(() => window.gedeeld.length)).toBe(1);
+    const nu = await page.evaluate(() => window.gedeeld[0]);
+    if (process.env.SHOTS) { await page.evaluate(() => { CC.closeSheet(); const m = CC.S().msgs.find((x) => x.welkom); CC.sheet(m.onderwerp, `<div style="white-space:pre-wrap;font-size:16px">${CC.esc(m.tekst)}</div>`, { groot: true }); }); await page.waitForTimeout(300); await page.screenshot({ path: `${process.env.SHOTS}/w2-mail.png`, fullPage: true }); }
+    expect(nu).toContain('Je krijgt zo een mail van ClubComm'); expect(nu).toContain('casper@test.nl'); expect(nu).toContain('Groet, Hanna (HJO bovenbouw)');
+    // Later opnieuw: vanuit de trainerkaart
+    await page.evaluate(() => { CC.closeSheet(); const b = document.createElement('button'); b.dataset.act = 'trainerKaart'; b.dataset.id = CC.S().people.find((x) => x.email === 'casper@test.nl').id; document.body.appendChild(b); b.click(); b.remove(); });
+    if (process.env.SHOTS) { await page.waitForTimeout(300); await page.screenshot({ path: `${process.env.SHOTS}/w3-trainerkaart.png` }); }
+    await page.locator('#sheet [data-act="stafDeel"]').click();
+    await expect.poll(() => page.evaluate(() => window.gedeeld.length)).toBe(2);
+    expect(await page.evaluate(() => window.gedeeld[1])).toContain('Je hebt er een mail over gekregen');
+    // De functie onthoudt dit toestel voor de volgende keer
+    await page.evaluate(() => { CC.closeSheet(); CC.ui.functie = null; });
+    await page.locator('#app [data-act="stafNieuw"]').first().click();
+    await expect(page.locator('#sn-f')).toHaveValue('HJO bovenbouw');
+    await controleer(page, fouten, 'trainer uitnodigen');
+  });
+
   // Besluit 92: oefenwedstrijd uit, met verzamelen, verzamelpunt en adres; ouder ziet het op het kaartje, in het bericht en bij Vervoer
   test('trainer plant een oefenwedstrijd uit; ouder ziet adres en vervoer', { tag: ['@kleineclub', '@rooster'] }, async ({ page }) => {
     const fouten = volgFouten(page);
