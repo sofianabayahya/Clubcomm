@@ -1,0 +1,22 @@
+# ClubComm — zware beveiligingscontrole (maat L): rechten per rol, clubscheiding en vaste regels op een TIJDELIJKE lokale database.
+# Draait vanzelf bij een pull request die de database-opbouw of de gegevenslaag raakt, en met de hand (Actions → Beveiliging → Run).
+# Maakt nooit verbinding met de echte database: geen geheimen, alleen een socket in een tijdelijke map (zie supabase/tests/rechtentest-lokaal.sh).
+name: Beveiliging
+on:
+  pull_request:
+    paths:
+      - 'supabase/migrations/**'
+      - 'supabase/tests/**'
+      - 'public/app/opslag.js'
+      - 'public/app/live.js'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  rechten:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - run: ls -d /usr/lib/postgresql/*/bin
+      - run: bash supabase/tests/rechtentest-lokaal.sh

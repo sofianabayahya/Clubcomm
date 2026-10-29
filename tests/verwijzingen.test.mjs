@@ -1,4 +1,5 @@
 // Controle: verwijzingen naar bestanden en mappen in de documentatie en tests bestaan echt (na het hernoemen van een map, 29-10).
+// Telt ook nieuwe bestanden die nog niet in git staan (anders mist een lokale run wat GitHub wel ziet).
 // Telt alleen paden tussen `backticks` die beginnen met docs/, supabase/, public/, tests/ of .claude/, plus vaste paden met path.join(__dirname, …) in scripts en tests.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -7,7 +8,7 @@ import path from 'node:path';
 import { execSync } from 'node:child_process';
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
-const bestanden = execSync('git ls-files', { cwd: root }).toString().split('\n').filter((f) => /\.(md|js|mjs|sql)$/.test(f) && !f.startsWith('node_modules/'));
+const bestanden = execSync('git ls-files --cached --others --exclude-standard', { cwd: root }).toString().split('\n').filter((f) => /\.(md|js|mjs|sql)$/.test(f) && !f.startsWith('node_modules/'));
 // Bewust geen controle: paden met een patroon of opvulling, uitvoer die niet in git staat, en verwijzingen naar wat er vroeger was (historisch)
 const overslaan = (p) => /[*…{}<>$]|\.\.\.|\bX\b/.test(p) || p.startsWith('docs/presentaties/uit');
 const historisch = (regel) => /tot 29-10|heette tot|Hernoemd naar|vroeger|vervallen|verwijderd|niet gemaakt|gebouwd als/i.test(regel);
