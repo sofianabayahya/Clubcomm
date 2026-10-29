@@ -2,7 +2,12 @@
 
 *Deze map heette tot 29-10-2026 `docs/methodiek/dcg/`. Zie `docs/sporen.md` (Spoor 1).*
 
-**Let op: dit is de persoonlijke voetbalmethodiek van de initiatiefnemer** (AZ, Ajax, KNVB, VC4/UEFA A Youth, eigen ervaring). DCG O13 is nu de oefenomgeving. Technisch staat de methodiek in het **DCG-clubprofiel** (id `dcg`), tot een apart besluit over een persoonlijk trainersprofiel. Deze inhoud gaat **nooit vanzelf** naar AVV Swift of een andere club. Andere clubs die ClubComm afnemen volgen de visie van de KNVB (standaardprofiel `supabase/profielen/knvb-*.json`). Niets hieruit hoort in de code of in de standaard; het komt alleen in het **DCG-opleidingsprofiel** (Besluit 121 en 123: methodiek als gegevens per club).
+**Let op: dit is de persoonlijke voetbalmethodiek van de initiatiefnemer** (AZ, Ajax, KNVB, VC4/UEFA A Youth, eigen ervaring). DCG O13 is nu de oefenomgeving. Technisch staat de methodiek in het **DCG-clubprofiel** (id `dcg`), tot een apart besluit over een persoonlijk trainersprofiel. Deze inhoud gaat **nooit vanzelf** naar AVV Swift of een andere club. Elke club kiest in ClubComm haar eigen opleidingsmethodiek. ClubComm ondersteunt drie mogelijkheden (Besluit 123, `modus` in het profiel):
+1. **KNVB-standaard** (`standaard`; bestand `supabase/profielen/knvb-*.json`);
+2. **KNVB met clubspecifieke aanvullingen** (`afgeleid`);
+3. **een volledig eigen opleidingsmethodiek** (`eigen`).
+
+De persoonlijke methodiek wordt **nooit automatisch overgenomen** in het profiel van een andere club, ook niet als aanvulling. Niets hieruit hoort in de code of in de KNVB-standaard; het staat alleen in het **DCG-opleidingsprofiel** (Besluit 121 en 123: methodiek als gegevens per club).
 
 | Bestand | Inhoud | Rol |
 |---|---|---|

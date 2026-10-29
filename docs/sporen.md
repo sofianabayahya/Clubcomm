@@ -53,7 +53,7 @@
 
 **Doel en afbakening**
 - De jeugdmethodiek van AVV Swift: KNVB-visie plus het jeugdbeleidsplan van de club. Focus O14–O19.
-- De gebruiker is daar HJO bovenbouw.
+- De gebruiker is daar **HJO bovenbouw** (inhoudelijke functie). Zijn technische rollen in ClubComm (HO, clubbeheerder) zijn iets anders.
 - **Geen DCG-inhoud** gebruiken zonder uitdrukkelijke toestemming.
 
 **Leidende documentatie**

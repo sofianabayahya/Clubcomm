@@ -11,6 +11,8 @@
 | **3. Opleidingsprofiel** | De voetbalinhoud: visie, leerlijnen, voetbalproblemen, leerniveaus, sjablonen, weekformat. | De eigenaar van de methodiek (Spoor 1, Spoor 2 of de KNVB-standaard) | Database, soort `profiel`; bron en opbouw in `supabase/profielen/` |
 | **4. Trainer** | Eigen vormen, trainingen, evaluaties, traject en ontwikkeling. | De trainer zelf (de begeleider kijkt mee volgens de rechten) | `S.vormen`, `S.trainingsplannen` (scope `eigen`), traject en dossier (scopes `trainerzelf`, `trainerdossier`) |
 
+Een club kiest in laag 3 uit drie mogelijkheden (`modus` in het profiel, Besluit 123): de **KNVB-standaard** (`standaard`), de **KNVB met clubspecifieke aanvullingen** (`afgeleid`) of een **volledig eigen opleidingsmethodiek** (`eigen`). De persoonlijke methodiek (Spoor 1) wordt nooit automatisch overgenomen.
+
 Elke laag gebruikt alleen de laag erboven, nooit andersom:
 - het profiel kent geen schermen;
 - de code kent geen methodiek;

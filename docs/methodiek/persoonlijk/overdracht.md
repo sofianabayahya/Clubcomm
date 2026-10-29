@@ -12,7 +12,7 @@
 
 ## Waar gaat deze chat over
 - **Inhoud van DCG:** kerndocument, profiel v3, periodisering (Excel → CSV), straks oefenvormen en tekeningen.
-- **Alleen deze methodiek.** AVV Swift heeft een eigen spoor (Spoor 2: KNVB en het jeugdbeleidsplan); andere clubs volgen de KNVB-standaard (Spoor 3).
+- **Alleen deze methodiek.** AVV Swift heeft een eigen spoor (Spoor 2: KNVB en het jeugdbeleidsplan); andere clubs kiezen de KNVB-standaard, de KNVB met eigen aanvullingen of een volledig eigen methodiek (Spoor 3). De persoonlijke methodiek wordt nooit automatisch overgenomen.
 - **Het kerndocument van 26-09-2026 is leidend** (`01-kerndocument-v1.0.md`). Excel blijft het inhoudelijke document (uitgewerkt met ChatGPT); CSV met puntkomma's is alleen het invoerformaat.
 
 ## Wat er al is
