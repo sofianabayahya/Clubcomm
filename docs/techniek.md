@@ -2,6 +2,7 @@
 
 ## Onderdelen
 - **App**: `public/` (dezelfde schermen als de demo). Online via Vercel: https://mijnclubcomm.nl (project `clubcomm`, map `public`; domein bij Hostnet: A-record @ → 76.76.21.21, CNAME www → cname.vercel-dns.com; www stuurt door). Het oude adres https://clubcomm-nine.vercel.app werkt ook.
+- **Publiceren (vastgesteld 29-10, gecontroleerd in Vercel):** Vercel is gekoppeld aan GitHub. **Elke push naar `main` (dus elk samengevoegd pull request) gaat binnen een halve minuut vanzelf naar productie** (mijnclubcomm.nl), ook als alleen documenten veranderen (dan krijgt de app alleen een nieuw versienummer en ververst hij één keer). Een push naar een andere branch maakt alleen een voorbeeldversie (*preview*, achter de Vercel-login), nooit productie. Dus: **samenvoegen met `main` = publiceren**, en dat gebeurt alleen na akkoord van de gebruiker. Nooit `create_deployment` met target production voor een werkbranch; `create_deployment` alleen om `main` opnieuw te publiceren (bijvoorbeeld bij herstel). Na elke samenvoeging met `list_deployments` nagaan dat productie de commit van `main` draait.
 - **Database en inloggen**: Supabase-project `ClubComm` (regio Frankfurt, EU). Club-id `dcg` (club DCG).
 - **Demo**: online alleen `mijnclubcomm.nl/demo`, op uitnodiging (Besluit 89). Met `?demo` achter het adres draait de demo alleen nog op de eigen computer (localhost).
 

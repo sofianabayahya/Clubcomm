@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 29 oktober 2026 (t/m Besluit 138)
+Laatst bijgewerkt: 29 oktober 2026 (t/m Besluit 139)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -11,6 +11,7 @@ Laatst bijgewerkt: 29 oktober 2026 (t/m Besluit 138)
 - **Ideeën en open vragen** staan onderaan bij *Later / ideeën* en *Nog te bespreken*, elk met een status. Wordt een idee een besluit of afgewezen, dan verhuist het.
 - **Volgorde in dit bestand:** eerst de ontwerpprincipes en de basis (Besluit 1 t/m 13 en 16), daarna van nieuw naar oud (95, 94, … 14). Het register hierboven staat altijd op nummer.
 - **Voorstellen** (nog geen besluit) staan in `docs/onderzoek/`.
+- **Gericht lezen (29-10):** dit bestand blijft de enige bron van waarheid, maar wordt niet bij elke opdracht helemaal gelezen. Begin bij `docs/kaart.md` (welke besluiten bij welk onderwerp), zoek dan op `## Besluit N` en op een zoekwoord, en zoek altijd een zoekwoord in *Afgewezen ideeën*. Lees het hele Register en de geraakte besluiten bij een nieuw besluit, nieuwe functionaliteit of een wijziging die meer modules raakt. Borgen gebeurt naar de maat van de opdracht (S, M, L in `CLAUDE.md`): een kleine aanpassing (S) krijgt geen besluit.
 - **Drie sporen (29-10):** alleen Spoor 3 (ClubComm) geeft een besluitnummer en werkt dit register bij. Spoor 1 (persoonlijk) en Spoor 2 (Swift) schrijven *"Voorstel Spoor X — …"* in hun eigen map (`docs/methodiek/…`). Het eerstvolgende vrije nummer kies je pas vlak voor het opslaan.
 
 ## Register
@@ -20,7 +21,8 @@ Laatst bijgewerkt: 29 oktober 2026 (t/m Besluit 138)
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
-| 138 | 1 · 3 | Tabblad Training bij de DCG-methodiek: *Mijn lijn* als één overzicht per week (bolletjes per training, leerniveau begin → eind, uitgevoerde minuten), vaststellen, afgelaste training één keer signaleren (doorschuiven of laten vervallen), titel = hoofdthema, vaardigheden per gereedschap (profiel), lege plek opent *Vorm kiezen* gefilterd op gereedschap, vaardigheid en aantal spelers | ✅ geldt |  |
+| 139 | 3 | Eén oefenvormkiezer voor elke club: dezelfde bediening, inhoud uit het profiel (gereedschap, vaardigheid, leerniveau alleen als het profiel ze heeft); compacte regel per vorm met redenen, meer achter ⓘ; niets uitgesloten (past het best · past deels · alle andere); *Ongedaan maken* na het plaatsen; leerniveau bij een vorm alleen ter informatie (nooit oranje of lager) | ✅ geldt |  |
+| 138 | 1 · 3 | Tabblad Training bij de DCG-methodiek: *Mijn lijn* als één overzicht per week (bolletjes per training, leerniveau begin → eind, uitgevoerde minuten), vaststellen, afgelaste training één keer signaleren (doorschuiven of laten vervallen), titel = hoofdthema, vaardigheden per gereedschap (profiel), lege plek opent *Vorm kiezen* gefilterd op gereedschap, vaardigheid en aantal spelers | ◐ deels herzien | door 139 (één oefenvormkiezer voor elke club; geen knop *past bij*, niets uitgesloten) |
 | 137 | 1 · 3 | DCG-periodisering O13 invoeren: kolommen van het Excel-spoorboekje werken direct; hoofdthema, teamfunctie en ondersteunend gereedschap erbij (in de onderbouwing); contrathema gekoppeld aan één probleem (+ eventueel een ondersteunend) met behoud van de eigen tekst, nooit op losse woorden; handelingsketen vrije tekst; contra telt niet mee in de minuten | ✅ geldt |  |
 | 136 | 3 | Teams, trainingsdagen en wedstrijden zelf beheren (clubbeheerder en HO): team toevoegen, trainer koppelen, trainingen pas in de kalender als er een trainer is, wedstrijden plakken van voetbal.nl, trainingsschema laden (vanaf een gekozen leeftijd) | ✅ geldt |  |
 | 135 | 3 | Tabblad Training in de volgorde van het werk (laptop: Lijn · Plannen · Week · Vormen), regel *Je zit in* (week, thema, A/B; tik = Lijn), geen dubbelingen (maandoverzicht alleen in Lijn, evalueren in Week), weekthema met A/B voor clubs zonder periodisering | ◐ deels herzien | door 138 (Lijn bij de DCG-methodiek: één overzicht) |
@@ -675,7 +677,25 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 139 — Eén oefenvormkiezer voor elke club (Spoor 3)
+*Besloten 29 oktober 2026, na het voorbeeld op 390 px. Vervangt de drie manieren van kiezen: *Vorm kiezen* van de DCG-methodiek (Besluit 138), de eenvoudige lijst voor andere clubs, en het voorstel uit PR #92 (dat nooit is samengevoegd). Uitgangspunt: consistente bediening, profielafhankelijke inhoud (`docs/architectuur.md`).*
+- **Eén venster, twee tikken.** Een lege plek aantikken opent *Kies oefenvorm · [plek]*, bij elke club (ook zonder methodiek). Een vorm aantikken zet hem op de plek. Ook *+ Vorm* en *Kies een vorm* in het venster van een plek openen dit venster.
+- **Compact.** Per vorm één regel: tekening, naam en in één regel waarom hij past (✓) of minder past (oranje, vooraan). Meer staat achter **ⓘ**: soort, aantallen en duur, de minimumvariant bij te weinig spelers, *Zet in …* of bewust *Toch in … zetten*, en *Vorm bekijken*.
+- **ClubComm adviseert, de trainer beslist.** Niets wordt uitgesloten:
+  - **Past het best:** het doel van de plek (gereedschap van het blok; bij Start en Partij het passende vormtype), de gekozen vaardigheid en het aantal spelers kloppen;
+  - **Past deels:** wel het doel, maar een ander aantal of een andere vaardigheid (met de reden);
+  - **Alle andere vormen:** ingeklapt, met zoeken (met de reden, bijv. *ander gereedschap*).
+  - Binnen een groep: eerst de vaardigheid (en de fase) van de plek, dan de duur die het dichtst bij de minuten van de plek ligt. **Het leerniveau telt niet mee** (correctie 29-10, zie hieronder). *Vorige week ook* staat erbij, niet als oordeel.
+- **Wat uit het profiel komt, alleen als het profiel het heeft:** gereedschap (leerlijnen), vaardigheden per gereedschap (één regel om opzij te schuiven), leerniveau van de plek en het aanbevolen leerniveau van een vorm. Zonder die onderdelen (zoals AVV Swift nu) is het hetzelfde venster zonder die regels.
+- **Ongedaan maken.** Na het plaatsen staat 8 seconden *In A1 gezet · Ongedaan maken*. Alleen die plek gaat terug (vorm en minuten); de rest van de training blijft precies gelijk. Ook bij *+* in *Mijn vormen* en *Zet in een training…*.
+- **Leerniveau bij een vorm alleen ter informatie** (correctie van de initiatiefnemer, 29-10): het leerniveau hoort bij het leerproces van de speler en de opdracht van de plek, niet als vaste eigenschap van een vorm. In het vormvenster optioneel *Vaak gebruikt bij leerniveau*; in de kiezer staat *meestal …* als informatie, **nooit oranje en zonder invloed op de volgorde**. Geen oproep in *Vormen* om het aan te vullen (informatie is geen taak); het filter *nog geen leerniveau* blijft. Wat een vorm wel lager of oranje maakt: ander gereedschap, andere vaardigheid, ander aantal spelers.
+- **Blijft zoals het was:** de blokcodes Start · A · B · S · Partij (die staan nog in de code, zie `docs/architectuur.md`; aparte ronde), slepen en *+* in *Mijn vormen* op de laptop, *Nieuwe vorm* met het gekozen gereedschap en de vaardigheid, *Minuten en leerniveau van de plek*.
+- **Getest:** regressietests vóór de wijziging (`tests/kiezer.spec.js`, groen op de oude kiezer en ongewijzigd groen op de nieuwe) met het DCG-profiel op 390 en 1366 px en zonder profiel (zoals Swift), plus tests voor de nieuwe delen.
+
+---
+
 ## Besluit 138 — Tabblad Training bij de DCG-methodiek: Mijn lijn, vaststellen, afgelaste training, vorm kiezen vanuit de vaardigheid
+> **◐ Deels herzien door Besluit 139 (één oefenvormkiezer voor elke club; geen knop *past bij*: wat niet past staat lager, niet weg)** (zie Register).
 *Besloten 29 oktober 2026. De initiatiefnemer vroeg om een analyse van het tabblad Training (`docs/onderzoek/trainingstab-2026-10-29.md`) en zei daarna: "beantwoord zelf de vragen, je weet hoe ik denk". Alles hieronder geldt **alleen bij de DCG-methodiek** (profiel met voetbalproblemen en leerniveaus); andere clubs merken er niets van. Herziet Besluit 135 deels (Lijn).*
 - **Lijn = Mijn lijn, één overzicht.** Per week één regel: voetbalprobleem, A en B, het leerniveau van begin tot eind van de week, een bolletje per training (○ gepland · ◐ uitgewerkt · ● gegeven · ✕ afgelast), de wedstrijd (beoordeeld x/3) en de echt uitgevoerde minuten. Tik op een week = Plannen. Ook weken met een eigen training zonder periodisering staan erin. *Per week* en de tabel met rode leerdoelen zijn weg (dubbel en alarm zonder reden); de minuten van deze maand staan ingeklapt eronder zodra er iets gegeven is.
 - **Vaststellen:** de trainer stelt de periodisering vast (*Vastgesteld 29 okt*). Dan kan er niet meer worden teruggedraaid; elke training blijft vrij aan te passen. *Weer concept* kan altijd.
@@ -2237,6 +2257,8 @@ Bewust niet gedaan, met de reden. Komt een van deze toch terug, zeg dan dat het 
 
 | Idee | Waarom niet | Besluit |
 |---|---|---|
+| Aparte lijst *Aanbevolen voor A1* in de kolom *Mijn vormen* op de laptop (voorstel PR #92) | Eén venster voor elke club en elk scherm (Besluit 139); een tweede plek om hetzelfde te kiezen maakt het onrustig. Slepen en *+* blijven | 139 |
+| Een vorm verbergen omdat hij niet bij het aantal spelers of de vaardigheid past (knop *past bij*) | ClubComm adviseert, de trainer beslist: wat minder past staat lager met de reden, niet weg | 139 |
 | Shirtjes met cijfers in de tekening (zoals Rinus) | De initiatiefnemer kiest de rondjes en driehoeken; die zijn kleiner en duidelijker | 132 |
 | Sterren "Voetbal echt" bij een vorm (zoals Rinus) | Een oordeel zonder vaste maat; het leerdoel, de weerstand en de fase zeggen al hoe wedstrijdecht een vorm is | 132 |
 | Zestien oefenvormtypes als één keuzelijst op het scherm | Ze overlappen: ze mengen vorm, inhoud en weerstand (een 4 tegen 4 is partijvorm, SSG én wedstrijdvorm). Te veel keuze voor een vrijwilliger; ze staan nu onder *Meer precies* | 131 |
