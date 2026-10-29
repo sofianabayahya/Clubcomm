@@ -201,7 +201,11 @@
     const gezien = {}; uit.forEach((x) => { if (!x.a) return; const k = x.a.id; if (gezien[k] && x.actie !== 'fout') { x.actie = 'overslaan'; x.reden = 'staat dubbel in het bestand'; } gezien[k] = true; });
     return uit; };
   // Stempel: zo kunnen we later zien of je een concept hebt aangepast (dan wordt het nooit verwijderd)
-  const stempel = (p) => JSON.stringify([p.thema, p.onderdelen, p.methodiek, p.blokDoel, p.overig, p.sjabloon, !!p.gegeven, p.anders || '', p.evaluatie || null]);
+  // De database (jsonb) verandert de volgorde van de velden; daarom met gesorteerde sleutels, zodat de stempel na herladen gelijk blijft
+  const geordend = (x) => (Array.isArray(x) ? x.map(geordend) : x && typeof x === 'object' ? Object.keys(x).sort().reduce((o, k) => { if (x[k] !== undefined) o[k] = geordend(x[k]); return o; }, {}) : x);
+  // Korte controlecode (FNV-1a, 2 × 32 bit) in plaats van de hele tekst: kleinere rijen, zelfde vergelijking
+  const code = (t) => { let a = 0x811c9dc5, b = 0x01000193 ^ t.length; for (let i = 0; i < t.length; i++) { const c = t.charCodeAt(i); a = Math.imul(a ^ c, 0x01000193) >>> 0; b = Math.imul(b ^ c, 0x5bd1e995) >>> 0; } return `s${a.toString(36)}${b.toString(36)}`; };
+  const stempel = (p) => code(JSON.stringify(geordend([p.thema, p.onderdelen, p.methodiek, p.blokDoel, p.overig, p.sjabloon, !!p.gegeven, p.anders || '', p.evaluatie || null])));
   const toevoegen = (S, lijst, bestand) => { const tid = CC.teamId && CC.teamId(); const sj = T().sjablonen(S); let n = 0, wk = 0, ob = 0;
     lijst.forEach((x) => { if (!x.a) return;
       let w = weekPlan(S, tid, x.datum); if (!w) { w = nieuwWeek(S, tid, x.datum, bestand); w.methodiek = { ...x.m, observatie: '' }; w.stempel = stempel(w); wk++; }

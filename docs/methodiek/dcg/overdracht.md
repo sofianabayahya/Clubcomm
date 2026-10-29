@@ -5,6 +5,11 @@
 ## Startzin voor de nieuwe chat
 > Dit is de chat voor de DCG-methodiek in ClubComm. Lees eerst `docs/methodiek/dcg/overdracht.md`, `CLAUDE.md` en Besluit 133 in `docs/besluiten.md`. Werk alleen aan de methodiek van DCG (profiel, periodisering, oefenvormen). Verander niets aan de app voor andere clubs zonder te vragen.
 
+## Drie sporen (afspraak 29-10)
+- **Spoor 1 – de persoonlijke voetbalmethodiek van de initiatiefnemer (DCG).** Daar gaat deze chat over: profiel, periodisering, vaardigheden, oefenvormen.
+- **Voetbalinhoudelijke keuzes van DCG gaan nooit vanzelf naar AVV Swift** (of een andere club). Swift volgt zijn eigen methodiek (KNVB-standaard); overnemen kan alleen als de initiatiefnemer dat per onderdeel vraagt.
+- **Spoor 3 – algemene verbeteringen aan ClubComm** (schermen, menu, rechten, delen) bespreken we apart en leggen we voor aan de ClubComm-chat.
+
 ## Waar gaat deze chat over
 - **Inhoud van DCG:** kerndocument, profiel v3, periodisering (Excel → CSV), straks oefenvormen en tekeningen.
 - **Alleen DCG.** Andere clubs (zoals AVV Swift) volgen de KNVB-standaard; daar gaat de ClubComm-chat over.
@@ -28,6 +33,7 @@
 
 ## Wat nog moet (op volgorde)
 1. ~~Profiel v3 in de database~~ ✅ 29-10; app online ✅ 29-10 (Besluit 137 en 138).
+2. ~~Periodisering O13 in de database~~ ✅ 29-10: 22 conceptrainingen + 8 weekplannen (6 wedstrijden met observatiepunten), met de code van de app gemaakt en per rij gecontroleerd (`supabase/scripts/2026-10-29_dcg_periodisering_o13.sql`). De trainingen van 27-10 en 29-10 (eigen voorbereiding) bleven zoals ze waren. Week 51: contraprobleem nog leeg (keuze 6 of 7).
 2. **Definitieve periodisering** in Excel (met ChatGPT) → opslaan als CSV → in de app laden. Eerst het voorbeeld laten zien; pas na *Toevoegen* verandert er iets.
 3. **Oefenvormen en tekeningen**, later en alleen door de initiatiefnemer aangeleverd.
 
