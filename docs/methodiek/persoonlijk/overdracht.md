@@ -49,4 +49,4 @@
 *Bijgewerkt 29-10 na de afspraak over de drie sporen; zie `CLAUDE.md` en `docs/sporen.md`.*
 - **Eigen werkbranch per chat**, zodat de chats elkaars werk niet overschrijven. Vóór elke wijziging de controle uit `CLAUDE.md` (nieuwste `main`, open pull requests, hoogste besluitnummer, conflicten).
 - **Geen besluitnummers in dit spoor.** Een nieuwe afspraak heet hier *"Voorstel Spoor 1 — …"*. Spoor 3 geeft het definitieve nummer en zet het in het register.
-- **Niet zelf publiceren en niet zelf samenvoegen met `main`.** Werk klaar → `npm test` (alles groen) → pushen naar de eigen branch → pull request → Spoor 3 controleert, voegt samen en publiceert vanaf `main`.
+- **Niet zelf publiceren en niet zelf samenvoegen met `main`.** Werk klaar → `npm test` (alles groen) → pushen naar de eigen branch → pull request (een push naar een eigen branch komt nooit in productie; samenvoegen met `main` wel, vanzelf) → Spoor 3 controleert, voegt samen en publiceert vanaf `main`.
