@@ -121,6 +121,11 @@ test('oefenvorm kiezen (Besluit 139): twee tikken, redenen, toch kiezen en onged
   await page.setViewportSize({ width: 390, height: 844 });
   await klaarzetten(page, true);
   // Aanbevolen leerniveau bij een vorm en een training van vorige week met de rondo
+  // Eerst de volgorde zonder aanbevolen leerniveau: die mag door het leerniveau niet veranderen
+  await page.locator('.tr-midden .tr-rij', { hasText: 'A1' }).first().click();
+  const zonderNiveau = await volgorde(page);
+  await page.evaluate(() => CC.closeSheet());
+  await page.waitForTimeout(1600); // dezelfde plek opnieuw: de beveiliging tegen dubbel tikken wacht 1,5 s
   await page.evaluate(() => { const S = CC.S(); S.vormen.find((v) => v.id === 'v-kaats').niveauAdvies = 'ln-kiezen'; S.vormen.find((v) => v.id === 'v-rondo').niveauAdvies = 'ln-uitvoeren';
     S.vormen.find((v) => v.id === 'v-groot').minVariant = '4 tegen 4 zonder keepers';
     S.trainingsplannen.push({ id: 'tp-vorig', actId: 'los-vorig', los: true, datum: CC.date.addDays(CC.date.vandaag(), -7), eigenaar: CC.me().id, onderdelen: [{ id: 'o-x', vormId: 'v-rondo', min: 10 }] });
@@ -130,10 +135,12 @@ test('oefenvorm kiezen (Besluit 139): twee tikken, redenen, toch kiezen en onged
   await page.locator('.tr-midden .tr-rij', { hasText: 'A1' }).first().click();
   await expect(page.locator('#sheet .sheet-kop h2')).toContainText('Kies oefenvorm · A1');
   const rij = (id) => page.locator(`#sheet .kv-r:has([data-v="${id}"])`);
-  await expect(rij('v-kaats').locator('.kv-w')).toContainText('Kiezen ✓');
-  await expect(rij('v-rondo').locator('.kv-w .o')).toContainText('Uitvoeren');
+  // Het aanbevolen leerniveau is alleen informatie: niet oranje en geen invloed op de volgorde (de plek A1 staat op Kiezen)
+  await expect(rij('v-kaats').locator('.kv-w')).toContainText('meestal Kiezen');
+  await expect(rij('v-rondo').locator('.kv-w')).toContainText('meestal Uitvoeren');
+  await expect(rij('v-rondo').locator('.kv-w .o')).toHaveCount(0);
   await expect(rij('v-rondo').locator('.kv-w')).toContainText('vorige week ook');
-  expect((await volgorde(page)).slice(0, 2)).toEqual(['v-kaats', 'v-rondo']);
+  expect(await volgorde(page)).toEqual(zonderNiveau);
   if (process.env.SHOTS) { await page.waitForTimeout(400); await page.screenshot({ path: `${process.env.SHOTS}/k1-dcg-tel.png` }); }
   // Niets uitgesloten: te groot staat bij Past deels, met de reden; een ander gereedschap staat ingeklapt bij Alle andere vormen
   await expect(page.locator('#sheet .kv-groep', { hasText: 'Past deels' })).toContainText('(1)');
@@ -156,10 +163,9 @@ test('oefenvorm kiezen (Besluit 139): twee tikken, redenen, toch kiezen en onged
   await page.locator('.tr-midden .tr-rij', { hasText: 'A1' }).first().click();
   await rij('v-kaats').locator('[data-act="tpVormErbij"]').first().click();
   p = await plan(page); expect(p.onderdelen.find((o) => o.blok === 'A1').vormId).toBe('v-kaats');
-  // Vormen: één rustige regel om het aanbevolen leerniveau aan te vullen (2 van de 4 hebben er een); tik = filter 'nog geen leerniveau'
+  // Vormen: geen oproep om een leerniveau aan te vullen (informatie is geen taak); het leerniveau kan wel bij de vorm worden gezet
   await page.locator('[data-act="seg"][data-val="vormen"]').click();
-  await page.locator('.tr-aanvul').click();
-  await expect(page.locator('.tr-kaart')).toHaveCount(2);
+  await expect(page.locator('.tr-aanvul')).toHaveCount(0);
   await page.locator('.tr-kaart', { hasText: 'Groot positiespel' }).click();
   await page.locator('#sheet [data-act="vormBewerk"]').click();
   await page.locator('[data-act="vormKies"][data-veld="niveauAdvies"][data-w="ln-afstemmen"]').click();

@@ -285,13 +285,14 @@
       if (vh) r.push(vhOk ? [`${vhNaam(S, vh)} ✓`] : ['andere vaardigheid', true]); else if (gs && vv.length) r.push([vv.map((x) => vhNaam(S, x)).filter(Boolean).slice(0, 2).join(', ')]);
       if (types && rel) r.push([`${typeNaam(typeVan(v))} ✓`]);
       if (n) r.push(aantalOk ? [va ? `bij ${n}: eigen opzet ✓` : `${n} sp ✓`] : [`voor ${bereik(v.spelersMin, v.spelersMax, 'sp')}`, true]);
-      const niv = nv && v.niveauAdvies && niveauNaam(S, v.niveauAdvies); if (niv) r.push(v.niveauAdvies === nv ? [`${niv} ✓`] : [niv, true]);
+      // Het leerniveau hoort bij de opdracht van de plek, niet bij de vorm: alleen ter informatie, nooit oranje of lager
+      const niv = nv && v.niveauAdvies && niveauNaam(S, v.niveauAdvies); if (niv) r.push([`meestal ${niv}`]);
       const fa = fs && v.faseAdvies && faseNaam(S, v.faseAdvies); if (fa) r.push(v.faseAdvies === fs.id ? [`${fa} ✓`] : [fa, true]);
       if (vorigeWeek(S, p, v)) r.push(['vorige week ook']);
       r.sort((x, y) => !!y[1] - !!x[1]); // wat minder past eerst, zodat je het meteen ziet
       const noot = aantalOk || !n ? '' : `Je hebt er vandaag ${n}.${v.minVariant && (v.aantalMin == null || n >= Number(v.aantalMin)) ? ` Bij ${n}: <b>${esc(v.minVariant)}</b> (minimumvariant van deze vorm).` : ' Pas het aantal of de ruimte aan, of kies een andere vorm.'}`;
-      return { v, r, noot, rel, goed: rel && aantalOk && vhOk, vhOk, niveauOk: !niv || v.niveauAdvies === nv, faseOk: !fa || v.faseAdvies === fs.id, duur: Math.abs((Number(v.duur) || 0) - (Number(o && o.min) || Number(v.duur) || 0)) }; });
-    const volg = (x, y) => (y.vhOk - x.vhOk) || (y.niveauOk - x.niveauOk) || (y.faseOk - x.faseOk) || (x.duur - y.duur) || x.v.naam.localeCompare(y.v.naam);
+      return { v, r, noot, rel, goed: rel && aantalOk && vhOk, vhOk, faseOk: !fa || v.faseAdvies === fs.id, duur: Math.abs((Number(v.duur) || 0) - (Number(o && o.min) || Number(v.duur) || 0)) }; });
+    const volg = (x, y) => (y.vhOk - x.vhOk) || (y.faseOk - x.faseOk) || (x.duur - y.duur) || x.v.naam.localeCompare(y.v.naam);
     return { ctx, top: lijst.filter((x) => x.goed).sort(volg), deels: lijst.filter((x) => x.rel && !x.goed).sort(volg), rest: lijst.filter((x) => !x.rel).sort(volg) }; };
   // Eén compacte regel per vorm: tik = op de plek; ⓘ = meer (wat de vorm is, de minimumvariant, bekijken)
   const kvRij = (S, id, i, x, c) => { const open = vk().meer === x.v.id; const slot = i != null && i !== '' ? `data-i="${i}"` : ''; const oranje = x.r.some((y) => y[1]);
@@ -581,9 +582,6 @@
     <div class="chips tr-filters">${actief(S).map(([k, w]) => `<button class="chipknop aan" data-act="vfWeg" data-k="${k}" aria-label="Filter weghalen: ${esc(filterNaam(S, k, k === 'past' || k === 'kort' || k === 'keepers' ? k : w))}">${esc(filterNaam(S, k, k === 'past' || k === 'kort' || k === 'keepers' ? k : w))} ✕</button>`).join('')}
       <button class="chipknop" data-act="vfOpen">${icon('plus')}Filter</button>${actief(S).length ? '<button class="chipknop tr-wis" data-act="vfWis">Wis</button>' : ''}</div>
     <button class="knop vol" data-act="vormNieuw">${icon('plus')}Nieuwe vorm</button>
-    ${(() => { // Besluit 139: één rustige regel zolang vormen nog geen aanbevolen leerniveau hebben (alleen met leerniveaus in het profiel)
-      const z = niveaus(S).length && !vf().niveau ? mijnVormen(S).filter((v) => !v.niveauAdvies).length : 0;
-      return z ? `<button type="button" class="tr-rij tr-aanvul" data-act="vfZet" data-k="niveau" data-w="zonder"><span class="tr-t"><b>${z} vorm${z === 1 ? '' : 'en'} zonder leerniveau</b><small>Aanvullen: dan weet ClubComm welke vorm bij welke plek past</small></span>${icon('chevron-right')}</button>` : ''; })()}
     <div id="vormResultaat">${resultaat(S)}</div>`;
   document.addEventListener('input', (e) => { if (e.target.id !== 'vormZoek') return; vf().q = e.target.value; const r = document.getElementById('vormResultaat'); if (r) r.innerHTML = resultaat(CC.S()); });
   // Filtervenster: chips werken meteen; de knop onderaan toont hoeveel vormen er overblijven
@@ -653,7 +651,7 @@
       ${precies.length > 1 ? `<details class="uitklap tr-precies" ${(v.precies || []).length ? 'open' : ''}><summary>Meer precies (optioneel)</summary><div class="chips">${precies.map((x) => kies(v, 'precies', x.id, esc(x.naam), (v.precies || []).includes(x.id))).join('')}</div><p></p></details>` : ''}
       ${h.sectie('Speelrichting')}<div class="chips">${[[0, 'geen'], [1, 'één'], [2, 'twee']].map(([x, n]) => kies(v, 'richting', x, n, v.richting === x)).join('')}${kies(v, 'doelen', 'ja', `${v.doelen ? '✓ ' : ''}met doelen`, v.doelen === true)}</div>
       ${h.sectie('Omschakeling')}<div class="chips">${VT.omschakeling.map((o) => kies(v, 'omschakeling', o.id, esc(o.naam), v.omschakeling === o.id)).join('')}</div>
-      ${niveaus(S).length ? `${h.sectie('Aanbevolen leerniveau (optioneel)')}<div class="chips">${niveaus(S).map((x) => kies(v, 'niveauAdvies', x.id, esc(x.naam), v.niveauAdvies === x.id)).join('')}</div>` : ''}
+      ${niveaus(S).length ? `${h.sectie('Vaak gebruikt bij leerniveau (optioneel, alleen ter informatie)')}<div class="chips">${niveaus(S).map((x) => kies(v, 'niveauAdvies', x.id, esc(x.naam), v.niveauAdvies === x.id)).join('')}</div>` : ''}
       ${fasen(S).length ? `${h.sectie('Aanbevolen fase (optioneel)')}<div class="chips">${fasen(S).map((f) => kies(v, 'faseAdvies', f.id, esc(f.naam), v.faseAdvies === f.id)).join('')}</div>` : ''}
       <label for="v-af">Afmeting</label><input id="v-af" name="afmeting" value="${esc(v.afmeting || '')}" placeholder="Bijv. 25 × 20 m">
       ${uitgebreid(S, v)}
