@@ -156,10 +156,11 @@
   // Terugblik: pas na afloop (gegeven, echte minuten, wat anders)
   const terugblik = (S, p, a) => { const uit = p.gegeven ? (p.onderdelen || []).filter((o) => o.vormId && !o.spacing) : [];
     if (!afgelopen(a)) return `<div class="kaartje"><b>Na de training</b><small class="zacht">Hier vul je na afloop in of de training is gegeven, de echte minuten en wat je de volgende keer anders doet${a.eind ? ` (vanaf ${a.eind})` : ''}.</small></div>`;
-    const open = uit.filter((o) => o.minUit == null).length;
+    const open = uit.filter((o) => o.minUit == null).length; const onz = uit.filter((o) => minStatus(S, p, o) === 'onzeker').length;
     return `<form class="kaartje codeform" data-autosave="tpTerug" data-id="${a.id}">
       <label class="schakel"><span>Training is gegeven</span><input type="checkbox" name="gegeven" ${p.gegeven ? 'checked' : ''}><i></i></label>
-      ${uit.length ? `<div class="tr-kop"><b>Hoeveel minuten echt?</b><span class="tr-stat ${open ? 'g' : 'v'}">${open ? `Nog niet gecontroleerd${open < uit.length ? ` (${open} van ${uit.length})` : ''}` : 'Gecontroleerd'}</span></div>
+      ${uit.length ? `<div class="tr-kop"><b>Hoeveel minuten echt?</b><span class="tr-stat ${open || onz ? 'g' : 'v'}">${open ? `Nog niet gecontroleerd${open < uit.length ? ` (${open} van ${uit.length})` : ''}` : onz ? 'Niet zeker gecontroleerd' : 'Gecontroleerd'}</span></div>
+        ${onz ? `<small class="zacht">Ingevuld vóór ${ZEKER_TEKST}: toen stonden de geplande minuten vooraf ingevuld. Gelijk aan gepland is daarom niet aantoonbaar gecontroleerd. Een afwijkend getal is wel door jou ingevuld.</small>` : ''}
         <small class="zacht">Leeg = nog niet gecontroleerd; het grijze getal is gepland. Vul in wat echt liep (0 = niet gedaan)${open ? ', of kies Klopt zoals gepland' : ''}.</small>
         <div class="tr-lijst">${uit.map((o) => { const v = vorm(S, o.vormId); return `<div class="tr-rij tr-uit">${o.blok ? `<span class="tr-code">${esc(code(o))}</span>` : ''}<span class="tr-t"><b>${esc(v ? v.naam : 'Vorm')}</b><small>gepland ${Number(o.min) || 0} min${o.blok === 'start' ? ' · telt niet voor de leerlijn' : ''}</small></span><input name="uit-${esc(o.id)}" type="number" inputmode="numeric" min="0" max="120" aria-label="Minuten echt: ${esc(v ? v.naam : 'vorm')}" placeholder="${Number(o.min) || 0}" value="${o.minUit != null ? o.minUit : ''}"></div>`; }).join('')}</div>
         ${open ? `<button type="button" class="knop licht vol" data-act="tpKloptZo" data-id="${esc(a.id)}">${icon('check')}Klopt zoals gepland (${open} ${open === 1 ? 'vorm' : 'vormen'})</button>` : ''}` : ''}
@@ -172,16 +173,19 @@
     </form>`; };
   // Besluit 141: de vier getallen met hun echte betekenis (optie A: de berekening blijft zoals hij was)
   const minutenKaart = (S, p) => { const m = CC.trMinuten(S, p); const gs = Object.entries(m.gs).sort((x, y) => y[1] - x[1]);
-    const rij = (n, w, uitleg) => `<div class="tr-mrij"><span>${n}</span><b>${w}</b>${uitleg ? `<small class="zacht">${uitleg}</small>` : ''}</div>`;
+    const rij = (n, w, ...uitleg) => `<div class="tr-mrij"><span>${n}</span><b>${w}</b>${uitleg.filter(Boolean).map((x) => `<small class="zacht">${x}</small>`).join('')}</div>`;
+    const ingevuld = m.reg + m.regOnzeker; const nc = (x) => (x ? `Inclusief ${x} nog niet gecontroleerde minuten (geteld als gepland)` : '');
     return `<div class="tr-minuten"><b>Minuten</b>
       ${rij('Geplande trainingsduur', `${m.gepland} min`)}
-      ${rij('Werkelijke trainingsduur', m.gecontroleerd ? `${m.duur} min geregistreerd` : 'nog niet gecontroleerd', m.zonderReg > 0 ? `${m.zonderReg} min gepland zonder registratie (${m.gecontroleerd ? '' : 'oefenvormen, '}spacing, ombouw of lege plekken)` : '')}
-      ${rij('Uitgevoerd in oefenvormen', `${m.vormen} min`, m.vormenOpen ? `waarvan ${m.vormenOpen} min nog zoals gepland, niet gecontroleerd` : '')}
-      ${rij('Toegerekend aan een gereedschap', `${m.gsTotaal} min`, gs.map(([x, n]) => `${esc(ldNaam(S, x) || 'onbekend')} ${n}`).join(' · '))}
+      ${rij('Werkelijke trainingsduur', m.ok || m.onzeker ? `${ingevuld} min ingevuld` : 'nog niet gecontroleerd',
+        m.regOnzeker ? `Waarvan ${m.regOnzeker} min ingevuld vóór ${ZEKER_TEKST}: niet zeker of dat de echte minuten zijn` : '',
+        m.zonderReg > 0 ? `Niet geregistreerd: ${m.zonderReg} van ${m.gepland} geplande min (${m.ok || m.onzeker ? '' : 'oefenvormen, '}start zonder vorm, spacing, ombouw of lege plekken). Dit is dus niet de volledige trainingsduur.` : '')}
+      ${rij('Uitgevoerd in oefenvormen', `${m.vormen} min`, nc(m.vormenNc))}
+      ${rij('Toegerekend aan een gereedschap', `${m.gsTotaal} min`, gs.map(([x, n]) => `${esc(ldNaam(S, x) || 'onbekend')} ${n}`).join(' · '), nc(m.gsNc))}
       <details class="uitklap"><summary>Wat betekenen deze getallen?</summary>
         <p class="klein"><b>Geplande trainingsduur:</b> alle plekken en de ombouw samen.</p>
-        <p class="klein"><b>Werkelijke trainingsduur:</b> alleen wat je echt hebt ingevuld. Start, spacing en ombouw horen bij de trainingsduur, maar tellen niet voor de leerlijn; spacing en ombouw vul je niet apart in.</p>
-        <p class="klein"><b>Uitgevoerd in oefenvormen:</b> de oefenvormen zonder start en spacing; echte minuten, anders gepland. Dit getal staat ook in Lijn.</p>
+        <p class="klein"><b>Werkelijke trainingsduur:</b> alleen wat echt is ingevuld. Start, spacing en ombouw horen bij de trainingsduur, maar tellen niet voor de leerlijn; spacing en ombouw vul je niet apart in. Daarom staat erbij hoeveel minuten niet zijn geregistreerd.</p>
+        <p class="klein"><b>Uitgevoerd in oefenvormen:</b> de oefenvormen zonder start en spacing; echte minuten, en waar die nog niet zijn gecontroleerd de geplande. Dit getal staat ook in Lijn.</p>
         <p class="klein"><b>Toegerekend aan een gereedschap:</b> dezelfde minuten bij het hoofdgereedschap van de vorm (niet van het blok). Een vorm zonder hoofdgereedschap telt hier niet mee.</p>
         <p class="klein zacht">Minuten zijn een registratie van oefentijd, geen bewijs dat iets is geleerd.</p></details></div>`; };
   // Besluit 141: Toepassing. De bestaande vraag Transfer naar vrij spel (zelfde antwoord, niet dubbel opgeslagen), bij de partij
@@ -385,28 +389,38 @@
   // ---------- Periodisering (Besluit 131): minuten per hoofdleerdoel, uitgevoerd ----------
   // Alleen vormen (geen start, spacing of ombouw); het hoofdleerdoel van de vorm krijgt de minuten, secundaire tellen als "ook geraakt".
   CC.minutenPerLeerdoel = (S, maand) => {
-    const r = { min: {}, ook: {}, gepland: 0, uit: 0, trainingen: 0 };
+    const r = { min: {}, ook: {}, gepland: 0, uit: 0, nc: 0, trainingen: 0 };
     plannen(S).filter((p) => p.eigenaar === ik() && p.gegeven && String(actVan(S, p).datum || '').slice(0, 7) === maand).forEach((p) => { r.trainingen++;
       (p.onderdelen || []).filter((o) => o.vormId && !o.spacing && o.blok !== 'start').forEach((o) => { const v = vorm(S, o.vormId); if (!v) return;
-        const uit = o.minUit != null ? Number(o.minUit) : Number(o.min) || 0; r.gepland += Number(o.min) || 0; r.uit += uit;
+        const uit = o.minUit != null ? Number(o.minUit) : Number(o.min) || 0; r.gepland += Number(o.min) || 0; r.uit += uit; if (minStatus(S, p, o) !== 'ok') r.nc += uit;
         const k = koppeling(S, v); if (k.primair) r.min[k.primair] = (r.min[k.primair] || 0) + uit; if (uit) k.ook.forEach((x) => { r.ook[x] = (r.ook[x] || 0) + 1; }); }); });
     return r;
   };
   // Besluit 141 (optie A): vier minutengetallen per training, zonder meer zekerheid te suggereren dan er is geregistreerd.
-  // Echte minuten = minUit; leeg (null) = nog niet gecontroleerd (dan telt de oefenvorm met de geplande minuten, zoals altijd).
-  CC.trMinuten = (S, p) => { const o = p.onderdelen || []; const r = { gepland: totaal(p), duur: 0, zonderReg: totaal(p), vormen: 0, vormenOpen: 0, gs: {}, gsTotaal: 0, teControleren: 0, gecontroleerd: 0 };
-    o.filter((x) => x.vormId && !x.spacing).forEach((x) => { if (x.minUit != null) { r.duur += Number(x.minUit) || 0; r.zonderReg -= Number(x.min) || 0; r.gecontroleerd++; } else r.teControleren++; });
+  // Status van de echte minuten per oefenvorm: 'open' = leeg (nog niet gecontroleerd); 'onzeker' = ingevuld bij een training van vóór
+  // ZEKER_VANAF en gelijk aan gepland (toen vulde het scherm de geplande minuten vooraf in, dus niet aan te tonen); anders 'ok'.
+  // Er wordt niets aan bestaande gegevens veranderd; de berekening (echt, anders gepland) blijft gelijk.
+  const ZEKER_VANAF = '2026-10-30';
+  const minStatus = (S, p, o) => { if (o.minUit == null) return 'open'; const d = String(actVan(S, p).datum || p.datum || '');
+    return d && d < ZEKER_VANAF && Number(o.minUit) === (Number(o.min) || 0) ? 'onzeker' : 'ok'; };
+  CC.trMinuten = (S, p) => { const o = p.onderdelen || [];
+    const r = { gepland: totaal(p), reg: 0, regOnzeker: 0, zonderReg: totaal(p), vormen: 0, vormenNc: 0, gs: {}, gsTotaal: 0, gsNc: 0, open: 0, onzeker: 0, ok: 0 };
+    o.filter((x) => x.vormId && !x.spacing).forEach((x) => { const st = minStatus(S, p, x); r[st]++; if (st === 'open') return;
+      r.zonderReg -= Number(x.min) || 0; if (st === 'ok') r.reg += Number(x.minUit) || 0; else r.regOnzeker += Number(x.minUit) || 0; });
     if (!p.gegeven) return r;
-    o.filter((x) => x.vormId && !x.spacing && x.blok !== 'start').forEach((x) => { const uit = x.minUit != null ? Number(x.minUit) : Number(x.min) || 0; r.vormen += uit; if (x.minUit == null) r.vormenOpen += Number(x.min) || 0;
-      const v = vorm(S, x.vormId); const pr = v && koppeling(S, v).primair; if (pr) { r.gs[pr] = (r.gs[pr] || 0) + uit; r.gsTotaal += uit; } });
+    o.filter((x) => x.vormId && !x.spacing && x.blok !== 'start').forEach((x) => { const uit = x.minUit != null ? Number(x.minUit) : Number(x.min) || 0; const nc = minStatus(S, p, x) !== 'ok';
+      r.vormen += uit; if (nc) r.vormenNc += uit;
+      const v = vorm(S, x.vormId); const pr = v && koppeling(S, v).primair; if (pr) { r.gs[pr] = (r.gs[pr] || 0) + uit; r.gsTotaal += uit; if (nc) r.gsNc += uit; } });
     return r; };
+  CC.trMinStatus = minStatus;
+  const ZEKER_TEKST = (() => { const d = D.parse(ZEKER_VANAF); return `${d.getDate()} ${D.MAAND[d.getMonth()]}`; })();
   const maandBlok = (S, open) => {
     const nu = D.vandaag().slice(0, 7); const r = CC.minutenPerLeerdoel(S, nu); if (!r.trainingen) return '';
     const lds = leerdoelen(S).filter((l) => !String(l.id).startsWith('ld-')); const ids = [...new Set(lds.map((l) => l.id).concat(Object.keys(r.min)))];
     const max = Math.max(1, ...ids.map((x) => r.min[x] || 0)); const ook = Object.entries(r.ook);
     return `<details class="uitklap tr-maand" ${open ? 'open' : ''}><summary>${D.MAAND[D.parse(`${nu}-01`).getMonth()]}: minuten toegerekend aan een gereedschap</summary>
       <div class="tr-mlijst">${ids.sort((x, y) => (r.min[y] || 0) - (r.min[x] || 0)).map((x) => `<div><span>${esc(ldNaam(S, x) || 'Onbekend leerdoel')}</span><i style="width:${Math.max(2, Math.round(((r.min[x] || 0) / max) * 100))}%" class="${r.min[x] ? '' : 'nul'}"></i><b>${r.min[x] || 0} min</b></div>`).join('')}</div>
-      <small class="zacht">${r.trainingen} training${r.trainingen === 1 ? '' : 'en'} gegeven · uitgevoerd in oefenvormen ${r.uit} van ${r.gepland} min gepland${ook.length ? ` · ook geraakt: ${ook.map(([x, n]) => `${esc(ldNaam(S, x))} ${n}×`).join(', ')}` : ''}</small></details>`;
+      <small class="zacht">${r.trainingen} training${r.trainingen === 1 ? '' : 'en'} gegeven · uitgevoerd in oefenvormen ${r.uit} van ${r.gepland} min gepland${r.nc ? `, inclusief ${r.nc} nog niet gecontroleerde minuten` : ''}${ook.length ? ` · ook geraakt: ${ook.map(([x, n]) => `${esc(ldNaam(S, x))} ${n}×`).join(', ')}` : ''}</small></details>`;
   };
 
   // ---------- Tabblad Training (Besluit 130, 132, 140): Week (uitvoeren en evalueren) · Plannen (voorbereiden) · Vormenbank (oefenstof) · Lijn (ontwikkeling) ----------
@@ -577,7 +591,7 @@
     if (!lds.length) return `${CC.trWeekthema ? CC.trWeekthema(S) : ''}${h.leeg('Er staan nog geen leerdoelen in het opleidingsprofiel van de club. Daarom zie je hier nog geen minuten per leerdoel; het weekthema kun je al gebruiken.', 'list-checks')}`;
     // Besluit 138: bij de methodiek (DCG) één overzicht; de minuten van deze maand ingeklapt eronder (alleen als er iets gegeven is)
     if (methodiekActief(S) && CC.trMijnLijn) return `${CC.trMijnLijn(S)}${maandBlok(S, false)}`;
-    return `${CC.trWeekthema ? CC.trWeekthema(S) : ''}<div class="kaartje tr-lijn"><b>Opleidingslijn · minuten toegerekend aan een gereedschap</b><small class="zacht">Per oefenvorm (zonder start en spacing) bij het hoofdgereedschap van de vorm. Vet = uitgevoerd (training gegeven; echte minuten, anders gepland), grijs = alleen gepland. Rood = dit leerdoel kwam de afgelopen 4 weken niet aan bod.</small>
+    return `${CC.trWeekthema ? CC.trWeekthema(S) : ''}<div class="kaartje tr-lijn"><b>Opleidingslijn · minuten toegerekend aan een gereedschap</b><small class="zacht">Per oefenvorm (zonder start en spacing) bij het hoofdgereedschap van de vorm. Vet = uitgevoerd (training gegeven; echte minuten, anders gepland: inclusief nog niet gecontroleerde minuten), grijs = alleen gepland. Rood = dit leerdoel kwam de afgelopen 4 weken niet aan bod.</small>
       <div class="tr-tabel"><table><thead><tr><th>Leerdoel</th>${weken.map((w) => `<th class="${w === nu ? 'nu' : ''}">wk ${D.weeknr(w)}</th>`).join('')}</tr></thead><tbody>
       ${lds.map((l) => { const vier = weken.slice(3, 7).some((w) => (cel[`${w}|${l.id}`] || {}).u || (cel[`${w}|${l.id}`] || {}).g);
         return `<tr><th class="${vier ? '' : 'rood'}">${esc(l.naam)}</th>${weken.map((w) => { const c = cel[`${w}|${l.id}`]; return `<td class="${w === nu ? 'nu' : ''}">${c ? (c.uit ? `<b>${c.u}</b>` : `<span class="zacht">${c.g}</span>`) : ''}</td>`; }).join('')}</tr>`; }).join('')}

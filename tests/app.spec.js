@@ -1640,6 +1640,8 @@ test('trainingsmodule: volgorde, je zit in en weekthema (KNVB-profiel)', { tag: 
 // Besluit 131: classificatie (weerstand vanuit het hoofdleerdoel), sjabloon DCG 75 met fase-voorstel, gepland en uitgevoerd, filters
 test('trainingsmodule: classificatie, sjabloon, fase, minuten per leerdoel en filters', { tag: ['@training', '@profiel'] }, async ({ page }) => {
   const fouten = volgFouten(page);
+  // Na de grens van Besluit 141 (30-10): ingevulde minuten gelden als gecontroleerd
+  await page.clock.setFixedTime(new Date('2026-11-10T10:00:00+01:00'));
   await page.setViewportSize({ width: 1366, height: 900 });
   await nepDatabase(page);
   const profiel = JSON.parse(require('fs').readFileSync(require('path').join(__dirname, '..', 'supabase', 'profielen', 'dcg.json'), 'utf8'));
@@ -1700,7 +1702,7 @@ test('trainingsmodule: classificatie, sjabloon, fase, minuten per leerdoel en fi
   await expect(page.locator('form[data-autosave="tpTerug"] .tr-stat')).toHaveText('Nog niet gecontroleerd');
   await expect(page.locator('.tr-minuten')).toContainText('Werkelijke trainingsduurnog niet gecontroleerd');
   await expect(page.locator('.tr-minuten')).toContainText('Uitgevoerd in oefenvormen6 min');
-  await expect(page.locator('.tr-minuten')).toContainText('waarvan 6 min nog zoals gepland, niet gecontroleerd');
+  await expect(page.locator('.tr-minuten')).toContainText('Inclusief 6 nog niet gecontroleerde minuten');
   await expect.poll(async () => { const r = Object.values((await nepDb(page)).rows).find((x) => x.soort === 'trainingsplannen'); return r ? `${r.data.gegeven}|${r.data.onderdelen[1].minUit == null}` : ''; }).toBe('true|true');
   // Klopt zoals gepland: de geplande minuten worden expliciet de echte minuten
   await page.locator('[data-act="tpKloptZo"]').click();
@@ -1710,7 +1712,9 @@ test('trainingsmodule: classificatie, sjabloon, fase, minuten per leerdoel en fi
   await page.fill('.tr-uit input', '4'); await page.locator('.tr-uit input').press('Tab');
   await expect(page.locator('form[data-autosave="tpTerug"] .tr-stat')).toHaveText('Gecontroleerd');
   await expect(page.locator('.tr-minuten')).toContainText('Geplande trainingsduur75 min');
-  await expect(page.locator('.tr-minuten')).toContainText('Werkelijke trainingsduur4 min geregistreerd');
+  await expect(page.locator('.tr-minuten')).toContainText('Werkelijke trainingsduur4 min ingevuld');
+  await expect(page.locator('.tr-minuten')).toContainText('Dit is dus niet de volledige trainingsduur');
+  await expect(page.locator('.tr-minuten')).not.toContainText('Inclusief');
   await expect(page.locator('.tr-minuten')).toContainText('Toegerekend aan een gereedschap4 min');
   // Clubs zonder de vraag Transfer zien geen Toepassing; DCG wel (zie de periodiseringstest)
   await page.locator('[data-act="seg"][data-val="lijn"]').click();
@@ -1978,6 +1982,24 @@ test('trainingsmodule: DCG-periodisering O13 met hoofdthema, teamfunctie, contra
   await expect(page.locator('.tr-wdet .tr-stapknop')).toHaveCount(3);
   await expect(page.locator('.tr-wdet .tr-stapknop b')).toHaveText(['di 3 nov · Uitvoeren → Herkennen', 'do 5 nov · Herkennen → Kiezen', 'vr 6 nov · Kiezen → Afstemmen']);
   await expect(page.locator('.tr-wdet')).toContainText('Ondersteunend');
+  // Lijn: label zolang bij een gegeven training echte minuten ontbreken; verdwijnt na controleren
+  await page.evaluate(() => { const S = CC.S(); S.vormen = [{ id: 'v-t', naam: 'Testvorm', eigenaar: CC.me().id, koppelingen: { dcg: { primair: 'll-passen' } } }];
+    const p = CC.tr.plan(S, 'a-o12-20261103'); p.onderdelen.find((o) => o.blok === 'A1').vormId = 'v-t'; p.gegeven = true; CC.save(); CC.render(); });
+  await expect(page.locator('.tr-wdet .tr-stapknop').first().locator('.tr-nc')).toHaveText('Minuten nog niet gecontroleerd');
+  await expect(page.locator('.tr-wdet')).toContainText('inclusief 6 nog niet gecontroleerde minuten');
+  await page.evaluate(() => { const p = CC.tr.plan(CC.S(), 'a-o12-20261103'); p.onderdelen.find((o) => o.blok === 'A1').minUit = 6; CC.save(); CC.render(); });
+  await expect(page.locator('.tr-wdet .tr-nc')).toHaveCount(0);
+  await page.evaluate(() => { const p = CC.tr.plan(CC.S(), 'a-o12-20261103'); p.gegeven = false; delete p.onderdelen.find((o) => o.blok === 'A1').minUit; p.onderdelen.find((o) => o.blok === 'A1').vormId = null; CC.save(); CC.render(); });
+  // Bestaande training van vóór 30-10 (minuten toen vooraf ingevuld): geen zekerheid claimen, niets aan de gegevens veranderen
+  await page.evaluate(() => { const S = CC.S(); const p = CC.tr.plan(S, 'a-o12-20261029'); const o = p.onderdelen.find((x) => x.blok === 'A1'); o.vormId = 'v-t'; o.minUit = Number(o.min); p.gegeven = true;
+    const o2 = p.onderdelen.find((x) => x.blok === 'A2'); o2.vormId = 'v-t'; o2.minUit = Number(o2.min) + 2; CC.save(); CC.render(); });
+  await page.evaluate(() => CC.open('trainingsplan', { id: 'a-o12-20261029' }));
+  await expect(page.locator('form[data-autosave="tpTerug"] .tr-stat')).toHaveText('Niet zeker gecontroleerd');
+  await expect(page.locator('.tr-minuten')).toContainText('niet zeker of dat de echte minuten zijn');
+  await expect(page.locator('[data-act="tpKloptZo"]')).toHaveCount(0);
+  await expect.poll(async () => { const p = (await rijen()).find((x) => x.act_id === 'a-o12-20261029').data; const a1 = p.onderdelen.find((x) => x.blok === 'A1'), a2 = p.onderdelen.find((x) => x.blok === 'A2'); return `${a1.minUit === a1.min}|${a2.minUit === a2.min + 2}`; }).toBe('true|true');
+  await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
+  await page.locator('[data-act="seg"][data-val="lijn"]').click();
   await page.locator('.tr-wdet .tr-stapknop').nth(1).click();
   await expect(page.locator('.tr-stap')).toHaveText('Stap 2 van 3 · Herkennen → Kiezen');
   await page.locator('[data-act="seg"][data-val="lijn"]').click();

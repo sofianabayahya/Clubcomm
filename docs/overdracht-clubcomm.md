@@ -10,11 +10,11 @@
 ## Open pull requests
 | PR | Wat | Stand |
 |---|---|---|
-| #101 | Besluit 141: trainingsmodule stap 1 (branch `bouw/trainingsmodule-stap1`): Lijn met weekdetail en *Beheer* (*Periodeplanning vastleggen*), Plannen *Stap x van y* en *Toepassing · partij*, Week met vier minutengetallen, leeg = *nog niet gecontroleerd*, *Klopt zoals gepland*, Transfer bij Toepassing; Vormenbank | Tests groen; wacht op akkoord. Niet samenvoegen of publiceren zonder akkoord |
+| #101 | Besluit 141: trainingsmodule stap 1 (branch `bouw/trainingsmodule-stap1`): Lijn met weekdetail en *Beheer* (*Periodeplanning vastleggen*), Plannen *Stap x van y* en *Toepassing · partij*, Week met vier minutengetallen, leeg = *nog niet gecontroleerd*, *Klopt zoals gepland*, Transfer bij Toepassing; Vormenbank; label *Minuten nog niet gecontroleerd* in Lijn, totalen *inclusief nog niet gecontroleerde minuten*, oude trainingen *niet zeker gecontroleerd* | Inhoudelijk akkoord (29-10) na drie verbeteringen; samenvoegen na groene controles. Niet samenvoegen of publiceren zonder akkoord |
 
 ## Wacht op akkoord van de gebruiker
 - Stap 1 trainingsmodule beoordelen. Pas daarna stap 2 (weekevaluatie in Lijn, één nieuw veld op het weekplan) en stap 3 (herinnering na de training).
-- Oude trainingen: ingevulde echte minuten van vóór Besluit 141 zijn mogelijk vooraf ingevuld en niet echt gecontroleerd (bijv. DCG 29-10). Niets aan veranderd; zo nodig samen bekijken.
+- Na samenvoegen: de gebruiker test zelf de route week 45 (Lijn → do in Plannen → Week → Lijn). Pas daarna stap 2.
 - Rechtenvoorstel 032 (begeleider kijkt mee, clubbank): lokaal getest met `npm run test:veilig -- 032` (56/56).
 - Twee bevindingen uit de beveiligingstest (maat L): uitvoerrecht van drie `priv`-functies intrekken; `priv.cc_club()` bij een account in twee clubs.
 - Idee (L): bij een trainer zien of hij al heeft ingelogd.
