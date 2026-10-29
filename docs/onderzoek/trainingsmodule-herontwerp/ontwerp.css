@@ -55,3 +55,25 @@ body { margin: 0; background: var(--grond); }
 .zij .tr { grid-template-columns: 40px 1fr; }
 .min { table-layout: fixed; } .min th, .min td { padding: 6px 2px; } .min th:first-child, .min td:first-child { width: 46px; }
 .min th.n, .min td.n { width: 58px; } .min td:nth-child(2) { overflow-wrap: anywhere; } .min .uit { width: 50px; }
+/* v2 */
+.prog { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.prog div { border-radius: 10px; background: var(--vlak2); padding: 8px 6px; text-align: center; font-size: 13px; }
+.prog b { display: block; font-size: 14px; } .prog .niv { margin-top: 4px; }
+.ostatus { display: inline-block; font-size: 12px; font-weight: 700; border-radius: 999px; padding: 1px 8px; border: 1px solid var(--lijn); color: var(--inkt); background: var(--vlak); }
+.ostatus.ok { background: var(--groen-l); color: var(--groen); border-color: transparent; }
+.ev { width: 100%; border-collapse: collapse; font-size: 14px; } .ev th, .ev td { padding: 5px 3px; border-bottom: 1px solid var(--lijn); text-align: left; } .ev td.c, .ev th.c { text-align: center; }
+.voorstel-c { border: 2px dashed #8a4b00; border-radius: 14px; padding: 2px; }
+.lint { background: #fff4e5; color: #8a4b00; font-weight: 800; font-size: 13px; border-radius: 10px; padding: 6px 10px; }
+.terug { color: var(--blauw); font-weight: 700; font-size: 15px; min-height: 44px; display: flex; align-items: center; }
+.sheetvb { background: rgba(15,23,42,.35); padding: 120px 0 0; min-height: 100vh; }
+.sheetvb .blad { background: var(--grond); border-radius: 20px 20px 0 0; padding: 16px; display: grid; gap: 10px; }
+.menuitem { display: grid; gap: 2px; padding: 12px 0; border-top: 1px solid var(--lijn); min-height: 44px; }
+.menuitem b { font-size: 16px; } .menuitem small { color: var(--zacht); font-size: 14px; }
+.signaal-vb { border-left: 4px solid var(--oranje); }
+.optie { display: flex; flex-direction: column; gap: 8px; }
+.twee-l { display: grid; grid-template-columns: 340px 1fr; gap: 12px; align-items: start; }
+.prog { grid-template-columns: repeat(3, minmax(0, 1fr)); } .prog .niv { white-space: normal; }
+.ev { table-layout: fixed; } .ev td:first-child, .ev th:first-child { width: 42%; } .ev td { overflow-wrap: anywhere; }
+.ostatus { flex: none; }
+.ev { font-size: 13px; } .ev td:first-child, .ev th:first-child { width: 36%; } .ev td { overflow-wrap: normal; word-break: normal; hyphens: none; }
+.ev td:first-child, .ev th:first-child { width: 31%; } .ev td.c { font-size: 12px; padding: 5px 1px; }

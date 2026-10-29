@@ -18,6 +18,9 @@
 - Rechtenvoorstel 032 (begeleider kijkt mee, clubbank): `supabase/migrations/032_begeleider_kijkt_mee.sql.voorstel` (lokaal getest met `npm run test:veilig -- 032`: 56/56).
 - Twee bevindingen uit de beveiligingstest (maat L): uitvoerrecht van drie `priv`-functies netjes intrekken; `priv.cc_club()` bij een account in twee clubs.
 
+- **Herontwerp Lijn · Plannen · Week · Vormenbank** (ontwerp v2, 29-10): `docs/onderzoek/trainingsmodule-herontwerp/ontwerp-v2.md` met voorbeelden op 390 px en laptop. Minuten optie A (alleen presentatie), voorstel C (bedoeling per blok, Toepassing apart; geen nieuwe velden), weekevaluatie (één veld op het weekplan), herinnering na de training (signaal, één keer). Niets gebouwd. Branch `onderzoek/trainingsmodule-herontwerp`.
+- **Opleidingsprofiel lezen door trainers** (voorstel, maat L): `docs/onderzoek/profiel-leesrechten/voorstel.md` op branch `onderzoek/profiel-leesrechten` (scopes `profiel` en `profielconcept`, 24 controles). Niets uitgevoerd.
+
 ## Volgende technische stap
 - Klein (S): de kaart omzetten naar testlabels, `npm run check` en `npm run test:veilig` in `CLAUDE.md`, label voor `tests/kiezer.spec.js`.
 - Voorstel (L): het opleidingsprofiel veilig leesbaar maken voor trainers (rechtenvoorstel en rechtentest eerst).
