@@ -43,7 +43,7 @@ Volgens Besluit 123 hoort methodiek in het profiel. Deze stukken staan nog in de
 |---|---|---|
 | `training.js` (`blokSoort`, `code`, `GROEPNAAM`, `BLOKKLEUR`) | Vaste blokcodes Start · A · B · S (spacing) · P (partij) | Een profiel met een andere opbouw past er niet in |
 | `periodisering.js` (`KOLOMMEN`, `ALIAS`) | Vaste CSV-kolommen, met namen uit het Excel-spoorboekje van Spoor 1 | Een andere club met een eigen periodisering moet dezelfde kolommen gebruiken |
-| `training.js` (`vkHtml`, Besluit 138) en PR #92 (`kiezen`, `aanbevolen`) | Twee manieren om een oefenvorm te kiezen | Twee schermen voor één taak; samenvoegen tot één kiezer |
+| ~~`training.js` (`vkHtml`, Besluit 138) en PR #92 (`kiezen`, `aanbevolen`)~~ | ~~Twee manieren om een oefenvorm te kiezen~~ | Opgelost in Besluit 139: één kiezer (`advies`, `kvHtml`); de vormtypes per blok (`TYPE_BLOK`: Start = droog, rondo, duel; Partij = partij) staan nog in de code, net als de blokcodes |
 | `periodisering.js` (`CC.trMijnLijn`) tegenover het weekthema met tabel (Besluit 135) | Twee verschillende Lijn-schermen | Andere bediening per profiel |
 
 Dit wordt opgelost per onderwerp, met een eigen besluit en de test *Zoals Swift* groen. Niet alles tegelijk.
