@@ -883,3 +883,18 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .tb-wed td { padding: 6px 4px; border-top: 1px solid var(--lijn); vertical-align: top; }
 .tb-wed tr.zacht td { color: var(--zacht, #55606d); }
 #wedPlakTekst, #schemaTekst { width: 100%; font: inherit; font-size: 15px; border: 1px solid var(--lijn); border-radius: 10px; padding: 8px; }
+
+/* Besluit 137: melding met knop; oefenvorm kiezen met redenen */
+.toast .toast-knop { pointer-events: auto; background: none; border: 0; color: #8fc4ff; font: inherit; font-weight: 700; min-height: 44px; padding: 0 4px; margin-left: 6px; cursor: pointer; white-space: nowrap; }
+.kv-ctx { font-size: 15px; margin: 0; }
+.kv-kaart { background: var(--vlak); border: 1px solid var(--lijn); border-radius: var(--r); padding: 10px 12px; margin: 8px 0; display: flex; flex-direction: column; gap: 6px; }
+.kv-kaart.or { border-color: #a84d08; background: #fffaf3; }
+.kv-kop { display: flex; gap: 10px; align-items: center; background: none; border: 0; padding: 0; text-align: left; font: inherit; color: inherit; cursor: pointer; min-height: 44px; }
+.kv-kop .tr-t { flex: 1; }
+.kv-waarom { display: flex; flex-wrap: wrap; gap: 6px; }
+.kv-waarom span { font-size: 13px; border-radius: 999px; padding: 3px 9px; background: #eef4fb; color: #0b3a66; }
+.kv-waarom span.o { background: #fff1e0; color: #8a4b00; }
+.kv-noot { font-size: 14px; color: #8a4b00; margin: 0; }
+.kv-knop { min-height: 44px; }
+.kv-groep { margin: 14px 0 0; font-size: 16px; }
+.tr-rij.kv-sel { outline: 3px solid var(--blauw, #0869c2); outline-offset: 2px; border-radius: 10px; background: #eef4fb; }

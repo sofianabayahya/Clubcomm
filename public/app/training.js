@@ -122,11 +122,12 @@
   const groepen = (p) => { const g = []; (p.onderdelen || []).forEach((o, i) => { let k = blokSoort(o.blok); if (k === 'S') k = g.length ? g[g.length - 1].k : ''; if (!g.length || g[g.length - 1].k !== k) g.push({ k, items: [] }); g[g.length - 1].items.push(i); }); return g; };
   const rijHtml = (S, p, a, o, i, n, k, metCode) => {
     const v = o.vormId && vorm(S, o.vormId);
-    const naam = v ? v.naam : o.spacing ? o.naam || 'Spacing' : o.naam || 'Kies een vorm';
+    const naam = v ? v.naam : o.spacing ? o.naam || 'Spacing' : o.naam || 'Kies oefenvorm';
     const extra = v && n ? (voorAantal(v, n, k) ? esc(voorAantal(v, n, k).tekst) : (!past(v, n, k) ? `gemaakt voor ${bereik(v.spelersMin, v.spelersMax, 'spelers')}` : '')) : '';
     const variant = v && o.variant != null && (v.varianten || [])[o.variant] ? `variant ${esc(v.varianten[o.variant].naam || String.fromCharCode(65 + Number(o.variant)))}` : '';
     const sub = [o.spacing ? (o.naam ? 'spacing' : 'vrij in te vullen') : v ? [typeNaam(typeVan(v)), (CC.weerstand(S, v) || {}).kort].filter(Boolean).join(' · ') : o.blok === 'start' ? 'warming-up · kies een vorm' : 'kies een vorm', variant, o.notitie ? esc(o.notitie) : '', extra].filter(Boolean).join(' · ');
-    return `<button type="button" class="tr-rij" data-act="tpOnderdeel" data-id="${a.id}" data-i="${i}" data-drop-i="${i}">${metCode ? `<span class="tr-code">${esc(code(o))}</span>` : ''}${leegSlot(o) ? `<span class="tr-mini leeg">${icon('plus')}</span>` : mini(v, o.spacing)}<span class="tr-t"><b>${esc(naam)}</b><small>${sub}${o.spacing || leegSlot(o) && o.blok === 'start' ? '' : blokChip(S, o)}</small></span><span class="tr-min">${Number(o.min) || 0} min${v && n && !past(v, n, k) && !voorAantal(v, n, k) ? '<span class="st o">aantal</span>' : ''}</span></button>`;
+    const sel = leegSlot(o) && (pf().slot || {}).id === a.id && pf().slot.i === i;
+    return `<button type="button" class="tr-rij ${sel ? 'kv-sel' : ''}" data-act="${leegSlot(o) ? 'tpLeeg' : 'tpOnderdeel'}" data-id="${a.id}" data-i="${i}" data-drop-i="${i}" ${sel ? 'aria-pressed="true"' : ''}>${metCode ? `<span class="tr-code">${esc(code(o))}</span>` : ''}${leegSlot(o) ? `<span class="tr-mini leeg">${icon('plus')}</span>` : mini(v, o.spacing)}<span class="tr-t"><b>${esc(naam)}</b><small>${sub}${o.spacing || leegSlot(o) && o.blok === 'start' ? '' : blokChip(S, o)}</small></span><span class="tr-min">${Number(o.min) || 0} min${v && n && !past(v, n, k) && !voorAantal(v, n, k) ? '<span class="st o">aantal</span>' : ''}</span></button>`;
   };
   const GROEPNAAM = { start: 'Start', P: 'Partij', '': 'Opbouw' };
   // Het midden van Plannen (en de trainingspagina): kop in één regel, opbouw in blokken
@@ -253,23 +254,61 @@
   CC.on('tpOnderdeelWeg', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); if (!p) return; p.onderdelen.splice(Number(el.dataset.i), 1); CC.save(); CC.closeSheet(); CC.render(); });
   CC.on('tpSpacing', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); if (!p) return; p.onderdelen.push({ id: nieuwId('o'), spacing: true, naam: 'Hooghouden', min: 2 }); CC.save(); CC.render(); });
 
-  // Vorm kiezen: eerst wat past bij het aantal spelers en keepers van deze training; met data-i vul je een lege plek
-  CC.on('tpVormKiezen', (el) => {
-    const S = CC.S(); const p = plan(S, el.dataset.id); if (!p) return; const slot = el.dataset.i != null ? `data-i="${el.dataset.i}"` : '';
-    const n = Number(p.spelers) || 0, k = p.keepers == null ? null : Number(p.keepers);
-    const lijst = mijnVormen(S).slice().sort((x, y) => x.naam.localeCompare(y.naam));
-    const goed = n ? lijst.filter((v) => past(v, n, k) || voorAantal(v, n, k)) : lijst; const rest = n ? lijst.filter((v) => !goed.includes(v)) : [];
-    const rij = (v) => `<button type="button" class="tr-rij" data-act="tpVormErbij" data-id="${el.dataset.id}" data-v="${v.id}" ${slot}>${mini(v)}<span class="tr-t"><b>${esc(v.naam)}</b><small>${[vormSub(S, v), ldNaam(S, koppeling(S, v).primair), n && voorAantal(v, n, k) ? esc(voorAantal(v, n, k).tekst) : ''].filter(Boolean).join(' · ')}</small></span></button>`;
-    CC.sheet('Vorm kiezen', `${n ? `<p class="zacht klein">Passend bij <b>${n} spelers${k != null ? ` en ${k} keeper${k === 1 ? '' : 's'}` : ''}</b>.</p>` : ''}
-      ${goed.length ? `<div class="tr-lijst">${goed.map(rij).join('')}</div>` : `<p class="zacht">${lijst.length ? 'Geen vorm voor dit aantal.' : 'Je hebt nog geen vormen.'}</p>`}
-      ${rest.length ? `<details class="uitklap"><summary>Andere vormen (${rest.length})</summary><div class="tr-lijst">${rest.map(rij).join('')}</div></details>` : ''}
-      <button class="knop licht vol" data-act="vormNieuw" data-plan="${el.dataset.id}" ${slot}>${icon('plus')}Nieuwe vorm maken</button>`, { groot: true });
-  });
   const zetIn = (p, v, i) => { const o = i != null && p.onderdelen[Number(i)];
     if (o) { o.vormId = v.id; if (!o.min) o.min = Number(v.duur) || 0; return; }
     p.onderdelen.push({ id: nieuwId('o'), vormId: v.id, min: Number(v.duur) || 0, spacing: false }); };
+  // ---------- Besluit 137: oefenvorm kiezen vanuit een plek in twee tikken ----------
+  // Alleen je eigen vormen. Past het best = leerdoel van het blok (bij Start en Partij: het passende type) én het aantal spelers;
+  // per vorm de redenen (✓ of oranje). ClubComm stelt voor, de trainer kiest (Besluit 121); niets gaat vanzelf.
+  const TYPE_BLOK = { start: ['droog', 'rondo', 'duel'], P: ['partij'] };
+  const plekNaam = (o) => (o ? (o.blok === 'P' ? 'Partij' : code(o) || 'deze plek') : 'de training');
+  const vorigeWeek = (S, p, v) => { const d = actVan(S, p).datum; if (!d) return false; const van = D.addDays(d, -13);
+    return plannen(S).some((x) => x !== p && !x.week && x.eigenaar === ik() && (x.onderdelen || []).some((o) => o.vormId === v.id) && (() => { const e = actVan(S, x).datum; return e && e >= van && e < d; })()); };
+  const aanbevolen = (S, p, i) => { const a = actVan(S, p); const o = i != null && i !== '' ? p.onderdelen[Number(i)] : null; const n = aantalSp(S, p, a); const k = p.keepers == null || p.keepers === '' ? null : Number(p.keepers);
+    const soort = o ? blokSoort(o.blok) : ''; const doel = soort === 'A' || soort === 'B' ? blokDoel(S, p, soort) : null; const f = o ? faseVan(S, o) : null; const types = o && !doel ? TYPE_BLOK[o.blok] || null : null;
+    const ctx = { o, n, k, soort, doel, f, types, label: plekNaam(o) };
+    const kaarten = mijnVormen(S).map((v) => { const kp = koppeling(S, v); const ld = !!doel && (kp.primair === doel || kp.ook.includes(doel)); const tp = !!types && types.includes(typeVan(v));
+      const va = n ? voorAantal(v, n, k) : null; const aantalOk = !n || past(v, n, k) || !!va; const vf = f && v.faseAdvies;
+      const r = [];
+      if (ld) r.push([`${soort} · ${ldNaam(S, doel)} ✓`]); if (tp) r.push([`${typeNaam(typeVan(v))} ✓`]);
+      if (n) r.push(aantalOk ? [va ? `bij ${n}: eigen opzet ✓` : `${n} spelers ✓`] : [`gemaakt voor ${bereik(v.spelersMin, v.spelersMax, 'spelers')}`, true]);
+      if (vf) r.push(v.faseAdvies === f.id ? [`${faseNaam(S, f.id)} ✓`] : [`${faseNaam(S, v.faseAdvies)} (${ctx.label} = ${faseNaam(S, f.id)})`, true]);
+      if (vorigeWeek(S, p, v)) r.push(['vorige week ook gedaan']);
+      const noot = aantalOk ? '' : `Je hebt er vandaag ${n}.${v.minVariant && (v.aantalMin == null || n >= Number(v.aantalMin)) ? ` Bij ${n}: <b>${esc(v.minVariant)}</b> (minimumvariant van deze vorm).` : ' Pas het aantal of de ruimte aan, of kies een andere vorm.'}`;
+      return { v, r, noot, relevant: doel ? ld : types ? tp : true, aantalOk, faseOk: !vf || v.faseAdvies === f.id, duurAfstand: Math.abs((Number(v.duur) || 0) - (Number(o && o.min) || Number(v.duur) || 0)) }; });
+    const volg = (x, y) => (y.faseOk - x.faseOk) || (x.duurAfstand - y.duurAfstand) || x.v.naam.localeCompare(y.v.naam);
+    return { ctx, top: kaarten.filter((x) => x.relevant && x.aantalOk).sort(volg), ander: kaarten.filter((x) => x.relevant && !x.aantalOk).sort(volg), rest: kaarten.filter((x) => !x.relevant).sort(volg) }; };
+  const kvKaart = (S, a, i, x, ctx) => { const or = !x.aantalOk;
+    return `<div class="kv-kaart ${or ? 'or' : ''}" data-naam="${esc(x.v.naam.toLowerCase())}"><button type="button" class="kv-kop" data-act="vormOpen" data-id="${x.v.id}">${mini(x.v)}<span class="tr-t"><b>${esc(x.v.naam)}</b><small>${vormSub(S, x.v)}</small></span></button>
+      ${x.r.length ? `<div class="kv-waarom">${x.r.map(([t, o]) => `<span class="${o ? 'o' : ''}">${esc(t)}</span>`).join('')}</div>` : ''}${x.noot ? `<p class="kv-noot">${x.noot}</p>` : ''}
+      <button type="button" class="knop ${or ? 'licht' : ''} kv-knop" data-act="tpVormErbij" data-id="${esc(a.id)}" data-v="${x.v.id}" ${i != null && i !== '' ? `data-i="${i}"` : ''}>${or ? `Toch in ${esc(ctx.label)} zetten` : `Zet in ${esc(ctx.label)}`}</button></div>`; };
+  const kvCtx = (S, ctx) => [ctx.doel ? `<b>${esc(ctx.soort)} · ${esc(ldNaam(S, ctx.doel))}</b>` : ctx.types ? `<b>${esc(ctx.label)}</b>` : '', ctx.f ? esc(faseNaam(S, ctx.f.id)) : '', ctx.n ? `${ctx.n} spelers${ctx.k != null ? `, ${ctx.k} keeper${ctx.k === 1 ? '' : 's'}` : ''}` : '', ctx.o ? `${Number(ctx.o.min) || 0} min` : ''].filter(Boolean).join(' · ');
+  const kvLijst = (S, p, a, i) => { const r = aanbevolen(S, p, i); const c = r.ctx; const kop = c.doel || c.types ? 'Past het best' : c.n ? `Passend bij ${c.n} spelers` : 'Je vormen';
+    return `${kvCtx(S, c) ? `<p class="kv-ctx">${kvCtx(S, c)}</p>` : ''}<p class="zacht klein" style="margin:0">Uit je eigen vormen, op leerdoel, aantal en fase. Jij kiest.</p>
+      <h4 class="kv-groep">${kop} (${r.top.length})</h4>${r.top.length ? r.top.map((x) => kvKaart(S, a, i, x, c)).join('') : `<p class="zacht klein">${c.doel ? `Nog geen vorm voor ${esc(c.soort)} · ${esc(ldNaam(S, c.doel))}${c.n ? ` bij ${c.n} spelers` : ''}.` : 'Nog geen passende vorm.'}</p>`}
+      ${r.ander.length ? `<h4 class="kv-groep">Ander aantal spelers (${r.ander.length})</h4>${r.ander.map((x) => kvKaart(S, a, i, x, c)).join('')}` : ''}
+      ${r.rest.length ? `<details class="uitklap"><summary>Alle andere vormen (${r.rest.length}) · zoeken</summary><input type="search" class="tr-zoek kv-zoek" placeholder="Zoek een vorm…" aria-label="Zoek een vorm"><div class="kv-alle">${r.rest.map((x) => kvKaart(S, a, i, x, c)).join('')}</div></details>` : ''}
+      <div class="knoppen"><button class="knop licht" data-act="vormNieuw" data-plan="${esc(a.id)}" ${i != null && i !== '' ? `data-i="${i}"` : ''}>${icon('plus')}Nieuwe vorm</button>${c.o ? `<button class="knop licht" data-act="tpOnderdeel" data-id="${esc(a.id)}" data-i="${i}">Minuten en notitie van ${esc(c.label)}</button>` : ''}</div>`; };
+  document.addEventListener('input', (e) => { if (!e.target.classList || !e.target.classList.contains('kv-zoek')) return; const q = e.target.value.trim().toLowerCase();
+    e.target.parentElement.querySelectorAll('.kv-alle .kv-kaart').forEach((k) => { k.hidden = !!q && !k.dataset.naam.includes(q); }); });
+  const kiezen = (id, i) => { const S = CC.S(); const p = plan(S, id); if (!p) return; const o = i != null && i !== '' ? p.onderdelen[Number(i)] : null;
+    CC.sheet(`Kies oefenvorm${o ? ` · ${plekNaam(o)}` : ''}`, kvLijst(S, p, actVan(S, p), i), { groot: true }); };
+  CC.on('tpVormKiezen', (el) => kiezen(el.dataset.id, el.dataset.i));
+  // Lege plek: telefoon = meteen kiezen; laptop (Plannen) = plek kiezen, links staat wat daar past
+  CC.on('tpLeeg', (el) => { const i = Number(el.dataset.i);
+    if (groot() && document.querySelector('.tr-pbank')) { const f = pf(); f.slot = f.slot && f.slot.id === el.dataset.id && f.slot.i === i ? null : { id: el.dataset.id, i }; return CC.render(); }
+    kiezen(el.dataset.id, i); });
+  CC.on('tpSlotWeg', () => { pf().slot = null; CC.render(); });
+  // Zet in …: direct opgeslagen; 8 seconden Ongedaan maken
   CC.on('tpVormErbij', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); const v = vorm(S, el.dataset.v); if (!p || !v) return;
-    zetIn(p, v, el.dataset.i); CC.save(); CC.closeSheet(); CC.render(); });
+    const i = el.dataset.i != null && el.dataset.i !== '' ? Number(el.dataset.i) : null; const o = i != null ? p.onderdelen[i] : null;
+    CC.ui.kvTerug = { id: el.dataset.id, i, v: v.id, oud: o ? { vormId: o.vormId || null, min: o.min } : null, lengte: (p.onderdelen || []).length };
+    zetIn(p, v, i); const label = plekNaam(i != null ? p.onderdelen[i] : null); pf().slot = null;
+    CC.save(); CC.closeSheet(); CC.render(); CC.toast(`In ${label} gezet`, '', { knop: 'Ongedaan maken', act: 'tpOngedaan' }); });
+  CC.on('tpOngedaan', () => { const u = CC.ui.kvTerug; const S = CC.S(); const p = u && plan(S, u.id); CC.ui.kvTerug = null; if (!p) return;
+    if (u.oud && p.onderdelen[u.i] && p.onderdelen[u.i].vormId === u.v) { p.onderdelen[u.i].vormId = u.oud.vormId || undefined; if (!u.oud.vormId) delete p.onderdelen[u.i].vormId; p.onderdelen[u.i].min = u.oud.min; }
+    else if (!u.oud && p.onderdelen.length === u.lengte + 1 && p.onderdelen[u.lengte].vormId === u.v) p.onderdelen.splice(u.lengte, 1);
+    CC.save(); CC.render(); CC.toast('Ongedaan gemaakt'); });
   // Eerdere training als basis: opbouw, thema en leerdoelen overnemen
   CC.on('tpKopie', (el) => {
     const S = CC.S(); const p = plan(S, el.dataset.id);
@@ -356,6 +395,8 @@
     const l = mijnVormen(S).filter((v) => zoekTreft(S, v, f.q) && (!f.past || !n || past(v, n, null)) && (!doel || koppeling(S, v).primair === doel || koppeling(S, v).ook.includes(doel))).sort((x, y) => x.naam.localeCompare(y.naam));
     return l.length ? l.map((v) => `<div class="tr-bk" draggable="true" data-drag-v="${v.id}"><button type="button" class="tr-bk-t" data-act="vormOpen" data-id="${v.id}">${mini(v)}<span class="tr-t"><b>${esc(v.naam)}</b><small>${[v.duur ? `${v.duur} min` : '', bereik(v.spelersMin, v.spelersMax, 'sp'), ldNaam(S, koppeling(S, v).primair)].filter(Boolean).join(' · ')}</small></span></button><button class="icoonknop" data-act="tpPlaats" data-id="${a.id}" data-v="${v.id}" aria-label="${esc(v.naam)} in de training zetten">${icon('plus')}</button></div>`).join('') : '<p class="zacht klein">Geen vorm gevonden.</p>'; };
   const bankKolom = (S, p, a) => { const f = pf(); const n = aantalSp(S, p, a);
+    const sl = f.slot && f.slot.id === a.id && p.onderdelen[f.slot.i] && leegSlot(p.onderdelen[f.slot.i]) ? f.slot : null;
+    if (sl) return `<div class="kaartje kv-bank"><div class="tr-kop"><b>Aanbevolen voor ${esc(plekNaam(p.onderdelen[sl.i]))}</b><button class="icoonknop" data-act="tpSlotWeg" aria-label="Terug naar Mijn vormen">${icon('x')}</button></div>${kvLijst(S, p, a, sl.i)}<small class="zacht">Of sleep een vorm naar een plek.</small></div>`;
     return `<div class="kaartje"><b>Mijn vormen</b><input id="planZoek" class="tr-zoek" type="search" placeholder="Zoek een vorm…" aria-label="Zoek een vorm" value="${esc(f.q || '')}">
       <div class="chips">${n ? `<button class="chipknop ${f.past ? 'aan' : ''}" aria-pressed="${!!f.past}" data-act="pfZet" data-k="past">past bij ${n}</button>` : ''}${['A', 'B'].filter((b) => blokDoel(S, p, b)).map((b) => `<button class="chipknop ${f.doel === b ? 'aan' : ''}" aria-pressed="${f.doel === b}" data-act="pfZet" data-k="doel" data-w="${b}">${b} = ${esc(ldNaam(S, blokDoel(S, p, b)))}</button>`).join('')}</div>
       <div id="planBank" data-id="${a.id}">${bankLijst(S, p, a)}</div><small class="zacht">${groot() ? 'Sleep een vorm naar een plek, of tik op +' : 'Tik op +'} (komt op de eerste passende lege plek).</small>

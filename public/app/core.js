@@ -87,10 +87,11 @@
     if (CC.alGetikt(`submit|${JSON.stringify(f.dataset)}`, 1500)) return; fn(f, e); });
 
   // ---------- Toast en sheet ----------
-  CC.toast = (tekst, soort = '') => {
+  // Besluit 137: een melding kan één knop hebben (bijv. Ongedaan maken); dan blijft hij 8 seconden staan
+  CC.toast = (tekst, soort = '', actie) => {
     const t = document.getElementById('toast');
-    t.className = `toast show ${soort}`; t.innerHTML = `${icon(soort === 'fout' ? 'circle-alert' : 'circle-check')}<span>${esc(tekst)}</span>`;
-    clearTimeout(CC._tt); CC._tt = setTimeout(() => { t.className = 'toast'; }, 2600);
+    t.className = `toast show ${soort}`; t.innerHTML = `${icon(soort === 'fout' ? 'circle-alert' : 'circle-check')}<span>${esc(tekst)}</span>${actie ? `<button type="button" class="toast-knop" data-act="${esc(actie.act)}">${esc(actie.knop)}</button>` : ''}`;
+    clearTimeout(CC._tt); CC._tt = setTimeout(() => { t.className = 'toast'; t.innerHTML = ''; }, actie ? 8000 : 2600);
   };
   CC.sheet = (titel, html, opts = {}) => {
     const el = document.getElementById('sheet');

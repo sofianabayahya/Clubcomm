@@ -1538,6 +1538,61 @@ test('teams en trainingsdagen: team, rooster, trainer, wedstrijden plakken en sc
   await controleer(page, fouten, 'teams en trainingsdagen');
 });
 
+// Besluit 137: oefenvorm kiezen vanuit een plek in twee tikken (redenen, ander aantal, vorige week, ongedaan maken, laptop)
+test('trainingsmodule: oefenvorm kiezen in twee tikken met ongedaan maken', async ({ page }) => {
+  const fouten = volgFouten(page);
+  await nepDatabase(page);
+  const profiel = JSON.parse(require('fs').readFileSync(require('path').join(__dirname, '..', 'supabase', 'profielen', 'dcg.json'), 'utf8'));
+  await page.evaluate((data) => { const db = JSON.parse(sessionStorage.getItem('fake-sb-db'));
+    db.rows['dcg|profiel|dcg'] = { club_id: 'dcg', soort: 'profiel', id: 'dcg', scope: 'hjo', data };
+    db.rows['dcg|club|club'].data.modules = { ...(db.rows['dcg|club|club'].data.modules || {}), training: true };
+    sessionStorage.setItem('fake-sb-db', JSON.stringify(db)); }, profiel);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await inloggen(page, 'admin@test.nl');
+  await page.evaluate(() => { const S = CC.S(); const D = CC.date; CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer')); const me = CC.me().id;
+    S.acts.push({ id: 'tVorig', teamId: 'O12-1', soort: 'training', datum: D.addDays(D.vandaag(), -5), tijd: '18:30', eind: '19:45' }, { id: 'tKies', teamId: 'O12-1', soort: 'training', datum: D.addDays(D.vandaag(), 2), tijd: '18:30', eind: '19:45' });
+    const k = (ld) => ({ dcg: { primair: ld, ook: [] } });
+    S.vormen = [{ id: 'vA', naam: 'Dreigen en passeren', eigenaar: me, spelersMin: 6, spelersMax: 16, duur: 10, koppelingen: k('ll-1v1-aanvallend') },
+      { id: 'vB', naam: 'Zes tegen zes', eigenaar: me, spelersMin: 11, spelersMax: 14, duur: 20, aantalMin: 10, minVariant: '5 tegen 5 op een derde veld', koppelingen: k('ll-1v1-aanvallend') },
+      { id: 'vC', naam: 'Rondo vier tegen een', eigenaar: me, spelersMin: 5, spelersMax: 10, duur: 8, koppelingen: k('ll-passen') }];
+    const sj = CC.tr.sjablonen(S).find((x) => x.id === 'dcg-75');
+    S.trainingsplannen = [{ id: 'tp-v', actId: 'tVorig', teamId: 'O12-1', datum: D.addDays(D.vandaag(), -5), eigenaar: me, thema: '', leerdoelen: [], onderdelen: [{ id: 'x', vormId: 'vA', min: 10 }] },
+      { id: 'tp-k', actId: 'tKies', teamId: 'O12-1', datum: D.addDays(D.vandaag(), 2), eigenaar: me, thema: '', leerdoelen: [], spelers: 10, keepers: null, sjabloon: sj.id, blokDoel: { A: 'll-1v1-aanvallend', B: 'll-passen' },
+        onderdelen: sj.blokken.map((b, i) => ({ id: 'o' + i, blok: b.blok, min: b.min, spacing: b.blok === 'S', naam: b.blok === 'S' ? 'Hooghouden' : b.naam || '', sjabloonFase: b.fase || null })) }];
+    CC.save(); CC.render(); });
+  await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
+  await page.locator('[data-act="seg"][data-val="plannen"]').click();
+  await page.locator('.weekstrook [data-val="tKies"]').click();
+  // Tik 1: de lege plek A2
+  await page.locator('.tr-pmid .tr-rij[data-i="3"]').click();
+  await expect(page.locator('#sheet')).toContainText('Kies oefenvorm · A2');
+  await expect(page.locator('#sheet .kv-ctx')).toContainText('A · 1v1 aanvallend');
+  await expect(page.locator('#sheet .kv-groep').first()).toHaveText('Past het best (1)');
+  await expect(page.locator('#sheet .kv-kaart').first()).toContainText('Dreigen en passeren');
+  await expect(page.locator('#sheet .kv-kaart').first()).toContainText('vorige week ook gedaan');
+  const ander = page.locator('#sheet .kv-kaart.or');
+  await expect(ander).toContainText('Je hebt er vandaag 10. Bij 10: 5 tegen 5 op een derde veld');
+  await expect(ander.locator('[data-act="tpVormErbij"]')).toHaveText('Toch in A2 zetten');
+  await expect(page.locator('#sheet details summary')).toContainText('Alle andere vormen (1)');
+  // Tik 2: Zet in A2; daarna ongedaan maken
+  await page.locator('#sheet .kv-kaart').first().locator('[data-act="tpVormErbij"]').click();
+  await expect(page.locator('.tr-pmid .tr-rij[data-i="3"]')).toContainText('Dreigen en passeren');
+  await expect(page.locator('#toast')).toContainText('In A2 gezet');
+  await expect.poll(async () => Object.values((await nepDb(page)).rows).find((r) => r.soort === 'trainingsplannen' && r.act_id === 'tKies').data.onderdelen[3].vormId).toBe('vA');
+  await page.locator('#toast [data-act="tpOngedaan"]').click();
+  await expect(page.locator('.tr-pmid .tr-rij[data-i="3"]')).toContainText('Kies oefenvorm');
+  await expect.poll(async () => Object.values((await nepDb(page)).rows).find((r) => r.soort === 'trainingsplannen' && r.act_id === 'tKies').data.onderdelen[3].vormId || null).toBe(null);
+  // Laptop: plek kiezen, links Aanbevolen voor B1 (leerdoel passen)
+  await page.setViewportSize({ width: 1366, height: 900 }); await page.evaluate(() => CC.render());
+  await page.locator('.tr-pmid .tr-rij[data-i="4"]').click();
+  await expect(page.locator('.tr-pmid .tr-rij[data-i="4"]')).toHaveClass(/kv-sel/);
+  await expect(page.locator('.kv-bank')).toContainText('Aanbevolen voor B1');
+  await page.locator('.kv-bank .kv-kaart').first().locator('[data-act="tpVormErbij"]').click();
+  await expect(page.locator('.tr-pmid .tr-rij[data-i="4"]')).toContainText('Rondo vier tegen een');
+  await expect(page.locator('.kv-bank')).toHaveCount(0);
+  await controleer(page, fouten, 'oefenvorm kiezen');
+});
+
 // Besluit 135: volgorde op de laptop, "Je zit in" en weekthema bij een club met het KNVB-profiel (geen periodisering)
 test('trainingsmodule: volgorde, je zit in en weekthema (KNVB-profiel)', async ({ page }) => {
   const fouten = volgFouten(page);
@@ -1618,10 +1673,10 @@ test('trainingsmodule: classificatie, sjabloon, fase, minuten per leerdoel en fi
   await expect(page.locator('.tr-pmid')).toContainText('75 van 1 min');
   // Besluit 133: met leerniveaus in het profiel staat het leerniveau in de regel (de fase zit ingeklapt in het venster)
   await expect(page.locator('.tr-pmid .tr-rij').nth(1).locator('.tr-fase')).toHaveCount(0);
-  // Lege plek A1 vullen met een nieuwe vorm en die classificeren
+  // Lege plek A1 vullen met een nieuwe vorm en die classificeren (Besluit 137: laptop = plek kiezen, links Aanbevolen voor A1)
   await page.locator('.tr-pmid .tr-rij').nth(1).click();
-  await page.locator('#sheet [data-act="tpVormKiezen"]').click();
-  await page.locator('#sheet [data-act="vormNieuw"]').click();
+  await expect(page.locator('.kv-bank')).toContainText('Aanbevolen voor A1');
+  await page.locator('.kv-bank [data-act="vormNieuw"]').click();
   await page.fill('#v-n', 'Druk zetten 2 tegen 3+1'); await page.locator('#v-n').press('Tab');
   await page.locator('[data-act="vormKies"][data-veld="ld"][data-w="ll-1v1-verdedigen"]').click();
   await page.fill('input[name="aan"]', '3'); await page.fill('input[name="ver"]', '2'); await page.fill('input[name="neu"]', '1'); await page.locator('input[name="neu"]').press('Tab');

@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 29 oktober 2026 (t/m Besluit 136)
+Laatst bijgewerkt: 29 oktober 2026 (t/m Besluit 137)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -17,11 +17,12 @@ Laatst bijgewerkt: 29 oktober 2026 (t/m Besluit 136)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 137 | Oefenvorm kiezen vanuit een plek in twee tikken (*Kies oefenvorm* → *Zet in A2*): alleen eigen vormen, *Past het best* op leerdoel en aantal met redenen (ook *vorige week ook gedaan*), *Ander aantal spelers* in oranje met de minimumvariant, *Ongedaan maken*; laptop: plek kiezen, links *Aanbevolen voor …* | ✅ geldt |  |
 | 136 | Teams, trainingsdagen en wedstrijden zelf beheren (clubbeheerder en HO): team toevoegen, trainer koppelen, trainingen pas in de kalender als er een trainer is, wedstrijden plakken van voetbal.nl, trainingsschema laden (vanaf een gekozen leeftijd) | ✅ geldt |  |
 | 135 | Tabblad Training in de volgorde van het werk (laptop: Lijn · Plannen · Week · Vormen), regel *Je zit in* (week, thema, A/B; tik = Lijn), geen dubbelingen (maandoverzicht alleen in Lijn, evalueren in Week), weekthema met A/B voor clubs zonder periodisering | ✅ geldt |  |
 | 134 | Trainers begeleiden (KNVB): begeleiden en ontwikkelen, niet beoordelen; begeleider (HO of TC met traject) ziet het hele seizoen de trainingen van de trainer, kijkt en geeft feedback; club beslist; invoeren per club in te stellen; trainer deelt zelf vormen in een clubbank. Gebouwd: moment verplaatsen en *niet doorgegaan*. Meekijken en clubbank: rechtenvoorstel, wacht op akkoord | ✅ geldt (deels gebouwd) |  |
 | 133 | DCG-methodiek als profiel v3 (kerndocument leidend); methodiekblok compact; leerniveau per blok; status berekend; evaluatiekaart (3 open + verdiepend); periodisering laden uit CSV met voorbeeld; observatiepunten bij de wedstrijd; uitgebreide vormvelden | ✅ geldt |  |
-| 132 | Training: Week (telefoon, controleren) · Plannen (laptop: vormen · training in blokken · week) · Vormen · Lijn; vorm in Rinus-stijl met *Zet in een training…* en materiaal uit de tekening; printen; kopiëren naar een andere dag | ◐ deels herzien | door 135 (volgorde op de laptop, geen weeklijst en maandoverzicht in Plannen, evalueren in Week) |
+| 132 | Training: Week (telefoon, controleren) · Plannen (laptop: vormen · training in blokken · week) · Vormen · Lijn; vorm in Rinus-stijl met *Zet in een training…* en materiaal uit de tekening; printen; kopiëren naar een andere dag | ◐ deels herzien | door 135 (volgorde op de laptop, geen weeklijst en maandoverzicht in Plannen, evalueren in Week); 137 (lege plek: kies oefenvorm in twee tikken; laptop: plek kiezen, links aanbevolen) |
 | 131 | Oefenvormen geclassificeerd (8 hoofdtypes, weerstand vanuit het hoofdleerdoel, omschakeling met richting), opbouw in blokken met sjabloon DCG 75 en fase-voorstel, gepland en uitgevoerd, filters; laptop vanaf 900 px | ◐ deels herzien | door 132 (geen leerdoel-chips meer in de kop van een training; vorm opent in Rinus-stijl) |
 | 130 | Trainer: eigen tabblad Training (week met de training bovenaan, aanwezigheid in een venster, Vormen); ook bij AVV Swift, daar trainingen op datum | ◐ deels herzien | door 132 (Training heeft Week · Plannen · Vormen · Lijn; de training staat op de laptop in Plannen) |
 | 129 | Observeren: klok en turven bovenaan, snelle notities met minuut en onderwerp, aandachtspunten na afloop | ✅ geldt |  |
@@ -670,6 +671,18 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 137 — Oefenvorm kiezen vanuit een plek in twee tikken, met redenen en ongedaan maken
+*Besloten 29 oktober 2026 ("A, bouw het maar, met vorige week ook gedaan"), na analyse en voorbeelden (`docs/onderzoek/oefenvorm-kiezen/`). Herziet Besluit 132 deels. Past bij Besluit 121 (ClubComm stelt voor, de trainer kiest).*
+- **Twee tikken:** (1) tik op een lege plek (*Kies oefenvorm*) → het venster **Kies oefenvorm · A2** opent meteen; (2) **Zet in A2** → klaar, direct opgeslagen. Minuten en notitie van de plek: knop onderaan het venster.
+- **Alleen je eigen vormen**; niets verzonnen, niets gedeeld of gepubliceerd. Gedeelde vormen (clubbank) pas na akkoord op de rechten (Besluit 134).
+- **Past het best:** het leerdoel van het blok (A of B; hoofdleerdoel of *ook*) én het aantal spelers en keepers van de training (of *Bij dit aantal* van de vorm). Bij Start en Partij: het passende type (warming-up: droog, rondo, duel; partij: partijvorm). Volgorde: aanbevolen fase gelijk aan de fase van de plek, dan duur dicht bij de minuten van de plek.
+- **Redenen per vorm** (✓ of oranje): leerdoel, aantal, fase (bijv. *oefenleer (A2 = toepassing)*) en **vorige week ook gedaan** (dezelfde vorm in een eigen training in de 13 dagen ervoor), zodat je bewust herhaalt of afwisselt. Informatie, geen regel.
+- **Ander aantal spelers:** zelfde leerdoel, maar het aantal past niet: oranje kaart met *"Je hebt er vandaag 10. Bij 10: … (minimumvariant van deze vorm)"*, anders *"Pas het aantal of de ruimte aan, of kies een andere vorm."* De knop heet **Toch in A2 zetten**: de trainer beslist; in de training blijft het label *aantal*.
+- **Alle andere vormen:** ingeklapt, met zoeken. Geen passende vorm: dat staat er, met *Nieuwe vorm* (komt meteen op de plek).
+- **Ongedaan maken:** de melding *In A2 gezet* heeft 8 seconden de knop **Ongedaan maken** (zet de plek terug zoals hij was en slaat opnieuw op). Daarna: plek openen → *Weghalen*.
+- **Laptop (Plannen):** geen venster. Klik op een lege plek: die wordt blauw omrand en de kolom links wordt **Aanbevolen voor A2** (dezelfde kaarten); nog een keer klikken of ✕ = terug naar *Mijn vormen*. Slepen blijft werken.
+- **Techniek:** hergebruikt `blokDoel`, `koppeling`, `aantalSp`, `past`, `voorAantal`, `faseVan`, `typeVan`, `mijnVormen`, `zetIn`; `CC.toast` kan één knop hebben. Geen database- of rechtenwijziging; de `vormId`-koppeling blijft gelijk.
+
 ## Besluit 136 — Teams, trainingsdagen en wedstrijden zelf beheren; trainingen pas bij een trainer
 *Besloten 29 oktober 2026 ("bouw ze alle drie"), na voorbeelden (`docs/onderzoek/teams-zelf/`). Aanleiding: bij AVV Swift kon een nieuwe trainer (zondag O16-2) niet aan zijn team gekoppeld worden, omdat het team niet bestond, en teams, trainingsdagen en wedstrijden kon alleen Claude invoeren.*
 - **Wie:** de **clubbeheerder** (bovenaan *Seizoen*) én de **HO** (pakket Trainers begeleiden: onder *Trainers* de regels *Teams, trainingsdagen en wedstrijden* en *Trainer toevoegen*). Een TC niet.
@@ -745,6 +758,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Swift en andere clubs:** niets verandert. Alles hangt aan het DCG-profiel (de module verschijnt alleen als het profiel voetbalproblemen en leerniveaus heeft).
 
 ## Besluit 132 — Training op de laptop: Plannen, vorm in Rinus-stijl, printen, kopiëren en de Lijn
+> **◐ Deels herzien door Besluit 137** (lege plek: oefenvorm kiezen in twee tikken; laptop: plek kiezen, links aanbevolen).
 > **◐ Deels herzien door Besluit 135** (volgorde op de laptop Lijn · Plannen · Week · Vormen; geen weeklijst en maandoverzicht in Plannen; evalueren in Week).
 
 *Besloten 28 oktober 2026 ("bouw maar in de volgorde"), na een schermopname van KNVB Rinus en voorbeelden (`docs/onderzoek/training-laptop/`). Aanleiding: op de laptop stond alles onder elkaar (thema, vijf leerdoel-chips, spelers, opbouw, maandminuten, terugblik, knoppen); trainingen maak je op de laptop en controleer je op de telefoon.*

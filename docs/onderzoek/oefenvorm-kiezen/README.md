@@ -1,6 +1,6 @@
 # Oefenvorm kiezen vanuit een blok in twee tikken (voorstel 29-10-2026)
 
-*Analyse en ontwerp. **Geen code, database of rechten gewijzigd.** Bouwen pas na akkoord (dan Besluit 137).*
+*Analyse en ontwerp. **Gebouwd op 29-10 als Besluit 137** (met *vorige week ook gedaan*).*
 
 ## Hoe het nu werkt (code nagelopen in `public/app/training.js`)
 | Stap | Handler | Wat gebeurt er |
