@@ -266,25 +266,28 @@
     return plannen(S).some((x) => x !== p && !x.week && x.eigenaar === ik() && (x.onderdelen || []).some((o) => o.vormId === v.id) && (() => { const e = actVan(S, x).datum; return e && e >= van && e < d; })()); };
   const aanbevolen = (S, p, i) => { const a = actVan(S, p); const o = i != null && i !== '' ? p.onderdelen[Number(i)] : null; const n = aantalSp(S, p, a); const k = p.keepers == null || p.keepers === '' ? null : Number(p.keepers);
     const soort = o ? blokSoort(o.blok) : ''; const doel = soort === 'A' || soort === 'B' ? blokDoel(S, p, soort) : null; const f = o ? faseVan(S, o) : null; const types = o && !doel ? TYPE_BLOK[o.blok] || null : null;
-    const ctx = { o, n, k, soort, doel, f, types, label: plekNaam(o) };
+    const nv = o && !o.spacing ? o.niveau || o.niveauVoorstel || null : null; // Besluit 137: leerniveau van de plek
+    const ctx = { o, n, k, soort, doel, f, nv, types, label: plekNaam(o) };
     const kaarten = mijnVormen(S).map((v) => { const kp = koppeling(S, v); const ld = !!doel && (kp.primair === doel || kp.ook.includes(doel)); const tp = !!types && types.includes(typeVan(v));
       const va = n ? voorAantal(v, n, k) : null; const aantalOk = !n || past(v, n, k) || !!va; const vf = f && v.faseAdvies;
       const r = [];
       if (ld) r.push([`${soort} · ${ldNaam(S, doel)} ✓`]); if (tp) r.push([`${typeNaam(typeVan(v))} ✓`]);
       if (n) r.push(aantalOk ? [va ? `bij ${n}: eigen opzet ✓` : `${n} spelers ✓`] : [`gemaakt voor ${bereik(v.spelersMin, v.spelersMax, 'spelers')}`, true]);
+      const vn = nv && v.niveauAdvies && niveauNaam(S, v.niveauAdvies);
+      if (vn) r.push(v.niveauAdvies === nv ? [`${niveauNaam(S, nv)} ✓`] : [`${niveauNaam(S, v.niveauAdvies)} (${ctx.label} = ${niveauNaam(S, nv)})`, true]);
       if (vf) r.push(v.faseAdvies === f.id ? [`${faseNaam(S, f.id)} ✓`] : [`${faseNaam(S, v.faseAdvies)} (${ctx.label} = ${faseNaam(S, f.id)})`, true]);
       if (vorigeWeek(S, p, v)) r.push(['vorige week ook gedaan']);
       const noot = aantalOk ? '' : `Je hebt er vandaag ${n}.${v.minVariant && (v.aantalMin == null || n >= Number(v.aantalMin)) ? ` Bij ${n}: <b>${esc(v.minVariant)}</b> (minimumvariant van deze vorm).` : ' Pas het aantal of de ruimte aan, of kies een andere vorm.'}`;
-      return { v, r, noot, relevant: doel ? ld : types ? tp : true, aantalOk, faseOk: !vf || v.faseAdvies === f.id, duurAfstand: Math.abs((Number(v.duur) || 0) - (Number(o && o.min) || Number(v.duur) || 0)) }; });
-    const volg = (x, y) => (y.faseOk - x.faseOk) || (x.duurAfstand - y.duurAfstand) || x.v.naam.localeCompare(y.v.naam);
+      return { v, r, noot, relevant: doel ? ld : types ? tp : true, aantalOk, niveauOk: !vn || v.niveauAdvies === nv, faseOk: !vf || v.faseAdvies === f.id, duurAfstand: Math.abs((Number(v.duur) || 0) - (Number(o && o.min) || Number(v.duur) || 0)) }; });
+    const volg = (x, y) => (y.niveauOk - x.niveauOk) || (y.faseOk - x.faseOk) || (x.duurAfstand - y.duurAfstand) || x.v.naam.localeCompare(y.v.naam);
     return { ctx, top: kaarten.filter((x) => x.relevant && x.aantalOk).sort(volg), ander: kaarten.filter((x) => x.relevant && !x.aantalOk).sort(volg), rest: kaarten.filter((x) => !x.relevant).sort(volg) }; };
   const kvKaart = (S, a, i, x, ctx) => { const or = !x.aantalOk;
     return `<div class="kv-kaart ${or ? 'or' : ''}" data-naam="${esc(x.v.naam.toLowerCase())}"><button type="button" class="kv-kop" data-act="vormOpen" data-id="${x.v.id}">${mini(x.v)}<span class="tr-t"><b>${esc(x.v.naam)}</b><small>${vormSub(S, x.v)}</small></span></button>
       ${x.r.length ? `<div class="kv-waarom">${x.r.map(([t, o]) => `<span class="${o ? 'o' : ''}">${esc(t)}</span>`).join('')}</div>` : ''}${x.noot ? `<p class="kv-noot">${x.noot}</p>` : ''}
       <button type="button" class="knop ${or ? 'licht' : ''} kv-knop" data-act="tpVormErbij" data-id="${esc(a.id)}" data-v="${x.v.id}" ${i != null && i !== '' ? `data-i="${i}"` : ''}>${or ? `Toch in ${esc(ctx.label)} zetten` : `Zet in ${esc(ctx.label)}`}</button></div>`; };
-  const kvCtx = (S, ctx) => [ctx.doel ? `<b>${esc(ctx.soort)} · ${esc(ldNaam(S, ctx.doel))}</b>` : ctx.types ? `<b>${esc(ctx.label)}</b>` : '', ctx.f ? esc(faseNaam(S, ctx.f.id)) : '', ctx.n ? `${ctx.n} spelers${ctx.k != null ? `, ${ctx.k} keeper${ctx.k === 1 ? '' : 's'}` : ''}` : '', ctx.o ? `${Number(ctx.o.min) || 0} min` : ''].filter(Boolean).join(' · ');
+  const kvCtx = (S, ctx) => [ctx.doel ? `<b>${esc(ctx.soort)} · ${esc(ldNaam(S, ctx.doel))}</b>` : ctx.types ? `<b>${esc(ctx.label)}</b>` : '', ctx.nv ? esc(niveauNaam(S, ctx.nv)) : '', ctx.f ? esc(faseNaam(S, ctx.f.id)) : '', ctx.n ? `${ctx.n} spelers${ctx.k != null ? `, ${ctx.k} keeper${ctx.k === 1 ? '' : 's'}` : ''}` : '', ctx.o ? `${Number(ctx.o.min) || 0} min` : ''].filter(Boolean).join(' · ');
   const kvLijst = (S, p, a, i) => { const r = aanbevolen(S, p, i); const c = r.ctx; const kop = c.doel || c.types ? 'Past het best' : c.n ? `Passend bij ${c.n} spelers` : 'Je vormen';
-    return `${kvCtx(S, c) ? `<p class="kv-ctx">${kvCtx(S, c)}</p>` : ''}<p class="zacht klein" style="margin:0">Uit je eigen vormen, op leerdoel, aantal en fase. Jij kiest.</p>
+    return `${kvCtx(S, c) ? `<p class="kv-ctx">${kvCtx(S, c)}</p>` : ''}<p class="zacht klein" style="margin:0">Uit je eigen vormen, op leerdoel, aantal, leerniveau en fase. Jij kiest.</p>
       <h4 class="kv-groep">${kop} (${r.top.length})</h4>${r.top.length ? r.top.map((x) => kvKaart(S, a, i, x, c)).join('') : `<p class="zacht klein">${c.doel ? `Nog geen vorm voor ${esc(c.soort)} · ${esc(ldNaam(S, c.doel))}${c.n ? ` bij ${c.n} spelers` : ''}.` : 'Nog geen passende vorm.'}</p>`}
       ${r.ander.length ? `<h4 class="kv-groep">Ander aantal spelers (${r.ander.length})</h4>${r.ander.map((x) => kvKaart(S, a, i, x, c)).join('')}` : ''}
       ${r.rest.length ? `<details class="uitklap"><summary>Alle andere vormen (${r.rest.length}) · zoeken</summary><input type="search" class="tr-zoek kv-zoek" placeholder="Zoek een vorm…" aria-label="Zoek een vorm"><div class="kv-alle">${r.rest.map((x) => kvKaart(S, a, i, x, c)).join('')}</div></details>` : ''}
@@ -589,7 +592,7 @@
       <div class="tr-rv-r">${ty || aand.length ? `<small class="tr-soort">${esc([typeNaam(ty), ...aand].filter(Boolean).join(' · '))}</small>` : ''}
       <div class="tr-meta">${[v.afmeting, bereik(v.spelersMin, v.spelersMax, 'spelers'), v.duur ? `${v.duur} min` : '', w && w.kort, c].filter(Boolean).map((x) => `<span>${esc(x)}</span>`).join('')}</div>
       <div class="knoppen"><button class="knop" data-act="vormNaarTraining" data-id="${v.id}">${icon('plus')}Zet in een training…</button><button class="knop licht" data-act="vormKopie" data-id="${v.id}">${icon('repeat')}Dupliceren</button><button class="knop licht" data-act="vormPrint" data-id="${v.id}">${icon('printer')}Printen</button><button class="knop licht" data-act="vormBewerk" data-id="${v.id}">${icon('pencil')}Bewerken</button></div>
-      ${k.primair || v.doel || v.faseAdvies ? `${h.sectie('Doel')}<p>${k.primair ? `★ ${esc(ldNaam(S, k.primair))}${k.ook.length ? ` · ook: ${k.ook.map((x) => esc(ldNaam(S, x))).join(', ')}` : ''}` : ''}${v.doel ? `${k.primair ? '<br>' : ''}${esc(v.doel)}` : ''}${v.faseAdvies ? `<br><small class="zacht">Aanbevolen fase: ${esc(faseNaam(S, v.faseAdvies))}</small>` : ''}</p>` : ''}
+      ${k.primair || v.doel || v.faseAdvies || v.niveauAdvies ? `${h.sectie('Doel')}<p>${k.primair ? `★ ${esc(ldNaam(S, k.primair))}${k.ook.length ? ` · ook: ${k.ook.map((x) => esc(ldNaam(S, x))).join(', ')}` : ''}` : ''}${v.doel ? `${k.primair ? '<br>' : ''}${esc(v.doel)}` : ''}${v.niveauAdvies && niveauNaam(S, v.niveauAdvies) ? `<br><small class="zacht">Aanbevolen leerniveau: ${esc(niveauNaam(S, v.niveauAdvies))}</small>` : ''}${v.faseAdvies ? `<br><small class="zacht">Aanbevolen fase: ${esc(faseNaam(S, v.faseAdvies))}</small>` : ''}</p>` : ''}
       ${v.organisatie ? `${h.sectie('Organisatie en spelregels')}${punten(v.organisatie)}` : ''}
       ${v.coach ? `${h.sectie('Coachpunten')}${punten(v.coach)}` : ''}
       ${mk.length || mh.length ? `<div class="twee">${mk.length ? `<div>${h.sectie('Makkelijker')}${varLijst(mk)}</div>` : ''}${mh.length ? `<div>${h.sectie('Moeilijker')}${varLijst(mh)}</div>` : ''}</div>` : ''}
@@ -620,6 +623,7 @@
       ${precies.length > 1 ? `<details class="uitklap tr-precies" ${(v.precies || []).length ? 'open' : ''}><summary>Meer precies (optioneel)</summary><div class="chips">${precies.map((x) => kies(v, 'precies', x.id, esc(x.naam), (v.precies || []).includes(x.id))).join('')}</div><p></p></details>` : ''}
       ${h.sectie('Speelrichting')}<div class="chips">${[[0, 'geen'], [1, 'één'], [2, 'twee']].map(([x, n]) => kies(v, 'richting', x, n, v.richting === x)).join('')}${kies(v, 'doelen', 'ja', `${v.doelen ? '✓ ' : ''}met doelen`, v.doelen === true)}</div>
       ${h.sectie('Omschakeling')}<div class="chips">${VT.omschakeling.map((o) => kies(v, 'omschakeling', o.id, esc(o.naam), v.omschakeling === o.id)).join('')}</div>
+      ${niveaus(S).length ? `${h.sectie('Aanbevolen leerniveau (optioneel)')}<div class="chips">${niveaus(S).map((x) => kies(v, 'niveauAdvies', x.id, esc(x.naam), v.niveauAdvies === x.id)).join('')}</div>` : ''}
       ${fasen(S).length ? `${h.sectie('Aanbevolen fase (optioneel)')}<div class="chips">${fasen(S).map((f) => kies(v, 'faseAdvies', f.id, esc(f.naam), v.faseAdvies === f.id)).join('')}</div>` : ''}
       <label for="v-af">Afmeting</label><input id="v-af" name="afmeting" value="${esc(v.afmeting || '')}" placeholder="Bijv. 25 × 20 m">
       ${uitgebreid(S, v)}

@@ -1552,13 +1552,14 @@ test('trainingsmodule: oefenvorm kiezen in twee tikken met ongedaan maken', asyn
   await page.evaluate(() => { const S = CC.S(); const D = CC.date; CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer')); const me = CC.me().id;
     S.acts.push({ id: 'tVorig', teamId: 'O12-1', soort: 'training', datum: D.addDays(D.vandaag(), -5), tijd: '18:30', eind: '19:45' }, { id: 'tKies', teamId: 'O12-1', soort: 'training', datum: D.addDays(D.vandaag(), 2), tijd: '18:30', eind: '19:45' });
     const k = (ld) => ({ dcg: { primair: ld, ook: [] } });
-    S.vormen = [{ id: 'vA', naam: 'Dreigen en passeren', eigenaar: me, spelersMin: 6, spelersMax: 16, duur: 10, koppelingen: k('ll-1v1-aanvallend') },
+    S.vormen = [{ id: 'vD', naam: 'Aaa techniek dribbelen', eigenaar: me, spelersMin: 6, spelersMax: 16, duur: 10, niveauAdvies: 'ln-uitvoeren', koppelingen: k('ll-1v1-aanvallend') },
+      { id: 'vA', naam: 'Dreigen en passeren', eigenaar: me, spelersMin: 6, spelersMax: 16, duur: 10, niveauAdvies: 'ln-kiezen', koppelingen: k('ll-1v1-aanvallend') },
       { id: 'vB', naam: 'Zes tegen zes', eigenaar: me, spelersMin: 11, spelersMax: 14, duur: 20, aantalMin: 10, minVariant: '5 tegen 5 op een derde veld', koppelingen: k('ll-1v1-aanvallend') },
       { id: 'vC', naam: 'Rondo vier tegen een', eigenaar: me, spelersMin: 5, spelersMax: 10, duur: 8, koppelingen: k('ll-passen') }];
     const sj = CC.tr.sjablonen(S).find((x) => x.id === 'dcg-75');
     S.trainingsplannen = [{ id: 'tp-v', actId: 'tVorig', teamId: 'O12-1', datum: D.addDays(D.vandaag(), -5), eigenaar: me, thema: '', leerdoelen: [], onderdelen: [{ id: 'x', vormId: 'vA', min: 10 }] },
       { id: 'tp-k', actId: 'tKies', teamId: 'O12-1', datum: D.addDays(D.vandaag(), 2), eigenaar: me, thema: '', leerdoelen: [], spelers: 10, keepers: null, sjabloon: sj.id, blokDoel: { A: 'll-1v1-aanvallend', B: 'll-passen' },
-        onderdelen: sj.blokken.map((b, i) => ({ id: 'o' + i, blok: b.blok, min: b.min, spacing: b.blok === 'S', naam: b.blok === 'S' ? 'Hooghouden' : b.naam || '', sjabloonFase: b.fase || null })) }];
+        onderdelen: sj.blokken.map((b, i) => ({ id: 'o' + i, blok: b.blok, min: b.min, spacing: b.blok === 'S', naam: b.blok === 'S' ? 'Hooghouden' : b.naam || '', sjabloonFase: b.fase || null, niveauVoorstel: b.blok === 'A2' ? 'ln-kiezen' : null })) }];
     CC.save(); CC.render(); });
   await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
   await page.locator('[data-act="seg"][data-val="plannen"]').click();
@@ -1567,9 +1568,13 @@ test('trainingsmodule: oefenvorm kiezen in twee tikken met ongedaan maken', asyn
   await page.locator('.tr-pmid .tr-rij[data-i="3"]').click();
   await expect(page.locator('#sheet')).toContainText('Kies oefenvorm · A2');
   await expect(page.locator('#sheet .kv-ctx')).toContainText('A · 1v1 aanvallend');
-  await expect(page.locator('#sheet .kv-groep').first()).toHaveText('Past het best (1)');
+  await expect(page.locator('#sheet .kv-ctx')).toContainText('Kiezen');
+  await expect(page.locator('#sheet .kv-groep').first()).toHaveText('Past het best (2)');
+  // Zelfde leerniveau als de plek eerst (ook al komt de andere eerder op alfabet); ander leerniveau in oranje
   await expect(page.locator('#sheet .kv-kaart').first()).toContainText('Dreigen en passeren');
+  await expect(page.locator('#sheet .kv-kaart').first()).toContainText('Kiezen ✓');
   await expect(page.locator('#sheet .kv-kaart').first()).toContainText('vorige week ook gedaan');
+  await expect(page.locator('#sheet .kv-kaart').nth(1).locator('.kv-waarom span.o')).toHaveText('Uitvoeren (A2 = Kiezen)');
   const ander = page.locator('#sheet .kv-kaart.or');
   await expect(ander).toContainText('Je hebt er vandaag 10. Bij 10: 5 tegen 5 op een derde veld');
   await expect(ander.locator('[data-act="tpVormErbij"]')).toHaveText('Toch in A2 zetten');
@@ -1590,6 +1595,10 @@ test('trainingsmodule: oefenvorm kiezen in twee tikken met ongedaan maken', asyn
   await page.locator('.kv-bank .kv-kaart').first().locator('[data-act="tpVormErbij"]').click();
   await expect(page.locator('.tr-pmid .tr-rij[data-i="4"]')).toContainText('Rondo vier tegen een');
   await expect(page.locator('.kv-bank')).toHaveCount(0);
+  // Aanbevolen leerniveau bij een vorm instellen (Meer precies / classificatie)
+  await page.evaluate(() => CC.open('vorm', { id: 'vC' }));
+  await page.locator('[data-act="vormKies"][data-veld="niveauAdvies"][data-w="ln-afstemmen"]').click();
+  expect(await page.evaluate(() => CC.S().vormen.find((v) => v.id === 'vC').niveauAdvies)).toBe('ln-afstemmen');
   await controleer(page, fouten, 'oefenvorm kiezen');
 });
 
