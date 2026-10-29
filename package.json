@@ -6,7 +6,11 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node --test tests/automaat.test.mjs tests/verwijzingen.test.mjs && playwright test"
+    "test": "node --test tests/automaat.test.mjs tests/verwijzingen.test.mjs && playwright test",
+    "test:snel": "node --test tests/verwijzingen.test.mjs && playwright test --grep",
+    "test:server": "node --test tests/automaat.test.mjs",
+    "test:veilig": "bash supabase/tests/rechtentest-lokaal.sh",
+    "check": "node scripts/check.mjs"
   },
   "dependencies": {
     "express": "^4.18.2"

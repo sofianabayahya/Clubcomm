@@ -5,7 +5,7 @@ const { volgFouten, controleer, doorklik, nepDatabase, inloggen, nepDb, NEP_SUPA
 
 test.describe('Demo', () => {
   for (const wie of ['sanne', 'mark', 'linda', 'peter']) {
-    test(`doorklikken: ${wie}`, async ({ page }) => {
+    test(`doorklikken: ${wie}`, { tag: ['@doorklik', '@schermen'] }, async ({ page }) => {
       const fouten = volgFouten(page);
       await page.goto('/?demo');
       await page.evaluate(() => localStorage.clear());
@@ -17,7 +17,7 @@ test.describe('Demo', () => {
     });
   }
 
-  test('ouder meldt af', async ({ page }) => {
+  test('ouder meldt af', { tag: ['@afmelden'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -33,7 +33,7 @@ test.describe('Demo', () => {
   });
 
   // Besluit 95: organisatie bij de coördinator, trainers bij de HO; zonder coördinator doet de HO het (terugval)
-  test('taken: coördinator organiseert, HO volgt trainers, terugval zonder coördinator', async ({ page }) => {
+  test('taken: coördinator organiseert, HO volgt trainers, terugval zonder coördinator', { tag: ['@taken'] }, async ({ page }) => {
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
     await page.goto('/?demo');
@@ -51,7 +51,7 @@ test.describe('Demo', () => {
   });
 
   // Besluit 95 stap 2: Home van de HO = trainers, deze week, rapporten; organisatie alleen voor teams zonder coördinator
-  test('HO-Home: trainers eerst, rapport per lichting, coördinator houdt zijn eigen Home', async ({ page }) => {
+  test('HO-Home: trainers eerst, rapport per lichting, coördinator houdt zijn eigen Home', { tag: ['@begeleiden'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -78,7 +78,7 @@ test.describe('Demo', () => {
   });
 
   // Besluit 97: focus per bouw (signalen buiten je focus blijven zichtbaar als één regel) en bouwen instellen door de clubbeheerder
-  test('bouwen: focus voor de HO en indeling door de clubbeheerder', async ({ page }) => {
+  test('bouwen: focus voor de HO en indeling door de clubbeheerder', { tag: ['@begeleiden', '@clubbeheer'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -113,7 +113,7 @@ test.describe('Demo', () => {
   });
 
   // Besluit 97 stap 3: geen aanwezigheid opgenomen → coördinator bevestigt → telt mee + pushmelding aan de HO
-  test('trainer niet gekomen: signaal, bevestigen, melding aan de HO', async ({ page }) => {
+  test('trainer niet gekomen: signaal, bevestigen, melding aan de HO', { tag: ['@afmelden', '@begeleiden'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -134,7 +134,7 @@ test.describe('Demo', () => {
   });
 
   // Demo: snel wisselen van account en rol vanuit het profiel, zonder inlogscherm
-  test('demo: snel wisselen tussen accounts en rollen', async ({ page }) => {
+  test('demo: snel wisselen tussen accounts en rollen', { tag: ['@demo'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -152,7 +152,7 @@ test.describe('Demo', () => {
   });
 
   // Besluit 99 deel 1: tabblad Trainers, traject, kennismaking (uitnodigen → invullen → zien), VOG bij de coördinator, printen
-  test('trainers begeleiden: traject, kennismaking, VOG en printen', async ({ page }) => {
+  test('trainers begeleiden: traject, kennismaking, VOG en printen', { tag: ['@begeleiden'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -197,7 +197,7 @@ test.describe('Demo', () => {
   });
 
   // Besluit 99 deel 2: begeleidingsmoment (vijf fasen, A4-observatie, delen, reflectie van de trainer)
-  test('begeleidingsmoment: observeren, reflectie, delen en printen', async ({ page }) => {
+  test('begeleidingsmoment: observeren, reflectie, delen en printen', { tag: ['@begeleiden'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -309,7 +309,7 @@ test.describe('Demo', () => {
 
   // Besluit 100: pakket "Alleen Trainers begeleiden", technisch coördinator met werkgebied, vragenlijst per niveau, evaluatie overnemen
   // Besluit 134: een moment dat voorbij is zonder observatie: verplaatsen (vragenlijst blijft) of niet doorgegaan
-  test('begeleidingsmoment: verlopen moment verplaatsen of niet doorgegaan', async ({ page }) => {
+  test('begeleidingsmoment: verlopen moment verplaatsen of niet doorgegaan', { tag: ['@begeleiden'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -342,7 +342,7 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'moment verplaatsen');
   });
 
-  test('technisch coördinator, werkgebied en pakket Alleen Trainers begeleiden', async ({ page }) => {
+  test('technisch coördinator, werkgebied en pakket Alleen Trainers begeleiden', { tag: ['@begeleiden'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -414,7 +414,7 @@ test.describe('Demo', () => {
   });
 
   // Verbeterplan 17-10, snelle winsten: geen dubbele knopnamen, dringend bovenaan, Observeren op de dag zelf
-  test('snelle winsten: unieke knopnamen, dringend bovenaan, knop Observeren', async ({ page }) => {
+  test('snelle winsten: unieke knopnamen, dringend bovenaan, knop Observeren', { tag: ['@schermen'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -435,7 +435,7 @@ test.describe('Demo', () => {
   });
 
   // Besluit 103: automatisch bewaren; tekst gaat niet verloren bij een andere tik of bij het sluiten van een venster
-  test('automatisch bewaren in formulieren', async ({ page }) => {
+  test('automatisch bewaren in formulieren', { tag: ['@schermen'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -464,7 +464,7 @@ test.describe('Demo', () => {
   });
 
   // Besluit 104: rol wisselen met één tik in de kop, met per rol wat er wacht
-  test('rol wisselen in de kop', async ({ page }) => {
+  test('rol wisselen in de kop', { tag: ['@schermen'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -491,7 +491,7 @@ test.describe('Demo', () => {
   });
 
   // Besluit 105: aan het begin van een fase (minder dan 6 keer gemeten) geen kleur en geen signaal, wel het percentage
-  test('nieuwe fase: pas een kleur vanaf 6 keer gemeten', async ({ page }) => {
+  test('nieuwe fase: pas een kleur vanaf 6 keer gemeten', { tag: ['@afmelden'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -521,7 +521,7 @@ test.describe('Demo', () => {
   });
 
   // Besluit 106: selectieteam in de O13-competitie (11 tegen 11); de trainer maakt het schema zelf
-  test('eigen wisselschema: opstelling, wissel, minuten en posities', async ({ page }) => {
+  test('eigen wisselschema: opstelling, wissel, minuten en posities', { tag: ['@wedstrijd'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -579,7 +579,7 @@ test.describe('Demo', () => {
   });
 
   // Besluit 107: de teamleider zet zelf een oefenwedstrijd in; de ouders krijgen een bericht, de trainer een melding
-  test('teamleider zet een oefenwedstrijd in', async ({ page }) => {
+  test('teamleider zet een oefenwedstrijd in', { tag: ['@rooster', '@wedstrijd'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -602,7 +602,7 @@ test.describe('Demo', () => {
   });
 
   // Besluit 110: verzamelen is clubbeleid per leeftijd (de speelvorm telt); trainer of teamleider past per wedstrijd aan
-  test('verzameltijd volgens de clubregel per leeftijd', async ({ page }) => {
+  test('verzameltijd volgens de clubregel per leeftijd', { tag: ['@rooster'] }, async ({ page }) => {
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
     await page.goto('/?demo');
@@ -624,7 +624,7 @@ test.describe('Demo', () => {
 
   // Gevonden 20-10 bij DCG: een verlopen urgent bericht (afgelaste training van 9 okt) bleef bovenaan Actie nodig bij ouders,
   // ook bij de trainer zelf in zijn ouderrol. Nu: verlopen en eigen berichten staan er niet meer.
-  test('ouder: verlopen of eigen urgent bericht niet meer bij Actie nodig', async ({ page }) => {
+  test('ouder: verlopen of eigen urgent bericht niet meer bij Actie nodig', { tag: ['@berichten'] }, async ({ page }) => {
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
     await page.goto('/?demo');
@@ -642,7 +642,7 @@ test.describe('Demo', () => {
   });
 
   // App-controle 23-10: een dubbele tik op Versturen of Volgend blok doet maar één keer iets
-  test('dubbel tikken telt één keer', async ({ page }) => {
+  test('dubbel tikken telt één keer', { tag: ['@schermen'] }, async ({ page }) => {
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
     await page.goto('/?demo');
@@ -659,7 +659,7 @@ test.describe('Demo', () => {
   });
 
   // Besluit 112: anoniem schermgebruik tellen (per rol en scherm), overzicht voor de clubbeheerder
-  test('schermgebruik: tellen en overzicht', async ({ page }) => {
+  test('schermgebruik: tellen en overzicht', { tag: ['@clubbeheer'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -680,7 +680,7 @@ test.describe('Demo', () => {
   });
 
   // Besluit 113: tik op een speler → venster (spelerskaart); "Alles over …" opent de pagina; vegen sluit het venster
-  test('spelerskaart als venster en vegen om te sluiten', async ({ page }) => {
+  test('spelerskaart als venster en vegen om te sluiten', { tag: ['@schermen', '@gesprekken'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -710,7 +710,7 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'spelerskaart');
   });
 
-  test('trainerkaart als venster (HO, Rapport trainers)', async ({ page }) => {
+  test('trainerkaart als venster (HO, Rapport trainers)', { tag: ['@begeleiden', '@schermen'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -733,7 +733,7 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'trainerkaart');
   });
 
-  test('venster: telefoon onderaan, laptop in het midden', async ({ page }) => {
+  test('venster: telefoon onderaan, laptop in het midden', { tag: ['@schermen'] }, async ({ page }) => {
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
     await page.goto('/?demo');
@@ -756,7 +756,7 @@ test.describe('Demo', () => {
   });
 
   // Gevonden bij Besluit 114: een chauffeur die alleen ouder is, zag "X rijdt niet mee" niet (persoonlijk bericht van een andere ouder)
-  test('chauffeur (ouder) ziet dat een kind niet meerijdt', async ({ page }) => {
+  test('chauffeur (ouder) ziet dat een kind niet meerijdt', { tag: ['@taken'] }, async ({ page }) => {
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
     await page.goto('/?demo');
@@ -770,7 +770,7 @@ test.describe('Demo', () => {
   });
 
   // Besluit 115: trainer kan niet → teamleider en coördinator krijgen bericht; zonder coördinator de HO (terugval)
-  test('trainer kan niet: bericht naar coördinator, anders HO', async ({ page }) => {
+  test('trainer kan niet: bericht naar coördinator, anders HO', { tag: ['@afmelden'] }, async ({ page }) => {
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
     await page.goto('/?demo');
@@ -790,7 +790,7 @@ test.describe('Demo', () => {
   });
 
   // Besluit 116: minuten en speeltijd ziet alleen de trainer (niet de teamleider of de timekeeper)
-  test('speeltijd: alleen de trainer ziet minuten', async ({ page }) => {
+  test('speeltijd: alleen de trainer ziet minuten', { tag: ['@wedstrijd'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -808,7 +808,7 @@ test.describe('Demo', () => {
   });
 
   // Besluit 117: mocht de timekeeper niet opslaan, dan gaat het als voorstel naar de trainer, die het met één tik overneemt
-  test('voorstel timekeeper: doorsturen en overnemen', async ({ page }) => {
+  test('voorstel timekeeper: doorsturen en overnemen', { tag: ['@wedstrijd'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -833,7 +833,7 @@ test.describe('Demo', () => {
   });
 
   // Besluit 118: keuze- en filterknoppen, balkjes en de rolwissel minimaal 44 pt tikvlak
-  test('tikvlakken minimaal 44 pt', async ({ page }) => {
+  test('tikvlakken minimaal 44 pt', { tag: ['@schermen'] }, async ({ page }) => {
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
     await page.goto('/?demo');
@@ -848,7 +848,7 @@ test.describe('Demo', () => {
     expect(await page.evaluate(() => { const r = document.querySelector('.rolknop').getBoundingClientRect(); const e = document.elementFromPoint(r.left + 8, r.bottom + 12); return !!(e && e.closest('.rolknop')); })).toBe(true);
   });
 
-  test('spelerskaart: teamleider', async ({ page }) => {
+  test('spelerskaart: teamleider', { tag: ['@gesprekken'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -863,7 +863,7 @@ test.describe('Demo', () => {
   });
 
   // Besluit 107: bij je eigen bericht zie je hoe het aankwam (pushmelding, e-mail of gelezen in de app)
-  test('berichten: zien hoe het aankwam', async ({ page }) => {
+  test('berichten: zien hoe het aankwam', { tag: ['@berichten'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -898,7 +898,7 @@ test.describe('Demo', () => {
   });
 
   // Gevonden 17-10 bij DCG: een lange teamnaam ("O12 talententeam") liep over het balkje heen
-  test('inzicht: lange teamnaam overlapt het balkje niet', async ({ page }) => {
+  test('inzicht: lange teamnaam overlapt het balkje niet', { tag: ['@schermen'] }, async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 800 });
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -915,7 +915,7 @@ test.describe('Demo', () => {
   });
 
   // Training afgelasten met een eigen toelichting: één bericht aan de ouders
-  test('trainer gelast een training af met toelichting', async ({ page }) => {
+  test('trainer gelast een training af met toelichting', { tag: ['@afmelden', '@rooster'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
@@ -939,7 +939,7 @@ test.describe('Demo', () => {
 });
 
 test.describe('Kleine club (echte versie, nagebootste database)', () => {
-  test('beheerder zet het rooster, iedereen klikt door, ouder meldt af', async ({ page }) => {
+  test('beheerder zet het rooster, iedereen klikt door, ouder meldt af', { tag: ['@afmelden'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await nepDatabase(page);
 
@@ -973,7 +973,7 @@ test.describe('Kleine club (echte versie, nagebootste database)', () => {
   });
 
   // Besluit 117: in de echte versie weigert de database de uitslag van een ouder → voorstel in de database → trainer neemt over
-  test('timekeeper mag niet opslaan: voorstel naar de trainer', async ({ page }) => {
+  test('timekeeper mag niet opslaan: voorstel naar de trainer', { tag: ['@kleineclub', '@wedstrijd'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await nepDatabase(page);
     await page.evaluate(() => { const db = JSON.parse(sessionStorage.getItem('fake-sb-db')); const d = CC.date.vandaag();
@@ -995,7 +995,7 @@ test.describe('Kleine club (echte versie, nagebootste database)', () => {
   });
 
   // Besluit 100: een club met alleen Trainers begeleiden (zoals de test bij een tweede club): HO, TC en één trainer, geen ouders
-  test('pakket Alleen Trainers begeleiden: HO, TC en trainer klikken door', async ({ page }) => {
+  test('pakket Alleen Trainers begeleiden: HO, TC en trainer klikken door', { tag: ['@kleineclub', '@begeleiden'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await nepDatabase(page);
     await page.evaluate(() => {
@@ -1032,7 +1032,7 @@ test.describe('Kleine club (echte versie, nagebootste database)', () => {
   });
 
   // Besluit 92: oefenwedstrijd uit, met verzamelen, verzamelpunt en adres; ouder ziet het op het kaartje, in het bericht en bij Vervoer
-  test('trainer plant een oefenwedstrijd uit; ouder ziet adres en vervoer', async ({ page }) => {
+  test('trainer plant een oefenwedstrijd uit; ouder ziet adres en vervoer', { tag: ['@kleineclub', '@rooster'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await nepDatabase(page);
     await inloggen(page, 'admin@test.nl');
@@ -1061,7 +1061,7 @@ test.describe('Kleine club (echte versie, nagebootste database)', () => {
 
 // De demo rekent vanaf "vandaag": de rondleiding moet op elke dag van de week kloppen (fout gevonden op een woensdag)
 // Besluit 114: de rondleiding als één verhaal; het bestuur kiest de hoofdstukken; afmelden gebeurt echt en springt over
-test('rondleiding: kiezen, afmelden springt over, opnieuw beginnen', async ({ page }) => {
+test('rondleiding: kiezen, afmelden springt over, opnieuw beginnen', { tag: ['@demo'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await page.setViewportSize({ width: 1366, height: 768 });
   await page.route('**/app/vendor/supabase.js', (r) => r.fulfill({ contentType: 'application/javascript', body: NEP_SUPABASE }));
@@ -1098,7 +1098,7 @@ test('rondleiding: kiezen, afmelden springt over, opnieuw beginnen', async ({ pa
 
 test.describe('Rondleiding op elke dag van de week', () => {
   for (const dag of ['2026-10-05T16:00', '2026-10-06T16:00', '2026-10-07T16:00', '2026-10-08T16:00', '2026-10-09T20:00', '2026-10-10T09:45', '2026-10-10T16:00', '2026-10-11T12:00']) {
-    test(`elke stap vindt zijn onderdeel · ${dag}`, async ({ page }) => {
+    test(`elke stap vindt zijn onderdeel · ${dag}`, { tag: ['@demo'] }, async ({ page }) => {
       const fouten = volgFouten(page);
       await page.clock.install({ time: new Date(`${dag}:00+02:00`) });
       await page.setViewportSize({ width: 1366, height: 768 });
@@ -1119,7 +1119,7 @@ test.describe('Rondleiding op elke dag van de week', () => {
 });
 
 test.describe('Demo voor besturen (/demo, Besluit 89)', () => {
-  test('alleen op uitnodiging, en elke stap van de rondleiding klopt', async ({ page }) => {
+  test('alleen op uitnodiging, en elke stap van de rondleiding klopt', { tag: ['@demo'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     await page.setViewportSize({ width: 1366, height: 768 });
     await page.route('**/app/vendor/supabase.js', (r) => r.fulfill({ contentType: 'application/javascript', body: NEP_SUPABASE }));
@@ -1150,7 +1150,7 @@ test.describe('Demo voor besturen (/demo, Besluit 89)', () => {
 });
 
 // Besluit 93: evaluatieformulier coach (losse pagina, alleen op het toestel, PDF via printen)
-test('evaluatie: notitie bij de juiste stap, ontwikkelpunt verplicht, bewaard op het toestel', async ({ page }) => {
+test('evaluatie: notitie bij de juiste stap, ontwikkelpunt verplicht, bewaard op het toestel', { tag: ['@begeleiden'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   const meldingen = []; page.on('dialog', async (d) => { meldingen.push(d.message()); await d.accept(); });
   await page.goto('/evaluatie');
@@ -1177,7 +1177,7 @@ test('evaluatie: notitie bij de juiste stap, ontwikkelpunt verplicht, bewaard op
 });
 
 // Observatieformulier op papier: leeg te printen (ook zonder ontwikkelpunt), signalen uit het voorgesprek als turfregels
-test('evaluatie: leeg observatieformulier op papier', async ({ page }) => {
+test('evaluatie: leeg observatieformulier op papier', { tag: ['@begeleiden'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await page.goto('/evaluatie');
   await page.evaluate(() => { window.print = () => { window.__geprint = true; }; });
@@ -1193,7 +1193,7 @@ test('evaluatie: leeg observatieformulier op papier', async ({ page }) => {
 });
 
 // Trainingsmodule, stap 3: testscherm van de tekentool (/tekenen), alleen op het toestel
-test('tekentool: tekenen, opslaan en opnieuw tonen', async ({ page }) => {
+test('tekentool: tekenen, opslaan en opnieuw tonen', { tag: ['@tekentool', '@training'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await page.setViewportSize({ width: 1366, height: 820 });
   await page.goto('/tekenen'); await page.evaluate(() => localStorage.clear()); await page.goto('/tekenen');
@@ -1213,7 +1213,7 @@ test('tekentool: tekenen, opslaan en opnieuw tonen', async ({ page }) => {
 });
 
 // 27-10: de kop noemt de clubnaam niet twee keer (HJO en clubbeheerder hebben de club al als titel)
-test('kop: clubnaam niet dubbel bij de HJO', async ({ page }) => {
+test('kop: clubnaam niet dubbel bij de HJO', { tag: ['@schermen'] }, async ({ page }) => {
   await page.goto('/?demo');
   await page.evaluate(() => localStorage.clear());
   await page.goto('/?demo');
@@ -1225,7 +1225,7 @@ test('kop: clubnaam niet dubbel bij de HJO', async ({ page }) => {
 });
 
 // 27-10: Home links en Berichten rechts bij elke rol; ouder: alleen Berichten heeft een getal; Regels en Inzicht ingeklapt; laptop: menu links
-test('tabbladen gelijk, één keer signaleren, lange schermen ingeklapt, laptop-menu', async ({ page }) => {
+test('tabbladen gelijk, één keer signaleren, lange schermen ingeklapt, laptop-menu', { tag: ['@schermen'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await page.goto('/?demo');
   await page.evaluate(() => localStorage.clear());
@@ -1257,7 +1257,7 @@ test('tabbladen gelijk, één keer signaleren, lange schermen ingeklapt, laptop-
 });
 
 // Besluit 123: het opleidingsprofiel van de club wordt gelezen, maar nooit door de app overschreven of weggehaald
-test('opleidingsprofiel: de app leest het en laat het staan', async ({ page }) => {
+test('opleidingsprofiel: de app leest het en laat het staan', { tag: ['@profiel', '@training'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await nepDatabase(page);
   const profiel = JSON.parse(require('fs').readFileSync(require('path').join(__dirname, '..', 'supabase', 'profielen', 'dcg.json'), 'utf8'));
@@ -1272,7 +1272,7 @@ test('opleidingsprofiel: de app leest het en laat het staan', async ({ page }) =
 });
 
 // Besluit 124: nummerbalk in de tekentool (nummer tikken = speler op zijn plek, nog een keer = weg, zonder nummer, nummer van een gekozen speler wijzigen)
-test('tekentool: nummerbalk en rood schijfje', async ({ page }) => {
+test('tekentool: nummerbalk en rood schijfje', { tag: ['@tekentool', '@training'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await page.setViewportSize({ width: 1366, height: 820 });
   await page.goto('/tekenen'); await page.evaluate(() => localStorage.clear()); await page.goto('/tekenen');
@@ -1304,7 +1304,7 @@ test('tekentool: nummerbalk en rood schijfje', async ({ page }) => {
 });
 
 // Besluit 125: rondje/driehoek per team wisselen (wordt bewaard bij de tekening) en de nummerbalk in- en uitklappen
-test('tekentool: vorm per team wisselen, menu Spelers open en dicht', async ({ page }) => {
+test('tekentool: vorm per team wisselen, menu Spelers open en dicht', { tag: ['@tekentool', '@training'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await page.setViewportSize({ width: 1366, height: 820 });
   await page.goto('/tekenen'); await page.evaluate(() => localStorage.clear()); await page.goto('/tekenen');
@@ -1330,7 +1330,7 @@ test('tekentool: vorm per team wisselen, menu Spelers open en dicht', async ({ p
 });
 
 // Besluit 126: ontwerp A (rail + menu's) en pijlen met boog en aanpasbare lengte
-test('tekentool: rail, menu Veld en pijl met boog en langer maken', async ({ page }) => {
+test('tekentool: rail, menu Veld en pijl met boog en langer maken', { tag: ['@tekentool', '@training'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await page.setViewportSize({ width: 1366, height: 820 });
   await page.goto('/tekenen'); await page.evaluate(() => localStorage.clear()); await page.goto('/tekenen');
@@ -1369,7 +1369,7 @@ test('tekentool: rail, menu Veld en pijl met boog en langer maken', async ({ pag
 });
 
 // Besluit 127: gebogen pijl als vaste soort (de boog groeit mee bij het trekken)
-test('tekentool: loopactie met boog', async ({ page }) => {
+test('tekentool: loopactie met boog', { tag: ['@tekentool', '@training'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await page.setViewportSize({ width: 1366, height: 820 });
   await page.goto('/tekenen'); await page.evaluate(() => localStorage.clear()); await page.goto('/tekenen');
@@ -1388,7 +1388,7 @@ test('tekentool: loopactie met boog', async ({ page }) => {
 
 // Besluit 128: trainingsmodule (proef) in de echte versie: training voorbereiden, spacing, nieuwe vorm met leerdoel uit het profiel.
 // Alles komt in de database met scope 'eigen' op naam van de trainer.
-test('trainingsmodule: training voorbereiden en eigen vorm (echte versie)', async ({ page }) => {
+test('trainingsmodule: training voorbereiden en eigen vorm (echte versie)', { tag: ['@training', '@kleineclub'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await nepDatabase(page);
   const profiel = JSON.parse(require('fs').readFileSync(require('path').join(__dirname, '..', 'supabase', 'profielen', 'dcg.json'), 'utf8'));
@@ -1452,7 +1452,7 @@ test('trainingsmodule: training voorbereiden en eigen vorm (echte versie)', asyn
 });
 
 // Besluit 130: club zonder planning (pakket Trainers begeleiden, zoals AVV Swift): tabbladen Home · Training · Berichten, trainingen op datum
-test('trainingsmodule: training op datum zonder planning (pakket Trainers begeleiden)', async ({ page }) => {
+test('trainingsmodule: training op datum zonder planning (pakket Trainers begeleiden)', { tag: ['@training', '@kleineclub'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await nepDatabase(page);
   await page.evaluate(() => { const db = JSON.parse(sessionStorage.getItem('fake-sb-db'));
@@ -1484,7 +1484,7 @@ test('trainingsmodule: training op datum zonder planning (pakket Trainers begele
 });
 
 // Besluit 136: teams, trainingsdagen, trainer koppelen, wedstrijden plakken en trainingsschema laden (HO, pakket Trainers begeleiden)
-test('teams en trainingsdagen: team, rooster, trainer, wedstrijden plakken en schema laden', async ({ page }) => {
+test('teams en trainingsdagen: team, rooster, trainer, wedstrijden plakken en schema laden', { tag: ['@rooster', '@clubbeheer'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await nepDatabase(page);
   await page.evaluate(() => { const db = JSON.parse(sessionStorage.getItem('fake-sb-db')); db.rows['dcg|club|club'].data.pakket = 'trainers'; sessionStorage.setItem('fake-sb-db', JSON.stringify(db)); });
@@ -1539,7 +1539,7 @@ test('teams en trainingsdagen: team, rooster, trainer, wedstrijden plakken en sc
 });
 
 // Besluit 135: volgorde op de laptop, "Je zit in" en weekthema bij een club met het KNVB-profiel (geen periodisering)
-test('trainingsmodule: volgorde, je zit in en weekthema (KNVB-profiel)', async ({ page }) => {
+test('trainingsmodule: volgorde, je zit in en weekthema (KNVB-profiel)', { tag: ['@training', '@profiel'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await nepDatabase(page);
   const profiel = JSON.parse(require('fs').readFileSync(require('path').join(__dirname, '..', 'supabase', 'profielen', 'knvb-2026.1.json'), 'utf8'));
@@ -1590,7 +1590,7 @@ test('trainingsmodule: volgorde, je zit in en weekthema (KNVB-profiel)', async (
 });
 
 // Besluit 131: classificatie (weerstand vanuit het hoofdleerdoel), sjabloon DCG 75 met fase-voorstel, gepland en uitgevoerd, filters
-test('trainingsmodule: classificatie, sjabloon, fase, minuten per leerdoel en filters', async ({ page }) => {
+test('trainingsmodule: classificatie, sjabloon, fase, minuten per leerdoel en filters', { tag: ['@training', '@profiel'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await page.setViewportSize({ width: 1366, height: 900 });
   await nepDatabase(page);
@@ -1701,7 +1701,7 @@ test('trainingsmodule: classificatie, sjabloon, fase, minuten per leerdoel en fi
 });
 
 // Besluit 133: periodisering laden (voorbeeld, alleen echte trainingen, niets overschrijven, terugdraaien), methodiekblok, status, evaluatiekaart, observatiepunten, uitgebreide vormvelden
-test('trainingsmodule: periodisering laden, methodiek, evaluatie en observatiepunten', async ({ page }) => {
+test('trainingsmodule: periodisering laden, methodiek, evaluatie en observatiepunten', { tag: ['@training', '@profiel'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await page.setViewportSize({ width: 1366, height: 900 });
   await nepDatabase(page);
@@ -1802,7 +1802,7 @@ test('trainingsmodule: periodisering laden, methodiek, evaluatie en observatiepu
 });
 
 // Besluit 137: de echte conceptperiodisering van DCG O13 (kolommen uit het Excel-spoorboekje), op de echte kalender (nagebootst)
-test('trainingsmodule: DCG-periodisering O13 met hoofdthema, teamfunctie, contraprobleem en vrije handelingsketen', async ({ page }) => {
+test('trainingsmodule: DCG-periodisering O13 met hoofdthema, teamfunctie, contraprobleem en vrije handelingsketen', { tag: ['@training', '@profiel'] }, async ({ page }) => {
   const fs = require('fs'), path = require('path');
   const fouten = volgFouten(page);
   await page.clock.setFixedTime(new Date('2026-11-02T10:00:00+01:00'));

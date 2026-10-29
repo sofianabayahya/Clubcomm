@@ -6,6 +6,8 @@ module.exports = defineConfig({
   testMatch: '*.spec.js',
   timeout: 180000,
   fullyParallel: true,
+  // 4 tegelijk op de eigen computer (3 keer achter elkaar 67/67 goed, 29-10); op GitHub de standaard (2), tot dat daar ook bewezen is
+  workers: process.env.CI ? undefined : 4,
   retries: 0,
   reporter: process.env.CI ? [['list'], ['github']] : 'list',
   use: { ...devices['Pixel 5'], baseURL: 'http://localhost:5055', locale: 'nl-NL', timezoneId: 'Europe/Amsterdam', serviceWorkers: 'block', actionTimeout: 15000 },
