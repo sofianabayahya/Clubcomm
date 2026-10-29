@@ -2,7 +2,7 @@
 
 **Wat verstaan we bij AVV Swift onder een goede training, en hoe maken we dat zichtbaar?**
 
-> *CONCEPT ter bespreking. Voorstel Spoor 2, 29-10-2026. Dit hoofdstuk is nog niet vastgesteld en nog geen onderdeel van het Swift-profiel in ClubComm.*
+> *CONCEPT, versie 2 (29-10-2026, na beoordeling ronde 4). Voorstel Spoor 2. De zes observatiecriteria hebben **voorlopig akkoord als concept**. Het hoofdstuk is nog **niet formeel vastgesteld** door Swift en nog geen onderdeel van het Swift-profiel in ClubComm.*
 >
 > *Basis: het Ontwikkelplan Bovenbouw (OP, hoofdstuk 01–05), het Beleidsdocument Jeugd & Technische vorming (BD, 4 juni 2025) en de vier gouden trainingsprincipes van de KNVB. Wat hier als **Besluitpunt** staat, is een keuze die nog door Swift moet worden gemaakt.*
 
@@ -112,7 +112,7 @@ Om zo gelijk mogelijk te observeren, beschrijven we per criterium **wat je ziet*
 
 *Het beleidsdocument noemt dit de belangrijkste taak van iedere trainer: "het creëren van een optimaal leerklimaat"* (BD 3.2.2).
 
-> **Besluitpunt 06-A.** Zijn deze gedragsbeschrijvingen volledig en juist voor de bovenbouw? Ze zijn opgesteld uit de bronnen. Voor gebruik in het veld adviseren we ze eerst met de begeleiders te toetsen. Bijvoorbeeld: twee begeleiders observeren dezelfde training en vergelijken hun uitkomst.
+> **Besluit 06-A (voorlopig akkoord).** De gedragsbeschrijvingen worden eerst getoetst. Twee begeleiders observeren onafhankelijk van elkaar dezelfde training (zie de pilot, `pilot-twee-begeleiders.md`). Pas daarna gaan ze definitief het veld in.
 
 ### De schaal
 
@@ -137,8 +137,20 @@ De opleidingsketen van OP 05 loopt van voetbalvisie tot evaluatie. Op het niveau
 
 Daarbij gelden deze afspraken:
 - **De trainer kiest zelf.** Hij vertrekt vanuit een concreet voetbalprobleem dat hij in de wedstrijd of training ziet. Daarbij kiest hij de teamfunctie en teamtaak.
-- **Teamfuncties en teamtaken volgen de KNVB-structuur.** De teamfuncties zijn **Aanvallen · Omschakelen · Verdedigen**; het beleidsdocument gebruikt dezelfde indeling (BD 2.4). De Swift-spelprincipes per teamfunctie zijn de inhoudelijke uitwerking: waar we op letten.
-  > **Besluitpunt 06-B.** De precieze lijst van KNVB-teamtaken wordt overgenomen uit de officiële KNVB-bron en daartegen gecontroleerd, voordat hij in ClubComm komt.
+- **Teamfuncties en teamtaken volgen de KNVB-systematiek:**
+
+  | KNVB | Teamtaken | Overgang |
+  |---|---|---|
+  | **Aanvallen** (eigen team heeft de bal) | opbouwen · scoren | **Omschakelen bij balverlies**: van aanvallen naar verdedigen |
+  | **Verdedigen** (tegenstander heeft de bal) | storen · doelpunten voorkomen | **Omschakelen bij balverovering**: van verdedigen naar aanvallen |
+
+  Er zijn dus twee hoofdteamfuncties. Omschakelen is het moment van overgang tussen die twee, geen derde teamfunctie.
+  *Bron: KNVB, overzicht teamfuncties en doelstellingen (knvb.nl, gevonden via de zoekfunctie; de pagina zelf kon vanuit deze werkomgeving niet worden geopend).*
+- **De Swift-spelprincipes zijn de inhoudelijke uitwerking, niet de systematiek.** Het beleidsdocument ordent de spelprincipes van de bovenbouw in drie kolommen: Aanvallen, Omschakelen en Verdedigen (BD 2.4). Dat is de Swift-ordening van de principes. Die laten we zoals hij is. In ClubComm hangen we de Swift-principes aan de KNVB-structuur:
+  - de principes onder *Aanvallen* bij de teamfunctie Aanvallen;
+  - de principes onder *Verdedigen* bij de teamfunctie Verdedigen;
+  - de principes onder *Omschakelen* bij de twee omschakelmomenten (*verdedigen naar aanvallen* bij balverovering, *aanvallen naar verdedigen* bij balverlies).
+  > **Besluit 06-B (open).** De teamtaken hierboven worden eerst gecontroleerd in de officiële KNVB-bron zelf (het document *Overzicht teamfuncties en doelstellingen*), voordat ze in ClubComm komen.
 - **Leeftijd.** Zolang er geen uitgewerkte leeftijdsdoelen zijn, gebruiken we de **fasen van de leerlijn** uit het beleidsdocument (BD 2.5):
 
   | Fase | Leeftijd | Kern uit het beleidsdocument |
@@ -147,7 +159,7 @@ Daarbij gelden deze afspraken:
   | 4 | O14–O16 | Voetballen vanuit linie(s); samen voetballen vanuit linies en de wedstrijd winnen; werken naar vaste posities, 2–3 posities |
   | 5 | O17–senioren | Een speelwijze perfectioneren; voetballen als team en wedstrijden en competities winnen; vaste posities, specialist |
 
-  > **Besluitpunt 06-C.** Concrete leeftijdsdoelen voor O14 t/m O19 (ontwikkelopgave 1) worden apart uitgewerkt. Dit hoofdstuk legt ze bewust nog niet vast.
+  > **Besluit 06-C (voorlopig).** Voorlopig gebruiken we de bestaande Swift-faseteksten hierboven. Concrete leeftijdsdoelen voor O14 t/m O19 (ontwikkelopgave 1) worden apart uitgewerkt. Dit hoofdstuk legt ze bewust niet vast.
 - **Geen verplichte periodisering.** Er komt nu geen verplichte meerweekse periodisering (zie hoofdstuk 08, nog uit te werken). Een trainer mag een thema een paar trainingen herhalen of variëren. Dat is een advies, geen plicht.
 
 ---
@@ -160,13 +172,11 @@ Voorbereiden is voor iedere trainer **altijd mogelijk en altijd vrijwillig**. Cl
 
 | Onderdeel | Toelichting |
 |---|---|
-| **1. Het voetbalprobleem** | Wat zie je in de wedstrijd of training dat beter moet? In eigen woorden, met de teamfunctie en teamtaak erbij. |
+| **1. Het voetbalprobleem** | Wat zie je in de wedstrijd of training dat beter moet? In eigen woorden, met de teamfunctie en teamtaak (of het omschakelmoment) erbij. |
 | **2. Een concrete doelstelling** | Wat moeten de spelers aan het eind beter doen? Als hulp: de 5 W's (wie, wat, waar, wanneer, waarom). Hoofdrolspelers noemen mag, maar is niet verplicht. |
 | **3. De gekozen oefenvormen** | Welke vormen, in welke volgorde, en waarom ze passen bij het doel. Een tekening mag, maar is niet verplicht. |
 
-De coachaccenten (*waar let ik op, wat zeg of vraag ik?*) zijn een aanbevolen vierde onderdeel. Ze maken criterium 3 en 5 beter zichtbaar.
-
-> **Besluitpunt 06-D.** Wordt het vierde onderdeel (coachaccenten) bij een observatie ook verplicht, of blijft het aanbevolen?
+De **coachaccenten** (*waar let ik op, wat zeg of vraag ik?*) zijn **aanbevolen, niet verplicht** (besluit 06-D). Ze maken criterium 3 en 5 beter zichtbaar.
 
 ---
 
@@ -177,7 +187,12 @@ Een begeleidingsobservatie volgt deze vaste opbouw (hoofdstuk 07 beschrijft de h
 1. **Voorbereiding delen.** De trainer deelt de voorbereiding van **die ene training** met zijn begeleider.
 2. **Voorfeedback.** De begeleider geeft kort feedback op het probleem, het doel en de vormen. De trainer beslist zelf wat hij ermee doet.
 3. **Observatie.** De begeleider observeert de training met de zes criteria en de schaal, en noteert wat hij ziet.
-4. **Zelfreflectie.** De trainer reflecteert na de training op **dezelfde zes criteria**, zonder de observatie van de begeleider eerst te zien.
+4. **Korte zelfreflectie.** De trainer beantwoordt na de training drie korte vragen:
+   - *Wat ging goed?*
+   - *Wat lukte nog niet zoals bedoeld?*
+   - *Wat ga je de volgende keer anders doen?*
+
+   Daarnaast **kan** hij de zes criteria op de schaal aangeven. Dat is niet verplicht, en er hoort geen tekst per criterium bij. Hij doet dit voordat hij de observatie van de begeleider ziet.
 5. **Gesprek.** Beide perspectieven komen naast elkaar te liggen. Verschillen zijn het beste startpunt van het gesprek.
 6. **Eén ontwikkelafspraak.** Die wordt bij het volgende moment als eerste besproken.
 
@@ -201,9 +216,9 @@ Uit het beleidsdocument volgen de afspraken hieronder, voor iedere bovenbouwtrai
 | Bereid zijn feedback te ontvangen, bijeenkomsten te volgen en volgens de gezamenlijke Swift-werkwijze te werken | OP 03 (*ontwikkelbereidheid*) |
 
 Uit deze kwaliteitsstandaard komen nog twee afspraken bij:
-- iedere trainer kent de **zes criteria** en gebruikt ze bij zijn zelfreflectie na een begeleidingsmoment;
-- bij een geplande observatie is de **minimale voorbereiding** (6.4) gedeeld.
+- de **zes criteria** zijn de gezamenlijke standaard waarmee een begeleidingsobservatie wordt gedaan;
+- bij een geplande observatie is de **minimale voorbereiding** (6.4) gedeeld, en reflecteert de trainer kort na afloop (6.5).
 
-> **Besluitpunt 06-E.** Worden deze twee afspraken uit de kwaliteitsstandaard formele verwachtingen voor iedere trainer? De zes in de tabel staan al in het beleid.
+> **Besluit 06-E (voorlopig).** De zes criteria en de minimale voorbereiding vormen de gezamenlijke standaard voor **begeleidingsobservaties**. Dit geldt onder voorbehoud van formele vaststelling door Swift.
 >
-> **Besluitpunt 06-F.** Het beleidsdocument noemt *"specifieke eisen aan opleidingsniveau per team"* (BD 1.1), maar werkt ze niet uit. Moeten die eisen in hoofdstuk 07 komen, of blijven ze apart?
+> **Besluit 06-F.** Specifieke diploma-eisen per team (BD 1.1 noemt *"specifieke eisen aan opleidingsniveau per team"*) blijven een **afzonderlijk beleidsbesluit**, buiten deze kwaliteitsstandaard.

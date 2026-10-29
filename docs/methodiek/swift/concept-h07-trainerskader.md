@@ -2,7 +2,7 @@
 
 **Hoe begeleiden we iedere trainer passend bij zijn niveau, ambitie en ontwikkelbehoefte?**
 
-> *CONCEPT ter bespreking. Voorstel Spoor 2, 29-10-2026. Dit hoofdstuk is nog niet vastgesteld en nog geen onderdeel van het Swift-profiel in ClubComm.*
+> *CONCEPT, versie 2 (29-10-2026, na beoordeling ronde 4). Voorstel Spoor 2. De drie ondersteuningsniveaus hebben **voorlopig akkoord als concept**. Het hoofdstuk is nog **niet formeel vastgesteld** door Swift en nog geen onderdeel van het Swift-profiel in ClubComm.*
 >
 > *Basis: Ontwikkelplan Bovenbouw (OP, hoofdstuk 03 en 04) en Beleidsdocument Jeugd & Technische vorming (BD, 4 juni 2025). Wat hier als **Besluitpunt** staat, is een keuze die nog door Swift moet worden gemaakt. Bevoegdheden zijn **voorstellen**: er worden geen nieuwe bevoegdheden toegekend zonder bestuurlijk en technisch akkoord.*
 
@@ -14,11 +14,23 @@
 
 De trainer is *"de belangrijkste dagelijkse schakel tussen het jeugdbeleid van AVV Swift en wat spelers daadwerkelijk op het trainingsveld ervaren"* (OP 03). Swift wil een kwalitatief sterk trainerscorps, met trainers die *"zich gewaardeerd voelen"* en *"zichzelf ontwikkelen door opleiding"* (BD 2.2).
 
-De bovenbouw telt trainers met:
-- VC3: 3 trainers;
-- VC2: 3 trainers;
-- VC1: 7 trainers;
-- geen diploma: 12 trainers.
+Het Ontwikkelplan geeft een eerste overzicht van de trainersgroep (OP 03, *Overzicht huidige trainersgroep*, het piramidebeeld *Beeld bovenbouw*):
+
+| Opleiding | Aantal |
+|---|---|
+| VC4 | 0 |
+| VC3 | 3 |
+| VC2 | 3 |
+| VC1 | 7 |
+| Zonder diploma | 12 |
+
+*Toelichting bij deze aantallen.* Het Ontwikkelplan noemt **geen totaal**. Opgeteld is het 25. Of dat het juiste totaal is, hangt af van de afbakening, en die staat niet in het Ontwikkelplan:
+- **peildatum:** het is een *eerste inventarisatie*;
+- **teams:** alle bovenbouwteams O14 t/m O23, jongens en meiden, of een deel daarvan;
+- **wie telt mee:** alleen hoofdtrainers, of ook assistent-trainers;
+- **dubbeltellingen:** telt een trainer met meer diploma's of meer teams één keer?
+
+> **Besluitpunt 07-I (nieuw).** De afbakening van de inventarisatie bevestigen, voordat er een totaal in het document komt.
 
 Een diploma is een belangrijke aanwijzing, maar zegt niet alles (OP 03). Ook hebben trainers verschillende ambities: *"Niet iedere trainer hoeft hetzelfde profiel te hebben."*
 
@@ -80,7 +92,7 @@ Hoe een niveau tot stand komt:
 - Het niveau kan **altijd** worden aangepast, in overleg. Het is een momentopname.
 - Andere trainers zien elkaars niveau niet.
 
-> **Besluitpunt 07-A.** Kloppen de beschrijvingen per niveau (de eerste rij)? Ze staan niet in het Ontwikkelplan. Het is een Swift-uitwerking van ontwikkelopgave 3.
+> **Besluit 07-A (voorlopig akkoord).** De drie ondersteuningsniveaus zijn voorlopig akkoord als concept. De beschrijvingen staan niet in het Ontwikkelplan; ze zijn een Swift-uitwerking van ontwikkelopgave 3.
 
 ---
 
@@ -96,14 +108,14 @@ Voorbereiden en delen → Voorfeedback → Observatie → Zelfreflectie → Gesp
 2. **Voorbereiden en delen.** De trainer deelt de voorbereiding van die ene training (minimaal: probleem, doel, vormen; zie 06.4).
 3. **Voorfeedback.** De begeleider reageert kort en concreet. De trainer houdt de regie over zijn training.
 4. **Observatie** met de zes criteria en de schaal.
-5. **Zelfreflectie** van de trainer op dezelfde zes criteria, het liefst dezelfde dag.
-6. **Gesprek.** Begin met de vorige afspraak. Leg daarna de twee perspectieven naast elkaar en bespreek eerst de verschillen. Eindig met één afspraak.
+5. **Korte zelfreflectie** van de trainer, het liefst dezelfde dag, met drie vragen: *wat ging goed, wat lukte nog niet zoals bedoeld, wat ga je de volgende keer anders doen?* Daarnaast kan hij de zes criteria op de schaal aangeven. Dat is niet verplicht, en er hoort geen tekst per criterium bij.
+6. **Gesprek.** Begin met de vorige afspraak. Leg daarna de twee perspectieven naast elkaar: de reflectie van de trainer en, als hij die invulde, zijn schaal, tegenover de observatie van de begeleider. Bespreek eerst de verschillen. Eindig met één afspraak.
 7. **Eén ontwikkelafspraak**, gekoppeld aan één criterium. Concreet: wat ga je anders doen, en waar zien we dat aan?
 8. **Opvolging.** Het volgende moment wordt bepaald **op basis van de ontwikkelafspraak en de beschikbare begeleidingscapaciteit**.
 
 Er is **geen vast verplicht aantal observaties per seizoen**.
 
-> **Besluitpunt 07-B.** Hoe vaak begeleiding per niveau plaatsvindt, beslissen we na overleg en na de pilot met drie trainers. Pas daarna leggen we vast of er per niveau een richtlijn komt.
+> **Besluit 07-B.** De frequentie van begeleiding wordt **nog niet vastgelegd**.
 
 ---
 
@@ -120,13 +132,15 @@ Er is **geen vast verplicht aantal observaties per seizoen**.
 **Formele vaststelling.** De HJO bovenbouw ontwikkelt. Vaststelling gaat volgens de bevoegdheden binnen AVV Swift.
 
 ### Openstaande besluitpunten
-> **Besluitpunt 07-C.** Bestaat de functie TJC in de bovenbouw formeel, en wie stelt hem aan?
+> **Besluit 07-C t/m 07-F.** Rol, benoeming, werkgebied en overdracht van de TJC worden **eerst organisatorisch vastgelegd** binnen Swift. Tot dan krijgt een TJC in ClubComm geen toegang. De vragen die daarbij beantwoord moeten worden:
 >
-> **Besluitpunt 07-D.** Wie wijst het **werkgebied** van een TJC toe (welke teams of leeftijden, welke trainers), en hoe wordt dat vastgelegd en gewijzigd?
+> **07-C.** Bestaat de functie TJC in de bovenbouw formeel, en wie stelt hem aan?
 >
-> **Besluitpunt 07-E.** Ziet een TJC de trainersscan en het ondersteuningsniveau van de trainers in zijn werkgebied, of alleen de begeleidingsmomenten die hij zelf doet?
+> **07-D.** Wie wijst het **werkgebied** van een TJC toe (welke teams of leeftijden, welke trainers), en hoe wordt dat vastgelegd en gewijzigd?
 >
-> **Besluitpunt 07-F.** Wie neemt het over als een TJC stopt of van werkgebied wisselt, en wat gebeurt er met zijn lopende begeleidingen?
+> **07-E.** Ziet een TJC de trainersscan en het ondersteuningsniveau van de trainers in zijn werkgebied, of alleen de begeleidingsmomenten die hij zelf doet?
+>
+> **07-F.** Wie neemt het over als een TJC stopt of van werkgebied wisselt, en wat gebeurt er met zijn lopende begeleidingen?
 
 *Technische uitvoering in ClubComm:* toegang per werkgebied bestaat nog niet in de rechten van de database. Dat vraagt een apart technisch voorstel en akkoord (Spoor 3, risicoklasse L). Tot die tijd krijgt niemand meer toegang dan nu.
 
@@ -155,14 +169,42 @@ Het beleidsdocument geeft de HO *"evaluatie-/beoordelingsgesprekken met trainers
 | Ondersteuningsniveau + uitleg | lezen | lezen en schrijven | nee |
 | Ontwikkelafspraken | lezen | lezen en schrijven | nee |
 
-### Afspraken bij een formeel beoordelingstraject (voorstel)
-1. Een formeel beoordelings- of functioneringsgesprek is een **apart traject**, met een eigen verslag. Het staat niet in de begeleidingsroute.
-2. **De zelfreflecties van de trainer worden nooit overgedragen** naar een beoordelingstraject.
-3. Wil de beoordelaar iets uit de begeleiding gebruiken, dan gaat het alleen om een **samenvatting van de ontwikkelafspraken en de voortgang**. Die samenvatting wordt eerst **met de trainer gedeeld**, en de trainer mag er zijn reactie bij geven.
-4. De trainer weet vooraf dat deze scheiding bestaat. Dat staat in de uitleg bij de start van de begeleiding.
-5. Is er een ernstige zorg (bijvoorbeeld over veiligheid van spelers), dan geldt het bestaande beleid voor een veilig sportklimaat. Daar is deze route niet voor bedoeld.
+### Overdrachtsregels naar een formeel beoordelingstraject (voorstel, nog te toetsen)
 
-> **Besluitpunt 07-G.** Akkoord met afspraak 1–5? Bij afspraak 3: is toestemming van de trainer nodig, of alleen dat hij het vooraf ziet?
+*Besluit 07-G: ontwikkelgerichte begeleiding en formele beoordeling blijven **gescheiden**. De regels hieronder zijn een zorgvuldig uitgewerkt voorstel. Ze worden vóór vaststelling **getoetst op privacy en juridische aspecten** (zie de toetsvragen onderaan).*
+
+**A. Twee gescheiden trajecten**
+1. Het formele beoordelings- of functioneringsgesprek (BD 3.2.1) is een **apart traject** met een eigen verslag. Het wordt niet in de begeleidingsroute in ClubComm vastgelegd.
+2. Wie het formele gesprek voert, krijgt **niet** vanzelf toegang tot de begeleidingsroute, ook niet als hij dezelfde persoon is als de begeleider. In dat geval gebruikt hij in het formele gesprek alleen wat hieronder onder B staat.
+
+**B. Wat nooit wordt overgedragen**
+
+3. De **zelfreflecties** en de zelfinschatting van de trainer.
+4. De **eigen werkaantekeningen** van de begeleider.
+5. De **schaalkeuzes per criterium** (Zichtbaar, Gedeeltelijk zichtbaar, enzovoort). Zonder het gesprek erbij zeggen ze weinig, en ze zijn niet bedoeld als beoordeling.
+
+**C. Wat wel kan worden overgedragen, en alleen zo**
+
+6. Een **korte samenvatting** van de ontwikkelafspraken en de voortgang daarop (welke afspraak, gelukt / deels / nog niet).
+7. De samenvatting wordt geschreven door de begeleider en **eerst aan de trainer voorgelegd**.
+8. De trainer kan er **zijn reactie** bij schrijven. Die reactie gaat altijd mee.
+9. Het ondersteuningsniveau gaat alleen mee als de trainer daarmee instemt.
+
+**D. Transparantie**
+
+10. De trainer hoort bij de start van de begeleiding dat deze scheiding bestaat en wat er wel en niet kan worden overgedragen.
+11. Elke overdracht wordt vastgelegd: wat, wanneer, aan wie. De trainer kan dat inzien.
+
+**E. Uitzondering**
+
+12. Bij een ernstige zorg, bijvoorbeeld over de veiligheid van spelers, geldt het bestaande beleid van Swift voor een veilige sportomgeving (zoals de VOG-plicht, BD 1.1). Deze begeleidingsroute is daar niet voor bedoeld en wordt er niet voor gebruikt.
+
+**Toetsvragen voor de privacy- en juridische toets**
+- Op welke grondslag mag Swift deze gegevens over trainers (vrijwilligers en betaalde trainers) verwerken, en verschilt dat per groep?
+- Is voor regel 7 tot en met 9 **toestemming** van de trainer nodig, of is **vooraf informeren** genoeg?
+- Mag de beoordelaar weten dat er een begeleidingstraject loopt?
+- Hoe gaat het als de begeleider en de beoordelaar dezelfde persoon zijn (regel 2)?
+- Sluit dit aan op een bestaand privacybeleid of reglement van Swift?
 
 ---
 
@@ -183,4 +225,4 @@ Het beleidsdocument geeft de HO *"evaluatie-/beoordelingsgesprekken met trainers
 
 Voor de begeleiding worden persoonsgegevens van trainers vastgelegd: vragenlijsten, reflecties, observaties, niveaus en afspraken. Het doel is uitsluitend de ontwikkeling van de trainer.
 
-> **Besluitpunt 07-H.** Bewaartermijnen, inzage, correctie, verwijdering en wat er gebeurt met de gegevens van trainers die vertrekken, worden apart vastgesteld. Er ligt een voorstel ter bespreking. Daarbij moet blijken of Swift al een privacybeleid heeft waarop dit moet aansluiten.
+> **Besluit 07-H.** Er wordt **nog geen bewaartermijn vastgesteld**. Bewaartermijnen, inzage, correctie, verwijdering en wat er gebeurt met de gegevens van trainers die vertrekken, worden apart vastgesteld. Er ligt een voorstel ter bespreking. Daarbij moet blijken of Swift al een privacybeleid heeft waarop dit moet aansluiten.

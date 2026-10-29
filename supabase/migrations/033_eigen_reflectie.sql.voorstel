@@ -1,0 +1,55 @@
+-- ClubComm — de trainer is eigenaar van zijn eigen teksten; een clubbeheerder zonder begeleidersrol heeft geen toegang
+-- tot het begeleidingsdossier. VOORSTEL (Spoor 3, maat L): NIET TOEPASSEN ZONDER AKKOORD. Lokaal getest met
+-- EXTRA_SQL="supabase/tests/lokaal/begeleiding-eigenaarschap.sql" npm run test:veilig -- 033 (ook samen met 032).
+-- Raakt priv.cc_mag NIET (zodat dit samengaat met voorstel 032, dat cc_mag opnieuw schrijft); werkt met
+--   (1) een extra bewaker (trigger) op scope 'trainerzelf' en (2) een extra beperkende regel (restrictive policy).
+--
+-- (1) Scope 'trainerzelf' (kennismaking trainerKennis, vragenlijst vooraf en reflectie begeleidZelf):
+--     - de trainer zelf mag alles met zijn eigen rij, behalve hem op naam van een ander of in een andere scope zetten;
+--     - iemand anders (HO/TC) mag alleen het veld 'gevraagd' zetten of wijzigen, en alleen een lege rij aanmaken
+--       (velden 'trainerId' en 'gevraagd'); de inhoud blijft van de trainer; verwijderen mag niet;
+--     - de server (geen ingelogde gebruiker: automatische berichten, beheerscripts) wordt niet tegengehouden.
+-- (2) Scopes 'trainerzelf' en 'trainerdossier': alleen de persoon zelf of een begeleider (rol hjo of tc). Daarmee vervalt
+--     de toegang van een clubbeheerder zonder begeleidersrol. Lezen door de trainer zelf en schrijven door de begeleider
+--     blijven zoals in cc_mag geregeld.
+
+create or replace function priv.cc_bewaak_trainerzelf() returns trigger
+language plpgsql security definer set search_path = public as $$
+declare ik text := priv.cc_ik(); oud jsonb; nieuw jsonb; eigen boolean;
+begin
+  if auth.uid() is null then return coalesce(new, old); end if;
+  if tg_op = 'DELETE' then
+    if old.persoon_id is distinct from ik then raise exception 'Alleen de trainer zelf mag dit verwijderen'; end if;
+    return old;
+  end if;
+  if tg_op = 'UPDATE' and (new.persoon_id is distinct from old.persoon_id or new.scope is distinct from old.scope) then
+    raise exception 'Eigenaar of scope wijzigen mag niet';
+  end if;
+  eigen := new.persoon_id is not distinct from ik;
+  if eigen then return new; end if;
+  if tg_op = 'INSERT' then
+    if exists (select 1 from jsonb_object_keys(coalesce(new.data, '{}'::jsonb)) k where k not in ('trainerId', 'gevraagd')) then
+      raise exception 'Alleen de trainer zelf mag dit invullen';
+    end if;
+    return new;
+  end if;
+  oud := coalesce(old.data, '{}'::jsonb) - 'gevraagd'; nieuw := coalesce(new.data, '{}'::jsonb) - 'gevraagd';
+  if oud <> nieuw then raise exception 'Alleen de trainer zelf mag dit wijzigen (jij mag alleen gevraagd wijzigen)'; end if;
+  return new;
+end $$;
+revoke all on function priv.cc_bewaak_trainerzelf() from public;
+
+drop trigger if exists rij_trainerzelf on public.rij;
+create trigger rij_trainerzelf before insert or update on public.rij for each row
+  when (new.scope = 'trainerzelf') execute function priv.cc_bewaak_trainerzelf();
+drop trigger if exists rij_trainerzelf_oud on public.rij;
+create trigger rij_trainerzelf_oud before update on public.rij for each row
+  when (old.scope = 'trainerzelf' and new.scope is distinct from 'trainerzelf') execute function priv.cc_bewaak_trainerzelf();
+drop trigger if exists rij_trainerzelf_weg on public.rij;
+create trigger rij_trainerzelf_weg before delete on public.rij for each row
+  when (old.scope = 'trainerzelf') execute function priv.cc_bewaak_trainerzelf();
+
+drop policy if exists rij_begeleiding on public.rij;
+create policy rij_begeleiding on public.rij as restrictive for all to authenticated
+  using (scope not in ('trainerzelf', 'trainerdossier') or persoon_id = (select priv.cc_ik()) or (select priv.cc_begeleider()))
+  with check (scope not in ('trainerzelf', 'trainerdossier') or persoon_id = (select priv.cc_ik()) or (select priv.cc_begeleider()));
