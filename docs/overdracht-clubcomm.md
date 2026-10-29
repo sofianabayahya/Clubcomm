@@ -5,12 +5,10 @@
 **Bijgewerkt:** 29-10-2026
 
 ## Stand
-- `main` = `5d140fb` (#100, Besluit 140). Hoogste besluit in `main`: **140**. Besluit **141** zit in de pull request hieronder; het eerstvolgende vrije nummer daarna is **142**.
+- `main` = `2946205` (#101, Besluit 141, trainingsmodule stap 1). Productie draait die commit (Vercel READY, nagegaan 29-10). Hoogste besluit: **141**; het eerstvolgende vrije nummer is **142**.
 
 ## Open pull requests
-| PR | Wat | Stand |
-|---|---|---|
-| #101 | Besluit 141: trainingsmodule stap 1 (branch `bouw/trainingsmodule-stap1`): Lijn met weekdetail en *Beheer* (*Periodeplanning vastleggen*), Plannen *Stap x van y* en *Toepassing · partij*, Week met vier minutengetallen, leeg = *nog niet gecontroleerd*, *Klopt zoals gepland*, Transfer bij Toepassing; Vormenbank; label *Minuten nog niet gecontroleerd* in Lijn, totalen *inclusief nog niet gecontroleerde minuten*, oude trainingen *niet zeker gecontroleerd* | Inhoudelijk akkoord (29-10) na drie verbeteringen; samenvoegen na groene controles. Niet samenvoegen of publiceren zonder akkoord |
+Geen.
 
 ## Wacht op akkoord van de gebruiker
 - Stap 1 trainingsmodule beoordelen. Pas daarna stap 2 (weekevaluatie in Lijn, één nieuw veld op het weekplan) en stap 3 (herinnering na de training).
