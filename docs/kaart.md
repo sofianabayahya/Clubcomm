@@ -14,7 +14,7 @@
 | **Taken, vervoer, meehelpen, materiaal** | `taken.js`, `meehelpen.js`, `materiaal.js`, `waardering.js` | 17, 25, 28, 31, 64, 95, 98 | `taken:\|chauffeur` |
 | **Ontwikkelgesprekken en beoordeling** | `beoordeling.js`, `gesprek.js` | 23, 65–72, 101 | `spelerskaart` |
 | **Trainers begeleiden (HO, TC)** | `trainers.js`, `begeleiding.js`, `hjohome.js`, `hjofilter.js` (`CC.werkgebied` in `hjo.js`) | 97, 99, 100, 129, 134 | `trainers begeleiden\|begeleidingsmoment\|technisch coördinator\|HO-Home\|bouwen\|pakket Alleen` |
-| **Trainingsmodule** | `training.js` (kiezer, Plannen, Week, Vormen), `periodisering.js` (methodiek, Lijn), `vormtypes.js` | 121, 128, 130–135, 137, 138 (139 in PR #97) | `trainingsmodule\|oefenvorm` (na PR #97 ook het bestand kiezer.spec.js) |
+| **Trainingsmodule** | `training.js` (kiezer, Plannen, Week, Vormen), `periodisering.js` (methodiek, Lijn), `vormtypes.js` | 121, 128, 130–135, 137, 138, 139 | `trainingsmodule\|oefenvorm` + `tests/kiezer.spec.js` |
 | **Opleidingsprofielen** | `opslag.js` (leest `S.profielen`), `training.js` (`profiel`, `ond`); bron: `supabase/profielen/` | 121, 123, 133 | `opleidingsprofiel\|trainingsmodule` |
 | **Tekentool** | `tekentool.js` + `.css`, `tekenen.html` | 124–127 | `tekentool` |
 | **Demo en rondleiding** | `demo.js` (`STAPPEN`), `data.js` (democlub) | 89, 114 | `rondleiding\|uitnodiging\|demo:\|elke stap` |
@@ -55,7 +55,7 @@
 - `opstelling.js`: speelvorm per team `team.speelCat` (`M.wedCat`); keuze van de staf in `S.teamKeuze`.
 - `adres.js`: adres via PDOK (`data-adres`). `push.js`: pushmeldingen (Besluit 53). `onderhoud.js`: foutregistratie en zelf verversen (`versie.json` uit `versie-maken.js`, Besluit 63).
 - **Opleidingsprofielen (Besluit 123):** methodiek als gegevens, niet in de code. Opbouw en KNVB-standaard: `supabase/profielen/`; het DCG-profiel staat in de database (soort `profiel`); de app leest ze in `S.profielen` en schrijft ze nooit terug.
-- **Trainingsmodule:** eigen vormen (`S.vormen`) en trainingen (`S.trainingsplannen`, scope `eigen`); tabblad *Training* (`CC.trainingTab`) met Lijn · Plannen · Week · Vormen; `periodisering.js` alleen als het profiel voetbalproblemen en leerniveaus heeft. Tekentool zit in `index.html`; los testscherm `/tekenen`.
+- **Trainingsmodule:** eigen vormen (`S.vormen`) en trainingen (`S.trainingsplannen`, scope `eigen`); tabblad *Training* (`CC.trainingTab`) met Lijn · Plannen · Week · Vormen; `periodisering.js` alleen als het profiel voetbalproblemen en leerniveaus heeft. **Eén oefenvormkiezer voor elke club** (Besluit 139: `advies`, `kvHtml`; *Ongedaan maken* via `CC.toast` met knop; regressietests in `tests/kiezer.spec.js`). Tekentool zit in `index.html`; los testscherm `/tekenen`.
 - `evaluatie.html` (`/evaluatie`): evaluatieformulier coach, alleen op het toestel (Besluit 93).
 - **Demo:** online alleen `mijnclubcomm.nl/demo`, **alleen op uitnodiging** (`demo.js`, tabel `demo_toegang`, Besluit 89); `?demo` alleen lokaal. Accounts: Sanne (ouder), Mark (trainer + ouder), Linda (teamleider + ouder), Peter (HJO + beheerder), Esther (coördinator). Democlub "VV De Voorbeeldclub": **alleen verzonnen namen**. Nieuw of gewijzigd scherm: kijk of `STAPPEN` in `demo.js` nog klopt.
 
