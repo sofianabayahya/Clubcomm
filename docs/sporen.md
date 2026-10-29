@@ -102,13 +102,13 @@
   - draait de integratietests;
   - publiceert.
 - Alleen gecontroleerde commits op `main` gaan online.
-- Na het publiceren controleren dat productie gelijk is aan die commit.
+- Samenvoegen met `main` publiceert vanzelf (Vercel); werkbranches krijgen alleen een afgeschermde voorbeeldversie. Daarom samenvoegen alleen na akkoord, en daarna controleren dat productie gelijk is aan die commit.
 
 **Wat er gebouwd is**
-- Zie het register; hoogste besluit nu: **138**.
+- Zie het register; hoogste besluit nu: **139**.
 
 **Openstaande vragen** (nog geen bouwopdracht)
-- PR #92: oefenvorm kiezen in twee tikken. Het voorstel is om één algemene oefenvormkiezer te maken, samen met *Vorm kiezen* van Besluit 138.
+- Eén algemene oefenvormkiezer: gebouwd als Besluit 139 (pull request ter beoordeling). Daarna wordt PR #92 gesloten.
 - Profiel veilig leesbaar maken voor trainers (rechten en rechtentest).
 - KNVB-standaardprofiel bruikbaar maken.
 - Lijn en andere methodiekafhankelijke schermen gelijktrekken.

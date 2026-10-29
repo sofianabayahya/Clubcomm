@@ -1619,9 +1619,9 @@ test('trainingsmodule: classificatie, sjabloon, fase, minuten per leerdoel en fi
   // Besluit 133: met leerniveaus in het profiel staat het leerniveau in de regel (de fase zit ingeklapt in het venster)
   await expect(page.locator('.tr-pmid .tr-rij').nth(1).locator('.tr-fase')).toHaveCount(0);
   // Lege plek A1 vullen met een nieuwe vorm en die classificeren
-  // Besluit 138: een lege plek opent meteen "Vorm kiezen" (gefilterd op het gereedschap van het blok)
+  // Besluit 138/139: een lege plek opent meteen de oefenvormkiezer (met het gereedschap van het blok)
   await page.locator('.tr-pmid .tr-rij').nth(1).click();
-  await expect(page.locator('#sheet')).toContainText('Vorm kiezen');
+  await expect(page.locator('#sheet')).toContainText('Kies oefenvorm');
   await page.locator('#sheet [data-act="vormNieuw"]').click();
   await page.fill('#v-n', 'Druk zetten 2 tegen 3+1'); await page.locator('#v-n').press('Tab');
   await page.locator('[data-act="vormKies"][data-veld="ld"][data-w="ll-1v1-verdedigen"]').click();
@@ -1886,7 +1886,8 @@ test('trainingsmodule: DCG-periodisering O13 met hoofdthema, teamfunctie, contra
   await expect(page.locator('#sheet .tr-vh')).toContainText('Vooruit inspelen');
   await page.waitForTimeout(400);
   if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/6-vorm-kiezen.png`, fullPage: false });
-  await expect(page.locator('#sheet [data-act="vkZet"][data-k="past"]')).toContainText('past bij');
+  // Besluit 139: geen aparte knop 'past bij'; de groepen tonen wat past (niets wordt uitgesloten)
+  await expect(page.locator('#sheet .kv-groep').first()).toContainText('Past het best');
   await page.locator('#sheet summary', { hasText: 'Ander gereedschap' }).click();
   await page.locator('#sheet [data-act="vkZet"][data-k="gs"][data-w="ll-1v1-aanvallend"]').click();
   await expect(page.locator('#sheet .tr-vh')).toContainText('Passeren');
