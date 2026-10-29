@@ -15,8 +15,8 @@
 |---|---|---|
 | Kerndocument en drie hoofdstukken | `01-…` t/m `04-…` in deze map | Leidend, alleen DCG |
 | Audit van de database | `audit-2026-10-28.md` | Klaar |
-| **Profiel v3** (6 gereedschappen incl. Afwerken – benutten, 8 voetbalproblemen, 5 leerniveaus, mengpaneel met 9 knoppen, weekformat met optioneel contrathema) | `supabase/profielen/dcg.json`; leesbare versie `profiel-v3-controle.md` | Klaar en nagekeken tegen het kerndocument; **nog niet in de database** |
-| Script om v3 in de database te zetten | `supabase/scripts/2026-10-28_dcg_profiel_v3.sql` | Klaar, **niet uitgevoerd**. Werkt alleen als het huidige profiel nog exact v1 is (controlesom `c550bf9a49eb215082de42245515b02f`) |
+| **Profiel v3** (6 gereedschappen incl. Afwerken – benutten, 8 voetbalproblemen, 5 leerniveaus, mengpaneel met 9 knoppen, weekformat met optioneel contrathema) | `supabase/profielen/dcg.json`; leesbare versie `profiel-v3-controle.md` | **In de database sinds 29-10** (controlesom gelijk aan `dcg.json`; met 37 vaardigheden als concept) |
+| Script om v3 in de database te zetten | `supabase/scripts/2026-10-28_dcg_profiel_v3.sql` | **Uitgevoerd op 29-10.** Terugzetten naar v1 kan met het terugdraaiscript |
 | Reservekopie v1 en terugzetten | `supabase/backups/2026-10-28_dcg_profiel_v1.json`, `supabase/scripts/2026-10-28_dcg_profiel_v3_terug.sql` | Klaar |
 | Oud script v2 | `supabase/scripts/2026-10-27_dcg_profiel_v2.sql` | **Vervallen, niet uitvoeren** |
 | Leeg CSV-sjabloon met de echte data (29-10 t/m 18-12, 23 trainingen en 6 wedstrijden van het O13 talententeam) | `periodisering-sjabloon-o13.csv` | Klaar; kan ook in de app (Training → Lijn → Periodisering laden) |
@@ -27,7 +27,7 @@
 **CSV-kolommen:** `datum;soort;fase;week;probleem;contrathema;gereedschapA;gereedschapB;keten;leerniveau;gedrag;informatie;leerroute;transfer;onderbouw;observatie;model`. Kolommen gaan op naam; observatiepunten bij een wedstrijd scheid je met `|` (maximaal 3); `model` = leeg (spacing) of *afwisselend*.
 
 ## Wat nog moet (op volgorde)
-1. **Akkoord van de initiatiefnemer op de lijst van profiel v3**, daarna het script uitvoeren (met `execute_sql`), controleren dat versie 3 erin staat, en de app bekijken.
+1. ~~Profiel v3 in de database~~ ✅ 29-10; app online ✅ 29-10 (Besluit 137 en 138).
 2. **Definitieve periodisering** in Excel (met ChatGPT) → opslaan als CSV → in de app laden. Eerst het voorbeeld laten zien; pas na *Toevoegen* verandert er iets.
 3. **Oefenvormen en tekeningen**, later en alleen door de initiatiefnemer aangeleverd.
 
