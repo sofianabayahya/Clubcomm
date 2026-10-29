@@ -11,6 +11,7 @@ Laatst bijgewerkt: 29 oktober 2026 (t/m Besluit 138)
 - **Ideeën en open vragen** staan onderaan bij *Later / ideeën* en *Nog te bespreken*, elk met een status. Wordt een idee een besluit of afgewezen, dan verhuist het.
 - **Volgorde in dit bestand:** eerst de ontwerpprincipes en de basis (Besluit 1 t/m 13 en 16), daarna van nieuw naar oud (95, 94, … 14). Het register hierboven staat altijd op nummer.
 - **Voorstellen** (nog geen besluit) staan in `docs/onderzoek/`.
+- **Gericht lezen (29-10):** dit bestand blijft de enige bron van waarheid, maar wordt niet bij elke opdracht helemaal gelezen. Begin bij `docs/kaart.md` (welke besluiten bij welk onderwerp), zoek dan op `## Besluit N` en op een zoekwoord, en zoek altijd een zoekwoord in *Afgewezen ideeën*. Lees het hele Register en de geraakte besluiten bij een nieuw besluit, nieuwe functionaliteit of een wijziging die meer modules raakt. Borgen gebeurt naar de maat van de opdracht (S, M, L in `CLAUDE.md`): een kleine aanpassing (S) krijgt geen besluit.
 - **Drie sporen (29-10):** alleen Spoor 3 (ClubComm) geeft een besluitnummer en werkt dit register bij. Spoor 1 (persoonlijk) en Spoor 2 (Swift) schrijven *"Voorstel Spoor X — …"* in hun eigen map (`docs/methodiek/…`). Het eerstvolgende vrije nummer kies je pas vlak voor het opslaan.
 
 ## Register
