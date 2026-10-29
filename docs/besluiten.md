@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 29 oktober 2026 (t/m Besluit 139)
+Laatst bijgewerkt: 29 oktober 2026 (t/m Besluit 140)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -21,6 +21,7 @@ Laatst bijgewerkt: 29 oktober 2026 (t/m Besluit 139)
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
+| 140 | 3 | Trainer uitnodigen bij pakket Trainers begeleiden: welkomstmail met de bedoeling (begeleiden, ontwikkelen niet beoordelen; wie ziet wat) en de functie van de HO; aanmelden altijd via e-mail, WhatsApp als persoonlijk seintje (nu en later opnieuw vanuit de trainerkaart) | ✅ geldt |  |
 | 139 | 3 | Eén oefenvormkiezer voor elke club: dezelfde bediening, inhoud uit het profiel (gereedschap, vaardigheid, leerniveau alleen als het profiel ze heeft); compacte regel per vorm met redenen, meer achter ⓘ; niets uitgesloten (past het best · past deels · alle andere); *Ongedaan maken* na het plaatsen; leerniveau bij een vorm alleen ter informatie (nooit oranje of lager) | ✅ geldt |  |
 | 138 | 1 · 3 | Tabblad Training bij de DCG-methodiek: *Mijn lijn* als één overzicht per week (bolletjes per training, leerniveau begin → eind, uitgevoerde minuten), vaststellen, afgelaste training één keer signaleren (doorschuiven of laten vervallen), titel = hoofdthema, vaardigheden per gereedschap (profiel), lege plek opent *Vorm kiezen* gefilterd op gereedschap, vaardigheid en aantal spelers | ◐ deels herzien | door 139 (één oefenvormkiezer voor elke club; geen knop *past bij*, niets uitgesloten) |
 | 137 | 1 · 3 | DCG-periodisering O13 invoeren: kolommen van het Excel-spoorboekje werken direct; hoofdthema, teamfunctie en ondersteunend gereedschap erbij (in de onderbouwing); contrathema gekoppeld aan één probleem (+ eventueel een ondersteunend) met behoud van de eigen tekst, nooit op losse woorden; handelingsketen vrije tekst; contra telt niet mee in de minuten | ✅ geldt |  |
@@ -118,7 +119,7 @@ Laatst bijgewerkt: 29 oktober 2026 (t/m Besluit 139)
 | 45 | 3 | Gegevens van een ander wijzigen: alleen HJO/clubbeheerder | ✅ geldt |  |
 | 44 | 3 | Meer trainers en teamleiders per team; rollen pas opslaan na bevestigen | ✅ geldt |  |
 | 43 | 3 | Adres aanvullen tijdens het typen | ✅ geldt |  |
-| 42 | 3 | Stafleden zonder kind: de club voegt ze toe | ✅ geldt |  |
+| 42 | 3 | Stafleden zonder kind: de club voegt ze toe | ◐ deels herzien | door 140 (welkomsttekst bij pakket Trainers begeleiden; uitnodiging opnieuw delen) |
 | 41 | 3 | Vastgezette berichten ook voor nieuwe ouders; welkomstbericht bij goedkeuren | ✅ geldt |  |
 | 40 | 3 | Telefoonnummer vult de ouder zelf in | ◐ deels herzien | door 46 (telefoonnummer bij het aanmelden) |
 | 39 | 3 | Wisselschema: de club kiest om de hoeveel minuten, de trainer past zelf aan | ◐ deels herzien | door 60 (speelduur per leeftijd), 106 (selectie: zelf maken in plaats van een voorstel) |
@@ -674,6 +675,17 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
 ### Vuistregel voor nieuwe ideeën
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
+
+---
+
+## Besluit 140 — Trainer uitnodigen bij pakket Trainers begeleiden: welkomstmail met de bedoeling, WhatsApp als seintje (Spoor 3)
+*Besloten 29 oktober 2026. Aanleiding: de HO van AVV Swift voegt trainers toe en wil ze ook via WhatsApp kunnen uitnodigen.*
+- **Aanmelden gaat altijd via e-mail.** Inloggen werkt met een code van 6 cijfers per mail (Besluit 52); zonder juist e-mailadres kan een trainer niet binnenkomen, en de mail is het vaste spoor. Geen inloglink met een geheime code via WhatsApp.
+- **WhatsApp is een persoonlijk seintje van de HO erbij:** direct na het toevoegen (*Deel de inloglink*) en later opnieuw vanuit de trainerkaart (*Uitnodiging opnieuw delen*, voor HO en clubbeheerder). De tekst zegt dat er een mail van ClubComm komt (kijk ook in je spam) en hoe je inlogt.
+- **Welkomstmail bij het pakket Trainers begeleiden** (afzender *[club] via ClubComm*, onderwerp *Welkom bij ClubComm – [club]*): wie hem toevoegde en met welke functie, wat de bedoeling is (dit seizoen begeleid worden, samen kijken naar trainingen en wedstrijden, ontwikkelen en niet beoordelen), wat je in ClubComm vindt, **wie ziet wat je over jezelf invult** (jij, je begeleiders HO en TC, en de clubbeheerder; gecontroleerd tegen de rechten van migratie 024/025), en in vier stappen hoe je begint.
+- **Functie van de HO** (bijv. *HJO bovenbouw*): een vrij veld bij *Staflid toevoegen*, onder in de mail. Dit toestel onthoudt het voor de volgende keer; het wordt niet in de database bij de persoon opgeslagen.
+- Bij andere pakketten en andere rollen blijft de welkomstmail zoals hij was (Besluit 42).
+- **Niet gedaan:** zien of een trainer al heeft ingelogd ("nog niet ingelogd"). Dat is een nieuw gegeven over personen (maat L) en vraagt eerst een voorstel.
 
 ---
 
@@ -1688,6 +1700,7 @@ Vaste regel voor alle portalen: een lijst die in het seizoen groeit, toont eerst
 - Zonder internet of als PDOK even niet werkt, typ je gewoon zelf; de Routeknop gebruikt wat er staat.
 
 ## Besluit 42 — Stafleden zonder kind: de club voegt ze toe
+> **◐ Deels herzien door Besluit 140 (bij pakket Trainers begeleiden: welkomsttekst met de bedoeling; uitnodiging later opnieuw delen)** (zie Register).
 *Besloten 25 september 2026.*
 
 - Een trainer of teamleider zonder kind in het team meldt zich niet aan zoals een ouder. De **HJO of clubbeheerder** voegt hem toe: **Teams → Staf → Staflid toevoegen** (naam, e-mailadres, eventueel telefoon, rol en team of groep).

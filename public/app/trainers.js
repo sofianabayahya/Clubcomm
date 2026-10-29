@@ -154,6 +154,7 @@
       t && h.rij({ ic: 'clock', titel: 'Wedstrijd bekijken', sub: 'Begeleidingsmoment plannen', act: 'begelInplannen', attrs: `data-id="${tr.id}" data-soort="wedstrijd"` }),
       t && h.rij({ ic: 'clock', titel: 'Training bekijken', sub: 'Begeleidingsmoment plannen', act: 'begelInplannen', attrs: `data-id="${tr.id}" data-soort="training"` }),
       !CC.pakketTrainers(S) && h.rij({ ic: 'phone', titel: 'Contact vastleggen', sub: 'Gebeld, geappt of gesprek', act: 'trainerContact', attrs: `data-id="${tr.id}"` }),
+      CC.rol() && ['hjo', 'beheerder'].includes(CC.rol().rol) && h.rij({ ic: 'share-2', titel: 'Uitnodiging opnieuw delen', sub: 'Via WhatsApp of een ander bericht', act: 'stafDeel', attrs: `data-id="${tr.id}" data-opnieuw="1"` }),
       h.rij({ ic: 'star', titel: volgt ? 'Niet meer volgen' : 'Volgen', sub: volgt ? 'Staat nu bovenaan bij Gevolgd' : 'Komt bovenaan bij Gevolgd', act: 'trainerKaartVolg', attrs: `data-id="${tr.id}"` }),
     ].filter(Boolean).join('');
     CC.sheet(tr.naam, `<p class="zacht klein kaart-sub">${sub}</p>${cijfers.length ? `<div class="cijfers">${cijfers.join('')}</div>` : ''}

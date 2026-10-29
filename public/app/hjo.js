@@ -253,6 +253,7 @@
       <label for="sn-t">Telefoonnummer (mag leeg)</label><input id="sn-t" name="tel" type="tel" inputmode="tel" autocomplete="off" placeholder="06 12345678">
       <div class="twee"><div><label for="sn-r">Rol</label><select id="sn-r" name="r"><option value="trainer">Trainer</option>${CC.pakketTrainers && CC.pakketTrainers(S) ? '' : '<option value="teamleider">Teamleider</option>'}${S.club.coordinatorAan && !(CC.pakketTrainers && CC.pakketTrainers(S)) ? `<option value="coordinator">${esc(S.club.labels.coordinator)}</option>` : ''}<option value="hjo">${esc(S.club.labels.hjo)}</option><option value="tc">Technisch coördinator</option></select></div>
       <div><label for="sn-team">Team (niet nodig voor ${esc(S.club.labels.hjo)} of TC)</label><select id="sn-team" name="team">${S.teams.map((t) => `<option value="${t.id}" ${t.id === voor ? 'selected' : ''}>${esc(t.naam)}</option>`).join('')}${S.club.coordinatorAan ? `<optgroup label="Groep (voor ${esc(S.club.labels.coordinator.toLowerCase())})">${(S.club.groepen || []).map((g) => `<option value="groep:${esc(g.naam)}">${esc(g.naam)}</option>`).join('')}</optgroup>` : ''}</select></div></div>
+      ${CC.pakketTrainers && CC.pakketTrainers(S) ? `<label for="sn-f">Jouw functie (onder de welkomstmail, mag leeg)</label><input id="sn-f" name="f" autocomplete="off" placeholder="Bijv. HJO bovenbouw" value="${esc(eigenFunctie())}">` : ''}
       <button class="knop">Toevoegen en uitnodigen</button>
       <p class="zacht klein">Hij of zij krijgt een welkomstmail met hoe je inlogt. Staat dit e-mailadres al in de club (bijv. als ouder), dan komt de rol erbij.</p></form>`); });
   CC.on('stafNieuwOk', (f) => {
@@ -270,12 +271,35 @@
     if (team && r === 'trainer' && !team.trainerId) team.trainerId = p.id; if (team && r === 'teamleider' && !team.teamleiderId) team.teamleiderId = p.id;
     if (team && r === 'trainer' && CC.trainingenKlaarzetten) CC.trainingenKlaarzetten(S, team);
     const wat = `${CC.rolNaam(rol).toLowerCase()}${team ? ` van ${team.naam}` : rol.groep ? ` ${rol.groep}` : ''}`;
-    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'persoonlijk', welkom: true, bereik: p.naam, onderwerp: `Welkom bij ClubComm`, tekst: `Hoi ${p.naam.split(' ')[0]}! Je bent in ClubComm van ${S.club.naam} toegevoegd als ${wat}.\n\nInloggen: ga naar ${location.host}, vul ${email} in en typ de code van 6 cijfers uit de mail over. Je hoeft je niet aan te melden.\n\nTip: zet ClubComm op je beginscherm (iPhone: Delen → Zet op beginscherm).`, tijd: new Date().toISOString(), ontvangers: [p.id], gelezen: [], antw: [], urgent: false, gepland: null });
+    if (f.f) { CC.ui.functie = f.f.value.trim(); try { localStorage.setItem('cc-functie', CC.ui.functie); } catch (e) { /* alleen gemak */ } }
+    const w = CC.welkom(S, p, rol, email);
+    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'persoonlijk', welkom: true, bereik: p.naam, onderwerp: w.onderwerp, tekst: w.tekst, tijd: new Date().toISOString(), ontvangers: [p.id], gelezen: [], antw: [], urgent: false, gepland: null });
     CC.save(); CC.closeSheet(); CC.render();
     CC.sheet('Toegevoegd', `<p><b>${esc(p.naam)}</b> is nu ${esc(wat)}${bestond ? ' (stond al in de club; de rol is erbij gekomen)' : ''}.</p><p class="zacht">Er gaat een welkomstmail naar ${esc(email)} met hoe je inlogt. Wil je het ook zelf even laten weten?</p>
-      <button class="knop vol" data-act="stafDeel" data-naam="${esc(p.naam.split(' ')[0])}" data-wat="${esc(wat)}" data-email="${esc(email)}">${icon('share-2')}Deel de inloglink</button>`);
+      <button class="knop vol" data-act="stafDeel" data-id="${esc(p.id)}" data-rol="${esc(JSON.stringify(rol))}">${icon('share-2')}Deel de inloglink</button>`);
   });
-  CC.on('stafDeel', (el) => CC.deel(`Hoi ${el.dataset.naam}! Je bent in ClubComm toegevoegd als ${el.dataset.wat}. Log in op ${location.origin} met ${el.dataset.email}: je krijgt een code van 6 cijfers per mail.`, 'ClubComm'));
+  // Welkomst (Besluit 42; bij pakket Trainers begeleiden met de bedoeling van het begeleiden, Besluit 140). De mail is het vaste
+  // spoor (inloggen gaat met een code per mail); WhatsApp is een persoonlijk seintje van de HO erbij.
+  const eigenFunctie = () => { if (CC.ui.functie != null) return CC.ui.functie; try { return localStorage.getItem('cc-functie') || ''; } catch (e) { return ''; } };
+  const isBegeleiden = (S, rol) => !!(CC.pakketTrainers && CC.pakketTrainers(S)) && rol && rol.rol === 'trainer';
+  CC.welkom = (S, p, rol, email, opnieuw) => {
+    const me = CC.me() || {}; const voor = (p.naam || '').split(' ')[0]; const ikVoor = (me.naam || '').split(' ')[0]; const functie = eigenFunctie(); const club = S.club.naam;
+    const team = rol && rol.teamId && M.team(S, rol.teamId); const wat = `${CC.rolNaam(rol).toLowerCase()}${team ? ` van ${team.naam}` : rol && rol.groep ? ` ${rol.groep}` : ''}`;
+    if (!isBegeleiden(S, rol)) return { onderwerp: 'Welkom bij ClubComm',
+      tekst: `Hoi ${voor}! Je bent in ClubComm van ${club} toegevoegd als ${wat}.\n\nInloggen: ga naar ${location.host}, vul ${email} in en typ de code van 6 cijfers uit de mail over. Je hoeft je niet aan te melden.\n\nTip: zet ClubComm op je beginscherm (iPhone: Delen → Zet op beginscherm).`,
+      app: `Hoi ${voor}! Je bent in ClubComm toegevoegd als ${wat}. Log in op ${location.origin} met ${email}: je krijgt een code van 6 cijfers per mail.` };
+    const begeleiders = `${S.club.labels.hjo || 'HO'} en TC`;
+    return { onderwerp: `Welkom bij ClubComm – ${club}`,
+      tekst: `Hoi ${voor},\n\n${me.naam || 'De club'}${functie ? `, ${functie},` : ''} heeft je toegevoegd als ${wat} in ClubComm. ${club} gebruikt ClubComm om trainers te begeleiden.\n\n`
+        + `Wat is de bedoeling?\n• Dit seizoen begeleidt ${ikVoor || 'de club'} je als trainer. Jullie kijken samen naar je trainingen en wedstrijden, en jij bepaalt mee waaraan je werkt. Het gaat om ontwikkelen, niet om beoordelen.\n• In ClubComm vind je je afspraken, je begeleidingsmomenten en je eigen leerdoel. Als je wilt, ook je trainingen en oefenvormen.\n• Wat je over jezelf invult, zien alleen jij, je begeleiders (${begeleiders}) en de clubbeheerder.\n\n`
+        + `Zo begin je (2 minuten)\n1. Ga naar ${location.host}\n2. Vul ${email} in\n3. Je krijgt een code van 6 cijfers per mail. Typ die over. Geen wachtwoord, je hoeft je niet aan te melden.\n4. Tip: zet ClubComm op je beginscherm (iPhone: Delen → Zet op beginscherm).\n\n`
+        + `Vragen? Reageer op dit bericht in de app of stuur ${ikVoor || 'ons'} een berichtje.\n\nGroet,\n${me.naam || club}${functie ? `\n${functie} ${club}` : `\n${club}`}`,
+      app: `Hoi ${voor}! Ik heb je toegevoegd aan ClubComm, de app waarmee ik dit seizoen de trainers van ${club} begeleid. ${opnieuw ? 'Je hebt er een mail over gekregen' : 'Je krijgt zo een mail'} van ClubComm (noreply@mijnclubcomm.nl); kijk ook even in je spam. Inloggen: ${location.host}${email ? ` met ${email}` : ''}, dan krijg je een code per mail. Groet, ${ikVoor}${functie ? ` (${functie})` : ''}` };
+  };
+  // Delen via WhatsApp (of iets anders): direct na het toevoegen, en later opnieuw vanuit de trainerkaart
+  CC.on('stafDeel', (el) => { const S = CC.S(); const p = M.persoon(S, el.dataset.id); if (!p) return;
+    const rol = el.dataset.rol ? JSON.parse(el.dataset.rol) : (p.rollen || []).find((r) => r.rol === 'trainer') || (p.rollen || [])[0];
+    CC.deel(CC.welkom(S, p, rol, p.email || '', !!el.dataset.opnieuw).app, 'ClubComm'); });
   CC.on('exportPdf', () => { CC.toast('Printvenster: kies "Opslaan als PDF"'); setTimeout(() => window.print(), 300); });
 
   // Rooster

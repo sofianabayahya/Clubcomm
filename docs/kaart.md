@@ -13,7 +13,7 @@
 | **Berichten en automatisch werk** | `autoberichten.js`, `core.js` (berichten), `push.js`, `sw.js`; server: `supabase/functions/automaat`, `supabase/functions/melding` | 19, 36, 57, 75, 77, 79–82, 107 | `berichten\|ouder: verlopen` + `node --test tests/automaat.test.mjs` |
 | **Taken, vervoer, meehelpen, materiaal** | `taken.js`, `meehelpen.js`, `materiaal.js`, `waardering.js` | 17, 25, 28, 31, 64, 95, 98 | `taken:\|chauffeur` |
 | **Ontwikkelgesprekken en beoordeling** | `beoordeling.js`, `gesprek.js` | 23, 65–72, 101 | `spelerskaart` |
-| **Trainers begeleiden (HO, TC)** | `trainers.js`, `begeleiding.js`, `hjohome.js`, `hjofilter.js` (`CC.werkgebied` in `hjo.js`) | 97, 99, 100, 129, 134 | `trainers begeleiden\|begeleidingsmoment\|technisch coördinator\|HO-Home\|bouwen\|pakket Alleen` |
+| **Trainers begeleiden (HO, TC)** | `trainers.js`, `begeleiding.js`, `hjohome.js`, `hjofilter.js` (`CC.werkgebied` in `hjo.js`) | 42, 97, 99, 100, 129, 134, 140 | `trainers begeleiden\|begeleidingsmoment\|technisch coördinator\|HO-Home\|bouwen\|pakket Alleen` |
 | **Trainingsmodule** | `training.js` (kiezer, Plannen, Week, Vormen), `periodisering.js` (methodiek, Lijn), `vormtypes.js` | 121, 128, 130–135, 137, 138, 139 | `trainingsmodule\|oefenvorm` + `tests/kiezer.spec.js` |
 | **Opleidingsprofielen** | `opslag.js` (leest `S.profielen`), `training.js` (`profiel`, `ond`); bron: `supabase/profielen/` | 121, 123, 133 | `opleidingsprofiel\|trainingsmodule` |
 | **Tekentool** | `tekentool.js` + `.css`, `tekenen.html` | 124–127 | `tekentool` |
