@@ -1,6 +1,6 @@
 # De drie sporen van ClubComm
 
-*Vastgelegd 29-10-2026. Dit is een **routekaart**, geen tweede register: welke afspraken gelden, staat alleen in `docs/besluiten.md`. Hier staat per spoor waar het over gaat, wat je leest en wat de volgende stap is. Hoe de lagen technisch werken: `docs/architectuur.md`.*
+*Vastgelegd 29-10-2026. Waar de code en tests per onderwerp staan: `docs/kaart.md`. Elk spoor heeft een eigen overdracht en schrijft alleen in de zijne: Spoor 1 `docs/methodiek/persoonlijk/overdracht.md`, Spoor 2 `docs/methodiek/swift/overdracht.md`, Spoor 3 `docs/overdracht-clubcomm.md`. Dit is een **routekaart**, geen tweede register: welke afspraken gelden, staat alleen in `docs/besluiten.md`. Hier staat per spoor waar het over gaat, wat je leest en wat de volgende stap is. Hoe de lagen technisch werken: `docs/architectuur.md`.*
 
 | | Spoor 1 — Persoonlijk | Spoor 2 — Swift | Spoor 3 — ClubComm |
 |---|---|---|---|
