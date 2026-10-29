@@ -934,3 +934,18 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .tr-beheer small { margin: -4px 0 8px; }
 @media (max-width: 899px) { .tr-wdet { margin-left: 8px; } }
 .tr-uit input::placeholder { color: var(--zacht); font-style: italic; opacity: 1; }
+/* Besluit 142: tijd vóór de training (veldtijd − organisatie = oefentijd) */
+.tr-tijd { display: grid; gap: 6px; margin: 8px 0; padding: 8px 12px; border: 1px solid var(--lijn); border-radius: var(--r-s); }
+.tr-tijd.klein { padding: 6px 10px; font-size: 14px; }
+.tr-tijd-r { display: flex; flex-wrap: wrap; gap: 0 10px; align-items: center; font-size: 15px; }
+.tr-tijd-r b { font-size: 17px; }
+.tr-orgknop { min-height: 44px; padding: 0 2px; border: 0; background: none; color: var(--blauw); font: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.tr-tbar { position: relative; display: flex; height: 16px; border-radius: 6px; overflow: hidden; background: #f1f5f9; }
+.tr-tbar i { display: block; height: 100%; min-width: 2px; border-right: 2px solid #fff; }
+.tr-tbar i:last-of-type { border-right: 0; }
+.tr-tbar .tr-org { background: repeating-linear-gradient(135deg, #cbd5e1 0 4px, #e2e8f0 4px 8px); }
+.tr-tbar .tr-over { background: repeating-linear-gradient(135deg, #b45309 0 4px, #f59e0b 4px 8px); }
+.tr-tbar .tr-vrij { background: transparent; }
+.tr-grens { position: absolute; top: 0; bottom: 0; width: 3px; background: #0f172a; }
+.tr-twaarsch { background: #fff4e5; color: #7a3e00; border-radius: 10px; padding: 8px 10px; font-size: 15px; }
+.tr-tok { color: var(--groen); font-weight: 700; }

@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 29 oktober 2026 (t/m Besluit 141)
+Laatst bijgewerkt: 29 oktober 2026 (t/m Besluit 142)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -21,7 +21,8 @@ Laatst bijgewerkt: 29 oktober 2026 (t/m Besluit 141)
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
-| 141 | 3 | Trainingsmodule stap 1: Lijn (ontwikkeling) · Plannen (voorbereiden) · Week (uitvoeren en evalueren) · Vormenbank (oefenstof, voor alle clubs). Lijn: weekdetail met *Opbouw van de week*, *Beheer* met *Periodeplanning vastleggen* (niets vergrendeld). Plannen: *Stap x van y*, blok *Toepassing · partij*. Week: vier minutengetallen (optie A, de berekening blijft) met *inclusief nog niet gecontroleerde minuten*, echte minuten leeg = *nog niet gecontroleerd*, *Klopt zoals gepland*, label in Lijn; oude trainingen (vóór 30-10, gelijk aan gepland) = *niet zeker gecontroleerd*, gegevens ongewijzigd; Transfer naar vrij spel bij Toepassing (zelfde antwoord, *Niet beoordeeld*). Geen nieuw veld | ✅ geldt |  |
+| 142 | 3 | Tijd vóór de training, voor elke club: bovenaan Plannen *veldtijd (kalender) − organisatie (de bestaande regel ombouw, door de trainer aan te passen, ook zonder sjabloon) = oefentijd*, de gekleurde balk met de grens, en een waarschuwing als de ingeplande minuten de oefentijd overschrijden (nooit blokkeren). Organisatie telt één keer. Geen nieuw veld; DCG-sjabloon 68 + 7 blijft. Geen registratie of samenvatting van uitloop | ✅ geldt |  |
+| 141 | 3 | Trainingsmodule stap 1: Lijn (ontwikkeling) · Plannen (voorbereiden) · Week (uitvoeren en evalueren) · Vormenbank (oefenstof, voor alle clubs). Lijn: weekdetail met *Opbouw van de week*, *Beheer* met *Periodeplanning vastleggen* (niets vergrendeld). Plannen: *Stap x van y*, blok *Toepassing · partij*. Week: vier minutengetallen (optie A, de berekening blijft) met *inclusief nog niet gecontroleerde minuten*, echte minuten leeg = *nog niet gecontroleerd*, *Klopt zoals gepland*, label in Lijn; oude trainingen (vóór 30-10, gelijk aan gepland) = *niet zeker gecontroleerd*, gegevens ongewijzigd; Transfer naar vrij spel bij Toepassing (zelfde antwoord, *Niet beoordeeld*). Geen nieuw veld | ◐ deels herzien | door 142 (*75 van 75 min gepland* en de losse regel ombouw staan nu in de tijdsbalk; ombouw heet organisatie) |
 | 140 | 3 | Trainer uitnodigen bij pakket Trainers begeleiden: welkomstmail met de bedoeling (begeleiden, ontwikkelen niet beoordelen; wie ziet wat) en de functie van de HO; aanmelden altijd via e-mail, WhatsApp als persoonlijk seintje (nu en later opnieuw vanuit de trainerkaart) | ✅ geldt |  |
 | 139 | 3 | Eén oefenvormkiezer voor elke club: dezelfde bediening, inhoud uit het profiel (gereedschap, vaardigheid, leerniveau alleen als het profiel ze heeft); compacte regel per vorm met redenen, meer achter ⓘ; niets uitgesloten (past het best · past deels · alle andere); *Ongedaan maken* na het plaatsen; leerniveau bij een vorm alleen ter informatie (nooit oranje of lager) | ◐ deels herzien | door 141 (*Mijn vormen* heet *Vormenbank*; blok Partij heet *Toepassing · partij*) |
 | 138 | 1 · 3 | Tabblad Training bij de DCG-methodiek: *Mijn lijn* als één overzicht per week (bolletjes per training, leerniveau begin → eind, uitgevoerde minuten), vaststellen, afgelaste training één keer signaleren (doorschuiven of laten vervallen), titel = hoofdthema, vaardigheden per gereedschap (profiel), lege plek opent *Vorm kiezen* gefilterd op gereedschap, vaardigheid en aantal spelers | ◐ deels herzien | door 139 (één oefenvormkiezer voor elke club; geen knop *past bij*, niets uitgesloten); door 141 (tik op een week = weekdetail; *Vaststellen* heet *Periodeplanning vastleggen*, status *Vastgelegd*; knoppen onder *Beheer*) |
@@ -679,7 +680,23 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 142 — Tijd vóór de training: veldtijd, organisatie en oefentijd (Spoor 3)
+*Besloten 29 oktober 2026, na het onderzoek `docs/onderzoek/tijdsplanning/analyse.md` (branch `onderzoek/tijdsplanning`, voorbeelden op 390 px en laptop) en de bijstelling van de initiatiefnemer: **alleen een realistische planning vooraf**, geen registratie of analyse achteraf. Aanleiding: bij DCG O13 duurde een vorm van 10 minuten er 18, en de partij verviel. Herziet Besluit 141 deels.*
+- **Doel:** de trainer ziet vóór de training of zijn programma realistisch binnen de veldtijd past. Voor elke club hetzelfde (DCG, Swift en andere); de tijd leest alleen minuten, geen methodiek.
+- **Bovenaan het midden van Plannen** (telefoon en laptop): *75 veldtijd − 10 organisatie ✎ = 65 oefentijd*, daaronder de bestaande gekleurde balk over de veldtijd met een streep op de grens van de oefentijd. Organisatie is grijs gearceerd, wat erover gaat oranje gearceerd. In Week staat hetzelfde klein in de weekkaart (alleen lezen).
+  - **Veldtijd** = begin- en eindtijd in de kalender. Zonder tijden (losse training) telt ClubComm alleen de minuten op en waarschuwt niet.
+  - **Organisatie** (uitleg, wissels, drinken, ombouw) = de bestaande regel *Ombouw, wissels, afsluiting* (`overig`). Tik = het venster *Organisatie*, ook bij een training zonder sjabloon (*+ organisatie*). Keuzes alleen uit eigen waarden: *vorige training* en *het sjabloon van de club*. **Geen standaard en nooit automatisch ingevuld.**
+  - **Oefentijd** = veldtijd − organisatie. **Ingepland** = alle plekken (start, vormen, spacing, partij). **De organisatie telt één keer:** niet bij ingepland, wel bij de geplande trainingsduur (Besluit 141).
+- **Waarschuwing, nooit een blokkade:** *⚠ 68 van 65 min ingepland: 3 te veel. In de organisatietijd valt: P Partij (laatste 3 min). Je kunt zo doorgaan.* Past het: *✓ 45 van 52 min ingepland · nog 7 min vrij*. Zo ziet de trainer meteen dat de afsluitende partij in de knel komt.
+- **Weg (dubbel):** de losse regel *Ombouw* onderaan Plannen en *75 van 75 min gepland*; onderaan staat alleen nog *x van y plekken ingevuld*.
+- **Gegevens:** past volledig in de bestaande structuur. Veldtijd uit de kalender, organisatie = `overig` (bij een training zonder sjabloon gemaakt als *Organisatie*), minuten van de plekken. **Geen nieuw veld, geen migratie.** Bestaande trainingen, periodisering en CSV blijven gelijk. **Het DCG-sjabloon blijft 68 + 7**; 10 minuten organisatie kies je per training.
+- **Niet gedaan** (zie *Afgewezen ideeën*): uitloopredenen, een automatische uitloopsamenvatting, extra evaluatievelden voor minuten, tijdsrapportages of dashboards, de duur van een vorm automatisch aanpassen, ombouwminuten berekenen, een vaste norm. De echte minuten van Besluit 141 blijven zoals ze zijn.
+- **Getest:** DCG-sjabloon 75 − 7 = 68 (*past precies*), organisatie 10 → *3 te veel* met de partij genoemd (gegevens: organisatie 10, plekken samen 68), Week alleen lezen; een club zonder profiel (zoals Swift) met 60 min: *+ organisatie*, 8 → *nog 7 min vrij*, overschrijding met de naam van de laatste plek; een losse training zonder tijden: alleen de som.
+
+---
+
 ## Besluit 141 — Trainingsmodule stap 1: Lijn · Plannen · Week · Vormenbank, minuten eerlijk benoemd, Toepassing (Spoor 3)
+> **◐ Deels herzien door Besluit 142** (*75 van 75 min gepland* en de losse regel ombouw staan nu in de tijdsbalk; ombouw heet organisatie).
 *Besloten 29 oktober 2026, na het ontwerp v2 (branch `onderzoek/trainingsmodule-herontwerp`, `ontwerp-v2.md` met voorbeelden op 390 px) en het akkoord van de initiatiefnemer op stap 1. Herziet Besluit 131, 135, 138 en 139 deels. Stap 2 (weekevaluatie) en stap 3 (herinnering na de training) volgen pas na beoordeling van stap 1.*
 - **Elk tabblad één taak**, voor elke club dezelfde bediening: **Lijn** = het ontwikkelproces, **Plannen** = de voorbereiding, **Week** = uitvoeren en evalueren, **Vormenbank** = de oefenstof. *Vormen* en *Mijn vormen* heten voortaan **Vormenbank**, bij alle clubs (ook het segment bij de trainer, Besluit 128). De functies blijven gelijk.
 - **Lijn (bij de methodiek uit het profiel):**
@@ -2299,6 +2316,10 @@ Bewust niet gedaan, met de reden. Komt een van deze toch terug, zeg dan dat het 
 
 | Idee | Waarom niet | Besluit |
 |---|---|---|
+| Uitloop achteraf registreren (redenen, een automatische uitloopsamenvatting, extra evaluatievelden voor minuten) | De trainer wil een realistische planning vooraf, geen extra administratie achteraf; de echte minuten (Besluit 141) blijven bestaan | 142 |
+| Tijdsrapportages of dashboards over werkelijke minuten | Geen functies bouwen alleen omdat de gegevens er zijn | 142 |
+| Ombouwminuten per overgang berekenen, of een vaste norm (bijv. 10 min organisatie) voor elke club of leeftijd | Fictieve zekerheid; één handmatig organisatiebudget per training is genoeg | 142 |
+| De duur van een vorm in de Vormenbank automatisch aanpassen na een training | Eén training zegt niets over de vorm; de trainer beslist | 142 |
 | Aparte lijst *Aanbevolen voor A1* in de kolom *Mijn vormen* op de laptop (voorstel PR #92) | Eén venster voor elke club en elk scherm (Besluit 139); een tweede plek om hetzelfde te kiezen maakt het onrustig. Slepen en *+* blijven | 139 |
 | Een vorm verbergen omdat hij niet bij het aantal spelers of de vaardigheid past (knop *past bij*) | ClubComm adviseert, de trainer beslist: wat minder past staat lager met de reden, niet weg | 139 |
 | Shirtjes met cijfers in de tekening (zoals Rinus) | De initiatiefnemer kiest de rondjes en driehoeken; die zijn kleiner en duidelijker | 132 |
