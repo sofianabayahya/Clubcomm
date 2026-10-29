@@ -3,7 +3,7 @@
 *Gemaakt op 29-10-2026. Vanaf nu is er een **aparte chat voor de DCG-methodiek**. De chat ClubComm (product) gaat over schermen, rechten, Swift, de KNVB-standaard en andere clubs. Lees ook `CLAUDE.md` en Besluit 133 tot en met 135 in `docs/besluiten.md`.*
 
 ## Startzin voor de nieuwe chat
-> Dit is de chat voor de DCG-methodiek in ClubComm. Lees eerst `docs/methodiek/dcg/overdracht.md`, `CLAUDE.md` en Besluit 133 in `docs/besluiten.md`. Werk alleen aan de methodiek van DCG (profiel, periodisering, oefenvormen). Verander niets aan de app voor andere clubs zonder te vragen.
+> Dit is de chat voor de DCG-methodiek in ClubComm. Lees eerst `docs/methodiek/persoonlijk/overdracht.md`, `CLAUDE.md` en Besluit 133 in `docs/besluiten.md`. Werk alleen aan de methodiek van DCG (profiel, periodisering, oefenvormen). Verander niets aan de app voor andere clubs zonder te vragen.
 
 ## Drie sporen (afspraak 29-10)
 - **Spoor 1 – de persoonlijke voetbalmethodiek van de initiatiefnemer (DCG).** Daar gaat deze chat over: profiel, periodisering, vaardigheden, oefenvormen.
@@ -12,7 +12,7 @@
 
 ## Waar gaat deze chat over
 - **Inhoud van DCG:** kerndocument, profiel v3, periodisering (Excel → CSV), straks oefenvormen en tekeningen.
-- **Alleen DCG.** Andere clubs (zoals AVV Swift) volgen de KNVB-standaard; daar gaat de ClubComm-chat over.
+- **Alleen deze methodiek.** AVV Swift heeft een eigen spoor (Spoor 2: KNVB en het jeugdbeleidsplan); andere clubs kiezen de KNVB-standaard, de KNVB met eigen aanvullingen of een volledig eigen methodiek (Spoor 3). De persoonlijke methodiek wordt nooit automatisch overgenomen.
 - **Het kerndocument van 26-09-2026 is leidend** (`01-kerndocument-v1.0.md`). Excel blijft het inhoudelijke document (uitgewerkt met ChatGPT); CSV met puntkomma's is alleen het invoerformaat.
 
 ## Wat er al is
@@ -45,7 +45,8 @@
 - **Geen rechtenwijziging.** Rechten horen bij de ClubComm-chat (zie het rechtenvoorstel van Besluit 134).
 - **Niets veranderen dat andere clubs raakt.** Alles van de methodiek moet in het profiel staan (gegevens), niet in de code. Moet er toch code veranderen, overleg dan eerst met de ClubComm-chat; de test *Zoals Swift* moet groen blijven.
 
-## Samenwerken met de ClubComm-chat
-- **Eigen werkbranch per chat**, zodat de chats elkaars werk niet overschrijven. Voor het samenvoegen met `main`: eerst `main` binnenhalen.
-- **`docs/besluiten.md` is gedeeld.** Een nieuw besluit krijgt het eerstvolgende vrije nummer; kijk vlak voor het opslaan welk nummer dat is.
-- Werkwijze blijft gelijk: besluit → bouwen → `npm test` (alles groen) → pushen → publiceren → pull request naar `main`.
+## Samenwerken met de ClubComm-chat (Spoor 3)
+*Bijgewerkt 29-10 na de afspraak over de drie sporen; zie `CLAUDE.md` en `docs/sporen.md`.*
+- **Eigen werkbranch per chat**, zodat de chats elkaars werk niet overschrijven. Vóór elke wijziging de controle uit `CLAUDE.md` (nieuwste `main`, open pull requests, hoogste besluitnummer, conflicten).
+- **Geen besluitnummers in dit spoor.** Een nieuwe afspraak heet hier *"Voorstel Spoor 1 — …"*. Spoor 3 geeft het definitieve nummer en zet het in het register.
+- **Niet zelf publiceren en niet zelf samenvoegen met `main`.** Werk klaar → `npm test` (alles groen) → pushen naar de eigen branch → pull request → Spoor 3 controleert, voegt samen en publiceert vanaf `main`.

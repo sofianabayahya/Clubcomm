@@ -1,5 +1,7 @@
 # Trainingsmodule: opleidingsprofielen per club
 
+> *Historisch onderzoeksdocument. Niet leidend voor de actuele werking. Zie `docs/architectuur.md` en het besluitenregister (`docs/besluiten.md`).*
+
 *27 oktober 2026. Antwoord op "Aanvulling ClubComm – Clubspecifieke methodologie". Dit is een **voorstel, geen besluit**: er is niets gebouwd of gemigreerd. Het vult `docs/trainingsmodule-2.md` aan en herziet daar een deel van: de soort `begrip` gaat op in het profiel, en de leerdoelen van een vorm komen in een aparte koppeling. Voorbeeldschermen: `docs/onderzoek/trainingsmodule-2/p-swift.png`, `p-dcg.png` en `p-trainer.png`.*
 
 **In het kort:** een **opleidingsprofiel** is een los pakket gegevens met versies. Elke club heeft er één. Oefenvormen zijn neutraal en worden via een **koppeling** aan de leerdoelen van een profiel verbonden. De KNVB-standaard staat als **gegevensbestand** in de repository en niet in de code. Elke club krijgt een eigen kopie in de eigen clubgegevens. Daardoor blijft de bestaande clubscheiding zoals hij is.

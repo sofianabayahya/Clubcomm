@@ -1,6 +1,6 @@
 # Fase 1: methodologisch fundament en periodisering O13 (voorstel 28-10-2026)
 
-> **Deels vervangen door de audit van 28-10** (`docs/methodiek/dcg/audit-2026-10-28.md`). Het kerndocument is nu leidend. De concepttabel in §7 (per dag andere gereedschappen, vaste dagaccenten) vervalt: het kerndocument legt per **week** één probleem, 2 hoofdgereedschappen en een keten vast, met drie leerroutes en zonder vaste dagindeling. De invoer gaat via de app, met een voorbeeld vooraf (audit §4).
+> **Deels vervangen door de audit van 28-10** (`docs/methodiek/persoonlijk/audit-2026-10-28.md`). Het kerndocument is nu leidend. De concepttabel in §7 (per dag andere gereedschappen, vaste dagaccenten) vervalt: het kerndocument legt per **week** één probleem, 2 hoofdgereedschappen en een keten vast, met drie leerroutes en zonder vaste dagindeling. De invoer gaat via de app, met een voorbeeld vooraf (audit §4).
 
 *Technisch voorstel ter goedkeuring. Er is nog **niets** gewijzigd in de database. Bronnen: de opdracht van de initiatiefnemer (fasering, kerndocument v1.0 van 26-09-2026, spacing-modellen). **Let op:** het kerndocument zelf, het HO-spoor en het Trainersspoor staan niet in de repository. Dit voorstel gebruikt de lijsten uit de opdracht (6 gereedschappen, 8 voetbalproblemen, 5 leerniveaus). Wil je dat de gedragsbeschrijvingen letterlijk uit het kerndocument komen, voeg het document dan toe (bijv. als PDF of markdown in `docs/methodiek/`).*
 

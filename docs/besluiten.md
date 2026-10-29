@@ -11,150 +11,153 @@ Laatst bijgewerkt: 29 oktober 2026 (t/m Besluit 138)
 - **Ideeën en open vragen** staan onderaan bij *Later / ideeën* en *Nog te bespreken*, elk met een status. Wordt een idee een besluit of afgewezen, dan verhuist het.
 - **Volgorde in dit bestand:** eerst de ontwerpprincipes en de basis (Besluit 1 t/m 13 en 16), daarna van nieuw naar oud (95, 94, … 14). Het register hierboven staat altijd op nummer.
 - **Voorstellen** (nog geen besluit) staan in `docs/onderzoek/`.
+- **Drie sporen (29-10):** alleen Spoor 3 (ClubComm) geeft een besluitnummer en werkt dit register bij. Spoor 1 (persoonlijk) en Spoor 2 (Swift) schrijven *"Voorstel Spoor X — …"* in hun eigen map (`docs/methodiek/…`). Het eerstvolgende vrije nummer kies je pas vlak voor het opslaan.
 
 ## Register
 ◐ = een deel geldt nog; lees het nieuwere besluit erbij. ✖ = geldt niet meer (alleen geschiedenis).
 
-| Nr | Onderwerp | Status | Herzien |
-|---|---|---|---|
-| 138 | Tabblad Training bij de DCG-methodiek: *Mijn lijn* als één overzicht per week (bolletjes per training, leerniveau begin → eind, uitgevoerde minuten), vaststellen, afgelaste training één keer signaleren (doorschuiven of laten vervallen), titel = hoofdthema, vaardigheden per gereedschap (profiel), lege plek opent *Vorm kiezen* gefilterd op gereedschap, vaardigheid en aantal spelers | ✅ geldt |  |
-| 137 | DCG-periodisering O13 invoeren: kolommen van het Excel-spoorboekje werken direct; hoofdthema, teamfunctie en ondersteunend gereedschap erbij (in de onderbouwing); contrathema gekoppeld aan één probleem (+ eventueel een ondersteunend) met behoud van de eigen tekst, nooit op losse woorden; handelingsketen vrije tekst; contra telt niet mee in de minuten | ✅ geldt |  |
-| 136 | Teams, trainingsdagen en wedstrijden zelf beheren (clubbeheerder en HO): team toevoegen, trainer koppelen, trainingen pas in de kalender als er een trainer is, wedstrijden plakken van voetbal.nl, trainingsschema laden (vanaf een gekozen leeftijd) | ✅ geldt |  |
-| 135 | Tabblad Training in de volgorde van het werk (laptop: Lijn · Plannen · Week · Vormen), regel *Je zit in* (week, thema, A/B; tik = Lijn), geen dubbelingen (maandoverzicht alleen in Lijn, evalueren in Week), weekthema met A/B voor clubs zonder periodisering | ◐ deels herzien | door 138 (Lijn bij de DCG-methodiek: één overzicht) |
-| 134 | Trainers begeleiden (KNVB): begeleiden en ontwikkelen, niet beoordelen; begeleider (HO of TC met traject) ziet het hele seizoen de trainingen van de trainer, kijkt en geeft feedback; club beslist; invoeren per club in te stellen; trainer deelt zelf vormen in een clubbank. Gebouwd: moment verplaatsen en *niet doorgegaan*. Meekijken en clubbank: rechtenvoorstel, wacht op akkoord | ✅ geldt (deels gebouwd) |  |
-| 133 | DCG-methodiek als profiel v3 (kerndocument leidend); methodiekblok compact; leerniveau per blok; status berekend; evaluatiekaart (3 open + verdiepend); periodisering laden uit CSV met voorbeeld; observatiepunten bij de wedstrijd; uitgebreide vormvelden | ◐ deels herzien | door 137 (contrathema, handelingsketen, extra kolommen) |
-| 132 | Training: Week (telefoon, controleren) · Plannen (laptop: vormen · training in blokken · week) · Vormen · Lijn; vorm in Rinus-stijl met *Zet in een training…* en materiaal uit de tekening; printen; kopiëren naar een andere dag | ◐ deels herzien | door 135 (volgorde op de laptop, geen weeklijst en maandoverzicht in Plannen, evalueren in Week) |
-| 131 | Oefenvormen geclassificeerd (8 hoofdtypes, weerstand vanuit het hoofdleerdoel, omschakeling met richting), opbouw in blokken met sjabloon DCG 75 en fase-voorstel, gepland en uitgevoerd, filters; laptop vanaf 900 px | ◐ deels herzien | door 132 (geen leerdoel-chips meer in de kop van een training; vorm opent in Rinus-stijl) |
-| 130 | Trainer: eigen tabblad Training (week met de training bovenaan, aanwezigheid in een venster, Vormen); ook bij AVV Swift, daar trainingen op datum | ◐ deels herzien | door 132 (Training heeft Week · Plannen · Vormen · Lijn; de training staat op de laptop in Plannen) |
-| 129 | Observeren: klok en turven bovenaan, snelle notities met minuut en onderwerp, aandachtspunten na afloop | ✅ geldt |  |
-| 128 | Trainingsmodule (proef): eigen oefenvormen en trainingen met spacing, varianten en aantallen | ◐ deels herzien | door 130 (de training staat in het tabblad Training) en 131 (soort → vormtype, vorm opent als venster); 134 (de begeleider ziet de trainingen, na akkoord op de rechten) |
-| 127 | Tekentool: loopactie en pass met boog als vaste soort | ✅ geldt |  |
-| 126 | Tekentool clean (rail met menu's, Veld/Opstelling/⚙ boven) en pijlen met boog en aanpasbare lengte | ✅ geldt |  |
-| 125 | Tekentool: rondje of driehoek per team kiezen; nummerbalk in- en uitklappen | ◐ deels herzien | door 126 (in- en uitklappen = het menu Spelers openen en sluiten) |
-| 124 | Tekentool: nummerbalk (rugnummers 1–11 en zonder nummer per team, op hun plek in de 1-4-3-3) en rood schijfje | ◐ deels herzien | door 126 (de nummerbalk staat in het menu Spelers) |
-| 123 | Opleidingsprofiel als gegevens; DCG-fundament ingevoerd (rest open), KNVB-standaard als bestand | ◐ deels herzien | door 131 (DCG-profiel versie 2: kant per leerlijn, 8 plekken spelprincipes, sjabloon DCG 75) |
-| 122 | Tabbladen gelijk (Home links, Berichten rechts), één keer signaleren, Regels en Inzicht ingeklapt, laptop met menu links | ◐ deels herzien | door 130 (trainer met module Trainingen: Training in plaats van Planning) en 131 (laptop vanaf 900 px) |
-| 121 | Richting trainingsmodule: opleidingsprofiel per club (standaard KNVB), vorm ≠ uitvoering, bouwen in fases, ClubComm stelt voor en de trainer kiest | ✅ geldt |  |
-| 120 | Inrichten: clubbeheerder op de laptop met startlijst; ClubComm-adviseur met overzicht van alle clubs | ✅ geldt |  |
-| 119 | Rechtentest per rol tegen de echte database, elke nacht, met alarm via de bewaking | ✅ geldt |  |
-| 118 | Tikvlakken minimaal 44 pt: keuze- en filterknoppen, balkjes, rolwissel, profielknop | ✅ geldt |  |
-| 117 | Vangnet: mag de timekeeper iets niet opslaan, dan gaat het als voorstel naar de trainer (één tik overnemen) | ✅ geldt |  |
-| 116 | De timekeeper slaat de wedstrijd echt op; minuten en speeltijd ziet alleen de trainer | ✅ geldt |  |
-| 115 | "Vervanger nodig" naar teamleider en coördinator (HO alleen als terugval); coördinator in de rondleiding | ✅ geldt |  |
-| 114 | De demo is één verhaal (een week bij de democlub); het bestuur kiest de hoofdstukken; afmelden gebeurt echt | ✅ geldt |  |
-| 113 | Drie lagen: tabblad → venster → pagina; spelerskaart, trainerkaart en "Aangekomen bij" als venster, vegen om te sluiten | ◐ deels herzien | door 131 (venster in het midden vanaf 900 px) |
-| 112 | Anoniem tellen welke schermen gebruikt worden; overzicht voor de clubbeheerder | ✅ geldt |  |
-| 111 | App-controle: dubbel tikken, Beperk beweging, kleur statusbalk, notch op de inlogpagina | ◐ deels herzien | door 120 (laptop met kolommen voor de schermen van de clubbeheerder); 122 (laptop: menu als kolom links) |
-| 110 | Verzamelen voor wedstrijden is clubbeleid, per leeftijd | ✅ geldt |  |
-| 109 | Posities in procenten van de gespeelde minuten | ◐ deels herzien | door 116 (alleen de trainer ziet de procenten en minuten) |
-| 108 | Verzameltijd per team: thuis en uit zoveel minuten voor de aftrap | ◐ deels herzien | door 110 (geen instelling per team meer: clubregel per leeftijd) |
-| 107 | Elk bericht komt aan (push of e-mail, ook antwoorden) en je ziet hoe; teamleider zet oefenwedstrijden in | ✅ geldt |  |
-| 106 | Eigen wisselschema voor selectieteams (opstelling 1-4-3-3, wissels, minuten en posities); speelvorm per team | ◐ deels herzien | door 116 (de timekeeper houdt het bij en slaat het op; minuten alleen voor de trainer) |
-| 105 | Aanwezigheid: pas een kleur en signaal vanaf 6 keer gemeten | ✅ geldt |  |
-| 104 | Rol wisselen met één tik in de kop, met per rol wat er wacht | ✅ geldt |  |
-| 103 | Automatisch bewaren in formulieren; Rollen opgeschoond | ✅ geldt |  |
-| 102 | Snelle winsten: dringend bovenaan, Observeren op de dag zelf, unieke knopnamen | ✅ geldt |  |
-| 101 | Voorgesprek als voormeting: eigen vragen voor training en wedstrijd | ✅ geldt |  |
-| 100 | Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden" | ◐ deels herzien | door 101 (vragen kort en uitgebreid per soort) |
-| 99 | Trainers begeleiden via een traject, met de KNVB-begeleidingscyclus; tabblad Trainers | ◐ deels herzien | door 100 (vragenlijst kort of uitgebreid per niveau; notities gedeeld per bouw met de TC); door 101 (vragenlijst vooraf per soort); 129 (observeren: snelle notities tijdens, aandachtspunten na afloop); 134 (moment verplaatsen of *niet doorgegaan*) |
-| 98 | Verantwoordelijkheid: iedere rol doet zijn eigen werk, de laag erboven is het vangnet | ✅ geldt |  |
-| 97 | Bouwen, werkgebied en focus, signalen die ertoe doen, trainersdossier | ◐ deels herzien | door 99 (traject per trainer in plaats van 2 + 2; tabblad Trainers; VOG en diploma bij de coördinator); door 100 (werkgebied bij de rol, rol TC gebouwd) |
-| 96 | Eén aanspreekpunt: de clubbeheerder (van de club) en de ClubComm-adviseur (van ons) | ◐ deels herzien | door 120 (startlijst en Inrichten voor de clubbeheerder, Mijn clubs voor de adviseur; meekijken alleen met toestemming) |
-| 95 | Twee lijnen: voetbal (HO) en organisatie (coördinator) | ◐ deels herzien | door 96 (clubbeheerder en ClubComm-adviseur), 97 (bouwen, focus, dossier; nieuwe bouwvolgorde), 99 (traject per trainer in plaats van 2 + 2 voor iedereen) |
-| 94 | Training afgelasten met eigen toelichting | ◐ deels herzien | door 95 (de HJO-knop Afgelasten ligt nu bij de coördinator) |
-| 93 | Evaluatieformulier praktijkbegeleiding coach (testcase, mijnclubcomm.nl/evaluatie) | ◐ deels herzien | door 95 (wordt later de module Trainers begeleiden in de app), 97 (in het trainersdossier) |
-| 92 | Oefenwedstrijd: thuis of uit, verzamelen, verzamelpunt en adres | ◐ deels herzien | door 107 (ook de teamleider zet een oefenwedstrijd in), 108 (standaard verzameltijd per team) |
-| 91 | Aanwezigheid: alleen dagen die nog iets vragen, met adres | ✅ geldt |  |
-| 90 | Adres en verzamelpunt zichtbaar waar de ouder kijkt | ✅ geldt |  |
-| 89 | Demo met rondleiding voor besturen, alleen op uitnodiging | ◐ deels herzien | door 95 (coördinator en HO in de rondleiding: gedaan met 114 en 115) en 114 (de rondleiding is één verhaal) |
-| 88 | Vangnet: automatische tests en bewaking | ✅ geldt |  |
-| 87 | Trainingsrooster: per dag eigen tijd en veld, ingangsdatum, veilig bijwerken | ✅ geldt |  |
-| 86 | Trainersportaal: elk scherm één taak; alle teamleiders zichtbaar | ◐ deels herzien | door 105 (Vraagt aandacht pas vanaf 6 keer gemeten) |
-| 85 | Wedstrijddag: alles wordt vastgelegd, niemand valt tussen wal en schip | ✅ geldt |  |
-| 84 | Eerst de pilot bij DCG afmaken, daarna een tweede club (SCPB) | ✅ geldt |  |
-| 83 | Zien wie pushmeldingen aan heeft; de teamleider spreekt ouders aan | ✅ geldt |  |
-| 82 | Berichten verdwijnen vanzelf als ze niet meer belangrijk zijn | ✅ geldt |  |
-| 81 | Lijsten tonen eerst wat nu speelt | ✅ geldt |  |
-| 80 | Berichtencentrum overzichtelijk houden | ✅ geldt |  |
-| 79 | Berichten: gesprek afronden, automatisch archiveren, ouderportaal zonder staf-berichten | ✅ geldt |  |
-| 78 | Gelezen via e-mail: niet meten; wel een oproep om meldingen aan te zetten | ✅ geldt |  |
-| 77 | Automatisch werk vanaf de server | ✅ geldt |  |
-| 76 | Minder handelingen: wat de app zelf doet, en wat bewust een mens blijft doen | ✅ geldt |  |
-| 75 | Vaste clubberichten volledig automatisch; zo min mogelijk handelingen voor vrijwilligers | ✅ geldt |  |
-| 74 | Communicatieplan DCG: vakantie 7 dagen; klaargezette berichten ook op de trainer-Home | ✅ geldt |  |
-| 73 | Home trainer: wedstrijddag; vakanties zichtbaar in de planning | ✅ geldt |  |
-| 72 | Ontwikkelgegevens bewaren zolang het kind lid is | ✅ geldt |  |
-| 71 | Ontwikkeling over de seizoenen heen, keepers, afgelaste training, HJO-signaal | ✅ geldt |  |
-| 70 | Gesprekken plannen rond de training; de trainer is leidend | ✅ geldt |  |
-| 69 | Ontwikkelgesprekken vanaf O12 | ✅ geldt |  |
-| 68 | Ontwikkelgesprek: het kind stuurt, de trainer vraagt door; minder werk voor vrijwilligers | ✅ geldt |  |
-| 67 | Ontwikkelgesprek: het kind is eigenaar, woorden in plaats van cijfers, de kijk van de trainer blijft bij de staf | ◐ deels herzien | door 68 (kijk van de trainer kort, geen vergelijkingstabel) |
-| 66 | Gesprekspagina voor het ontwikkelgesprek | ◐ deels herzien | door 67/68 (woorden in plaats van cijfers, geen vergelijkingstabel, ouders zien de kijk van de trainer niet) |
-| 65 | Ontwikkelgesprekken: Start en Voorjaar, plannen na de training | ◐ deels herzien | door 70 (plannen rond de training, de trainer kiest) |
-| 64 | Trainer en teamleider tellen als meehelpen | ✅ geldt |  |
-| 63 | Veiligheid, leesbaarheid en onderhoud (uit de app-analyse van 26-09) | ✅ geldt |  |
-| 62 | Scorebord en uitslag | ✅ geldt |  |
-| 61 | Spelerpagina: actie eerst, info in de kop | ◐ deels herzien | door 86 (Uitzonderingen in plaats van Geschiedenis) |
-| 60 | Speelduur per leeftijd volgens de KNVB | ✅ geldt |  |
-| 59 | Gesprekken als tekstballonnen: zie wie wat zei | ✅ geldt |  |
-| 58 | Reageren met alinea's | ✅ geldt |  |
-| 57 | Berichtenpagina: gesprekken, opruimen en één e-mail per onderwerp | ◐ deels herzien | door 79 (gesprek afronden, automatisch archiveren), 80/82 (berichten verdwijnen vanzelf), 107 (antwoorden per e-mail als de pushmelding niet lukt) |
-| 56 | Meldingen blijven komen na uitloggen | ✅ geldt |  |
-| 55 | Meldingen: meteen vragen bij de eerste keer | ✅ geldt |  |
-| 54 | Profiel opgeschoond | ✅ geldt |  |
-| 53 | Pushmeldingen (stap 1) | ◐ deels herzien | door 57 (e-mail als vangnet), 77 (herinneringen vanaf de server), 97 (push bij bevestigd trainer niet gekomen) |
-| 52 | Inloggen alleen met de code, geen knop in de mail | ✅ geldt |  |
-| 51 | Geen dubbele aanmelding voor hetzelfde kind | ✅ geldt |  |
-| 50 | Actie nodig altijd zichtbaar, materiaalbericht bij Verstuurd, geen filters bij spelers | ✅ geldt |  |
-| 49 | HJO: vierde knop Ouders onder Teams | ✅ geldt |  |
-| 48 | Verversen elke 30 seconden | ✅ geldt |  |
-| 47 | Aanmeldingen: teamleider eerst, trainer kan altijd | ✅ geldt |  |
-| 46 | Telefoonnummer al bij het aanmelden | ✅ geldt |  |
-| 45 | Gegevens van een ander wijzigen: alleen HJO/clubbeheerder | ✅ geldt |  |
-| 44 | Meer trainers en teamleiders per team; rollen pas opslaan na bevestigen | ✅ geldt |  |
-| 43 | Adres aanvullen tijdens het typen | ✅ geldt |  |
-| 42 | Stafleden zonder kind: de club voegt ze toe | ✅ geldt |  |
-| 41 | Vastgezette berichten ook voor nieuwe ouders; welkomstbericht bij goedkeuren | ✅ geldt |  |
-| 40 | Telefoonnummer vult de ouder zelf in | ◐ deels herzien | door 46 (telefoonnummer bij het aanmelden) |
-| 39 | Wisselschema: de club kiest om de hoeveel minuten, de trainer past zelf aan | ◐ deels herzien | door 60 (speelduur per leeftijd), 106 (selectie: zelf maken in plaats van een voorstel) |
-| 38 | Start pilot: het O12 talententeam | ✅ geldt |  |
-| 37 | Klaar voor de ouders: privacy, installeren, feedback en back-up | ◐ deels herzien | door 63 (foutregistratie gebouwd) |
-| 36 | Communicatieplan: aankondigen, herinneren, noodberichten en wanneer een e-mail | ◐ deels herzien | door 57 (e-mail), 74 (vakantie 7 dagen), 75 (vaste berichten automatisch), 77 (vanaf de server) |
-| 35 | Pilot RKSV DCG: activiteiten, taken per leeftijd en e-mailmeldingen | ◐ deels herzien | door 38 (start pilot), 53/57 (pushmeldingen, e-mail als vangnet) |
-| 34 | Informatie is geen taak; profielen per rol | ◐ deels herzien | door 95 (teamleider-profiel zonder trainer registreren) |
-| 33 | Teamleider: alles over de wedstrijd op één plek, en eerlijke speeltijd | ◐ deels herzien | door 39/60 (wisselen en speelduur), 106 (selectieteam mag het schema zelf maken; geen eerlijke verdeling), 95 (trainer registreren niet bij de teamleider), 97 (trainer niet gekomen: standaard bevestigt de coördinator) |
-| 32 | Kaarten: afmelden zoals op het veld, te laat komen apart | ◐ deels herzien | door 95 (wie belt en praat: trainer, coördinator, HO) |
-| 31 | Vervoer: iedereen brengt zijn eigen kind | ◐ deels herzien | door 85 (bericht aan chauffeur), 92 (oefenwedstrijd uit bij Vervoer) |
-| 30 | Volgorde en rust op elk scherm | ✅ geldt |  |
-| 29 | Waardering voor trainers en teamleiders | ◐ deels herzien | door 54 (telling trainer niet in het profiel) |
-| 28 | Wie helpt er mee? (taken en rijden) | ◐ deels herzien | door 33 (Wie helpt er mee staat bij Team), 64 (staf telt als meehelpen) |
-| 27 | Wanneer verdwijnt een actie? | ◐ deels herzien | door 34 (geen Gezien-knoppen) |
-| 26 | Home van HJO en coördinator: te doen en ter informatie | ◐ deels herzien | door 34 (geen losse spelers, geen Gezien-knoppen), 36 (vaste berichten), 75 (automatisch), 95 (HO-Home alleen trainers) |
-| 25 | Taken per rol (de club bepaalt) | ◐ deels herzien | door 95 (nieuwe standaard, eigenaar en terugval), 97 (werkgebied per bouw) |
-| 24 | Wie ziet wat (per rol) | ✖ vervangen | door 25 (Wat zie je in de takenlijst) |
-| 23 | Beoordelingsmomenten en ontwikkelgesprekken | ◐ deels herzien | door 65 (Start en Voorjaar), 67/68 (woorden in plaats van cijfers, het kind stuurt), 70 (plannen rond de training) |
-| 22 | Signalen afdoen | ◐ deels herzien | door 34 (geen Gezien-knoppen bij ter informatie), 95 (afgedane signalen controleert de coördinator) |
-| 21 | Afwezigheid van trainers signaleren | ◐ deels herzien | door 54 (telling niet meer in het profiel), 95 (niet gekomen: niet door de teamleider; de app signaleert, coördinator of HO bevestigt), 97 (pushmelding aan HO/TC bij bevestigd niet gekomen) |
-| 20 | Periode afmelden en "trainer kan niet" | ◐ deels herzien | door 95 (vervanger zoeken: coördinator, de teamleider helpt met ouders) en 115 (het bericht gaat ook echt naar de coördinator) |
-| 19 | Clubberichten, urgent en vastzetten | ◐ deels herzien | door 30 (vastgezet niet op Home), 95 (clubberichten: coördinator) |
-| 18 | Agenda-abonnement | ✅ geldt |  |
-| 17 | Module Materiaal | ◐ deels herzien | door 50 (bericht van de trainer); herziening open bij Nog te bespreken |
-| 16 | Pilot: de onderbouw | ✖ vervangen | door 35/38 (pilot is het O12 talententeam van DCG). De vuistregel voor nieuwe ideeën blijft gelden. |
-| 15 | Fases en opschaling | ◐ deels herzien | door 32 (kaarten per seizoen), 25/95 (stap 3 trainer of coördinator, stap 4 coördinator, stap 5 HO), 105 (zones pas vanaf 6 keer gemeten) |
-| 14 | Uitschrijven en account verwijderen | ◐ deels herzien | door 72 (ontwikkelgegevens meteen gewist) |
-| 13 | Planning: weekrooster in plaats van losse trainingen | ◐ deels herzien | door 87 (rooster per dag, veilig bijwerken), 95 (rooster en afgelasten: coördinator) |
-| 12 | Rollen en clubbeheerder | ◐ deels herzien | door 25 (taken per rol), 95 (twee lijnen), 96 (clubbeheerder is het enige aanspreekpunt, ClubComm-adviseur), 97 (bouwen in plaats van groepen) |
-| 11 | HJO-portaal | ◐ deels herzien | door 26 (Home), 30 (snelknoppen weg), 95 (organisatie naar de coördinator) |
-| 10 | Aanwezigheidsnorm en zones | ◐ deels herzien | door 33 (teamleider volgt spelers standaard niet), 34 (HJO geen losse spelers), 61 (langdurig meldt de ouder), 95 (team in de zone: coördinator, HO kijkt mee) |
-| 9 | Teamleiderportaal | ◐ deels herzien | door 31 (vervoer), 33 (vier knoppen, Regelen in Wedstrijd) |
-| 8 | Vaste app-structuur en namen (alle rollen) | ◐ deels herzien | door 12 (rollen coördinator en clubbeheerder), 33 (teamleider vier knoppen), 104 (rol wisselen in de kop, niet in het profiel); 122 (Home links, Berichten rechts bij elke rol; tabbladen per rol) |
-| 7 | Trainerportaal | ◐ deels herzien | door 33 (wedstrijdbegeleider vervallen), 39/60 (speeltijd), 50 (geen filters), 57 (berichten), 67/68 (ontwikkelgesprek), 86 (Spelers en Overzicht), 95 (de HO ziet niet alles); 122 (tabbladen trainer: Home · Planning · Wedstrijd · Spelers · Berichten) |
-| 6 | Instellingen per club en per team | ✅ geldt |  |
-| 5 | Aanwezigheid, stiptheid en kaarten | ◐ deels herzien | door 15 (opschaling), 32 (kaarten) |
-| 4 | Ouderportaal | ◐ deels herzien | door 30 (Home), 31 (vervoer), 32 (kaarten), 54 (profiel), 57 (berichten) |
-| 3 | Taal | ✅ geldt | nog niet gebouwd (alleen in de demo) |
-| 2 | Aanmelden van ouders en kinderen | ◐ deels herzien | door 12 (coördinator is een eigen rol), 47 (teamleider eerst, trainer kan altijd), 95 (na 48 uur: coördinator) |
-| 1 | Inloggen | ◐ deels herzien | door 52 (alleen code), 54 (één knop Uitloggen) |
+**Spoor** (sinds 29-10, zie `docs/sporen.md`): 3 = ClubComm (platform, alle clubs); 1 · 3 = inhoud van Spoor 1 (persoonlijke methodiek, nu via het DCG-clubprofiel) die in het platform is gebouwd; 2 = Swift (nog geen). Oudere besluiten staan op 3 tenzij ze over de methodiek gaan.
+
+| Nr | Spoor | Onderwerp | Status | Herzien |
+|---|---|---|---|---|
+| 138 | 1 · 3 | Tabblad Training bij de DCG-methodiek: *Mijn lijn* als één overzicht per week (bolletjes per training, leerniveau begin → eind, uitgevoerde minuten), vaststellen, afgelaste training één keer signaleren (doorschuiven of laten vervallen), titel = hoofdthema, vaardigheden per gereedschap (profiel), lege plek opent *Vorm kiezen* gefilterd op gereedschap, vaardigheid en aantal spelers | ✅ geldt |  |
+| 137 | 1 · 3 | DCG-periodisering O13 invoeren: kolommen van het Excel-spoorboekje werken direct; hoofdthema, teamfunctie en ondersteunend gereedschap erbij (in de onderbouwing); contrathema gekoppeld aan één probleem (+ eventueel een ondersteunend) met behoud van de eigen tekst, nooit op losse woorden; handelingsketen vrije tekst; contra telt niet mee in de minuten | ✅ geldt |  |
+| 136 | 3 | Teams, trainingsdagen en wedstrijden zelf beheren (clubbeheerder en HO): team toevoegen, trainer koppelen, trainingen pas in de kalender als er een trainer is, wedstrijden plakken van voetbal.nl, trainingsschema laden (vanaf een gekozen leeftijd) | ✅ geldt |  |
+| 135 | 3 | Tabblad Training in de volgorde van het werk (laptop: Lijn · Plannen · Week · Vormen), regel *Je zit in* (week, thema, A/B; tik = Lijn), geen dubbelingen (maandoverzicht alleen in Lijn, evalueren in Week), weekthema met A/B voor clubs zonder periodisering | ◐ deels herzien | door 138 (Lijn bij de DCG-methodiek: één overzicht) |
+| 134 | 3 | Trainers begeleiden (KNVB): begeleiden en ontwikkelen, niet beoordelen; begeleider (HO of TC met traject) ziet het hele seizoen de trainingen van de trainer, kijkt en geeft feedback; club beslist; invoeren per club in te stellen; trainer deelt zelf vormen in een clubbank. Gebouwd: moment verplaatsen en *niet doorgegaan*. Meekijken en clubbank: rechtenvoorstel, wacht op akkoord | ✅ geldt (deels gebouwd) |  |
+| 133 | 1 · 3 | DCG-methodiek als profiel v3 (kerndocument leidend); methodiekblok compact; leerniveau per blok; status berekend; evaluatiekaart (3 open + verdiepend); periodisering laden uit CSV met voorbeeld; observatiepunten bij de wedstrijd; uitgebreide vormvelden | ◐ deels herzien | door 137 (contrathema, handelingsketen, extra kolommen); uitleg 29-10: inhoud persoonlijk (Spoor 1), technisch via het DCG-profiel |
+| 132 | 3 | Training: Week (telefoon, controleren) · Plannen (laptop: vormen · training in blokken · week) · Vormen · Lijn; vorm in Rinus-stijl met *Zet in een training…* en materiaal uit de tekening; printen; kopiëren naar een andere dag | ◐ deels herzien | door 135 (volgorde op de laptop, geen weeklijst en maandoverzicht in Plannen, evalueren in Week) |
+| 131 | 1 · 3 | Oefenvormen geclassificeerd (8 hoofdtypes, weerstand vanuit het hoofdleerdoel, omschakeling met richting), opbouw in blokken met sjabloon DCG 75 en fase-voorstel, gepland en uitgevoerd, filters; laptop vanaf 900 px | ◐ deels herzien | door 132 (geen leerdoel-chips meer in de kop van een training; vorm opent in Rinus-stijl) |
+| 130 | 3 | Trainer: eigen tabblad Training (week met de training bovenaan, aanwezigheid in een venster, Vormen); ook bij AVV Swift, daar trainingen op datum | ◐ deels herzien | door 132 (Training heeft Week · Plannen · Vormen · Lijn; de training staat op de laptop in Plannen) |
+| 129 | 3 | Observeren: klok en turven bovenaan, snelle notities met minuut en onderwerp, aandachtspunten na afloop | ✅ geldt |  |
+| 128 | 3 | Trainingsmodule (proef): eigen oefenvormen en trainingen met spacing, varianten en aantallen | ◐ deels herzien | door 130 (de training staat in het tabblad Training) en 131 (soort → vormtype, vorm opent als venster); 134 (de begeleider ziet de trainingen, na akkoord op de rechten) |
+| 127 | 3 | Tekentool: loopactie en pass met boog als vaste soort | ✅ geldt |  |
+| 126 | 3 | Tekentool clean (rail met menu's, Veld/Opstelling/⚙ boven) en pijlen met boog en aanpasbare lengte | ✅ geldt |  |
+| 125 | 3 | Tekentool: rondje of driehoek per team kiezen; nummerbalk in- en uitklappen | ◐ deels herzien | door 126 (in- en uitklappen = het menu Spelers openen en sluiten) |
+| 124 | 3 | Tekentool: nummerbalk (rugnummers 1–11 en zonder nummer per team, op hun plek in de 1-4-3-3) en rood schijfje | ◐ deels herzien | door 126 (de nummerbalk staat in het menu Spelers) |
+| 123 | 1 · 3 | Opleidingsprofiel als gegevens; DCG-fundament ingevoerd (rest open), KNVB-standaard als bestand | ◐ deels herzien | door 131 (DCG-profiel versie 2: kant per leerlijn, 8 plekken spelprincipes, sjabloon DCG 75) |
+| 122 | 3 | Tabbladen gelijk (Home links, Berichten rechts), één keer signaleren, Regels en Inzicht ingeklapt, laptop met menu links | ◐ deels herzien | door 130 (trainer met module Trainingen: Training in plaats van Planning) en 131 (laptop vanaf 900 px) |
+| 121 | 3 | Richting trainingsmodule: opleidingsprofiel per club (standaard KNVB), vorm ≠ uitvoering, bouwen in fases, ClubComm stelt voor en de trainer kiest | ✅ geldt |  |
+| 120 | 3 | Inrichten: clubbeheerder op de laptop met startlijst; ClubComm-adviseur met overzicht van alle clubs | ✅ geldt |  |
+| 119 | 3 | Rechtentest per rol tegen de echte database, elke nacht, met alarm via de bewaking | ✅ geldt |  |
+| 118 | 3 | Tikvlakken minimaal 44 pt: keuze- en filterknoppen, balkjes, rolwissel, profielknop | ✅ geldt |  |
+| 117 | 3 | Vangnet: mag de timekeeper iets niet opslaan, dan gaat het als voorstel naar de trainer (één tik overnemen) | ✅ geldt |  |
+| 116 | 3 | De timekeeper slaat de wedstrijd echt op; minuten en speeltijd ziet alleen de trainer | ✅ geldt |  |
+| 115 | 3 | "Vervanger nodig" naar teamleider en coördinator (HO alleen als terugval); coördinator in de rondleiding | ✅ geldt |  |
+| 114 | 3 | De demo is één verhaal (een week bij de democlub); het bestuur kiest de hoofdstukken; afmelden gebeurt echt | ✅ geldt |  |
+| 113 | 3 | Drie lagen: tabblad → venster → pagina; spelerskaart, trainerkaart en "Aangekomen bij" als venster, vegen om te sluiten | ◐ deels herzien | door 131 (venster in het midden vanaf 900 px) |
+| 112 | 3 | Anoniem tellen welke schermen gebruikt worden; overzicht voor de clubbeheerder | ✅ geldt |  |
+| 111 | 3 | App-controle: dubbel tikken, Beperk beweging, kleur statusbalk, notch op de inlogpagina | ◐ deels herzien | door 120 (laptop met kolommen voor de schermen van de clubbeheerder); 122 (laptop: menu als kolom links) |
+| 110 | 3 | Verzamelen voor wedstrijden is clubbeleid, per leeftijd | ✅ geldt |  |
+| 109 | 3 | Posities in procenten van de gespeelde minuten | ◐ deels herzien | door 116 (alleen de trainer ziet de procenten en minuten) |
+| 108 | 3 | Verzameltijd per team: thuis en uit zoveel minuten voor de aftrap | ◐ deels herzien | door 110 (geen instelling per team meer: clubregel per leeftijd) |
+| 107 | 3 | Elk bericht komt aan (push of e-mail, ook antwoorden) en je ziet hoe; teamleider zet oefenwedstrijden in | ✅ geldt |  |
+| 106 | 3 | Eigen wisselschema voor selectieteams (opstelling 1-4-3-3, wissels, minuten en posities); speelvorm per team | ◐ deels herzien | door 116 (de timekeeper houdt het bij en slaat het op; minuten alleen voor de trainer) |
+| 105 | 3 | Aanwezigheid: pas een kleur en signaal vanaf 6 keer gemeten | ✅ geldt |  |
+| 104 | 3 | Rol wisselen met één tik in de kop, met per rol wat er wacht | ✅ geldt |  |
+| 103 | 3 | Automatisch bewaren in formulieren; Rollen opgeschoond | ✅ geldt |  |
+| 102 | 3 | Snelle winsten: dringend bovenaan, Observeren op de dag zelf, unieke knopnamen | ✅ geldt |  |
+| 101 | 3 | Voorgesprek als voormeting: eigen vragen voor training en wedstrijd | ✅ geldt |  |
+| 100 | 3 | Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden" | ◐ deels herzien | door 101 (vragen kort en uitgebreid per soort) |
+| 99 | 3 | Trainers begeleiden via een traject, met de KNVB-begeleidingscyclus; tabblad Trainers | ◐ deels herzien | door 100 (vragenlijst kort of uitgebreid per niveau; notities gedeeld per bouw met de TC); door 101 (vragenlijst vooraf per soort); 129 (observeren: snelle notities tijdens, aandachtspunten na afloop); 134 (moment verplaatsen of *niet doorgegaan*) |
+| 98 | 3 | Verantwoordelijkheid: iedere rol doet zijn eigen werk, de laag erboven is het vangnet | ✅ geldt |  |
+| 97 | 3 | Bouwen, werkgebied en focus, signalen die ertoe doen, trainersdossier | ◐ deels herzien | door 99 (traject per trainer in plaats van 2 + 2; tabblad Trainers; VOG en diploma bij de coördinator); door 100 (werkgebied bij de rol, rol TC gebouwd) |
+| 96 | 3 | Eén aanspreekpunt: de clubbeheerder (van de club) en de ClubComm-adviseur (van ons) | ◐ deels herzien | door 120 (startlijst en Inrichten voor de clubbeheerder, Mijn clubs voor de adviseur; meekijken alleen met toestemming) |
+| 95 | 3 | Twee lijnen: voetbal (HO) en organisatie (coördinator) | ◐ deels herzien | door 96 (clubbeheerder en ClubComm-adviseur), 97 (bouwen, focus, dossier; nieuwe bouwvolgorde), 99 (traject per trainer in plaats van 2 + 2 voor iedereen) |
+| 94 | 3 | Training afgelasten met eigen toelichting | ◐ deels herzien | door 95 (de HJO-knop Afgelasten ligt nu bij de coördinator) |
+| 93 | 3 | Evaluatieformulier praktijkbegeleiding coach (testcase, mijnclubcomm.nl/evaluatie) | ◐ deels herzien | door 95 (wordt later de module Trainers begeleiden in de app), 97 (in het trainersdossier) |
+| 92 | 3 | Oefenwedstrijd: thuis of uit, verzamelen, verzamelpunt en adres | ◐ deels herzien | door 107 (ook de teamleider zet een oefenwedstrijd in), 108 (standaard verzameltijd per team) |
+| 91 | 3 | Aanwezigheid: alleen dagen die nog iets vragen, met adres | ✅ geldt |  |
+| 90 | 3 | Adres en verzamelpunt zichtbaar waar de ouder kijkt | ✅ geldt |  |
+| 89 | 3 | Demo met rondleiding voor besturen, alleen op uitnodiging | ◐ deels herzien | door 95 (coördinator en HO in de rondleiding: gedaan met 114 en 115) en 114 (de rondleiding is één verhaal) |
+| 88 | 3 | Vangnet: automatische tests en bewaking | ✅ geldt |  |
+| 87 | 3 | Trainingsrooster: per dag eigen tijd en veld, ingangsdatum, veilig bijwerken | ✅ geldt |  |
+| 86 | 3 | Trainersportaal: elk scherm één taak; alle teamleiders zichtbaar | ◐ deels herzien | door 105 (Vraagt aandacht pas vanaf 6 keer gemeten) |
+| 85 | 3 | Wedstrijddag: alles wordt vastgelegd, niemand valt tussen wal en schip | ✅ geldt |  |
+| 84 | 3 | Eerst de pilot bij DCG afmaken, daarna een tweede club (SCPB) | ✅ geldt |  |
+| 83 | 3 | Zien wie pushmeldingen aan heeft; de teamleider spreekt ouders aan | ✅ geldt |  |
+| 82 | 3 | Berichten verdwijnen vanzelf als ze niet meer belangrijk zijn | ✅ geldt |  |
+| 81 | 3 | Lijsten tonen eerst wat nu speelt | ✅ geldt |  |
+| 80 | 3 | Berichtencentrum overzichtelijk houden | ✅ geldt |  |
+| 79 | 3 | Berichten: gesprek afronden, automatisch archiveren, ouderportaal zonder staf-berichten | ✅ geldt |  |
+| 78 | 3 | Gelezen via e-mail: niet meten; wel een oproep om meldingen aan te zetten | ✅ geldt |  |
+| 77 | 3 | Automatisch werk vanaf de server | ✅ geldt |  |
+| 76 | 3 | Minder handelingen: wat de app zelf doet, en wat bewust een mens blijft doen | ✅ geldt |  |
+| 75 | 3 | Vaste clubberichten volledig automatisch; zo min mogelijk handelingen voor vrijwilligers | ✅ geldt |  |
+| 74 | 3 | Communicatieplan DCG: vakantie 7 dagen; klaargezette berichten ook op de trainer-Home | ✅ geldt |  |
+| 73 | 3 | Home trainer: wedstrijddag; vakanties zichtbaar in de planning | ✅ geldt |  |
+| 72 | 3 | Ontwikkelgegevens bewaren zolang het kind lid is | ✅ geldt |  |
+| 71 | 3 | Ontwikkeling over de seizoenen heen, keepers, afgelaste training, HJO-signaal | ✅ geldt |  |
+| 70 | 3 | Gesprekken plannen rond de training; de trainer is leidend | ✅ geldt |  |
+| 69 | 3 | Ontwikkelgesprekken vanaf O12 | ✅ geldt |  |
+| 68 | 3 | Ontwikkelgesprek: het kind stuurt, de trainer vraagt door; minder werk voor vrijwilligers | ✅ geldt |  |
+| 67 | 3 | Ontwikkelgesprek: het kind is eigenaar, woorden in plaats van cijfers, de kijk van de trainer blijft bij de staf | ◐ deels herzien | door 68 (kijk van de trainer kort, geen vergelijkingstabel) |
+| 66 | 3 | Gesprekspagina voor het ontwikkelgesprek | ◐ deels herzien | door 67/68 (woorden in plaats van cijfers, geen vergelijkingstabel, ouders zien de kijk van de trainer niet) |
+| 65 | 3 | Ontwikkelgesprekken: Start en Voorjaar, plannen na de training | ◐ deels herzien | door 70 (plannen rond de training, de trainer kiest) |
+| 64 | 3 | Trainer en teamleider tellen als meehelpen | ✅ geldt |  |
+| 63 | 3 | Veiligheid, leesbaarheid en onderhoud (uit de app-analyse van 26-09) | ✅ geldt |  |
+| 62 | 3 | Scorebord en uitslag | ✅ geldt |  |
+| 61 | 3 | Spelerpagina: actie eerst, info in de kop | ◐ deels herzien | door 86 (Uitzonderingen in plaats van Geschiedenis) |
+| 60 | 3 | Speelduur per leeftijd volgens de KNVB | ✅ geldt |  |
+| 59 | 3 | Gesprekken als tekstballonnen: zie wie wat zei | ✅ geldt |  |
+| 58 | 3 | Reageren met alinea's | ✅ geldt |  |
+| 57 | 3 | Berichtenpagina: gesprekken, opruimen en één e-mail per onderwerp | ◐ deels herzien | door 79 (gesprek afronden, automatisch archiveren), 80/82 (berichten verdwijnen vanzelf), 107 (antwoorden per e-mail als de pushmelding niet lukt) |
+| 56 | 3 | Meldingen blijven komen na uitloggen | ✅ geldt |  |
+| 55 | 3 | Meldingen: meteen vragen bij de eerste keer | ✅ geldt |  |
+| 54 | 3 | Profiel opgeschoond | ✅ geldt |  |
+| 53 | 3 | Pushmeldingen (stap 1) | ◐ deels herzien | door 57 (e-mail als vangnet), 77 (herinneringen vanaf de server), 97 (push bij bevestigd trainer niet gekomen) |
+| 52 | 3 | Inloggen alleen met de code, geen knop in de mail | ✅ geldt |  |
+| 51 | 3 | Geen dubbele aanmelding voor hetzelfde kind | ✅ geldt |  |
+| 50 | 3 | Actie nodig altijd zichtbaar, materiaalbericht bij Verstuurd, geen filters bij spelers | ✅ geldt |  |
+| 49 | 3 | HJO: vierde knop Ouders onder Teams | ✅ geldt |  |
+| 48 | 3 | Verversen elke 30 seconden | ✅ geldt |  |
+| 47 | 3 | Aanmeldingen: teamleider eerst, trainer kan altijd | ✅ geldt |  |
+| 46 | 3 | Telefoonnummer al bij het aanmelden | ✅ geldt |  |
+| 45 | 3 | Gegevens van een ander wijzigen: alleen HJO/clubbeheerder | ✅ geldt |  |
+| 44 | 3 | Meer trainers en teamleiders per team; rollen pas opslaan na bevestigen | ✅ geldt |  |
+| 43 | 3 | Adres aanvullen tijdens het typen | ✅ geldt |  |
+| 42 | 3 | Stafleden zonder kind: de club voegt ze toe | ✅ geldt |  |
+| 41 | 3 | Vastgezette berichten ook voor nieuwe ouders; welkomstbericht bij goedkeuren | ✅ geldt |  |
+| 40 | 3 | Telefoonnummer vult de ouder zelf in | ◐ deels herzien | door 46 (telefoonnummer bij het aanmelden) |
+| 39 | 3 | Wisselschema: de club kiest om de hoeveel minuten, de trainer past zelf aan | ◐ deels herzien | door 60 (speelduur per leeftijd), 106 (selectie: zelf maken in plaats van een voorstel) |
+| 38 | 3 | Start pilot: het O12 talententeam | ✅ geldt |  |
+| 37 | 3 | Klaar voor de ouders: privacy, installeren, feedback en back-up | ◐ deels herzien | door 63 (foutregistratie gebouwd) |
+| 36 | 3 | Communicatieplan: aankondigen, herinneren, noodberichten en wanneer een e-mail | ◐ deels herzien | door 57 (e-mail), 74 (vakantie 7 dagen), 75 (vaste berichten automatisch), 77 (vanaf de server) |
+| 35 | 3 | Pilot RKSV DCG: activiteiten, taken per leeftijd en e-mailmeldingen | ◐ deels herzien | door 38 (start pilot), 53/57 (pushmeldingen, e-mail als vangnet) |
+| 34 | 3 | Informatie is geen taak; profielen per rol | ◐ deels herzien | door 95 (teamleider-profiel zonder trainer registreren) |
+| 33 | 3 | Teamleider: alles over de wedstrijd op één plek, en eerlijke speeltijd | ◐ deels herzien | door 39/60 (wisselen en speelduur), 106 (selectieteam mag het schema zelf maken; geen eerlijke verdeling), 95 (trainer registreren niet bij de teamleider), 97 (trainer niet gekomen: standaard bevestigt de coördinator) |
+| 32 | 3 | Kaarten: afmelden zoals op het veld, te laat komen apart | ◐ deels herzien | door 95 (wie belt en praat: trainer, coördinator, HO) |
+| 31 | 3 | Vervoer: iedereen brengt zijn eigen kind | ◐ deels herzien | door 85 (bericht aan chauffeur), 92 (oefenwedstrijd uit bij Vervoer) |
+| 30 | 3 | Volgorde en rust op elk scherm | ✅ geldt |  |
+| 29 | 3 | Waardering voor trainers en teamleiders | ◐ deels herzien | door 54 (telling trainer niet in het profiel) |
+| 28 | 3 | Wie helpt er mee? (taken en rijden) | ◐ deels herzien | door 33 (Wie helpt er mee staat bij Team), 64 (staf telt als meehelpen) |
+| 27 | 3 | Wanneer verdwijnt een actie? | ◐ deels herzien | door 34 (geen Gezien-knoppen) |
+| 26 | 3 | Home van HJO en coördinator: te doen en ter informatie | ◐ deels herzien | door 34 (geen losse spelers, geen Gezien-knoppen), 36 (vaste berichten), 75 (automatisch), 95 (HO-Home alleen trainers) |
+| 25 | 3 | Taken per rol (de club bepaalt) | ◐ deels herzien | door 95 (nieuwe standaard, eigenaar en terugval), 97 (werkgebied per bouw) |
+| 24 | 3 | Wie ziet wat (per rol) | ✖ vervangen | door 25 (Wat zie je in de takenlijst) |
+| 23 | 3 | Beoordelingsmomenten en ontwikkelgesprekken | ◐ deels herzien | door 65 (Start en Voorjaar), 67/68 (woorden in plaats van cijfers, het kind stuurt), 70 (plannen rond de training) |
+| 22 | 3 | Signalen afdoen | ◐ deels herzien | door 34 (geen Gezien-knoppen bij ter informatie), 95 (afgedane signalen controleert de coördinator) |
+| 21 | 3 | Afwezigheid van trainers signaleren | ◐ deels herzien | door 54 (telling niet meer in het profiel), 95 (niet gekomen: niet door de teamleider; de app signaleert, coördinator of HO bevestigt), 97 (pushmelding aan HO/TC bij bevestigd niet gekomen) |
+| 20 | 3 | Periode afmelden en "trainer kan niet" | ◐ deels herzien | door 95 (vervanger zoeken: coördinator, de teamleider helpt met ouders) en 115 (het bericht gaat ook echt naar de coördinator) |
+| 19 | 3 | Clubberichten, urgent en vastzetten | ◐ deels herzien | door 30 (vastgezet niet op Home), 95 (clubberichten: coördinator) |
+| 18 | 3 | Agenda-abonnement | ✅ geldt |  |
+| 17 | 3 | Module Materiaal | ◐ deels herzien | door 50 (bericht van de trainer); herziening open bij Nog te bespreken |
+| 16 | 3 | Pilot: de onderbouw | ✖ vervangen | door 35/38 (pilot is het O12 talententeam van DCG). De vuistregel voor nieuwe ideeën blijft gelden. |
+| 15 | 3 | Fases en opschaling | ◐ deels herzien | door 32 (kaarten per seizoen), 25/95 (stap 3 trainer of coördinator, stap 4 coördinator, stap 5 HO), 105 (zones pas vanaf 6 keer gemeten) |
+| 14 | 3 | Uitschrijven en account verwijderen | ◐ deels herzien | door 72 (ontwikkelgegevens meteen gewist) |
+| 13 | 3 | Planning: weekrooster in plaats van losse trainingen | ◐ deels herzien | door 87 (rooster per dag, veilig bijwerken), 95 (rooster en afgelasten: coördinator) |
+| 12 | 3 | Rollen en clubbeheerder | ◐ deels herzien | door 25 (taken per rol), 95 (twee lijnen), 96 (clubbeheerder is het enige aanspreekpunt, ClubComm-adviseur), 97 (bouwen in plaats van groepen) |
+| 11 | 3 | HJO-portaal | ◐ deels herzien | door 26 (Home), 30 (snelknoppen weg), 95 (organisatie naar de coördinator) |
+| 10 | 3 | Aanwezigheidsnorm en zones | ◐ deels herzien | door 33 (teamleider volgt spelers standaard niet), 34 (HJO geen losse spelers), 61 (langdurig meldt de ouder), 95 (team in de zone: coördinator, HO kijkt mee) |
+| 9 | 3 | Teamleiderportaal | ◐ deels herzien | door 31 (vervoer), 33 (vier knoppen, Regelen in Wedstrijd) |
+| 8 | 3 | Vaste app-structuur en namen (alle rollen) | ◐ deels herzien | door 12 (rollen coördinator en clubbeheerder), 33 (teamleider vier knoppen), 104 (rol wisselen in de kop, niet in het profiel); 122 (Home links, Berichten rechts bij elke rol; tabbladen per rol) |
+| 7 | 3 | Trainerportaal | ◐ deels herzien | door 33 (wedstrijdbegeleider vervallen), 39/60 (speeltijd), 50 (geen filters), 57 (berichten), 67/68 (ontwikkelgesprek), 86 (Spelers en Overzicht), 95 (de HO ziet niet alles); 122 (tabbladen trainer: Home · Planning · Wedstrijd · Spelers · Berichten) |
+| 6 | 3 | Instellingen per club en per team | ✅ geldt |  |
+| 5 | 3 | Aanwezigheid, stiptheid en kaarten | ◐ deels herzien | door 15 (opschaling), 32 (kaarten) |
+| 4 | 3 | Ouderportaal | ◐ deels herzien | door 30 (Home), 31 (vervoer), 32 (kaarten), 54 (profiel), 57 (berichten) |
+| 3 | 3 | Taal | ✅ geldt | nog niet gebouwd (alleen in de demo) |
+| 2 | 3 | Aanmelden van ouders en kinderen | ◐ deels herzien | door 12 (coördinator is een eigen rol), 47 (teamleider eerst, trainer kan altijd), 95 (na 48 uur: coördinator) |
+| 1 | 3 | Inloggen | ◐ deels herzien | door 52 (alleen code), 54 (één knop Uitloggen) |
 
 ---
 
@@ -732,8 +735,18 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Nog niet gebouwd (rechtenwijziging, wacht op akkoord):** meekijken (nieuwe leesregel voor trainingen: trainer + begeleider met traject dit seizoen; schrijven alleen de trainer), feedback in het dossier (bestaande scope), en de clubbank (nieuwe scope). Eerst het precieze rechtenvoorstel en voorbeelden, dan de rechtentest, dan pas de database.
 
 ## Besluit 133 — DCG-methodiek in ClubComm: profiel v3, periodisering als concepten, evaluatie en observatie
+
+> **Uitleg 29-10-2026 (drie sporen).** Naast elkaar, zodat de geschiedenis zichtbaar blijft:
+> | | Tekst van 28-10 | Hoe het nu gelezen wordt |
+> |---|---|---|
+> | Van wie is de methodiek? | "DCG-methodiek", "geldt alleen voor DCG" | **Inhoudelijk persoonlijk** (Spoor 1): de eigen methodiek van de initiatiefnemer; DCG O13 is de oefenomgeving |
+> | Hoe draait het technisch? | Profiel v3 van de club DCG | **Ongewijzigd:** via het DCG-clubprofiel (id `dcg`), tot een apart besluit over een persoonlijk trainersprofiel |
+> | Andere clubs | "Andere clubs volgen de KNVB" | Ongewijzigd; Swift krijgt een eigen spoor (Spoor 2) en neemt niets uit Spoor 1 over zonder uitdrukkelijke toestemming |
+> | Documenten | `docs/methodiek/dcg/` | Hernoemd naar `docs/methodiek/persoonlijk/` (paden hieronder bijgewerkt; inhoud ongewijzigd) |
+>
+> Dit is een uitleg, geen nieuw besluit: er verandert niets aan de app, het profiel of de rechten.
 > **◐ Deels herzien door Besluit 137** (contrathema met gekoppeld probleem en eigen tekst; handelingsketen vrije tekst; hoofdthema, teamfunctie en ondersteunend gereedschap).
-*Besloten 28 oktober 2026, na de audit (`docs/methodiek/dcg/audit-2026-10-28.md`) en vijf voorbeelden, beoordeeld met ChatGPT (`docs/onderzoek/periodisering-o13/stap2/`). **Het kerndocument van 26-09-2026 is leidend** (`docs/methodiek/dcg/`); het geldt **alleen voor DCG**, andere clubs volgen de KNVB. De Excel-periodisering van de initiatiefnemer blijft de inhoudelijke bron; ClubComm neemt die over en spreekt haar niet tegen.*
+*Besloten 28 oktober 2026, na de audit (`docs/methodiek/persoonlijk/audit-2026-10-28.md`) en vijf voorbeelden, beoordeeld met ChatGPT (`docs/onderzoek/periodisering-o13/stap2/`). **Het kerndocument van 26-09-2026 is leidend** (`docs/methodiek/persoonlijk/`); het geldt **alleen voor DCG**, andere clubs volgen de KNVB. De Excel-periodisering van de initiatiefnemer blijft de inhoudelijke bron; ClubComm neemt die over en spreekt haar niet tegen.*
 - **Profiel v3** (`supabase/profielen/dcg.json`):
   - 6 gereedschappen (Afwerken – benutten als `ll-6`), Ball Mastery als onderbouw;
   - 8 voetbalproblemen volledig uitgewerkt, 5 leerniveaus, 5 leeromgevingen;
@@ -760,7 +773,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
   - geen training op die dag → overgeslagen; al een voorbereiding → overgeslagen (nooit overschreven); dubbel → één keer; lege regel → niets; onbekende waarden → gemeld (de tekst blijft staan);
   - pas na **Toevoegen** schrijft de app, met de rechten van de trainer (scope `eigen`); geen oefenvormen of tekeningen.
   - **Terugdraaien** verwijdert alleen concepten die niet zijn aangepast en niet gegeven (stempel bij het laden).
-  - Een leeg sjabloon met de echte data staat in `docs/methodiek/dcg/periodisering-sjabloon-o13.csv` en kan ook in de app worden gedownload.
+  - Een leeg sjabloon met de echte data staat in `docs/methodiek/persoonlijk/periodisering-sjabloon-o13.csv` en kan ook in de app worden gedownload.
 - **Contrathema (optioneel, besloten 28-10):** een hoofdthema voor de primair te coachen partij en een relevant tegenovergesteld voetbalprobleem voor de andere partij.
   - Hoort bij de **week** (CSV-kolom `contrathema`) en verschijnt bij de trainingen als **voorstel**; de trainer kan het per training kiezen of op *Geen* zetten.
   - Niet iedere oefenvorm krijgt een contrathema; **geen verplicht veld en geen eigen evaluatie**.

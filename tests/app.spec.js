@@ -1822,7 +1822,7 @@ test('trainingsmodule: DCG-periodisering O13 met hoofdthema, teamfunctie, contra
       if ([2, 4, 5].includes(g)) S.acts.push({ id: `a-o12-${k}`, teamId: 'O12-1', soort: 'training', datum: d, tijd: '17:15', eind: '18:30' });
       if (wed[d]) S.acts.push({ id: `w-o12-${k}`, teamId: 'O12-1', soort: 'wedstrijd', datum: d, tijd: wed[d][0], eind: '', tegen: wed[d][1], thuis: wed[d][2] }); }
     CC.save(); CC.render(); });
-  const csv = fs.readFileSync(path.join(__dirname, '..', 'docs', 'methodiek', 'dcg', 'periodisering-o13-import-CONCEPT.csv'));
+  const csv = fs.readFileSync(path.join(__dirname, '..', 'docs', 'methodiek', 'persoonlijk', 'periodisering-o13-import-CONCEPT.csv'));
   await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
   await page.locator('[data-act="seg"][data-val="lijn"]').click();
   await page.locator('[data-act="perLaden"]').click();

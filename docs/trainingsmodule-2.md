@@ -1,5 +1,7 @@
 # Trainingsmodule 2.0: ontwerpvoorstel
 
+> *Historisch onderzoeksdocument. Niet leidend voor de actuele werking. Zie `docs/architectuur.md` en het besluitenregister (`docs/besluiten.md`).*
+
 *27 oktober 2026. Antwoord op "Ontwikkelvoorstel ClubComm – Methodologische trainingsmodule 2.0". Dit is een **voorstel, geen besluit**. Er is niets gebouwd of gemigreerd. Database, rechten en productieschermen blijven ongewijzigd tot het akkoord. ART blijft ongewijzigd. Achtergrond en audit: `docs/trainingsmodule.md`. De voorbeeldschermen zijn verzonnen voorbeelden.*
 
 

@@ -1,4 +1,4 @@
-// Maakt een leesbare controleversie (markdown) van een opleidingsprofiel: node supabase/profielen/leesbaar.js dcg > docs/methodiek/dcg/profiel-controle.md
+// Maakt een leesbare controleversie (markdown) van een opleidingsprofiel: node supabase/profielen/leesbaar.js dcg > docs/methodiek/persoonlijk/profiel-controle.md
 const p = require(`./${process.argv[2] || 'dcg'}.json`); const o = p.onderdelen; const L = [];
 const naam = (id) => ((o.leerlijnen.items.find((x) => x.id === id) || {}).naam || id);
 const lijst = (a) => (a || []).map((x) => `  - ${x}`).join('\n');

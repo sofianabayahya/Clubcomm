@@ -1,12 +1,36 @@
 # ClubComm
 
 Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoer, berichten, kaarten, speeltijd.
-**Pilot:** RKSV DCG (Amsterdam, Sportpark Ookmeer), team **O13 talententeam** (sinds 27-10; interne code `O12-1`, leeftijd O12 / geboortejaar 2015, speelt O13, selectie), 16 spelers (een 17e twijfelt nog). Database sinds 25-09 leeg op dit team na (Besluit 38). **Tweede club (10-10): AVV Swift** (club-id `swift`), alleen het pakket Trainers begeleiden: de gebruiker is daar HO + clubbeheerder (eigen e-mailadres), plus een TC en trainers. De gebruiker (Sofian) is trainer, ouder (zijn kind speelt in het team) en clubbeheerder, met twee teamleiders. Wedstrijden vanaf fase 2 (za 31 okt 2026).
+**Pilot:** RKSV DCG (Amsterdam, Sportpark Ookmeer), team **O13 talententeam** (sinds 27-10; interne code `O12-1`, leeftijd O12 / geboortejaar 2015, speelt O13, selectie), 16 spelers (een 17e twijfelt nog). Database sinds 25-09 leeg op dit team na (Besluit 38). **Tweede club (10-10): AVV Swift** (club-id `swift`), alleen het pakket Trainers begeleiden. **Inhoudelijke functie van de gebruiker bij Swift: HJO bovenbouw** (O14–O19). Zijn technische rollen in ClubComm daar (HO en clubbeheerder, eigen e-mailadres) zijn iets anders: die bepalen wat hij in de app mag, niet wat zijn functie in de club is. Verder een TC en trainers. De gebruiker (Sofian) is trainer, ouder (zijn kind speelt in het team) en clubbeheerder, met twee teamleiders. Wedstrijden vanaf fase 2 (za 31 okt 2026).
+
+## Drie sporen (afspraak 29-10, routekaart: `docs/sporen.md`)
+- **Spoor 1 — Persoonlijk:** de eigen voetbalmethodiek van de gebruiker (oefenomgeving DCG O13). Lees `docs/methodiek/persoonlijk/` (begin bij `overdracht.md`). Technisch via het DCG-clubprofiel; gaat **nooit vanzelf** naar een andere club.
+- **Spoor 2 — Swift:** jeugdmethodiek van AVV Swift (KNVB + jeugdbeleidsplan, O14–O19). Lees `docs/methodiek/swift/`. Geen inhoud uit Spoor 1 zonder uitdrukkelijke toestemming.
+- **Spoor 3 — ClubComm:** het platform voor alle clubs. Lees dit bestand, `docs/besluiten.md` en `docs/architectuur.md`.
+- **Herkennen:** het bericht begint met `SPOOR 1 — PERSOONLIJK`, `SPOOR 2 — SWIFT` of `SPOOR 3 — CLUBCOMM`. Lees alleen de documenten van dat spoor, plus `docs/sporen.md`. Geen spoor genoemd en je gaat iets wijzigen: eerst vragen.
+- **Inhoud en software apart:** raakt iets meer sporen, beschrijf dan apart (a) wat het inhoudelijk betekent voor dit profiel en (b) welke algemene functie ervoor nodig is (altijd Spoor 3).
+- **Besluiten:** alleen Spoor 3 geeft definitieve besluitnummers en houdt het register bij. Spoor 1 en 2 schrijven *"Voorstel Spoor X — …"* (in hun eigen map) en leggen dat voor aan Spoor 3.
+- **Samenvoegen en publiceren:** alleen Spoor 3 voegt samen met `main`, lost conflicten op, draait de integratietests en publiceert. Spoor 1 en 2 werken op een eigen branch en publiceren **nooit** zelf, ook niet "even" een werkbranch.
+
+## Controle vóór elke wijziging (code, centrale documenten, besluitnummers, publicatie)
+Een eerdere chatinstructie is nooit genoeg bewijs dat een branch nog actueel is. Controleer elke keer:
+1. de nieuwste `main` (`git fetch origin main`);
+2. de open pull requests;
+3. of andere sessies dezelfde bestanden of functies hebben veranderd;
+4. het hoogste definitieve besluitnummer in `docs/besluiten.md` (vrij nummer pas vlak voor het opslaan kiezen);
+5. het verschil tussen de werkbranch en `main`;
+6. of de branch achterloopt of conflicten heeft;
+7. de branch veilig bijwerken vanaf `main` (samenvoegen, geen eigen werk kwijt);
+8. pas verder als er geen nieuwere functionaliteit wordt overschreven.
+
+**Tweede controle vlak vóór samenvoegen en vóór publiceren:** dezelfde punten opnieuw.
+- Bij een conflict: stoppen, beschrijven en een voorstel doen. Niet zelf kiezen.
+- Publiceren gebeurt alleen vanaf een gecontroleerde commit op `main`. Daarna controleren dat productie (Vercel) precies die commit draait.
 
 ## Werkafspraken met de gebruiker
 - De gebruiker is beginner: altijd **eenvoudig Nederlands**, één stap tegelijk, uitleg waar je klikt.
-- Nieuwe keuze → vastleggen als **besluit** in `docs/besluiten.md` → bouwen → testen → committen en pushen → online zetten.
-- **Hoofdversie (main) altijd bijwerken:** na elke afgeronde ronde de werkbranch via een pull request samenvoegen met `main` (de gebruiker wil dat `main` op GitHub altijd de actuele stand is). Daarna de werkbranch opnieuw laten beginnen vanaf `main`.
+- Nieuwe keuze → vastleggen als **besluit** in `docs/besluiten.md` → bouwen → testen → committen en pushen → pull request → samenvoegen met `main` (tests groen) → `main` online zetten (Spoor 3, na de controles hierboven).
+- **Hoofdversie (main) altijd bijwerken:** na elke afgeronde ronde de werkbranch via een pull request samenvoegen met `main` (de gebruiker wil dat `main` op GitHub altijd de actuele stand is). Daarna de werkbranch opnieuw laten beginnen vanaf `main`. Vraagt de gebruiker om eerst te kijken, dan het pull request tonen en wachten op akkoord.
 - Vraagt de gebruiker **"wat zijn de volgende stappen?"**: kijk in `docs/productie-en-groei.md` → blok **Openstaand** en houd dat blok bij.
 - **Eigenaarschap:** zoek zelf actief naar verouderde teksten, gaten en fouten (zoals een tekst die niet meer klopt met een nieuwer besluit). Leg ze eerst voor aan de gebruiker en bouw pas na akkoord; kleine, duidelijke fouten mag je in dezelfde ronde meenemen en melden.
 - **Borgen (bij elk besluit):** (1) nieuw besluit bovenaan in `docs/besluiten.md`; (2) elk ouder besluit dat het raakt krijgt de regel *"◐ Deels herzien door Besluit X"* of *"✖ Vervangen door …"* en het **Register** bovenaan wordt bijgewerkt; (3) wat bewust niet doorgaat komt bij **Afgewezen ideeën** (met reden); (4) *Later / ideeën* en *Nog te bespreken* bijwerken; (5) **Openstaand** bijwerken. **Vóór je een idee voorstelt:** kijk bij Afgewezen ideeën en in het Register; stel nooit een afgewezen idee voor zonder dat te zeggen.
@@ -20,13 +44,16 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
 | Bestand | Inhoud |
 |---|---|
 | `docs/besluiten.md` | **Alle afspraken (bron van waarheid).** Bovenaan het **Register** (status per besluit), onderaan **Afgewezen ideeën**. Bij tegenstrijdigheid geldt het nieuwste besluit (nu t/m Besluit 138). |
+| `docs/sporen.md` | **Routekaart van de drie sporen:** per spoor doel, leidende documenten, wat vastligt, wat gebouwd is, open vragen, volgende stap. Geen tweede register. |
+| `docs/architectuur.md` | **Opbouw:** vier lagen (platform · vereniging · opleidingsprofiel · trainer), drie aparte voorwaarden (beschikbaarheid · methodologische inhoud · bevoegdheid), methodiek die nog in de code staat, weinig instellingen, Lijn · Plannen · Week · Vormen overal gelijk. |
+| `docs/methodiek/` | `persoonlijk/` (Spoor 1, tot 29-10 `dcg/`) en `swift/` (Spoor 2, nog leeg). |
 | `docs/app-controle.md` | **Controlelijst voor schermen** (uit het starterspakket van de gebruiker, mijnrijlesplanner): technieken met vakterm, vaste normen en ontwerpregels. Gebruiken bij elke controle of nieuw scherm. |
 | `docs/pilotlog.md` | **Fouten uit de pilot met oorzaak en patroon** (momentopname, opslaan, demo verbergt het, één persoon per rol, buiten de app, rommelige gegevens). Bij elke wijziging langs deze patronen lopen. |
 | `docs/plan-van-aanpak.md` | **Van pilot naar product:** A product af (ook op schaal: 50 teams) → B beschrijven (handboek) → C prijs en groei → D verkopen → E invoeren. Met planning t/m januari 2027. |
 | `docs/productie-en-groei.md` | Controlelijst, **Openstaand**, meerdere clubs, app of website, kosten. |
 | `docs/techniek.md` | Opbouw van de echte versie (Supabase, Vercel, Brevo, migraties, e-mail, back-up). |
 | `docs/presentaties/` | **Productoverzicht** "Wat kan ClubComm" (`maak.js product`, de bron voor pitch, demo en handleidingen) en PowerPoints per rol (bestuur, teamleider, ouders, trainer): handleiding én presentatie. Opnieuw maken: `shots*.js` (schermafbeeldingen uit de demo) en `maak.js`. Kennismaking voor een andere club: `shots-clubs.js`, dan `CONTACT_NAAM=… CONTACT_MAIL=… node docs/presentaties/maak.js clubs "Clubnaam"` → `uit/` (niet in git); PDF met `soffice --headless --convert-to pdf` (lettertype Carlito nodig). |
-| `docs/onderzoek/` | Achtergrond: analyse clubproblemen, vergelijking Teamy en VeldPlanner, **app-analyse 26-09** (rapportcijfers en prioriteiten) , **beoordeling 27-09** (19 onderwerpen, advies op volgorde), **verdienmodel** (voorstel prijzen), **taken per rol** (HO tegenover coördinator, stappenplan eerste gesprek met een club) het **verbeterplan gebruik 17-10** (UX-audit en werkstromen, P0–P3) en het **amuletten-concept 19-10** (beloning DCG). Voorstellen, geen besluiten. |
+| `docs/onderzoek/` | Achtergrond: analyse clubproblemen, vergelijking Teamy en VeldPlanner, **app-analyse 26-09** (rapportcijfers en prioriteiten) , **beoordeling 27-09** (19 onderwerpen, advies op volgorde), **verdienmodel** (voorstel prijzen), **taken per rol** (HO tegenover coördinator, stappenplan eerste gesprek met een club) het **verbeterplan gebruik 17-10** (UX-audit en werkstromen, P0–P3) en het **amuletten-concept 19-10** (beloning DCG). Voorstellen, geen besluiten. Oudere onderzoeksstukken dragen de regel *Historisch onderzoeksdocument* (ook `docs/trainingsmodule*.md`). |
 | `.claude/skills/` | Projectskills **app-design-architect** (UX-audit, ontwerp) en **app-workflow-optimizer** (taakstromen): gebruik ze bij elke analyse of herontwerp van schermen; analyse eerst, bouwen pas na akkoord. |
 
 ## De app
@@ -41,14 +68,14 @@ Communicatie en organisatie voor jeugdvoetbal: afmelden, planning, taken, vervoe
   - `adres.js`: adres aanvullen via PDOK (velden met `data-adres`). `push.js`: pushmeldingen aanzetten en keuzes (Besluit 53); tonen in `sw.js`. `onderhoud.js`: foutregistratie en zelf verversen bij een nieuwe versie (`versie.json`, gemaakt door `versie-maken.js` bij elke publicatie; Besluit 63).
   - Modules: `autoberichten.js` (Communicatieplan, noodberichten, herinneringen activiteiten), `afwezig.js`, `trainerafw.js`, `beoordeling.js` (+ `gesprek.js`: voorbereiding en gesprekspagina ontwikkelgesprek), `materiaal.js`, `meehelpen.js`, `waardering.js`, `hjofilter.js`, `agenda.js`.
   - **Opleidingsprofielen (Besluit 123):** methodiek als gegevens, niet in de code. Opbouw en KNVB-standaard: `supabase/profielen/`; het DCG-profiel staat in de database (soort `profiel`); de app leest ze in `S.profielen` en schrijft ze nooit terug.
-  - `training.js`: trainingsmodule (Besluit 128, module *Trainingen*): eigen vormen (`S.vormen`) en trainingen per activiteit of op datum (`S.trainingsplannen`, `los: true`), scope `eigen`; tabblad *Training* van de trainer (`CC.trainingTab`, Besluit 130, aanwezigheid in een venster); classificatie van vormen, blokken met sjabloon, gepland/uitgevoerd en filters (Besluit 131); Week · Plannen (laptop, slepen) · Vormen · Lijn, vorm in Rinus-stijl, printen en kopiëren (Besluit 132); catalogus oefenvormtypes in `app/vormtypes.js` (gegevens, vaste id's); `periodisering.js`: methodiekblok, status, periodisering laden (CSV, voorbeeld, terugdraaien) en observatiepunten (Besluit 133, alleen als het profiel voetbalproblemen en leerniveaus heeft); **DCG-methodiek:** `docs/methodiek/dcg/` (kerndocument leidend, alleen DCG); tekentool zit in `index.html`.
+  - `training.js`: trainingsmodule (Besluit 128 t/m 138, module *Trainingen*): eigen vormen (`S.vormen`) en trainingen (`S.trainingsplannen`, scope `eigen`); tabblad *Training* van de trainer (`CC.trainingTab`) met Lijn · Plannen · Week · Vormen; catalogus oefenvormtypes in `app/vormtypes.js`; `periodisering.js`: methodiekblok, periodisering laden (CSV), observatiepunten en Mijn lijn (alleen als het profiel voetbalproblemen en leerniveaus heeft). Hoe lagen, voorwaarden en profielinhoud samenwerken: `docs/architectuur.md`. Tekentool zit in `index.html`.
   - `tekenen.html` (los, `/tekenen`): testscherm van de **tekentool** voor oefenvormen (`app/tekentool.js` + `.css`, overgenomen uit de ART-app); alleen op het toestel. Audit, voorstel en open vragen: `docs/trainingsmodule.md`.
   - `evaluatie.html` (los, `/evaluatie`): evaluatieformulier praktijkbegeleiding coach, gegevens alleen op het toestel, PDF via printen (Besluit 93).
   - `live.js`: echte versie (Supabase: inloggen met e-mailcode, laden, automatisch opslaan, beheer).
 - **Demo:** online alleen `mijnclubcomm.nl/demo` met rondleiding voor besturen, **alleen op uitnodiging** (`demo.js`, tabel `demo_toegang`, Besluit 89). `?demo` werkt alleen nog lokaal (tests, schermafbeeldingen). Accounts: Sanne (ouder), Mark (trainer + ouder), Linda (teamleider + ouder), Peter (HJO + beheerder), Esther (coördinator). Democlub "VV De Voorbeeldclub", alleen verzonnen namen (geen echte clubs of adressen gebruiken!); staat in localStorage. De rondleiding is één verhaal met hoofdstukken die het bestuur kiest (Besluit 114); sommige stappen doen het echt (afmelden). Nieuwe of gewijzigde schermen: kijk of de rondleiding (`STAPPEN` in `demo.js`) nog klopt.
 
 ## Online
-- App: https://mijnclubcomm.nl (domein bij Hostnet, DNS naar Vercel; oud adres clubcomm-nine.vercel.app werkt ook) — Vercel-project `clubcomm` (map `public`). Online zetten: Vercel `create_deployment` (project `clubcomm`, target production, gitSource github `sofianabayahya/Clubcomm`, ref = de werkbranch, zonder teamId).
+- App: https://mijnclubcomm.nl (domein bij Hostnet, DNS naar Vercel; oud adres clubcomm-nine.vercel.app werkt ook) — Vercel-project `clubcomm` (map `public`). Online zetten: Vercel `create_deployment` (project `clubcomm`, target production, gitSource github `sofianabayahya/Clubcomm`, ref = `main` met de gecontroleerde commit (sha), zonder teamId). **Nooit een werkbranch publiceren** (afspraak 29-10). Na afloop met `get_deployment` nagaan dat de commit klopt.
 - Supabase-project `pkvacwbdgumkffxnxnqk` (Frankfurt). Club-id `dcg`; account van de gebruiker: persoon `p-beheer`. Migraties: bestand in `supabase/migrations/` **en** toepassen met `apply_migration`. Eenmalige datawijzigingen: bestand in `supabase/scripts/` en uitvoeren met `execute_sql`. Edge Functions `melding` (e-mail via Brevo én pushmeldingen) en `automaat` (elk kwartier het automatische werk; `supabase/functions/automaat`, secrets `BREVO_API_KEY`, `AFZENDER_EMAIL`; push-sleutelpaar staat in tabel `push_sleutel`, alleen voor de server).
 - E-mail: Brevo (inlogmail via SMTP, meldingen via API; gratis plan, 300 mails per dag). Afzender `noreply@mijnclubcomm.nl` ("ClubComm"). Claude kan via de Brevo-koppeling contacten en afzenders nakijken (o.a. of een adres op de blokkeerlijst staat), maar niet de bezorging van losse mails.
 

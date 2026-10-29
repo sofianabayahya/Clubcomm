@@ -1,5 +1,7 @@
 # Trainingsmodule ClubComm: hoe hij nu is opgebouwd (stand 28-10-2026)
 
+> *Historisch onderzoeksdocument. Niet leidend voor de actuele werking. Zie `docs/architectuur.md` en het besluitenregister (`docs/besluiten.md`).*
+
 *Beschrijving van wat er nu gebouwd is (Besluit 121 t/m 132), om te analyseren. Geen voorstel. Waar iets nog niet werkt of nog leeg is, staat dat erbij.*
 
 ---

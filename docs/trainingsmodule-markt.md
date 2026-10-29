@@ -1,5 +1,7 @@
 # Trainingsmodule: marktanalyse vertaald naar ClubComm
 
+> *Historisch onderzoeksdocument. Niet leidend voor de actuele werking. Zie `docs/architectuur.md` en het besluitenregister (`docs/besluiten.md`).*
+
 *27 oktober 2026. Antwoord op "ClubComm – Marktanalyse vertalen naar ontwikkelplan" (KNVB Rinus, 360Player, coachbetter, The Coaching Manual, planet.training, YouCoach). Dit is een **voorstel, geen besluit**: er is niets gebouwd of gemigreerd. Het bouwt voort op `docs/trainingsmodule-2.md` (vormenbank, versies, uitvoering) en `docs/trainingsmodule-profielen.md` (profielen per club). Voorbeeldschermen staan in `docs/onderzoek/trainingsmodule-2/`: `o-bank-*` (vormenbank), `m-voorbereiden` (training voorbereiden) en `m-hjo` (HO-overzicht).*
 
 **Toets voor elk idee:** past het bij ClubComm? Daarvoor lopen we langs:
