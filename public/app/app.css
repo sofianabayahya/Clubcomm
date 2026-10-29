@@ -877,3 +877,15 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .tr-zitin span { flex: 1; }
 .tr-zitin small { color: var(--blauw, #0869c2); font-weight: 600; white-space: nowrap; }
 .tr-zitin .ic { flex: none; color: var(--blauw, #0869c2); }
+/* Besluit 137: Mijn lijn, afgelaste training, vaardigheden */
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.tr-wk .tr-code { width: 48px; }
+.tr-wk.aan { background: var(--blauw-l); border-radius: var(--r-s); }
+.tr-wk .tr-t small { line-height: 1.5; }
+.tr-wkst { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 2px 4px; flex: none; max-width: 96px; font-size: 18px; color: var(--zacht); }
+.tr-wkst small { width: 100%; text-align: right; font-size: 13px; }
+.tr-bol { display: inline-block; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #64748b; vertical-align: middle; }
+.tr-bol.gegeven { background: var(--groen); border-color: var(--groen); } .tr-bol.uitgewerkt { border-color: var(--blauw); background: linear-gradient(90deg, var(--blauw) 50%, transparent 50%); }
+.tr-bol.x { border: 0; width: auto; height: auto; border-radius: 0; color: var(--rood); font-size: 15px; font-weight: 800; line-height: 1; }
+.tr-afg { border-left: 4px solid var(--oranje); }
+.tr-vh { margin-top: 2px; }

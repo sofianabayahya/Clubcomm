@@ -85,6 +85,15 @@ De rest (vormtype, speelrichting, omschakeling, fase, tags) gaat in **Meer kenme
 6. **Delen:** met wie wil je trainingen of de periodisering delen (assistent, vervanger, HO, trainers van andere teams), en alleen om te lezen of ook om aan te passen?
 7. **Titel:** wordt het hoofdthema de titel van de training?
 
+## 8b. Antwoorden (29-10, "beantwoord zelf de vragen") → Besluit 137
+1. **Menu:** bovenbalk is het advies, maar het raakt de hele app → ClubComm-chat, eerst een voorbeeld.
+2. **Vaardigheden:** startlijst van 37 uit de eigen woorden van het kerndocument, in het DCG-profiel; jij schrapt of vult aan.
+3. **Groepsgrootte:** wordt een soort variant (*andere groepsgrootte*) in het nieuwe vormvenster.
+4. **Vaststellen:** de trainer. De HO leest mee zodra delen er is.
+5. **Afgelast:** eerste knop *Doorschuiven*, tweede *Laten vervallen*; nooit automatisch.
+6. **Delen:** de periodisering leesbaar voor de staf en de HO; overdragen aan een vervanger als eigen kopie. Rechtenwijziging → ClubComm-chat.
+7. **Titel:** het hoofdthema wordt de titel.
+
 ## 9. Volgorde als je akkoord bent (voorstel)
 1. *Mijn lijn* als één tabel (alleen DCG/trainingsmodule, klein werk).
 2. Vaardigheden in het profiel (zodra jouw lijst er is) → vorm kiezen vanuit de plek (venster).

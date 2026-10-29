@@ -19,6 +19,16 @@ Cyclus: Voetbalprobleem → Waarnemen → Keuze WAT → Keuze HOE → Gereedscha
 
 *Waarnemen, kiezen, timing, communicatie en uitvoering zijn kwaliteitsdimensies door alle zes gereedschappen heen; geen extra universele vaardigheden.*
 
+## Vaardigheden per gereedschap (concept, Besluit 137)
+*Startlijst uit de eigen woorden van het kerndocument (Keuze WAT en oplossingen). Schrap of vul aan; de app gebruikt ze om vormen te zoeken.*
+
+- **1v1 aanvallend:** Passeren, Dreigen, Beschermen, Wegdraaien, Indribbelen, Uit druk dribbelen, Tegenstander binden
+- **Aannemen en meenemen:** Eerste contact vooruit, Eerste contact van druk af, Open draaien, Meenemen uit druk
+- **Passen:** Vooruit inspelen, In de ruimte spelen, Kaatsen, Derde man, Dieptespel, Spelverplaatsing, Terugleggen
+- **Vrijkomen:** Vrijlopen, Vrijmaken uit de dekkingsschaduw, Diepteloop, Steun onder de bal, Doorlopen na pass, Overlap en underlap
+- **1v1 verdedigen en bal veroveren:** Benaderen, Sturen, Vertragen, Passlijn dichtzetten, Instappen, Onderscheppen, Duel winnen
+- **Afwerken:** Direct afwerken, Eerste contact en schieten, 1v1 met de keeper, Teruggelegde bal afwerken, Rebound, Extra pass naar een betere positie
+
 ## Technische onderbouw / Ball Mastery
 Geen zevende universele vaardigheid, maar een technische onderbouw onder de gereedschapskist. Geen vast percentage per training.
 

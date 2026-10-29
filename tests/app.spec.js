@@ -1564,8 +1564,9 @@ test('trainingsmodule: classificatie, sjabloon, fase, minuten per leerdoel en fi
   // Besluit 133: met leerniveaus in het profiel staat het leerniveau in de regel (de fase zit ingeklapt in het venster)
   await expect(page.locator('.tr-pmid .tr-rij').nth(1).locator('.tr-fase')).toHaveCount(0);
   // Lege plek A1 vullen met een nieuwe vorm en die classificeren
+  // Besluit 137: een lege plek opent meteen "Vorm kiezen" (gefilterd op het gereedschap van het blok)
   await page.locator('.tr-pmid .tr-rij').nth(1).click();
-  await page.locator('#sheet [data-act="tpVormKiezen"]').click();
+  await expect(page.locator('#sheet')).toContainText('Vorm kiezen');
   await page.locator('#sheet [data-act="vormNieuw"]').click();
   await page.fill('#v-n', 'Druk zetten 2 tegen 3+1'); await page.locator('#v-n').press('Tab');
   await page.locator('[data-act="vormKies"][data-veld="ld"][data-w="ll-1v1-verdedigen"]').click();
@@ -1623,7 +1624,9 @@ test('trainingsmodule: classificatie, sjabloon, fase, minuten per leerdoel en fi
   await expect.poll(async () => { const r = Object.values((await nepDb(page)).rows).find((x) => x.soort === 'trainingsplannen' && x.act_id === 'tMorgen'); return r ? `${r.data.sjabloon}|${r.data.onderdelen.filter((o) => o.vormId).map((o) => o.blok).join()}` : ''; }).toBe('dcg-75|A1');
   // Lijn: de opleidingslijn per week (uitgevoerd vet)
   await page.locator('[data-act="seg"][data-val="lijn"]').click();
-  await expect(page.locator('.tr-lijn tr', { hasText: '1v1 verdedigen' }).locator('td b')).toHaveText('4');
+  // Besluit 137: bij de DCG-methodiek één overzicht per week (ook zonder periodisering), met de uitgevoerde minuten
+  await expect(page.locator('.tr-wk.aan .tr-wkst')).toContainText('4 min');
+  await expect(page.locator('.tr-wk.aan .tr-wkst .tr-bol.gegeven')).toHaveCount(1);
   // Kopiëren naar een andere dag (gevuld: eerst vragen) en printen
   await page.locator('[data-act="seg"][data-val="plannen"]').click();
   await page.locator('.weekstrook [data-val="tTest"]').click();
@@ -1817,6 +1820,45 @@ test('trainingsmodule: DCG-periodisering O13 met hoofdthema, teamfunctie, contra
     .toBe('Vrije speler herkennen|vp-6|vp-7|true|ll-1v1-aanvallend,ll-aannemen|null|Waarnemen → timen → helpen');
   await page.locator('#sheet [data-act="sluitRender"]').click();
   await expect(page.locator('.tr-meth .tr-contra')).toContainText('(probleem 6) · ook 7 De bal veroveren');
+  // Besluit 137: de titel van de training is het hoofdthema
+  await expect(page.locator('.tr-plankop h2')).toContainText('Vrije speler herkennen');
+  // Lege plek: meteen vorm kiezen, gefilterd op het gereedschap van het blok, met de vaardigheden
+  await page.locator('.tr-pmid .tr-rij', { hasText: 'A1' }).first().click();
+  await expect(page.locator('#sheet [data-act="vkZet"][data-k="gs"][data-w="ll-passen"]')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('#sheet .tr-vh')).toContainText('Vooruit inspelen');
+  await page.waitForTimeout(400);
+  if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/6-vorm-kiezen.png`, fullPage: false });
+  await expect(page.locator('#sheet [data-act="vkZet"][data-k="past"]')).toContainText('past bij');
+  await page.locator('#sheet summary', { hasText: 'Ander gereedschap' }).click();
+  await page.locator('#sheet [data-act="vkZet"][data-k="gs"][data-w="ll-1v1-aanvallend"]').click();
+  await expect(page.locator('#sheet .tr-vh')).toContainText('Passeren');
+  // Nieuwe vorm vanuit de keuze: gereedschap en vaardigheid gaan mee, de vorm staat meteen op de plek
+  await page.locator('#sheet [data-act="vkZet"][data-k="vh"][data-w="vh-passeren"]').click();
+  await page.locator('#sheet [data-act="vormNieuw"]').click();
+  await expect(page.locator('.tr-vh button[data-w="vh-passeren"]')).toHaveAttribute('aria-pressed', 'true');
+  await expect.poll(async () => { const r = Object.values((await nepDb(page)).rows).find((x) => x.soort === 'vormen'); return r ? `${r.data.koppelingen.dcg.primair}|${r.data.vaardigheden}` : ''; }).toBe('ll-1v1-aanvallend|vh-passeren');
+  await page.locator('[data-act="terug"]').click();
+  // Mijn lijn: één overzicht van 8 weken; vaststellen (dan geen terugdraaien)
+  await page.locator('[data-act="seg"][data-val="lijn"]').click();
+  await expect(page.locator('.tr-wk')).toHaveCount(8);
+  await expect(page.locator('.tr-wk', { hasText: 'wk 45' }).locator('.tr-niv')).toHaveText('Uitvoeren → Afstemmen');
+  await expect(page.locator('.tr-wk', { hasText: 'wk 45' }).locator('.tr-bol')).toHaveCount(3);
+  await page.locator('[data-act="perVast"]').click();
+  await expect(page.locator('.tr-per .tr-stat.v')).toContainText('Vastgesteld');
+  await expect(page.locator('[data-act="perTerug"]')).toHaveCount(0);
+  if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/7-mijn-lijn.png`, fullPage: true });
+  // Afgelaste training: één signaal in Plannen; doorschuiven tot het einde, niets automatisch
+  await page.evaluate(() => { CC.S().acts.find((a) => a.id === 'a-o12-20261110').afgelast = true; CC.save(); CC.render(); });
+  await page.locator('.tr-wk', { hasText: 'wk 46' }).click();
+  await expect(page.locator('.tr-afg')).toContainText('Training van di 10 nov is afgelast');
+  if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/8-afgelast.png`, fullPage: true });
+  await page.locator('[data-act="perDoor"]').click();
+  await expect(page.locator('.tr-afg')).toHaveCount(0);
+  const thema = async (id) => (await rijen()).find((r) => r.act_id === id).data.thema;
+  await expect.poll(() => thema('a-o12-20261112')).toBe('Vrijkomen en gerichte pass onder tempo');
+  await expect.poll(() => thema('a-o12-20261113')).toBe('Voordeel uitspelen via derde man');
+  await expect.poll(() => thema('a-o12-20261218')).toBe('Kansen benutten na combinatie');
+  await expect.poll(() => thema('a-o12-20261106')).toBe('Opbouw tegenover variabele druk');
   if (process.env.SHOTS) { await page.setViewportSize({ width: 1366, height: 900 });
     for (const [seg, naam] of [['lijn', 'L1-lijn'], ['plannen', 'L2-plannen'], ['week', 'L3-week'], ['vormen', 'L4-vormen']]) {
       await page.locator(`[data-act="seg"][data-val="${seg}"]`).click(); await page.waitForTimeout(300); await page.screenshot({ path: `${process.env.SHOTS}/${naam}.png`, fullPage: true }); }
