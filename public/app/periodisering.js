@@ -11,6 +11,17 @@
   const problemen = (S) => (T().ond(S, 'voetbalproblemen') || {}).items || [];
   const ketens = (S) => (T().ond(S, 'handelingsketens') || {}).items || [];
   const probleem = (S, id) => problemen(S).find((x) => x.id === id) || null;
+  const teamfuncties = (S) => (T().ond(S, 'teamfuncties') || {}).items || [];
+  // Handelingsketen is vrije tekst (combinatie van gereedschappen); de ketens uit het profiel zijn alleen voorbeelden
+  const ketenVan = (S, m) => m.ketenTekst || (ketens(S).find((k) => k.id === m.keten) || {}).naam || '';
+  // Contrathema: gekoppeld probleem (+ eventueel een ondersteunend probleem) met de eigen omschrijving erbij.
+  // Telt niet mee in de minuten: minuten gaan alleen naar het hoofdleerdoel van de vorm (CC.minutenPerLeerdoel), dus nooit dubbel.
+  const contraLabel = (S, m) => { const p1 = probleem(S, m.contra), p2 = probleem(S, m.contra2); const t = String(m.contraTekst || '').trim();
+    const eigen = t && !/^\d+$/.test(t) && (!p1 || t.toLowerCase() !== p1.naam.toLowerCase()) ? t : '';
+    // Kort: de eigen omschrijving met het nummer van het probleem; zonder eigen tekst de naam van het probleem
+    return [eigen ? `${eigen}${p1 ? ` (probleem ${p1.id.slice(3)})` : ''}` : p1 ? p1.naam : '', p2 ? `· ook ${p2.id.slice(3)} ${p2.naam}` : ''].filter(Boolean).join(' '); };
+  const ondersteunendVan = (S, m) => m.ondersteunendTekst || (m.ondersteunend || []).map((x) => T().ldNaam(S, x)).filter(Boolean).join(', ');
+  const tfNaam = (S, m) => (teamfuncties(S).find((x) => x.id === m.teamfunctie) || {}).naam || m.teamfunctieTekst || '';
   const maandag = (datum) => { const x = D.parse(datum); return D.addDays(datum, -((x.getDay() + 6) % 7)); };
   const weekId = (tid, datum) => `wk-${tid || 'los'}-${maandag(datum)}`;
   const weekPlan = (S, tid, datum) => T().plannen(S).find((p) => p.week && p.id === weekId(tid, datum) && p.eigenaar === T().ik()) || null;
@@ -18,7 +29,7 @@
   // Methodiek van een training: eerst wat bij de training zelf staat, aangevuld met het weekplan
   const methodiek = (S, p) => { if (!p) return {}; const a = T().actVan(S, p); const w = a.datum ? weekPlan(S, p.teamId || a.teamId, a.datum) : null; const wm = (w && w.methodiek) || {}, pm = p.methodiek || {}; const m = { ...wm, ...pm };
     // Contrathema (optioneel): hoort bij de week en verschijnt als voorstel, tenzij bij deze training zelf gekozen
-    if (!pm.contraGekozen && !pm.contra && !pm.contraTekst) { m.contra = wm.contra || null; m.contraTekst = wm.contraTekst || ''; }
+    if (!pm.contraGekozen && !pm.contra && !pm.contraTekst) { m.contra = wm.contra || null; m.contra2 = wm.contra2 || null; m.contraTekst = wm.contraTekst || ''; }
     return m; };
 
   // ---------- Status: berekend, nooit ingevuld ----------
@@ -40,28 +51,34 @@
     if (leeg) return tel ? '' : `<button class="knop licht vol tr-methknop" data-act="tpMethodiek" data-id="${esc(a.id)}">${icon('list-checks')}Methodiek toevoegen (probleem, gereedschappen, leerniveau, gedrag)</button>`;
     const vorig = vorigeAanpassing(S, p, m); const w = a.datum ? weekPlan(S, p.teamId || a.teamId, a.datum) : null;
     const rij = (n, x) => (x ? `<span>${n}</span><b>${esc(x)}</b>` : '');
-    const ketenN = (ketens(S).find((k) => k.id === m.keten) || {}).naam || m.ketenTekst;
-    const rest = [rij('Handelingsketen', ketenN), rij('Relevante informatie', m.informatie), rij('Leerroute', m.route), rij('Transfermoment', m.transfer), rij('Technische onderbouw', m.onderbouw), rij('Observatie', m.observatie), rij('Fase', m.fase)].join('');
+    const rest = [rij('Hoofdthema', m.hoofdthema), rij('Teamfunctie', tfNaam(S, m)), rij('Ondersteunend', ondersteunendVan(S, m)), rij('Handelingsketen', ketenVan(S, m)), rij('Relevante informatie', m.informatie), rij('Leerroute', m.route), rij('Transfermoment', m.transfer), rij('Technische onderbouw', m.onderbouw), rij('Observatie', m.observatie), w && w.methodiek && w.methodiek.week ? '' : rij('Fase', m.fase)].join('');
     return `<div class="tr-meth">
       <div class="tr-meth-kop"><b>${pr ? `${esc(pr.id.slice(3))} · ${esc(pr.naam)}` : esc(m.probleemTekst || 'Voetbalprobleem nog kiezen')}</b>${tel ? '' : `<button class="icoonknop" data-act="tpMethodiek" data-id="${esc(a.id)}" aria-label="Methodiek aanpassen">${icon('pencil')}</button>`}</div>
       <small>${[A ? `A ${esc(T().ldNaam(S, A))}` : '', B ? `B ${esc(T().ldNaam(S, B))}` : ''].filter(Boolean).join(' · ')}${(m.niveaus || []).length ? ` <span class="tr-niv">${esc(nv(S, m.niveaus))}</span>` : ''}</small>
       ${m.gedrag ? `<p class="tr-gedrag"><b>Gedrag:</b> ${esc(m.gedrag)}</p>` : ''}
-      ${m.contra || m.contraTekst ? `<small class="tr-contra">Contrathema (andere partij): ${esc((probleem(S, m.contra) || {}).naam || m.contraTekst)}${m.contraGekozen ? '' : ' · <i>voorstel</i>'}</small>` : ''}
+      ${m.contra || m.contraTekst ? `<small class="tr-contra">Contrathema (andere partij): ${esc(contraLabel(S, m))}${m.contraGekozen ? '' : ' · <i>voorstel</i>'}</small>` : ''}
       ${vorig ? `<p class="tr-vorig"><b>Voorstel van ${esc(T().dagNaam(T().actVan(S, vorig)))}:</b> ${esc(vorig.anders)} <small>(niet automatisch doorgevoerd)</small></p>` : ''}
       ${rest || (w && w.methodiek && w.methodiek.week) ? `<details class="tr-meth-meer"><summary>Onderbouwing (weekformat)</summary><div class="tr-meth-r">${w && w.methodiek && w.methodiek.week ? rij('Fase · week', `${w.methodiek.fase || ''} ${w.methodiek.week}`.trim()) : ''}${rest}</div></details>` : ''}
     </div>`; };
   // Venster om de methodiek van deze training aan te passen (blijft bij deze training; het weekplan blijft zoals het is)
   const sel = (naam, opties, w, leegTekst) => `<select name="${naam}"><option value="">${leegTekst || '—'}</option>${opties.map(([v, n]) => `<option value="${esc(v)}" ${v === w ? 'selected' : ''}>${esc(n)}</option>`).join('')}</select>`;
   CC.on('tpMethodiek', (el) => { const S = CC.S(); const p = T().plan(S, el.dataset.id); if (!p) return; const m = methodiek(S, p);
-    const lds = T().leerdoelen(S).map((l) => [l.id, l.naam]);
+    const lds = T().leerdoelen(S).map((l) => [l.id, l.naam]); const prs = problemen(S).map((x) => [x.id, `${x.id.slice(3)} · ${x.naam}`]);
+    const ll = ((T().ond(S, 'leerlijnen') || {}).items || []).filter((x) => x.naam);
     CC.sheet('Methodiek van deze training', `<form class="codeform" data-autosave="tpMeth" data-id="${esc(el.dataset.id)}">
-      <label>Centraal voetbalprobleem</label>${sel('probleem', problemen(S).map((x) => [x.id, `${x.id.slice(3)} · ${x.naam}`]), m.probleem)}
-      <label>Contrathema (optioneel, voor de andere partij)</label>${sel('contra', problemen(S).map((x) => [x.id, `${x.id.slice(3)} · ${x.naam}`]), m.contra, 'Geen')}
+      <label for="pm-h">Hoofdthema</label><input id="pm-h" name="hoofdthema" value="${esc(m.hoofdthema || '')}" placeholder="Bijv. opbouwen tegen twee jagers">
+      <label>Centraal voetbalprobleem</label>${sel('probleem', prs, m.probleem)}
+      <details class="uitklap tr-precies" ${m.contra || m.contraTekst ? 'open' : ''}><summary>Contrathema (optioneel, voor de andere partij)</summary>
+        <label>Contraprobleem</label>${sel('contra', prs, m.contra, 'Geen')}
+        <label for="pm-ct">Eigen omschrijving</label><input id="pm-ct" name="contraTekst" value="${esc(/^\d+$/.test(m.contraTekst || '') ? '' : m.contraTekst || '')}" placeholder="Bijv. passlijn door as sluiten">
+        <label>Ook (ondersteunend, optioneel)</label>${sel('contra2', prs, m.contra2, 'Geen')}<p></p></details>
       <div class="twee"><div><label>Hoofdgereedschap A</label>${sel('hg1', lds, T().blokDoel(S, p, 'A'))}</div><div><label>Hoofdgereedschap B</label>${sel('hg2', lds, T().blokDoel(S, p, 'B'))}</div></div>
+      ${ll.length ? `<fieldset class="tr-chips"><legend>Ondersteunend gereedschap (optioneel)</legend>${ll.map((x) => `<label class="tr-chip"><input type="checkbox" name="ond" value="${esc(x.id)}" ${(m.ondersteunend || []).includes(x.id) ? 'checked' : ''}><span>${esc(x.naam)}</span></label>`).join('')}</fieldset>` : ''}
       <fieldset class="tr-chips"><legend>Beoogd leerniveau (één of twee)</legend>${T().niveaus(S).map((x) => `<label class="tr-chip"><input type="checkbox" name="niv" value="${esc(x.id)}" ${(m.niveaus || []).includes(x.id) ? 'checked' : ''}><span>${esc(x.naam)}</span></label>`).join('')}</fieldset>
       <label for="pm-g">Gewenst gedrag (één zin)</label><textarea id="pm-g" name="gedrag" rows="2">${esc(m.gedrag || '')}</textarea>
       <details class="uitklap tr-precies"><summary>Onderbouwing (weekformat)</summary>
-        <label>Handelingsketen</label>${sel('keten', ketens(S).map((k) => [k.id, k.naam]), m.keten)}
+        ${teamfuncties(S).length ? `<label>Teamfunctie</label>${sel('teamfunctie', teamfuncties(S).map((x) => [x.id, x.naam]), m.teamfunctie)}` : ''}
+        <label for="pm-k">Handelingsketen (vrije tekst)</label><input id="pm-k" name="keten" list="pm-kl" value="${esc(ketenVan(S, m))}" placeholder="Bijv. waarnemen → voorbereiden → helpen"><datalist id="pm-kl">${ketens(S).map((k) => `<option value="${esc(k.naam)}">`).join('')}</datalist>
         <label for="pm-i">Relevante informatie</label><input id="pm-i" name="informatie" value="${esc(m.informatie || '')}">
         <label for="pm-r">Leerroute</label><input id="pm-r" name="route" value="${esc(m.route || '')}" placeholder="Bijv. gerichte vorm → 3v2 → SSG">
         <label for="pm-t">Transfermoment</label><input id="pm-t" name="transfer" value="${esc(m.transfer || '')}">
@@ -70,9 +87,15 @@
       <button type="button" class="knop vol" data-act="sluitRender">Klaar</button></form>`, { groot: true }); });
   CC.autosave.tpMeth = (f) => { const S = CC.S(); const p = T().plan(S, f.dataset.id); if (!p) return;
     const m = p.methodiek = { ...(p.methodiek || {}) };
-    ['probleem', 'keten'].forEach((k) => { m[k] = f.elements[k].value || null; });
-    const c = f.elements.contra.value || null; if (c !== (methodiek(S, p).contra || null) || m.contraGekozen) { m.contra = c; m.contraGekozen = true; }
-    ['gedrag', 'informatie', 'route', 'transfer', 'onderbouw', 'observatie'].forEach((k) => { m[k] = f.elements[k].value.trim(); });
+    const nu = methodiek(S, p); m.probleem = f.elements.probleem.value || null;
+    const kt = f.elements.keten.value.trim(); m.ketenTekst = kt; m.keten = (ketens(S).find((k) => k.naam.toLowerCase() === kt.toLowerCase()) || {}).id || null;
+    if (f.elements.teamfunctie) { m.teamfunctie = f.elements.teamfunctie.value || null; m.teamfunctieTekst = ''; }
+    // Contra: alleen bij deze training vastzetten als er iets verandert (anders blijft het weekvoorstel staan)
+    const c = f.elements.contra.value || null, c2 = f.elements.contra2.value || null, oudT = /^\d+$/.test(nu.contraTekst || '') ? '' : nu.contraTekst || '', ct = f.elements.contraTekst.value.trim();
+    if (m.contraGekozen || c !== (nu.contra || null) || c2 !== (nu.contra2 || null) || ct !== oudT) { m.contra = c; m.contra2 = c2; m.contraTekst = ct; m.contraGekozen = true; }
+    const ond = [...f.querySelectorAll('input[name="ond"]:checked')].map((x) => x.value);
+    if (f.querySelector('input[name="ond"]') && ond.join() !== (nu.ondersteunend || []).join()) { m.ondersteunend = ond; m.ondersteunendTekst = ''; }
+    ['hoofdthema', 'gedrag', 'informatie', 'route', 'transfer', 'onderbouw', 'observatie'].forEach((k) => { m[k] = f.elements[k].value.trim(); });
     m.niveaus = [...f.querySelectorAll('input[name="niv"]:checked')].map((x) => x.value);
     p.blokDoel = { ...(p.blokDoel || {}), A: f.elements.hg1.value || null, B: f.elements.hg2.value || null };
     const pr = probleem(S, m.probleem); if (pr && (!p.thema || p.thema === (p.importThema || ''))) { p.thema = pr.naam; p.importThema = pr.naam; } };
@@ -105,8 +128,8 @@
     const geladen = T().plannen(S).filter((p) => p.bron && p.eigenaar === T().ik()).length;
     const rijen = weken.map((w) => { const m = w.methodiek || {}; const pr = probleem(S, m.probleem); const tr = T().plannen(S).filter((p) => !p.week && p.eigenaar === T().ik() && (p.teamId || '') === (w.teamId || '') && T().actVan(S, p).datum && maandag(T().actVan(S, p).datum) === w.datum);
       const wd = w.wedstrijd && (w.wedstrijd.punten || []); const d = D.parse(w.datum);
-      return `<tr><th>wk ${D.weeknr(w.datum)}<br><small>${d.getDate()} ${D.MAAND[d.getMonth()]}</small></th><td>${pr ? esc(pr.naam) : esc(m.probleemTekst || '—')}${m.contra || m.contraTekst ? `<br><small class="zacht">contra: ${esc((probleem(S, m.contra) || {}).naam || m.contraTekst)}</small>` : ''}</td><td>${[m.hg1, m.hg2].filter(Boolean).map((x) => esc(T().ldNaam(S, x) || x)).join(' · ') || '—'}</td><td>${(m.niveaus || []).length ? `<span class="tr-niv">${esc(nv(S, m.niveaus))}</span>` : ''}</td><td>${tr.map((p) => CC.trStatus(S, p)).join('')}</td><td>${wd && wd.length ? `${wd.filter((x) => x.uitkomst).length}/${wd.length} beoordeeld` : ''}</td></tr>`; }).join('');
-    return `<div class="kaartje tr-fase"><div class="tr-kop"><b>Periodisering${weken.length ? ` · ${weken.length} weken` : ''}</b><div class="knoppen"><button class="knop" data-act="perLaden">${icon('list-checks')}Periodisering laden…</button>${geladen ? `<button class="knop licht" data-act="perTerug">Terugdraaien…</button>` : ''}</div></div>
+      return `<tr><th>wk ${D.weeknr(w.datum)}<br><small>${d.getDate()} ${D.MAAND[d.getMonth()]}</small></th><td>${pr ? esc(pr.naam) : esc(m.probleemTekst || '—')}${m.contra || m.contraTekst ? `<br><small class="zacht">contra: ${esc(contraLabel(S, m))}</small>` : ''}</td><td>${[m.hg1, m.hg2].filter(Boolean).map((x) => esc(T().ldNaam(S, x) || x)).join(' · ') || '—'}</td><td>${(m.niveaus || []).length ? `<span class="tr-niv">${esc(nv(S, m.niveaus))}</span>` : ''}</td><td>${tr.map((p) => CC.trStatus(S, p)).join('')}</td><td>${wd && wd.length ? `${wd.filter((x) => x.uitkomst).length}/${wd.length} beoordeeld` : ''}</td></tr>`; }).join('');
+    return `<div class="kaartje tr-per"><div class="tr-kop"><b>Periodisering${weken.length ? ` · ${weken.length} weken` : ''}</b><div class="knoppen"><button class="knop" data-act="perLaden">${icon('list-checks')}Periodisering laden…</button>${geladen ? `<button class="knop licht" data-act="perTerug">Terugdraaien…</button>` : ''}</div></div>
       ${rijen ? `<div class="tr-tabel"><table><thead><tr><th>Week</th><th>Centraal probleem</th><th>Hoofdgereedschappen</th><th>Leerniveau</th><th>Trainingen</th><th>Wedstrijd</th></tr></thead><tbody>${rijen}</tbody></table></div>`
         : '<small class="zacht">Nog geen periodisering. Laad je planning uit Excel (opslaan als CSV), of vul per training de methodiek in.</small>'}</div>`; };
 
@@ -133,15 +156,19 @@
     w.methodiek = { ...(w.methodiek || {}), thema: f.elements.thema.value.trim(), hg1: f.elements.hg1 ? f.elements.hg1.value || null : null, hg2: f.elements.hg2 ? f.elements.hg2.value || null : null }; };
 
   // CSV (Excel: Opslaan als → CSV, puntkomma of komma). Eén regel per training of wedstrijd.
-  const KOLOMMEN = ['datum', 'soort', 'fase', 'week', 'probleem', 'contrathema', 'gereedschapA', 'gereedschapB', 'keten', 'leerniveau', 'gedrag', 'informatie', 'leerroute', 'transfer', 'onderbouw', 'observatie', 'model'];
+  // Kolommen gaan op naam; de kolomnamen uit het Excel-spoorboekje van DCG werken ook (ALIAS). Andere kolommen worden genegeerd.
+  const KOLOMMEN = ['datum', 'soort', 'fase', 'week', 'hoofdthema', 'teamfunctie', 'probleem', 'contrathema', 'contraprobleem', 'contraondersteunend', 'gereedschapA', 'gereedschapB', 'ondersteunend', 'keten', 'leerniveau', 'gedrag', 'informatie', 'leerroute', 'transfer', 'onderbouw', 'observatie', 'model'];
+  const ALIAS = { soort: ['type'], probleem: ['centraalvoetbalprobleem'], keten: ['handelingsketen'], leerniveau: ['beoogdleerniveau'], gedrag: ['gewenstgedrag'], informatie: ['relevanteinformatie'], transfer: ['transfermoment'],
+    observatie: ['wedstrijdobservatie1', 'wedstrijdobservatie2', 'wedstrijdobservatie3'] };
   const csvLezen = (txt) => { txt = txt.replace(/^﻿/, ''); const eerste = txt.split(/\r?\n/)[0] || ''; const sep = (eerste.match(/;/g) || []).length >= (eerste.match(/,/g) || []).length ? ';' : ',';
     const rijen = []; let r = [], v = '', q = false;
     for (let i = 0; i < txt.length; i++) { const c = txt[i];
       if (q) { if (c === '"' && txt[i + 1] === '"') { v += '"'; i++; } else if (c === '"') q = false; else v += c; }
       else if (c === '"') q = true; else if (c === sep) { r.push(v); v = ''; } else if (c === '\n' || c === '\r') { if (c === '\r' && txt[i + 1] === '\n') i++; r.push(v); rijen.push(r); r = []; v = ''; } else v += c; }
     if (v !== '' || r.length) { r.push(v); rijen.push(r); }
-    const kop = (rijen.shift() || []).map((x) => x.trim().toLowerCase().replace(/[^a-z]/g, ''));
-    return rijen.filter((x) => x.some((y) => String(y).trim())).map((x) => Object.fromEntries(KOLOMMEN.map((k) => [k, String(x[kop.indexOf(k.toLowerCase())] || '').trim()]))); };
+    const kop = (rijen.shift() || []).map((x) => x.trim().toLowerCase().replace(/[^a-z0-9]/g, ''));
+    const waarde = (x, k) => { const namen = [k.toLowerCase(), ...(ALIAS[k] || [])]; return kop.map((n, i) => (namen.includes(n) ? String(x[i] || '').trim() : '')).filter(Boolean).join(' | '); };
+    return rijen.filter((x) => x.some((y) => String(y).trim())).map((x) => Object.fromEntries(KOLOMMEN.map((k) => [k, waarde(x, k)]))); };
   const datumVan = (s) => { s = String(s || '').trim(); let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/); if (m) return `${m[1]}-${m[2].padStart(2, '0')}-${m[3].padStart(2, '0')}`;
     m = s.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})$/); return m ? `${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}` : null; };
   const norm = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]/g, '');
@@ -149,7 +176,10 @@
     const x = problemen(S).find((p) => norm(p.naam) === n || norm(p.naam).includes(n.replace(/^\d+/, '')) && n.replace(/^\d+/, '').length > 5); return x ? x.id : (nr ? `vp-${nr[1]}` : null); };
   const zoekLd = (S, s) => { const n = norm(s); if (!n) return null; const l = T().leerdoelen(S).find((x) => norm(x.naam) === n || norm(x.naam).startsWith(n) || n.startsWith(norm(x.naam).slice(0, 8)) || (x.kern && norm(x.kern) === n)); return l ? l.id : null; };
   const zoekNiveaus = (S, s) => String(s || '').split(/[-–→>,/]+/).map((x) => (T().niveaus(S).find((n) => norm(n.naam) === norm(x)) || {}).id).filter(Boolean);
-  const zoekKeten = (S, s) => { const n = norm(s); return n ? ((ketens(S).find((k) => norm(k.naam) === n || norm(k.naam).includes(n)) || {}).id || null) : null; };
+  const zoekKeten = (S, s) => { const n = norm(s); return n ? ((ketens(S).find((k) => norm(k.naam) === n) || {}).id || null) : null; };
+  const zoekTf = (S, s) => { const n = norm(s); return n ? ((teamfuncties(S).find((x) => norm(x.naam) === n) || {}).id || null) : null; };
+  // Ondersteunend: één of meer gereedschappen gescheiden door ; of , (bijv. "Passen – Helpen; Vrijkomen – Timen"); de tekst blijft bewaard
+  const zoekOnd = (S, s) => String(s || '').split(/[;,]/).map((x) => x.replace(/\(.*\)/, '').trim()).filter(Boolean).map((x) => ({ x, id: zoekLd(S, x) }));
 
   // Voorbeeld: welke echte activiteit van het team krijgt wat? Alleen trainingen zonder voorbereiding krijgen een concept.
   const voorbeeld = (S, rows, bestand) => { const tid = CC.teamId && CC.teamId(); const uit = [];
@@ -158,10 +188,18 @@
       const acts = M.acts(S, tid, datum, datum).filter((a) => !a.afgelast && (soort === 'wedstrijd' ? M.isWed(a) : a.soort === 'training'));
       if (!acts.length) { uit.push({ i, r, datum, soort, actie: 'overslaan', reden: `geen ${soort} van ${CC.tn(tid)} op deze dag in de kalender` }); return; }
       const a = acts[0];
-      const pr = zoekProbleem(S, r.probleem), contra = zoekProbleem(S, r.contrathema), A = zoekLd(S, r.gereedschapA), B = zoekLd(S, r.gereedschapB), niv = zoekNiveaus(S, r.leerniveau), keten = zoekKeten(S, r.keten);
-      if (r.probleem && !pr) fout.push(`probleem "${r.probleem}" onbekend (tekst blijft staan)`); if (r.contrathema && !contra) fout.push(`contrathema "${r.contrathema}" onbekend (tekst blijft staan)`); if (r.gereedschapA && !A) fout.push(`gereedschap A "${r.gereedschapA}" onbekend`); if (r.gereedschapB && !B) fout.push(`gereedschap B "${r.gereedschapB}" onbekend`);
+      const pr = zoekProbleem(S, r.probleem), A = zoekLd(S, r.gereedschapA), B = zoekLd(S, r.gereedschapB), niv = zoekNiveaus(S, r.leerniveau), keten = zoekKeten(S, r.keten);
+      // Contra: de kolom contraprobleem (nummer of naam) beslist; zonder die kolom alleen bij een exacte naam of een nummer, nooit op losse woorden
+      const contra = r.contraprobleem ? zoekProbleem(S, r.contraprobleem) : zoekProbleem(S, r.contrathema), contra2 = zoekProbleem(S, r.contraondersteunend);
+      const ond = zoekOnd(S, r.ondersteunend), tf = zoekTf(S, r.teamfunctie);
+      if (r.probleem && !pr) fout.push(`probleem "${r.probleem}" onbekend (tekst blijft staan)`);
+      if (r.contraprobleem && !contra) fout.push(`contraprobleem "${r.contraprobleem}" onbekend`); else if (r.contrathema && !contra) fout.push(`contrathema "${r.contrathema}" nog niet gekoppeld aan een probleem (ter controle; tekst blijft staan)`);
+      if (r.contraondersteunend && !contra2) fout.push(`contraprobleem (ook) "${r.contraondersteunend}" onbekend`);
+      ond.filter((o) => !o.id).forEach((o) => fout.push(`ondersteunend "${o.x}" onbekend (tekst blijft staan)`)); if (r.teamfunctie && !tf) fout.push(`teamfunctie "${r.teamfunctie}" onbekend (tekst blijft staan)`); if (r.gereedschapA && !A) fout.push(`gereedschap A "${r.gereedschapA}" onbekend`); if (r.gereedschapB && !B) fout.push(`gereedschap B "${r.gereedschapB}" onbekend`);
       if (r.leerniveau && !niv.length) fout.push(`leerniveau "${r.leerniveau}" onbekend`);
-      const m = { probleem: pr, probleemTekst: r.probleem, contra, contraTekst: r.contrathema, hg1: A, hg2: B, keten, ketenTekst: r.keten, niveaus: niv, gedrag: r.gedrag, informatie: r.informatie, route: r.leerroute, transfer: r.transfer, onderbouw: r.onderbouw, observatie: soort === 'training' ? r.observatie : '', fase: r.fase, week: r.week };
+      const m = { hoofdthema: r.hoofdthema, teamfunctie: tf, teamfunctieTekst: tf ? '' : r.teamfunctie, probleem: pr, probleemTekst: r.probleem, contra, contra2, contraTekst: r.contrathema, hg1: A, hg2: B,
+        ondersteunend: ond.map((o) => o.id).filter((x) => x && x !== A && x !== B), ondersteunendTekst: r.ondersteunend, keten, ketenTekst: r.keten, niveaus: niv, gedrag: r.gedrag, informatie: r.informatie, route: r.leerroute, transfer: r.transfer, onderbouw: r.onderbouw,
+        observatie: soort === 'training' ? r.observatie.split(' | ').join('; ') : '', fase: r.fase, week: /^\d+$/.test(r.week) ? `wk ${r.week}` : r.week };
       if (soort === 'wedstrijd') { const punten = String(r.observatie || '').split('|').map((x) => x.trim()).filter(Boolean).slice(0, 3); const w = weekPlan(S, tid, datum);
         const al = w && w.wedstrijd && w.wedstrijd.actId === a.id && (w.wedstrijd.punten || []).length;
         uit.push({ i, r, datum, soort, a, m, punten, actie: al ? 'overslaan' : punten.length ? 'observatie' : 'niets', reden: al ? 'heeft al observatiepunten' : punten.length ? `${punten.length} observatiepunt${punten.length === 1 ? '' : 'en'}` : 'geen observatiepunten', fout }); return; }
@@ -193,7 +231,7 @@
       <p>✓ <b>${c('concept')} training${c('concept') === 1 ? '' : 'en'}</b> krijgen een concept (probleem, gereedschappen, leerniveau, gedrag; plekken leeg)</p>
       <p>✓ <b>${c('observatie')} wedstrijd${c('observatie') === 1 ? '' : 'en'}</b> krijgen observatiepunten</p>
       <p>– <b>0 bestaande trainingen</b> worden gewijzigd of verwijderd · <b>${c('overslaan')}</b> overgeslagen · <b>geen</b> oefenvormen of tekeningen</p>
-      ${c('fout') ? `<p style="color:var(--rood)">⚠ ${c('fout')} regel(s) met een fout worden niet geladen.</p>` : ''}${fouten.length ? `<p style="color:#8a4b00">⚠ ${fouten.length} regel(s) met onbekende waarden (de tekst blijft staan): ${esc(fouten.slice(0, 3).map((x) => x.fout[0]).join('; '))}${fouten.length > 3 ? ' …' : ''}</p>` : ''}</div>
+      ${c('fout') ? `<p style="color:var(--rood)">⚠ ${c('fout')} regel(s) met een fout worden niet geladen.</p>` : ''}${fouten.length ? (() => { const u = [...new Set(fouten.flatMap((x) => x.fout))]; return `<p style="color:#8a4b00">⚠ ${fouten.length} regel(s) ter controle (de tekst blijft staan): ${esc(u.slice(0, 4).join('; '))}${u.length > 4 ? ' …' : ''}</p>`; })() : ''}</div>
       <div class="tr-tabel"><table class="tr-pv"><thead><tr><th>Datum</th><th>Activiteit in de kalender</th><th>Probleem</th><th>Wat</th></tr></thead><tbody>
       ${l.map((x) => `<tr class="${x.actie}"><td>${x.datum ? esc(D.kort(x.datum)) : esc(x.r.datum)}</td><td>${x.a ? `${esc(x.a.soort === 'training' ? 'Training' : 'Wedstrijd')} ${esc(x.a.tijd || '')}${x.a.eind ? `–${esc(x.a.eind)}` : ''}` : '—'}</td><td>${esc(x.m ? (probleem(S, x.m.probleem) || {}).naam || x.m.probleemTekst || '' : '')}</td><td>${esc(x.reden)}</td></tr>`).join('')}</tbody></table></div>
       <div class="knoppen"><button class="knop" data-act="perToevoegen" ${c('concept') + c('observatie') ? '' : 'disabled'}>Toevoegen</button><button class="knop licht" data-act="sluit">Annuleren</button></div>`; };

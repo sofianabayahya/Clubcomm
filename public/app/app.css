@@ -848,7 +848,8 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .tr-ev { display: flex; flex-direction: column; gap: 4px; margin: 4px 0; } .tr-ev b { font-size: 14px; }
 .tr-diep { box-shadow: none; border: 1px solid var(--lijn); }
 .tr-obsw, .tr-bespreek { gap: 6px; }
-.tr-fase table { border-collapse: collapse; width: 100%; font-size: 14px; } .tr-fase th, .tr-fase td { text-align: left; padding: 7px 6px; border-bottom: 1px solid var(--lijn); vertical-align: top; }
+.tr-per table { border-collapse: collapse; width: 100%; font-size: 14px; } .tr-per th, .tr-per td { text-align: left; padding: 7px 6px; border-bottom: 1px solid var(--lijn); vertical-align: top; }
+.tr-per .tr-kop { flex-wrap: wrap; }
 .tr-pv { border-collapse: collapse; width: 100%; font-size: 14px; } .tr-pv th, .tr-pv td { text-align: left; padding: 6px; border-bottom: 1px solid var(--lijn); }
 .tr-pv tr.concept td:last-child, .tr-pv tr.observatie td:last-child { color: var(--groen); font-weight: 600; } .tr-pv tr.overslaan td:last-child { color: var(--zacht); } .tr-pv tr.fout td:last-child { color: var(--rood); font-weight: 600; }
 /* Besluit 129: observeren tijdens de wedstrijd (klok, turven, snelle notities) */

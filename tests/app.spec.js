@@ -1477,7 +1477,7 @@ test('trainingsmodule: training op datum zonder planning (pakket Trainers begele
   // Zoals Swift (KNVB-standaard, geen eigen profiel): niets van de DCG-methodiek (Besluit 133)
   await expect(page.locator('.tr-meth, .tr-methknop, .tr-stat, .tr-contra, .tr-niv')).toHaveCount(0);
   await page.locator('[data-act="seg"][data-val="lijn"]').click();
-  await expect(page.locator('[data-act="perLaden"], .tr-fase')).toHaveCount(0);
+  await expect(page.locator('[data-act="perLaden"], .tr-per')).toHaveCount(0);
   await expect(page.locator('.tr-weken')).toBeVisible(); // weekthema werkt ook zonder leerdoelen (alleen het thema)
   await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'trainingsplannen').map((r) => `${r.scope}|${r.persoon_id}|${r.data.los}|${r.data.datum}|${r.data.onderdelen.length}`).join()).toBe('eigen|p-beheer|true|2026-11-03|1');
   await controleer(page, fouten, 'training op datum');
@@ -1505,7 +1505,7 @@ test('trainingsmodule: volgorde, je zit in en weekthema (KNVB-profiel)', async (
   await expect(page.locator('.tr-pzij .tr-maand')).toHaveCount(0);
   await page.locator('.tr-zitin').click();
   await expect(page.locator('.tr-weken')).toBeVisible();
-  await expect(page.locator('.tr-fase')).toHaveCount(0);
+  await expect(page.locator('.tr-per, .tr-fase')).toHaveCount(0);
   const ma = await page.evaluate((d) => { const x = CC.date.parse(d); return CC.date.addDays(d, -((x.getDay() + 6) % 7)); }, datum);
   await page.locator(`[data-act="trWeekBewerk"][data-w="${ma}"]`).click();
   await page.fill('#tw-t', 'Vrijlopen'); await page.locator('#tw-t').press('Tab');
@@ -1678,7 +1678,7 @@ test('trainingsmodule: periodisering laden, methodiek, evaluatie en observatiepu
   await expect(page.locator('.tr-pv tr.observatie')).toHaveCount(1);
   await expect(page.locator('.tr-pv tr.overslaan')).toHaveCount(2);
   await expect(page.locator('#sheet')).toContainText('heeft al een voorbereiding (blijft zoals hij is)');
-  await expect(page.locator('#sheet')).toContainText('contrathema "Bestaat niet" onbekend');
+  await expect(page.locator('#sheet')).toContainText('contrathema "Bestaat niet" nog niet gekoppeld');
   await page.locator('[data-act="perToevoegen"]').click();
   const rijen = async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'trainingsplannen');
   await expect.poll(async () => (await rijen()).filter((r) => r.data.bron === 'dcg-o13-fase1' && !r.data.week).map((r) => `${r.act_id}|${r.data.sjabloon}|${r.data.onderdelen.filter((o) => o.vormId).length}`).sort().join()).toBe('p0|dcg-75|0,p2|dcg-75-afwisselend|0,p5|dcg-75|0');
@@ -1694,7 +1694,7 @@ test('trainingsmodule: periodisering laden, methodiek, evaluatie en observatiepu
   await expect(page.locator('.tr-pmid .tr-niv.vs').first()).toContainText('Kiezen · voorstel');
   // Nog een keer laden: niets dubbel
   await page.locator('[data-act="seg"][data-val="lijn"]').click();
-  await expect(page.locator('.tr-fase')).toContainText('Vooruitgang creëren');
+  await expect(page.locator('.tr-per')).toContainText('Vooruitgang creëren');
   await page.locator('[data-act="perLaden"]').click();
   await page.locator('#perBestand').setInputFiles({ name: 'dcg-o13-fase1.csv', mimeType: 'text/csv', buffer: Buffer.from(csv, 'utf8') });
   await expect(page.locator('.tr-pv tr.concept')).toHaveCount(0);
@@ -1741,4 +1741,85 @@ test('trainingsmodule: periodisering laden, methodiek, evaluatie en observatiepu
   await page.fill('#v-vp', 'Ontvanger draait niet open'); await page.locator('#v-vp').press('Tab');
   await expect.poll(async () => { const r = Object.values((await nepDb(page)).rows).find((x) => x.soort === 'vormen'); return r ? `${r.data.leeromgeving}|${r.data.weerstandNiveau}|${(r.data.alsVastloopt || {}).probleem}` : ''; }).toBe('lo-ssg|beperkt|Ontvanger draait niet open');
   await controleer(page, fouten, 'periodisering en methodiek');
+});
+
+// Besluit 136: de echte conceptperiodisering van DCG O13 (kolommen uit het Excel-spoorboekje), op de echte kalender (nagebootst)
+test('trainingsmodule: DCG-periodisering O13 met hoofdthema, teamfunctie, contraprobleem en vrije handelingsketen', async ({ page }) => {
+  const fs = require('fs'), path = require('path');
+  const fouten = volgFouten(page);
+  await page.clock.setFixedTime(new Date('2026-11-02T10:00:00+01:00'));
+  await nepDatabase(page);
+  const profiel = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'supabase', 'profielen', 'dcg.json'), 'utf8'));
+  await page.evaluate((data) => { const db = JSON.parse(sessionStorage.getItem('fake-sb-db'));
+    db.rows['dcg|profiel|dcg'] = { club_id: 'dcg', soort: 'profiel', id: 'dcg', scope: 'hjo', data };
+    db.rows['dcg|club|club'].data.modules = { ...(db.rows['dcg|club|club'].data.modules || {}), training: true };
+    sessionStorage.setItem('fake-sb-db', JSON.stringify(db)); }, profiel);
+  await inloggen(page, 'admin@test.nl');
+  // De kalender zoals in de database (28-10): di/do/vr 17:15–18:30, zes zaterdagwedstrijden
+  await page.evaluate(() => { const S = CC.S(); const D = CC.date; CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer'));
+    S.acts = S.acts.filter((a) => !(a.teamId === 'O12-1' && a.datum >= '2026-10-29' && a.datum <= '2026-12-18'));
+    const wed = { '2026-10-31': ['11:00', 'Atletico Club Amsterdam O13-5', false], '2026-11-07': ['12:30', 'vv Zwanenburg O13-1', true], '2026-11-14': ['12:45', 'Sporting Martinus O13-4', false],
+      '2026-11-21': ['12:30', 'AGB O13-1', false], '2026-11-28': ['14:30', 'Buitenveldert sc. O13-2', true], '2026-12-05': ['09:00', "SCPB'22 O13-5", false] };
+    for (let d = '2026-10-29'; d <= '2026-12-18'; d = D.addDays(d, 1)) { const g = D.parse(d).getDay(); const k = d.replace(/-/g, '');
+      if ([2, 4, 5].includes(g)) S.acts.push({ id: `a-o12-${k}`, teamId: 'O12-1', soort: 'training', datum: d, tijd: '17:15', eind: '18:30' });
+      if (wed[d]) S.acts.push({ id: `w-o12-${k}`, teamId: 'O12-1', soort: 'wedstrijd', datum: d, tijd: wed[d][0], eind: '', tegen: wed[d][1], thuis: wed[d][2] }); }
+    CC.save(); CC.render(); });
+  const csv = fs.readFileSync(path.join(__dirname, '..', 'docs', 'methodiek', 'dcg', 'periodisering-o13-import-CONCEPT.csv'));
+  await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
+  await page.locator('[data-act="seg"][data-val="lijn"]').click();
+  await page.locator('[data-act="perLaden"]').click();
+  await page.locator('#perBestand').setInputFiles({ name: 'periodisering-o13-import-CONCEPT.csv', mimeType: 'text/csv', buffer: csv });
+  await expect(page.locator('.tr-pv tr.concept')).toHaveCount(23);
+  await expect(page.locator('.tr-pv tr.observatie')).toHaveCount(6);
+  await expect(page.locator('#sheet')).toContainText('"Vooruitgang tegenstander voorkomen en bal veroveren" nog niet gekoppeld');
+  await expect(page.locator('#sheet')).not.toContainText('onbekend');
+  if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/1-voorbeeld.png`, fullPage: false });
+  await page.locator('[data-act="perToevoegen"]').click();
+  const rijen = async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'trainingsplannen');
+  await expect.poll(async () => (await rijen()).filter((r) => !r.data.week && r.data.concept).length).toBe(23);
+  // Geen oefenvormen, geen kalenderwijziging
+  if (process.env.SHOTS) fs.writeFileSync(`${process.env.SHOTS}/rijen.json`, JSON.stringify((await rijen()).filter((r) => r.data.bron), null, 1));
+  const r5 = (await rijen()).find((r) => r.act_id === 'a-o12-20261105').data;
+  expect(r5.onderdelen.filter((o) => o.vormId).length).toBe(0);
+  expect(r5.methodiek).toMatchObject({ hoofdthema: 'Vrije speler herkennen onder druk', teamfunctie: 'tf-aanvallen', probleem: 'vp-2', contra: 'vp-6', contraTekst: 'Vooruitgang voorkomen: passlijn door as sluiten',
+    hg1: 'll-passen', hg2: 'll-vrijkomen', ondersteunend: ['ll-aannemen'], keten: 'hk-vrij-aannemen-passen', niveaus: ['ln-herkennen', 'ln-kiezen'] });
+  const r17 = (await rijen()).find((r) => r.act_id === 'a-o12-20261117').data.methodiek;
+  expect(r17).toMatchObject({ keten: null, ketenTekst: 'Manipuleren → timen/helpen → benutten', ondersteunend: ['ll-6', 'll-passen'] });
+  expect((await rijen()).find((r) => r.act_id === 'a-o12-20261215').data.methodiek.contra).toBeNull();
+  const wk = (await rijen()).find((r) => r.data.week && r.data.wedstrijd && r.data.wedstrijd.actId === 'w-o12-20261107').data;
+  expect(wk.wedstrijd.punten.map((x) => x.tekst)).toEqual(['Herkennen spelers de vrije speler achter de druk?', 'Herkennen spelers de relevante informatie voordat zij handelen?', 'Wat gebeurt er direct na balwinst of balverlies?']);
+  const acts = Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'acts' && r.team_id === 'O12-1' && r.data.datum >= '2026-10-29' && r.data.datum <= '2026-12-18');
+  expect(acts.length).toBe(29); expect(acts.find((r) => r.id === 'w-o12-20261114').data.tijd).toBe('12:45');
+  // Week op de telefoon: compact blok, de rest onder Onderbouwing
+  if (process.env.SHOTS) { await page.locator('[data-act="seg"][data-val="lijn"]').click(); await page.screenshot({ path: `${process.env.SHOTS}/2-lijn.png`, fullPage: true }); }
+  await page.locator('[data-act="seg"][data-val="week"]').click();
+  await page.locator('.weekstrook [data-val="a-o12-20261105"]').click();
+  await expect(page.locator('.tr-meth .tr-contra')).toContainText('Vooruitgang voorkomen: passlijn door as sluiten (probleem 6) · voorstel');
+  await expect(page.locator('.tr-meth > small').first()).not.toContainText('Aannemen');
+  await page.locator('.tr-meth-meer summary').click();
+  await expect(page.locator('.tr-meth-r')).toContainText('Vrije speler herkennen onder druk');
+  await expect(page.locator('.tr-meth-r')).toContainText('Aanvallen');
+  if (process.env.SHOTS) for (const id of ['a-o12-20261103', 'a-o12-20261105', 'a-o12-20261106', 'w-o12-20261107']) {
+    await page.locator(`.weekstrook [data-val="${id}"]`).click(); const m = page.locator('.tr-meth-meer summary'); if (await m.count()) await m.click();
+    await page.screenshot({ path: `${process.env.SHOTS}/3-week-${id.slice(-4)}.png`, fullPage: true }); }
+  // Aanpassen per training: vrije keten, contra met ondersteunend probleem, ondersteunend gereedschap, hoofdthema
+  await page.locator('[data-act="seg"][data-val="plannen"]').click();
+  await page.locator('.weekstrook [data-val="a-o12-20261105"]').click();
+  if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/4-plannen.png`, fullPage: true });
+  await page.locator('.tr-meth [data-act="tpMethodiek"]').click();
+  if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/5-aanpassen.png`, fullPage: true });
+  await page.fill('#pm-h', 'Vrije speler herkennen'); await page.locator('#pm-h').press('Tab');
+  await page.locator('#sheet select[name="contra2"]').selectOption('vp-7');
+  await page.locator('#sheet input[name="ond"][value="ll-1v1-aanvallend"]').check({ force: true });
+  await page.locator('#sheet details.tr-precies summary', { hasText: 'Onderbouwing' }).click();
+  await page.fill('#pm-k', 'Waarnemen → timen → helpen'); await page.locator('#pm-k').press('Tab');
+  await expect.poll(async () => { const m = (await rijen()).find((r) => r.act_id === 'a-o12-20261105').data.methodiek; return `${m.hoofdthema}|${m.contra}|${m.contra2}|${m.contraGekozen}|${m.ondersteunend}|${m.keten}|${m.ketenTekst}`; })
+    .toBe('Vrije speler herkennen|vp-6|vp-7|true|ll-1v1-aanvallend,ll-aannemen|null|Waarnemen → timen → helpen');
+  await page.locator('#sheet [data-act="sluitRender"]').click();
+  await expect(page.locator('.tr-meth .tr-contra')).toContainText('(probleem 6) · ook 7 De bal veroveren');
+  if (process.env.SHOTS) { await page.setViewportSize({ width: 1366, height: 900 });
+    for (const [seg, naam] of [['lijn', 'L1-lijn'], ['plannen', 'L2-plannen'], ['week', 'L3-week'], ['vormen', 'L4-vormen']]) {
+      await page.locator(`[data-act="seg"][data-val="${seg}"]`).click(); await page.waitForTimeout(300); await page.screenshot({ path: `${process.env.SHOTS}/${naam}.png`, fullPage: true }); }
+    await page.locator('#app [data-act="vormNieuw"]').first().click(); await page.waitForTimeout(300); await page.screenshot({ path: `${process.env.SHOTS}/L5-nieuwe-vorm.png`, fullPage: true }); }
+  await controleer(page, fouten, 'DCG-periodisering O13');
 });

@@ -17,9 +17,10 @@ Laatst bijgewerkt: 28 oktober 2026 (t/m Besluit 135)
 
 | Nr | Onderwerp | Status | Herzien |
 |---|---|---|---|
+| 136 | DCG-periodisering O13 invoeren: kolommen van het Excel-spoorboekje werken direct; hoofdthema, teamfunctie en ondersteunend gereedschap erbij (in de onderbouwing); contrathema gekoppeld aan één probleem (+ eventueel een ondersteunend) met behoud van de eigen tekst, nooit op losse woorden; handelingsketen vrije tekst; contra telt niet mee in de minuten | ✅ geldt |  |
 | 135 | Tabblad Training in de volgorde van het werk (laptop: Lijn · Plannen · Week · Vormen), regel *Je zit in* (week, thema, A/B; tik = Lijn), geen dubbelingen (maandoverzicht alleen in Lijn, evalueren in Week), weekthema met A/B voor clubs zonder periodisering | ✅ geldt |  |
 | 134 | Trainers begeleiden (KNVB): begeleiden en ontwikkelen, niet beoordelen; begeleider (HO of TC met traject) ziet het hele seizoen de trainingen van de trainer, kijkt en geeft feedback; club beslist; invoeren per club in te stellen; trainer deelt zelf vormen in een clubbank. Gebouwd: moment verplaatsen en *niet doorgegaan*. Meekijken en clubbank: rechtenvoorstel, wacht op akkoord | ✅ geldt (deels gebouwd) |  |
-| 133 | DCG-methodiek als profiel v3 (kerndocument leidend); methodiekblok compact; leerniveau per blok; status berekend; evaluatiekaart (3 open + verdiepend); periodisering laden uit CSV met voorbeeld; observatiepunten bij de wedstrijd; uitgebreide vormvelden | ✅ geldt |  |
+| 133 | DCG-methodiek als profiel v3 (kerndocument leidend); methodiekblok compact; leerniveau per blok; status berekend; evaluatiekaart (3 open + verdiepend); periodisering laden uit CSV met voorbeeld; observatiepunten bij de wedstrijd; uitgebreide vormvelden | ◐ deels herzien | door 136 (contrathema, handelingsketen, extra kolommen) |
 | 132 | Training: Week (telefoon, controleren) · Plannen (laptop: vormen · training in blokken · week) · Vormen · Lijn; vorm in Rinus-stijl met *Zet in een training…* en materiaal uit de tekening; printen; kopiëren naar een andere dag | ◐ deels herzien | door 135 (volgorde op de laptop, geen weeklijst en maandoverzicht in Plannen, evalueren in Week) |
 | 131 | Oefenvormen geclassificeerd (8 hoofdtypes, weerstand vanuit het hoofdleerdoel, omschakeling met richting), opbouw in blokken met sjabloon DCG 75 en fase-voorstel, gepland en uitgevoerd, filters; laptop vanaf 900 px | ◐ deels herzien | door 132 (geen leerdoel-chips meer in de kop van een training; vorm opent in Rinus-stijl) |
 | 130 | Trainer: eigen tabblad Training (week met de training bovenaan, aanwezigheid in een venster, Vormen); ook bij AVV Swift, daar trainingen op datum | ◐ deels herzien | door 132 (Training heeft Week · Plannen · Vormen · Lijn; de training staat op de laptop in Plannen) |
@@ -669,6 +670,16 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 136 — DCG-periodisering O13 invoeren: extra velden, contraprobleem en vrije handelingsketen
+*Besloten 29 oktober 2026, na de controle van de conceptperiodisering (29-10 t/m 18-12, uitgewerkt met ChatGPT) tegen de echte kalender. Vult Besluit 133 aan. Alleen DCG; andere clubs merken er niets van (alles hangt aan het DCG-profiel).*
+- **Kolommen van het Excel-spoorboekje werken direct** (`centraal_voetbalprobleem`, `gereedschap_A`, `beoogd_leerniveau`, `wedstrijd_observatie_1..3` enz.); de oude kolomnamen blijven werken. Kolommen die ClubComm niet gebruikt (tijden, tegenstander, video/themales, opmerking, oefenvormen) worden genegeerd: **de kalender en de tijden veranderen nooit door de import.**
+- **Nieuw in de import en per training aan te passen:** *hoofdthema*, *teamfunctie* en *ondersteunend gereedschap* (één of meer; de eigen tekst blijft bewaard). Ze staan onder **Onderbouwing**; het compacte blok op de telefoon blijft gelijk.
+- **Contrathema = gekoppeld probleem + eigen omschrijving.** Kolom `contra_probleem` (nummer 1–8) beslist; optioneel `contra_ondersteunend`. Zonder die kolom koppelt ClubComm alleen bij een exacte naam of een nummer, **nooit op losse woorden**; twijfel staat in het voorbeeld als *ter controle*. Weergave: eigen omschrijving met *(probleem 6)*.
+- **Geen dubbele minuten:** het contraprobleem (en het ondersteunende gereedschap) telt niet mee; minuten gaan alleen naar het hoofdleerdoel van de vorm.
+- **Handelingsketen is vrije tekst** (een combinatie van gereedschappen, verschilt per probleem). De ketens in het profiel zijn alleen voorbeelden (keuzelijst bij het typen); er komen geen nieuwe vaste categorieën.
+- **Reparaties:** de kaart *Periodisering* in Lijn had dezelfde opmaaknaam als het fase-label (stippelrand, tekst brak niet af), waardoor de pagina op de telefoon breder werd dan het scherm; *Fase* stond dubbel in de onderbouwing; de waarschuwingen in het voorbeeld staan nu één keer per soort.
+- **Niet nu:** de dinsdagse Veo-besprekingen en themalessen blijven in het Excel-spoorboekje.
+
 ## Besluit 135 — Tabblad Training in de volgorde van het werk; "Je zit in"; weekthema
 *Besloten 28 oktober 2026 ("pak maar alles aan"), na de vraag van de initiatiefnemer: "wat is een logische volgorde, is het dubbel, hoe weet ik in welke leerlijn ik zit?" Herziet Besluit 132 deels.*
 - **Volgorde op de laptop = de coachcyclus:** *Lijn* (waar zit ik) → *Plannen* (training invullen) → *Week* (de dag zelf: aanwezigheid, uitvoeren, evalueren) → *Vormen* (de bibliotheek). Training opent op de laptop nog steeds op *Plannen*; de telefoon houdt *Week · Plannen · Vormen · Lijn* en opent op *Week*.
@@ -693,6 +704,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Nog niet gebouwd (rechtenwijziging, wacht op akkoord):** meekijken (nieuwe leesregel voor trainingen: trainer + begeleider met traject dit seizoen; schrijven alleen de trainer), feedback in het dossier (bestaande scope), en de clubbank (nieuwe scope). Eerst het precieze rechtenvoorstel en voorbeelden, dan de rechtentest, dan pas de database.
 
 ## Besluit 133 — DCG-methodiek in ClubComm: profiel v3, periodisering als concepten, evaluatie en observatie
+> **◐ Deels herzien door Besluit 136** (contrathema met gekoppeld probleem en eigen tekst; handelingsketen vrije tekst; hoofdthema, teamfunctie en ondersteunend gereedschap).
 *Besloten 28 oktober 2026, na de audit (`docs/methodiek/dcg/audit-2026-10-28.md`) en vijf voorbeelden, beoordeeld met ChatGPT (`docs/onderzoek/periodisering-o13/stap2/`). **Het kerndocument van 26-09-2026 is leidend** (`docs/methodiek/dcg/`); het geldt **alleen voor DCG**, andere clubs volgen de KNVB. De Excel-periodisering van de initiatiefnemer blijft de inhoudelijke bron; ClubComm neemt die over en spreekt haar niet tegen.*
 - **Profiel v3** (`supabase/profielen/dcg.json`):
   - 6 gereedschappen (Afwerken – benutten als `ll-6`), Ball Mastery als onderbouw;
