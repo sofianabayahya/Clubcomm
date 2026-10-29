@@ -201,7 +201,9 @@
     const gezien = {}; uit.forEach((x) => { if (!x.a) return; const k = x.a.id; if (gezien[k] && x.actie !== 'fout') { x.actie = 'overslaan'; x.reden = 'staat dubbel in het bestand'; } gezien[k] = true; });
     return uit; };
   // Stempel: zo kunnen we later zien of je een concept hebt aangepast (dan wordt het nooit verwijderd)
-  const stempel = (p) => JSON.stringify([p.thema, p.onderdelen, p.methodiek, p.blokDoel, p.overig, p.sjabloon, !!p.gegeven, p.anders || '', p.evaluatie || null]);
+  // De database (jsonb) verandert de volgorde van de velden; daarom met gesorteerde sleutels, zodat de stempel na herladen gelijk blijft
+  const geordend = (x) => (Array.isArray(x) ? x.map(geordend) : x && typeof x === 'object' ? Object.keys(x).sort().reduce((o, k) => { if (x[k] !== undefined) o[k] = geordend(x[k]); return o; }, {}) : x);
+  const stempel = (p) => JSON.stringify(geordend([p.thema, p.onderdelen, p.methodiek, p.blokDoel, p.overig, p.sjabloon, !!p.gegeven, p.anders || '', p.evaluatie || null]));
   const toevoegen = (S, lijst, bestand) => { const tid = CC.teamId && CC.teamId(); const sj = T().sjablonen(S); let n = 0, wk = 0, ob = 0;
     lijst.forEach((x) => { if (!x.a) return;
       let w = weekPlan(S, tid, x.datum); if (!w) { w = nieuwWeek(S, tid, x.datum, bestand); w.methodiek = { ...x.m, observatie: '' }; w.stempel = stempel(w); wk++; }

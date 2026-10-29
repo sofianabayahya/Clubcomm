@@ -1838,6 +1838,9 @@ test('trainingsmodule: DCG-periodisering O13 met hoofdthema, teamfunctie, contra
   // Geen oefenvormen, geen kalenderwijziging
   if (process.env.SHOTS) fs.writeFileSync(`${process.env.SHOTS}/rijen.json`, JSON.stringify((await rijen()).filter((r) => r.data.bron), null, 1));
   const r5 = (await rijen()).find((r) => r.act_id === 'a-o12-20261105').data;
+  // De stempel blijft gelijk als de database de volgorde van de velden verandert (jsonb)
+  expect(await page.evaluate(() => { const p = CC.tr.plan(CC.S(), 'a-o12-20261105'); const om = (x) => (Array.isArray(x) ? x.map(om) : x && typeof x === 'object' ? Object.fromEntries(Object.entries(x).reverse().map(([k, v]) => [k, om(v)])) : x);
+    return CC.periodisering.stempel(om(p)) === p.stempel; })).toBe(true);
   expect(r5.onderdelen.filter((o) => o.vormId).length).toBe(0);
   expect(r5.methodiek).toMatchObject({ hoofdthema: 'Vrije speler herkennen onder druk', teamfunctie: 'tf-aanvallen', probleem: 'vp-2', contra: 'vp-6', contraTekst: 'Vooruitgang voorkomen: passlijn door as sluiten',
     hg1: 'll-passen', hg2: 'll-vrijkomen', ondersteunend: ['ll-aannemen'], keten: 'hk-vrij-aannemen-passen', niveaus: ['ln-herkennen', 'ln-kiezen'] });
