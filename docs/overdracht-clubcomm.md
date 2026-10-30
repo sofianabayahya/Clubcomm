@@ -5,12 +5,13 @@
 **Bijgewerkt:** 30-10-2026
 
 ## Stand
-- `main` = `9e58519` (#103, Besluit 143; migratie 033 niet toegepast). Het eerstvolgende vrije besluitnummer is **144**.
+- `main` = `9e58519` (#103, Besluit 143; migratie 033 niet toegepast). Besluit **144** zit in #105 (andere sessie); het eerstvolgende vrije nummer daarna is **145**.
 - Productiedatabase (29/30-10, alleen gelezen): functioneel gelijk aan `main` (de md5 van alle `priv`-functies is gelijk, zonder commentaarregels). Het migratielogboek mist 027–030 (via losse SQL toegepast; alle objecten bestaan). Niet aanpassen zonder apart akkoord.
 
 ## Open pull requests
 | PR | Wat | Stand |
 |---|---|---|
+| #105 | Besluit 144: trainingskaart met vijf regels, herkomst en weekvoorstel apart | Andere sessie |
 | #106 | Test (S): tekentool-tests wachten 20 s op Opslaan (onder drukte soms > 5 s, gemeten tot 7 s; geen hang), branch `claude/intelligent-cannon-t4430r` | 600/600 onder drukte, `npm test` groen; wacht op akkoord |
 
 ## Wacht op akkoord van de gebruiker
