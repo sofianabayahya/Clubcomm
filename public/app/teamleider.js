@@ -30,7 +30,7 @@
         const t = takenInfo(S, a);
         const minimum = CC.categorie(M.wedCat(S, tid)).opVeld;
         return `<article class="kaartje hoofd">
-          <small>${D.relatief(a.datum)} · verzamelen ${a.verzamel}</small><h2>${h.actTitel(S, a)}</h2><p class="zacht">Aftrap ${a.tijd}${a.thuis ? ` · ${esc(a.veld)}` : ` · ${esc(a.adres)}`}</p>
+          <small>${D.relatief(a.datum)}${a.verzamel ? ` · verzamelen ${a.verzamel}` : ''}</small><h2>${h.actTitel(S, a)}</h2><p class="zacht">Aftrap ${a.tijd}${a.thuis ? ` · ${esc(a.veld)}` : ` · ${esc(a.adres)}`}</p>
           <div class="lijst">
             ${h.rij({ ic: 'users', titel: 'Spelers', sub: `${komt} van ${sp.length} komen`, rechts: komt < minimum + 1 ? '<span class="chip oranje mini">krap</span>' : '', kleur: komt < minimum + 1 ? 'oranje' : '', act: 'tab', attrs: 'data-tab="wedstrijd"' })}
             ${S.club.modules.taken ? h.rij({ ic: 'list-checks', titel: 'Taken', sub: t.t.length ? `${t.bezet} van ${t.t.length} bezet${t.t.length - t.bezet ? ` · open: ${t.t.filter((x) => !x.personId).map((x) => x.soort.toLowerCase()).join(', ')}` : ''}` : 'Geen taken', kleur: t.t.length - t.bezet ? 'oranje' : '', act: 'tab', attrs: 'data-tab="wedstrijd"' }) : ''}
@@ -55,7 +55,7 @@
           ${a.afgelast ? `<div class="info rood">${icon('ban')}<span>Deze wedstrijd is afgelast.</span></div>` : ''}
           <form class="kaartje codeform" data-submit="wedstrijdInfo" data-id="${a.id}">
             <div class="kaart-kop">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${D.relatief(a.datum)} · aftrap ${a.tijd}</small></div></div>
-            <div class="twee"><div><label for="wi-v">Verzamelen</label><input id="wi-v" name="verzamel" type="time" value="${a.verzamel}"></div>${gespeeld ? `<div><label for="wi-u">Uitslag</label><input id="wi-u" name="uitslag" placeholder="bijv. 3-2" value="${esc(a.uitslag || '')}"></div>` : ''}</div>
+            <div class="twee"><div><label for="wi-v">Verzamelen</label><input id="wi-v" name="verzamel" type="time" value="${esc(a.verzamel || '')}"></div>${gespeeld ? `<div><label for="wi-u">Uitslag</label><input id="wi-u" name="uitslag" placeholder="bijv. 3-2" value="${esc(a.uitslag || '')}"></div>` : ''}</div>
             <label for="wi-vp">Verzamelpunt (mag leeg)</label><input id="wi-vp" name="verzamelpunt" value="${esc(a.verzamelpunt || '')}" placeholder="${a.thuis ? 'Bijv. kleedkamer 3' : 'Bijv. de parkeerplaats bij de kantine'}">
             ${a.thuis ? `<p class="klein zacht">Thuis · ${esc(a.veld || '')}</p>` : `<label for="wi-a">Adres</label><input id="wi-a" name="adres" value="${esc(a.adres || '')}" data-adres autocomplete="off" placeholder="Begin te typen: straat of plaats">`}
             <div class="knoppen"><button class="knop licht">Opslaan</button>${a.thuis ? '' : h.route(a.adres)}<button type="button" class="knop licht" data-act="deelWedstrijd" data-id="${a.id}">${icon('share-2')}Delen</button></div></form>
@@ -98,7 +98,7 @@
     S.wijzigingen.push({ id: 'w' + Date.now(), teamId: a.teamId, door: me.id, tekst, tijd: now });
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Afgelast; ouders zijn ingelicht');
   });
-  CC.on('deelWedstrijd', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.id); CC.deel(`${CC.tn(a.teamId)} ${D.lang(a.datum)}: ${a.thuis ? 'thuis' : 'uit'} tegen ${a.tegen}. Verzamelen ${a.verzamel}, aftrap ${a.tijd}. ${a.thuis ? '' : `Adres: ${a.adres}. `}Kan je kind niet? Meld af in ClubComm: ${location.origin}${location.pathname}`, 'Wedstrijdinfo'); });
+  CC.on('deelWedstrijd', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.id); CC.deel(`${CC.tn(a.teamId)} ${D.lang(a.datum)}: ${a.thuis ? 'thuis' : 'uit'} tegen ${a.tegen}. ${a.verzamel ? `Verzamelen ${a.verzamel}, aftrap` : 'Aftrap'} ${a.tijd}. ${a.thuis ? '' : `Adres: ${a.adres}. `}Kan je kind niet? Meld af in ClubComm: ${location.origin}${location.pathname}`, 'Wedstrijdinfo'); });
   CC.on('deelTaken', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.a); const open = S.taken.filter((x) => x.actId === a.id && !x.personId).map((x) => x.soort); CC.deel(open.length ? `Voor ${D.lang(a.datum)} (${a.tegen}) zoeken we nog: ${open.join(', ')}. Kun jij? Tik op "Ik doe het" in ClubComm: ${location.origin}${location.pathname}` : 'Alle taken zijn bezet, dank jullie wel!', 'Taken'); });
   // Taak toevoegen: een soort die er al staat, kan niet nog een keer (voorkomt dubbele taken)
   CC.on('taakToevoegen', (el) => { const S = CC.S(); const al = S.taken.filter((x) => x.actId === el.dataset.a).map((x) => x.soort);

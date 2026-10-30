@@ -98,7 +98,7 @@
             ...zoekers.map((x) => h.rij({ ic: h.avatar(x.voornaam), titel: `${esc(x.voornaam)} zoekt vervoer`, sub: esc((M.persoon(S, (vraag[x.id] || {}).door) || { naam: '' }).naam), rechts: `<button class="knop klein" data-act="ikNeemMee" data-a="${a.id}" data-s="${x.id}">Kan met mij mee</button>` })),
           ];
           return `<article class="kaartje">
-            <div class="kaart-kop">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>Verzamelen ${a.verzamel} · ${esc(a.adres)}</small></div></div>
+            <div class="kaart-kop">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${[h.verzamelTekst(a), esc(a.adres || '')].filter(Boolean).join(' · ')}</small></div></div>
             ${eigen}
             ${lijst.length ? `<div class="lijst compact">${lijst.join('')}</div>` : ''}
           </article>`;
@@ -185,7 +185,7 @@
     return {
       titel: a.soort === 'training' ? 'Training' : a.soort === 'activiteit' ? 'Activiteit' : a.soort === 'oefen' ? 'Oefenwedstrijd' : 'Wedstrijd',
       html: `<article class="kaartje"><div class="kaart-kop">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${D.lang(a.datum)} · ${esc(t.naam)}</small></div></div>
-        ${a.soort === 'activiteit' && a.toelichting ? `<p>${esc(a.toelichting)}</p>` : ''}<dl class="gegevens">${a.soort === 'activiteit' ? `${a.verzamel || a.verzamelpunt ? `<dt>Verzamelen</dt><dd>${a.verzamel || ''}${CC.vpunt(a) ? `${a.verzamel ? ', ' : ''}bij ${esc(CC.vpunt(a))}` : ''}</dd>` : ''}<dt>Tijd</dt><dd>${a.tijd}–${a.eind}</dd>${a.plaats ? `<dt>Waar</dt><dd>${esc(a.plaats)}</dd>` : ''}` : a.soort === 'training' ? `<dt>Tijd</dt><dd>${a.tijd}–${a.eind}</dd><dt>Veld</dt><dd>${esc(a.veld)}</dd>` : `<dt>Verzamelen</dt><dd>${a.verzamel}${CC.vpunt(a) ? `, bij ${esc(CC.vpunt(a))}` : ''}</dd><dt>Aftrap</dt><dd>${a.tijd}</dd>${a.veld ? `<dt>Veld</dt><dd>${esc(a.veld)}</dd>` : ''}${a.uitslag && M.uitslagInst(S, a.teamId).naarOuders ? `<dt>Uitslag</dt><dd>${esc(a.uitslag)}</dd>` : ''}`}<dt>Afmelden</dt><dd>tot ${M.deadlineTekst(S, a)}</dd></dl>
+        ${a.soort === 'activiteit' && a.toelichting ? `<p>${esc(a.toelichting)}</p>` : ''}<dl class="gegevens">${a.soort === 'activiteit' ? `${a.verzamel || a.verzamelpunt ? `<dt>Verzamelen</dt><dd>${a.verzamel || ''}${CC.vpunt(a) ? `${a.verzamel ? ', ' : ''}bij ${esc(CC.vpunt(a))}` : ''}</dd>` : ''}<dt>Tijd</dt><dd>${a.tijd}–${a.eind}</dd>${a.plaats ? `<dt>Waar</dt><dd>${esc(a.plaats)}</dd>` : ''}` : a.soort === 'training' ? `<dt>Tijd</dt><dd>${a.tijd}–${a.eind}</dd><dt>Veld</dt><dd>${esc(a.veld)}</dd>` : `${a.verzamel || CC.vpunt(a) ? `<dt>Verzamelen</dt><dd>${a.verzamel || ''}${CC.vpunt(a) ? `${a.verzamel ? ', ' : ''}bij ${esc(CC.vpunt(a))}` : ''}</dd>` : ''}<dt>Aftrap</dt><dd>${a.tijd}</dd>${a.veld ? `<dt>Veld</dt><dd>${esc(a.veld)}</dd>` : ''}${a.uitslag && M.uitslagInst(S, a.teamId).naarOuders ? `<dt>Uitslag</dt><dd>${esc(a.uitslag)}</dd>` : ''}`}<dt>Afmelden</dt><dd>tot ${M.deadlineTekst(S, a)}</dd></dl>
         ${a.afgelast ? `<div class="info rood">${icon('ban')}<span>Deze activiteit is afgelast.</span></div>` : ''}${kaart}</article>${meer}`,
     };
   };
@@ -254,7 +254,7 @@
     if ((!coach && !tk) || a.datum < D.vandaag()) return { titel: 'Begeleiden', html: h.leeg('Je toegang voor deze activiteit is verlopen.', 'lock') };
     const training = !M.isWed(a);
     return { titel: training ? 'Training geven' : tk && !coach ? 'Timekeeper' : 'Trainer-coach', html: `<div class="info">${icon('info')}<span>Je hebt tijdelijk toegang, alleen voor deze ${training ? 'training' : 'wedstrijd'}.</span></div>
-      <div class="kaart-kop los">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${training ? `${a.tijd}–${a.eind} · ${esc(a.veld || '')}` : `Verzamelen ${a.verzamel} · aftrap ${a.tijd}`}</small></div></div>
+      <div class="kaart-kop los">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${training ? `${a.tijd}–${a.eind} · ${esc(a.veld || '')}` : `${h.verzamelTekst(a) ? `${h.verzamelTekst(a)} · ` : ''}aftrap ${a.tijd}`}</small></div></div>
       ${coach ? `${h.sectie('Aanwezigheid')}${CC.opnemenHtml(S, a)}` : ''}${!training && tk && S.club.modules.speeltijd ? `${h.sectie('Wisselschema')}${a.datum === D.vandaag() ? CC.speeltijdHtml(S, a.teamId, { alleenSchema: true, act: a.id }) : '<p class="zacht klein">Het wisselschema van de trainer zie je op de wedstrijddag hier.</p>'}` : ''}` };
   };
   CC.on('taakAf', (el) => { const S = CC.S(); const t = S.taken.find((x) => x.id === el.dataset.id); const a = M.act(S, t.actId); if (t.soort === CC.VERVANGER && a.vervangerId === t.personId) a.vervangerId = null; t.personId = null; CC.save(); CC.render(); CC.toast('Afgemeld voor deze taak; de teamleider krijgt bericht'); });
