@@ -34,7 +34,7 @@
   const laden = async () => {
     const rijen = await alleRijen();
     const S = CC.uitRijen(rijen, D.vandaag());
-    CC.zetS(S); snapshot(S); L.geladen = Date.now();
+    CC.zetS(S); if (CC.trBorgOrigineel) CC.trBorgOrigineel(S); snapshot(S); L.geladen = Date.now();
     // Besluit 77: draait de server het automatische werk (laatste run < 2 uur geleden)? Dan doet de app het niet zelf.
     // Besluit 83: wie krijgt pushmeldingen (alleen aan/uit, alleen voor de staf van het team)
     try { const { data: pa, error: pe } = await sb.rpc('push_status'); CC.pushAan = pe ? null : new Set(pa || []); } catch (e) { CC.pushAan = null; }
@@ -50,6 +50,8 @@
     if (L.bezig) { L.opnieuw = true; return; }
     L.bezig = true; let geweigerd = 0, offline = false; const afgewezen = [];
     try {
+      // Besluit 144: eerste aanpassing van een geladen concept? Dan eerst de oorspronkelijke planning erbij
+      if (CC.trBorgOrigineel) CC.trBorgOrigineel(CC.S());
       const nu = CC.naarRijen(CC.S(), club); const nieuw = []; const berichten = [];
       nu.forEach((r, k) => {
         const j = JSON.stringify(r); if (L.snap.get(k) === j || L.geweigerd.get(k) === j) return;

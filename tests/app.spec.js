@@ -1942,7 +1942,13 @@ test('trainingsmodule: periodisering laden, methodiek, evaluatie en observatiepu
   await page.fill('#tp-an', 'Verdediger mag direct druk zetten'); await page.locator('#tp-an').press('Tab');
   await expect.poll(async () => { const r = (await rijen()).find((x) => x.act_id === 'p0'); const e = (r && r.data.evaluatie) || {}; return r ? `${r.data.gegeven}|${e['ev-probleem']}|${e['ev-transfer']}` : ''; }).toBe('true|deels|duidelijk');
   await page.locator('.weekstrook [data-val="p2"]').click();
-  await expect(page.locator('.tr-vorig')).toContainText('Verdediger mag direct druk zetten');
+  // Besluit 144: Mee uit vorige toont alleen een herkende afspraak, nooit de hele tekst of een samenvatting
+  await expect(page.locator('.tr-mee')).toContainText('Geen afspraak herkend bij');
+  await expect(page.locator('.tr-mee')).not.toContainText('Verdediger mag direct druk zetten');
+  await page.evaluate(() => { const p = CC.tr.plan(CC.S(), 'p0'); p.anders = 'Liep goed. Afspraak: verdediger mag direct druk zetten. Verder niets.'; p.evaluatie['ev-volgende'] = 'behouden'; CC.render(); });
+  await expect(page.locator('.tr-mee')).toContainText('verdediger mag direct druk zetten');
+  await expect(page.locator('.tr-mee')).not.toContainText('Liep goed');
+  await expect(page.locator('.tr-mee')).toContainText('volgende training: behouden');
   // Observatiepunten bij de wedstrijd (Week): 2 uit het bestand, uitkomst aantikken
   await page.locator('[data-act="seg"][data-val="week"]').click();
   await page.locator('.weekstrook [data-val="w4"]').click();
@@ -2030,10 +2036,11 @@ test('trainingsmodule: DCG-periodisering O13 met hoofdthema, teamfunctie, contra
   await page.locator('[data-act="seg"][data-val="week"]').click();
   await page.locator('.weekstrook [data-val="a-o12-20261105"]').click();
   await expect(page.locator('.tr-meth .tr-contra')).toContainText('Vooruitgang voorkomen: passlijn door as sluiten (probleem 6) · voorstel');
-  await expect(page.locator('.tr-meth > small').first()).not.toContainText('Aannemen');
+  await expect(page.locator('.tr-tkaart .tr-stand')).toContainText('Concept uit de periodisering');
   await page.locator('.tr-meth-meer summary').click();
-  await expect(page.locator('.tr-meth-r')).toContainText('Vrije speler herkennen onder druk');
-  await expect(page.locator('.tr-meth-r')).toContainText('Aanvallen');
+  // Besluit 144: dagthema en teamfunctie staan zichtbaar in de kaart (Waar en Wat), niet meer ingeklapt
+  await expect(page.locator('.tr-tkaart')).toContainText('Vrije speler herkennen onder druk');
+  await expect(page.locator('.tr-tkaart')).toContainText('Teamfunctie Aanvallen');
   if (process.env.SHOTS) for (const id of ['a-o12-20261103', 'a-o12-20261105', 'a-o12-20261106', 'w-o12-20261107']) {
     await page.locator(`.weekstrook [data-val="${id}"]`).click(); const m = page.locator('.tr-meth-meer summary'); if (await m.count()) await m.click();
     await page.screenshot({ path: `${process.env.SHOTS}/3-week-${id.slice(-4)}.png`, fullPage: true }); }
