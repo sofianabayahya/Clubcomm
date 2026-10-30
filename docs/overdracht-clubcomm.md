@@ -2,16 +2,16 @@
 
 *Alleen Spoor 3 schrijft hier. Kort houden (hoogstens ongeveer 30 regels); aan het eind van elke ronde overschrijven. Spoor 1 en 2 hebben hun eigen overdracht (`docs/methodiek/persoonlijk/overdracht.md`, `docs/methodiek/swift/overdracht.md`).*
 
-**Bijgewerkt:** 29-10-2026
+**Bijgewerkt:** 30-10-2026
 
 ## Stand
-- `main` = `b78b9d8` (#102, Besluit 142). Productie: in deze ronde niet opnieuw nagegaan. Besluit **143** zit in de pull request hieronder; het eerstvolgende vrije nummer daarna is **144**.
-- Productiedatabase (29-10, alleen gelezen): functioneel gelijk aan `main` (de md5 van alle `priv`-functies is gelijk, zonder commentaarregels). Het migratielogboek mist 027–030; die zijn toen via losse SQL toegepast.
+- `main` = `1277583` (#104, wedstrijd zonder verzameltijd). Besluit **143** zit in #103; het eerstvolgende vrije nummer daarna is **144**.
+- Productiedatabase (29/30-10, alleen gelezen): functioneel gelijk aan `main` (de md5 van alle `priv`-functies is gelijk, zonder commentaarregels). Het migratielogboek mist 027–030 (via losse SQL toegepast; alle objecten bestaan). Niet aanpassen zonder apart akkoord.
 
 ## Open pull requests
 | PR | Wat | Stand |
 |---|---|---|
-| (nieuw) | Besluit 143: de trainer is eigenaar van zijn eigen teksten; migratie 033; branch `bouw/eigen-reflectie-033` | Tests lokaal groen; **niet samenvoegen en 033 niet toepassen zonder akkoord** |
+| #103 | Besluit 143: de trainer is eigenaar van zijn eigen teksten (migratie 033, nog niet toegepast), branch `bouw/eigen-reflectie-033` | `main` samengevoegd; tests groen; **niet samenvoegen en 033 niet toepassen zonder akkoord** |
 
 ## Wacht op akkoord van de gebruiker
 - PR Besluit 143, en daarna apart: 033 toepassen in productie (volgorde: eerst samenvoegen/publiceren, dan 033, dan controleren).

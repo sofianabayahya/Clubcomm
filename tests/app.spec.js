@@ -32,6 +32,27 @@ test.describe('Demo', () => {
     await controleer(page, fouten, 'na afmelden');
   });
 
+  // Een wedstrijd zonder verzameltijd en zonder verzamelpunt: alleen "aftrap …", nooit "Verzamelen undefined" (los van het tijdstip van de dag)
+  test('wedstrijd zonder verzamelen: alleen de aftrap', { tag: ['@wedstrijd', '@schermen'] }, async ({ page }) => {
+    const fouten = volgFouten(page);
+    await page.goto('/?demo');
+    await page.evaluate(() => localStorage.clear());
+    await page.goto('/?demo');
+    await page.locator('[data-act="demoLogin"]').first().click();
+    await page.locator('[data-act="magischeLink"]').click();
+    await expect(page.locator('nav.nav')).toBeVisible();
+    const teksten = await page.evaluate(() => {
+      const S = CC.S(); const me = CC.me();
+      const weds = S.acts.filter((a) => CC.m.isWed(a) && a.datum >= CC.date.vandaag());
+      weds.forEach((a) => { delete a.verzamel; delete a.verzamelpunt; });
+      const a = weds.find((x) => x.datum > CC.date.vandaag()) || weds[0]; a.vervangerId = me.id; CC.save();
+      return { sub: CC.h.actSub(S, a), aftrap: a.tijd, schermen: [CC.views.activiteit(S, { id: a.id }).html, CC.views.begeleiden(S, { id: a.id }).html, CC.icsTekst(S, me)].join('\n') };
+    });
+    expect(teksten.sub).toMatch(new RegExp(`^aftrap ${teksten.aftrap}`));
+    expect(teksten.schermen).not.toMatch(/undefined|Verzamelen,|Verzamelen ·/);
+    await doorklik(page, fouten, 'ouder zonder verzameltijd');
+  });
+
   // Besluit 95: organisatie bij de coördinator, trainers bij de HO; zonder coördinator doet de HO het (terugval)
   test('taken: coördinator organiseert, HO volgt trainers, terugval zonder coördinator', { tag: ['@taken'] }, async ({ page }) => {
     await page.goto('/?demo');
