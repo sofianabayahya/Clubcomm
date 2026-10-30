@@ -10,6 +10,7 @@
 ## Open pull requests
 | PR | Wat | Stand |
 |---|---|---|
+| (nieuw) | Test (S): tekentool-tests wachten 20 s op Opslaan (onder drukte soms > 5 s, gemeten tot 7 s; geen hang), branch `claude/intelligent-cannon-t4430r` | 600/600 onder drukte, `npm test` groen; wacht op akkoord |
 | #103 | Besluit 143: de trainer is eigenaar van zijn eigen teksten (migratie 033, nog niet toegepast), branch `bouw/eigen-reflectie-033` | Andere sessie; raakt ook deze overdracht en `tests/app.spec.js` |
 
 ## Wacht op akkoord van de gebruiker
@@ -19,6 +20,5 @@
 - Idee (L): bij een trainer zien of hij al heeft ingelogd.
 
 ## Volgende technische stap
-- Klein (S): de test "tekentool: tekenen, opslaan en opnieuw tonen" faalde op 30-10 één keer lokaal toen alle tests tegelijk liepen (los en daarna 4× groen). Nagaan of hij wankel is.
 - Klein (S): de kaart omzetten naar testlabels; `npm run check` en `npm run test:veilig` in `CLAUDE.md`.
 - Voorstel (L): het opleidingsprofiel veilig leesbaar maken voor trainers (er is een onderzoeksbranch `onderzoek/profiel-leesrechten`).
