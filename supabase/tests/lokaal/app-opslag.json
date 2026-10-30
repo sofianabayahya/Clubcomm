@@ -1,0 +1,214 @@
+{
+ "club": "dcg",
+ "personen": [
+  "p4",
+  "p15"
+ ],
+ "begin": [
+  {
+   "club_id": "dcg",
+   "soort": "people",
+   "id": "p4",
+   "scope": "persoon",
+   "team_id": null,
+   "speler_id": null,
+   "persoon_id": "p4",
+   "act_id": null,
+   "data": {
+    "id": "p4",
+    "naam": "Peter Visser",
+    "rollen": [
+     {
+      "rol": "hjo"
+     },
+     {
+      "rol": "beheerder"
+     }
+    ]
+   }
+  },
+  {
+   "club_id": "dcg",
+   "soort": "people",
+   "id": "p15",
+   "scope": "persoon",
+   "team_id": null,
+   "speler_id": null,
+   "persoon_id": "p15",
+   "act_id": null,
+   "data": {
+    "id": "p15",
+    "naam": "Dennis Peters",
+    "rollen": [
+     {
+      "rol": "trainer",
+      "teamId": "O9-1"
+     }
+    ]
+   }
+  },
+  {
+   "club_id": "dcg",
+   "soort": "begeleidMomenten",
+   "id": "bm-demo2",
+   "scope": "trainerdossier",
+   "team_id": "O9-1",
+   "speler_id": null,
+   "persoon_id": "p15",
+   "act_id": null,
+   "data": {
+    "id": "bm-demo2",
+    "trainerId": "p15",
+    "teamId": "O9-1",
+    "actId": null,
+    "soort": "wedstrijd",
+    "datum": "2026-11-01",
+    "door": "p4",
+    "klaar": false,
+    "gevraagd": "2026-11-01T20:00:00.000Z",
+    "voor": {
+     "thema": "Opbouwen onder druk",
+     "doel": "Kort opbouwen als er een vrije man is",
+     "leerdoel": "Eerst kijken, dan coachen",
+     "hoDoel": ""
+    },
+    "plan": {},
+    "obs": {
+     "punten": {},
+     "notities": {},
+     "klok": null,
+     "turf": {}
+    },
+    "vakken": {}
+   }
+  },
+  {
+   "club_id": "dcg",
+   "soort": "trainerKennis",
+   "id": "p15",
+   "scope": "trainerzelf",
+   "team_id": null,
+   "speler_id": null,
+   "persoon_id": "p15",
+   "act_id": null,
+   "data": {
+    "gevraagd": "2026-11-01T20:00:00.000Z",
+    "ingevuld": "2026-11-01T20:00:00.000Z",
+    "a": {
+     "ervaring": "3 jaar",
+     "ambitie": "Selectieteam"
+    }
+   }
+  }
+ ],
+ "stappen": [
+  {
+   "wie": "p4",
+   "wat": "HO neemt over uit het evaluatieformulier en deelt",
+   "verwacht": "mag",
+   "rijen": [
+    {
+     "club_id": "dcg",
+     "soort": "begeleidMomenten",
+     "id": "bm-demo2",
+     "scope": "trainerdossier",
+     "team_id": "O9-1",
+     "speler_id": null,
+     "persoon_id": "p15",
+     "act_id": null,
+     "data": {
+      "id": "bm-demo2",
+      "trainerId": "p15",
+      "teamId": "O9-1",
+      "actId": null,
+      "soort": "wedstrijd",
+      "datum": "2026-11-01",
+      "door": "p4",
+      "klaar": false,
+      "gevraagd": "2026-11-01T20:00:00.000Z",
+      "voor": {
+       "thema": "Opbouwen onder druk",
+       "doel": "Kort opbouwen als er een vrije man is",
+       "leerdoel": "Eerst kijken, dan coachen",
+       "hoDoel": ""
+      },
+      "plan": {
+       "leerdoel": "Rustig coachen"
+      },
+      "obs": {
+       "punten": {},
+       "notities": {},
+       "klok": null,
+       "turf": {},
+       "momenten": []
+      },
+      "vakken": {
+       "ontwikkelpunt": "Vaste coachmomenten"
+      },
+      "bron": "evaluatie",
+      "reflectieBegeleider": {
+       "r": {
+        "r1": "Ik riep minder",
+        "r2": "Spelers keken vaker op",
+        "r3": "In de partijvorm"
+       },
+       "door": "p4",
+       "op": "2026-11-01T20:00:00.000Z"
+      },
+      "gedeeld": "2026-11-01T20:00:00.000Z"
+     }
+    }
+   ],
+   "weg": []
+  },
+  {
+   "wie": "p15",
+   "wat": "trainer neemt de tekst over, past aan en slaat op",
+   "verwacht": "mag",
+   "rijen": [
+    {
+     "club_id": "dcg",
+     "soort": "begeleidZelf",
+     "id": "bm-demo2",
+     "scope": "trainerzelf",
+     "team_id": null,
+     "speler_id": null,
+     "persoon_id": "p15",
+     "act_id": null,
+     "data": {
+      "trainerId": "p15",
+      "r": {
+       "r1": "Ik riep minder, en vroeg vaker wat ze zagen",
+       "r2": "Spelers keken vaker op",
+       "r3": "In de partijvorm"
+      },
+      "overgenomen": "2026-11-01T20:00:00.000Z",
+      "reflectieOp": "2026-11-01T20:00:00.000Z"
+     }
+    }
+   ],
+   "weg": []
+  },
+  {
+   "wie": "p4",
+   "wat": "HO nodigt opnieuw uit met een verouderde kopie",
+   "verwacht": "weigert",
+   "rijen": [
+    {
+     "club_id": "dcg",
+     "soort": "trainerKennis",
+     "id": "p15",
+     "scope": "trainerzelf",
+     "team_id": null,
+     "speler_id": null,
+     "persoon_id": "p15",
+     "act_id": null,
+     "data": {
+      "gevraagd": "2026-11-01T20:00:00.000Z"
+     }
+    }
+   ],
+   "weg": []
+  }
+ ]
+}

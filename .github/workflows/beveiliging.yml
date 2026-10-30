@@ -9,6 +9,9 @@ on:
       - 'supabase/tests/**'
       - 'public/app/opslag.js'
       - 'public/app/live.js'
+      - 'public/app/begeleiding.js'   # Besluit 143: wat de app opslaat in het begeleidingsdossier (app-opslag.json)
+      - 'public/app/trainers.js'
+      - 'tests/eigen-reflectie.spec.js'
   workflow_dispatch:
 permissions:
   contents: read

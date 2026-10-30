@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 29 oktober 2026 (t/m Besluit 142)
+Laatst bijgewerkt: 29 oktober 2026 (t/m Besluit 143)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -21,6 +21,7 @@ Laatst bijgewerkt: 29 oktober 2026 (t/m Besluit 142)
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
+| 143 | 3 | De trainer is eigenaar van zijn eigen teksten (kennismaking, vragenlijst vooraf, reflectie): HO, TC en beheerder kunnen ze niet namens hem schrijven, wijzigen of verwijderen; alleen *gevraagd* zetten. Overnemen uit het evaluatieformulier = **begeleiderstekst** in het moment; de trainer kan die zelf overnemen en aanpassen. Een clubbeheerder zonder begeleidersrol heeft geen toegang tot het begeleidingsdossier. Migratie 033 (bewaker + beperkende regel, `cc_mag` ongewijzigd, samen met 032 in elke volgorde) | ✅ besloten (wacht op samenvoegen en migratie) |  |
 | 142 | 3 | Tijd vóór de training, voor elke club: bovenaan Plannen *veldtijd (kalender) − organisatie (de bestaande regel ombouw, door de trainer aan te passen, ook zonder sjabloon) = oefentijd*, de gekleurde balk met de grens, en een waarschuwing als de ingeplande minuten de oefentijd overschrijden (nooit blokkeren). Organisatie telt één keer. Geen nieuw veld; DCG-sjabloon 68 + 7 blijft. Geen registratie of samenvatting van uitloop | ✅ geldt |  |
 | 141 | 3 | Trainingsmodule stap 1: Lijn (ontwikkeling) · Plannen (voorbereiden) · Week (uitvoeren en evalueren) · Vormenbank (oefenstof, voor alle clubs). Lijn: weekdetail met *Opbouw van de week*, *Beheer* met *Periodeplanning vastleggen* (niets vergrendeld). Plannen: *Stap x van y*, blok *Toepassing · partij*. Week: vier minutengetallen (optie A, de berekening blijft) met *inclusief nog niet gecontroleerde minuten*, echte minuten leeg = *nog niet gecontroleerd*, *Klopt zoals gepland*, label in Lijn; oude trainingen (vóór 30-10, gelijk aan gepland) = *niet zeker gecontroleerd*, gegevens ongewijzigd; Transfer naar vrij spel bij Toepassing (zelfde antwoord, *Niet beoordeeld*). Geen nieuw veld | ◐ deels herzien | door 142 (*75 van 75 min gepland* en de losse regel ombouw staan nu in de tijdsbalk; ombouw heet organisatie) |
 | 140 | 3 | Trainer uitnodigen bij pakket Trainers begeleiden: welkomstmail met de bedoeling (begeleiden, ontwikkelen niet beoordelen; wie ziet wat) en de functie van de HO; aanmelden altijd via e-mail, WhatsApp als persoonlijk seintje (nu en later opnieuw vanuit de trainerkaart) | ✅ geldt |  |
@@ -63,8 +64,8 @@ Laatst bijgewerkt: 29 oktober 2026 (t/m Besluit 142)
 | 103 | 3 | Automatisch bewaren in formulieren; Rollen opgeschoond | ✅ geldt |  |
 | 102 | 3 | Snelle winsten: dringend bovenaan, Observeren op de dag zelf, unieke knopnamen | ✅ geldt |  |
 | 101 | 3 | Voorgesprek als voormeting: eigen vragen voor training en wedstrijd | ✅ geldt |  |
-| 100 | 3 | Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden" | ◐ deels herzien | door 101 (vragen kort en uitgebreid per soort) |
-| 99 | 3 | Trainers begeleiden via een traject, met de KNVB-begeleidingscyclus; tabblad Trainers | ◐ deels herzien | door 100 (vragenlijst kort of uitgebreid per niveau; notities gedeeld per bouw met de TC); door 101 (vragenlijst vooraf per soort); 129 (observeren: snelle notities tijdens, aandachtspunten na afloop); 134 (moment verplaatsen of *niet doorgegaan*) |
+| 100 | 3 | Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden" | ◐ deels herzien | door 101 (vragen kort en uitgebreid per soort); 143 (overgenomen reflectie is begeleiderstekst) |
+| 99 | 3 | Trainers begeleiden via een traject, met de KNVB-begeleidingscyclus; tabblad Trainers | ◐ deels herzien | door 100 (vragenlijst kort of uitgebreid per niveau; notities gedeeld per bouw met de TC); door 101 (vragenlijst vooraf per soort); 129 (observeren: snelle notities tijdens, aandachtspunten na afloop); 134 (moment verplaatsen of *niet doorgegaan*); 143 (kennismaking en reflectie alleen door de trainer; geen toegang voor een beheerder zonder begeleidersrol) |
 | 98 | 3 | Verantwoordelijkheid: iedere rol doet zijn eigen werk, de laag erboven is het vangnet | ✅ geldt |  |
 | 97 | 3 | Bouwen, werkgebied en focus, signalen die ertoe doen, trainersdossier | ◐ deels herzien | door 99 (traject per trainer in plaats van 2 + 2; tabblad Trainers; VOG en diploma bij de coördinator); door 100 (werkgebied bij de rol, rol TC gebouwd) |
 | 96 | 3 | Eén aanspreekpunt: de clubbeheerder (van de club) en de ClubComm-adviseur (van ons) | ◐ deels herzien | door 120 (startlijst en Inrichten voor de clubbeheerder, Mijn clubs voor de adviseur; meekijken alleen met toestemming) |
@@ -680,6 +681,43 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 143 — De trainer is eigenaar van zijn eigen teksten; geen begeleidingsdossier voor een beheerder zonder begeleidersrol (Spoor 3, maat L)
+*Besloten 29 oktober 2026, na het onderzoek *Beveiliging begeleidingsroute* (branch `onderzoek/swift-trainersontwikkeling`, map docs/onderzoek) en het inhoudelijk akkoord van de initiatiefnemer (Spoor 2/3, ronde 5). Gebouwd en getest op een eigen branch; **de migratie wordt pas toegepast na een apart akkoord**. Herziet Besluit 99 en 100 deels.*
+- **Aanleiding (lokaal aangetoond):**
+  - met de huidige rechten kon een HO, TC of clubbeheerder de reflectie van een trainer wijzigen, verwijderen en op zijn naam aanmaken;
+  - een clubbeheerder zonder begeleidersrol kon het hele begeleidingsdossier lezen;
+  - *Overnemen uit het evaluatieformulier* schreef de reflectie in de rij van de trainer, zonder dat dat zichtbaar was;
+  - opnieuw uitnodigen met een verouderde kopie kon ingevulde kennismakingsantwoorden overschrijven.
+- **Regel:**
+  - De **trainer** schrijft, wijzigt en verwijdert zijn eigen kennismaking, vragenlijst vooraf en reflectie (scope `trainerzelf`). Hij kan zijn rij niet op naam van een ander of in een andere scope zetten.
+  - **HO en TC** lezen die teksten, maar schrijven ze niet. Ze mogen alleen *gevraagd* zetten (uitnodigen) en een lege rij aanmaken. Een verouderde kopie terugsturen wordt geweigerd: bestaande antwoorden blijven staan.
+  - De **begeleider** legt zijn eigen observatie, feedback en aantekeningen vast in het moment en het dossier (scope `trainerdossier`, ongewijzigd).
+  - Een **clubbeheerder zonder begeleidersrol** (geen `hjo` of `tc`) heeft geen toegang tot `trainerzelf` en `trainerdossier`.
+  - **Vertrouwde serverprocessen** (databaserol `service_role` of de eigenaar) worden niet tegengehouden. Een gewone gebruiker valt daar nooit onder, ook niet zonder gebruikers-id of met een nagemaakte claim.
+- **Overnemen uit het evaluatieformulier:**
+  - de reflectie wordt **begeleiderstekst** in het moment (`reflectieBegeleider`: tekst, wie, wanneer);
+  - de trainer ziet *Genoteerd door [naam] (niet door jou)* met **Neem over als mijn reflectie**; daarna past hij het aan en tikt op Klaar. Pas dan is het zijn reflectie;
+  - de begeleider ziet beide, elk met wie het schreef.
+- **Techniek:** migratie `033_eigen_reflectie.sql`, met een bewaker (`priv.cc_bewaak_trainerzelf`, drie triggers) en een beperkende regel (`rij_begeleiding`).
+  - **`priv.cc_mag` blijft ongewijzigd**, zodat dit samengaat met rechtenvoorstel 032 in elke volgorde.
+  - Herhaald toepassen geeft geen fout.
+  - Hoe je terugdraait, staat bovenin de migratie.
+- **Gevolgen voor huidige gebruikers** (productie 29-10, alleen gelezen):
+  - DCG en Swift hebben elk één clubbeheerder, en die heeft ook de rol HO: zij zien niets minder;
+  - er staan nog **0 reflecties**, dus er hoeft niets te worden omgezet;
+  - wat verandert: een begeleider kan de teksten van een trainer niet meer wijzigen.
+- **Getest** (lokaal, `npm run test:veilig`):
+  - 55 controles op het begeleidingsdossier: 10 rollen, ook opslaan met upsert zoals de app doet, en de serveruitzondering;
+  - 10 controles op de **rijen die de app werkelijk opslaat**: `tests/eigen-reflectie.spec.js` legt ze vast in `app-opslag.json`, en `app-opslag.sql` speelt ze af;
+  - zonder 033 wijken 20 + 2 controles af, en met de oude app-werking faalt de app-opslagtest;
+  - ook goed: 033 → 032 en 032 → 033 (56/56 rechtentest), en 033 twee keer toepassen.
+- **Niet in dit besluit:**
+  - de werkaantekeningen van begeleiders (scope `hoprive`; eerst besluit 07-E in Spoor 2);
+  - het delen van een training;
+  - TJC per werkgebied.
+
+---
+
 ## Besluit 142 — Tijd vóór de training: veldtijd, organisatie en oefentijd (Spoor 3)
 *Besloten 29 oktober 2026, na het onderzoek `docs/onderzoek/tijdsplanning/analyse.md` (branch `onderzoek/tijdsplanning`, voorbeelden op 390 px en laptop) en de bijstelling van de initiatiefnemer: **alleen een realistische planning vooraf**, geen registratie of analyse achteraf. Aanleiding: bij DCG O13 duurde een vorm van 10 minuten er 18, en de partij verviel. Herziet Besluit 141 deels.*
 - **Doel:** de trainer ziet vóór de training of zijn programma realistisch binnen de veldtijd past. Voor elke club hetzelfde (DCG, Swift en andere); de tijd leest alleen minuten, geen methodiek.
@@ -1213,6 +1251,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Elke vraag hoort bij een onderdeel van het A4** (trainingsdoel, organisatie, leersituatie creëren, leersituatie beïnvloeden, coachgedrag, persoonlijk leerdoel). De begeleider ziet dat label bij elk antwoord, zodat een vaag antwoord meteen laat zien waar hij moet kijken. De trainer ziet alleen de vragen.
 
 ## Besluit 100 — Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden"
+> **◐ Deels herzien door Besluit 143** (overnemen uit het evaluatieformulier: de reflectie wordt begeleiderstekst in het moment, de trainer neemt hem zelf over).
 *Besloten 10 oktober 2026, voor de test bij een tweede club (HO + TC, twee trainers, geen ouders). Vult Besluit 97, 98 en 99 aan.*
 > **◐ Deels herzien door Besluit 101** (de vragenlijst vooraf: eigen vragen voor training en wedstrijd, als voormeting).
 - **Werkgebied bij de rol.** De clubbeheerder kiest bij elke HO en technisch coördinator (TC) welke **bouwen** bij hem horen, of de hele club (standaard). Zo kan een club **twee HO's** hebben (bijvoorbeeld onder- en middenbouw, en bovenbouw). Wat je ziet en je signalen volgen je werkgebied; de focus-chips tonen alleen bouwen binnen je werkgebied. De bouwen zelf blijven per club instelbaar (Besluit 97).
@@ -1230,6 +1269,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Een nieuwe club inrichten** gaat voorlopig via de initiatiefnemer en Claude (een script in de database). Een eigen account voor de **ClubComm-adviseur** (nieuwe club aanmaken, meerdere clubs) komt in december, zoals gepland (Openstaand).
 
 ## Besluit 99 — Trainers begeleiden via een traject, met de KNVB-begeleidingscyclus; tabblad Trainers
+> **◐ Deels herzien door Besluit 143** (kennismaking, vragenlijst vooraf en reflectie schrijft alleen de trainer; een clubbeheerder zonder begeleidersrol heeft geen toegang tot het begeleidingsdossier).
 > **◐ Deels herzien door Besluit 134** (moment verplaatsen of *niet doorgegaan*; de begeleider ziet straks de trainingen).
 *Besloten 10 oktober 2026. Analyse: `docs/onderzoek/ho-begeleiding-trainers.md` (hand-outs KNVB HO-A bijeenkomst 2 en 3, vragenlijst voorgesprek). Herziet de standaard "2 + 2 per trainer" uit Besluit 95 en 97.*
 > **◐ Deels herzien door Besluit 101** (de vragenlijst vooraf: eigen vragen voor training en wedstrijd, als voormeting).
