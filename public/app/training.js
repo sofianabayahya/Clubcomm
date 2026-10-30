@@ -216,7 +216,7 @@
       return ld || vh.length ? `<li><b>${b} · ${esc(ldNaam(S, ld) || 'geen gereedschap')}</b>${vh.length ? ` — ${esc(vh.join(', '))}` : ''}</li>` : ''; }).join('');
     return `<div class="tr-toep"><b>Toepassing${partij.length ? ` · ${esc(partij.map((v) => v.naam).join(', '))}` : ''}</b>
       <p>Kwam het gewenste gedrag uit de eerdere trainingsblokken terug in het partijspel?</p>
-      ${verwacht ? `<small class="zacht">Verwacht gedrag:</small><ul class="tr-verwacht">${verwacht}</ul>` : ''}${m.gedrag ? `<small class="zacht">Gewenst gedrag van de training: ${esc(m.gedrag)}</small>` : ''}
+      ${verwacht ? `<small class="zacht">Verwacht gedrag:</small><ul class="tr-verwacht">${verwacht}</ul>` : ''}${m.gedrag ? `<small class="zacht">Gewenst gedrag van de training: ${esc(m.gedrag)}</small>` : (() => { const wv = CC.trWeekVoorstel ? CC.trWeekVoorstel(S, p) : {}; return wv.gedrag ? `<small class="zacht">Weekvoorstel, gewenst gedrag: ${esc(wv.gedrag)}</small>` : ''; })()}
       ${partij.length ? '' : '<small class="zacht">Geen partijvorm gebruikt. Beoordeel dan het vrije spel elders in de training.</small>'}
       <div class="chips">${q.schaal.map((x) => `<button type="button" class="chipknop ${w === x ? 'aan' : ''}" aria-pressed="${w === x}" data-act="tpEval" data-id="${esc(a.id)}" data-q="${esc(q.id)}" data-w="${esc(x)}">${esc(x)}</button>`).join('')}<button type="button" class="chipknop ${w ? '' : 'aan'}" aria-pressed="${!w}" data-act="tpEval" data-id="${esc(a.id)}" data-q="${esc(q.id)}" data-w="">Niet beoordeeld</button></div></div>`; };
   // Evaluatiekaart uit het profiel (kerndocument §14): drie vragen open, de rest onder Verdiepende analyse; alles optioneel

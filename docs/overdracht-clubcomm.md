@@ -2,23 +2,22 @@
 
 *Alleen Spoor 3 schrijft hier. Kort houden (hoogstens ongeveer 30 regels); aan het eind van elke ronde overschrijven. Spoor 1 en 2 hebben hun eigen overdracht (`docs/methodiek/persoonlijk/overdracht.md`, `docs/methodiek/swift/overdracht.md`).*
 
-**Bijgewerkt:** 29-10-2026
+**Bijgewerkt:** 30-10-2026
 
 ## Stand
-- `main` = `b78b9d8` (#102, Besluit 142). Besluit **143** zit in #103 (andere sessie); het eerstvolgende vrije nummer daarna is **144**.
+- `main` = `1277583` (#104). Besluit **143** zit in #103, Besluit **144** in de pull request van `bouw/trainingskaart`; het eerstvolgende vrije nummer is **145**.
 
 ## Open pull requests
 | PR | Wat | Stand |
 |---|---|---|
-| #103 | Besluit 143: de trainer is eigenaar van zijn eigen teksten (migratie 033, nog niet toegepast), branch `bouw/eigen-reflectie-033` | Andere sessie; raakt ook deze overdracht en `tests/app.spec.js` |
-| #104 | Fout (S): wedstrijd zonder verzameltijd toonde "Verzamelen undefined" (core, ouder, agenda, teamleider) + test los van de klok, branch `claude/intelligent-cannon-t4430r` | Tests groen (6 + 76); wacht op akkoord |
+| #103 | Besluit 143: de trainer is eigenaar van zijn eigen teksten (migratie 033, nog niet toegepast), branch `bouw/eigen-reflectie-033` | `main` samengevoegd; tests groen; wacht op akkoord. Migratie 033 en de registratie van 027–030 zijn aparte akkoorden |
+| nieuw | Besluit 144: trainingskaart (vijf regels, herkomst, weekvoorstel apart, oorspronkelijke planning), branch `bouw/trainingskaart` | Tests groen (DCG en Swift); wacht op akkoord. Raakt bij samenvoegen met #103 deze overdracht en het register |
 
 ## Wacht op akkoord van de gebruiker
-- De gebruiker test zelf week 45 (Lijn → do in Plannen → Week → Lijn). Pas daarna stap 2 (weekevaluatie) en stap 3 (herinnering).
+- Correctie van de acht DCG-weekplannen (dagvelden eruit, `dagen` en `wedstrijd.context` erin): `supabase/scripts/2026-10-30_dcg_weekplannen_correctie.sql.voorstel`, gecontroleerd tegen de CSV, **niet uitgevoerd**.
 - Rechtenvoorstel 032 (begeleider kijkt mee, clubbank): lokaal getest met `npm run test:veilig -- 032` (56/56).
 - Twee bevindingen uit de beveiligingstest (maat L): uitvoerrecht van drie `priv`-functies intrekken; `priv.cc_club()` bij een account in twee clubs.
-- Idee (L): bij een trainer zien of hij al heeft ingelogd.
 
 ## Volgende technische stap
-- Klein (S): de kaart omzetten naar testlabels; `npm run check` en `npm run test:veilig` in `CLAUDE.md`.
-- Voorstel (L): het opleidingsprofiel veilig leesbaar maken voor trainers (er is een onderzoeksbranch `onderzoek/profiel-leesrechten`).
+- Vaardigheidsaccenten per trainingsplek (eigen besluit, nieuw veld per onderdeel); zie de PR van `bouw/trainingskaart` voor wat er nog ontbreekt.
+- Voorstel (L): het opleidingsprofiel veilig leesbaar maken voor trainers (onderzoeksbranch `onderzoek/profiel-leesrechten`).
