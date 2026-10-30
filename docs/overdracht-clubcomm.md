@@ -5,13 +5,13 @@
 **Bijgewerkt:** 30-10-2026
 
 ## Stand
-- `main` = `51e5a12` (#105, Besluit 144). **Migratie 033 is niet toegepast.** Het eerstvolgende vrije besluitnummer is **145**.
+- `main` = `eb4dcd0` (#106, tekentool-tests; Besluit 144 is de laatste op `main`), in productie nagegaan (Vercel READY). **Migratie 033 is niet toegepast.** Het eerstvolgende vrije besluitnummer is **145**.
 - Productiedatabase (29/30-10, alleen gelezen): functioneel gelijk aan `main` (de md5 van alle `priv`-functies is gelijk, zonder commentaarregels). Het migratielogboek mist 027–030 (via losse SQL toegepast; alle objecten bestaan). Niet aanpassen zonder apart akkoord.
 
 ## Open pull requests
 | PR | Wat | Stand |
 |---|---|---|
-| #106 | Test (S): tekentool-tests wachten 20 s op Opslaan (onder drukte soms > 5 s, gemeten tot 7 s; geen hang), branch `claude/intelligent-cannon-t4430r` | 600/600 onder drukte, `npm test` groen; wacht op akkoord |
+| — | Geen open pull requests (30-10) | |
 
 ## Wacht op akkoord van de gebruiker (in deze volgorde)
 1. Correctie van de acht DCG-weekplannen, `supabase/scripts/2026-10-30_dcg_weekplannen_correctie.sql.voorstel` (gecontroleerd tegen de CSV, **niet uitgevoerd**).
