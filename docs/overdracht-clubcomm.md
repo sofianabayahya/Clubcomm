@@ -11,7 +11,7 @@
 ## Open pull requests
 | PR | Wat | Stand |
 |---|---|---|
-| (nieuw) | Besluit 145: een geplaatste vorm verplaatsen (*Verplaatsen naar* Start · A1 · A2 · B1 · B2 · Partij, wisselen, ongedaan maken), branch `bouw/verplaatsen` | Tests groen; wacht op akkoord |
+| #107 | Besluit 145: een geplaatste vorm verplaatsen (*Verplaatsen naar* Start · A1 · A2 · B1 · B2 · Partij, wisselen, ongedaan maken), branch `bouw/verplaatsen` | Tests groen; wacht op akkoord |
 
 ## Wacht op akkoord van de gebruiker (in deze volgorde)
 1. Correctie van de acht DCG-weekplannen, `supabase/scripts/2026-10-30_dcg_weekplannen_correctie.sql.voorstel` (gecontroleerd tegen de CSV, **niet uitgevoerd**).
