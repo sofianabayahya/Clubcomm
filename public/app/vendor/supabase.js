@@ -47,7 +47,7 @@
   const zaai = () => {
     if (Object.keys(db.rows).length || !window.CC || !CC.uitRijen) return;
     const D = CC.date; const S = CC.uitRijen([], D.vandaag());
-    S.club = { ...S.club, ...SWIFT, id: CLUB, naam: 'AVV Swift — DEMO' };
+    S.club = { ...S.club, ...SWIFT, id: CLUB, naam: 'AVV Swift — DEMO', begeleiderKijktMee: true }; // CONCEPT 032: meekijken aan
     S.teams = [{ id: 'demo-o15', naam: 'Demo O15', cat: 'O15', type: 'selectie', rooster: [], afwijking: {}, trainerId: 'demo-trainer', teamleiderId: null }];
     const p = (id, naam, email, rollen) => ({ id, naam, email, tel: '', rollen });
     S.people = [p('demo-hjo', 'Demo HJO', 'hjo@demo.invalid', [{ rol: 'hjo' }, { rol: 'trainer', teamId: 'demo-o15' }]), p('demo-trainer', 'Demo Trainer', 'trainer@demo.invalid', [{ rol: 'trainer', teamId: 'demo-o15' }])];
@@ -92,6 +92,9 @@
     const stafouders = [...new Set(spelers.filter((s) => staf.includes(s.team_id)).flatMap((s) => (s.data || {}).ouders || []))];
     return { ik, rol, admin, coord, begeleider, staf, kids, kidteams, stafouders, tijdelijk: [], email: (db.user.email || '').toLowerCase() };
   };
+  const kijktMee = () => { const club = db.rows['club|club']; return !!(club && club.data && club.data.begeleiderKijktMee === true); };
+  const trajectSeizoen = (pid) => { const v = new Date(); const jaar = v.getFullYear() - (v.getMonth() < 6 ? 1 : 0); const sinds = `${jaar}-07-01`;
+    return alle().some((d) => d.soort === 'trainerDossier' && d.persoon_id === pid && ((((d.data || {}).traject) || {}).actief === true || (((d.data || {}).oud) || []).some((o) => String(o.afgerond || '') >= sinds))); };
   const isStaf = (pid) => rollenVan(pid).some((r) => r.rol !== 'ouder');
   const taak = (c, t, team) => { const club = db.rows['club|club']; const v = ((club && club.data.taken) || {})[t] || {}; const cat = ((db.rows['teams|' + team] || {}).data || {}).cat;
     return c.admin || c.rol.some((r) => (['trainer', 'teamleider'].includes(r.rol) && r.teamId === team && (v[r.rol] != null ? !!v[r.rol] : r.rol === 'trainer')) || (r.rol === 'coordinator' && (r.cats || []).includes(cat) && (v.coordinator != null ? !!v.coordinator : true))); };
@@ -112,6 +115,9 @@
       case 'act': return inn(r.team_id, c.staf) || (!schrijven && inn(r.speler_id, c.kids));
       case 'speeltijd': return inn(r.team_id, c.staf);
       case 'eigen': return r.persoon_id === c.ik;
+      // CONCEPT voorstel 032 (Besluit 134): de begeleider leest mee als de club het aanzet en de trainer dit seizoen een traject heeft (gehad)
+      case 'trainerplan': return r.persoon_id === c.ik || (!schrijven && c.begeleider && kijktMee() && trajectSeizoen(r.persoon_id));
+      case 'clubbank': return c.rol.some((x) => ['trainer', 'hjo', 'tc'].includes(x.rol)) && (!schrijven || r.persoon_id === c.ik);
       case 'hjo': return c.admin || c.coord;
       case 'bericht': if (schrijven) return ['systeem', c.ik].includes(d.van) || (d.ontvangers || []).includes(c.ik);
         return d.van === c.ik || (d.ontvangers || []).includes(c.ik) || (c.admin && ['nieuws', 'melding'].includes(d.soort))
@@ -136,6 +142,15 @@
     if (nieuw.soort === 'acts' && !oud && !c.staf.includes(nieuw.team_id)) return false;
     return true;
   };
+  // CONCEPT 032: de app slaat trainingen op als 'eigen'; met 032 worden het 'trainerplan' (ook de vormen die in een training staan).
+  // Bestaande rijen zet de demo om zoals een eenmalige omzetting bij de invoering zou doen (die zit nog niet in voorstel 032).
+  const inTraining = (pid, vid) => alle().some((p) => p.soort === 'trainingsplannen' && p.persoon_id === pid && p.scope === 'trainerplan' && ((p.data || {}).onderdelen || []).some((o) => o.vormId === vid));
+  const metPlanScope = (r) => { if (r.scope !== 'eigen') return r; const oud = db.rows[sleutel(r)];
+    if ((r.soort === 'trainingsplannen' && !(r.data || {}).week) || (oud && oud.scope === 'trainerplan') || (r.soort === 'vormen' && inTraining(r.persoon_id, r.id))) return { ...r, scope: 'trainerplan' };
+    return r; };
+  const planScopes = () => { alle().forEach((r) => { if (r.soort === 'trainingsplannen' && r.scope === 'eigen' && !(r.data || {}).week) r.scope = 'trainerplan'; });
+    alle().forEach((r) => { if (r.soort === 'vormen' && r.scope === 'eigen' && inTraining(r.persoon_id, r.id)) r.scope = 'trainerplan'; }); };
+  if (Object.keys(db.rows).length) { const c0 = db.rows['club|club']; if (c0 && c0.data && c0.data.begeleiderKijktMee === undefined) c0.data.begeleiderKijktMee = true; planScopes(); bewaar(); }
   window.DEMO_SWIFT.zicht = (pid) => { const oud = db.user; db.user = { id: 'zicht', email: '' }; db.lid.zicht = pid; const c = context(); const uit = alle().filter((r) => mag(r, false, c)).map(sleutel).sort(); delete db.lid.zicht; db.user = oud; return uit; };
   window.DEMO_SWIFT.magSchrijven = (pid, r) => { const oud = db.user; db.user = { id: 'zicht', email: '' }; db.lid.zicht = pid; const c = context(); const uit = mag({ club_id: CLUB, ...r }, true, c); delete db.lid.zicht; db.user = oud; return uit; };
 
@@ -164,9 +179,10 @@
         let res; const c = context();
         if (tabel !== 'rij') res = { data: [], error: null };
         else if (q.op === 'upsert') {
+          q.payload = q.payload.map(metPlanScope);
           const fout = q.payload.find((r) => { const oud = db.rows[sleutel(r)]; return r.club_id !== CLUB || !mag(r, true, c) || (oud && !mag(oud, true, c)) || !bewaak(r, oud, c); });
           if (fout) res = { data: null, error: geweigerd };
-          else { q.payload.forEach((r) => { db.rows[sleutel(r)] = kopie(r); }); bewaar(); res = { data: null, error: null }; }
+          else { q.payload.forEach((r) => { db.rows[sleutel(r)] = kopie(r); }); planScopes(); bewaar(); res = { data: null, error: null }; }
         } else if (q.op === 'delete') {
           Object.entries(db.rows).forEach(([k, r]) => { if (q.filters.every((f) => f(r)) && mag(r, true, c) && (r.scope !== 'bericht' || (r.data || {}).van === c.ik || c.admin)) delete db.rows[k]; });
           bewaar(); res = { data: null, error: null };

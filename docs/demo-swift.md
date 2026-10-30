@@ -34,4 +34,6 @@ Vercel-toegangsbeveiliging is dus **geen** onderdeel van de isolatie; die komt e
 | Alles in *Swift nu* | Bestaande functionaliteit, zoals Swift die nu heeft |
 | Opleidingsprofiel in *Swift KNVB — concept* (teamfuncties Aanvallen/Verdedigen volgens H06, teamtaken met 06-B open, evaluatievragen) | **Concept**, niet vastgesteld |
 | Trainer leest het profiel (in de stand KNVB) | **Concept**: in de echte database leest alleen HO/beheerder/coördinator het profiel (voorstel `onderzoek/profiel-leesrechten`) |
-| HO ziet de trainingen en vormen van de trainer | **Niet gebouwd** (wacht op rechtenvoorstel 032) |
+| HO ziet de trainingen van de trainer (en de vormen daarin), alleen lezen | **Concept** van voorstel 032, in beide standen gelabeld *CONCEPT · voorstel 032*; bij de trainer onder *Trainingen van de trainer*. Rechten: scope `trainerplan`, vergeleken met migratie 032 (128/128) |
+
+**Gevonden bij het nabootsen van 032 (30-10):** bestaande trainingen zijn `eigen`; de trigger `priv.cc_bewaak` verbiedt een trainer de scope te wijzigen. Met 032 zoals het nu is, blijven bestaande trainingen dus onzichtbaar en geeft opslaan met de nieuwe scope *"Scope wijzigen mag niet"* (lokaal getest). 032 heeft daarom nog een eenmalige omzetting of een uitzondering eigen → trainerplan nodig. De demo doet die omzetting zelf.

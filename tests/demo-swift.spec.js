@@ -80,8 +80,8 @@ test.describe('Demo Swift (simulatie)', () => {
     await page.locator('#drawSave').click(); await expect(page.locator('#drawOverlay')).toBeHidden({ timeout: 20000 });
     await page.locator('[data-act="terug"]').click();
     await expect(page.locator('#app')).toContainText('Demo: rondo 4 tegen 2');
-    await expect.poll(async () => Object.values(await db(page)).filter((r) => r.soort === 'vormen').map((r) => `${r.scope}|${r.persoon_id}|${(r.data.tekening || { items: [] }).items.length}`).join()).toBe('eigen|demo-trainer|1');
-    await expect.poll(async () => Object.values(await db(page)).filter((r) => r.soort === 'trainingsplannen').map((r) => `${r.scope}|${r.persoon_id}`).join()).toBe('eigen|demo-trainer');
+    await expect.poll(async () => Object.values(await db(page)).filter((r) => r.soort === 'vormen').map((r) => `${r.scope}|${r.persoon_id}|${(r.data.tekening || { items: [] }).items.length}`).join()).toBe('trainerplan|demo-trainer|1'); // CONCEPT 032: een vorm in een training is trainerplan
+    await expect.poll(async () => Object.values(await db(page)).filter((r) => r.soort === 'trainingsplannen').map((r) => `${r.scope}|${r.persoon_id}`).join()).toBe('trainerplan|demo-trainer');
     // Verversen: alles staat er nog, de trainer blijft ingelogd
     await page.reload(); await expect(page.locator('nav.nav')).toBeVisible(); await herkenbaar(page);
     expect(await page.evaluate(() => CC.me().naam)).toBe('Demo Trainer');
@@ -109,11 +109,18 @@ test.describe('Demo Swift (simulatie)', () => {
     await page.evaluate(() => CC.wisselRol(0)); await herkenbaar(page);
     await page.evaluate(() => CC.open('trainerDetail', { id: 'demo-trainer' }));
     await expect(page.locator('#app')).toContainText('Vaste coachmomenten');
-    // De HJO ziet de reflectie van de trainer (begeleider), maar niet zijn trainingen en vormen (alleen de maker)
+    // De HJO ziet de reflectie van de trainer (begeleider) en, als CONCEPT van voorstel 032, zijn trainingen en de vormen daarin (alleen lezen)
     const zichtH = await page.evaluate(() => window.DEMO_SWIFT.zicht('demo-hjo'));
     expect(zichtH).toContain('begeleidZelf|demo-bm1');
-    expect(zichtH.some((k) => k.startsWith('vormen|') || k.startsWith('trainingsplannen|'))).toBe(false);
-    expect(await page.evaluate(() => CC.S().vormen.length)).toBe(0);
+    expect(zichtH.filter((k) => k.startsWith('trainingsplannen|'))).toHaveLength(1);
+    expect(zichtH.filter((k) => k.startsWith('vormen|'))).toHaveLength(1);
+    await expect(page.locator('#app .demo-meekijk')).toContainText('CONCEPT · voorstel 032');
+    await page.locator('#app .demo-meekijk [data-act="demoMeekijk"]').first().click();
+    await expect(page.locator('#sheet')).toContainText('Demo: rondo 4 tegen 2 (aangepast)');
+    await expect(page.locator('#sheet')).toContainText('Alleen lezen');
+    await page.evaluate(() => CC.closeSheet());
+    // Wijzigen mag de HJO niet: de database (nagebootst) weigert het
+    expect(await page.evaluate(() => { const D = window.DEMO_SWIFT; const r = Object.values(D.db.rows).find((x) => x.soort === 'trainingsplannen'); return D.magSchrijven('demo-hjo', r); })).toBe(false);
     // Wisselen naar Trainer: zelfde account, dus dezelfde databaserechten als HO (zie demo-rechten.sh)
     await page.evaluate(() => CC.wisselRol(1)); await herkenbaar(page);
     await expect(page.locator('nav.nav button[data-tab]')).toHaveText(['Home', 'Training', 'Berichten']);
@@ -178,7 +185,9 @@ test.describe('Demo Swift (simulatie)', () => {
       const zet = (x) => { D.db.rows[`${x.soort}|${x.id}`] = { club_id: D.club, team_id: null, speler_id: null, persoon_id: null, act_id: null, ...x }; };
       zet({ soort: 'vormen', id: 'demo-v1', scope: 'eigen', persoon_id: 'demo-trainer', team_id: 'demo-o15', data: { id: 'demo-v1', naam: 'Demo-vorm' } });
       zet({ soort: 'vormen', id: 'demo-v2', scope: 'eigen', persoon_id: 'demo-hjo', team_id: 'demo-o15', data: { id: 'demo-v2', naam: 'Vorm van de HJO' } });
-      zet({ soort: 'trainingsplannen', id: 'demo-tp1', scope: 'eigen', persoon_id: 'demo-trainer', team_id: 'demo-o15', data: { id: 'demo-tp1', onderdelen: [] } });
+      zet({ soort: 'trainingsplannen', id: 'demo-tp1', scope: 'trainerplan', persoon_id: 'demo-trainer', team_id: 'demo-o15', data: { id: 'demo-tp1', onderdelen: [{ vormId: 'demo-v3' }] } });
+      zet({ soort: 'vormen', id: 'demo-v3', scope: 'trainerplan', persoon_id: 'demo-trainer', team_id: 'demo-o15', data: { id: 'demo-v3', naam: 'Vorm in een training' } });
+      zet({ soort: 'trainingsplannen', id: 'demo-tp2', scope: 'trainerplan', persoon_id: 'demo-hjo', team_id: 'demo-o15', data: { id: 'demo-tp2', onderdelen: [] } });
       zet({ soort: 'trainerNotities', id: 'demo-trainer', scope: 'hoprive', persoon_id: 'demo-trainer', data: { bouwen: [], tekst: 'Werkaantekening (fictief)' } });
       zet({ soort: 'begeleidZelf', id: 'demo-bm1', scope: 'trainerzelf', persoon_id: 'demo-trainer', data: { trainerId: 'demo-trainer', r: { r1: 'Fictief' } } });
       const rijen = Object.values(D.db.rows);
