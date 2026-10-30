@@ -11,7 +11,7 @@
 ## Open pull requests
 | PR | Wat | Stand |
 |---|---|---|
-| (nieuw) | Test (S): tekentool-tests wachten 20 s op Opslaan (onder drukte soms > 5 s, gemeten tot 7 s; geen hang), branch `claude/intelligent-cannon-t4430r` | 600/600 onder drukte, `npm test` groen; wacht op akkoord |
+| #106 | Test (S): tekentool-tests wachten 20 s op Opslaan (onder drukte soms > 5 s, gemeten tot 7 s; geen hang), branch `claude/intelligent-cannon-t4430r` | 600/600 onder drukte, `npm test` groen; wacht op akkoord |
 
 ## Wacht op akkoord van de gebruiker
 - Besluit 143 is samengevoegd (#103). Apart akkoord nodig: 033 toepassen in productie (volgorde: eerst nagaan dat productie `main` draait, dan 033, dan controleren).
