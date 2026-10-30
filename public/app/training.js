@@ -154,7 +154,7 @@
     const naam = v ? v.naam : o.spacing ? o.naam || 'Spacing' : o.naam || 'Kies een vorm';
     const extra = v && n ? (voorAantal(v, n, k) ? esc(voorAantal(v, n, k).tekst) : (!past(v, n, k) ? `gemaakt voor ${bereik(v.spelersMin, v.spelersMax, 'spelers')}` : '')) : '';
     const variant = v && o.variant != null && (v.varianten || [])[o.variant] ? `variant ${esc(v.varianten[o.variant].naam || String.fromCharCode(65 + Number(o.variant)))}` : '';
-    const sub = [o.spacing ? (o.naam ? 'spacing' : 'vrij in te vullen') : v ? [typeNaam(typeVan(v)), (CC.weerstand(S, v) || {}).kort].filter(Boolean).join(' · ') : o.blok === 'start' ? 'warming-up · kies een vorm' : 'kies een vorm', variant, o.notitie ? esc(o.notitie) : '', extra].filter(Boolean).join(' · ');
+    const sub = [o.spacing ? (o.naam ? 'spacing' : 'vrij in te vullen') : v ? [typeNaam(typeVan(v)), (CC.weerstand(S, v) || {}).kort].filter(Boolean).join(' · ') : o.blok === 'start' ? 'niet verplicht · kies een vorm of haal weg' : 'kies een vorm', variant, o.notitie ? esc(o.notitie) : '', extra].filter(Boolean).join(' · ');
     return `<button type="button" class="tr-rij" data-act="${leegSlot(o) ? 'tpVormKiezen' : 'tpOnderdeel'}" data-id="${a.id}" data-i="${i}" data-drop-i="${i}">${metCode ? `<span class="tr-code">${esc(code(o))}</span>` : ''}${leegSlot(o) ? `<span class="tr-mini leeg">${icon('plus')}</span>` : mini(v, o.spacing)}<span class="tr-t"><b>${esc(naam)}</b><small>${sub}${o.spacing || leegSlot(o) && o.blok === 'start' ? '' : blokChip(S, o)}</small></span><span class="tr-min">${Number(o.min) || 0} min${v && n && !past(v, n, k) && !voorAantal(v, n, k) ? '<span class="st o">aantal</span>' : ''}</span></button>`;
   };
   const GROEPNAAM = { start: 'Start', P: 'Toepassing · partij', '': 'Opbouw' };
@@ -303,7 +303,7 @@
     const S = CC.S(); const p = plan(S, el.dataset.id); const i = Number(el.dataset.i); const o = p && p.onderdelen[i]; if (!o) return;
     const v = o.vormId && vorm(S, o.vormId); const fs = fasen(S); const f = faseVan(S, o);
     const titel = v ? v.naam : o.spacing ? 'Spacing' : `${code(o) ? `${code(o)} · ` : ''}${o.naam || 'Kies een vorm'}`;
-    CC.sheet(titel, `${!v ? `<button class="knop vol" data-act="tpVormKiezen" data-id="${el.dataset.id}" data-i="${i}">${icon('plus')}${o.spacing ? 'Kies een vorm als spacing' : 'Kies een vorm'}</button>` : ''}
+    CC.sheet(titel, `${verplaatsRij(S, p, i, el.dataset.id)}${!v ? `<button class="knop vol" data-act="tpVormKiezen" data-id="${el.dataset.id}" data-i="${i}">${icon('plus')}${o.spacing ? 'Kies een vorm als spacing' : 'Kies een vorm'}</button>` : ''}
       <form data-submit="tpOnderdeelOk" data-id="${el.dataset.id}" data-i="${i}" class="codeform">
       ${o.spacing && !v ? `<label for="on-n">Wat doen ze?</label><input id="on-n" name="naam" value="${esc(o.naam || '')}" placeholder="Bijv. Hooghouden">${methodiekActief(S) && spacingVoorstel(S, p).length ? `<div class="chips"><span class="zacht klein tr-lbl">Eerder</span>${spacingVoorstel(S, p).map((x) => `<button type="button" class="chipknop" data-act="tpSpacingNaam" data-w="${esc(x)}">${esc(x)}</button>`).join('')}</div>` : ''}` : ''}
       <div class="twee"><div><label for="on-m">Minuten (gepland)</label><input id="on-m" name="min" type="number" inputmode="numeric" min="0" max="90" value="${Number(o.min) || 0}"></div>
@@ -316,6 +316,22 @@
       <div class="knoppen">${i > 0 ? `<button class="knop licht" data-act="tpSchuif" data-id="${el.dataset.id}" data-i="${i}" data-r="-1">↑ Omhoog</button>` : ''}${i < p.onderdelen.length - 1 ? `<button class="knop licht" data-act="tpSchuif" data-id="${el.dataset.id}" data-i="${i}" data-r="1">↓ Omlaag</button>` : ''}
         ${v ? `<button class="knop licht" data-act="vormOpen" data-id="${v.id}">${icon('pencil')}Vorm bekijken</button>` : ''}<button class="knop licht" data-act="tpDupliceer" data-id="${el.dataset.id}" data-i="${i}">${icon('repeat')}Dupliceren</button><button class="knop licht" data-act="tpOnderdeelWeg" data-id="${el.dataset.id}" data-i="${i}" style="color:var(--rood)">${icon('trash-2')}Weghalen</button></div>`);
   });
+  // Besluit 145: een geplaatste vorm naar een andere plek (Start, A1, A2, B1, B2, Partij). Lege plek = erheen, bezette plek = wisselen.
+  // De vorm neemt mee: minuten (gepland en echt), variant, notitie, vastgezet leerniveau en fase. Bij de plek blijven: code, naam, voorstellen.
+  const MEE = ['vormId', 'min', 'minUit', 'variant', 'notitie', 'niveau', 'fase', 'spacing'];
+  const plekVoorVerplaatsen = (o) => o.blok && o.blok !== 'S';
+  const verplaatsRij = (S, p, i, id) => { const o = p.onderdelen[i]; if (!o || !o.vormId || !plekVoorVerplaatsen(o)) return '';
+    const doelen = p.onderdelen.map((x, j) => ({ x, j })).filter(({ x }) => plekVoorVerplaatsen(x)); if (doelen.length < 2) return '';
+    return `<div class="tr-verpl"><b class="klein">Verplaatsen naar</b><div class="chips">${doelen.map(({ x, j }) => { const v = x.vormId && vorm(S, x.vormId);
+      return `<button type="button" class="tr-plekchip" data-act="tpVerplaats" data-id="${esc(id)}" data-i="${i}" data-naar="${j}" ${j === i ? 'disabled aria-current="true"' : ''}><b>${esc(plekNaam(x))}</b><small>${j === i ? 'hier' : v ? esc(v.naam) : `leeg · ${Number(x.min) || 0} min`}</small></button>`; }).join('')}</div>
+      <small class="zacht">Lege plek: de vorm gaat erheen. Bezette plek: de twee wisselen. Minuten, variant, leerniveau en notitie gaan mee.</small></div>`; };
+  const wissel = (a, b) => MEE.forEach((k) => { const x = a[k]; if (b[k] === undefined) delete a[k]; else a[k] = b[k]; if (x === undefined) delete b[k]; else b[k] = x; });
+  CC.on('tpVerplaats', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); const i = Number(el.dataset.i), j = Number(el.dataset.naar); const a = p && p.onderdelen[i], b = p && p.onderdelen[j]; if (!a || !b || i === j) return;
+    CC.ui.verplTerug = { plan: p.id, i: a.id, j: b.id, a: JSON.parse(JSON.stringify(a)), b: JSON.parse(JSON.stringify(b)) };
+    const bezet = !!b.vormId; wissel(a, b); CC.save(); CC.closeSheet(); CC.render();
+    CC.toast(`${bezet ? 'Gewisseld met' : 'Naar'} ${plekNaam(b)}${bezet ? '' : ' verplaatst'}`, '', { knop: 'Ongedaan maken', act: 'tpVerplaatsTerug' }); });
+  CC.on('tpVerplaatsTerug', () => { const u = CC.ui.verplTerug; CC.ui.verplTerug = null; const S = CC.S(); const p = u && plannen(S).find((x) => x.id === u.plan); if (!p) return;
+    p.onderdelen = p.onderdelen.map((x) => (x.id === u.i ? u.a : x.id === u.j ? u.b : x)); CC.save(); CC.render(); });
   // Spacing: de laatst gebruikte spacing (max. 3) als voorstel; één tik vult de naam in
   const spacingVoorstel = (S, p) => { const l = []; plannen(S).filter((q) => q !== p && q.eigenaar === ik() && !q.week).sort((x, y) => String(actVan(S, y).datum).localeCompare(String(actVan(S, x).datum)))
     .forEach((q) => (q.onderdelen || []).forEach((o) => { const n = o.spacing && !o.vormId && String(o.naam || '').trim(); if (n && !l.includes(n) && l.length < 3) l.push(n); })); return l; };

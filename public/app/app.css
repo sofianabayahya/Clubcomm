@@ -968,3 +968,10 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .tr-grens { position: absolute; top: 0; bottom: 0; width: 3px; background: #0f172a; }
 .tr-twaarsch { background: #fff4e5; color: #7a3e00; border-radius: 10px; padding: 8px 10px; font-size: 15px; }
 .tr-tok { color: var(--groen); font-weight: 700; }
+/* Besluit 145: een geplaatste vorm verplaatsen */
+.tr-verpl { display: grid; gap: 6px; margin-bottom: 8px; }
+.tr-verpl .chips { gap: 8px; }
+.tr-plekchip { display: grid; min-height: 44px; min-width: 64px; padding: 4px 10px; border: 1px solid var(--lijn); border-radius: 12px; background: var(--vlak); color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.tr-plekchip b { font-size: 15px; color: var(--blauw); }
+.tr-plekchip small { font-size: 13px; color: var(--zacht); }
+.tr-plekchip:disabled { opacity: .55; cursor: default; }
