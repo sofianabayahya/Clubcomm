@@ -160,7 +160,7 @@
       ${blok(4, `<p class="klein"><b>a. Reflectieverslag van ${esc(tr.naam.split(' ')[0])}</b></p>
         ${m.gedeeld ? `<p class="zacht klein">Gedeeld op ${D.kort(m.gedeeld.slice(0, 10))}.</p>` : `<p class="zacht klein">Na het delen ziet de trainer het voorblok, je observatie (✓ / ~ / – met je korte observaties) en de vier vakken. Daarna beantwoordt de trainer drie vragen:</p>`}
         <dl class="antwoorden">${REFLECTIE.map(([k, t]) => `<dt>${esc(t)}</dt><dd>${z.reflectieOp ? esc((z.r || {})[k] || '') : '<span class="zacht">nog niet ingevuld</span>'}</dd>`).join('')}</dl>
-        <div class="knoppen">${m.gedeeld ? '' : `<button class="knop licht klein" data-act="begelDeel" data-id="${m.id}">${icon('send')}Delen met de trainer</button>`}<button class="knop licht klein" data-act="begelVoorbeeld" data-id="${m.id}">${icon('eye')}Bekijk wat de trainer ziet</button></div>
+        ${genoteerd(S, m, z)}<div class="knoppen">${m.gedeeld ? '' : `<button class="knop licht klein" data-act="begelDeel" data-id="${m.id}">${icon('send')}Delen met de trainer</button>`}<button class="knop licht klein" data-act="begelVoorbeeld" data-id="${m.id}">${icon('eye')}Bekijk wat de trainer ziet</button></div>
         <form data-submit="begelKlaarOk" data-autosave="begelTerugblik" data-id="${m.id}" class="codeform"><p class="klein"><b>b. Mijn eigen terugblik als begeleider</b></p>${veldT('hoVerslag', 'Hoe ging mijn begeleiding? (mag leeg)', hoTekst(S, m), 'Wat deed ik goed als begeleider, wat doe ik de volgende keer anders? Handig voor je HO-opleiding. Alleen jij en de begeleiders van deze bouw zien dit; de trainer niet.', 4)}
         ${m.klaar ? `<p class="klein">${icon('circle-check')} Afgerond.</p><button class="knop licht klein" type="button" data-act="begelNieuw" data-id="${m.trainerId}">${icon('plus')}Volgend moment plannen</button>` : '<button class="knop">Afronden</button>'}</form>`)}` };
   };
@@ -250,7 +250,8 @@
     if (!(m.obs.momenten || []).length) m.obs.momenten = (e.notities || []).map((x) => ({ fase: x.fase, min: x.min || x.tijd || '', soort: x.soort || '', coach: x.coach != null ? x.coach : x.tekst || '', spelers: x.spelers || '' }));
     m.vakken = m.vakken || {}; vul(m.vakken, 'ontwikkelpunt', e.punt); vul(m.vakken, 'effect', e.s3); vul(m.vakken, 'afspraak', e.s6);
     if (!hoTekst(S, m)) zetHoTekst(S, m, `Aantekeningen gesprek\n\n${GESPREK.filter(([k]) => e[k]).map(([k, t]) => `${t}: ${e[k]}`).join('\n\n')}`);
-    if (e.r1 || e.r2 || e.r3) { const z = zelf(S)[m.id] || (zelf(S)[m.id] = { trainerId: m.trainerId }); if (!z.reflectieOp) { z.r = { r1: e.r1 || '', r2: e.r2 || '', r3: e.r3 || '' }; z.reflectieOp = new Date().toISOString(); } }
+    // Besluit 143: wat de begeleider uit het formulier overneemt, blijft zijn tekst (in het moment); de trainer kan het zelf overnemen
+    if ((e.r1 || e.r2 || e.r3) && !m.reflectieBegeleider) m.reflectieBegeleider = { r: { r1: e.r1 || '', r2: e.r2 || '', r3: e.r3 || '' }, door: CC.me().id, op: new Date().toISOString() };
     if (m.vakken.ontwikkelpunt) { const d = (S.trainerDossier || (S.trainerDossier = {}))[m.trainerId] || (S.trainerDossier[m.trainerId] = {}); if (d.traject && d.traject.actief && !d.traject.ontwikkelpunt) d.traject.ontwikkelpunt = m.vakken.ontwikkelpunt; }
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Overgenomen uit het evaluatieformulier'); });
   const momentenHtml = (m) => ((m.obs || {}).momenten || []).length ? `<ol class="momenten">${m.obs.momenten.map((x) => `<li><b>${esc((DELEN.find((d) => d[0] === x.fase) || [, ''])[1])}${x.min ? ` ${esc(String(x.min))}${/^\d+$/.test(String(x.min)) ? "'" : ''}` : ''}</b> ${x.soort ? `[${esc(x.soort)}] ` : ''}${esc(x.coach)}${x.spelers ? ` → ${esc(x.spelers)}` : ''}</li>`).join('')}</ol>` : '';
@@ -347,6 +348,10 @@
       ${VRAGEN(m.soort, m.niveau).map(([k, t]) => veldT(k, esc(t), (z.v || {})[k])).join('')}<button class="knop">Klaar</button></form>`, { groot: true }); });
   CC.on('begelZelfOk', (f) => { const S = CC.S(); const m = vind(S, f.dataset.id); const z = zelf(S)[m.id] || (zelf(S)[m.id] = { trainerId: m.trainerId });
     z.v = Object.fromEntries(VRAGEN(m.soort, m.niveau).map(([k]) => [k, f[k].value.trim()])); z.ingevuld = new Date().toISOString(); CC.save(); CC.closeSheet(); CC.render(); CC.toast('Dank je wel! De HO ziet je antwoorden'); });
+  // Besluit 143: tekst die de begeleider noteerde (bijv. uit het evaluatieformulier), altijd met wie het schreef
+  const genoteerd = (S, m, z, jij) => { const b = m.reflectieBegeleider; if (!b || z.reflectieOp) return '';
+    const wie = (M.persoon(S, b.door) || { naam: 'de begeleider' }).naam;
+    return `<div class="kaartje klein"><p><b>Genoteerd door ${esc(wie)}</b> <span class="zacht">(${D.kort(b.op.slice(0, 10))}, ${jij ? 'niet door jou' : 'niet door de trainer zelf'})</span></p><dl class="antwoorden">${REFLECTIE.map(([k, t]) => `<dt>${esc(t)}</dt><dd>${esc(b.r[k] || '—')}</dd>`).join('')}</dl></div>`; };
   // Wat de trainer ziet: voorblok, observatie, vier vakken en zijn reflectie. De begeleider kan het vooraf bekijken (voorbeeld).
   const obsGezien = (m) => CC.OBS[m.soort].flatMap((o) => o.p.map((q, i) => [o, q, `${o.k}${i}`])).filter(([, , sl]) => m.obs.punten[sl] || m.obs.notities[sl]);
   CC.views.begelVerslag = (S, p) => { const m = vind(S, p.id); const z = zelf(S)[m.id] || {}; const vb = !!p.voorbeeld; const tr = M.persoon(S, m.trainerId) || { naam: '' };
@@ -355,8 +360,11 @@
       <div class="kaartje klein"><b>Doel:</b> ${esc((m.voor || {}).doel || '—')}<br><b>Leerdoel:</b> ${esc((m.plan || {}).leerdoel || (m.voor || {}).leerdoel || '—')}</div>
       ${obs.length ? `${h.sectie('Wat er gezien is')}<div class="lijst compact">${obs.map(([o, q, sl]) => h.rij({ ic: '', titel: `${(TEKEN.find((t) => t[0] === m.obs.punten[sl]) || [, ''])[1]} ${esc(q)}`, sub: esc(m.obs.notities[sl] || ''), chevron: false })).join('')}</div>` : ''}
       ${VAKKEN.map(([k, t]) => `${h.sectie(t)}<p>${esc((m.vakken || {})[k] || '—')}</p>`).join('')}
-      ${h.sectie(vb ? 'Reflectie van de trainer' : 'Jouw reflectie')}${vb ? `<dl class="antwoorden">${REFLECTIE.map(([k, t]) => `<dt>${esc(t)}</dt><dd>${z.reflectieOp ? esc((z.r || {})[k] || '') : '<span class="zacht">nog niet ingevuld</span>'}</dd>`).join('')}</dl>` : `<form data-submit="begelReflectieOk" data-autosave="begelReflectie" data-id="${m.id}" class="codeform">${REFLECTIE.map(([k, t]) => veldT(k, esc(t), (z.r || {})[k])).join('')}<button class="knop">Klaar</button></form>`}
+      ${h.sectie(vb ? 'Reflectie van de trainer' : 'Jouw reflectie')}${genoteerd(S, m, z, !vb)}${!vb && m.reflectieBegeleider && !z.reflectieOp ? `<button class="knop licht klein" data-act="begelNeemOver" data-id="${m.id}">${icon('pencil')}Neem over als mijn reflectie</button><p class="zacht klein">Daarna kun je het aanpassen en op Klaar tikken. Het is dan jouw tekst.</p>` : ''}${vb ? `<dl class="antwoorden">${REFLECTIE.map(([k, t]) => `<dt>${esc(t)}</dt><dd>${z.reflectieOp ? esc((z.r || {})[k] || '') : '<span class="zacht">nog niet ingevuld</span>'}</dd>`).join('')}</dl>` : `<form data-submit="begelReflectieOk" data-autosave="begelReflectie" data-id="${m.id}" class="codeform">${REFLECTIE.map(([k, t]) => veldT(k, esc(t), (z.r || {})[k])).join('')}<button class="knop">Klaar</button></form>`}
       <button class="knop licht klein" data-act="begelPrint" data-id="${m.id}">${icon('printer')}Printen</button>` }; };
+  CC.on('begelNeemOver', (el) => { const S = CC.S(); const m = vind(S, el.dataset.id); const b = m && m.reflectieBegeleider; if (!b) return;
+    const z = zelf(S)[m.id] || (zelf(S)[m.id] = { trainerId: m.trainerId }); z.r = { ...b.r }; z.overgenomen = b.op;
+    CC.save(); CC.render(); CC.toast('Overgenomen. Pas het aan en tik op Klaar.'); });
   CC.on('begelReflectieOk', (f) => { const S = CC.S(); const m = vind(S, f.dataset.id); const z = zelf(S)[m.id] || (zelf(S)[m.id] = { trainerId: m.trainerId });
     z.r = Object.fromEntries(REFLECTIE.map(([k]) => [k, f[k].value.trim()])); z.reflectieOp = new Date().toISOString(); CC.save(); CC.render(); CC.toast('Reflectie opgeslagen'); });
 

@@ -36,12 +36,19 @@ Laptop, do 29: [oud](oud-lap-kaart-do29.jpg) · [nieuw](nieuw-lap-kaart-do29.jpg
 `supabase/scripts/2026-10-30_dcg_weekplannen_correctie.sql.voorstel`
 - **Controle tegen de CSV** (`docs/methodiek/persoonlijk/periodisering-o13-import-CONCEPT.csv`): bij alle acht weekplannen zijn hoofdthema, leerniveaus en route gelijk aan de **eerste trainingsrij** van die week. Het zijn dus dagwaarden, geen weekwaarden.
 - **Wat het doet, per weekplan:** hoofdthema, niveaus en route uit `methodiek` halen. Alleen wk 44: die dagwaarden bewaren bij `dagen['2026-10-29']`, omdat die eigen training bij het laden niet is overschreven. Bij zes weken het hoofdthema van de wedstrijd als `wedstrijd.context`. Daarna een nieuwe `stempel`.
-- **Wat het niet aanraakt:** de trainingen zelf, observatiepunten en hun uitkomsten, *vastgelegd*, alle andere velden. Elke regel werkt alleen als het weekplan nog precies zo is als bij de controle (`stempel`, hoofdthema, wedstrijd zonder context); anders gebeurt er niets.
+- **Wat het niet aanraakt:** de trainingen zelf, observatiepunten en hun uitkomsten, *vastgelegd*, alle andere velden.
+- **Alles of niets:** elk weekplan wordt in zijn geheel vergeleken met de gecontroleerde versie. Is er één intussen veranderd, dan stopt het script met *Gestopt: … is veranderd* en wordt er niets aangepast, ook niet bij de andere weken. (De controlecode `stempel` alleen was niet genoeg: die verandert niet als de trainer een weekplan aanpast.)
+- **Lokaal getest (30-10, tijdelijke database met de leeskopie, niet productie):**
+  - gewone uitvoering: 147 rijen, alleen de 8 weekplannen veranderd, uitkomst precies gelijk aan de verwachte stand; do 29-10 blijft een eigen training (geen concept, geen methodiek) en de dagwaarden staan bij `dagen['2026-10-29']`; wk 44 houdt zijn 3 observatiepunten;
+  - bij de andere 7 weken staan de verwijderde dagwaarden al in de concepttraining van die dag; er gaat dus niets verloren;
+  - tweede keer uitvoeren: stopt, niets veranderd;
+  - één weekplan vooraf aangepast: stopt, niets veranderd.
+- **Vóór uitvoeren:** productie opnieuw lezen. Is er sinds 30-10 iets veranderd aan een weekplan, dan stopt het script vanzelf; dan maak ik een nieuw voorstel.
 
 ## Wat nog ontbreekt voor vaardigheidsaccenten per trainingsplek
 
 1. **Een veld per plek.** Accenten staan nu bij de vorm (`vh`), niet bij de plek in de training. Nodig: een eigen keuze per onderdeel, bijv. `onderdelen[i].accent`. Eigen besluit (M, geen migratie: JSON in een bestaande rij).
-2. **De blokkop.** De kop van een blok leest het gereedschap nog met terugval op het weekplan (`blokDoel` → `CC.trWeekDoel`). Die terugval moet eerst weg, net als in de kaart, anders lijkt een weekwaarde een keuze van de trainer.
+2. **De blokkop.** Opgelost in #105 (weergave): de kop toont *weekvoorstel:* of *uit gekozen vorm*. De oefenvormkiezer filtert nog wel op het weekvoorstel als er niets gekozen is; dat blijft zo tot het accent per plek bestaat.
 3. **De kiezer.** Waar kiest de trainer het accent (in het blok of bij de vorm), en adviseert de oefenvormkiezer op dat accent? Nu adviseert hij op de vaardigheden van het profiel.
 4. **Evaluatie en Lijn.** Evalueren per accent of per training, en of Lijn minuten per accent telt. Pas besluiten als de keuze per plek bestaat.
 5. **De kaart.** *Accenten in gekozen vormen* wordt dan *Accenten per plek* (keuze van de trainer), met de vormaccenten als hulp.

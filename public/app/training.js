@@ -133,9 +133,14 @@
       : o.length ? `<small class="tr-tok">✓ ${t.inp} van ${grens} min ingepland${over < 0 ? ` · nog ${-over} min vrij` : ' · past precies'}</small>` : '';
     return `<div class="tr-tijd${lezen ? ' klein' : ''}"><div class="tr-tijd-r">${kop}</div>${o.length ? `<div class="tr-tbar" role="img" aria-label="${t.inp} minuten ingepland${grens != null ? `, ${grens} oefentijd` : ''}${t.org ? `, ${t.org} organisatie` : ''}">${delen.join('')}${lijn}</div>` : ''}${regel}</div>`; };
   // A = ..., B = ...: het hoofdleerdoel van de eerste vorm in elk blok
-  const blokDoelen = (S, p) => ['A', 'B'].map((b) => { const n = ldNaam(S, blokDoel(S, p, b)); return n ? `${b} = ${esc(n)}` : ''; }).filter(Boolean).join(' · ');
+  const blokDoelen = (S, p) => ['A', 'B'].map((b) => { const n = ldNaam(S, blokDoel(S, p, b)); return n ? `${b} = ${esc(n)}${blokDoelBron(S, p, b) === 'week' ? ' (weekvoorstel)' : ''}` : ''; }).filter(Boolean).join(' · ');
   // Leerdoel per blok: zelf gekozen, anders het hoofdleerdoel van de eerste vorm in dat blok
   const blokDoel = (S, p, b) => (p.blokDoel || {})[b] || (() => { const v = (p.onderdelen || []).filter((o) => blokSoort(o.blok) === b).map((o) => o.vormId && vorm(S, o.vormId)).find(Boolean); return v ? koppeling(S, v).primair : (p.blokDoel || {})[b] === null ? null : CC.trWeekDoel ? CC.trWeekDoel(S, p, b) : null; })();
+  // Waar komt het gereedschap van een blok vandaan (Besluit 144): eigen keuze, de eerste gekozen vorm, of het weekvoorstel (geen keuze van de trainer)
+  const blokDoelBron = (S, p, b) => { const e = (p.blokDoel || {})[b]; if (e) return 'eigen'; const v = (p.onderdelen || []).filter((o) => blokSoort(o.blok) === b).map((o) => o.vormId && vorm(S, o.vormId)).find(Boolean);
+    if (v) return koppeling(S, v).primair ? 'vorm' : null; return e !== null && CC.trWeekDoel && CC.trWeekDoel(S, p, b) ? 'week' : null; };
+  const blokKopTekst = (S, p, b) => { const n = ldNaam(S, blokDoel(S, p, b)); if (!n) return 'kies een leerdoel'; const w = blokDoelBron(S, p, b);
+    return w === 'week' ? `<span class="tr-gvoorstel">weekvoorstel: ${esc(n)}</span>` : w === 'vorm' ? `${esc(n)} <span class="tr-gvoorstel">· uit gekozen vorm</span>` : esc(n); };
   // Na afloop pas de terugblik (Principe 10: op het juiste moment)
   const opTijd = (datum, tijd) => { const d = D.parse(datum); const [u, m] = String(tijd).split(':').map(Number); d.setHours(u || 0, m || 0, 0, 0); return d; };
   const afgelopen = (a) => { if (!a || !a.datum) return false; if (a.datum < D.vandaag()) return true; if (a.datum > D.vandaag()) return false; return a.eind ? new Date() >= opTijd(a.datum, a.eind) : true; };
@@ -158,7 +163,7 @@
     const n = aantalSp(S, p, a), k = p.keepers == null || p.keepers === '' ? null : Number(p.keepers); const metCode = (p.onderdelen || []).some((o) => o.blok); const sj = sjablonen(S);
     const gezien = {};
     const gr = groepen(p).map((g) => { const min = g.items.reduce((t, i) => t + (Number(p.onderdelen[i].min) || 0), 0); const terug = gezien[g.k]; gezien[g.k] = true;
-      const kop = g.k === 'A' || g.k === 'B' ? `<button type="button" class="tr-gkop tr-${g.k}" data-act="tpBlokDoel" data-id="${a.id}" data-b="${g.k}">${g.k}${terug ? ' · terugkeer' : ` · ${blokDoel(S, p, g.k) ? esc(ldNaam(S, blokDoel(S, p, g.k))) : 'kies een leerdoel'} ▾`}</button>` : `<b class="tr-gkop tr-${g.k || 'x'}">${GROEPNAAM[g.k] || 'Opbouw'}</b>${g.k === 'P' && blokDoel(S, p, 'A') ? '<small class="zacht tr-toephint">kijk of A en B terugkomen</small>' : ''}`;
+      const kop = g.k === 'A' || g.k === 'B' ? `<button type="button" class="tr-gkop tr-${g.k}" data-act="tpBlokDoel" data-id="${a.id}" data-b="${g.k}">${g.k}${terug ? ' · terugkeer' : ` · ${blokKopTekst(S, p, g.k)} ▾`}</button>` : `<b class="tr-gkop tr-${g.k || 'x'}">${GROEPNAAM[g.k] || 'Opbouw'}</b>${g.k === 'P' && blokDoel(S, p, 'A') ? '<small class="zacht tr-toephint">kijk of A en B terugkomen</small>' : ''}`;
       return `<div class="tr-groep"><div class="tr-kop">${kop}<small class="zacht">${min} min</small></div><div class="tr-lijst">${g.items.map((i) => rijHtml(S, p, a, p.onderdelen[i], i, n, k, metCode)).join('')}</div></div>`; }).join('');
     return `<div class="kaartje tr-midden" data-drop-plan="${a.id}">
       <div class="tr-plankop"><div><h2>${esc(dagNaam(a))} · ${esc(p.thema || 'Training')} <button class="icoonknop" data-act="tpKopBewerk" data-id="${a.id}" aria-label="Thema en aantallen aanpassen">${icon('pencil')}</button>${CC.trStatus ? CC.trStatus(S, p) : ''}</h2>
@@ -213,7 +218,7 @@
     const partij = (p.onderdelen || []).filter((o) => o.blok === 'P' && o.vormId).map((o) => vorm(S, o.vormId)).filter(Boolean);
     const verwacht = ['A', 'B'].map((b) => { const ld = blokDoel(S, p, b); const vs = (p.onderdelen || []).filter((o) => blokSoort(o.blok) === b && o.vormId).map((o) => vorm(S, o.vormId)).filter(Boolean);
       const vh = [...new Set(vs.flatMap((v) => v.vaardigheden || []))].map((x) => vhNaam(S, x)).filter(Boolean);
-      return ld || vh.length ? `<li><b>${b} · ${esc(ldNaam(S, ld) || 'geen gereedschap')}</b>${vh.length ? ` — ${esc(vh.join(', '))}` : ''}</li>` : ''; }).join('');
+      return ld || vh.length ? `<li><b>${b} · ${esc(ldNaam(S, ld) || 'geen gereedschap')}${ld && blokDoelBron(S, p, b) === 'week' ? ' (weekvoorstel)' : ''}</b>${vh.length ? ` — accenten in gekozen vormen: ${esc(vh.join(', '))}` : ''}</li>` : ''; }).join('');
     return `<div class="tr-toep"><b>Toepassing${partij.length ? ` · ${esc(partij.map((v) => v.naam).join(', '))}` : ''}</b>
       <p>Kwam het gewenste gedrag uit de eerdere trainingsblokken terug in het partijspel?</p>
       ${verwacht ? `<small class="zacht">Verwacht gedrag:</small><ul class="tr-verwacht">${verwacht}</ul>` : ''}${m.gedrag ? `<small class="zacht">Gewenst gedrag van de training: ${esc(m.gedrag)}</small>` : (() => { const wv = CC.trWeekVoorstel ? CC.trWeekVoorstel(S, p) : {}; return wv.gedrag ? `<small class="zacht">Weekvoorstel, gewenst gedrag: ${esc(wv.gedrag)}</small>` : ''; })()}
@@ -251,9 +256,9 @@
       <button type="button" class="knop vol" data-act="sluitRender">Klaar</button></form>`); });
   CC.on('sluitRender', () => { CC.closeSheet(); CC.render(); });
   // Leerdoel van blok A of B
-  CC.on('tpBlokDoel', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); if (!p) return; const b = el.dataset.b; const nu = blokDoel(S, p, b);
+  CC.on('tpBlokDoel', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); if (!p) return; const b = el.dataset.b; const nu = blokDoelBron(S, p, b) === 'eigen' ? blokDoel(S, p, b) : null; const wv = blokDoelBron(S, p, b) === 'week' ? ldNaam(S, blokDoel(S, p, b)) : '';
     CC.sheet(`Blok ${b}: leerdoel`, `<div class="chips">${leerdoelen(S).map((l) => `<button class="chipknop ${nu === l.id ? 'aan' : ''}" aria-pressed="${nu === l.id}" data-act="tpBlokDoelOk" data-id="${el.dataset.id}" data-b="${b}" data-ld="${esc(l.id)}">${esc(l.naam)}</button>`).join('')}</div>
-      <small class="zacht">Zonder keuze neemt ClubComm het hoofdleerdoel van de eerste vorm in het blok.</small>`); });
+      ${wv ? `<p class="zacht">Weekvoorstel: ${esc(wv)} (niet gekozen). Tik het aan om het over te nemen.</p>` : ''}<small class="zacht">Zonder keuze neemt ClubComm het hoofdleerdoel van de eerste vorm in het blok, anders staat het weekvoorstel er als voorstel.</small>`); });
   CC.on('tpBlokDoelOk', (el) => { const p = plan(CC.S(), el.dataset.id); if (!p) return; p.blokDoel = p.blokDoel || {};
     p.blokDoel[el.dataset.b] = p.blokDoel[el.dataset.b] === el.dataset.ld ? null : el.dataset.ld; CC.save(); CC.closeSheet(); CC.render(); });
   // ⋯ Meer: wat je zelden doet

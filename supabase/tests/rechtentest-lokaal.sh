@@ -2,8 +2,9 @@
 # ClubComm — zware beveiligingscontrole (maat L), volledig lokaal. Gebruik: npm run test:veilig [-- 032]
 # Bouwt een TIJDELIJKE Postgres-database op deze computer (geen netwerk: alleen een socket in een tijdelijke map),
 # zet de Supabase-nabootsing en alle migraties uit supabase/migrations/ erin (een voorstel zoals 032 alleen als je het noemt),
-# en draait: priv.rechtentest() (rechten per rol), clubscheiding.sql (niets van een andere club) en statisch.sql (RLS,
-# search_path, anon). Daarna wordt alles weggegooid. Er is geen verbinding met de echte database mogelijk:
+# en draait: priv.rechtentest() (rechten per rol), clubscheiding.sql (niets van een andere club), statisch.sql (RLS,
+# search_path, anon), begeleiding-eigenaarschap.sql en app-opslag.sql (Besluit 143).
+# Daarna wordt alles weggegooid. Er is geen verbinding met de echte database mogelijk:
 # alle PG*-variabelen en databaseadressen worden gewist en psql praat alleen met de socket in de tijdelijke map.
 set -euo pipefail
 cd "$(dirname "$0")/../.."
@@ -24,9 +25,12 @@ case "$("${PSQL[@]}" -tAc "select inet_server_addr() is null")" in t) ;; *) echo
 # pg_net en pg_cron bestaan lokaal niet: alleen die regels worden overgeslagen (de nabootsing levert hun functies); verder ongewijzigd
 migreer() { sed -E 's/^[[:space:]]*(create|drop) extension( if (not )?exists)? (pg_net|pg_cron).*$/-- (lokaal overgeslagen) &/I' "$1" > "$DIR/m.sql"
   chmod 644 "$DIR/m.sql"; "${PSQL[@]}" -f "$DIR/m.sql" >/dev/null 2>"$DIR/fout" || { echo "FOUT in migratie $1:"; cat "$DIR/fout"; exit 1; }; }
-for f in supabase/migrations/*.sql; do migreer "$f"; done
-for v in "$@"; do f=$(ls supabase/migrations/${v}_*.sql.voorstel 2>/dev/null | head -1); [ -n "$f" ] || { echo "FOUT: voorstel $v niet gevonden"; exit 1; }
-  echo "Voorstel meegenomen: $f"; migreer "$f"; done
+# ZONDER="033": die migratie(s) eerst overslaan; noem ze daarna als argument om de volgorde te testen (bijv. -- 032 033)
+zonder() { for z in ${ZONDER:-}; do case "$(basename "$1")" in ${z}_*) return 0;; esac; done; return 1; }
+for f in supabase/migrations/*.sql; do zonder "$f" && { echo "Overgeslagen (ZONDER): $f"; continue; }; migreer "$f"; done
+for v in "$@"; do f=$( (ls supabase/migrations/${v}_*.sql.voorstel 2>/dev/null || true) | head -1); [ -n "$f" ] || f=$( (ls supabase/migrations/${v}_*.sql 2>/dev/null || true) | head -1)
+  [ -n "$f" ] || { echo "FOUT: voorstel of migratie $v niet gevonden"; exit 1; }
+  echo "Daarna meegenomen: $f"; migreer "$f"; done
 echo "Database opgebouwd: $(ls supabase/migrations/*.sql | wc -l) migraties ($("$BIN/postgres" --version | awk '{print $3}'), tijdelijk, geen netwerk)"
 
 fout=0
@@ -37,5 +41,9 @@ rapport() { local naam="$1"; local uit="$2"; local n; n=$(printf '%s\n' "$uit" |
 rapport "rechten per rol (priv.rechtentest)" "$("${PSQL[@]}" -tAF'|' -c "select wie, test, verwacht, uitkomst, ok from priv.rechtentest()")"
 rapport "clubscheiding" "$("${PSQL[@]}" -tAF'|' -f supabase/tests/lokaal/clubscheiding.sql | grep '|')"
 rapport "vaste regels (RLS, search_path, anon)" "$("${PSQL[@]}" -tAF'|' -f supabase/tests/lokaal/statisch.sql)"
+rapport "begeleidingsdossier (Besluit 143)" "$("${PSQL[@]}" -tAF'|' -f supabase/tests/lokaal/begeleiding-eigenaarschap.sql | grep '|')"
+rapport "app-opslag begeleiding (Besluit 143)" "$("${PSQL[@]}" -tAF'|' -f supabase/tests/lokaal/app-opslag.sql | grep '|')"
+# Extra controles (bijv. een onderzoek): EXTRA_SQL="pad/naar/bestand.sql" npm run test:veilig
+for x in ${EXTRA_SQL:-}; do rapport "extra: $(basename "$x")" "$("${PSQL[@]}" -tAF'|' -f "$x" | grep '|')"; done
 [ "$fout" -eq 0 ] && echo "Alle automatische beveiligingscontroles goed. Privacy (welke gegevens, wie ziet ze, hoe lang) blijft een handmatige stap: zie docs/kaart.md." || echo "Er zijn afwijkingen: niet samenvoegen."
 exit "$fout"

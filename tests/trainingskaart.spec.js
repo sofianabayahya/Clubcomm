@@ -115,6 +115,21 @@ for (const breed of [false, true]) {
     await expect(page.locator('.tr-wdet .tr-stapknop').first()).toContainText(`${await page.evaluate((di) => CC.date.parse(di).getDate(), d.di)}`);
     await expect(page.locator('.tr-wdet .tr-stapknop').first()).not.toContainText('→');
     await controleer(page, fouten, 'lijn');
+
+    // Blokkop: een weekvoorstel staat er als voorstel, niet als keuze van de trainer; een vorm als 'uit gekozen vorm'
+    await page.evaluate(() => { const p = CC.S().trainingsplannen.find((x) => x.id === 'tp-di'); p.onderdelen = [{ id: 'x1', blok: 'A1', min: 10 }, { id: 'x2', blok: 'B1', min: 10 }]; CC.save(); });
+    await plannen(page, 't-di');
+    await expect(page.locator('.tr-gkop.tr-A').first()).toHaveText('A · weekvoorstel: Aannemen en meenemen ▾');
+    await expect(page.locator('.tr-gkop.tr-B').first()).toHaveText('B · weekvoorstel: Passen ▾');
+    await page.locator('.tr-gkop.tr-A').first().click();
+    await expect(page.locator('#sheet .chipknop.aan')).toHaveCount(0);
+    await expect(page.locator('#sheet')).toContainText('Weekvoorstel: Aannemen en meenemen (niet gekozen)');
+    await page.evaluate(() => CC.closeSheet());
+    expect((await plan(page, 'tp-di')).blokDoel).toBeUndefined(); // bekijken schrijft niets
+    await page.evaluate(() => { const p = CC.S().trainingsplannen.find((x) => x.id === 'tp-di'); p.onderdelen[0].vormId = 'v-a2'; CC.save(); CC.render(); });
+    await expect(page.locator('.tr-gkop.tr-A').first()).toHaveText('A · Aannemen en meenemen · uit gekozen vorm ▾');
+    await expect(kaart(page)).toContainText('Accenten in gekozen vormen: Eerste contact van druk af');
+    await controleer(page, fouten, 'blokkop');
   });
 }
 
@@ -175,5 +190,8 @@ test('trainingskaart zonder opleidingsprofiel (zoals Swift): alleen een weekvoor
   await expect(page.locator('.tr-tkaart-los')).toContainText('Weekthema: Opbouwen onder druk');
   await expect(page.locator('.tr-meth, .tr-niv, .tr-contra, .tr-methknop')).toHaveCount(0);
   expect(await page.evaluate(() => CC.S().trainingsplannen.find((p) => p.id === 'tp-s').thema)).toBe(''); // niet ingevuld
+  // Blokkop zonder profiel: wat er staat, staat er nooit als keuze van de trainer zonder dat hij koos
+  await page.evaluate(() => { const S = CC.S(); const w = S.trainingsplannen.find((p) => p.week); w.methodiek.hg1 = 'Passen en trappen'; S.trainingsplannen.find((p) => p.id === 'tp-s').onderdelen = [{ id: 's1', blok: 'A1', min: 10 }]; CC.save(); CC.render(); });
+  await expect(page.locator('.tr-gkop.tr-A')).toHaveText('A · kies een leerdoel ▾');
   await controleer(page, fouten, 'zonder profiel');
 });

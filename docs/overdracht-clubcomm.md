@@ -5,19 +5,21 @@
 **Bijgewerkt:** 30-10-2026
 
 ## Stand
-- `main` = `1277583` (#104). Besluit **143** zit in #103, Besluit **144** in #105; het eerstvolgende vrije nummer is **145**.
+- `main` = `9e58519` (#103, Besluit 143), in productie nagegaan (Vercel READY). **Migratie 033 is niet toegepast.** Besluit **144** zit in #105; het eerstvolgende vrije nummer is **145**.
+- Productiedatabase (29/30-10, alleen gelezen): functioneel gelijk aan `main` (de md5 van alle `priv`-functies is gelijk, zonder commentaarregels). Het migratielogboek mist 027–030 (via losse SQL toegepast; alle objecten bestaan). Niet aanpassen zonder apart akkoord.
 
 ## Open pull requests
 | PR | Wat | Stand |
 |---|---|---|
-| #103 | Besluit 143: de trainer is eigenaar van zijn eigen teksten (migratie 033, nog niet toegepast), branch `bouw/eigen-reflectie-033` | `main` samengevoegd; tests groen; wacht op akkoord. Migratie 033 en de registratie van 027–030 zijn aparte akkoorden |
-| #105 | Besluit 144: trainingskaart (vijf regels, herkomst, weekvoorstel apart, oorspronkelijke planning), branch `bouw/trainingskaart` | Tests groen (DCG en Swift); wacht op akkoord. Raakt bij samenvoegen met #103 deze overdracht en het register |
+| #105 | Besluit 144: trainingskaart (vijf regels, herkomst, weekvoorstel apart, oorspronkelijke planning, blokkop met herkomst), branch `bouw/trainingskaart` | `main` samengevoegd; tests groen (DCG en Swift); wacht op akkoord |
 
-## Wacht op akkoord van de gebruiker
-- Correctie van de acht DCG-weekplannen (dagvelden eruit, `dagen` en `wedstrijd.context` erin): `supabase/scripts/2026-10-30_dcg_weekplannen_correctie.sql.voorstel`, gecontroleerd tegen de CSV, **niet uitgevoerd**.
-- Rechtenvoorstel 032 (begeleider kijkt mee, clubbank): lokaal getest met `npm run test:veilig -- 032` (56/56).
-- Twee bevindingen uit de beveiligingstest (maat L): uitvoerrecht van drie `priv`-functies intrekken; `priv.cc_club()` bij een account in twee clubs.
+## Wacht op akkoord van de gebruiker (in deze volgorde)
+1. #105 samenvoegen.
+2. Daarna apart: correctie van de acht DCG-weekplannen, `supabase/scripts/2026-10-30_dcg_weekplannen_correctie.sql.voorstel` (gecontroleerd tegen de CSV, **niet uitgevoerd**).
+3. Apart: 033 toepassen in productie (dan controleren met `priv.rechtentest()` en de app).
+- Rechtenvoorstel 032 (begeleider kijkt mee, clubbank): lokaal getest; samen met 033 in beide volgordes goed (56/56).
+- Bevinding: uitvoerrecht van drie `priv`-functies intrekken (onbereikbaar voor anon). Een account hoort bij precies één club (getest 10/10).
 
 ## Volgende technische stap
-- Vaardigheidsaccenten per trainingsplek (eigen besluit, nieuw veld per onderdeel); zie `docs/onderzoek/trainingskaart/README.md` voor wat er nog ontbreekt.
+- Later, eigen besluit: vaardigheidsaccenten per trainingsplek (de vorm blijft herbruikbaar; de trainer kiest per training het accent). Wat ontbreekt: `docs/onderzoek/trainingskaart/README.md`. Nu niet bouwen.
 - Voorstel (L): het opleidingsprofiel veilig leesbaar maken voor trainers (onderzoeksbranch `onderzoek/profiel-leesrechten`).
