@@ -5,21 +5,21 @@
 **Bijgewerkt:** 30-10-2026
 
 ## Stand
-- `main` = `1277583` (#104, wedstrijd zonder verzameltijd). Besluit **143** zit in #103; het eerstvolgende vrije nummer daarna is **144**.
+- `main` = `9e58519` (#103, Besluit 143), in productie nagegaan (Vercel READY). **Migratie 033 is niet toegepast.** Besluit **144** zit in #105; het eerstvolgende vrije nummer is **145**.
 - Productiedatabase (29/30-10, alleen gelezen): functioneel gelijk aan `main` (de md5 van alle `priv`-functies is gelijk, zonder commentaarregels). Het migratielogboek mist 027–030 (via losse SQL toegepast; alle objecten bestaan). Niet aanpassen zonder apart akkoord.
 
 ## Open pull requests
 | PR | Wat | Stand |
 |---|---|---|
-| #103 | Besluit 143: de trainer is eigenaar van zijn eigen teksten (migratie 033, nog niet toegepast), branch `bouw/eigen-reflectie-033` | `main` samengevoegd; tests groen; **niet samenvoegen en 033 niet toepassen zonder akkoord** |
+| #105 | Besluit 144: trainingskaart (vijf regels, herkomst, weekvoorstel apart, oorspronkelijke planning, blokkop met herkomst), branch `bouw/trainingskaart` | `main` samengevoegd; tests groen (DCG en Swift); wacht op akkoord |
 
-## Wacht op akkoord van de gebruiker
-- PR Besluit 143, en daarna apart: 033 toepassen in productie (volgorde: eerst samenvoegen/publiceren, dan 033, dan controleren).
+## Wacht op akkoord van de gebruiker (in deze volgorde)
+1. #105 samenvoegen.
+2. Daarna apart: correctie van de acht DCG-weekplannen, `supabase/scripts/2026-10-30_dcg_weekplannen_correctie.sql.voorstel` (gecontroleerd tegen de CSV, **niet uitgevoerd**).
+3. Apart: 033 toepassen in productie (dan controleren met `priv.rechtentest()` en de app).
 - Rechtenvoorstel 032 (begeleider kijkt mee, clubbank): lokaal getest; samen met 033 in beide volgordes goed (56/56).
-- Bevinding: uitvoerrecht van drie `priv`-functies intrekken (onbereikbaar voor anon). De zorg over `priv.cc_club()` bij twee clubs klopte niet: een account hoort bij precies één club (getest 10/10).
-- Idee (L): bij een trainer zien of hij al heeft ingelogd.
+- Bevinding: uitvoerrecht van drie `priv`-functies intrekken (onbereikbaar voor anon). Een account hoort bij precies één club (getest 10/10).
 
 ## Volgende technische stap
-- Na Besluit 143: de bestaande observatie- en reflectiemodule verder (Spoor 2-route, stap 3), eerst bespreken.
-- Klein (S): de kaart omzetten naar testlabels; `npm run check` en `npm run test:veilig` in `CLAUDE.md`.
-- Voorstel (L): het opleidingsprofiel veilig leesbaar maken voor trainers (er is een onderzoeksbranch `onderzoek/profiel-leesrechten`).
+- Later, eigen besluit: vaardigheidsaccenten per trainingsplek (de vorm blijft herbruikbaar; de trainer kiest per training het accent). Wat ontbreekt: `docs/onderzoek/trainingskaart/README.md`. Nu niet bouwen.
+- Voorstel (L): het opleidingsprofiel veilig leesbaar maken voor trainers (onderzoeksbranch `onderzoek/profiel-leesrechten`).
