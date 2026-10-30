@@ -9,7 +9,7 @@ De echte ClubComm-app, maar zonder database: `public/app/vendor/supabase.js` is 
 1. **Geen adres en geen sleutel**: `config.js` wijst naar `https://demo.invalid` (bestaat nooit). De echte Supabase-bibliotheek staat niet op deze branch.
 2. **Browser-blokkade (CSP)**: `connect-src 'self'` in `index.html` én als header in `vercel.json`. De browser weigert elk verzoek naar een andere site, ook als code het zou proberen.
 3. **Geen server**: geen e-mail, geen pushmelding, geen uitnodiging, geen geplande taak. Het inlogscherm zegt dat eerlijk ("er is geen mail verstuurd").
-4. **Geen preview zonder akkoord**: `vercel.json` → `git.deploymentEnabled["demo/swift-trainer"] = false`.
+4. **Preview** (akkoord 30-10): alleen een afgeschermde voorbeeldversie van deze branch; nooit productie.
 
 Vercel-toegangsbeveiliging is dus **geen** onderdeel van de isolatie; die komt er alleen bovenop.
 

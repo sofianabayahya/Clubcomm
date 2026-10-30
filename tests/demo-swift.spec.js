@@ -41,7 +41,7 @@ test.describe('Demo Swift (simulatie)', () => {
     const cfg = fs.readFileSync(path.join(public_, 'app', 'config.js'), 'utf8');
     expect(cfg).toMatch(/url: 'https:\/\/demo\.invalid'/);
     const vercel = JSON.parse(fs.readFileSync(path.join(public_, 'vercel.json'), 'utf8'));
-    expect(vercel.git.deploymentEnabled['demo/swift-trainer']).toBe(false); // geen preview zonder akkoord
+    // Preview toegestaan (akkoord 30-10); de isolatie hangt niet van Vercel af maar van config, bibliotheek en CSP
     expect(JSON.stringify(vercel.headers)).toContain("connect-src 'self'");
     expect(fs.readFileSync(path.join(public_, 'index.html'), 'utf8')).toContain('<meta http-equiv="Content-Security-Policy" content="connect-src \'self\'');
   });

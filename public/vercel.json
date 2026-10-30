@@ -1,5 +1,4 @@
 {
-  "git": { "deploymentEnabled": { "demo/swift-trainer": false } },
   "buildCommand": "node versie-maken.js",
   "outputDirectory": ".",
   "cleanUrls": true,
