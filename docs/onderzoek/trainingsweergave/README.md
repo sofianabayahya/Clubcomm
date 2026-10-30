@@ -107,45 +107,93 @@ Lijn toont per training: datum · leerniveau, met daaronder titel · status.
 - `nu-tel-plannen-vr30.jpg`, `nu-tel-plannen-do29.jpg`, `nu-tel-week-do29.jpg`, `nu-tel-lijn.jpg` (telefoon);
 - `nu-lap-plannen-vr30.jpg` (laptop).
 
-## 8. Voorstel: één trainingskaart met vijf vaste regels (geen nieuwe velden)
+## 8. Definitief voorstel: de trainingskaart (ronde 2, 30-10)
 
-**Schermen:**
-- `voorstel-vr30.jpg`, `voorstel-do29.jpg`, `voorstel-di27.jpg` (390 px);
-- `voorstel-laptop.jpg`.
+*Na je reactie van 30-10. **Alleen een voorbeeld:** geen wijziging aan app, database of productie.*
 
-Het methodiekblok wordt één kaart met vijf regels, elk met een **vast woord** ervoor. Alles komt uit de **bestaande** gegevens:
+**Schermen** (werkelijke gegevens DCG O13):
+- `kaart-vr30.jpg`, `kaart-do29.jpg`, `kaart-di27.jpg` (telefoon, 390 px);
+- `kaart-laptop.jpg`;
+- `kaart-zonder-profiel.jpg` (club zonder opleidingsprofiel, zoals Swift; verzonnen voorbeeld).
 
-| Regel | Inhoud (bestaand) | Herkomst zichtbaar |
+### 8.1 De vijf regels en waar ze vandaan komen (alleen bestaande gegevens)
+
+| Regel | Betekenis | Bestaande gegevens |
 |---|---|---|
-| **Titel** | eigen titel; is die leeg: het hoofdthema van de week, met het label *weekthema* | label *weekthema* |
-| **WAT** | *Hoofdthema van deze training* + *Voetbalprobleem 2 · Vooruitgang creëren* (nummer mét woord) | – |
-| **WAAR** | teamfunctie + relevante informatie (nu ingeklapt) | label *week* als het uit het weekplan komt |
-| **WELKE** | A · B, ondersteunend, gedrag; bij een gegeven training *in je vormen: Uitvoeren 3× · Herkennen 3×* | label *week* |
-| **NIVEAU** | één chip + de plek in de week (*di 27 → do 29 → vr 30*); geen tweede chip meer bij *Stap x van y* | *uit het weekplan*, en of het klopt met de vormen |
-| **MEE UIT VORIGE** | uit *wat ging anders* van de vorige training: de zin met *afspraak*, anders de eerste zin, plus *Hele evaluatie lezen* | dag van de vorige training |
+| **Wat** | het voetbalprobleem | `methodiek.probleem` (naam uit het profiel, met het woord *Voetbalprobleem* en het nummer) + teamfunctie + contrathema |
+| **Waar** | de wedstrijdcontext of het dagthema | dagthema = `methodiek.hoofdthema` uit de periodisering, of bij een eigen training de **titel**; relevante informatie; de wedstrijd van de week (observatiepunten) |
+| **Welke** | gereedschappen en vaardigheidsaccenten | A/B (`blokDoel` of methodiek), ondersteunend; **accenten in je vormen** = `vaardigheden` van de gekozen oefenvormen (bestaat sinds Besluit 138) |
+| **Niveau** | de beoogde leerroute | `methodiek.niveaus` + `route`; bij een eigen training zonder keuze: de leerniveaus die je per vorm koos (*Uitvoeren 3× · Herkennen 3×*) |
+| **Mee uit vorige** | de concrete afspraak | uit *wat ging anders* (`anders`) van de **vorige training van het team** (zie 8.4) |
 
-**Verder:**
-- **di 27 (gegeven vóór het weekplan):** het weekplan wordt **niet** getoond alsof het de keuze van de trainer was. Er staat een rustige regel *Andere inhoud dan het weekplan*.
-- **Onderbouwing (weekformat)** blijft één tik verder, voor handelingsketen, leerroute, transfer en observatie.
-- **Telefoon:** de kaart is ongeveer één scherm hoog. **Laptop:** de kaart links naast de opbouw, alles open.
-- **Optioneel**, apart te beslissen: *Weekthema als titel gebruiken* bij een lege titel (één tik, het schrijft `thema`).
+Een regel zonder gegevens verdwijnt (club zonder profiel: alleen *Wat*, *Welke* en *Mee uit vorige*).
 
-**Wat dit niet doet:**
-- geen nieuwe velden;
-- geen automatische samenvatting (vergelijk het afgewezen idee *automatische uitloopsamenvatting*: hier tonen we alleen een stuk van je eigen tekst);
-- het weekplan of de trainingen worden niet veranderd;
-- geen Swift-inhoud.
+### 8.2 Herkomst altijd zichtbaar (geen kleur alleen: elk label heeft een woord)
 
-**Te beslissen:**
-1. Akkoord op de vijf regels (WAT, WAAR, WELKE, NIVEAU, MEE UIT VORIGE)?
-2. Training **zonder eigen methodiek**: het weekplan tonen **met het label *week*** (voorstel), of niet tonen?
-3. Training die **vóór** het weekplan is gegeven (zoals di 27): *Andere inhoud dan het weekplan* tonen (voorstel), of niets?
-4. *Mee uit vorige*: de zin met *afspraak* (voorstel), of de eerste zin?
-5. Apart, klein: het origineel van een concepttraining bewaren, zodat aanpassen het origineel niet wist (alleen als je dat wilt; dat is wel een gegevenswijziging, maat M).
+| Label | Betekent | Voorbeeld |
+|---|---|---|
+| **eigen** | jouw voorbereiding | do 29: accenten in je vormen |
+| **periodisering** | geladen voor **deze dag** (concepttraining) | vr 30 |
+| **weekvoorstel** (stippellijn, apart vak) | hoort bij de week; **niet** door jou gekozen; wordt **nooit** in de training gezet | do 29 en di 27 |
 
-**Maat:** M (gewijzigd scherm, geen database), Spoor 3. Een eigen besluit na akkoord.
+Bovenaan elke kaart één regel met de stand:
+- *Concept uit de periodisering · nog niet aangepast*
+- *Eigen voorbereiding – periodisering niet toegepast*
+- *Eigen voorbereiding – gegeven vóór de periodisering (geladen 29 okt)*
 
-**Testen:**
-- DCG O13 week 44 (deze drie trainingen);
-- een club zonder profiel, zoals Swift: daar verschijnt de kaart niet, omdat de methodiek niet actief is;
-- telefoon en laptop.
+### 8.3 Trainingen zonder eigen methodiek en historische trainingen
+- **Niets automatisch invullen.** De huidige code vult een training zonder eigen methodiek stil aan met het weekplan (`methodiek()` in `periodisering.js`). Voorstel: dat alleen nog tonen als **weekvoorstel**, apart.
+- **di 27** (gegeven vóór het laden): het weekvoorstel staat er alleen als context (*later geladen*). Er wordt niets aan de training toegevoegd en niets overschreven.
+- **Voorstel van vorige trainingen** gaat niet meer via *hetzelfde probleem* (dat kwam ook stil uit het weekplan). Het wordt gewoon de vorige training van het team.
+
+### 8.4 Mee uit vorige: alleen een herkende afspraak, nooit iets verzonnen
+1. Staat in *wat ging anders* een zin die begint met **Afspraak** of **Concrete afspraak** (zoals bij do 29), dan toont de kaart **die zin letterlijk**.
+2. Heeft de evaluatie een gekozen antwoord bij *volgende keer* (`ev-volgende`, bijv. *één variabele aanpassen*), dan staat dat eronder. Dat is een keuze die je zelf maakte.
+3. Niets herkend: *Geen afspraak herkend in de evaluatie van di 27* + een link *Wat anders ging op di 27*.
+4. De hele evaluatie staat er nooit meer standaard in; alleen via *Hele evaluatie lezen*.
+
+Tip voor jezelf: begin de laatste alinea van *wat ging anders* met **Afspraak:**. Dan pakt de kaart hem altijd.
+
+### 8.5 Weekthema, voetbalprobleem, wedstrijdcontext, dagaccent en oefenvormen
+
+Analyse van het periodiseringsbestand van DCG O13 (alle 8 weken met 2 trainingen):
+
+| Soort | In het bestand | Gelijk per week? | Waar op de kaart |
+|---|---|---|---|
+| **Weekthema** | bestaat **niet** als eigen kolom; de week wordt gedragen door fase + voetbalprobleem | – | strook *Week 44 · Fase 1 · Voetbalprobleem 2* |
+| **Voetbalprobleem** | `centraal_voetbalprobleem` | ja, 8/8 | **Wat** |
+| **Wedstrijdcontext** | `hoofdthema` van de **wedstrijdregel** (bijv. *Opbouwen achteruit: eerste druklijn uitspelen*) | – | **wordt nu niet geladen** (alleen de 3 observatiepunten); zie keuze 3 |
+| **Dagaccent / dagthema** | `hoofdthema`, `beoogd_leerniveau`, `leerroute` | nee, **0/8** (per dag anders) | **Waar** en **Niveau** |
+| **Gekozen oefenvormen** | – (eigen keuze) | – | de opbouw + *accenten in je vormen* |
+
+**Ontdekt:** het weekplan bevat nu ook de **dagwaarden van de eerste trainingsdag** (hoofdthema, leerniveau, leerroute). Bij week 44 zijn dat die van do 29.
+
+Voorstel:
+- **Weergave (zonder gegevenswijziging):** het weekvoorstel toont alleen de velden die echt per week gelden (probleem, teamfunctie, contrathema, A/B, ondersteunend, gedrag, relevante informatie). De dagwaarden in het weekplan worden niet als weekthema getoond.
+- **Laden (later, eigen besluit):** het weekplan krijgt alleen de weekvelden. De dagwaarden van een overgeslagen training (zoals do 29) komen als *periodisering voor deze dag (niet toegepast)* bij die dag.
+
+Voor de 8 bestaande weekplannen zou dat een eenmalige correctie uit het CSV-bestand zijn. Dat is een databasewijziging, dus alleen na akkoord. Zonder die correctie toont do 29 *periodisering niet toegepast*, zonder de dagwaarden.
+
+### 8.6 Oorspronkelijke planning terugvinden
+- **Nu:** alle 22 concepttrainingen en 8 weekplannen zijn nog precies zoals geladen (de bestaande controlecode `stempel` nagerekend op 30-10).
+- **Bestaande bron:** `docs/methodiek/persoonlijk/periodisering-o13-import-CONCEPT.csv` (in de repository, niet in de app).
+- **Eenvoudigste oplossing (geen versiebeheer):** op het moment dat je een concept voor het **eerst** aanpast, en de controlecode dus nog klopt, bewaart de app één momentopname in de training (`origineel`: titel, methodiek, A/B; ongeveer 1 kB). Op de kaart staat dan *Oorspronkelijke planning ›*.
+  - Niets eenmaligs in de database nodig.
+  - Er komen geen nieuwe velden op het scherm.
+  - Werkt ook voor de al geladen concepten.
+
+### 8.7 Te beslissen
+1. Akkoord op de kaart zoals in de schermen (5 regels, 3 herkomstlabels, weekvoorstel apart)?
+2. *Mee uit vorige*: de regels uit 8.4 (*Afspraak* of *Concrete afspraak*, plus de keuze bij *volgende keer*)?
+3. Wedstrijdcontext: alleen de observatiepunten (nu), of bij het laden ook het hoofdthema van de wedstrijdregel bewaren (later, eigen besluit)?
+4. Momentopname bij de eerste aanpassing (8.6): bouwen met de kaart, of later?
+5. Weekplan alleen weekvelden + eenmalige correctie van de 8 weekplannen (8.5): later, eigen besluit met databaseakkoord?
+
+**Maat:** de kaart is M (scherm, geen database). 8.5 (correctie) is een gegevenswijziging, alleen na akkoord.
+
+**Testen bij het bouwen:**
+- DCG week 44 (di 27, do 29, vr 30);
+- een club zonder profiel;
+- telefoon en laptop;
+- 44 pt tikvlak;
+- herkomst niet alleen met kleur.
