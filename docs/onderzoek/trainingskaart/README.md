@@ -31,6 +31,12 @@
 
 Laptop, do 29: [oud](oud-lap-kaart-do29.jpg) · [nieuw](nieuw-lap-kaart-do29.jpg) · [gecorrigeerd](gecorrigeerd-lap-kaart-do29.jpg).
 
+## Blokkop A/B (30-10)
+
+Boven: geen eigen keuze, het gereedschap komt uit het weekplan (schuin, *weekvoorstel:*). Onder: uit de eerste gekozen vorm. Een eigen keuze staat er gewoon (*A · Passen*).
+
+![](blokkop-herkomst.jpg)
+
 ## Correctie van de acht weekplannen (voorstel, niet uitgevoerd)
 
 `supabase/scripts/2026-10-30_dcg_weekplannen_correctie.sql.voorstel`
