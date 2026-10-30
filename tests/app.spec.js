@@ -1266,8 +1266,9 @@ test('tekentool: tekenen, opslaan en opnieuw tonen', { tag: ['@tekentool', '@tra
   await page.mouse.click(veld.x + veld.width * 0.5, veld.y + veld.height * 0.5);
   await page.keyboard.press('H');
   await page.mouse.click(veld.x + veld.width * 0.7, veld.y + veld.height * 0.3);
+  // Opslaan zet de tekening om naar een plaatje; op een drukke computer (veel tests tegelijk) duurt dat soms meer dan 5 s (gemeten: tot 7 s)
   await page.locator('#drawSave').click();
-  await expect(page.locator('#drawOverlay')).toBeHidden();
+  await expect(page.locator('#drawOverlay')).toBeHidden({ timeout: 20000 });
   await expect(page.locator('.tegel svg')).toHaveCount(1);
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem('cc-tekentool-test'))[0].data.items.length)).toBe(3);
   expect(fouten).toEqual([]);
@@ -1358,7 +1359,7 @@ test('tekentool: nummerbalk en rood schijfje', { tag: ['@tekentool', '@training'
   await page.locator('[data-rail="schijfjes"]').click();
   await expect(page.locator('[data-draw-tool][aria-label="Schijfje rood"]')).toHaveCount(1);
   await page.locator('#drawSave').click();
-  await expect(page.locator('#drawOverlay')).toBeHidden();
+  await expect(page.locator('#drawOverlay')).toBeHidden({ timeout: 20000 });
   const items = await page.evaluate(() => JSON.parse(localStorage.getItem('cc-tekentool-test'))[0].data.items.filter((x) => x.t === 'p').map((x) => `${x.c}${x.n || ''}`).sort());
   expect(items).toEqual(['geel', 'geel', 'rood1', 'rood10', 'rood11', 'rood3', 'rood6']);
   expect(fouten).toEqual([]);
@@ -1382,7 +1383,7 @@ test('tekentool: vorm per team wisselen, menu Spelers open en dicht', { tag: ['@
   await page.locator('[data-rail="spelers"]').click();
   await expect(page.locator('[data-nr="rood|6"]')).toBeVisible();
   await page.locator('#drawSave').click();
-  await expect(page.locator('#drawOverlay')).toBeHidden();
+  await expect(page.locator('#drawOverlay')).toBeHidden({ timeout: 20000 });
   const d = await page.evaluate(() => JSON.parse(localStorage.getItem('cc-tekentool-test'))[0].data);
   expect(d.vormen).toEqual({ rood: 't' });
   // de tegel tekent het ook als driehoek
@@ -1421,7 +1422,7 @@ test('tekentool: rail, menu Veld en pijl met boog en langer maken', { tag: ['@te
   const e = await page.locator('[data-h="2"]').boundingBox();
   await page.mouse.move(e.x + e.width / 2, e.y + e.height / 2); await page.mouse.down(); await page.mouse.move(e.x + 120, e.y + e.height / 2, { steps: 5 }); await page.mouse.up();
   await page.locator('#drawSave').click();
-  await expect(page.locator('#drawOverlay')).toBeHidden();
+  await expect(page.locator('#drawOverlay')).toBeHidden({ timeout: 20000 });
   const p = await page.evaluate(() => JSON.parse(localStorage.getItem('cc-tekentool-test'))[0].data.items.find((x) => x.t === 'arrow'));
   expect(p.cy).toBeLessThan(p.y1 - 40); // boog naar boven
   expect(p.x2 - p.x1).toBeGreaterThan(300); // langer gemaakt
@@ -1441,7 +1442,7 @@ test('tekentool: loopactie met boog', { tag: ['@tekentool', '@training'] }, asyn
   await page.mouse.move(v.x + v.width * 0.3, v.y + v.height * 0.6); await page.mouse.down();
   await page.mouse.move(v.x + v.width * 0.6, v.y + v.height * 0.6, { steps: 5 }); await page.mouse.up();
   await page.locator('#drawSave').click();
-  await expect(page.locator('#drawOverlay')).toBeHidden();
+  await expect(page.locator('#drawOverlay')).toBeHidden({ timeout: 20000 });
   const p = await page.evaluate(() => JSON.parse(localStorage.getItem('cc-tekentool-test'))[0].data.items[0]);
   expect(p.k).toBe('run'); expect(p.cy).toBeLessThan(p.y1 - 40);
   expect(fouten).toEqual([]);
@@ -1507,7 +1508,7 @@ test('trainingsmodule: training voorbereiden en eigen vorm (echte versie)', { ta
   await page.locator('[data-nr="rood|6"]').click();
   await page.evaluate(() => CC.ververs());
   await page.locator('#drawSave').click();
-  await expect(page.locator('#drawOverlay')).toBeHidden();
+  await expect(page.locator('#drawOverlay')).toBeHidden({ timeout: 20000 });
   await expect.poll(async () => { const r = Object.values((await nepDb(page)).rows).find((x) => x.soort === 'vormen'); return r && r.data.tekening ? r.data.tekening.items.length : 0; }, { message: 'tekening in de database' }).toBe(1);
   await controleer(page, fouten, 'trainingsmodule');
 });
