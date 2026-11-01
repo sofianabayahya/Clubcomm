@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 30 oktober 2026 (t/m Besluit 144)
+Laatst bijgewerkt: 1 november 2026 (t/m Besluit 146)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -21,6 +21,7 @@ Laatst bijgewerkt: 30 oktober 2026 (t/m Besluit 144)
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
+| 146 | 3 | Begeleider bij het pakket Trainers begeleiden: HO = *Home · Trainers · Teams · Berichten*, TC = *Home · Trainers · Berichten*. Home = Actie nodig + de week van je trainers (dagknoppen met aantal, bouwfilter, *Wedstrijden · Trainingen · Beide*, *Alleen thuis*; per regel tijd · team · trainer · thuis/uit · tegenstander · veld) met *Begeleiden* in 2 tikken. Trainers = compacte lijst (één regel per trainer, *Alle (n) · Traject (n)*, zoeken) met een snelvenster; de grote trajectkaart wordt één regel. Geen nieuwe gegevens of rechten | ✅ geldt |  |
 | 144 | 3 | Trainingskaart in Plannen: vijf vaste regels *Wat · Waar · Welke · Niveau · Mee uit vorige*, elk met herkomst (*Eigen · Periodisering · Weekvoorstel*); het weekvoorstel staat apart en vult nooit vanzelf in; *Accenten in gekozen vormen* (geen trainingsaccent); *Mee uit vorige* toont alleen een zin die begint met *Afspraak:* plus de bestaande evaluatiegegevens, met een link; wedstrijdsituatie apart van het dagthema; één momentopname *Oorspronkelijke planning* bij de eerste wijziging van een concept; weekplan alleen weekvelden. Bestaande trainingen en weekplannen ongewijzigd | ✅ geldt (bestaande weekplannen: correctie wacht op akkoord) |  |
 | 143 | 3 | De trainer is eigenaar van zijn eigen teksten (kennismaking, vragenlijst vooraf, reflectie): HO, TC en beheerder kunnen ze niet namens hem schrijven, wijzigen of verwijderen; alleen *gevraagd* zetten. Overnemen uit het evaluatieformulier = **begeleiderstekst** in het moment; de trainer kan die zelf overnemen en aanpassen. Een clubbeheerder zonder begeleidersrol heeft geen toegang tot het begeleidingsdossier. Migratie 033 (bewaker + beperkende regel, `cc_mag` ongewijzigd, samen met 032 in elke volgorde) | ✅ besloten (wacht op samenvoegen en migratie) |  |
 | 142 | 3 | Tijd vóór de training, voor elke club: bovenaan Plannen *veldtijd (kalender) − organisatie (de bestaande regel ombouw, door de trainer aan te passen, ook zonder sjabloon) = oefentijd*, de gekleurde balk met de grens, en een waarschuwing als de ingeplande minuten de oefentijd overschrijden (nooit blokkeren). Organisatie telt één keer. Geen nieuw veld; DCG-sjabloon 68 + 7 blijft. Geen registratie of samenvatting van uitloop | ✅ geldt |  |
@@ -65,7 +66,7 @@ Laatst bijgewerkt: 30 oktober 2026 (t/m Besluit 144)
 | 103 | 3 | Automatisch bewaren in formulieren; Rollen opgeschoond | ✅ geldt |  |
 | 102 | 3 | Snelle winsten: dringend bovenaan, Observeren op de dag zelf, unieke knopnamen | ✅ geldt |  |
 | 101 | 3 | Voorgesprek als voormeting: eigen vragen voor training en wedstrijd | ✅ geldt |  |
-| 100 | 3 | Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden" | ◐ deels herzien | door 101 (vragen kort en uitgebreid per soort); 143 (overgenomen reflectie is begeleiderstekst) |
+| 100 | 3 | Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden" | ◐ deels herzien | door 101 (vragen kort en uitgebreid per soort); 143 (overgenomen reflectie is begeleiderstekst); 146 (tabbladen van HO en TC: Home met de week, Trainers compact, Teams eigen tabblad) |
 | 99 | 3 | Trainers begeleiden via een traject, met de KNVB-begeleidingscyclus; tabblad Trainers | ◐ deels herzien | door 100 (vragenlijst kort of uitgebreid per niveau; notities gedeeld per bouw met de TC); door 101 (vragenlijst vooraf per soort); 129 (observeren: snelle notities tijdens, aandachtspunten na afloop); 134 (moment verplaatsen of *niet doorgegaan*); 143 (kennismaking en reflectie alleen door de trainer; geen toegang voor een beheerder zonder begeleidersrol) |
 | 98 | 3 | Verantwoordelijkheid: iedere rol doet zijn eigen werk, de laag erboven is het vangnet | ✅ geldt |  |
 | 97 | 3 | Bouwen, werkgebied en focus, signalen die ertoe doen, trainersdossier | ◐ deels herzien | door 99 (traject per trainer in plaats van 2 + 2; tabblad Trainers; VOG en diploma bij de coördinator); door 100 (werkgebied bij de rol, rol TC gebouwd) |
@@ -682,6 +683,25 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 146 — De week van de begeleider: Home, compacte trainerslijst en het tabblad Teams (Spoor 3)
+*Besloten 1 november 2026, na voorbeelden op 390 px (Home met de week, Trainers compact, snelvenster) en het akkoord van de initiatiefnemer. Aanleiding: bij AVV Swift staan nu vier trainers met hun trainingen en wedstrijden; de HO wil op één plek zien wie wanneer en waar speelt en daaruit kiezen. Herziet Besluit 100 deels (tabbladen).*
+- **Doel:** de begeleider kiest in een paar tikken welke training of wedstrijd hij bezoekt, ook met veel trainers. Voor elke club met het pakket *Trainers begeleiden*.
+- **Tabbladen:** HO = **Home · Trainers · Teams · Berichten**; TC = **Home · Trainers · Berichten**. Een club die alles gebruikt, had al Home · Trainers · Teams · Inzicht · Berichten: dezelfde plekken, dus er verschuift niets als een club meer modules gaat gebruiken.
+- **Home = Actie nodig + de week van je trainers.** Dagknoppen *ma … zo* met het aantal; pijlen voor vorige en volgende week. Standaard: vandaag, of de eerstvolgende dag met iets (op zondag zonder wedstrijden meteen de volgende week). Filters: de bouw (dezelfde keuze als bij Trainers, binnen je werkgebied), *Wedstrijden* (standaard) · *Trainingen* · *Beide*, en *Alleen thuis*.
+  - Per regel: tijd · team · trainer · *Thuis* of *Uit* · tegenstander · veld. Afgelast staat erbij. Alleen teams met een trainer in ClubComm (Besluit 136).
+  - **Begeleiden in 2 tikken:** tik op de regel → bevestigen. Het begeleidingsmoment staat meteen op die training of wedstrijd en de trainer krijgt de vragenlijst, net als bij plannen vanuit het traject. Staat er al een moment, dan opent de regel dat moment.
+  - Wat er was onder *Deze week* (begeleidingsmomenten) zit nu in de regels; een moment op een losse datum staat bij die dag.
+- **Thuis of uit is genoeg.** Geen adres, kaart of reistijd: de begeleider kiest meestal een thuiswedstrijd (zie ook *Afgewezen ideeën*, Besluit 43).
+- **Trainers = compacte lijst.** *Alle (n) · Traject (n)* (bij het pakket standaard *Alle*), bouwfilter, zoeken. Eén regel per trainer: naam · team · bouw · stand (*traject 1/4 · volgend: za 7 nov*, *kennismaking gevraagd*). De grote kaart met *in traject / gedaan* wordt één regel: *Traject: 2 van 6 momenten gedaan dit seizoen*. Kennismaking uitnodigen en de lege vragenlijst staan in één regel onderaan.
+  - **Snelvenster** bij een tik: team, bouw, traject of kennismaking, de komende en de laatste momenten, en de knoppen *Begeleidingsmoment plannen* (of *Traject starten*) en *Volledig dossier*.
+  - Zonder het pakket (club met spelers) blijft *Alle trainers* het bestaande overzicht met afmeldingen en zones.
+- **Teams** is een eigen tabblad voor de HO (teams, trainingsdagen, wedstrijden plakken, trainer toevoegen); het blok onderaan Trainers vervalt.
+- **Gegevens en rechten:** niets nieuws. De begeleider leest datum, tijd, tegenstander, thuis/uit en veld al (Besluit 100), nooit spelers. Geen migratie.
+- **Niet gedaan:** adres, kaart of reistijd bij uitwedstrijden; een eigen tabblad *Week* (de week hoort op Home, actie eerst).
+- **Getest** (`tests/ho-week.spec.js`, vaste datum): vier tabbladen; za 7 nov met afgelast, thuis en uit, zonder het team zonder trainer; *Alleen thuis*; bouwfilter; trainingen op een andere dag; *Begeleiden* maakt het moment op de juiste wedstrijd; vorige/volgende week; Trainers compact met aantallen en snelvenster; Teams; een TC met werkgebied Bovenbouw ziet alleen zijn bouw.
+
+---
+
 ## Besluit 144 — Trainingskaart: vijf regels met herkomst, weekvoorstel apart, oorspronkelijke planning (Spoor 3)
 *Besloten 30 oktober 2026, na het onderzoek op branch `onderzoek/trainingsweergave` (schermen op telefoon en laptop met echte DCG O13-gegevens van 27, 29 en 30 oktober) en het akkoord van de initiatiefnemer. Vergelijking oud en nieuw: `docs/onderzoek/trainingskaart/README.md`. Herziet de Besluiten 133, 137 en 141 deels. De inhoud (DCG-methodiek) is van Spoor 1; de functie geldt voor elke club.*
 - **Doel:** de trainer ziet in één blok **wat** hij vandaag traint en **waar het vandaan komt**, zonder dat ClubComm iets voor hem invult. "ClubComm signaleert, mensen beslissen."
@@ -1276,6 +1296,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Elke vraag hoort bij een onderdeel van het A4** (trainingsdoel, organisatie, leersituatie creëren, leersituatie beïnvloeden, coachgedrag, persoonlijk leerdoel). De begeleider ziet dat label bij elk antwoord, zodat een vaag antwoord meteen laat zien waar hij moet kijken. De trainer ziet alleen de vragen.
 
 ## Besluit 100 — Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden"
+> **◐ Deels herzien door Besluit 146** (tabbladen: HO = Home · Trainers · Teams · Berichten, TC = Home · Trainers · Berichten; Home met de week van de trainers).
 > **◐ Deels herzien door Besluit 143** (overnemen uit het evaluatieformulier: de reflectie wordt begeleiderstekst in het moment, de trainer neemt hem zelf over).
 *Besloten 10 oktober 2026, voor de test bij een tweede club (HO + TC, twee trainers, geen ouders). Vult Besluit 97, 98 en 99 aan.*
 > **◐ Deels herzien door Besluit 101** (de vragenlijst vooraf: eigen vragen voor training en wedstrijd, als voormeting).
@@ -2385,6 +2406,7 @@ Bewust niet gedaan, met de reden. Komt een van deze toch terug, zeg dan dat het 
 | Het weekvoorstel vanzelf invullen in de training | De trainer beslist; het voorstel staat apart met *Weekvoorstel overnemen* | 144 |
 | Versiebeheer of een wijzigingsgeschiedenis van trainingen | Eén momentopname van de oorspronkelijke planning is genoeg (Principe 10) | 144 |
 | Accenten van de gekozen vormen als trainingsaccent tonen | Een accent hoort bij een trainingsplek en is een keuze van de trainer, geen optelsom van vormen | 144 |
+| Adres, kaart of reistijd bij uitwedstrijden in de week van de begeleider | De begeleider kiest op thuis of uit; meestal een thuiswedstrijd. Reistijd is eerder afgewezen (Besluit 43) | 146 |
 | Uitloop achteraf registreren (redenen, een automatische uitloopsamenvatting, extra evaluatievelden voor minuten) | De trainer wil een realistische planning vooraf, geen extra administratie achteraf; de echte minuten (Besluit 141) blijven bestaan | 142 |
 | Tijdsrapportages of dashboards over werkelijke minuten | Geen functies bouwen alleen omdat de gegevens er zijn | 142 |
 | Ombouwminuten per overgang berekenen, of een vaste norm (bijv. 10 min organisatie) voor elke club of leeftijd | Fictieve zekerheid; één handmatig organisatiebudget per training is genoeg | 142 |
