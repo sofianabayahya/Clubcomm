@@ -121,6 +121,10 @@
     CC.sheet(`${soort === 'wedstrijd' ? 'Wedstrijd' : 'Training'} kiezen`, `<p class="zacht">Waar ga je kijken? ${esc(voor)} krijgt meteen de ${t.niveau === 'uitgebreid' ? 'uitgebreide' : 'korte'} vragenlijst om voor te bereiden.</p>
       ${acts.length ? `<div class="lijst">${acts.map((a) => h.rij({ ic: soort === 'wedstrijd' ? 'trophy' : 'dumbbell', titel: `${D.lang(a.datum)} · ${a.tijd}`, sub: esc([CC.tn(a.teamId), a.veld].filter(Boolean).join(' · ')), act: 'begelInplannenOk', attrs: `data-id="${tr.id}" data-a="${a.id}"` })).join('')}</div>` : `<p class="zacht klein">Er staan de komende 6 weken geen ${soort === 'wedstrijd' ? 'wedstrijden' : 'trainingen'} van het team in ClubComm. Kies hieronder een datum.</p>`}
       <form data-submit="begelInplannenOk" data-id="${tr.id}" data-soort="${soort}" class="codeform"><label for="bp-d">Andere datum</label><input id="bp-d" name="d" type="date" min="${D.vandaag()}" required><button class="knop licht">Plannen</button></form>`); });
+  // Besluit 146: plannen vanuit de week op Home (zelfde als hieronder, met een gekozen training of wedstrijd)
+  CC.begelPlanOpAct = (S, pid, actId) => { const tr = M.persoon(S, pid); const a = M.act(S, actId); if (!tr || !a) return;
+    const m = maakMoment(S, tr, a, M.isWed(a) ? 'wedstrijd' : 'training', a.datum); stuurVragen(S, m); CC.save(); CC.closeSheet(); CC.render();
+    CC.toast(`Gepland: ${m.soort} ${D.kort(m.datum)}. ${tr.naam.split(' ')[0]} krijgt de vragenlijst`); };
   CC.on('begelInplannenOk', (el) => { const S = CC.S(); const tr = M.persoon(S, el.dataset.id); const a = el.dataset.a ? M.act(S, el.dataset.a) : null;
     const datum = a ? a.datum : el.d.value; if (!datum) return CC.toast('Kies een datum', 'fout');
     const m = maakMoment(S, tr, a, el.dataset.soort, datum); stuurVragen(S, m); CC.save(); CC.closeSheet(); CC.render();

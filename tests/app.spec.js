@@ -391,10 +391,10 @@ test.describe('Demo', () => {
     await page.locator('nav.nav button[data-tab="rollen"]').click();
     await expect(page.locator('#app .rij', { hasText: 'Technisch coördinator' }).first()).toBeVisible();
     await expect(page.locator('#app [data-act="rollenPersoon"]', { hasText: 'Technisch coördinator (Onderbouw)' })).toHaveCount(1);
-    // Esther als TC: alleen Trainers en Berichten, alleen trainers uit de onderbouw
+    // Esther als TC: Home (de week van haar trainers), Trainers en Berichten (Besluit 146), alleen trainers uit de onderbouw
     await page.evaluate((id) => { CC.zetSessie(id); CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'tc')); }, esther);
-    await page.locator('nav.nav button[data-tab="home"]').click();
-    await expect(page.locator('nav.nav button')).toHaveCount(2);
+    await expect(page.locator('nav.nav button')).toHaveText(['Home', 'Trainers', /^Berichten/]);
+    await page.locator('nav.nav button[data-tab="trainers"]').click();
     await page.locator('[data-act="seg"][data-key="trDeel"][data-val="alle"]').click();
     await expect(page.locator('#app')).toContainText('Dennis Peters');
     const buiten = await page.evaluate(() => CC.S().teams.filter((t) => CC.bouwVan(CC.S(), t).naam !== 'Onderbouw').flatMap((t) => CC.m.stafVan(CC.S(), t.id, ['trainer'])).map((id) => CC.m.persoon(CC.S(), id).naam).filter((n) => !CC.S().teams.some((t) => CC.bouwVan(CC.S(), t).naam === 'Onderbouw' && CC.m.stafVan(CC.S(), t.id, ['trainer']).some((x) => CC.m.persoon(CC.S(), x).naam === n))));
@@ -516,6 +516,8 @@ test.describe('Demo', () => {
   // Besluit 105: aan het begin van een fase (minder dan 6 keer gemeten) geen kleur en geen signaal, wel het percentage
   test('nieuwe fase: pas een kleur vanaf 6 keer gemeten', { tag: ['@afmelden'] }, async ({ page }) => {
     const fouten = volgFouten(page);
+    // Vaste datum midden in een fase: vlak na de start van een fase (zoals 1 november) heeft de demo nog te weinig metingen
+    await page.clock.setFixedTime(new Date('2026-10-08T12:00:00+02:00'));
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
     await page.goto('/?demo');
@@ -1034,7 +1036,7 @@ test.describe('Kleine club (echte versie, nagebootste database)', () => {
     await inloggen(page, 'ho@test.nl');
     await doorklik(page, fouten, 'HO (pakket)');
     await page.evaluate(() => CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'hjo')));
-    await expect(page.locator('nav.nav button')).toHaveCount(2);
+    await expect(page.locator('nav.nav button')).toHaveText(['Home', 'Trainers', 'Teams', /^Berichten/]); // Besluit 146
     await page.evaluate(() => CC.open('trainerDetail', { id: 'p-tr' }));
     await page.locator('#app form[data-submit="hoNotitieOk"] textarea').fill('Kan door');
     await page.locator('#app form[data-submit="hoNotitieOk"] textarea').press('Tab');
@@ -1048,7 +1050,7 @@ test.describe('Kleine club (echte versie, nagebootste database)', () => {
       await page.evaluate(() => CC.logout());
       await inloggen(page, email);
       await doorklik(page, fouten, email);
-      await expect(page.locator('nav.nav button')).toHaveCount(2);
+      await expect(page.locator('nav.nav button')).toHaveCount(email === 'tc@test.nl' ? 3 : 2); // TC: Home · Trainers · Berichten (Besluit 146)
     }
     await page.locator('nav.nav button[data-tab="home"]').click();
     await expect(page.locator('#app [data-act="begelZelf"]')).toHaveCount(1);
@@ -1638,7 +1640,7 @@ test('teams en trainingsdagen: team, rooster, trainer, wedstrijden plakken en sc
   await page.setViewportSize({ width: 390, height: 844 });
   await inloggen(page, 'admin@test.nl');
   await page.evaluate(() => { CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'hjo')); CC.render(); });
-  await page.locator('#app .rij', { hasText: 'Teams, trainingsdagen en wedstrijden' }).click();
+  await page.locator('nav.nav button[data-tab="teams"]').click(); // Besluit 146: Teams is een eigen tabblad
   await expect(page.locator('.tb-teams')).toBeVisible();
   // Team toevoegen (nog geen trainer) en trainingsdagen: alleen klaarzetten, nog geen trainingen
   await page.locator('[data-act="teamNieuw"]').click();
