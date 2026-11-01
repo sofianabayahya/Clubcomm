@@ -44,8 +44,29 @@
       spelprincipes: { status: 'leeg', items: [] }, leerdoelenPerLeeftijd: { status: 'leeg', items: [] },
     },
   };
+  // Drie extra fictieve teams met een trainer (voor de week van de begeleider, Besluit 146): andere bouwen, thuis en uit
+  const EXTRA = [['demo-o13', 'Demo O13', 'O13', 'demo-tr-o13', 'Demo Trainer O13', [0, 2], '09:00'], ['demo-o14', 'Demo O14', 'O14', 'demo-tr-o14', 'Demo Trainer O14', [1, 3], '11:15'], ['demo-o17', 'Demo O17', 'O17', 'demo-tr-o17', 'Demo Trainer O17', [0, 3], '14:30']];
+  const vulExtra = (S, D, ma) => {
+    EXTRA.forEach(([tid, naam, cat, pid, pnaam, dagen, wtijd], i) => {
+      if (S.teams.some((t) => t.id === tid)) return;
+      S.teams.push({ id: tid, naam, cat, type: 'selectie', rooster: [], afwijking: {}, trainerId: pid, teamleiderId: null });
+      S.people.push({ id: pid, naam: pnaam, email: `${pid}@demo.invalid`, tel: '', rollen: [{ rol: 'trainer', teamId: tid }] });
+      for (let w = -1; w <= 3; w++) { const m = D.addDays(ma, 7 * w);
+        dagen.forEach((d) => S.acts.push({ id: `${tid}-t-${m}-${d}`, teamId: tid, soort: 'training', datum: D.addDays(m, d), tijd: '17:30', eind: '18:45' }));
+        S.acts.push({ id: `${tid}-w-${m}`, teamId: tid, soort: 'wedstrijd', datum: D.addDays(m, 5), tijd: wtijd, eind: wtijd, thuis: (w + i) % 2 === 0, tegen: `Demo FC ${cat}-${((w + i + 4) % 3) + 1}`, veld: (w + i) % 2 === 0 ? `veld ${i + 1}` : '', afgelast: false, uitslag: null }); }
+    });
+    S.acts.sort((x, y) => (x.datum + x.tijd).localeCompare(y.datum + y.tijd));
+  };
+  // Al bestaande demo-opslag (van voor 1-11) krijgt de extra teams erbij; niets van de gebruiker verandert
+  const aanvul = () => {
+    if (!window.CC || !CC.uitRijen || !Object.keys(db.rows).length || db.rows['teams|demo-o14']) return;
+    const D = CC.date; const v = D.vandaag(); const ma = D.addDays(v, -((D.parse(v).getDay() + 6) % 7));
+    const S = CC.uitRijen(alle().map(kopie), v); vulExtra(S, D, ma);
+    CC.naarRijen(S, CLUB).forEach((r) => { if (!db.rows[sleutel(r)] && ['teams', 'people', 'contact', 'acts'].includes(r.soort)) db.rows[sleutel(r)] = { ...r, club_id: CLUB }; });
+    bewaar();
+  };
   const zaai = () => {
-    if (Object.keys(db.rows).length || !window.CC || !CC.uitRijen) return;
+    if (Object.keys(db.rows).length) return aanvul(); if (!window.CC || !CC.uitRijen) return;
     const D = CC.date; const S = CC.uitRijen([], D.vandaag());
     S.club = { ...S.club, ...SWIFT, id: CLUB, naam: 'AVV Swift — DEMO', begeleiderKijktMee: true }; // CONCEPT 032: meekijken aan
     S.teams = [{ id: 'demo-o15', naam: 'Demo O15', cat: 'O15', type: 'selectie', rooster: [], afwijking: {}, trainerId: 'demo-trainer', teamleiderId: null }];
@@ -69,6 +90,7 @@
         vakken: { sterk: 'Duidelijke uitleg in het begin (fictief voorbeeld)', ontwikkelpunt: 'Eerst kijken, dan coachen', effect: 'Na twee vaste momenten speelden ze sneller de vrije man aan', afspraak: 'Bij elke vorm eerst 2 minuten alleen kijken' } },
       { id: 'demo-bm2', trainerId: 'demo-trainer', teamId: 'demo-o15', actId: null, soort: 'wedstrijd', datum: D.addDays(ma, 12), door: 'demo-hjo', klaar: false, gevraagd: D.addDays(v, -1) + 'T18:00:00.000Z',
         voor: { thema: 'Opbouwen onder druk', doel: 'Kort opbouwen als er een vrije man is', leerdoel: 'Eerst kijken, dan coachen', hoDoel: '' }, plan: {}, obs: { punten: {}, notities: {}, klok: null, turf: {} }, vakken: {} }];
+    vulExtra(S, D, ma);
     if (STAND === 'knvb') { S.profielen = { [KNVB_CONCEPT.id]: KNVB_CONCEPT }; S.club.profiel = KNVB_CONCEPT.id; }
     CC.naarRijen(S, CLUB).forEach((r) => { db.rows[sleutel(r)] = { ...r, club_id: CLUB }; });
     // CONCEPTFUNCTIONALITEIT: in de echte database heeft een profiel scope hjo (trainers lezen het nog niet; voorstel

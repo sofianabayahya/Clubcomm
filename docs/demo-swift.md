@@ -3,7 +3,7 @@
 *Branch `demo/swift-trainer`. Wordt **nooit** samengevoegd met `main` en nooit naar productie gepubliceerd. Spoor 3, 30-10-2026.*
 
 ## Wat het is
-De echte ClubComm-app, maar zonder database: `public/app/vendor/supabase.js` is op deze branch een **nagebootste database in de browser**. Alles is fictief: team **Demo O15** (trainingen di en do 18:30–19:45, wedstrijd za, vorige week tot drie weken vooruit), **Demo HJO** (HO + trainer van Demo O15) en **Demo Trainer** (alleen trainer). De clubinstellingen zijn die van AVV Swift (pakket Trainers begeleiden, module Training, seizoen, fasen, vakanties, taken, label HO), **zonder** adres, sportpark en stops.
+De echte ClubComm-app, maar zonder database: `public/app/vendor/supabase.js` is op deze branch een **nagebootste database in de browser**. Alles is fictief: team **Demo O15** (trainingen di en do 18:30–19:45, wedstrijd za, vorige week tot drie weken vooruit) en drie extra teams met een eigen trainer (Demo O13, O14, O17; thuis en uit, voor de week van de begeleider, Besluit 146), **Demo HJO** (HO + trainer van Demo O15) en **Demo Trainer** (alleen trainer). De clubinstellingen zijn die van AVV Swift (pakket Trainers begeleiden, module Training, seizoen, fasen, vakanties, taken, label HO), **zonder** adres, sportpark en stops.
 
 ## Isolatie (waarom er geen verbinding met de echte database kan zijn)
 1. **Geen adres en geen sleutel**: `config.js` wijst naar `https://demo.invalid` (bestaat nooit). De echte Supabase-bibliotheek staat niet op deze branch.
