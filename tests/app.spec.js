@@ -516,6 +516,8 @@ test.describe('Demo', () => {
   // Besluit 105: aan het begin van een fase (minder dan 6 keer gemeten) geen kleur en geen signaal, wel het percentage
   test('nieuwe fase: pas een kleur vanaf 6 keer gemeten', { tag: ['@afmelden'] }, async ({ page }) => {
     const fouten = volgFouten(page);
+    // Vaste datum midden in demo-fase 1 (19-08 t/m 30-10): daarna begint fase 2 met minder dan 6 metingen en zijn er terecht geen signalen
+    await page.clock.setFixedTime(new Date('2026-10-14T10:00:00+02:00'));
     await page.goto('/?demo');
     await page.evaluate(() => localStorage.clear());
     await page.goto('/?demo');

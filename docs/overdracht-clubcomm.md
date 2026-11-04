@@ -2,16 +2,16 @@
 
 *Alleen Spoor 3 schrijft hier. Kort houden (hoogstens ongeveer 30 regels); aan het eind van elke ronde overschrijven. Spoor 1 en 2 hebben hun eigen overdracht (`docs/methodiek/persoonlijk/overdracht.md`, `docs/methodiek/swift/overdracht.md`).*
 
-**Bijgewerkt:** 30-10-2026
+**Bijgewerkt:** 04-11-2026
 
 ## Stand
-- `main` = `51e5a12` (#105, Besluit 144). **Migratie 033 is niet toegepast.** Het eerstvolgende vrije besluitnummer is **145**.
+- `main` = `eb4dcd0` (#106 samengevoegd). **Migratie 033 is niet toegepast.** Het eerstvolgende vrije besluitnummer is **145**.
 - Productiedatabase (29/30-10, alleen gelezen): functioneel gelijk aan `main` (de md5 van alle `priv`-functies is gelijk, zonder commentaarregels). Het migratielogboek mist 027–030 (via losse SQL toegepast; alle objecten bestaan). Niet aanpassen zonder apart akkoord.
 
 ## Open pull requests
 | PR | Wat | Stand |
 |---|---|---|
-| #106 | Test (S): tekentool-tests wachten 20 s op Opslaan (onder drukte soms > 5 s, gemeten tot 7 s; geen hang), branch `claude/intelligent-cannon-t4430r` | 600/600 onder drukte, `npm test` groen; wacht op akkoord |
+| nieuw | Test (S): `nieuwe fase: pas een kleur vanaf 6 keer gemeten` met vaste datum 14-10-2026 (sinds demo-fase 2 op 31-10 begon, waren er terecht geen signalen meer en faalde de test op `main`), branch `claude/dazzling-babbage-y6ns5j` | `npm test` groen (6/6 + 81/81); wacht op akkoord |
 
 ## Wacht op akkoord van de gebruiker (in deze volgorde)
 1. Correctie van de acht DCG-weekplannen, `supabase/scripts/2026-10-30_dcg_weekplannen_correctie.sql.voorstel` (gecontroleerd tegen de CSV, **niet uitgevoerd**).
