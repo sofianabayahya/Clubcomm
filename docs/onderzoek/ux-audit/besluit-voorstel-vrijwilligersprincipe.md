@@ -1,6 +1,6 @@
 # Voorstel algemeen besluit: het vrijwilligersprincipe en de drie lagen
 
-*4-11-2026. Spoor 3. **Voorstel, nog geen besluit.** Het besluitnummer kiezen we pas vlak voor het opslaan. Nu gereserveerd in open werk: 145 (#107), 146 (#108), 148 (#110). Het eerstvolgende vrije nummer is waarschijnlijk **149**. Verwerkt de aanscherpingen van de initiatiefnemer op de audit (`README.md`, §0).*
+*4-11-2026, bijgewerkt na de tweede beoordeling. Spoor 3. **Klaar als algemeen ontwerpbesluit; nog niet opgeslagen in `docs/besluiten.md`.** Het besluitnummer kiezen we pas vlak voor het opslaan. Nu gereserveerd in open werk: 145 (#107), 146 (#108), 148 (#110). Het eerstvolgende vrije nummer is waarschijnlijk **149**. Verwerkt de aanscherpingen van de initiatiefnemer op de audit (`README.md`, §0).*
 
 ---
 
@@ -8,7 +8,7 @@
 
 *Besloten [datum], na de integrale UX-audit (`docs/onderzoek/ux-audit/`) en het akkoord van de initiatiefnemer op de richting. Geldt voor elke club, elke rol en elk toekomstig voorstel. Vult Besluit 30 en 34 aan (vuistregels) en Principe 10.*
 
-**Uitgangspunt:** trainers, teamleiders en begeleiders zijn vrijwilligers, ook als ze een diploma hebben. Hoeveel tijd en ambitie iemand heeft, verschilt. ClubComm werkt daarom zonder extra trainingsadministratie. Wie meer doet, krijgt er meer voor terug.
+**Uitgangspunt:** trainers, teamleiders en begeleiders zijn vrijwilligers, ook als ze een diploma hebben. Hoeveel tijd en ambitie iemand heeft, verschilt. ClubComm beperkt daarom de administratieve belasting en werkt zonder extra trainingsadministratie. **Een trainer krijgt altijd hulp aangeboden, maar hoeft niets onnodig in te vullen.** Een vereniging kan wel afspraken maken over begeleiding en de voorbereiding die daarvoor nodig is.
 
 ### 1. De drie lagen zijn gebruiksmogelijkheden
 | Laag | Wat de gebruiker kan doen | Ontwerpdoel voor eenvoudige digitale taken |
@@ -17,7 +17,7 @@
 | **Trainen** | een training voorbereiden, een oefenvorm kiezen of tekenen, printen | een eenvoudige taak (een eerdere training kiezen, printen) in ± 2 min |
 | **Ontwikkelen** | begeleiding, reflectie, ontwikkelafspraak, periodisering, Lijn, publiceren in de clubbibliotheek | korte invoer (3 reflectievragen) in ± 5 min |
 
-- Het zijn **geen rollen en geen niveaus**. Een trainer kiest zelf hoeveel hij gebruikt, en kan dat per week anders doen.
+- Het zijn **geen rollen, geen diploma- en geen ambitieniveaus**. Een trainer kiest zelf hoeveel hij gebruikt, en kan dat per week anders doen.
 - De tijden zijn **ontwerpdoelen voor eenvoudige digitale taken**, geen limiet voor een volledige voorbereiding of een begeleidingsgesprek.
 - Laag, diploma, ambitie en ondersteuningsniveau veranderen **nooit rechten** en zetten nooit functies uit.
 
@@ -40,14 +40,14 @@
 
 ### 3. Ontwerpregels (gelden voor elk scherm)
 1. **Aanbieden op het moment zelf.** Een functie verschijnt waar de gebruiker al is (bijvoorbeeld bij een lege training), niet als taak op Home.
-2. **Leeg is goed.** Een lege toestand = één zin uitleg en hoogstens één knop. Geen *"(0)"*, geen *"x van y ingevuld"*, geen herinnering om iets te vullen.
+2. **Leeg is goed, en helpt.** Een lege toestand = één zin uitleg, **één duidelijke hoofdactie, aangevuld met alleen relevante keuzes**. Een keuze die in deze situatie niets doet, staat er niet. Geen *"(0)"*, geen *"x van y ingevuld"*, geen herinnering om iets te vullen.
 3. **Eén primaire knop per toestand.** Geen dubbele actie op hetzelfde scherm. Geen uitgeschakelde knop zonder uitleg; verberg hem liever tot hij zin heeft.
 4. **Zelfde handeling = zelfde woord.** *Oefenvorm* in knoppen en vensters; de bank heet *Vormenbank*.
 5. **Vaktaal met uitleg.** Woorden uit een opleidingsprofiel alleen met één zin uitleg waar de gebruiker ze moet gebruiken. Zonder profiel gewone woorden.
 6. **Navigatie blijft gelijk.** Tabbladen verdwijnen niet per club of laag (Besluit 122 en 141). Een onderdeel zonder inhoud toont een begrijpelijke lege toestand.
 7. **Eén hoofdstatus per regel** (besluit 4-11); details staan in het venster.
 8. **De begeleider beoordeelt niet op invoer.** Geen overzicht met aantallen ingevoerde trainingen per trainer. Wat de trainer zelf aangeeft (ambitie, tijd, gewenste hulp) is leidend.
-9. **Meldingen bedekken geen knop** en geven een tik niet door aan een knop die je niet ziet.
+9. **Meldingen veroorzaken nooit een onbedoelde handeling.** Een tik op een melding (ook vlak na het verdwijnen) bedient nooit iets dat eronder ligt. De navigatie blijft bereikbaar.
 10. **Normen** (`docs/app-controle.md`):
     - tikvlak 44 pt (WCAG 2.2 AA: minimaal 24 px);
     - leestekst 16 px;
@@ -64,7 +64,7 @@ Elk nieuw voorstel (maat M of L) beantwoordt in één regel per vraag:
 **Niet in dit besluit:**
 - de clubbibliotheek zelf (rechten, maat L);
 - de drie startroutes (wacht op de bibliotheek);
-- Lijn verbergen (afgewezen voor nu: eerst een lege toestand, zie `voorstel-drie-kleine-verbeteringen.md`).
+- de Lijn: het tabblad blijft zichtbaar, ook zonder opleidingsprofiel. De rustige lege toestand is een apart voorstel. Het weekthema blijft vrijwillig, en de app suggereert nooit dat een trainer achterloopt.
 
 ---
 

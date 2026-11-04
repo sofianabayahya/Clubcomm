@@ -246,6 +246,20 @@ Trainers zijn vrijwilligers, ook als ze een diploma hebben. Hoeveel tijd iemand 
 
 ---
 
+## Bijgewerkt 4-11 (tweede beoordeling)
+- **Besluitvoorstel aangescherpt:**
+  - één duidelijke hoofdactie plus alleen relevante keuzes;
+  - altijd hulp aanbieden;
+  - de vereniging mag afspraken maken over begeleiding.
+
+  Het besluit ligt klaar.
+- **Definitief voorstel drie verbeteringen**, met twee geteste oplossingen voor meldingen (advies: zwevend, vangt de tik zelf, nalooptijd).
+- Lijn en de rolknop staan als bijlage. **De rolknop is geen fout:** het klikbare vlak is 77 × 45 px.
+- **Pull requests:**
+  - #107 heeft `main` binnen en botst niet;
+  - #110 en #108 botsen alleen in de documentatie;
+  - #111 is **niet volledig** overbodig. Het deel *nieuwe fase* staat al op `main` en botst. Maar #111 zet ook twee roostertests op een vaste datum en voegt een regel toe aan *Openstaand*; die zijn nieuw.
+
 ## Bijgewerkt 4-11 (na de reactie van de initiatiefnemer)
 - **Akkoord op de richting.** De drie lagen zijn gebruiksmogelijkheden, geen rollen. Uitgewerkt als besluitvoorstel: `besluit-voorstel-vrijwilligersprincipe.md`.
 - **Drie kleine verbeteringen** (lege training, lege kiezer, meldingen) met schermen en acceptatiecriteria: `voorstel-drie-kleine-verbeteringen.md`. Daarin ook:
