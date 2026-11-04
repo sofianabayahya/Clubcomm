@@ -21,7 +21,15 @@ const hoogste = (ref) => Math.max(0, ...[...git(`show ${ref}:docs/besluiten.md`)
 let max = Math.max(hoogste('origin/main'), hoogste('HEAD')); const overlap = [];
 for (const b of open) { max = Math.max(max, hoogste(b)); const zelfde = regels(git(`diff --name-only origin/main...${b}`)).filter((f) => mijn.has(f)); if (zelfde.length) { const k = conflicten(b, 'HEAD');
   overlap.push(`${b.replace('origin/', '')} (${git(`log -1 --format=%cr ${b}`)}): ${zelfde.join(', ')}${k.length ? ` → conflict in ${k.join(', ')}` : ' → samen te voegen zonder conflict'}`); } }
-console.log(`Open werk (branches niet in main): ${open.length ? open.map((b) => b.replace('origin/', '')).join(', ') : 'geen'}`);
+// Alleen de weergave (nummers en overlap hierboven kijken naar alle branches): wat al in main staat apart, zodat echt open werk opvalt.
+// Inhoud al in main = samenvoegen met main verandert niets. Waarschijnlijk af = alleen documenten (docs/) die ook in main staan, in een andere versie.
+const boomMain = git('rev-parse origin/main^{tree}'); const soort = { inMain: [], af: [], open: [] };
+for (const b of open) { const n = b.replace('origin/', ''); let boom = ''; try { boom = execSync(`git merge-tree --write-tree ${b} origin/main`, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).split('\n')[0]; } catch { /* conflict */ }
+  const bestanden = regels(git(`diff --name-only origin/main...${b}`));
+  if (boom === boomMain) soort.inMain.push(n); else if (bestanden.length && bestanden.every((f) => f.startsWith('docs/') && git(`cat-file -t origin/main:${f}`) === 'blob')) soort.af.push(n); else soort.open.push(n); }
+console.log(`Open werk (branches niet in main): ${soort.open.length ? soort.open.join(', ') : 'geen'}`);
+if (soort.af.length) console.log(`Waarschijnlijk af (alleen documenten die ook in main staan, in een andere versie; eerst nakijken): ${soort.af.join(', ')}`);
+if (soort.inMain.length) console.log(`Inhoud al in main (kan weg): ${soort.inMain.join(', ')}`);
 console.log(overlap.length ? `Zelfde bestanden als ander open werk:\n  ${overlap.join('\n  ')}` : 'Geen ander open werk raakt jouw bestanden');
 console.log(`Hoogste besluit in main: ${hoogste('origin/main')} · eerstvolgende vrije nummer (ook gekeken in open werk): ${max + 1}`);
 // Besluitnummers (werkafspraak 04-11): tijdens het werk heet een nieuw besluit `Besluit NNN`; het nummer pas bij "overdracht bijwerken".

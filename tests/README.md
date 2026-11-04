@@ -10,7 +10,7 @@
 | `ZONDER=033 npm run test:veilig -- 032 033` | Volgorde testen: migratie 033 eerst overslaan, daarna 032 en 033 | 3 s | Twee rechtenwijzigingen die elkaar kunnen raken |
 | `EXTRA_SQL=pad.sql npm run test:veilig` | Een extra controlebestand meenemen (bijv. een onderzoek) | 3 s | Een vermoeden aantonen vóór een voorstel |
 | `APP_OPSLAG_BIJWERKEN=1 npx playwright test tests/eigen-reflectie.spec.js` | Vastleggen welke rijen de app opslaat bij begeleiden (`supabase/tests/lokaal/app-opslag.json`); daarna `npm run test:veilig` | 3 s | Als de app iets anders gaat opslaan in het begeleidingsdossier |
-| `npm run check` | Branch actueel? Conflict met main? Ander open werk in dezelfde bestanden? Eerstvolgende vrije besluitnummer, waar nog `NNN` staat, dubbel besluitnummer in open werk | 1 s | Begin van een opdracht en vlak vóór samenvoegen |
+| `npm run check` | Branch actueel? Conflict met main? Open werk (apart: branches die al in main zitten)? Ander open werk in dezelfde bestanden? Eerstvolgende vrije besluitnummer, waar nog `NNN` staat, dubbel besluitnummer in open werk | 1 s | Begin van een opdracht en vlak vóór samenvoegen |
 
 ## Labels
 Elke test in `tests/app.spec.js` heeft een of meer labels: `@afmelden` `@rooster` `@wedstrijd` `@berichten` `@taken` `@gesprekken` `@begeleiden` `@training` `@profiel` `@tekentool` `@demo` `@schermen` `@clubbeheer` `@kleineclub` (echte versie met nagebootste database) `@doorklik` (elke rol klikt door). Meer labels tegelijk: `npm run test:snel -- "@training|@profiel"`. Een nieuwe test krijgt altijd een label: `test('naam', { tag: ['@training'] }, async ({ page }) => …)`.
