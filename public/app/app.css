@@ -987,6 +987,13 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .kv-aanbevolen { margin: 8px 0 0; }
 @media (min-width: 900px) { .tr-start { grid-template-columns: 1fr 1fr; } .tr-start-vraag { grid-column: 1 / -1; } .tr-start.een { grid-template-columns: 1fr; } }
 
+/* Besluit 146: de week van de begeleider (Home) */
+.ho-begeleid { flex: none; border: 1px solid var(--lijn); border-radius: var(--r-s); padding: 8px 12px; min-height: 44px; display: inline-flex; align-items: center; color: var(--blauw); font-weight: 600; font-size: 14px; background: var(--vlak); }
+.ho-tel { display: inline-flex; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--blauw); color: #fff; font-size: 12px; align-items: center; justify-content: center; }
+.chipknop.aan .ho-tel { background: #fff; color: var(--blauw); }
+.ho-weeknav { display: inline-flex; gap: 6px; }
+.ho-weeknav .knop { min-width: 44px; min-height: 44px; justify-content: center; }
+
 /* Besluit 145: een geplaatste vorm verplaatsen */
 .tr-verpl { display: grid; gap: 6px; margin-bottom: 8px; }
 .tr-verpl .chips { gap: 8px; }

@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 4 november 2026 (t/m Besluit 156; 146 staat in een open pull request)
+Laatst bijgewerkt: 4 november 2026 (t/m Besluit 157)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -21,7 +21,8 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 156; 146 staat in een open pull 
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
-| 156 | 3 | Tekentool, paneel *Spelers*: één team tegelijk met zes teamkleuren (nieuw: **oranje** en **roze**), per team **rondje of driehoek**, nummers 1–11 en *Zonder nummer* voor **elk** team, *＋ Losse speler*, Trainer en Keeper in het paneel. Telefoon: het paneel ligt **vast onderaan** en het veld blijft erboven zichtbaar; bovenbalk in twee regels (↶ ↷); de tip blijft weg na wegtikken. Laptop: hetzelfde paneel naast de rail. Oude tekeningen ongewijzigd | ✅ besloten (wacht op samenvoegen) |  |
+| 157 | 3 | Tekentool, telefoon **gekanteld** (breed en lager dan 500 px): eigen indeling met de rail **links**, de bovenbalk op **één regel**, geen tip en geen hulptekst, het veld **past in de hoogte**; het paneel *Spelers* ligt **rechts naast het veld** (hoogstens 330 px, scrollt). Staand, tablet en laptop ongewijzigd | ✅ besloten (wacht op samenvoegen) |  |
+| 156 | 3 | Tekentool, paneel *Spelers*: één team tegelijk met zes teamkleuren (nieuw: **oranje** en **roze**), per team **rondje of driehoek**, nummers 1–11 en *Zonder nummer* voor **elk** team, *＋ Losse speler*, Trainer en Keeper in het paneel. Telefoon: het paneel ligt **vast onderaan** en het veld blijft erboven zichtbaar; bovenbalk in twee regels (↶ ↷); de tip blijft weg na wegtikken. Laptop: hetzelfde paneel naast de rail. Oude tekeningen ongewijzigd | ◐ deels herzien | door 157 (gekanteld ligt het paneel rechts naast het veld) |
 | 155 | 3 | Korte evaluatie en labels uit het profiel: `evaluatie.kort` bepaalt welke vragen na de training open staan en in welke volgorde (DCG: doel/situatie · gedrag · toepassing · volgende leerstap; *Weerstand* naar Verdiepende analyse); zonder `kort` alles zoals voorheen; vraagteksten en antwoorden ongewijzigd. *Handelingen in gekozen vormen* in plaats van *Accenten*. DCG-profiel v4: *Loskomen uit de dekkingsschaduw*, *Afremmen* (codes ongewijzigd); database-update apart akkoord | geldt (profiel v4 in de database sinds 04-11) | — |
 | 154 | 3 | Begeleider (HO, TC) ziet alleen trainers in zijn werkgebied, ook in de database: werkgebied leeg = hele club, anders een gedeelde bouw met een team waar de persoon trainer is (berekend uit het team, niets opgeslagen); geldt voor `trainerzelf`, `trainerdossier` en straks `trainerplan`; geen toewijzing per begeleider; `admin` telt hier niet; uitvoering (034) apart | ✅ geldt (nog niet gebouwd) | |
 | 153 | 3 | Tekentool, veldlijnen: **penaltystip** (11 m), **halve maan** (9,15 m rond de stip, buiten de 16), **hoekschopboogjes** (1 m) en **middenstip** op 11×11 (liggend en staand) en Half veld; niet op 8×8, 6×6 en Vak (pupillenvelden pas met hun KNVB-maat). Bestaande tekeningen krijgen de lijnen vanzelf; gegevens ongewijzigd | ✅ besloten (wacht op samenvoegen) |  |
@@ -31,6 +32,7 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 156; 146 staat in een open pull 
 | 149 | 3 | Vrijwilligersprincipe (algemene ontwerpstandaard): *een trainer krijgt altijd hulp aangeboden, maar hoeft niets onnodig in te vullen*. Drie lagen als gebruiksmogelijkheden (Draaien · Trainen · Ontwikkelen), geen rollen of niveaus en nooit invloed op rechten; vrijwillig behalve beveiliging, gegevensintegriteit en afspraken tussen mensen (bijv. minimale voorbereiding bij een aangekondigde observatie); tien ontwerpregels en vier toetsvragen | ✅ geldt |  |
 | 148 | 3 | Tekentool, rugnummers: een nummerknop **verwijdert nooit** meer; staat het nummer er al, dan **kiest** hij die speler (bij een dubbel nummer eerst de eerst neergezette, nog een keer = de volgende). Een met de knop gekozen speler houdt zijn nummer; nummer wijzigen = de speler op het veld aantikken en dan een nummer (dubbel mag, geen ruil meer) of *Ander nummer…* (1–99). Nieuwe speler = **eerste vrije** nummer. *Opstelling* gebruikt de nummers van de balk (keeper hoort bij het team en is 1; spits 3-3-1 = 9). Oude tekeningen ongewijzigd, geen migratie | ✅ besloten (wacht op samenvoegen) |  |
 | 147 | 3 | Gereedschap vastleggen bij een gegeven training: per plek een momentopname (`vast`: gereedschap, *ook*, vaardigheden met hun leerlijn van toen, profiel en versie, datum, bron) bij de eerste keer *gegeven*. Daarna telt die, ook als de koppeling in de Vormenbank verandert. Ongeldige momentopname = minuten bij geen gereedschap, nooit stil terugvallen op de koppeling van nu. Terugzetten bewaart; opnieuw aanvinken legt niets nieuws vast. Correctie (andere vorm, toevoegen, ook na terugzetten) = meteen vastleggen; plek zonder momentopname op een vastgelegde training = niet toegerekend; kopiëren neemt niets mee, ook geen vastlegdatum van de doeltraining. Oude gegeven trainingen blijven ongewijzigd. Melding in de Vormenbank | geldt | — |
+| 146 | 3 | Begeleider bij het pakket Trainers begeleiden: HO = *Home · Trainers · Teams · Berichten*, TC = *Home · Trainers · Berichten*. Home = Actie nodig + de week van je trainers (dagknoppen met aantal, bouwfilter, *Wedstrijden · Trainingen · Beide*, *Alleen thuis*; per regel tijd · team · trainer · thuis/uit · tegenstander · veld) met *Begeleiden* in 2 tikken. Trainers = compacte lijst (één regel per trainer, *Alle (n) · Traject (n)*, zoeken) met een snelvenster; de grote trajectkaart wordt één regel. Geen nieuwe gegevens of rechten | ✅ geldt |  |
 | 145 | 3 | Een geplaatste vorm verplaatsen: in het venster van de vorm *Verplaatsen naar* Start · A1 · A2 · B1 · B2 · Partij; lege plek = erheen, bezette plek = wisselen; minuten, variant, notitie, vastgezet leerniveau en fase gaan mee, de plek houdt code en voorstellen; tijd blijft gelijk; ongedaan maken. Start is niet verplicht. Geen nieuw veld | ✅ geldt |  |
 | 144 | 3 | Trainingskaart in Plannen: vijf vaste regels *Wat · Waar · Welke · Niveau · Mee uit vorige*, elk met herkomst (*Eigen · Periodisering · Weekvoorstel*); het weekvoorstel staat apart en vult nooit vanzelf in; *Accenten in gekozen vormen* (geen trainingsaccent); *Mee uit vorige* toont alleen een zin die begint met *Afspraak:* plus de bestaande evaluatiegegevens, met een link; wedstrijdsituatie apart van het dagthema; één momentopname *Oorspronkelijke planning* bij de eerste wijziging van een concept; weekplan alleen weekvelden. Bestaande trainingen en weekplannen ongewijzigd | ◐ deels herzien (bestaande weekplannen: correctie wacht op akkoord) | door 155 (*Accenten in gekozen vormen* heet *Handelingen in gekozen vormen*) |
 | 143 | 3 | De trainer is eigenaar van zijn eigen teksten (kennismaking, vragenlijst vooraf, reflectie): HO, TC en beheerder kunnen ze niet namens hem schrijven, wijzigen of verwijderen; alleen *gevraagd* zetten. Overnemen uit het evaluatieformulier = **begeleiderstekst** in het moment; de trainer kan die zelf overnemen en aanpassen. Een clubbeheerder zonder begeleidersrol heeft geen toegang tot het begeleidingsdossier. Migratie 033 (bewaker + beperkende regel, `cc_mag` ongewijzigd, samen met 032 in elke volgorde) | ✅ besloten (wacht op samenvoegen en migratie) |  |
@@ -76,7 +78,7 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 156; 146 staat in een open pull 
 | 103 | 3 | Automatisch bewaren in formulieren; Rollen opgeschoond | ✅ geldt |  |
 | 102 | 3 | Snelle winsten: dringend bovenaan, Observeren op de dag zelf, unieke knopnamen | ✅ geldt |  |
 | 101 | 3 | Voorgesprek als voormeting: eigen vragen voor training en wedstrijd | ✅ geldt |  |
-| 100 | 3 | Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden" | ◐ deels herzien | door 101 (vragen kort en uitgebreid per soort); 143 (overgenomen reflectie is begeleiderstekst); aangevuld door 154 (werkgebied ook in de database) |
+| 100 | 3 | Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden" | ◐ deels herzien | door 101 (vragen kort en uitgebreid per soort); 143 (overgenomen reflectie is begeleiderstekst); 146 (tabbladen van HO en TC: Home met de week, Trainers compact, Teams eigen tabblad); aangevuld door 154 (werkgebied ook in de database) |
 | 99 | 3 | Trainers begeleiden via een traject, met de KNVB-begeleidingscyclus; tabblad Trainers | ◐ deels herzien | door 100 (vragenlijst kort of uitgebreid per niveau; notities gedeeld per bouw met de TC); door 101 (vragenlijst vooraf per soort); 129 (observeren: snelle notities tijdens, aandachtspunten na afloop); 134 (moment verplaatsen of *niet doorgegaan*); 143 (kennismaking en reflectie alleen door de trainer; geen toegang voor een beheerder zonder begeleidersrol) |
 | 98 | 3 | Verantwoordelijkheid: iedere rol doet zijn eigen werk, de laag erboven is het vangnet | ✅ geldt |  |
 | 97 | 3 | Bouwen, werkgebied en focus, signalen die ertoe doen, trainersdossier | ◐ deels herzien | door 99 (traject per trainer in plaats van 2 + 2; tabblad Trainers; VOG en diploma bij de coördinator); door 100 (werkgebied bij de rol, rol TC gebouwd) |
@@ -693,7 +695,21 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 157 — Tekentool: een eigen indeling voor de gekantelde telefoon (Spoor 3, maat M)
+> Herziet Besluit 156 deels (gekanteld ligt het paneel *Spelers* rechts, niet onderaan).
+*Besloten 4 november 2026: de initiatiefnemer koos advies A uit `docs/onderzoek/tekentool/gekanteld.md`, met de adviezen bij de keuzes (grens lager dan 500 px; een tablet en een Pro Max gekanteld houden hun huidige indeling).*
+- **Probleem (gemeten):** met een gekantelde telefoon was maar 13–32% van het veld zichtbaar en kon je niet scrollen naar de rest; met het paneel *Spelers* open 0%. Bovenaan stonden de bovenbalk, de tip, de rail als rij en de hulptekst onder elkaar, samen ± 75% van de hoogte.
+- **Wanneer:** smaller dan 900 px, breder dan hoog en lager dan 500 px. Een tablet en een grote telefoon die gekanteld breder is dan 900 px (zoals een Pro Max) houden de laptopindeling; daar past het veld al.
+- **Indeling:** de rail staat links (zoals op de laptop). De bovenbalk staat op één regel (*Annuleren · Veld · Opstelling · ⚙ · ↶ ↷ · Opslaan*). De tip en de hulptekst vallen weg. Het veld past in de hoogte die over is. Het paneel *Spelers* ligt rechts naast het veld, onder de bovenbalk (hoogstens 330 px breed, en het scrollt). De andere menu's openen naast de rail.
+- **Gemeten:** 100% van het veld zichtbaar op 667 × 375, 780 × 360 en 844 × 390, met en zonder paneel. Spelers zijn gekanteld ± 12–14 px (staand ± 9 px).
+- **Draaien** met het paneel open: het veld en het paneel gaan vanzelf naar hun nieuwe plek.
+- Staand (Besluit 156), tablet en laptop blijven gelijk. Geen gegevens; opgeslagen tekeningen ongewijzigd.
+- Tests: `tests/tekentool-gekanteld.spec.js` (op de oude code falen ze alle drie).
+
+---
+
 ## Besluit 156 — Tekentool: paneel Spelers met één team tegelijk, oranje en roze, en het veld zichtbaar op de telefoon (Spoor 3, maat M)
+> **◐ Deels herzien door Besluit 157:** met de telefoon gekanteld ligt het paneel rechts naast het veld, niet onderaan.
 > Herziet de Besluiten 124, 125 en 126 deels.
 *Besloten 4 november 2026: de initiatiefnemer koos A + A+ uit `docs/onderzoek/tekentool/spelers-mobiel.md` en vroeg er roze en oranje als team bij; voorbeeld op 390 px en laptop in §6 van dat document. Keuzes: op de laptop hetzelfde paneel; alleen rondje en driehoek (geen vierkant, op verzoek van de initiatiefnemer).*
 - **Probleem (gemeten):** op elke telefoon bedekte het menu *Spelers* het hele veld; op 360 px en gekanteld waren de knoppen van de tegenstander niet te bereiken (het menu was langer dan het scherm). De tip *"tekenen gaat sneller op een laptop"* kwam bij elke tekening terug.
@@ -878,6 +894,25 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Vormenbank:** onder het hoofdgereedschap, alleen als de vorm in een gegeven training staat: *"Staat in 1 gegeven training. Die houdt het gereedschap van toen; een wijziging geldt voor nieuwe en geplande trainingen."* en zo nodig *"1 gegeven training van vóór deze regel volgt de vorm nog wel."* Informatie, geen vraag; 16 px.
 - **Niet in dit besluit:** versies van vormen (Besluit 121, fase 2), naam en tekening vastleggen, de momentopname tonen.
 - **Tests:** `tests/vastleggen.spec.js` (390 px en 1366 px).
+
+---
+
+## Besluit 146 — De week van de begeleider: Home, compacte trainerslijst en het tabblad Teams (Spoor 3)
+*Besloten 1 november 2026, na voorbeelden op 390 px (Home met de week, Trainers compact, snelvenster) en het akkoord van de initiatiefnemer. Aanleiding: bij AVV Swift staan nu vier trainers met hun trainingen en wedstrijden; de HO wil op één plek zien wie wanneer en waar speelt en daaruit kiezen. Herziet Besluit 100 deels (tabbladen).*
+- **Doel:** de begeleider kiest in een paar tikken welke training of wedstrijd hij bezoekt, ook met veel trainers. Voor elke club met het pakket *Trainers begeleiden*.
+- **Tabbladen:** HO = **Home · Trainers · Teams · Berichten**; TC = **Home · Trainers · Berichten**. Een club die alles gebruikt, had al Home · Trainers · Teams · Inzicht · Berichten: dezelfde plekken, dus er verschuift niets als een club meer modules gaat gebruiken.
+- **Home = Actie nodig + de week van je trainers.** Dagknoppen *ma … zo* met het aantal; pijlen voor vorige en volgende week. Standaard: vandaag, of de eerstvolgende dag met iets (op zondag zonder wedstrijden meteen de volgende week). Filters: de bouw (dezelfde keuze als bij Trainers, binnen je werkgebied), *Wedstrijden* (standaard) · *Trainingen* · *Beide*, en *Alleen thuis*.
+  - Per regel: tijd · team · trainer · *Thuis* of *Uit* · tegenstander · veld. Afgelast staat erbij. Alleen teams met een trainer in ClubComm (Besluit 136).
+  - **Begeleiden in 2 tikken:** tik op de regel → bevestigen. Het begeleidingsmoment staat meteen op die training of wedstrijd en de trainer krijgt de vragenlijst, net als bij plannen vanuit het traject. Staat er al een moment, dan opent de regel dat moment.
+  - Wat er was onder *Deze week* (begeleidingsmomenten) zit nu in de regels; een moment op een losse datum staat bij die dag.
+- **Thuis of uit is genoeg.** Geen adres, kaart of reistijd: de begeleider kiest meestal een thuiswedstrijd (zie ook *Afgewezen ideeën*, Besluit 43).
+- **Trainers = compacte lijst.** *Alle (n) · Traject (n)* (bij het pakket standaard *Alle*), bouwfilter, zoeken. Eén regel per trainer: naam · team · bouw · stand (*traject 1/4 · volgend: za 7 nov*, *kennismaking gevraagd*). De grote kaart met *in traject / gedaan* wordt één regel: *Traject: 2 van 6 momenten gedaan dit seizoen*. Kennismaking uitnodigen en de lege vragenlijst staan in één regel onderaan.
+  - **Snelvenster** bij een tik: team, bouw, traject of kennismaking, de komende en de laatste momenten, en de knoppen *Begeleidingsmoment plannen* (of *Traject starten*) en *Volledig dossier*.
+  - Zonder het pakket (club met spelers) blijft *Alle trainers* het bestaande overzicht met afmeldingen en zones.
+- **Teams** is een eigen tabblad voor de HO (teams, trainingsdagen, wedstrijden plakken, trainer toevoegen); het blok onderaan Trainers vervalt.
+- **Gegevens en rechten:** niets nieuws. De begeleider leest datum, tijd, tegenstander, thuis/uit en veld al (Besluit 100), nooit spelers. Geen migratie.
+- **Niet gedaan:** adres, kaart of reistijd bij uitwedstrijden; een eigen tabblad *Week* (de week hoort op Home, actie eerst).
+- **Getest** (`tests/ho-week.spec.js`, vaste datum): vier tabbladen; za 7 nov met afgelast, thuis en uit, zonder het team zonder trainer; *Alleen thuis*; bouwfilter; trainingen op een andere dag; *Begeleiden* maakt het moment op de juiste wedstrijd; vorige/volgende week; Trainers compact met aantallen en snelvenster; Teams; een TC met werkgebied Bovenbouw ziet alleen zijn bouw.
 
 ---
 
@@ -1497,6 +1532,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Elke vraag hoort bij een onderdeel van het A4** (trainingsdoel, organisatie, leersituatie creëren, leersituatie beïnvloeden, coachgedrag, persoonlijk leerdoel). De begeleider ziet dat label bij elk antwoord, zodat een vaag antwoord meteen laat zien waar hij moet kijken. De trainer ziet alleen de vragen.
 
 ## Besluit 100 — Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden"
+> **◐ Deels herzien door Besluit 146** (tabbladen: HO = Home · Trainers · Teams · Berichten, TC = Home · Trainers · Berichten; Home met de week van de trainers).
 > **◐ Aangevuld door Besluit 154** (het werkgebied geldt ook in de database voor kennismaking, reflectie, dossier en begeleidingsmomenten, niet alleen voor de notities).
 > **◐ Deels herzien door Besluit 143** (overnemen uit het evaluatieformulier: de reflectie wordt begeleiderstekst in het moment, de trainer neemt hem zelf over).
 *Besloten 10 oktober 2026, voor de test bij een tweede club (HO + TC, twee trainers, geen ouders). Vult Besluit 97, 98 en 99 aan.*
@@ -2613,6 +2649,7 @@ Bewust niet gedaan, met de reden. Komt een van deze toch terug, zeg dan dat het 
 | Het weekvoorstel vanzelf invullen in de training | De trainer beslist; het voorstel staat apart met *Weekvoorstel overnemen* | 144 |
 | Versiebeheer of een wijzigingsgeschiedenis van trainingen | Eén momentopname van de oorspronkelijke planning is genoeg (Principe 10) | 144 |
 | Accenten van de gekozen vormen als trainingsaccent tonen | Een accent hoort bij een trainingsplek en is een keuze van de trainer, geen optelsom van vormen | 144 |
+| Adres, kaart of reistijd bij uitwedstrijden in de week van de begeleider | De begeleider kiest op thuis of uit; meestal een thuiswedstrijd. Reistijd is eerder afgewezen (Besluit 43) | 146 |
 | Uitloop achteraf registreren (redenen, een automatische uitloopsamenvatting, extra evaluatievelden voor minuten) | De trainer wil een realistische planning vooraf, geen extra administratie achteraf; de echte minuten (Besluit 141) blijven bestaan | 142 |
 | Tijdsrapportages of dashboards over werkelijke minuten | Geen functies bouwen alleen omdat de gegevens er zijn | 142 |
 | Ombouwminuten per overgang berekenen, of een vaste norm (bijv. 10 min organisatie) voor elke club of leeftijd | Fictieve zekerheid; één handmatig organisatiebudget per training is genoeg | 142 |
