@@ -23,13 +23,15 @@ for (const b of open) { max = Math.max(max, hoogste(b)); const zelfde = regels(g
   overlap.push(`${b.replace('origin/', '')} (${git(`log -1 --format=%cr ${b}`)}): ${zelfde.join(', ')}${k.length ? ` → conflict in ${k.join(', ')}` : ' → samen te voegen zonder conflict'}`); } }
 // Alleen de weergave (nummers en overlap hierboven kijken naar alle branches): wat al in main staat apart, zodat echt open werk opvalt.
 // Inhoud al in main = samenvoegen met main verandert niets. Waarschijnlijk af = alleen documenten (docs/) die ook in main staan, in een andere versie.
-const boomMain = git('rev-parse origin/main^{tree}'); const soort = { inMain: [], af: [], open: [] };
+const boomMain = git('rev-parse origin/main^{tree}'); const soort = { inMain: [], af: [], oud: [], open: [] };
 for (const b of open) { const n = b.replace('origin/', ''); let boom = ''; try { boom = execSync(`git merge-tree --write-tree ${b} origin/main`, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).split('\n')[0]; } catch { /* conflict */ }
   const bestanden = regels(git(`diff --name-only origin/main...${b}`));
-  if (boom === boomMain) soort.inMain.push(n); else if (bestanden.length && bestanden.every((f) => f.startsWith('docs/') && git(`cat-file -t origin/main:${f}`) === 'blob')) soort.af.push(n); else soort.open.push(n); }
+  // Geen gemeenschappelijke basis: van vóór de herstart van main (19-10-2026); niet automatisch te vergelijken
+  if (!git(`merge-base origin/main ${b}`)) soort.oud.push(n); else if (boom === boomMain) soort.inMain.push(n); else if (bestanden.length && bestanden.every((f) => f.startsWith('docs/') && git(`cat-file -t origin/main:${f}`) === 'blob')) soort.af.push(n); else soort.open.push(n); }
 console.log(`Open werk (branches niet in main): ${soort.open.length ? soort.open.join(', ') : 'geen'}`);
 if (soort.af.length) console.log(`Waarschijnlijk af (alleen documenten die ook in main staan, in een andere versie; eerst nakijken): ${soort.af.join(', ')}`);
 if (soort.inMain.length) console.log(`Inhoud al in main (kan weg): ${soort.inMain.join(', ')}`);
+if (soort.oud.length) console.log(`Van vóór 19-10 (geen gemeenschappelijke basis met main; niet te vergelijken): ${soort.oud.join(', ')}`);
 console.log(overlap.length ? `Zelfde bestanden als ander open werk:\n  ${overlap.join('\n  ')}` : 'Geen ander open werk raakt jouw bestanden');
 console.log(`Hoogste besluit in main: ${hoogste('origin/main')} · eerstvolgende vrije nummer (ook gekeken in open werk): ${max + 1}`);
 // Besluitnummers (werkafspraak 04-11): tijdens het werk heet een nieuw besluit `Besluit NNN`; het nummer pas bij "overdracht bijwerken".

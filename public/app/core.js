@@ -38,7 +38,7 @@
   };
   CC.kinderen = () => { const me = CC.me(); return S.players.filter((p) => p.teamId && p.ouders.includes(me.id)); };
   CC.rolNaam = (r) => ({ ouder: 'Ouder', trainer: 'Trainer', teamleider: 'Teamleider', hjo: S.club.labels.hjo, tc: 'Technisch coördinator', beheerder: 'Clubbeheerder', coordinator: S.club.labels.coordinator }[r.rol]);
-  CC.login = (pid) => { const me = M.persoon(S, pid); sessie = { pid, rolIdx: 0, kindId: null }; store.set(SESSIE, sessie); ui.tab = 'home'; ui.view = null; ui.stack = []; CC.toast(`Welkom, ${me.naam.split(' ')[0]}!`); CC.render(); };
+  CC.login = (pid) => { sessie = { pid, rolIdx: 0, kindId: null }; store.set(SESSIE, sessie); ui.tab = 'home'; ui.view = null; ui.stack = []; CC.render(); };
   CC.zetSessie = (pid) => { const oud = store.get(SESSIE, null); sessie = { pid, rolIdx: oud && oud.pid === pid ? oud.rolIdx || 0 : 0, kindId: oud && oud.pid === pid ? oud.kindId : null }; store.set(SESSIE, sessie); };
   CC.logout = () => { sessie = null; store.del(SESSIE); ui.login = { stap: 'mail', email: '' }; CC.closeSheet(); CC.render(); };
   CC.wisselRol = (idx) => { sessie.rolIdx = idx; store.set(SESSIE, sessie); ui.tab = 'home'; ui.view = null; ui.stack = []; CC.closeSheet(); CC.render(); window.scrollTo(0, 0); };
@@ -88,10 +88,16 @@
 
   // ---------- Toast en sheet ----------
   // Besluit 139: een melding kan één knop hebben (bijv. Ongedaan maken); dan blijft hij 8 seconden staan
+  // Besluit 150: een melding veroorzaakt nooit een onbedoelde handeling (Besluit 149, regel 9). Hij vangt een tik zelf op
+  // (tik = sluiten; de knop doet zijn werk), en bij het verdwijnen vervaagt hij 0,25 s zichtbaar terwijl hij de tik nog opvangt.
+  // Daarna is hij weg en gaat elke tik gewoon naar de inhoud: geen onzichtbare blokkade.
+  const toastWeg = () => { const t = document.getElementById('toast'); if (!t || !t.classList.contains('show')) return;
+    t.classList.remove('show'); t.classList.add('weg'); clearTimeout(CC._tw); CC._tw = setTimeout(() => { t.className = 'toast'; t.innerHTML = ''; }, 250); };
   CC.toast = (tekst, soort = '', actie) => {
     const t = document.getElementById('toast');
-    t.className = `toast show ${soort}`; t.innerHTML = `${icon(soort === 'fout' ? 'circle-alert' : 'circle-check')}<span>${esc(tekst)}</span>${actie ? `<button type="button" class="toast-knop" data-act="${esc(actie.act)}">${esc(actie.knop)}</button>` : ''}`;
-    clearTimeout(CC._tt); CC._tt = setTimeout(() => { t.className = 'toast'; t.innerHTML = ''; }, actie ? 8000 : 2600);
+    clearTimeout(CC._tw); t.className = `toast show ${soort}`; t.innerHTML = `${icon(soort === 'fout' ? 'circle-alert' : 'circle-check')}<span>${esc(tekst)}</span>${actie ? `<button type="button" class="toast-knop" data-act="${esc(actie.act)}">${esc(actie.knop)}</button>` : ''}`;
+    if (!t.dataset.vangt) { t.dataset.vangt = '1'; t.addEventListener('click', () => toastWeg()); }
+    clearTimeout(CC._tt); CC._tt = setTimeout(toastWeg, actie ? 8000 : 2600);
   };
   CC.sheet = (titel, html, opts = {}) => {
     const el = document.getElementById('sheet');
