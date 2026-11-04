@@ -14,7 +14,7 @@ Dit ging op 04-11 twee keer mis:
 
 | Nummer | Gekozen door | Gevolg |
 |---|---|---|
-| **146** | `bouw/ho-week` (#108, 01-11) **en** `demo/swift-trainer` (04-11) | **Staat nog steeds dubbel.** `npm run check` ziet het niet, want het kijkt alleen naar het hoogste nummer. |
+| **146** | `bouw/ho-week` (#108, 01-11) **en** `demo/swift-trainer` (04-11) | Opgelost doordat `demo/swift-trainer` het werk van #108 heeft binnengehaald. Het is nu één en hetzelfde Besluit 146 (zie de correctie hieronder). |
 | **154** | #118 **en** #119 | #119 is hernummerd naar 155. Daarvoor moesten het Register, de kop, de codecommentaren, de tests, de scripts, de kaart en de overdracht worden aangepast, en daarna alles opnieuw getest. |
 
 Ook nu bijna: #122 gebruikt 156. Een sessie die vandaag "het vrije nummer" uit de overdracht leest, ziet daar nog **156** staan.
@@ -49,7 +49,7 @@ Ook nu bijna: #122 gebruikt 156. Een sessie die vandaag "het vrije nummer" uit d
 
 Ik stel voor: **open pull requests houden hun nummer**, zodat er niets opnieuw hoeft. Er is één uitzondering:
 
-- **146** staat dubbel: #108 (`bouw/ho-week`) en `demo/swift-trainer` (nog geen pull request). Wie het eerst wordt samengevoegd, houdt 146. Het andere werk krijgt bij het samenvoegen een nieuw nummer. Advies: zet in `demo/swift-trainer` nu al `NNN`, want daar is nog geen pull request.
+- **Correctie (bij het bouwen, 04-11):** 146 is **niet** dubbel. `demo/swift-trainer` heeft de commit van #108 (`2998aa3`) zelf binnengehaald, dus beide branches hebben hetzelfde Besluit 146. Die branch blijft daarom ongewijzigd. `npm run check` noemt een nummer daarom alleen dubbel als de titel anders is.
 - #113 (150), #122 (156) en #123 (verwijst naar 154, dat al op `main` staat) zijn in orde.
 
 ## Voordelen en nadelen
