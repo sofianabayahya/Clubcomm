@@ -304,7 +304,10 @@
       railOpen = id;
       // Meteen de laatst gebruikte variant kiezen: één tik op Hoedjes = verder met dezelfde kleur.
       // Is er iets gekozen (bijv. een speler voor een ander nummer), dan blijft die gekozen.
-      if ((st.sel == null && !(st.multi && st.multi.length > 1)) && (st.tool == null || railVan(st.tool) !== r)){ st.tool = laatste(r); }
+      // Besluit 152: Spelers zet bij openen niets aan (het menu is vooral voor de nummerknoppen); een losse speler = tik
+      // een kleur en dan het veld. Stond er gereedschap van een ander menu aan, dan gaat dat uit.
+      if (id === "spelers"){ if (st.tool != null && railVan(st.tool) !== r) st.tool = null; }
+      else if ((st.sel == null && !(st.multi && st.multi.length > 1)) && (st.tool == null || railVan(st.tool) !== r)){ st.tool = laatste(r); }
       el("drawFlyH").textContent = r.naam;
       el("drawFlyGrid").innerHTML = l.map(toolKnop).join("");
       el("drawNummers").hidden = id !== "spelers";
@@ -336,7 +339,7 @@
         el("drawTools").parentNode.appendChild(f);
         f.addEventListener("click", function(e){
           if (!st) return;
-          if (e.target.closest(".draw-fly-x")){ sluitMenus(); return; }
+          if (e.target.closest(".draw-fly-x")){ sluitMenus(); st.tool = null; render(); return; } // Besluit 152: × = klaar, gereedschap uit
           var tk = e.target.closest("[data-draw-tool]");
           if (tk){ var n = Number(tk.getAttribute("data-draw-tool")), r = railVan(n); railLaatst[r.id] = n; pickTool(n, true); if (r.id !== "spelers") sluitMenus(); return; }
           if (e.target.closest("[data-klap]")){ nrDicht = !nrDicht; try { localStorage.setItem("cc-draw-nummers", nrDicht ? "dicht" : "open"); } catch(x){} renderNummers(); return; }
