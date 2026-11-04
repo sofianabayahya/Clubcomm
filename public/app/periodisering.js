@@ -62,9 +62,10 @@
   const LAB = { eigen: ['Eigen', 'e'], periodisering: ['Periodisering', 'p'], week: ['Weekvoorstel', 'w'] };
   const lab = (k) => ` <span class="tr-her ${LAB[k][1]}">${LAB[k][0]}</span>`;
   // Accenten en gereedschap staan bij de oefenvormen, niet bij de trainingsplek: daarom "in gekozen vormen" (nog geen trainingsaccent)
-  const inVormen = (S, p) => { const vs = (p.onderdelen || []).filter((o) => o.vormId && !o.spacing).map((o) => T().vorm(S, o.vormId)).filter(Boolean);
-    const vh = [...new Set(vs.flatMap((v) => v.vaardigheden || []))].map((x) => T().vhNaam(S, x)).filter(Boolean);
-    const gs = [...new Set(vs.map((v) => T().koppeling(S, v).primair).filter(Boolean))].map((x) => T().ldNaam(S, x)).filter(Boolean);
+  // Besluit 147: bij een gegeven training de momentopname van toen (T().gsVan), anders de vorm zoals hij nu is
+  const inVormen = (S, p) => { const os = (p.onderdelen || []).filter((o) => o.vormId && !o.spacing && T().telt(S, p, o)).map((o) => T().gsVan(S, p, o));
+    const vh = [...new Set(os.flatMap((g) => g.vh))].map((x) => T().vhNaam(S, x)).filter(Boolean);
+    const gs = [...new Set(os.map((g) => g.gs).filter(Boolean))].map((x) => T().ldNaam(S, x)).filter(Boolean);
     const tel = {}; (p.onderdelen || []).forEach((o) => { if (!o.spacing && o.niveau) tel[o.niveau] = (tel[o.niveau] || 0) + 1; });
     const niv = T().niveaus(S).filter((n) => tel[n.id]).map((n) => `${n.naam} ${tel[n.id]}×`);
     return { vh, gs, niv }; };
