@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 4 november 2026 (t/m Besluit 155; 146, 149 en 150 staan in open pull requests)
+Laatst bijgewerkt: 4 november 2026 (t/m Besluit 155; 146 en 150 staan in open pull requests)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -26,6 +26,7 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 155; 146, 149 en 150 staan in op
 | 153 | 3 | Tekentool, veldlijnen: **penaltystip** (11 m), **halve maan** (9,15 m rond de stip, buiten de 16), **hoekschopboogjes** (1 m) en **middenstip** op 11×11 (liggend en staand) en Half veld; niet op 8×8, 6×6 en Vak (pupillenvelden pas met hun KNVB-maat). Bestaande tekeningen krijgen de lijnen vanzelf; gegevens ongewijzigd | ✅ besloten (wacht op samenvoegen) |  |
 | 152 | 3 | Tekentool: een menu sluiten zet niets onbedoeld neer. **×** = klaar (het gereedschap gaat uit, in elk menu); het menu **Spelers** zet bij openen geen gereedschap aan (losse speler = kleur tikken, dan het veld; sneltoetsen ongewijzigd). De snelle route *Hoedjes → tik op het veld* blijft. Geen gegevenswijziging | ✅ besloten (wacht op samenvoegen) |  |
 | 151 | 3 | Documentatie en presentatie: functiekaarten in docs/handleiding (nieuw) als enige bron (blokken per niveau, bundels per uitgave); drie statussen (Concept · Gereed · Gepubliceerd, alleen wat in productie is); blok Documentatie-impact in elke pull request; borging pas na de bevestigde release; vast scenario bestuursdemo | ✅ geldt | |
+| 149 | 3 | Vrijwilligersprincipe (algemene ontwerpstandaard): *een trainer krijgt altijd hulp aangeboden, maar hoeft niets onnodig in te vullen*. Drie lagen als gebruiksmogelijkheden (Draaien · Trainen · Ontwikkelen), geen rollen of niveaus en nooit invloed op rechten; vrijwillig behalve beveiliging, gegevensintegriteit en afspraken tussen mensen (bijv. minimale voorbereiding bij een aangekondigde observatie); tien ontwerpregels en vier toetsvragen | ✅ geldt |  |
 | 148 | 3 | Tekentool, rugnummers: een nummerknop **verwijdert nooit** meer; staat het nummer er al, dan **kiest** hij die speler (bij een dubbel nummer eerst de eerst neergezette, nog een keer = de volgende). Een met de knop gekozen speler houdt zijn nummer; nummer wijzigen = de speler op het veld aantikken en dan een nummer (dubbel mag, geen ruil meer) of *Ander nummer…* (1–99). Nieuwe speler = **eerste vrije** nummer. *Opstelling* gebruikt de nummers van de balk (keeper hoort bij het team en is 1; spits 3-3-1 = 9). Oude tekeningen ongewijzigd, geen migratie | ✅ besloten (wacht op samenvoegen) |  |
 | 147 | 3 | Gereedschap vastleggen bij een gegeven training: per plek een momentopname (`vast`: gereedschap, *ook*, vaardigheden met hun leerlijn van toen, profiel en versie, datum, bron) bij de eerste keer *gegeven*. Daarna telt die, ook als de koppeling in de Vormenbank verandert. Ongeldige momentopname = minuten bij geen gereedschap, nooit stil terugvallen op de koppeling van nu. Terugzetten bewaart; opnieuw aanvinken legt niets nieuws vast. Correctie (andere vorm, toevoegen, ook na terugzetten) = meteen vastleggen; plek zonder momentopname op een vastgelegde training = niet toegerekend; kopiëren neemt niets mee, ook geen vastlegdatum van de doeltraining. Oude gegeven trainingen blijven ongewijzigd. Melding in de Vormenbank | geldt | — |
 | 145 | 3 | Een geplaatste vorm verplaatsen: in het venster van de vorm *Verplaatsen naar* Start · A1 · A2 · B1 · B2 · Partij; lege plek = erheen, bezette plek = wisselen; minuten, variant, notitie, vastgezet leerniveau en fase gaan mee, de plek houdt code en voorstellen; tijd blijft gelijk; ongedaan maken. Start is niet verplicht. Geen nieuw veld | ✅ geldt |  |
@@ -139,11 +140,11 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 155; 146, 149 en 150 staan in op
 | 37 | 3 | Klaar voor de ouders: privacy, installeren, feedback en back-up | ◐ deels herzien | door 63 (foutregistratie gebouwd) |
 | 36 | 3 | Communicatieplan: aankondigen, herinneren, noodberichten en wanneer een e-mail | ◐ deels herzien | door 57 (e-mail), 74 (vakantie 7 dagen), 75 (vaste berichten automatisch), 77 (vanaf de server) |
 | 35 | 3 | Pilot RKSV DCG: activiteiten, taken per leeftijd en e-mailmeldingen | ◐ deels herzien | door 38 (start pilot), 53/57 (pushmeldingen, e-mail als vangnet) |
-| 34 | 3 | Informatie is geen taak; profielen per rol | ◐ deels herzien | door 95 (teamleider-profiel zonder trainer registreren) |
+| 34 | 3 | Informatie is geen taak; profielen per rol | ◐ deels herzien | door 95 (teamleider-profiel zonder trainer registreren); aangevuld door 149 |
 | 33 | 3 | Teamleider: alles over de wedstrijd op één plek, en eerlijke speeltijd | ◐ deels herzien | door 39/60 (wisselen en speelduur), 106 (selectieteam mag het schema zelf maken; geen eerlijke verdeling), 95 (trainer registreren niet bij de teamleider), 97 (trainer niet gekomen: standaard bevestigt de coördinator) |
 | 32 | 3 | Kaarten: afmelden zoals op het veld, te laat komen apart | ◐ deels herzien | door 95 (wie belt en praat: trainer, coördinator, HO) |
 | 31 | 3 | Vervoer: iedereen brengt zijn eigen kind | ◐ deels herzien | door 85 (bericht aan chauffeur), 92 (oefenwedstrijd uit bij Vervoer) |
-| 30 | 3 | Volgorde en rust op elk scherm | ✅ geldt |  |
+| 30 | 3 | Volgorde en rust op elk scherm | ✅ geldt | aangevuld door 149 |
 | 29 | 3 | Waardering voor trainers en teamleiders | ◐ deels herzien | door 54 (telling trainer niet in het profiel) |
 | 28 | 3 | Wie helpt er mee? (taken en rijden) | ◐ deels herzien | door 33 (Wie helpt er mee staat bij Team), 64 (staf telt als meehelpen) |
 | 27 | 3 | Wanneer verdwijnt een actie? | ◐ deels herzien | door 34 (geen Gezien-knoppen) |
@@ -757,6 +758,48 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Bestuursdemo, vast scenario:** het probleem · tijdwinst voor vrijwilligers · een training voorbereiden · de HJO begeleidt een trainer · kennis blijft in de club · *Nu / In ontwikkeling*. Nalopen na elke relevante release. Nieuwe stappen in de rondleiding (`public/app/demo.js`) zijn een appwijziging (maat M) en gaan apart.
 - **Overgang:** de bestaande PowerPoints en PDF's blijven staan tot hun opvolger gepubliceerd is, en worden niet aangepast zonder apart akkoord.
 - **Volgende stappen (elk apart, na akkoord):** sjabloon voor pull requests met het blok Documentatie-impact · de eerste 5–6 trainerskaarten + *Snelstart vrijwillige trainer* als Concept · `maak.js` laten lezen uit de kaarten (PDF via de Chromium van de tests) · handleiding HJO en clubbeheerder · rondleiding aanvullen.
+
+---
+
+## Besluit 149 — Vrijwilligersprincipe: ClubComm biedt aan en verplicht niets onnodigs (Spoor 3, algemene ontwerpstandaard)
+*Besloten 4 november 2026, na de integrale UX-audit (map docs/onderzoek/ux-audit op branch `onderzoek/ux-audit`) en twee beoordelingsrondes van de initiatiefnemer ("akkoord als algemeen ontwerpbesluit"). Vult Besluit 30 en 34 en Principe 10 aan. **Dit is een ontwerpstandaard; het akkoord geldt niet automatisch voor code- of databasewijzigingen.***
+
+**Uitgangspunt:** *"Een trainer krijgt altijd hulp aangeboden, maar hoeft niets onnodig in te vullen."* Trainers, teamleiders en begeleiders zijn vrijwilligers, ook als ze een diploma hebben; hoeveel tijd en ambitie iemand heeft, verschilt. ClubComm beperkt de administratieve belasting en werkt zonder extra trainingsadministratie. Een vereniging kan wel afspraken maken over begeleiding en de voorbereiding die daarvoor nodig is.
+
+**1. Drie lagen: gebruiksmogelijkheden, geen rollen of niveaus**
+| Laag | Wat de gebruiker kan doen | Ontwerpdoel voor eenvoudige digitale taken |
+|---|---|---|
+| **Draaien** | niets extra: rooster, afmelden, berichten, vervoer en taken werken vanzelf | 0 min extra |
+| **Trainen** | een training voorbereiden, een oefenvorm kiezen of tekenen, printen | een eenvoudige taak (eerdere training kiezen, printen) in ± 2 min |
+| **Ontwikkelen** | begeleiding, reflectie, ontwikkelafspraak, periodisering, Lijn, publiceren in de clubbibliotheek | korte invoer (3 reflectievragen) in ± 5 min |
+- Geen rollen, geen diploma- of ambitieniveaus: een trainer kiest zelf hoeveel hij gebruikt, en kan dat per week anders doen.
+- De tijden zijn ontwerpdoelen voor eenvoudige digitale taken, geen limiet voor een volledige voorbereiding of een begeleidingsgesprek.
+- Laag, diploma, ambitie en ondersteuningsniveau veranderen **nooit rechten** en zetten nooit functies uit.
+
+**2. Vrijwillig, met drie uitzonderingen.** Vrijwillig blijven onder meer: normale trainingen voorbereiden, een oefenvorm tekenen, periodiseren en de Lijn, reflecteren buiten een afgesproken begeleiding, echte minuten (Besluit 141), publiceren in de clubbibliotheek. Wel nodig, en alleen dit:
+1. **Beveiliging en privacy** (inloggen, rechten, clubscheiding, wat een trainer privé houdt): "niets blokkeert" geldt hier nooit.
+2. **Gegevensintegriteit**: geen opslag die gegevens beschadigt; vastgelegde gegevens blijven gelijk (bijv. Besluit 147); bevestiging of *Ongedaan maken* bij verwijderen.
+3. **Afspraken tussen mensen**: wat een ander nodig heeft om zijn werk te doen. Bij een **aangekondigde observatie** mag de vereniging een minimale voorbereiding afspreken (Swift: voetbalprobleem, doelstelling en gekozen oefenvormen). De app vraagt daar op het moment zelf om, legt uit waarom en toont wat ontbreekt; een gesprek of observatie blokkeert hij daar niet om.
+
+**3. Tien ontwerpregels (voor elk scherm)**
+1. **Aanbieden op het moment zelf**: een functie verschijnt waar de gebruiker al is, niet als taak op Home.
+2. **Leeg is goed, en helpt**: een lege toestand = één zin uitleg, één duidelijke hoofdactie, aangevuld met alleen relevante keuzes. Een keuze die in deze situatie niets doet, staat er niet. Geen *"(0)"*, geen *"x van y ingevuld"*, geen herinnering om iets te vullen.
+3. **Eén primaire knop per toestand**: geen dubbele actie op hetzelfde scherm; geen uitgeschakelde knop zonder uitleg (liever verbergen tot hij zin heeft).
+4. **Zelfde handeling = zelfde woord**: *oefenvorm* in knoppen en vensters; de bank heet *Vormenbank*.
+5. **Vaktaal met uitleg**: woorden uit een opleidingsprofiel alleen met één zin uitleg waar de gebruiker ze moet gebruiken; zonder profiel gewone woorden.
+6. **Navigatie blijft gelijk**: tabbladen verdwijnen niet per club of laag (Besluit 122, 141); een onderdeel zonder inhoud toont een begrijpelijke lege toestand.
+7. **Eén hoofdstatus per regel**; details in het venster.
+8. **De begeleider beoordeelt niet op invoer**: geen overzicht met aantallen ingevoerde trainingen per trainer; wat de trainer zelf aangeeft (ambitie, tijd, gewenste hulp) is leidend.
+9. **Meldingen veroorzaken nooit een onbedoelde handeling**: een tik op of vlak na een melding bedient nooit iets eronder; de navigatie blijft bereikbaar.
+10. **Normen** (`docs/app-controle.md`): tikvlak 44 pt (WCAG 2.2 AA: minimaal 24 px), leestekst 16 px, contrast 4,5 : 1, *Ongedaan maken* bij verwijderen of vervangen.
+
+**4. Vier toetsvragen** (elk voorstel van maat M of L beantwoordt ze in één regel):
+1. In welke laag valt het?
+2. Wordt er iets verplicht? Zo ja: welke van de drie uitzonderingen?
+3. Hoeveel tikken kost de eenvoudigste route op 390 px?
+4. Verandert het rechten, gegevens of de navigatie?
+
+**Niet in dit besluit:** de clubbibliotheek (rechten, maat L), de drie startroutes (wachten op de bibliotheek), de lege toestand van de Lijn (apart ontwerp), het opruimen van een lege nieuwe oefenvorm (apart voorstel). Uitwerking en metingen: README.md en voorstel-drie-kleine-verbeteringen.md in docs/onderzoek/ux-audit (branch `onderzoek/ux-audit`).
 
 ---
 
@@ -2062,6 +2105,7 @@ Zodra er pushmeldingen zijn, gaan vaste herinneringen standaard alleen nog als p
 
 ## Besluit 34 — Informatie is geen taak; profielen per rol
 > **◐ Deels herzien door Besluit 95 (teamleider-profiel zonder trainer registreren)** (zie Register).
+> **◐ Aangevuld door Besluit 149** (vrijwilligersprincipe: ontwerpregels en toetsvragen voor elk scherm).
 *Besloten 24 september 2026.*
 
 **Vuistregel (geldt voor elk nieuw idee):** informatie gaat van de bron (meestal de ouder) rechtstreeks de app in. We maken er nooit een taak van voor iemand anders, tenzij er echt iets besloten of gedaan moet worden. Afmelden is communicatie van de ouder, geen taak voor de teamleider ("afmelden namens de ouder" bouwen we dus niet).
@@ -2150,6 +2194,7 @@ Standaard: teamleider **Basis**, trainer **Compleet**.
 - Afmelden voor de wedstrijd haalt de vraag automatisch weg. Rijden telt mee bij "Wie helpt er mee?" (Besluit 28).
 
 ## Besluit 30 — Volgorde en rust op elk scherm
+> **◐ Aangevuld door Besluit 149** (vrijwilligersprincipe: ontwerpregels en toetsvragen voor elk scherm).
 *Besloten 24 september 2026.*
 
 Uitgangspunt: **informeren, en clean**. Dat vertalen we naar zes vuistregels voor elk scherm en elke rol:
