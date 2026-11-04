@@ -18,7 +18,7 @@
 | **Opleidingsprofielen** | `opslag.js` (leest `S.profielen`), `training.js` (`profiel`, `ond`); bron: `supabase/profielen/` | 121, 123, 133 | `opleidingsprofiel\|trainingsmodule` |
 | **Tekentool** | `tekentool.js` + `.css`, `tekenen.html` | 124–127 | `tekentool` |
 | **Demo en rondleiding** | `demo.js` (`STAPPEN`), `data.js` (democlub) | 89, 114 | `rondleiding\|uitnodiging\|demo:\|elke stap` |
-| **Schermen, tabbladen, vensters** | `core.js` (`CC.sheet`, `CC.toast`, `CC.on`), `index.html`, `app.css` | 30, 34, 102–104, 111, 113, 118, 122 | `tabbladen\|venster\|tikvlakken\|dubbel tikken\|rol wisselen\|automatisch bewaren` |
+| **Schermen, tabbladen, vensters** | `core.js` (`CC.sheet`, `CC.toast`, `CC.on`), `index.html`, `app.css` | 30, 34, 102–104, 111, 113, 118, 122, 149 | `tabbladen\|venster\|tikvlakken\|dubbel tikken\|rol wisselen\|automatisch bewaren` |
 | **Inloggen, opslag, rechten** ⚠️ altijd maat L | `live.js`, `opslag.js` (scopes), `core.js` (inloggen, privacy); `supabase/migrations/` | 1, 14, 24, 45, 52, 72, 119, 143 | alle tests + rechtentest (zie onder) |
 | **Inrichten en clubbeheer** | `hjo.js` (Regels, Rollen, Seizoen), `onderhoud.js` | 6, 12, 96, 112, 120 | `schermgebruik\|kop:` |
 | **Presentaties en handleidingen** | `docs/presentaties/` (`maak.js`, `shots*.js`) | 89, 114 | geen (handmatig) |
@@ -27,7 +27,7 @@
 - **Spoor 1 (persoonlijke methodiek):** `docs/methodiek/persoonlijk/overdracht.md` en het kerndocument; code via Spoor 3.
 - **Spoor 2 (Swift):** `docs/methodiek/swift/overdracht.md` en `docs/methodiek/swift/README.md`.
 - **Spoor 3 (ClubComm):** `docs/overdracht-clubcomm.md`, deze kaart, en bij twijfel `docs/architectuur.md` (lagen en voorwaarden).
-- **Schermwerk:** ook `docs/app-controle.md`. **Gegevens of meerdere rollen:** ook `docs/pilotlog.md` (patronen van eerdere fouten).
+- **Schermwerk:** ook `docs/app-controle.md` en de ontwerpregels en toetsvragen van Besluit 149 (vrijwilligersprincipe). **Gegevens of meerdere rollen:** ook `docs/pilotlog.md` (patronen van eerdere fouten).
 - **Planning en volgende stappen:** `docs/productie-en-groei.md` → **Openstaand**.
 
 ## Documenten
