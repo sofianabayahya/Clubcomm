@@ -2,23 +2,26 @@
 
 *Alleen Spoor 3 schrijft hier. Kort houden (hoogstens ongeveer 30 regels); aan het eind van elke ronde overschrijven. Spoor 1 en 2 hebben hun eigen overdracht (`docs/methodiek/persoonlijk/overdracht.md`, `docs/methodiek/swift/overdracht.md`).*
 
-**Bijgewerkt:** 30-10-2026
+**Bijgewerkt:** 4-11-2026
 
 ## Stand
-- `main` = `51e5a12` (#105, Besluit 144). **Migratie 033 is niet toegepast.** Het eerstvolgende vrije besluitnummer is **145**.
-- Productiedatabase (29/30-10, alleen gelezen): functioneel gelijk aan `main` (de md5 van alle `priv`-functies is gelijk, zonder commentaarregels). Het migratielogboek mist 027–030 (via losse SQL toegepast; alle objecten bestaan). Niet aanpassen zonder apart akkoord.
+- `main` = `eb4dcd0` (#106). Productie draait #105 (Besluit 144) en later. **Migratie 033 is niet toegepast.** Eerstvolgende vrije besluitnummer: **147** (146 = PR #108).
+- Productiedatabase: niet aangepast. Migratielogboek mist 027–030 (objecten bestaan). Niet aanpassen zonder apart akkoord.
 
-## Open pull requests
-| PR | Wat | Stand |
+## Open werk
+| Wat | Branch / PR | Stand |
 |---|---|---|
-| #106 | Test (S): tekentool-tests wachten 20 s op Opslaan (onder drukte soms > 5 s, gemeten tot 7 s; geen hang), branch `claude/intelligent-cannon-t4430r` | 600/600 onder drukte, `npm test` groen; wacht op akkoord |
+| Week van de begeleider (Besluit 146) | PR #108, `bouw/ho-week` | CI groen; **niet samenvoegen** zonder akkoord |
+| Label *Herkomst onbekend* (trainingskaart) | `bouw/herkomst-onbekend` (lokaal) | wacht op akkoord voor push/PR |
+| Demo Swift (nep-database) | `demo/swift-trainer` | alleen voorbeeldversie; **nooit samenvoegen** |
+| Functioneel ontwerp begeleidingsproces + 2 technische voorstellen | `onderzoek/begeleidingsproces`, `docs/onderzoek/begeleidingsproces/` | besluiten 4-11 verwerkt; alleen documenten |
 
-## Wacht op akkoord van de gebruiker (in deze volgorde)
-1. Correctie van de acht DCG-weekplannen, `supabase/scripts/2026-10-30_dcg_weekplannen_correctie.sql.voorstel` (gecontroleerd tegen de CSV, **niet uitgevoerd**).
-2. Apart: 033 toepassen in productie (dan controleren met `priv.rechtentest()` en de app).
-- Rechtenvoorstel 032 (begeleider kijkt mee, clubbank): lokaal getest; samen met 033 in beide volgordes goed (56/56).
-- Bevinding: uitvoerrecht van drie `priv`-functies intrekken (onbereikbaar voor anon). Een account hoort bij precies één club (getest 10/10).
+## Wacht op akkoord van de gebruiker
+1. Correctie van de acht DCG-weekplannen (`supabase/scripts/2026-10-30_dcg_weekplannen_correctie.sql.voorstel`, **niet uitgevoerd**).
+2. 033 toepassen in productie (dan `priv.rechtentest()` en de app controleren). Eerste stap van de bouwvolgorde begeleiding.
+3. PR #108 apart beoordelen.
 
-## Volgende technische stap
-- Later, eigen besluit: vaardigheidsaccenten per trainingsplek (de vorm blijft herbruikbaar; de trainer kiest per training het accent). Wat ontbreekt: `docs/onderzoek/trainingskaart/README.md`. Nu niet bouwen.
-- Voorstel (L): het opleidingsprofiel veilig leesbaar maken voor trainers (onderzoeksbranch `onderzoek/profiel-leesrechten`).
+## Volgende technische stap (bouwvolgorde besluit 8, 4-11)
+1. 033 afronden → 2. vorige-afspraaklus → 3. reflectie vóór gesprek (stap 2 en 3: technisch voorstel 1, los van #108) → 4. #108 → 5. rechtenvoorstel delen + toewijzingen (voorstel 2, migratie 034 als voorstel, vervangt 032) → 6. delen/versies/voorfeedback → 7. Swift-criteria na de pilot.
+- Open beleid (Spoor 2 / club): bewaartermijn, inzage oudere verslagen bij een nieuwe begeleider, verwijderverzoek, de drie nieuwe reflectievragen.
+- Later: vaardigheidsaccenten per trainingsplek; profiel leesbaar voor trainers (`onderzoek/profiel-leesrechten`).
