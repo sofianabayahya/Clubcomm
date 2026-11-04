@@ -194,6 +194,17 @@
   };
   const GROEPNAAM = { start: 'Start', P: 'Toepassing · partij', '': 'Opbouw' };
   // Het midden van Plannen (en de trainingspagina): kop in één regel, opbouw in blokken
+  // Besluit 150: een lege training begint met één vraag en alleen relevante keuzes (Besluit 149, regel 2 en 3).
+  // Eerdere training gebruiken alleen als er een eerdere eigen training met inhoud is; sjabloon alleen als het clubprofiel er een heeft.
+  const eerdereTrainingen = (S, p) => plannen(S).filter((x) => x.eigenaar === ik() && x !== p && (x.onderdelen || []).length).sort((x, y) => String(y.datum).localeCompare(String(x.datum)));
+  const startKeuze = (S, p, a, sj) => { const eerder = eerdereTrainingen(S, p); const l = eerder[0];
+    const nv = l ? (l.onderdelen || []).filter((o) => o.vormId && !o.spacing).length : 0;
+    return `<div class="tr-start ${l ? '' : 'een'}"><p class="tr-start-vraag"><b>Hoe wil je beginnen?</b></p>
+      ${l ? `<div class="tr-startkaart"><b>Eerdere training gebruiken</b><p>Neem een training over die je al gemaakt hebt en pas hem aan. Laatst: <b>${esc(l.thema || 'Training')}</b> (${nv} ${nv === 1 ? 'oefenvorm' : 'oefenvormen'}).</p>
+        <div class="knoppen"><button class="knop vol" data-act="tpKopie" data-id="${a.id}">${icon('repeat')}Kies een eerdere training</button></div></div>` : ''}
+      <div class="tr-startkaart"><b>Zelf samenstellen</b><p>Begin leeg en zet oefenvormen in de volgorde van de training.</p>
+        <div class="knoppen">${sj.map((x) => `<button class="knop licht" data-act="tpSjabloon" data-id="${a.id}" data-s="${esc(x.id)}">${icon('list-checks')}Sjabloon ${esc(x.naam)} (${(x.blokken || []).reduce((t, b) => t + (Number(b.min) || 0), 0) + ((x.overig || {}).min || 0)} min)</button>`).join('')}<button class="knop ${l || sj.length ? 'licht' : 'vol'}" data-act="tpVormKiezen" data-id="${a.id}">${icon('plus')}Oefenvorm</button><button class="knop licht" data-act="tpSpacing" data-id="${a.id}">${icon('plus')}Spacing</button></div>
+        <small class="zacht">Spacing = een kort ander oefeningetje tussen twee oefenvormen, bijvoorbeeld 2 minuten hooghouden.</small></div></div>`; };
   const planMidden = (S, p, a) => {
     const n = aantalSp(S, p, a), k = p.keepers == null || p.keepers === '' ? null : Number(p.keepers); const metCode = (p.onderdelen || []).some((o) => o.blok); const sj = sjablonen(S);
     const gezien = {};
@@ -203,13 +214,12 @@
     return `<div class="kaartje tr-midden" data-drop-plan="${a.id}">
       <div class="tr-plankop"><div><h2>${esc(dagNaam(a))} · ${esc(p.thema || 'Training')} <button class="icoonknop" data-act="tpKopBewerk" data-id="${a.id}" aria-label="Thema en aantallen aanpassen">${icon('pencil')}</button>${CC.trStatus ? CC.trStatus(S, p) : ''}</h2>
         ${CC.trStap ? CC.trStap(S, p, a) : ''}<small class="zacht">${[a.tijd ? `${a.tijd}${a.eind ? `–${a.eind}` : ''}` : '', n ? `${n} spelers${p.spelers == null || p.spelers === '' ? (S.pres[a.id] ? ' aanwezig' : ' verwacht') : ''}` : '', k ? `${k} keeper${k === 1 ? '' : 's'}` : '', p.sjabloon ? `sjabloon ${esc((sj.find((x) => x.id === p.sjabloon) || { naam: '' }).naam)}` : ''].filter(Boolean).join(' · ')}</small></div>
-        <div class="knoppen"><button class="knop licht" data-act="tpKopieNaar" data-id="${a.id}" ${(p.onderdelen || []).length ? '' : 'disabled'}>${icon('repeat')}Kopiëren naar…</button><button class="knop licht" data-act="tpPrint" data-id="${a.id}" ${(p.onderdelen || []).length ? '' : 'disabled'}>${icon('printer')}Printen</button><button class="knop licht" data-act="tpMeer" data-id="${a.id}" aria-label="Meer">⋯</button></div></div>
+        ${(p.onderdelen || []).length ? `<div class="knoppen"><button class="knop licht" data-act="tpKopieNaar" data-id="${a.id}">${icon('repeat')}Kopiëren naar…</button><button class="knop licht" data-act="tpPrint" data-id="${a.id}">${icon('printer')}Printen</button><button class="knop licht" data-act="tpMeer" data-id="${a.id}" aria-label="Meer">⋯</button></div>` : ''}</div>
       ${CC.trMethodiek ? CC.trMethodiek(S, p, a) : ''}
       ${CC.trFeedback ? CC.trFeedback(S, p) : ''}
       ${tijdsbalk(S, p, a)}
-      ${gr || `<p class="zacht">Nog leeg. ${sj.length ? 'Begin met het sjabloon van de club, een eerdere training, of zet' : 'Zet'} vormen en spacing in de volgorde van de training.</p>`}
-      ${(p.onderdelen || []).length ? '' : `${sj.map((s) => `<button class="knop vol" data-act="tpSjabloon" data-id="${a.id}" data-s="${esc(s.id)}">${icon('list-checks')}Sjabloon ${esc(s.naam)} (${(s.blokken || []).reduce((t, b) => t + (Number(b.min) || 0), 0) + ((s.overig || {}).min || 0)} min)</button>`).join('')}<button class="knop licht vol" data-act="tpKopie" data-id="${a.id}">${icon('repeat')}Eerdere training overnemen</button>`}
-      <div class="tr-kop"><div class="knoppen"><button class="knop licht" data-act="tpVormKiezen" data-id="${a.id}">${icon('plus')}Vorm</button><button class="knop licht" data-act="tpSpacing" data-id="${a.id}">${icon('plus')}Spacing</button></div><span class="zacht klein">${(p.onderdelen || []).some((o) => !o.spacing) ? `${(p.onderdelen || []).filter((o) => !o.spacing && o.vormId).length} van ${(p.onderdelen || []).filter((o) => !o.spacing).length} plekken ingevuld` : ''}</span></div>
+      ${gr || startKeuze(S, p, a, sj)}
+      ${(p.onderdelen || []).length ? `<div class="tr-kop"><div class="knoppen"><button class="knop licht" data-act="tpVormKiezen" data-id="${a.id}">${icon('plus')}Oefenvorm</button><button class="knop licht" data-act="tpSpacing" data-id="${a.id}">${icon('plus')}Spacing</button></div><span class="zacht klein">${(p.onderdelen || []).some((o) => !o.spacing) ? `${(p.onderdelen || []).filter((o) => !o.spacing && o.vormId).length} van ${(p.onderdelen || []).filter((o) => !o.spacing).length} plekken ingevuld` : ''}</span></div>` : ''}
       ${(p.onderdelen || []).some((o) => o.blok) ? `<small class="zacht">Gestippeld = voorstel. Tik op een regel voor minuten, ${niveaus(S).length ? 'leerniveau' : 'fase'} en variant.</small>` : ''}
     </div>`; };
   // Terugblik: pas na afloop (gegeven, echte minuten, wat anders)
@@ -436,14 +446,19 @@
     const kop = [c.gs ? `<b>${c.soort === 'A' || c.soort === 'B' ? `${esc(c.soort)} · ` : ''}${esc(ldNaam(S, c.gs))}</b>` : c.o ? `<b>${esc(c.label)}</b>` : '', c.nv ? esc(niveauNaam(S, c.nv)) : '', c.fs ? esc(faseNaam(S, c.fs.id)) : '',
       c.n ? `${c.n} spelers${c.k != null ? `, ${c.k} keeper${c.k === 1 ? '' : 's'}` : ''}` : '', c.o ? `${Number(c.o.min) || 0} min` : ''].filter(Boolean).join(' · ');
     const chip = (k, w, naam, aan) => `<button type="button" class="chipknop ${aan ? 'aan' : ''}" aria-pressed="${!!aan}" data-act="vkZet" data-k="${k}" data-w="${esc(w)}" data-id="${esc(id)}" ${slot}>${naam}</button>`;
-    const leeg = c.gs ? `Nog geen vorm voor ${esc(ldNaam(S, c.gs))}${c.vh ? ` · ${esc(vhNaam(S, c.vh))}` : ''}${c.n ? ` bij ${c.n} spelers` : ''}.` : mijnVormen(S).length ? 'Nog geen vorm die helemaal past.' : 'Je hebt nog geen vormen.';
+    const leeg = c.gs ? `Nog geen oefenvorm voor ${esc(ldNaam(S, c.gs))}${c.vh ? ` · ${esc(vhNaam(S, c.vh))}` : ''}${c.n ? ` bij ${c.n} spelers` : ''}.` : 'Nog geen oefenvorm die helemaal past.';
+    const bankLeeg = !mijnVormen(S).length;
+    // Besluit 150: één ingang voor een nieuwe oefenvorm, met uitleg wat er gebeurt (geen tweede lijst, Besluit 139)
+    const nieuwKaart = `<div class="tr-startkaart kv-nieuw"><b>Nieuwe oefenvorm maken</b><p>${bankLeeg ? 'Je Vormenbank is nog leeg. Maak je eerste oefenvorm; hij komt meteen op deze plek en daarna in je Vormenbank.' : 'Staat er niets bij dat past? Maak je eigen oefenvorm; hij komt meteen op deze plek en daarna in je Vormenbank.'}</p>
+      <div class="knoppen"><button class="knop ${bankLeeg ? 'vol' : 'licht'}" data-act="vormNieuw" data-plan="${esc(id)}" ${slot} ${c.gs ? `data-gs="${esc(c.gs)}"` : ''} ${c.vh ? `data-vh="${esc(c.vh)}"` : ''}>${icon('plus')}Nieuwe oefenvorm${c.gs ? ` (${esc(ldNaam(S, c.gs))}${c.vh ? ` · ${esc(vhNaam(S, c.vh))}` : ''})` : ''}</button></div>
+      <small class="zacht"><b>Wat gebeurt er?</b> Je opent een scherm voor deze oefenvorm: geef hem een naam en beschrijf hoe hij werkt; tekenen mag. Wat je invult, wordt vanzelf bewaard. Met ‹ ga je terug naar je training.</small></div>`;
     return `${kop ? `<p class="kv-ctx">${kop}</p>` : ''}
       ${c.vhs.length ? `<div class="chips tr-vh kv-scroll"><span class="zacht klein tr-lbl">Vaardigheid</span>${chip('vh', '', 'Alle', !c.vh)}${c.vhs.map((x) => chip('vh', x.id, esc(x.naam), c.vh === x.id)).join('')}</div>` : ''}
       ${c.metGs ? `<details class="uitklap kv-gs" ${c.gs ? '' : 'open'}><summary>${c.gs ? 'Ander gereedschap' : 'Gereedschap'}</summary><div class="chips">${chip('gs', '', 'Alle', !c.gs)}${leerdoelen(S).filter((l) => !String(l.id).startsWith('ld-')).map((l) => chip('gs', l.id, esc(l.naam), c.gs === l.id)).join('')}</div></details>` : ''}
-      <h4 class="kv-groep">Past het best (${r.top.length})</h4>${r.top.length ? r.top.map((x) => kvRij(S, id, i, x, c)).join('') : `<p class="zacht klein">${leeg}</p>`}
+      ${bankLeeg ? '' : `<p class="zacht klein kv-aanbevolen">Aanbevolen voor deze plek · geen verplichting</p><h4 class="kv-groep">Past het best (${r.top.length})</h4>${r.top.length ? r.top.map((x) => kvRij(S, id, i, x, c)).join('') : `<p class="zacht klein">${leeg}</p>`}`}
       ${r.deels.length ? `<h4 class="kv-groep">Past deels (${r.deels.length})</h4>${r.deels.map((x) => kvRij(S, id, i, x, c)).join('')}` : ''}
-      ${r.rest.length ? `<details class="uitklap kv-rest" ${vk().rest ? 'open' : ''}><summary>Alle andere vormen (${r.rest.length}) · zoeken</summary><input type="search" class="tr-zoek kv-zoek" placeholder="Zoek een vorm…" aria-label="Zoek een vorm"><div class="kv-alle">${r.rest.map((x) => kvRij(S, id, i, x, c)).join('')}</div></details>` : ''}
-      <div class="knoppen kv-onder"><button class="knop licht" data-act="vormNieuw" data-plan="${esc(id)}" ${slot} ${c.gs ? `data-gs="${esc(c.gs)}"` : ''} ${c.vh ? `data-vh="${esc(c.vh)}"` : ''}>${icon('plus')}Nieuwe vorm${c.gs ? ` (${esc(ldNaam(S, c.gs))}${c.vh ? ` · ${esc(vhNaam(S, c.vh))}` : ''})` : ''}</button>${c.o ? `<button class="knop licht" data-act="tpOnderdeel" data-id="${esc(id)}" data-i="${i}">Minuten en ${niveaus(S).length ? 'leerniveau' : 'fase'} van ${esc(c.label)}</button>` : ''}</div>`; };
+      ${r.rest.length ? `<details class="uitklap kv-rest" ${vk().rest ? 'open' : ''}><summary>Alle andere oefenvormen (${r.rest.length}) · zoeken</summary><input type="search" class="tr-zoek kv-zoek" placeholder="Zoek een oefenvorm…" aria-label="Zoek een oefenvorm"><div class="kv-alle">${r.rest.map((x) => kvRij(S, id, i, x, c)).join('')}</div></details>` : ''}
+      ${nieuwKaart}${c.o ? `<div class="knoppen kv-onder"><button class="knop licht" data-act="tpOnderdeel" data-id="${esc(id)}" data-i="${i}">Minuten en ${niveaus(S).length ? 'leerniveau' : 'fase'} van ${esc(c.label)}</button></div>` : ''}`; };
   const kvTeken = (el) => { const d = document.querySelector('[data-vk]'); if (d) d.innerHTML = kvHtml(CC.S(), el.dataset.id, el.dataset.i != null ? el.dataset.i : null); };
   CC.on('vkZet', (el) => { const f = vk(); const w = el.dataset.w || null; if (el.dataset.k === 'gs') { f.gs = w; f.vh = null; } else f.vh = w; f.meer = null; kvTeken(el); });
   CC.on('kvMeer', (el) => { const f = vk(); f.meer = f.meer === el.dataset.v ? null : el.dataset.v; f.rest = !!el.closest('.kv-rest'); kvTeken(el); });
@@ -569,13 +584,14 @@
   const pf = () => CC.ui.pf || (CC.ui.pf = {});
   const bankLijst = (S, p, a) => { const f = pf(); const n = aantalSp(S, p, a); const doel = f.doel ? blokDoel(S, p, f.doel) : null;
     const l = mijnVormen(S).filter((v) => zoekTreft(S, v, f.q) && (!f.past || !n || past(v, n, null)) && (!doel || koppeling(S, v).primair === doel || koppeling(S, v).ook.includes(doel)) && (!doel || !f.vh || (v.vaardigheden || []).includes(f.vh))).sort((x, y) => x.naam.localeCompare(y.naam));
-    return l.length ? l.map((v) => `<div class="tr-bk" draggable="true" data-drag-v="${v.id}"><button type="button" class="tr-bk-t" data-act="vormOpen" data-id="${v.id}">${mini(v)}<span class="tr-t"><b>${esc(v.naam)}</b><small>${[v.duur ? `${v.duur} min` : '', bereik(v.spelersMin, v.spelersMax, 'sp'), ldNaam(S, koppeling(S, v).primair)].filter(Boolean).join(' · ')}</small></span></button><button class="icoonknop" data-act="tpPlaats" data-id="${a.id}" data-v="${v.id}" aria-label="${esc(v.naam)} in de training zetten">${icon('plus')}</button></div>`).join('') : '<p class="zacht klein">Geen vorm gevonden.</p>'; };
-  const bankKolom = (S, p, a) => { const f = pf(); const n = aantalSp(S, p, a);
-    return `<div class="kaartje"><b>Vormenbank</b><input id="planZoek" class="tr-zoek" type="search" placeholder="Zoek een vorm…" aria-label="Zoek een vorm" value="${esc(f.q || '')}">
+    return l.length ? l.map((v) => `<div class="tr-bk" draggable="true" data-drag-v="${v.id}"><button type="button" class="tr-bk-t" data-act="vormOpen" data-id="${v.id}">${mini(v)}<span class="tr-t"><b>${esc(v.naam)}</b><small>${[v.duur ? `${v.duur} min` : '', bereik(v.spelersMin, v.spelersMax, 'sp'), ldNaam(S, koppeling(S, v).primair)].filter(Boolean).join(' · ')}</small></span></button><button class="icoonknop" data-act="tpPlaats" data-id="${a.id}" data-v="${v.id}" aria-label="${esc(v.naam)} in de training zetten">${icon('plus')}</button></div>`).join('') : '<p class="zacht klein">Geen oefenvorm gevonden.</p>'; };
+  // Besluit 150: een lege Vormenbank toont hier niets (geen 'Geen oefenvorm gevonden' en geen tweede ingang); de kiezer en het tabblad Vormenbank blijven
+  const bankKolom = (S, p, a) => { if (!mijnVormen(S).length) return ''; const f = pf(); const n = aantalSp(S, p, a);
+    return `<div class="kaartje"><b>Vormenbank</b><input id="planZoek" class="tr-zoek" type="search" placeholder="Zoek een oefenvorm…" aria-label="Zoek een oefenvorm" value="${esc(f.q || '')}">
       <div class="chips">${n ? `<button class="chipknop ${f.past ? 'aan' : ''}" aria-pressed="${!!f.past}" data-act="pfZet" data-k="past">past bij ${n}</button>` : ''}${['A', 'B'].filter((b) => blokDoel(S, p, b)).map((b) => `<button class="chipknop ${f.doel === b ? 'aan' : ''}" aria-pressed="${f.doel === b}" data-act="pfZet" data-k="doel" data-w="${b}">${b} = ${esc(ldNaam(S, blokDoel(S, p, b)))}</button>`).join('')}</div>
       ${f.doel && vaardigheden(S, blokDoel(S, p, f.doel)).length ? `<div class="chips tr-vh">${vaardigheden(S, blokDoel(S, p, f.doel)).map((x) => `<button class="chipknop ${f.vh === x.id ? 'aan' : ''}" aria-pressed="${f.vh === x.id}" data-act="pfZet" data-k="vh" data-w="${esc(x.id)}">${esc(x.naam)}</button>`).join('')}</div>` : ''}
       <div id="planBank" data-id="${a.id}">${bankLijst(S, p, a)}</div><small class="zacht">${groot() ? 'Sleep een vorm naar een plek, of tik op +' : 'Tik op +'} (komt op de eerste passende lege plek).</small>
-      <button class="knop licht vol" data-act="vormNieuw" data-plan="${a.id}">${icon('plus')}Nieuwe vorm</button></div>`; };
+      <button class="knop licht vol" data-act="vormNieuw" data-plan="${a.id}">${icon('plus')}Nieuwe oefenvorm</button></div>`; };
   CC.on('pfZet', (el) => { const f = pf(); if (el.dataset.k === 'past') f.past = !f.past; else if (el.dataset.k === 'vh') f.vh = f.vh === el.dataset.w ? null : el.dataset.w; else { f.doel = f.doel === el.dataset.w ? null : el.dataset.w; f.vh = null; } CC.render(); });
   document.addEventListener('input', (e) => { if (e.target.id !== 'planZoek') return; pf().q = e.target.value; const b = document.getElementById('planBank'); const S = CC.S(); const p = b && plan(S, b.dataset.id); if (p) b.innerHTML = bankLijst(S, p, actVan(S, p)); });
   // Plek voor een vorm: lege plek in het blok met hetzelfde leerdoel, anders de eerste lege plek (niet spacing of start), anders erachter
@@ -731,10 +747,10 @@
     return `${l.length ? `<div class="tr-raster">${l.map((v) => kaart(S, v)).join('')}</div>` : '<p class="zacht">Geen vorm met deze filters.</p>'}
       ${niet.length ? `<details class="uitklap"><summary>Past niet bij ${teamGrootte(S)} spelers (${niet.length})</summary><div class="tr-raster">${niet.map((v) => kaart(S, v)).join('')}</div></details>` : ''}`; };
   const actief = (S) => Object.entries(vf()).filter(([k, w]) => k !== 'q' && w != null && w !== '' && w !== false);
-  CC.vormenLijst = (S) => `<input id="vormZoek" class="tr-zoek" type="search" placeholder="Zoek een vorm (naam, type, leerdoel)…" aria-label="Zoek een vorm" value="${esc(vf().q || '')}">
+  CC.vormenLijst = (S) => `<input id="vormZoek" class="tr-zoek" type="search" placeholder="Zoek een oefenvorm (naam, type, leerdoel)…" aria-label="Zoek een oefenvorm" value="${esc(vf().q || '')}">
     <div class="chips tr-filters">${actief(S).map(([k, w]) => `<button class="chipknop aan" data-act="vfWeg" data-k="${k}" aria-label="Filter weghalen: ${esc(filterNaam(S, k, k === 'past' || k === 'kort' || k === 'keepers' ? k : w))}">${esc(filterNaam(S, k, k === 'past' || k === 'kort' || k === 'keepers' ? k : w))} ✕</button>`).join('')}
       <button class="chipknop" data-act="vfOpen">${icon('plus')}Filter</button>${actief(S).length ? '<button class="chipknop tr-wis" data-act="vfWis">Wis</button>' : ''}</div>
-    <button class="knop vol" data-act="vormNieuw">${icon('plus')}Nieuwe vorm</button>
+    <button class="knop vol" data-act="vormNieuw">${icon('plus')}Nieuwe oefenvorm</button>
     <div id="vormResultaat">${resultaat(S)}</div>`;
   document.addEventListener('input', (e) => { if (e.target.id !== 'vormZoek') return; vf().q = e.target.value; const r = document.getElementById('vormResultaat'); if (r) r.innerHTML = resultaat(CC.S()); });
   // Filtervenster: chips werken meteen; de knop onderaan toont hoeveel vormen er overblijven
