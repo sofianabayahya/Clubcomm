@@ -408,9 +408,11 @@
     }
 
     /* Opstellingen met één klik: eigen team (rood) verdedigt onder (staande velden) of links (liggende velden),
-       de tegenstander (geel) gespiegeld. Posities als fractie van het speelveld; nummers lopen door per teamkleur. */
-    var OPST = { "212": [[0.5, 0.94, "K"], [0.3, 0.8], [0.7, 0.8], [0.5, 0.68], [0.33, 0.56], [0.67, 0.56]],
-      "331": [[0.5, 0.94, "K"], [0.2, 0.8], [0.5, 0.82], [0.8, 0.8], [0.25, 0.68], [0.5, 0.7], [0.75, 0.68], [0.5, 0.57]] };
+       de tegenstander (geel) gespiegeld. Posities als fractie van het speelveld. Het derde getal is het rugnummer van die
+       plek, vast gekozen uit de rollen van de nummerbalk (1-4-3-3): de keeper is 1 en de spits van de 3-3-1 is 9.
+       Is dat nummer in het team al bezet, dan het dichtstbijzijnde vrije nummer (Besluit 148). */
+    var OPST = { "212": [[0.5, 0.94, "K"], [0.3, 0.8, 4], [0.7, 0.8, 3], [0.5, 0.68, 6], [0.33, 0.56, 10], [0.67, 0.56, 8]],
+      "331": [[0.5, 0.94, "K"], [0.2, 0.8, 5], [0.5, 0.82, 3], [0.8, 0.8, 2], [0.25, 0.68, 10], [0.5, 0.7, 6], [0.75, 0.68, 8], [0.5, 0.57, 9]] };
     function zetOpstelling(code, tegen){
       if (!st || !OPST[code]) return;
       var f = FIELDS[st.field], m = 30, staand = /^(staand|f8|f6|half)$/.test(st.field), kleur = tegen ? "geel" : "rood";
@@ -423,7 +425,7 @@
         var x = staand ? m + fx * (f.w - 2 * m) : m + (1 - fy) * (f.w - 2 * m);
         var y = staand ? m + fy * (f.h - 2 * m) : m + fx * (f.h - 2 * m);
         if (q[2] === "K"){ st.items.push({ t: "p", c: "keeper", team: kleur, x: Math.round(x), y: Math.round(y) }); bezet[1] = true; return; }
-        var n = nummerVoorPlek(q[0], q[1], bezet); bezet[n] = true;
+        var n = !bezet[q[2]] ? q[2] : nummerVoorPlek(q[0], q[1], bezet); bezet[n] = true;
         st.items.push({ t: "p", c: kleur, n: n, x: Math.round(x), y: Math.round(y) });
       });
       st.tool = null; st.sel = null; render();
@@ -451,16 +453,24 @@
       });
       return best != null ? best : vrijNummer(null, bezet);
     }
-    // Het object met dit rugnummer in dit team (voor nummer 1 ook de keeper van het team), als index in st.items.
-    function indexVanNummer(kleur, n){
-      var i = st.items.findIndex(function(x){ return x.t === "p" && x.c === kleur && x.n === n; });
-      if (i === -1 && n === 1) i = st.items.findIndex(function(x){ return x.t === "p" && x.c === "keeper" && x.team === kleur; });
-      return i;
+    // Alle spelers met dit rugnummer in dit team (voor nummer 1 ook de keeper van het team), als index in st.items,
+    // in de volgorde waarin ze zijn neergezet. Zo is bij een bewust dubbel nummer altijd duidelijk welke je kiest.
+    function indexenVanNummer(kleur, n){
+      var l = [];
+      st.items.forEach(function(x, i){ if (x.t === "p" && ((x.c === kleur && x.n === n) || (n === 1 && x.c === "keeper" && x.team === kleur))) l.push(i); });
+      return l;
     }
+    // Kiezen met een nummerknop: eerst de speler die het eerst is neergezet; staat er al een van deze spelers gekozen,
+    // dan de volgende (en na de laatste weer de eerste). Bij één speler blijft die gekozen.
+    // Een speler die met een nummerknop is gekozen (st.viaBalk) houdt zijn nummer: de volgende nummerknop kiest of zet neer,
+    // zodat 5 en daarna 7 tikken speler 7 kiest en niet speler 5 hernummert. Nummer wijzigen: Ander nummer… of de speler
+    // op het veld aantikken en dan een nummer (zoals in Besluit 124).
+    function kiesVolgende(l){ var nu = l.indexOf(st.sel); st.tool = null; st.multi = null; st.sel = l[nu === -1 ? 0 : (nu + 1) % l.length]; st.viaBalk = st.sel; render(); }
 
     /* Nummerbalk (27-10, ClubComm): per team de rugnummers 1-11 en "zonder nummer". Een nummer tikken zet die speler
        meteen op zijn plek in de 1-4-3-3 (eigen team rood, verdedigt onder of links; tegenstander geel, gedraaid).
-       Nog een keer tikken = weg. Is er een speler gekozen, dan krijgt die het nummer (of geen nummer). */
+       Staat het nummer er al, dan kies je die speler (verwijderen gaat alleen met Verwijderen). Is er een speler gekozen,
+       dan krijgt die het nummer (of geen nummer); dubbel mag bewust. Reparatie 4-11, Besluit 148. */
     var NR_PLEK = { 1: [0.5, 0.94], 2: [0.85, 0.78], 3: [0.62, 0.81], 4: [0.38, 0.81], 5: [0.15, 0.78], 6: [0.5, 0.7],
       8: [0.7, 0.63], 10: [0.3, 0.63], 7: [0.82, 0.56], 9: [0.5, 0.54], 11: [0.18, 0.56] };
     var NR_TEAMS = [["rood", "Eigen team", "●"], ["geel", "Tegenstander", "▲"]];
@@ -474,28 +484,31 @@
       var it = st.sel != null && !(st.multi && st.multi.length > 1) ? st.items[st.sel] : null;
       return it && it.t === "p" && TEAM[it.c] && !TEAM[it.c].letter ? it : null;
     }
+    // De speler die een getikt nummer krijgt: alleen een speler die op het veld is gekozen.
+    function nrDoel(){ var gk = gekozenSpeler(); return gk && st.sel !== st.viaBalk ? gk : null; }
     function tikNummer(kleur, n){
-      var tegen = kleur === "geel", gk = gekozenSpeler();
+      var tegen = kleur === "geel", gk = nrDoel();
       // Een knop van een ander team geldt niet voor de gekozen speler: dan gewoon zonder keuze verder.
       if (gk && gk.c !== kleur){ st.sel = null; gk = null; }
       if (gk){
         // Gekozen speler krijgt dit nummer. Heeft een teamgenoot het al, dan komt het bewust twee keer voor (geen ruil meer).
-        if ((gk.n || 0) === (n || 0)) return;
+        // Zelfde nummer nog eens tikken: niets wijzigen; staat het er dubbel, dan de volgende speler met dat nummer kiezen.
+        if ((gk.n || 0) === (n || 0)){ var zelf = n ? indexenVanNummer(kleur, n) : []; if (zelf.length > 1) kiesVolgende(zelf); return; }
         snapshot(); gk.n = n || 0; render(); return;
       }
       if (!n){
         snapshot();
         var k = st.items.filter(function(x){ return x.t === "p" && x.c === kleur && !x.n; }).length;
         var q = plekOpVeld(0.2 + (k % 7) * 0.1, 0.66 - Math.floor(k / 7) * 0.08, tegen);
-        st.items.push({ t: "p", c: kleur, x: q.x, y: q.y }); render(); return;
+        st.sel = null; st.viaBalk = null; st.items.push({ t: "p", c: kleur, x: q.x, y: q.y }); render(); return;
       }
       // Staat dit nummer er al, dan kies je die speler (om te verplaatsen, te hernummeren of bewust te verwijderen).
       // Verwijderen gebeurt nooit meer met een nummerknop, alleen met Verwijderen (en kan ongedaan worden gemaakt).
-      var i = indexVanNummer(kleur, n);
-      if (i !== -1){ st.tool = null; st.multi = null; st.sel = i; render(); return; }
+      var al = indexenVanNummer(kleur, n);
+      if (al.length){ kiesVolgende(al); return; }
       snapshot();
       var pl = NR_PLEK[n] || [0.5, 0.6], p = plekOpVeld(pl[0], pl[1], tegen);
-      st.items.push({ t: "p", c: kleur, n: n, x: p.x, y: p.y }); render();
+      st.sel = null; st.viaBalk = null; st.items.push({ t: "p", c: kleur, n: n, x: p.x, y: p.y }); render();
     }
     // Een ander rugnummer (ook 12 of hoger) voor de gekozen speler; leeg = zonder nummer.
     function anderNummer(){
@@ -515,7 +528,7 @@
     }
     function renderNummers(){
       var bak = el("drawNummers"); if (!bak) return;
-      var gk = gekozenSpeler();
+      var gk = nrDoel(), gekozen = gekozenSpeler();
       var inMenu = !!(bak.closest && bak.closest(".draw-fly")), dicht = nrDicht && !inMenu;
       bak.classList.toggle("dicht", dicht);
       var kop = inMenu ? '<b class="draw-nr-titel">Rugnummers</b>' : '<button type="button" class="draw-nr-klap" data-klap aria-expanded="' + !dicht + '"><b>Rugnummers</b>' + (dicht ? '<small>tik om te openen</small>' : '') + '<span aria-hidden="true">' + (dicht ? '▾' : '▴') + '</span></button>';
@@ -535,8 +548,8 @@
           '<svg viewBox="-16 -16 32 32" width="22" height="22" aria-hidden="true">' + (vorm === "c" ? '<circle r="11" fill="' + fill + '" stroke="#333" stroke-width="1"/>' : '<path d="M 0 -12 L 11 8 L -11 8 Z" fill="' + fill + '" stroke="#333" stroke-width="1"/>') + '</svg>' +
           '<span>' + tm[1] + '</span><small aria-hidden="true">⇄</small></button><div class="draw-nr-knoppen">' + [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(knop).join("") +
           '<button type="button" class="draw-nr leeg" data-nr="' + kleur + '|0">' + (gk ? 'Zonder nummer' : '+ Zonder nummer' + (zonder ? ' (' + zonder + ')' : '')) + '</button>' +
-          (gk && gk.c === kleur ? '<button type="button" class="draw-nr leeg" data-nr-ander>Ander nummer…</button>' : '') + '</div></div>';
-      }).join("") + '<small>' + (gk ? 'Tik een nummer: de gekozen speler krijgt dat nummer (dubbel mag). Weghalen: Verwijderen onder het veld.' : 'Tik een nummer: staat het er nog niet, dan komt de speler op zijn plek (1-4-3-3); staat het er al, dan kies je die speler. Weghalen: kies de speler en tik Verwijderen. Tik op ● of ▲ om rondje en driehoek te wisselen.') + '</small>';
+          (gekozen && gekozen.c === kleur ? '<button type="button" class="draw-nr leeg" data-nr-ander>Ander nummer…</button>' : '') + '</div></div>';
+      }).join("") + '<small>' + (gk ? 'Tik een nummer: de gekozen speler krijgt dat nummer (dubbel mag). Weghalen: Verwijderen onder het veld.' : (gekozen ? 'Gekozen: nummer ' + (gekozen.n || 'zonder') + '. Een ander nummer tikken kiest die speler of zet hem neer. Nummer wijzigen: Ander nummer… of tik de speler op het veld en dan een nummer. ' : '') + 'Tik een nummer: staat het er nog niet, dan komt de speler op zijn plek (1-4-3-3); staat het er al, dan kies je die speler. Weghalen: kies de speler en tik Verwijderen. Tik op ● of ▲ om rondje en driehoek te wisselen.') + '</small>';
     }
 
     // Knop kiezen; nog een keer dezelfde knop = stoppen. Hoedjeskleur onthouden voor "Vak met hoedjes" en toets H.
@@ -554,7 +567,7 @@
       if (evt.button === 2) return; // rechtermuisknop = stoppen (zie contextmenu)
       if (!st) return;
       var p = svgPt(evt), target = evt.target.closest("[data-i]");
-      sluitMenus();
+      sluitMenus(); st.viaBalk = null; // op het veld gekozen = het getikte nummer gaat naar deze speler
       var greep = evt.target.closest("[data-h]");
       if (greep && st.sel != null){ snapshot(); st.drag = { mode: "greep", i: st.sel, h: greep.getAttribute("data-h"), moved: false }; evt.preventDefault(); return; }
       if (st.tool != null && !(target && !isDragTool(toolDef(st.tool)))){

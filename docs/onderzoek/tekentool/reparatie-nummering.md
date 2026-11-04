@@ -1,6 +1,6 @@
 # Voorstel A — Reparatie rugnummering tekentool
 
-*4-11-2026. Spoor 3, maat M (gedrag van een bestaande functie verandert; herziet Besluit 124 deels). **Voorbereid op branch `bouw/tekentool-nummering`, niet samengevoegd en niet gepubliceerd.** Geen database- of productiewijziging. Vervolg in de aparte chat *ClubComm — Ontwikkeling Tekentool*.*
+*4-11-2026. Spoor 3, maat M (gedrag van een bestaande functie verandert; herziet Besluit 124 deels). **Richting goedgekeurd (4-11) = Besluit 148. Pull request vanaf branch `bouw/tekentool-nummering`; niet samengevoegd en niet gepubliceerd.** Zie *Controles na akkoord* onderaan: daar zijn twee fouten in deze eerste versie gevonden en hersteld. Geen database- of productiewijziging. Vervolg in de aparte chat *ClubComm — Ontwikkeling Tekentool*.*
 
 ## Begrippen, uit elkaar gehouden
 | Begrip | In de gegevens | Betekenis |
@@ -26,11 +26,13 @@
 | Nummerknop van een nummer dat **er al is** | speler **verwijderd** | die speler wordt **gekozen** (verplaatsen, hernummeren, bewust verwijderen) |
 | Speler verwijderen | ook via de nummerknop | **alleen** met *Verwijderen* (of Delete); *Ongedaan maken* werkt |
 | Nieuwe speler (gereedschap, dupliceren, ander team) | hoogste + 1 | **eerste vrije** nummer |
-| Gekozen speler, bezet nummer tikken | ruilen | **dubbel**; de knop toont *2×*, de schermlezer *"staat er 2 keer"* |
+| Speler **op het veld** gekozen, bezet nummer tikken | ruilen | **dubbel**; de knop toont *2×*, de schermlezer *"staat er 2 keer"* |
+| Speler **met een nummerknop** gekozen, ander nummer tikken | (bestond niet) | kiest die speler of zet hem neer; de gekozen speler **houdt** zijn nummer (zie controle 3) |
+| Dubbel nummer tikken | eerste wordt verwijderd | eerst de eerst neergezette, nog een keer = de volgende (zie controle 1) |
 | Gekozen speler, nummer 14 | kan niet | **Ander nummer…** (1–99, leeg = zonder nummer) |
 | Gekozen speler, knop van het andere team | wijzigt de gekozen speler | geldt niet voor de gekozen speler |
 | Gekozen speler: welke nummers zijn bezet? | niet te zien | bezette nummers **omrand** |
-| *Opstelling* 2-1-2 en 3-3-1 | 1, 2, 3… in lijstvolgorde; keeper zonder team | nummer van de dichtstbijzijnde plek in de 1-4-3-3: **keeper 1**, 3-3-1 = 2, 3, 5, 6, 8, 9, 10; 2-1-2 = 3, 4, 6, 8, 10 |
+| *Opstelling* 2-1-2 en 3-3-1 | 1, 2, 3… in lijstvolgorde; keeper zonder team | **vast nummer per plek** uit de 1-4-3-3: **keeper 1**; 3-3-1 = 5, 3, 2 achter · 10, 6, 8 midden · **9 spits**; 2-1-2 = 4, 3 · 6 · 10, 8. Bezet: dichtstbijzijnde vrije nummer |
 
 ![Vóór: 390 px](nummering-voor-390.jpg) ![Na: 390 px](nummering-na-390.jpg)
 
@@ -65,13 +67,13 @@
 | laptop | T1 een bestaand nummer aantikken om die speler te kiezen | 2 | gelukt | 0 |
 | laptop | T3 laagste veldspeler (2) verwijderen, nieuwe speler krijgt 2 | 6 | gelukt | 0 |
 | laptop | T4 speler 5 bewust ook nummer 6 (dubbel) | 3 | gelukt | 0 |
-| laptop | T5 na 3-3-1 nummer 9 (spits) aantikken | 3 | gelukt (spits is al 9, wordt gekozen) | 0 |
+| laptop | T5 na 3-3-1 nummer 9 (spits) aantikken | 3 | gelukt, **maar** 9 was de middenvelder (zie controle 4) | 0 |
 | laptop | T6 speler nummer 14 geven | 4 | gelukt | 0 |
 | laptop | T7 speler verwijderen (expliciet) en ongedaan maken | 3 | gelukt | 0 |
 | mobiel | T1 een bestaand nummer aantikken om die speler te kiezen | 2 | gelukt | 0 |
 | mobiel | T3 laagste veldspeler (2) verwijderen, nieuwe speler krijgt 2 | 6 | MISLUKT (kreeg 3) | 2 |
 | mobiel | T4 speler 5 bewust ook nummer 6 (dubbel) | 3 | gelukt | 0 |
-| mobiel | T5 na 3-3-1 nummer 9 (spits) aantikken | 3 | gelukt (spits is al 9, wordt gekozen) | 0 |
+| mobiel | T5 na 3-3-1 nummer 9 (spits) aantikken | 3 | gelukt, **maar** 9 was de middenvelder (zie controle 4) | 0 |
 | mobiel | T6 speler nummer 14 geven | 4 | gelukt | 0 |
 | mobiel | T7 speler verwijderen (expliciet) en ongedaan maken | 3 | gelukt | 0 |
 
@@ -97,8 +99,28 @@
 ## Gevolgen voor Besluit 124 (tekst voor het besluit, na akkoord)
 > **◐ Deels herzien door Besluit [nummer bij akkoord]:** een nummer dat al op het veld staat aantikken **kiest** die speler; verwijderen gebeurt alleen met *Verwijderen* (ongedaan te maken). Een gekozen speler krijgt het getikte nummer zonder te ruilen (dubbel mag bewust), en *Ander nummer…* geeft 1–99. Nieuwe spelers krijgen het eerste vrije nummer. *Opstelling* gebruikt dezelfde nummers als de balk; de keeper hoort bij een team en is nummer 1.
 
-## Nog te doen vóór samenvoegen (na jouw akkoord)
-1. Bespreken in de chat *Ontwikkeling Tekentool* (met ChatGPT).
-2. Besluitnummer kiezen en vastleggen; Besluit 124 markeren.
-3. Volledige `npm test`, pull request, CI groen.
-4. Daarna pas samenvoegen, na je aparte akkoord.
+## Controles na akkoord op de richting (4-11)
+*Gevraagd door de initiatiefnemer vóór de pull request. Nagespeeld in de browser (laptop 1366 px, telefoon 390 px) en vastgelegd in tests.*
+
+| # | Vraag | Uitkomst | Gevolg |
+|---|---|---|---|
+| 1 | Twee spelers van hetzelfde team hebben bewust hetzelfde nummer; wat kiest de knop? | Eerste versie: altijd de eerste in de lijst, de tweede was met de knop nooit te bereiken | **Aangepast:** eerst de speler die het eerst is neergezet; nog een keer tikken = de volgende, daarna weer de eerste. Kiezen verandert niets aan de tekening (test) |
+| 2 | Telt de keeper goed mee, en blijven oude keepers gelijk? | Keeper uit *Opstelling* hoort bij zijn team en is 1: knop 1 kiest hem, een nieuwe veldspeler krijgt niet nog een 1, de keeper van de tegenstander telt niet voor het eigen team. Een oude keeper **zonder team** telt nergens mee en krijgt na openen en opslaan **geen** team erbij | In orde (test). Een keeper die je zelf neerzet (knop *K*) heeft geen team en telt niet mee; zo blijft het voorspelbaar |
+| 3 | Veroorzaakt de nummering nieuwe selectieproblemen? | **Ja, in de eerste versie.** Een speler die met een knop was gekozen, werd door de volgende knop **hernummerd**. Tik 5 (kiezen) en daarna 7 (bedoeld: kiezen of erbij) → speler 5 werd 7, er stond twee keer 7 en 5 was weg | **Aangepast:** een met de knop gekozen speler houdt zijn nummer; de volgende knop kiest of zet neer. Nummer wijzigen: speler op het veld aantikken en dan een nummer (zoals Besluit 124), of *Ander nummer…*. Telefoontest: vijf tikken op bestaande nummers = niets erbij, niets weg |
+| 4 | (gevonden bij de meting) Is de spits na *Opstelling 3-3-1* nummer 9? | **Nee, in de eerste versie.** De nummers werden plek voor plek aan het dichtstbijzijnde vrije nummer gegeven: de centrale verdediger kreeg 6, de middenvelder 9 en de **spits 3**. De test keek alleen naar de reeks nummers, niet naar wie welk nummer had | **Aangepast:** vast nummer per plek (tabel hierboven); de test controleert nu dat 9 vooraan staat |
+
+**Aanraakvlak op de telefoon:** de nummering verandert niets aan het aantikken op het veld (`onDown`, de tekencode en de grootte van spelers zijn ongewijzigd). De mislukte telefoonhandeling (T3) komt door spelers van ± 9 px op 390 px; dat blijft een apart onderwerp (prioriteit 6). Met de knop kiezen en *Ander nummer…* zijn op de telefoon juist een betrouwbare weg om een nummer te wijzigen zonder het kleine rondje te raken.
+
+**Bestaand gedrag dat niet door deze reparatie komt (gemeten op `main` én deze branch, voor de chat Ontwikkeling Tekentool):**
+- Het menu *Spelers* zet het gereedschap *speler rood* aan. Op de laptop zet een klik op het veld om het menu te sluiten daardoor een speler neer.
+- Op de telefoon (390 px) bedekt het menu *Spelers* het hele veld: je ziet niet waar een speler komt.
+- *Opstelling* twee keer kiezen zet een tweede keeper en vijf spelers precies op dezelfde plekken.
+- Veld wisselen verplaatst niets: na 3-3-1 voor beide teams op *11×11 liggend* staan op *11×11 staand* 7 spelers buiten de lijnen.
+- Op *Half veld* komt de keeper van het eigen team bij de middenlijn, niet in het doel.
+
+**Tests (4-11):** `tests/tekentool-nummering.spec.js` 8 tests, alle 13 `@tekentool` groen. Volledige `npm test`: 88 van 89 groen. De ene fout (*nieuwe fase: pas een kleur vanaf 6 keer gemeten*, `@afmelden`) faalt op `main` precies zo (3 van 3), hangt af van de datum van vandaag in de demo en heeft niets met de tekentool te maken.
+
+## Nog te doen vóór samenvoegen
+1. Pull request controleren, CI groen op GitHub.
+2. Je **aparte akkoord** op samenvoegen (samenvoegen = publiceren naar productie).
+3. Besluiten 145–147 staan in open pull requests; bij samenvoegen in de juiste volgorde in het Register zetten.
