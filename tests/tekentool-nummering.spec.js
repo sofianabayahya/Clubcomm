@@ -5,6 +5,12 @@ const { test, expect } = require('@playwright/test');
 const { volgFouten } = require('./hulp');
 
 const TAG = { tag: ['@tekentool', '@training'] };
+// Besluit 156: het paneel toont één team tegelijk. Eerst het team kiezen (als het nog niet aan staat), dan het nummer.
+const nr = async (page, kleur, n, hoe = 'click') => {
+  const t = page.locator(`[data-team="${kleur}"]`);
+  if ((await t.getAttribute('aria-pressed')) !== 'true') await t[hoe]();
+  await page.locator(`[data-nr="${kleur}|${n}"]`)[hoe]();
+};
 const open = async (page, breed = true) => {
   if (breed) await page.setViewportSize({ width: 1366, height: 820 });
   await page.goto('/tekenen'); await page.evaluate(() => localStorage.clear()); await page.goto('/tekenen');
@@ -15,7 +21,7 @@ const open = async (page, breed = true) => {
 const spelers = (page) => page.evaluate(() => [...document.querySelectorAll('#drawSvg g[data-i]')].map((g) => (g.querySelector('text') || {}).textContent).filter(Boolean));
 const gekozenLabel = (page) => page.evaluate(() => { const g = document.querySelector('#drawSvg g[filter]'); return g && g.querySelector('text') ? g.querySelector('text').textContent : null; });
 const opstelling = async (page, code) => { await page.locator('summary', { hasText: 'Opstelling' }).click(); await page.locator(`[data-draw-form="${code}"]`).click(); };
-const menuSpelers = async (page) => { if (!(await page.locator('[data-nr="rood|1"]').isVisible())) await page.locator('[data-rail="spelers"]').click(); };
+const menuSpelers = async (page) => { if (!(await page.locator('#drawFly.draw-fly-spelers').isVisible())) await page.locator('[data-rail="spelers"]').click(); };
 const opslaan = async (page) => { await page.locator('#drawSave').click(); await expect(page.locator('#drawOverlay')).toBeHidden({ timeout: 20000 }); return page.evaluate(() => JSON.parse(localStorage.getItem('cc-tekentool-test'))[0].data); };
 // Speler op het veld aanklikken. Het menu Spelers ligt deels over het veld: eerst dicht, daarna weer open.
 const kiesSpeler = async (page, label) => {
@@ -42,7 +48,7 @@ test('nummering: opstelling en nummerbalk gebruiken dezelfde nummers; bestaand n
   await menuSpelers(page);
   await expect(page.locator('[data-nr="rood|1"]')).toHaveAttribute('aria-pressed', 'true'); // de keeper van het team telt als 1
   await expect(page.locator('[data-nr="rood|9"]')).toHaveAttribute('aria-pressed', 'true');
-  await page.locator('[data-nr="rood|9"]').click();
+  await nr(page, 'rood', 9);
   expect((await spelers(page)).length).toBe(8); // niets erbij, niets weg
   expect(await gekozenLabel(page)).toBe('9');
   await expect(page.locator('#drawSelBar')).toBeVisible();
@@ -88,22 +94,22 @@ test('nummering: bewust dubbel, ander nummer typen, verwijderen alleen met Verwi
   const fouten = volgFouten(page);
   await open(page);
   await menuSpelers(page);
-  for (const n of [1, 2, 3]) await page.locator(`[data-nr="rood|${n}"]`).click();
+  for (const n of [1, 2, 3]) await nr(page, 'rood', n);
   // Speler 1 op het veld kiezen en bewust ook nummer 3 geven: geen ruil meer
   await kiesSpeler(page, '1');
   expect(await gekozenLabel(page)).toBe('1');
-  await page.locator('[data-nr="rood|3"]').click();
+  await nr(page, 'rood', 3);
   expect((await spelers(page)).sort()).toEqual(['2', '3', '3']);
   await page.keyboard.press('Escape'); await page.keyboard.press('Escape'); await page.keyboard.press('Escape'); // menu dicht, gereedschap uit, keuze weg
   await menuSpelers(page);
   await expect(page.locator('[data-nr="rood|3"]')).toHaveAttribute('aria-label', /staat er 2 keer/);
   // Ander nummer (14) voor de gekozen speler
-  await page.locator('[data-nr="rood|2"]').click();
+  await nr(page, 'rood', 2);
   page.once('dialog', (dl) => dl.accept('14'));
   await page.locator('[data-nr-ander]').click();
   expect((await spelers(page)).sort()).toEqual(['14', '3', '3']);
   // Een knop van het andere team verandert de gekozen speler niet
-  await page.locator('[data-nr="geel|0"]').click();
+  await nr(page, 'geel', 0);
   expect((await spelers(page)).sort()).toEqual(['14', '3', '3']);
   // Verwijderen is een aparte handeling en kan ongedaan worden gemaakt
   await kiesSpeler(page, '14');
@@ -168,15 +174,15 @@ test('nummering: bij een dubbel nummer kiest de knop voorspelbaar de eerste, dan
   await laadOud(page, oud);
   await menuSpelers(page);
   await expect(page.locator('[data-nr="rood|5"]')).toHaveAttribute('aria-label', /staat er 2 keer/);
-  await page.locator('[data-nr="rood|5"]').click();
+  await nr(page, 'rood', 5);
   expect(await gekozenPlek(page)).toBe('translate(100 100)'); // eerst neergezet
-  await page.locator('[data-nr="rood|5"]').click();
+  await nr(page, 'rood', 5);
   expect(await gekozenPlek(page)).toBe('translate(140 300)'); // de volgende, niet de 5 van de tegenstander
-  await page.locator('[data-nr="rood|5"]').click();
+  await nr(page, 'rood', 5);
   expect(await gekozenPlek(page)).toBe('translate(100 100)'); // weer de eerste
   // Vanaf een andere gekozen speler begint het weer bij de eerste
-  await page.locator('[data-nr="rood|7"]').click();
-  await page.locator('[data-nr="rood|7"]').click(); // enkel nummer: blijft gekozen, er verandert niets
+  await nr(page, 'rood', 7);
+  await nr(page, 'rood', 7); // enkel nummer: blijft gekozen, er verandert niets
   expect(await gekozenPlek(page)).toBe('translate(200 200)');
   expect((await spelers(page)).sort()).toEqual(['5', '5', '5', '7']);
   const d = await opslaan(page);
@@ -193,8 +199,9 @@ test('nummering: keeper van het team telt als 1; oude keeper zonder team blijft 
   await opstelling(page, '212|t');  // tegenstander: eigen keeper, telt niet voor rood
   await menuSpelers(page);
   await expect(page.locator('[data-nr="rood|1"]')).toHaveAttribute('aria-pressed', 'true');
+  await page.locator('[data-team="geel"]').click();
   await expect(page.locator('[data-nr="geel|1"]')).toHaveAttribute('aria-pressed', 'true');
-  await page.locator('[data-nr="rood|1"]').click();
+  await nr(page, 'rood', 1);
   expect(await gekozenLabel(page)).toBe('K'); // nummer 1 kiest de keeper van het eigen team
   expect(await gekozenPlek(page)).not.toBe(null);
   await page.locator('.draw-fly-x').click();
@@ -231,18 +238,18 @@ test('nummering: telefoon, nummerknoppen geven geen onbedoelde plaatsing of verw
   await opstelling(page, '331|');
   await menuSpelers(page);
   const voor = (await spelers(page)).sort();
-  for (const n of [2, 9, 9, 1, 1]) await page.locator(`[data-nr="rood|${n}"]`).tap();
+  for (const n of [2, 9, 9, 1, 1]) await nr(page, 'rood', n, 'tap');
   expect((await spelers(page)).sort()).toEqual(voor); // vijf tikken op bestaande nummers: niets erbij, niets weg
   expect(await gekozenLabel(page)).toBe('K');
   // Met de knop gekozen (9), dan een vrij nummer (11): er komt een speler 11 bij, 9 houdt zijn nummer
-  await page.locator('[data-nr="rood|9"]').tap();
+  await nr(page, 'rood', 9, 'tap');
   await expect(page.locator('.draw-nummers small').last()).toContainText('Gekozen: nummer 9');
-  await page.locator('[data-nr="rood|11"]').tap();
+  await nr(page, 'rood', 11, 'tap');
   expect((await spelers(page)).sort()).toEqual([...voor, '11'].sort());
   await page.locator('#drawUndo').tap();
   expect((await spelers(page)).sort()).toEqual(voor);
   // Nummer wijzigen zonder het kleine rondje te raken: knop 9, dan Ander nummer… (7); Ongedaan maken in één stap
-  await page.locator('[data-nr="rood|9"]').tap();
+  await nr(page, 'rood', 9, 'tap');
   page.once('dialog', (dl) => dl.accept('7'));
   await page.locator('[data-nr-ander]').tap();
   expect((await spelers(page)).sort()).toEqual(['10', '2', '3', '5', '6', '7', '8', 'K']);
@@ -257,8 +264,8 @@ test('nummering: Ander nummer… accepteert alleen hele getallen 1 tot en met 99
   const fouten = volgFouten(page);
   await open(page);
   await menuSpelers(page);
-  await page.locator('[data-nr="rood|4"]').click(); // speler 4 neerzetten
-  await page.locator('[data-nr="rood|4"]').click(); // en kiezen
+  await nr(page, 'rood', 4); // speler 4 neerzetten
+  await nr(page, 'rood', 4); // en kiezen
   const geef = async (tekst) => { page.once('dialog', (dl) => dl.accept(tekst)); await page.locator('[data-nr-ander]').click(); return page.evaluate(() => { const g = document.querySelector('#drawSvg g[filter]'); return g ? (g.querySelector('text') || { textContent: '' }).textContent : null; }); };
   for (const fout of ['12abc', '3.5', '0', '100', '-5', '1e1', 'abc', '7 8']) expect(await geef(fout), `invoer "${fout}"`).toBe('4'); // geweigerd, nummer blijft 4
   expect(await geef(' 14 ')).toBe('14'); // spaties eromheen mogen
@@ -277,14 +284,14 @@ test('nummering: twee keepers van hetzelfde team (telling, kiezen, weergave)', T
   await menuSpelers(page);
   await expect(page.locator('[data-nr="rood|1"]')).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('[data-nr="rood|1"]')).toHaveAttribute('aria-label', /staat er 2 keer/);
-  await page.locator('[data-nr="rood|1"]').click();
+  await nr(page, 'rood', 1);
   expect(await gekozenPlek(page)).toBe('translate(60 300)');
-  await page.locator('[data-nr="rood|1"]').click();
+  await nr(page, 'rood', 1);
   expect(await gekozenPlek(page)).toBe('translate(60 400)');
-  await page.locator('[data-nr="rood|1"]').click();
+  await nr(page, 'rood', 1);
   expect(await gekozenPlek(page)).toBe('translate(60 300)');
   // Met een keeper gekozen: een vrij nummer tikken zet een veldspeler neer, de keeper verandert niet
-  await page.locator('[data-nr="rood|5"]').click();
+  await nr(page, 'rood', 5);
   await page.locator('.draw-fly-x').click(); await page.locator('[data-draw-select]').click();
   const veld = await page.locator('#drawSvg').boundingBox();
   await page.keyboard.press('1');
@@ -299,39 +306,39 @@ test('nummering: kiezen met de knop, op het veld, ander team, opnieuw een nummer
   const fouten = volgFouten(page);
   await open(page);
   await menuSpelers(page);
-  for (const n of [2, 3, 5]) await page.locator(`[data-nr="rood|${n}"]`).click();
-  for (const n of [4, 9]) await page.locator(`[data-nr="geel|${n}"]`).click();
+  for (const n of [2, 3, 5]) await nr(page, 'rood', n);
+  for (const n of [4, 9]) await nr(page, 'geel', n);
   const start = ['geel4', 'geel9', 'rood2', 'rood3', 'rood5'];
   const stand = () => page.evaluate(() => [...document.querySelectorAll('#drawSvg g[data-i]')].map((g) => ({ '#E53935': 'rood', '#F2D100': 'geel' }[g.querySelector('circle,path').getAttribute('fill')] + g.querySelector('text').textContent)).sort());
   // 1. kiezen met de knop (3), dan andere knoppen van hetzelfde team: kiezen, nooit hernummeren
-  await page.locator('[data-nr="rood|3"]').click();
-  await page.locator('[data-nr="rood|5"]').click();
+  await nr(page, 'rood', 3);
+  await nr(page, 'rood', 5);
   expect(await gekozenLabel(page)).toBe('5'); expect(await stand()).toEqual(start);
   // 2. knop van het andere team terwijl rood 5 met de knop gekozen is: kiest geel 9
-  await page.locator('[data-nr="geel|9"]').click();
+  await nr(page, 'geel', 9);
   expect(await gekozenLabel(page)).toBe('9'); expect(await stand()).toEqual(start);
   // 3. op het veld rood 2 kiezen, dan een knop van het andere team (geel 4): rood 2 blijft 2, geel 4 wordt gekozen
   await kiesSpeler(page, '2');
-  await page.locator('[data-nr="geel|4"]').click();
+  await nr(page, 'geel', 4);
   expect(await gekozenLabel(page)).toBe('4'); expect(await stand()).toEqual(start);
   // 4. weer met de knop (rood 2), dan een vrij nummer (rood 7): er komt een speler 7 bij, 2 blijft 2
-  await page.locator('[data-nr="rood|2"]').click();
-  await page.locator('[data-nr="rood|7"]').click();
+  await nr(page, 'rood', 2);
+  await nr(page, 'rood', 7);
   expect(await stand()).toEqual([...start, 'rood7'].sort());
   // 5. op het veld rood 7 kiezen en bewust nummer 8 geven: alleen dat is een hernummering
   await kiesSpeler(page, '7');
-  await page.locator('[data-nr="rood|8"]').click();
+  await nr(page, 'rood', 8);
   expect(await stand()).toEqual([...start, 'rood8'].sort());
   // 6. daarna met de knop rood 3 kiezen en geel 9: geen wijziging
-  await page.locator('[data-nr="rood|3"]').click();
-  await page.locator('[data-nr="geel|9"]').click();
+  await nr(page, 'rood', 3);
+  await nr(page, 'geel', 9);
   expect(await stand()).toEqual([...start, 'rood8'].sort());
   // 7. teamkleur van een gekozen speler wisselen (rood 3 → geel): eerste vrije geel nummer, daarna een rode knop wijzigt hem niet
   await page.locator('.draw-fly-x').click();
   await kiesOpVeld(page, '3');
   await page.locator('#drawKleur [data-kleur="geel"]').click();
   await page.locator('[data-rail="spelers"]').click();
-  await page.locator('[data-nr="rood|5"]').click();
+  await nr(page, 'rood', 5);
   expect(await stand()).toEqual(['geel1', 'geel4', 'geel9', 'rood2', 'rood5', 'rood8']);
   expect(await gekozenLabel(page)).toBe('5');
   expect(fouten).toEqual([]);
