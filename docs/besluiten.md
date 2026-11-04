@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 4 november 2026 (t/m Besluit 152; 146 en 149–151 staan in open pull requests)
+Laatst bijgewerkt: 4 november 2026 (t/m Besluit 153; 146 en 149–151 staan in open pull requests)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -21,6 +21,7 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 152; 146 en 149–151 staan in o
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
+| 153 | 3 | Tekentool, veldlijnen: **penaltystip** (11 m), **halve maan** (9,15 m rond de stip, buiten de 16), **hoekschopboogjes** (1 m) en **middenstip** op 11×11 (liggend en staand) en Half veld; niet op 8×8, 6×6 en Vak (pupillenvelden pas met hun KNVB-maat). Bestaande tekeningen krijgen de lijnen vanzelf; gegevens ongewijzigd | ✅ besloten (wacht op samenvoegen) |  |
 | 152 | 3 | Tekentool: een menu sluiten zet niets onbedoeld neer. **×** = klaar (het gereedschap gaat uit, in elk menu); het menu **Spelers** zet bij openen geen gereedschap aan (losse speler = kleur tikken, dan het veld; sneltoetsen ongewijzigd). De snelle route *Hoedjes → tik op het veld* blijft. Geen gegevenswijziging | ✅ besloten (wacht op samenvoegen) |  |
 | 148 | 3 | Tekentool, rugnummers: een nummerknop **verwijdert nooit** meer; staat het nummer er al, dan **kiest** hij die speler (bij een dubbel nummer eerst de eerst neergezette, nog een keer = de volgende). Een met de knop gekozen speler houdt zijn nummer; nummer wijzigen = de speler op het veld aantikken en dan een nummer (dubbel mag, geen ruil meer) of *Ander nummer…* (1–99). Nieuwe speler = **eerste vrije** nummer. *Opstelling* gebruikt de nummers van de balk (keeper hoort bij het team en is 1; spits 3-3-1 = 9). Oude tekeningen ongewijzigd, geen migratie | ✅ besloten (wacht op samenvoegen) |  |
 | 147 | 3 | Gereedschap vastleggen bij een gegeven training: per plek een momentopname (`vast`: gereedschap, *ook*, vaardigheden met hun leerlijn van toen, profiel en versie, datum, bron) bij de eerste keer *gegeven*. Daarna telt die, ook als de koppeling in de Vormenbank verandert. Ongeldige momentopname = minuten bij geen gereedschap, nooit stil terugvallen op de koppeling van nu. Terugzetten bewaart; opnieuw aanvinken legt niets nieuws vast. Correctie (andere vorm, toevoegen, ook na terugzetten) = meteen vastleggen; plek zonder momentopname op een vastgelegde training = niet toegerekend; kopiëren neemt niets mee, ook geen vastlegdatum van de doeltraining. Oude gegeven trainingen blijven ongewijzigd. Melding in de Vormenbank | geldt | — |
@@ -683,6 +684,16 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
 ### Vuistregel voor nieuwe ideeën
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
+
+---
+
+## Besluit 153 — Tekentool: penaltystip, halve maan, hoekschopboogjes en middenstip (Spoor 3, maat M)
+*Besloten 4 november 2026: de initiatiefnemer miste deze lijnen; voorstel met proefbeelden `docs/onderzoek/tekentool/veldlijnen.md`; gekozen: middenstip ja, alleen 11×11 en Half veld.*
+- **Op schaal** (± 10 beeldpunten per meter): penaltystip op 11 m van de doellijn; halve maan met straal 9,15 m (gelijk aan de middencirkel) rond de stip, alleen het deel buiten het strafschopgebied; hoekschopboogje van 1 m in elke hoek (op Half veld alleen bij de doellijn); middenstip.
+- **Velden:** 11×11 liggend, 11×11 staand en Half veld. **Niet** op 8×8 en 6×6: die velden hebben nog niet de KNVB-maat (prioriteit 3, veldcoördinaten), en of 6×6 een strafschopgebied heeft is een voetbalvraag. **Vak** blijft een vrij vak zonder lijnen.
+- **Bestaande tekeningen:** de lijnen worden bij elke weergave uit de gegevens getekend, dus ook oude tekeningen (tegel, vormkaart, printen) tonen ze; de gegevens veranderen niet. In productie (4-11): 5 tekeningen *11×11 liggend* en 3 *Half veld*; de 11 op *Vak* blijven gelijk.
+- Dezelfde lijndikte en kleur als de bestaande lijnen; niet aan te tikken.
+- Tests: `tests/tekentool-veld.spec.js`.
 
 ---
 
