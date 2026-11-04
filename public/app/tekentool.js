@@ -342,6 +342,7 @@
           if (e.target.closest("[data-klap]")){ nrDicht = !nrDicht; try { localStorage.setItem("cc-draw-nummers", nrDicht ? "dicht" : "open"); } catch(x){} renderNummers(); return; }
           var v = e.target.closest("[data-vorm]");
           if (v){ var c = v.getAttribute("data-vorm"); st.vormen[c] = vormVan(c) === "c" ? "t" : "c"; spelerIconen(); render(); return; }
+          if (e.target.closest("[data-nr-ander]")){ anderNummer(); return; }
           var b = e.target.closest("[data-nr]"); if (!b) return; var x = b.getAttribute("data-nr").split("|"); tikNummer(x[0], Number(x[1]));
         });
       }
@@ -414,14 +415,47 @@
       if (!st || !OPST[code]) return;
       var f = FIELDS[st.field], m = 30, staand = /^(staand|f8|f6|half)$/.test(st.field), kleur = tegen ? "geel" : "rood";
       snapshot();
-      var n = st.items.reduce(function(mx, x){ return x.t === "p" && x.c === kleur ? Math.max(mx, x.n || 0) : mx; }, 0);
+      // Eén nummersysteem: elke plek krijgt het rugnummer van de dichtstbijzijnde plek in de nummerbalk (1-4-3-3),
+      // zodat de spits 9 is in de opstelling én in de balk. De keeper hoort bij het team en telt als nummer 1.
+      var bezet = gebruikteNummers(kleur);
       OPST[code].forEach(function(q){
         var fx = q[0], fy = tegen ? 1 - q[1] : q[1];
         var x = staand ? m + fx * (f.w - 2 * m) : m + (1 - fy) * (f.w - 2 * m);
         var y = staand ? m + fy * (f.h - 2 * m) : m + fx * (f.h - 2 * m);
-        st.items.push(q[2] === "K" ? { t: "p", c: "keeper", x: Math.round(x), y: Math.round(y) } : { t: "p", c: kleur, n: ++n, x: Math.round(x), y: Math.round(y) });
+        if (q[2] === "K"){ st.items.push({ t: "p", c: "keeper", team: kleur, x: Math.round(x), y: Math.round(y) }); bezet[1] = true; return; }
+        var n = nummerVoorPlek(q[0], q[1], bezet); bezet[n] = true;
+        st.items.push({ t: "p", c: kleur, n: n, x: Math.round(x), y: Math.round(y) });
       });
       st.tool = null; st.sel = null; render();
+    }
+
+    /* Rugnummers (reparatie 4-11): een speler is een object in de lijst (zijn plek in st.items is de technische identiteit),
+       het rugnummer `n` is alleen een label dat je mag aanpassen en dat dubbel mag voorkomen, de teamkleur is `c`.
+       Het voorgestelde nummer is het eerste vrije nummer in dat team; een keeper met `team` telt als nummer 1. */
+    function gebruikteNummers(kleur){
+      var b = {};
+      st.items.forEach(function(x){
+        if (x.t !== "p") return;
+        if (x.c === kleur && x.n) b[x.n] = true;
+        if (x.c === "keeper" && x.team === kleur) b[1] = true;
+      });
+      return b;
+    }
+    function vrijNummer(kleur, bezet){ var b = bezet || gebruikteNummers(kleur), n = 1; while (b[n]) n++; return n; }
+    function nummerVoorPlek(fx, fy, bezet){
+      var best = null, afst = Infinity;
+      Object.keys(NR_PLEK).forEach(function(k){
+        var n = Number(k); if (bezet[n]) return;
+        var d = Math.pow(NR_PLEK[k][0] - fx, 2) + Math.pow(NR_PLEK[k][1] - fy, 2);
+        if (d < afst){ afst = d; best = n; }
+      });
+      return best != null ? best : vrijNummer(null, bezet);
+    }
+    // Het object met dit rugnummer in dit team (voor nummer 1 ook de keeper van het team), als index in st.items.
+    function indexVanNummer(kleur, n){
+      var i = st.items.findIndex(function(x){ return x.t === "p" && x.c === kleur && x.n === n; });
+      if (i === -1 && n === 1) i = st.items.findIndex(function(x){ return x.t === "p" && x.c === "keeper" && x.team === kleur; });
+      return i;
     }
 
     /* Nummerbalk (27-10, ClubComm): per team de rugnummers 1-11 en "zonder nummer". Een nummer tikken zet die speler
@@ -442,21 +476,35 @@
     }
     function tikNummer(kleur, n){
       var tegen = kleur === "geel", gk = gekozenSpeler();
-      snapshot();
+      // Een knop van een ander team geldt niet voor de gekozen speler: dan gewoon zonder keuze verder.
+      if (gk && gk.c !== kleur){ st.sel = null; gk = null; }
       if (gk){
-        // Gekozen speler krijgt dit nummer; had een teamgenoot het al, dan ruilen ze.
-        if (n){ var ander = st.items.find(function(x){ return x !== gk && x.t === "p" && x.c === gk.c && x.n === n; }); if (ander) ander.n = gk.n || 0; }
-        gk.n = n || 0; render(); return;
+        // Gekozen speler krijgt dit nummer. Heeft een teamgenoot het al, dan komt het bewust twee keer voor (geen ruil meer).
+        if ((gk.n || 0) === (n || 0)) return;
+        snapshot(); gk.n = n || 0; render(); return;
       }
       if (!n){
+        snapshot();
         var k = st.items.filter(function(x){ return x.t === "p" && x.c === kleur && !x.n; }).length;
         var q = plekOpVeld(0.2 + (k % 7) * 0.1, 0.66 - Math.floor(k / 7) * 0.08, tegen);
         st.items.push({ t: "p", c: kleur, x: q.x, y: q.y }); render(); return;
       }
-      var i = st.items.findIndex(function(x){ return x.t === "p" && x.c === kleur && x.n === n; });
-      if (i !== -1){ st.items.splice(i, 1); st.sel = null; st.multi = null; render(); return; }
+      // Staat dit nummer er al, dan kies je die speler (om te verplaatsen, te hernummeren of bewust te verwijderen).
+      // Verwijderen gebeurt nooit meer met een nummerknop, alleen met Verwijderen (en kan ongedaan worden gemaakt).
+      var i = indexVanNummer(kleur, n);
+      if (i !== -1){ st.tool = null; st.multi = null; st.sel = i; render(); return; }
+      snapshot();
       var pl = NR_PLEK[n] || [0.5, 0.6], p = plekOpVeld(pl[0], pl[1], tegen);
       st.items.push({ t: "p", c: kleur, n: n, x: p.x, y: p.y }); render();
+    }
+    // Een ander rugnummer (ook 12 of hoger) voor de gekozen speler; leeg = zonder nummer.
+    function anderNummer(){
+      var gk = gekozenSpeler(); if (!gk) return;
+      var t = window.prompt("Rugnummer (1–99, leeg = zonder nummer)", gk.n ? String(gk.n) : "");
+      if (t == null) return;
+      var n = parseInt(String(t).trim(), 10);
+      if (String(t).trim() !== "" && !(n >= 1 && n <= 99)){ showToast("Kies een nummer van 1 tot en met 99"); return; }
+      snapshot(); gk.n = String(t).trim() === "" ? 0 : n; render();
     }
     // Knoppen bij Spelers (links) tonen dezelfde vorm als op het veld
     function spelerIconen(){
@@ -475,17 +523,20 @@
       bak.innerHTML = kop + NR_TEAMS.map(function(tm){
         var kleur = tm[0], ink = TEAM[kleur].ink, fill = TEAM[kleur].fill;
         var zonder = st.items.filter(function(x){ return x.t === "p" && x.c === kleur && !x.n; }).length;
+        var aantal = function(n){ return st.items.filter(function(x){ return x.t === "p" && x.c === kleur && x.n === n; }).length + (n === 1 && st.items.some(function(x){ return x.t === "p" && x.c === "keeper" && x.team === kleur; }) ? 1 : 0); };
         var knop = function(n){
-          var aan = gk ? gk.c === kleur && (gk.n || 0) === n : st.items.some(function(x){ return x.t === "p" && x.c === kleur && x.n === n; });
-          return '<button type="button" class="draw-nr' + (aan ? ' aan' : '') + '" data-nr="' + kleur + '|' + n + '"' + (aan ? ' style="background:' + fill + ';color:' + ink + ';border-color:' + fill + '"' : '') +
-            ' aria-pressed="' + aan + '" aria-label="' + tm[1] + ' nummer ' + n + '">' + n + '</button>';
+          var keer = aantal(n), aan = gk ? gk.c === kleur && (gk.n || 0) === n : keer > 0;
+          // Met een gekozen speler blijft zichtbaar welke nummers in het team al op het veld staan (omrand).
+          return '<button type="button" class="draw-nr' + (aan ? ' aan' : (gk && keer ? ' bezet' : '')) + '" data-nr="' + kleur + '|' + n + '"' + (aan ? ' style="background:' + fill + ';color:' + ink + ';border-color:' + fill + '"' : '') +
+            ' aria-pressed="' + aan + '" aria-label="' + tm[1] + ' nummer ' + n + (keer > 1 ? ', staat er ' + keer + ' keer' : '') + '">' + n + (keer > 1 ? '<sup aria-hidden="true">' + keer + '×</sup>' : '') + '</button>';
         };
         var vorm = vormVan(kleur);
         return '<div class="draw-nr-rij"><button type="button" class="draw-nr-vorm" data-vorm="' + kleur + '" title="Rondje of driehoek wisselen" aria-label="' + tm[1] + ': ' + (vorm === "c" ? "rondje" : "driehoek") + ', tik om te wisselen">' +
           '<svg viewBox="-16 -16 32 32" width="22" height="22" aria-hidden="true">' + (vorm === "c" ? '<circle r="11" fill="' + fill + '" stroke="#333" stroke-width="1"/>' : '<path d="M 0 -12 L 11 8 L -11 8 Z" fill="' + fill + '" stroke="#333" stroke-width="1"/>') + '</svg>' +
           '<span>' + tm[1] + '</span><small aria-hidden="true">⇄</small></button><div class="draw-nr-knoppen">' + [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(knop).join("") +
-          '<button type="button" class="draw-nr leeg" data-nr="' + kleur + '|0">' + (gk ? 'Zonder nummer' : '+ Zonder nummer' + (zonder ? ' (' + zonder + ')' : '')) + '</button></div></div>';
-      }).join("") + '<small>' + (gk ? 'Tik een nummer: de gekozen speler krijgt dat nummer.' : 'Tik een nummer: de speler staat meteen op zijn plek (1-4-3-3). Nog een keer tikken = weg. Tik op ● of ▲ om rondje en driehoek te wisselen.') + '</small>';
+          '<button type="button" class="draw-nr leeg" data-nr="' + kleur + '|0">' + (gk ? 'Zonder nummer' : '+ Zonder nummer' + (zonder ? ' (' + zonder + ')' : '')) + '</button>' +
+          (gk && gk.c === kleur ? '<button type="button" class="draw-nr leeg" data-nr-ander>Ander nummer…</button>' : '') + '</div></div>';
+      }).join("") + '<small>' + (gk ? 'Tik een nummer: de gekozen speler krijgt dat nummer (dubbel mag). Weghalen: Verwijderen onder het veld.' : 'Tik een nummer: staat het er nog niet, dan komt de speler op zijn plek (1-4-3-3); staat het er al, dan kies je die speler. Weghalen: kies de speler en tik Verwijderen. Tik op ● of ▲ om rondje en driehoek te wisselen.') + '</small>';
     }
 
     // Knop kiezen; nog een keer dezelfde knop = stoppen. Hoedjeskleur onthouden voor "Vak met hoedjes" en toets H.
@@ -522,8 +573,8 @@
           if (t.c) obj.c = t.c;
           if (t.s) obj.s = t.s;
           if (t.t === "num") obj.n = ++st.num;
-          // Spelers krijgen automatisch het volgende nummer binnen hun team (kleur).
-          if (t.t === "p" && !TEAM[t.c].letter) obj.n = 1 + st.items.reduce(function(mx, x){ return x.t === "p" && x.c === t.c ? Math.max(mx, x.n || 0) : mx; }, 0);
+          // Spelers krijgen automatisch het eerste vrije nummer binnen hun team (kleur).
+          if (t.t === "p" && !TEAM[t.c].letter) obj.n = vrijNummer(t.c);
           if (t.t === "text"){
             var txt = window.prompt("Tekst op het veld", "5P");
             if (!txt || !txt.trim()){ st.undo.pop(); return; }
@@ -702,8 +753,8 @@
       if (!idx.length) return; snapshot();
       idx.forEach(function(j){
         var g = st.items[j]; if (!g || g.c === k || !/^(p|cone|dish)$/.test(g.t) || (g.t === "p" && TEAM[g.c] && TEAM[g.c].letter)) return;
-        // Speler naar een ander team: volgend vrij rugnummer in dat team.
-        if (g.t === "p") g.n = 1 + st.items.reduce(function(mx, x){ return x.t === "p" && x.c === k ? Math.max(mx, x.n || 0) : mx; }, 0);
+        // Speler naar een ander team: eerste vrije rugnummer in dat team.
+        if (g.t === "p") g.n = vrijNummer(k);
         g.c = k;
         if (g.t === "cone") lastHat = k;
       });
@@ -721,7 +772,7 @@
         st.multi.forEach(function(j){
           var c = JSON.parse(JSON.stringify(st.items[j]));
           if ("x" in c){ c.x += 24; c.y += 24; } else { c.x1 += 24; c.y1 += 24; c.x2 += 24; c.y2 += 24; if (c.cx != null){ c.cx += 24; c.cy += 24; } }
-          if (c.t === "p" && !TEAM[c.c].letter) c.n = 1 + st.items.reduce(function(mx, x){ return x.t === "p" && x.c === c.c ? Math.max(mx, x.n || 0) : mx; }, 0);
+          if (c.t === "p" && !TEAM[c.c].letter) c.n = vrijNummer(c.c);
           if (c.t === "num") c.n = ++st.num;
           st.items.push(c); nieuw.push(st.items.length - 1);
         });
@@ -731,7 +782,7 @@
       snapshot();
       var c = JSON.parse(JSON.stringify(it));
       if ("x" in c){ c.x += 24; c.y += 24; } else { c.x1 += 24; c.y1 += 24; c.x2 += 24; c.y2 += 24; if (c.cx != null){ c.cx += 24; c.cy += 24; } }
-      if (c.t === "p" && !TEAM[c.c].letter) c.n = 1 + st.items.reduce(function(mx, x){ return x.t === "p" && x.c === c.c ? Math.max(mx, x.n || 0) : mx; }, 0);
+      if (c.t === "p" && !TEAM[c.c].letter) c.n = vrijNummer(c.c);
       if (c.t === "num") c.n = ++st.num;
       st.items.push(c); st.sel = st.items.length - 1; render();
     }
