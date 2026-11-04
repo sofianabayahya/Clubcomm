@@ -762,6 +762,8 @@ small.bewaard.ok { color: var(--groen); } small.bewaard.fout { color: var(--rood
 .tr-fase.vast { border-style: solid; border-color: transparent; background: var(--blauw-l); color: var(--blauw-d); }
 .tr-overig { min-height: 44px; cursor: pointer; }
 .tr-uit { cursor: default; }
+/* Besluit 147: melding in de Vormenbank — leestekst 16 px (app-controle), informatie, geen knop */
+.tr-vastm { display: block; font-size: 1rem; line-height: 1.4; margin-top: .4rem; }
 .tr-uit input { width: 72px !important; flex: none; min-height: 44px; text-align: center; }
 .tr-cls { display: flex; flex-direction: column; gap: 6px; border-top: 1px solid var(--lijn); border-bottom: 1px solid var(--lijn); padding: 10px 0 12px; margin: 4px 0; }
 .tr-cls-kop { font-size: 17px; }
