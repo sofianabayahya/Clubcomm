@@ -1,5 +1,5 @@
--- ClubComm — test Besluit 154 (voorstel 034): een begeleider ziet alleen trainers in zijn werkgebied. Alleen lokaal:
---   EXTRA_SQL=supabase/tests/lokaal/begeleider-werkgebied.sql npm run test:veilig -- 034
+-- ClubComm — test Besluit 154 (migratie 034): een begeleider ziet alleen trainers in zijn werkgebied. Alleen lokaal:
+--   npm run test:veilig
 -- Alles in één transactie die wordt teruggedraaid; elke controle in een eigen subtransactie. "verwacht" = het beleid van
 -- Besluit 154; zonder 034 wijken de controles met "weigert" voor een begeleider buiten zijn werkgebied af.
 -- Club WG gebruikt de standaardbouwen (Onderbouw 8–12, Middenbouw 13–15, Bovenbouw 16–19), zoals DCG en Swift op 4-11.

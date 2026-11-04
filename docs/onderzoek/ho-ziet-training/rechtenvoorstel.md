@@ -1,6 +1,6 @@
 # Rechtenvoorstel: begeleider kijkt mee en clubbank (Besluit 134)
 
-*Voorstel van 29-10-2026. **Nog niet uitgevoerd.** Het script staat klaar in `supabase/migrations/032_begeleider_kijkt_mee.sql.voorstel` en is getest op een lokale kopie van de database-opbouw (migraties 001–031): de rechtentest geeft **56 van 56 goed** (37 bestaande + 19 nieuwe controles).*
+*Voorstel van 29-10-2026. **Nog niet uitgevoerd.** Het script staat klaar in `supabase/migrations/032_begeleider_kijkt_mee.sql` en is getest op een lokale kopie van de database-opbouw (migraties 001–031): de rechtentest geeft **56 van 56 goed** (37 bestaande + 19 nieuwe controles).*
 
 ## Wie mag wat
 

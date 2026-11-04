@@ -391,10 +391,10 @@ test.describe('Demo', () => {
     await page.locator('nav.nav button[data-tab="rollen"]').click();
     await expect(page.locator('#app .rij', { hasText: 'Technisch coördinator' }).first()).toBeVisible();
     await expect(page.locator('#app [data-act="rollenPersoon"]', { hasText: 'Technisch coördinator (Onderbouw)' })).toHaveCount(1);
-    // Esther als TC: alleen Trainers en Berichten, alleen trainers uit de onderbouw
+    // Esther als TC: Home (de week van haar trainers), Trainers en Berichten (Besluit 146), alleen trainers uit de onderbouw
     await page.evaluate((id) => { CC.zetSessie(id); CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'tc')); }, esther);
-    await page.locator('nav.nav button[data-tab="home"]').click();
-    await expect(page.locator('nav.nav button')).toHaveCount(2);
+    await expect(page.locator('nav.nav button')).toHaveText(['Home', 'Trainers', /^Berichten/]);
+    await page.locator('nav.nav button[data-tab="trainers"]').click();
     await page.locator('[data-act="seg"][data-key="trDeel"][data-val="alle"]').click();
     await expect(page.locator('#app')).toContainText('Dennis Peters');
     const buiten = await page.evaluate(() => CC.S().teams.filter((t) => CC.bouwVan(CC.S(), t).naam !== 'Onderbouw').flatMap((t) => CC.m.stafVan(CC.S(), t.id, ['trainer'])).map((id) => CC.m.persoon(CC.S(), id).naam).filter((n) => !CC.S().teams.some((t) => CC.bouwVan(CC.S(), t).naam === 'Onderbouw' && CC.m.stafVan(CC.S(), t.id, ['trainer']).some((x) => CC.m.persoon(CC.S(), x).naam === n))));
@@ -1038,7 +1038,7 @@ test.describe('Kleine club (echte versie, nagebootste database)', () => {
     await inloggen(page, 'ho@test.nl');
     await doorklik(page, fouten, 'HO (pakket)');
     await page.evaluate(() => CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'hjo')));
-    await expect(page.locator('nav.nav button')).toHaveCount(2);
+    await expect(page.locator('nav.nav button')).toHaveText(['Home', 'Trainers', 'Teams', /^Berichten/]); // Besluit 146
     await page.evaluate(() => CC.open('trainerDetail', { id: 'p-tr' }));
     await page.locator('#app form[data-submit="hoNotitieOk"] textarea').fill('Kan door');
     await page.locator('#app form[data-submit="hoNotitieOk"] textarea').press('Tab');
@@ -1052,7 +1052,7 @@ test.describe('Kleine club (echte versie, nagebootste database)', () => {
       await page.evaluate(() => CC.logout());
       await inloggen(page, email);
       await doorklik(page, fouten, email);
-      await expect(page.locator('nav.nav button')).toHaveCount(2);
+      await expect(page.locator('nav.nav button')).toHaveCount(email === 'tc@test.nl' ? 3 : 2); // TC: Home · Trainers · Berichten (Besluit 146)
     }
     await page.locator('nav.nav button[data-tab="home"]').click();
     await expect(page.locator('#app [data-act="begelZelf"]')).toHaveCount(1);
@@ -1457,7 +1457,7 @@ test('tekentool: loopactie met boog', { tag: ['@tekentool', '@training'] }, asyn
 });
 
 // Besluit 128: trainingsmodule (proef) in de echte versie: training voorbereiden, spacing, nieuwe vorm met leerdoel uit het profiel.
-// Alles komt in de database met scope 'eigen' op naam van de trainer.
+// Alles komt in de database met scope 'trainerplan' (trainingen en de vormen erin, Besluit 134) of 'eigen' (weekplannen, overige vormen), op naam van de trainer.
 test('trainingsmodule: training voorbereiden en eigen vorm (echte versie)', { tag: ['@training', '@kleineclub'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await nepDatabase(page);
@@ -1498,8 +1498,8 @@ test('trainingsmodule: training voorbereiden en eigen vorm (echte versie)', { ta
   await page.locator('#sheet [data-act="tpDupliceer"]').click();
   await expect(page.locator('.tr-midden .tr-rij')).toHaveCount(3);
   await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'trainingsplannen').map((r) => `${r.scope}|${r.persoon_id}|${r.act_id}|${r.data.onderdelen.length}|${r.data.leerdoelen.join()}`).join(), { message: 'training in de database' })
-    .toBe('eigen|p-beheer|tTest|3|');
-  await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'vormen').map((r) => `${r.scope}|${r.persoon_id}|${r.data.naam}`).join()).toBe('eigen|p-beheer|Skills passeren in kruisvorm');
+    .toBe('trainerplan|p-beheer|tTest|3|');
+  await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'vormen').map((r) => `${r.scope}|${r.persoon_id}|${r.data.naam}`).join()).toBe('trainerplan|p-beheer|Skills passeren in kruisvorm');
   // Week op de telefoon: de training om te controleren
   await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
   await expect(page.locator('.tr-weekkaart')).toContainText('Skills passeren in kruisvorm');
@@ -1552,7 +1552,7 @@ test('trainingsmodule: training op datum zonder planning (pakket Trainers begele
   await page.locator('[data-act="seg"][data-val="lijn"]').click();
   await expect(page.locator('[data-act="perLaden"], .tr-per')).toHaveCount(0);
   await expect(page.locator('.tr-weken')).toBeVisible(); // weekthema werkt ook zonder leerdoelen (alleen het thema)
-  await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'trainingsplannen').map((r) => `${r.scope}|${r.persoon_id}|${r.data.los}|${r.data.datum}|${r.data.onderdelen.length}`).join()).toBe('eigen|p-beheer|true|2026-11-03|1');
+  await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'trainingsplannen').map((r) => `${r.scope}|${r.persoon_id}|${r.data.los}|${r.data.datum}|${r.data.onderdelen.length}`).join()).toBe('trainerplan|p-beheer|true|2026-11-03|1');
   // Besluit 141: na afloop dezelfde minutenkaart; zonder de vraag Transfer in het profiel geen Toepassing
   await page.locator('[data-act="seg"][data-val="plannen"]').click();
   await page.locator('[data-act="tpLosNieuw"]').click();
@@ -1721,7 +1721,7 @@ test('teams en trainingsdagen: team, rooster, trainer, wedstrijden plakken en sc
   await page.setViewportSize({ width: 390, height: 844 });
   await inloggen(page, 'admin@test.nl');
   await page.evaluate(() => { CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'hjo')); CC.render(); });
-  await page.locator('#app .rij', { hasText: 'Teams, trainingsdagen en wedstrijden' }).click();
+  await page.locator('nav.nav button[data-tab="teams"]').click(); // Besluit 146: Teams is een eigen tabblad
   await expect(page.locator('.tb-teams')).toBeVisible();
   // Team toevoegen (nog geen trainer) en trainingsdagen: alleen klaarzetten, nog geen trainingen
   await page.locator('[data-act="teamNieuw"]').click();
