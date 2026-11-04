@@ -61,7 +61,7 @@ Een HO of TC mag de gegevens van een trainer lezen en schrijven (de schrijfregel
 
 ## 5. De wijziging: migratie 034 (gebouwd als voorstel, alleen lokaal getest)
 
-Het bestand is `supabase/migrations/034_begeleider_werkgebied.sql.voorstel`. Het is **niet toegepast** in productie.
+Het bestand is `supabase/migrations/034_begeleider_werkgebied.sql`. Het is **niet toegepast** in productie.
 
 **Anders dan de eerste schets.** In de schets paste ik `priv.cc_mag` aan. Bij het bouwen bleek een veiligere weg mogelijk, op dezelfde manier als 033: `priv.cc_mag` blijft ongewijzigd en alleen de **beperkende regel** `rij_begeleiding` uit 033 wordt vervangen.
 - **Oude voorwaarde:** de persoon zelf of *een* begeleider.

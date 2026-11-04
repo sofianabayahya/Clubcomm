@@ -1,5 +1,5 @@
 -- ClubComm — Besluit 134: de begeleider (HO of TC) kijkt mee met de trainingen van een trainer; clubbank met oefenvormen.
--- VOORSTEL: NIET TOEPASSEN ZONDER AKKOORD VAN DE INITIATIEFNEMER. Lokaal getest op een kopie van de opbouw (migraties 001–031).
+-- TOEGEPAST in productie op 4-11-2026 (na akkoord), als 032_begeleider_kijkt_mee en 032b_rechtentest_meekijken.
 -- Nieuwe scopes:
 --   'trainerplan': trainingen en de vormen die in een training staan. Schrijven: alleen de trainer. Lezen: ook HO/TC, als de club
 --                  'begeleiderKijktMee' aanzet (clubregels) en de trainer dit seizoen (vanaf 1 juli) een traject heeft of had.
