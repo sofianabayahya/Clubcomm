@@ -5,12 +5,13 @@
 **Bijgewerkt:** 04-11-2026
 
 ## Stand
-- `main` = #109 (Besluit 147) + #111 (vaste datums in de tests). **Migratie 033 is niet toegepast.** Het eerstvolgende vrije besluitnummer is **150** (145, 146, 148 en 149 zijn bezet door open PR's).
+- `main` = `205d13a` (#111, vaste datums in de tests; daarvoor #109, Besluit 147). **Migratie 033 is niet toegepast.** Het eerstvolgende vrije besluitnummer is **150** (145, 146, 148 en 149 zijn bezet door open PR's).
 - Productiedatabase (29/30-10, alleen gelezen): functioneel gelijk aan `main` (de md5 van alle `priv`-functies is gelijk, zonder commentaarregels). Het migratielogboek mist 027–030 (via losse SQL toegepast; alle objecten bestaan). Niet aanpassen zonder apart akkoord.
 
 ## Open pull requests
 | PR | Wat | Stand |
 |---|---|---|
+| nieuw | Werkwijze (S): in `CLAUDE.md` de stap *overdracht bijwerken* vóór samenvoegen, branch `claude/dazzling-babbage-y6ns5j` | wacht op akkoord |
 | #107, #108, #110, #112 | Besluiten 145, 146, 148, 149 (andere sessies) | open |
 
 - Samengevoegd 04-11: #111, vaste datum in drie datumafhankelijke tests (nieuwe fase; twee roostertests die vanaf eind mei 2027 zouden falen). Proef op 7 datums t/m 20-09-2027. Idee *demoseizoen laten meeschuiven* staat in Openstaand.
