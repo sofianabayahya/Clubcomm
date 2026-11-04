@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 4 november 2026 (t/m Besluit 155; 146 en 150 staan in open pull requests)
+Laatst bijgewerkt: 4 november 2026 (t/m Besluit 156; 146 en 150 staan in open pull requests)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -21,6 +21,7 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 155; 146 en 150 staan in open pu
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
+| 156 | 3 | Tekentool, paneel *Spelers*: één team tegelijk met zes teamkleuren (nieuw: **oranje** en **roze**), per team **rondje of driehoek**, nummers 1–11 en *Zonder nummer* voor **elk** team, *＋ Losse speler*, Trainer en Keeper in het paneel. Telefoon: het paneel ligt **vast onderaan** en het veld blijft erboven zichtbaar; bovenbalk in twee regels (↶ ↷); de tip blijft weg na wegtikken. Laptop: hetzelfde paneel naast de rail. Oude tekeningen ongewijzigd | ✅ besloten (wacht op samenvoegen) |  |
 | 155 | 3 | Korte evaluatie en labels uit het profiel: `evaluatie.kort` bepaalt welke vragen na de training open staan en in welke volgorde (DCG: doel/situatie · gedrag · toepassing · volgende leerstap; *Weerstand* naar Verdiepende analyse); zonder `kort` alles zoals voorheen; vraagteksten en antwoorden ongewijzigd. *Handelingen in gekozen vormen* in plaats van *Accenten*. DCG-profiel v4: *Loskomen uit de dekkingsschaduw*, *Afremmen* (codes ongewijzigd); database-update apart akkoord | geldt (profiel v4 in de database sinds 04-11) | — |
 | 154 | 3 | Begeleider (HO, TC) ziet alleen trainers in zijn werkgebied, ook in de database: werkgebied leeg = hele club, anders een gedeelde bouw met een team waar de persoon trainer is (berekend uit het team, niets opgeslagen); geldt voor `trainerzelf`, `trainerdossier` en straks `trainerplan`; geen toewijzing per begeleider; `admin` telt hier niet; uitvoering (034) apart | ✅ geldt (nog niet gebouwd) | |
 | 153 | 3 | Tekentool, veldlijnen: **penaltystip** (11 m), **halve maan** (9,15 m rond de stip, buiten de 16), **hoekschopboogjes** (1 m) en **middenstip** op 11×11 (liggend en staand) en Half veld; niet op 8×8, 6×6 en Vak (pupillenvelden pas met hun KNVB-maat). Bestaande tekeningen krijgen de lijnen vanzelf; gegevens ongewijzigd | ✅ besloten (wacht op samenvoegen) |  |
@@ -48,9 +49,9 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 155; 146 en 150 staan in open pu
 | 129 | 3 | Observeren: klok en turven bovenaan, snelle notities met minuut en onderwerp, aandachtspunten na afloop | ✅ geldt |  |
 | 128 | 3 | Trainingsmodule (proef): eigen oefenvormen en trainingen met spacing, varianten en aantallen | ◐ deels herzien | door 130 (de training staat in het tabblad Training) en 131 (soort → vormtype, vorm opent als venster); 134 (de begeleider ziet de trainingen, na akkoord op de rechten) |
 | 127 | 3 | Tekentool: loopactie en pass met boog als vaste soort | ✅ geldt |  |
-| 126 | 3 | Tekentool clean (rail met menu's, Veld/Opstelling/⚙ boven) en pijlen met boog en aanpasbare lengte | ◐ deels herzien | door 152 (Spelers zet bij openen geen gereedschap aan; × zet het gereedschap uit) |
-| 125 | 3 | Tekentool: rondje of driehoek per team kiezen; nummerbalk in- en uitklappen | ◐ deels herzien | door 126 (in- en uitklappen = het menu Spelers openen en sluiten) |
-| 124 | 3 | Tekentool: nummerbalk (rugnummers 1–11 en zonder nummer per team, op hun plek in de 1-4-3-3) en rood schijfje | ◐ deels herzien | door 126 (de nummerbalk staat in het menu Spelers); door 148 (een bestaand nummer tikken kiest de speler in plaats van verwijderen; geen ruil meer; eerste vrije nummer) |
+| 126 | 3 | Tekentool clean (rail met menu's, Veld/Opstelling/⚙ boven) en pijlen met boog en aanpasbare lengte | ◐ deels herzien | door 152 (Spelers zet bij openen geen gereedschap aan; × zet het gereedschap uit); door 156 (telefoon: het paneel Spelers ligt onderaan, niet meer over het veld) |
+| 125 | 3 | Tekentool: rondje of driehoek per team kiezen; nummerbalk in- en uitklappen | ◐ deels herzien | door 126 (in- en uitklappen = het menu Spelers openen en sluiten); door 156 (vorm kiezen in het paneel per team, voor zes teamkleuren) |
+| 124 | 3 | Tekentool: nummerbalk (rugnummers 1–11 en zonder nummer per team, op hun plek in de 1-4-3-3) en rood schijfje | ◐ deels herzien | door 126 (de nummerbalk staat in het menu Spelers); door 148 (een bestaand nummer tikken kiest de speler in plaats van verwijderen; geen ruil meer; eerste vrije nummer); door 156 (nummers voor elk team, één team tegelijk) |
 | 123 | 1 · 3 | Opleidingsprofiel als gegevens; DCG-fundament ingevoerd (rest open), KNVB-standaard als bestand | ◐ deels herzien | door 131 (DCG-profiel versie 2: kant per leerlijn, 8 plekken spelprincipes, sjabloon DCG 75) |
 | 122 | 3 | Tabbladen gelijk (Home links, Berichten rechts), één keer signaleren, Regels en Inzicht ingeklapt, laptop met menu links | ◐ deels herzien | door 130 (trainer met module Trainingen: Training in plaats van Planning) en 131 (laptop vanaf 900 px) |
 | 121 | 3 | Richting trainingsmodule: opleidingsprofiel per club (standaard KNVB), vorm ≠ uitvoering, bouwen in fases, ClubComm stelt voor en de trainer kiest | ✅ geldt |  |
@@ -691,6 +692,24 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 156 — Tekentool: paneel Spelers met één team tegelijk, oranje en roze, en het veld zichtbaar op de telefoon (Spoor 3, maat M)
+> Herziet de Besluiten 124, 125 en 126 deels.
+*Besloten 4 november 2026: de initiatiefnemer koos A + A+ uit `docs/onderzoek/tekentool/spelers-mobiel.md` en vroeg er roze en oranje als team bij; voorbeeld op 390 px en laptop in §6 van dat document. Keuzes: op de laptop hetzelfde paneel; alleen rondje en driehoek (geen vierkant, op verzoek van de initiatiefnemer).*
+- **Probleem (gemeten):** op elke telefoon bedekte het menu *Spelers* het hele veld; op 360 px en gekanteld waren de knoppen van de tegenstander niet te bereiken (het menu was langer dan het scherm). De tip *"tekenen gaat sneller op een laptop"* kwam bij elke tekening terug.
+- **Paneel *Spelers*** (laptop en telefoon gelijk):
+  - **Zes teams:** *Eigen team* (rood), *Tegenstander* (geel), lichtblauw en blauw, en **nieuw oranje en roze**. De knoppen tonen kleur en vorm; er staat één team tegelijk open. Het team volgt de gekozen speler, anders het laatst gekozen team.
+  - **Vorm per team:** rondje of driehoek, per tekening bewaard (`vormen`, zoals in Besluit 125). Standaard is oranje een rondje en roze een driehoek. Een vierkant is er bewust niet.
+  - **Nummers 1–11, *Zonder nummer* en *Ander nummer…*** voor het gekozen team, dus nu voor **elk** team. De regels van Besluit 148 gelden voor alle teams. Alleen *Tegenstander* staat gespiegeld; de andere teams gebruiken de plekken van het eigen team.
+  - ***＋ Losse speler*** (in het gekozen team; daarna tik je op het veld, zoals in Besluit 152), **Trainer** en **Keeper**.
+- **Telefoon (A):** het paneel ligt vast onderaan (hoogstens 62% van het scherm, en het scrollt als dat nodig is). Het veld schuift erboven; de hulptekst boven het veld verdwijnt zolang het paneel open is. Gemeten: op 390 px is het veld volledig zichtbaar, op 360 px ongeveer 70% (was 0%); elke knop is bereikbaar, ook gekanteld.
+- **Telefoon (A+):** de bovenbalk staat in twee regels (*Annuleren · ↶ ↷ · Opslaan* en *Veld · Opstelling · ⚙*); de schermlezer noemt de pijlen nog steeds *Ongedaan maken* en *Opnieuw*. Een weggetikte tip blijft op dat toestel weg.
+- **Oranje en roze:** `#FFA000` en `#F06292` met donkere cijfers (contrast ± 10 : 1 en ± 6,5 : 1); bewust een andere tint dan de oranje en roze hoedjes. Ze tellen op het materiaalbriefje mee als hesjes. Ze zijn ook te kiezen bij *kleur wijzigen* van een gekozen speler, met de sneltoetsen 5 en 6.
+- **Bestaande tekeningen:** ongewijzigd; geen migratie.
+- **Niet in dit besluit:** gekanteld staat het veld zelfs zonder menu grotendeels onder de rand (prioriteit 6); spelers zijn op de telefoon ± 9 px (zoomen of een minimummaat); een team met nummers dat geen *Tegenstander* is (bijv. oranje) gebruikt de plekken van het eigen team, zodat oranje 1 op de plek van de eigen keeper komt.
+- Tests: `tests/tekentool-paneel.spec.js`, plus de aangepaste tests in `tests/tekentool-nummering.spec.js` en `tests/app.spec.js`.
+
+---
+
 ## Besluit 155 — Korte evaluatie en labels uit het profiel (Spoor 3, maat M)
 *Besloten 4 november 2026, na het voorstel `docs/onderzoek/stap3-labels/voorstel.md` (branch `onderzoek/stap3-labels`, voorbeelden op 390 px) en het akkoord van de initiatiefnemer. De begrippen komen uit de begrippenlijst v2.1 van Spoor 1 (*akkoord als uitgangspunt*, 04-11); de functie geldt voor elke club. Herziet Besluit 133 en 144 deels.*
 - **Korte evaluatie uit het profiel:** het profiel kan in `evaluatie.kort` zeggen welke vragen na de training open staan, en in welke volgorde. De rest staat onder *Verdiepende analyse*. De transfervraag (*Toepassing*) blijft één blok bij de partij en staat op haar plek in die volgorde; ze komt niet nog eens onder Verdiepende analyse.
@@ -1219,6 +1238,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - In het menu *Pijlen* staan nu ook **Loopactie met boog** en **Pass met boog**. Bij het trekken groeit de boog mee (een derde van de lengte opzij, links van de looprichting). Daarna aanpassen met de bolletjes zoals in Besluit 126.
 
 ## Besluit 126 — Tekentool clean (ontwerp A) en pijlen met boog en aanpasbare lengte
+> **◐ Deels herzien door Besluit 156:** op de telefoon ligt het menu *Spelers* vast onderaan (niet meer onder de rail over het veld).
 > **◐ Deels herzien door Besluit 152:** *de knop onthoudt de laatst gekozen variant* geldt bij het openen niet meer voor *Spelers*; sluiten met × zet het gereedschap uit (Esc en klikken op het veld werken zoals hieronder).
 *Besloten 27 oktober 2026, na analyse en drie ontwerpen (`docs/onderzoek/tekentool/`); de initiatiefnemer koos het advies: ontwerp A met de contextbalk uit B.*
 - **Smalle rail links** met één knop per soort: *Kies · Spelers · Bal · Hoedjes · Schijfjes · Doelen · Pijlen · Markeren*.
@@ -1237,12 +1257,14 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ## Besluit 125 — Tekentool: rondje of driehoek per team zelf kiezen; nummerbalk in- en uitklappen
 > **◐ Deels herzien door Besluit 126 (in- en uitklappen = het menu Spelers openen en sluiten)** (zie Register).
+> **◐ Deels herzien door Besluit 156:** de vorm (rondje of driehoek) kies je in het paneel *Spelers* bij het gekozen team; dat geldt voor alle zes teamkleuren.
 *Besloten 27 oktober 2026 (verzoek van de initiatiefnemer).*
 - **Vorm per team:** in de nummerbalk tik je op het symbool (● of ▲) voor *Eigen team* of *Tegenstander*; dat team wisselt tussen rondje en driehoek. Dat geldt voor de spelers op het veld, de knoppen links en de tegel. De keuze wordt bewaard bij de tekening (`vormen`); trainer en keeper blijven driehoek.
 - **Nummerbalk in- en uitklappen:** de kop *Rugnummers* klapt de balk in tot één regel en weer uit. Het apparaat onthoudt de keuze.
 
 ## Besluit 124 — Tekentool: nummerbalk voor rugnummers en een rood schijfje
 > **◐ Deels herzien door Besluit 126 (de nummerbalk staat in het menu Spelers)** (zie Register).
+> **◐ Deels herzien door Besluit 156:** nummerknoppen voor **elk** team (één team tegelijk in het paneel), niet alleen *Eigen team* en *Tegenstander*.
 > **◐ Deels herzien door Besluit 148:** *nog een keer tikken = weg* geldt niet meer (een bestaand nummer tikken kiest de speler; verwijderen alleen met *Verwijderen*); een gekozen speler krijgt het nummer **zonder ruil** (dubbel mag bewust), alleen als hij op het veld is gekozen; nieuwe spelers krijgen het eerste vrije nummer.
 *Besloten 27 oktober 2026, na een voorbeeld (`docs/onderzoek/trainingsmodule-2/t-nummerbalk.png`). Aanleiding: voor de juiste rugnummers moest je eerst 1 t/m 10 neerzetten en de rest weer verwijderen, voor beide teams; een speler zonder nummer kon niet.*
 - **Nummerbalk boven het veld:** per team (*Eigen team* rood, *Tegenstander* geel) de knoppen 1–11 en *+ Zonder nummer*.
