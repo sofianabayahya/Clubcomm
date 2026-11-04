@@ -966,6 +966,8 @@ test.describe('Demo', () => {
 test.describe('Kleine club (echte versie, nagebootste database)', () => {
   test('beheerder zet het rooster, iedereen klikt door, ouder meldt af', { tag: ['@afmelden'] }, async ({ page }) => {
     const fouten = volgFouten(page);
+    // Vaste datum midden in het demoseizoen (t/m 05-06-2027): het rooster maakt trainingen van vandaag tot het seizoenseinde, vlak voor het einde of erna zijn het er te weinig
+    await page.clock.setFixedTime(new Date('2026-10-14T10:00:00+02:00'));
     await nepDatabase(page);
 
     // 1. Beheerder: alles doorklikken met een lege planning
@@ -1708,6 +1710,8 @@ test('verplaatsen: zonder plekcodes (club zonder sjabloon) alleen omhoog en omla
 // Besluit 136: teams, trainingsdagen, trainer koppelen, wedstrijden plakken en trainingsschema laden (HO, pakket Trainers begeleiden)
 test('teams en trainingsdagen: team, rooster, trainer, wedstrijden plakken en schema laden', { tag: ['@rooster', '@clubbeheer'] }, async ({ page }) => {
   const fouten = volgFouten(page);
+  // Vaste datum midden in het demoseizoen (t/m 05-06-2027): het rooster maakt trainingen van vandaag tot het seizoenseinde, vlak voor het einde of erna zijn het er te weinig
+  await page.clock.setFixedTime(new Date('2026-10-14T10:00:00+02:00'));
   await nepDatabase(page);
   await page.evaluate(() => { const db = JSON.parse(sessionStorage.getItem('fake-sb-db')); db.rows['dcg|club|club'].data.pakket = 'trainers'; sessionStorage.setItem('fake-sb-db', JSON.stringify(db)); });
   await page.setViewportSize({ width: 390, height: 844 });
