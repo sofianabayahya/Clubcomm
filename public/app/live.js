@@ -35,6 +35,13 @@
     const rijen = await alleRijen();
     const S = CC.uitRijen(rijen, D.vandaag());
     CC.zetS(S); if (CC.trBorgOrigineel) CC.trBorgOrigineel(S); snapshot(S); L.geladen = Date.now();
+    // Besluit 159: eigen trainingen en vormen die nog met een oude scope in de database staan (bijv. 'eigen' van vóór meekijken),
+    // één keer opnieuw opslaan met de scope die de app nu bepaalt. Alleen eigen rijen; nooit die van een ander.
+    const ik = L.pid || (CC.me && CC.me() ? CC.me().id : null); let om = 0;
+    rijen.forEach((r) => { if (!ik || r.persoon_id !== ik || !['vormen', 'trainingsplannen'].includes(r.soort)) return;
+      const k = `${r.soort}|${r.id}`; const s = L.snap.get(k); if (!s) return; const o = JSON.parse(s);
+      if (o.scope !== r.scope) { o.scope = r.scope; L.snap.set(k, JSON.stringify(o)); om++; } });
+    if (om) CC.save();
     // Besluit 77: draait de server het automatische werk (laatste run < 2 uur geleden)? Dan doet de app het niet zelf.
     // Besluit 83: wie krijgt pushmeldingen (alleen aan/uit, alleen voor de staf van het team)
     try { const { data: pa, error: pe } = await sb.rpc('push_status'); CC.pushAan = pe ? null : new Set(pa || []); } catch (e) { CC.pushAan = null; }

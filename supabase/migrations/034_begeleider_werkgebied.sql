@@ -1,5 +1,5 @@
 -- ClubComm — Besluit 154: een begeleider (HO of TC) ziet alleen trainers in zijn werkgebied, ook in de database.
--- VOORSTEL: NIET TOEPASSEN ZONDER AKKOORD VAN DE INITIATIEFNEMER. Alleen lokaal getest (npm run test:veilig -- 034).
+-- TOEGEPAST in productie op 4-11-2026 (na akkoord), na 033 en 032. Lokaal getest (npm run test:veilig).
 --
 -- Werkgebied leeg = de hele club; anders mag de begeleider alleen bij de gegevens van een persoon die trainer is van een team
 -- in een bouw van zijn werkgebied. De bouw wordt hier berekend uit de categorie (of teamcode) van het team en de bouwen

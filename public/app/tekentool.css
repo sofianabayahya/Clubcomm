@@ -166,3 +166,21 @@
   #drawOverlay .draw-stage.paneel-open { padding-right: calc(6px + min(330px, 42vw)); }
   #drawOverlay .draw-fly:not(.draw-fly-spelers) { left: 80px; right: auto; top: 6px; max-width: calc(100% - 96px); max-height: calc(100% - 12px); overflow-y: auto; }
 }
+/* Besluit 158: kleur wijzigen met een tikvlak van 44 px (het rondje blijft ± 28 px); de tip wijkt voor het paneel Spelers. */
+#drawOverlay .draw-swatch { width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: none; box-shadow: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+#drawOverlay .draw-swatch span { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px #888; box-sizing: border-box; }
+#drawOverlay .draw-swatch.active span { box-shadow: 0 0 0 3px #00B3FF; }
+#drawOverlay .draw-kleur { gap: 0; padding: 0; flex-wrap: wrap; }
+#drawOverlay.spelers-open #drawPhone { display: none; }
+/* Besluit 158: op de telefoon staand staan Kopie en Weg in de kop van het paneel Spelers; de balk onder het veld is dan weg
+   (die lag achter het paneel) en het veld krimpt mee als het paneel hoger wordt. Laptop en gekanteld: zoals het was. */
+.draw-fly-acties { display: none; align-items: center; gap: 6px; margin-left: auto; }
+.draw-fly-actie { min-width: 44px; height: 44px; padding: 0 10px; border: 1px solid #c9d3df; border-radius: 10px; background: #fff; display: inline-flex; align-items: center; gap: 4px; font: 600 14px inherit; font-family: inherit; color: var(--ink); cursor: pointer; }
+.draw-fly-actie.weg { color: var(--low); border-color: var(--low-soft); }
+.draw-fly-h b { white-space: nowrap; }
+@media (max-width: 899px) and (orientation: portrait), (max-width: 899px) and (min-height: 501px) {
+  #drawOverlay .draw-fly-acties { display: flex; }
+  #drawOverlay .draw-fly-acties:not(:empty) + .draw-fly-x { margin-left: 0; }
+  #drawOverlay.spelers-open #drawSelBar { display: none !important; }
+  #drawOverlay .draw-stage.paneel-open #drawSvg { height: auto; flex: 1 1 0; min-height: 0; max-height: 100%; }
+}

@@ -1001,3 +1001,9 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .tr-plekchip b { font-size: 15px; color: var(--blauw); }
 .tr-plekchip small { font-size: 13px; color: var(--zacht); }
 .tr-plekchip:disabled { opacity: .55; cursor: default; }
+/* Besluit 134 en 159: meekijken met de trainingen van een trainer */
+.mk-ond { border-top: 1px solid var(--lijn); padding: 10px 0; }
+.mk-ond p { margin: 0 0 6px; }
+.mk-tekening { background: var(--vlak2); border-radius: var(--r-s); padding: 6px; margin: 6px 0; }
+.mk-tekening svg { display: block; width: 100%; height: auto; max-height: 320px; }
+.mk-fb { background: var(--blauw-l); }

@@ -216,6 +216,7 @@
         ${CC.trStap ? CC.trStap(S, p, a) : ''}<small class="zacht">${[a.tijd ? `${a.tijd}${a.eind ? `–${a.eind}` : ''}` : '', n ? `${n} spelers${p.spelers == null || p.spelers === '' ? (S.pres[a.id] ? ' aanwezig' : ' verwacht') : ''}` : '', k ? `${k} keeper${k === 1 ? '' : 's'}` : '', p.sjabloon ? `sjabloon ${esc((sj.find((x) => x.id === p.sjabloon) || { naam: '' }).naam)}` : ''].filter(Boolean).join(' · ')}</small></div>
         ${(p.onderdelen || []).length ? `<div class="knoppen"><button class="knop licht" data-act="tpKopieNaar" data-id="${a.id}">${icon('repeat')}Kopiëren naar…</button><button class="knop licht" data-act="tpPrint" data-id="${a.id}">${icon('printer')}Printen</button><button class="knop licht" data-act="tpMeer" data-id="${a.id}" aria-label="Meer">⋯</button></div>` : ''}</div>
       ${CC.trMethodiek ? CC.trMethodiek(S, p, a) : ''}
+      ${CC.trFeedback ? CC.trFeedback(S, p) : ''}
       ${tijdsbalk(S, p, a)}
       ${gr || startKeuze(S, p, a, sj)}
       ${(p.onderdelen || []).length ? `<div class="tr-kop"><div class="knoppen"><button class="knop licht" data-act="tpVormKiezen" data-id="${a.id}">${icon('plus')}Oefenvorm</button><button class="knop licht" data-act="tpSpacing" data-id="${a.id}">${icon('plus')}Spacing</button></div><span class="zacht klein">${(p.onderdelen || []).some((o) => !o.spacing) ? `${(p.onderdelen || []).filter((o) => !o.spacing && o.vormId).length} van ${(p.onderdelen || []).filter((o) => !o.spacing).length} plekken ingevuld` : ''}</span></div>` : ''}

@@ -1,5 +1,5 @@
--- ClubComm — test Besluit 154 samen met voorstel 032 (meekijken, scope trainerplan). Alleen lokaal, alleen met 032 en 034:
---   EXTRA_SQL=supabase/tests/lokaal/begeleider-werkgebied-032.sql npm run test:veilig -- 032 034
+-- ClubComm — test Besluit 154 samen met 032 (meekijken, scope trainerplan). Alleen lokaal (rechtentest-lokaal.sh):
+--   npm run test:veilig
 -- De club zet meekijken aan; trainers O10 en O17 hebben een traject. Alles wordt teruggedraaid.
 begin;
 create temp table uitkomst (wie text, test text, verwacht text, uitkomst text);
