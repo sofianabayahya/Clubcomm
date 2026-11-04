@@ -966,6 +966,8 @@ test.describe('Demo', () => {
 test.describe('Kleine club (echte versie, nagebootste database)', () => {
   test('beheerder zet het rooster, iedereen klikt door, ouder meldt af', { tag: ['@afmelden'] }, async ({ page }) => {
     const fouten = volgFouten(page);
+    // Vaste datum midden in het demoseizoen (t/m 05-06-2027): het rooster maakt trainingen van vandaag tot het seizoenseinde, vlak voor het einde of erna zijn het er te weinig
+    await page.clock.setFixedTime(new Date('2026-10-14T10:00:00+02:00'));
     await nepDatabase(page);
 
     // 1. Beheerder: alles doorklikken met een lege planning
@@ -1335,7 +1337,7 @@ test('opleidingsprofiel: de app leest het en laat het staan', { tag: ['@profiel'
   await controleer(page, fouten, 'profiel');
 });
 
-// Besluit 124: nummerbalk in de tekentool (nummer tikken = speler op zijn plek, nog een keer = weg, zonder nummer, nummer van een gekozen speler wijzigen)
+// Besluit 124 (deels herzien 4-11): nummerbalk in de tekentool (nummer tikken = speler op zijn plek; staat het nummer er al, dan wordt die speler gekozen en niet verwijderd; zonder nummer; nummer van een gekozen speler wijzigen)
 test('tekentool: nummerbalk en rood schijfje', { tag: ['@tekentool', '@training'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await page.setViewportSize({ width: 1366, height: 820 });
@@ -1344,12 +1346,16 @@ test('tekentool: nummerbalk en rood schijfje', { tag: ['@tekentool', '@training'
   await expect(page.locator('#drawSelBar')).toBeHidden();
   await page.locator('[data-rail="spelers"]').click(); // Besluit 126: nummers staan in het menu Spelers
   for (const n of [1, 3, 4, 6, 9, 10]) await page.locator(`[data-nr="rood|${n}"]`).click();
-  await page.locator('[data-nr="rood|4"]').click(); // weg
+  await page.locator('[data-nr="rood|4"]').click(); // staat er al: speler 4 wordt gekozen, niet verwijderd (reparatie 4-11)
+  await expect(page.locator('#drawSelBar')).toBeVisible();
+  // Besluit 156: één team tegelijk; Tegenstander kiezen geldt niet voor de gekozen speler van het eigen team
+  await page.locator('[data-team="geel"]').click();
   await page.locator('[data-nr="geel|0"]').click();
   await page.locator('[data-nr="geel|0"]').click();
-  await expect(page.locator('[data-nr="rood|3"]')).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.locator('[data-nr="rood|4"]')).toHaveAttribute('aria-pressed', 'false');
   await expect(page.locator('[data-nr="geel|0"]')).toContainText('(2)');
+  await page.locator('[data-team="rood"]').click();
+  await expect(page.locator('[data-nr="rood|3"]')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('[data-nr="rood|4"]')).toHaveAttribute('aria-pressed', 'true');
   // speler 9 kiezen en nummer 11 geven (menu dicht, speler aanklikken, menu Spelers weer open)
   await page.locator('.draw-fly-x').click();
   await page.locator('[data-draw-select]').click();
@@ -1363,11 +1369,11 @@ test('tekentool: nummerbalk en rood schijfje', { tag: ['@tekentool', '@training'
   await page.locator('#drawSave').click();
   await expect(page.locator('#drawOverlay')).toBeHidden({ timeout: 20000 });
   const items = await page.evaluate(() => JSON.parse(localStorage.getItem('cc-tekentool-test'))[0].data.items.filter((x) => x.t === 'p').map((x) => `${x.c}${x.n || ''}`).sort());
-  expect(items).toEqual(['geel', 'geel', 'rood1', 'rood10', 'rood11', 'rood3', 'rood6']);
+  expect(items).toEqual(['geel', 'geel', 'rood1', 'rood10', 'rood11', 'rood3', 'rood4', 'rood6']);
   expect(fouten).toEqual([]);
 });
 
-// Besluit 125: rondje/driehoek per team wisselen (wordt bewaard bij de tekening) en de nummerbalk in- en uitklappen
+// Besluit 125 en 156: vorm per team kiezen (rondje, driehoek, vierkant; wordt bewaard bij de tekening) en het menu Spelers open en dicht
 test('tekentool: vorm per team wisselen, menu Spelers open en dicht', { tag: ['@tekentool', '@training'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await page.setViewportSize({ width: 1366, height: 820 });
@@ -1376,7 +1382,7 @@ test('tekentool: vorm per team wisselen, menu Spelers open en dicht', { tag: ['@
   await page.locator('[data-rail="spelers"]').click();
   await page.locator('[data-nr="rood|6"]').click();
   await expect(page.locator('#drawSvg g[data-i] circle')).toHaveCount(1);
-  await page.locator('[data-vorm="rood"]').click();
+  await page.locator('[data-vorm-kies="t"]').click(); // vorm van het gekozen team (Eigen team)
   await expect(page.locator('#drawSvg g[data-i] circle')).toHaveCount(0);
   await expect(page.locator('#drawSvg g[data-i] path')).toHaveCount(1);
   // Besluit 126: de nummers zitten in het menu Spelers; menu dicht = nummers weg, rail-knop = weer open
@@ -1632,9 +1638,84 @@ test('tijdsbalk: club zonder profiel (zoals Swift), eigen veldtijd en organisati
   await controleer(page, fouten, 'tijdsbalk zonder profiel');
 });
 
+// Besluit 145: een geplaatste vorm naar een andere plek, zonder opnieuw te kiezen; minuten, variant, leerniveau en notitie gaan mee
+test('verplaatsen: vorm van Start naar A1, wisselen en ongedaan maken (390 px)', { tag: ['@training', '@profiel'] }, async ({ page }) => {
+  const fouten = volgFouten(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await nepDatabase(page);
+  const profiel = JSON.parse(require('fs').readFileSync(require('path').join(__dirname, '..', 'supabase', 'profielen', 'dcg.json'), 'utf8'));
+  await page.evaluate((data) => { const db = JSON.parse(sessionStorage.getItem('fake-sb-db'));
+    db.rows['dcg|profiel|dcg'] = { club_id: 'dcg', soort: 'profiel', id: 'dcg', scope: 'hjo', data };
+    db.rows['dcg|club|club'].data.modules = { ...(db.rows['dcg|club|club'].data.modules || {}), training: true };
+    sessionStorage.setItem('fake-sb-db', JSON.stringify(db)); }, profiel);
+  await inloggen(page, 'admin@test.nl');
+  await page.evaluate(() => { const S = CC.S(); CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer'));
+    S.acts.push({ id: 'tV', teamId: 'O12-1', soort: 'training', datum: CC.date.addDays(CC.date.vandaag(), 1), tijd: '17:15', eind: '18:30' });
+    S.vormen = [{ id: 'v-droog', naam: 'Aannemen en opendraaien (droog)', eigenaar: CC.me().id, koppelingen: { dcg: { primair: 'll-aannemen' } }, varianten: [{ naam: 'Links' }, { naam: 'Rechts' }] },
+      { id: 'v-rondo', naam: 'Rondo vooruit', eigenaar: CC.me().id, koppelingen: { dcg: { primair: 'll-passen' } } }]; CC.save(); CC.render(); });
+  await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
+  await page.locator('[data-act="seg"][data-val="plannen"]').click();
+  await page.locator('.weekstrook [data-val="tV"]').click();
+  await page.locator('[data-act="tpNieuw"]').click();
+  await page.locator('[data-act="tpSjabloon"][data-s="dcg-75"]').click();
+  // De vorm staat (per ongeluk) op Start, met eigen minuten, variant, leerniveau en notitie
+  await page.evaluate(() => { const p = CC.tr.plan(CC.S(), 'tV'); Object.assign(p.onderdelen[0], { vormId: 'v-droog', min: 8, variant: 1, niveau: 'ln-uitvoeren', notitie: 'accent opendraaien' }); CC.save(); CC.render(); });
+  const tijd = await page.locator('.tr-pmid .tr-tijd-r').innerText();
+  await expect(page.locator('.tr-pmid .tr-rij').first()).toContainText('Aannemen en opendraaien (droog)');
+  await page.locator('.tr-pmid .tr-rij').first().click();
+  await expect(page.locator('#sheet .tr-plekchip')).toHaveCount(6);
+  await expect(page.locator('#sheet .tr-plekchip[disabled]')).toContainText('Start');
+  await expect(page.locator('#sheet .tr-plekchip[data-naar="1"]')).toContainText('leeg · 6 min');
+  if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/verplaatsen-venster.png` });
+  await page.locator('#sheet .tr-plekchip[data-naar="1"]').click();
+  await expect(page.locator('#toast, .toast').first()).toContainText('Naar A1 verplaatst');
+  const ond = async () => (await page.evaluate(() => CC.tr.plan(CC.S(), 'tV').onderdelen.slice(0, 4).map((o) => `${o.blok}:${o.vormId || '-'}:${o.min}:${o.variant ?? ''}:${o.niveau || ''}:${o.notitie || ''}:${o.niveauVoorstel || ''}`)));
+  expect(await ond()).toEqual(['start:-:6::::', 'A1:v-droog:8:1:ln-uitvoeren:accent opendraaien:', 'S:-:3::::', 'A2:-:10::::']);
+  // De tijd blijft gelijk; Start is leeg en niet verplicht
+  await expect.poll(() => page.locator('.tr-pmid .tr-tijd-r').innerText()).toBe(tijd);
+  await expect(page.locator('.tr-pmid .tr-tok')).toHaveText('✓ 68 van 68 min ingepland · past precies');
+  await expect(page.locator('.tr-pmid .tr-rij').first()).toContainText('niet verplicht');
+  // Ongedaan maken: alles terug
+  await page.locator('[data-act="tpVerplaatsTerug"]').click();
+  expect(await ond()).toEqual(['start:v-droog:8:1:ln-uitvoeren:accent opendraaien:', 'A1:-:6::::', 'S:-:3::::', 'A2:-:10::::']);
+  // Bezette plek: de twee wisselen
+  await page.evaluate(() => { const p = CC.tr.plan(CC.S(), 'tV'); Object.assign(p.onderdelen[3], { vormId: 'v-rondo', min: 12 }); CC.save(); CC.render(); });
+  await page.waitForTimeout(1600);
+  await page.locator('.tr-pmid .tr-rij').first().click();
+  await page.locator('#sheet .tr-plekchip[data-naar="3"]').click();
+  expect(await ond()).toEqual(['start:v-rondo:12::::', 'A1:-:6::::', 'S:-:3::::', 'A2:v-droog:8:1:ln-uitvoeren:accent opendraaien:']);
+  await expect.poll(async () => { const r = Object.values((await nepDb(page)).rows).find((x) => x.soort === 'trainingsplannen'); return r ? r.data.onderdelen[3].vormId : ''; }).toBe('v-droog');
+  // De vorm in de Vormenbank is niet veranderd
+  expect(await page.evaluate(() => JSON.stringify(CC.S().vormen.find((v) => v.id === 'v-droog')))).not.toContain('min');
+  await controleer(page, fouten, 'verplaatsen');
+});
+
+test('verplaatsen: zonder plekcodes (club zonder sjabloon) alleen omhoog en omlaag', { tag: ['@training', '@kleineclub'] }, async ({ page }) => {
+  const fouten = volgFouten(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await nepDatabase(page);
+  await page.evaluate(() => { const db = JSON.parse(sessionStorage.getItem('fake-sb-db'));
+    db.rows['dcg|club|club'].data.modules = { ...(db.rows['dcg|club|club'].data.modules || {}), training: true }; sessionStorage.setItem('fake-sb-db', JSON.stringify(db)); });
+  await inloggen(page, 'admin@test.nl');
+  await page.evaluate(() => { const S = CC.S(); const d = CC.date.addDays(CC.date.vandaag(), 1); CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer'));
+    S.acts.push({ id: 'tW', teamId: 'O12-1', soort: 'training', datum: d, tijd: '19:00', eind: '20:00' });
+    S.vormen = [{ id: 'v1', naam: 'Positiespel 5 tegen 3', eigenaar: CC.me().id }, { id: 'v2', naam: 'Partij', eigenaar: CC.me().id }];
+    S.trainingsplannen = [{ id: 'tp-w', actId: 'tW', teamId: 'O12-1', datum: d, eigenaar: CC.me().id, thema: '', leerdoelen: [], onderdelen: [{ id: 'a', vormId: 'v1', min: 15 }, { id: 'b', vormId: 'v2', min: 20 }] }];
+    CC.save(); CC.render(); });
+  await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
+  await page.locator('[data-act="seg"][data-val="plannen"]').click();
+  await page.locator('.weekstrook [data-val="tW"]').click();
+  await page.locator('.tr-pmid .tr-rij').first().click();
+  await expect(page.locator('#sheet .tr-verpl')).toHaveCount(0);
+  await expect(page.locator('#sheet [data-act="tpSchuif"]')).toHaveText('↓ Omlaag');
+  await controleer(page, fouten, 'verplaatsen zonder plekcodes');
+});
+
 // Besluit 136: teams, trainingsdagen, trainer koppelen, wedstrijden plakken en trainingsschema laden (HO, pakket Trainers begeleiden)
 test('teams en trainingsdagen: team, rooster, trainer, wedstrijden plakken en schema laden', { tag: ['@rooster', '@clubbeheer'] }, async ({ page }) => {
   const fouten = volgFouten(page);
+  // Vaste datum midden in het demoseizoen (t/m 05-06-2027): het rooster maakt trainingen van vandaag tot het seizoenseinde, vlak voor het einde of erna zijn het er te weinig
+  await page.clock.setFixedTime(new Date('2026-10-14T10:00:00+02:00'));
   await nepDatabase(page);
   await page.evaluate(() => { const db = JSON.parse(sessionStorage.getItem('fake-sb-db')); db.rows['dcg|club|club'].data.pakket = 'trainers'; sessionStorage.setItem('fake-sb-db', JSON.stringify(db)); });
   await page.setViewportSize({ width: 390, height: 844 });
@@ -1929,7 +2010,7 @@ test('trainingsmodule: periodisering laden, methodiek, evaluatie en observatiepu
   await page.locator('#perBestand').setInputFiles({ name: 'dcg-o13-fase1.csv', mimeType: 'text/csv', buffer: Buffer.from(csv, 'utf8') });
   await expect(page.locator('.tr-pv tr.concept')).toHaveCount(0);
   await page.locator('#sheet [data-act="sluit"].knop').click();
-  // Evaluatie p0 (afgelopen, in Week): drie vragen open, de rest onder Verdiepende analyse; aanpassing als voorstel bij p2
+  // Evaluatie p0 (afgelopen, in Week): de korte vragen uit het profiel open (Besluit 155), de rest onder Verdiepende analyse; aanpassing als voorstel bij p2
   await page.locator('[data-act="seg"][data-val="week"]').click();
   await page.locator('.weekstrook [data-val="p0"]').click();
   await page.locator('form[data-autosave="tpTerug"] label.schakel').click();
@@ -1940,8 +2021,11 @@ test('trainingsmodule: periodisering laden, methodiek, evaluatie en observatiepu
   await expect(page.locator('.tr-toep')).toContainText('Geen partijvorm gebruikt');
   await expect(page.locator('.tr-toep [aria-pressed="true"]')).toHaveText('Niet beoordeeld');
   await page.locator('[data-act="tpEval"][data-q="ev-transfer"][data-w="duidelijk"]').click();
+  await expect(page.locator('.tr-toep [aria-pressed="true"]')).toHaveText('duidelijk');
+  // Besluit 155: Transfer hoort bij de korte vragen, dus geen tweede regel onder Verdiepende analyse; Weerstand staat daar wel
   await page.locator('.tr-diep summary').click();
-  await expect(page.locator('.tr-diep')).toContainText('duidelijk · kies bij Toepassing');
+  await expect(page.locator('.tr-diep')).not.toContainText('kies bij Toepassing');
+  await expect(page.locator('.tr-diep')).toContainText('Weerstand');
   await page.fill('#tp-an', 'Verdediger mag direct druk zetten'); await page.locator('#tp-an').press('Tab');
   await expect.poll(async () => { const r = (await rijen()).find((x) => x.act_id === 'p0'); const e = (r && r.data.evaluatie) || {}; return r ? `${r.data.gegeven}|${e['ev-probleem']}|${e['ev-transfer']}` : ''; }).toBe('true|deels|duidelijk');
   await page.locator('.weekstrook [data-val="p2"]').click();
