@@ -41,6 +41,11 @@
   const sjablonen = (S) => (ond(S, 'trainingsopbouw') || {}).sjablonen || [];
   const profielId = (S) => (profiel(S) || {}).id || 'club';
 
+  // Besluit 147: melding in de Vormenbank (informatie, geen vraag)
+  const vastMelding = (S, v) => { const gp = plannen(S).filter((p) => p.gegeven && !p.week && (p.onderdelen || []).some((o) => o.vormId === v.id));
+    const vast = gp.filter((p) => p.onderdelen.some((o) => o.vormId === v.id && vastGeldig(S, o))).length; const oud = gp.length - vast; if (!gp.length) return '';
+    const n = (x) => `${x} gegeven ${x === 1 ? 'training' : 'trainingen'}`;
+    return `<small class="zacht tr-vastm">${vast ? `Staat in ${n(vast)}. Die ${vast === 1 ? 'houdt' : 'houden'} het gereedschap van toen; een wijziging geldt voor nieuwe en geplande trainingen.` : ''}${vast && oud ? ' ' : ''}${oud ? `${n(oud)} van vóór deze regel ${oud === 1 ? 'volgt' : 'volgen'} de vorm nog wel.` : ''}</small>`; };
   // ---------- Classificatie van een vorm (Besluit 131) ----------
   // Oude vormen (Besluit 128: soort, leerdoelen) blijven geldig: ze worden gelezen alsof ze al een type en koppeling hebben.
   const typeVan = (v) => (v.type !== undefined ? v.type : (VT.vanSoort[v.soort] !== undefined ? VT.vanSoort[v.soort] : null));
@@ -48,6 +53,32 @@
   const typeKleur = (id) => (VT.types.find((t) => t.id === id) || {}).kleur || '#0869c2';
   const koppeling = (S, v) => { const k = (v.koppelingen || {})[profielId(S)]; if (k) return { primair: k.primair || null, ook: k.ook || [] };
     const l = v.leerdoelen || []; return { primair: l[0] || null, ook: l.slice(1) }; };
+  // Besluit 147: bij een gegeven training ligt per plek vast welk gereedschap de vorm toen had (o.vast). Daarna telt die momentopname,
+  // ook als de koppeling in de Vormenbank later verandert. Een aanwezige maar ongeldige momentopname wordt nooit stil vervangen door
+  // de koppeling van nu: die minuten tellen dan bij geen gereedschap (bron 'ongeldig'). Vaardigheden worden bewaard met de leerlijn
+  // waaronder ze toen stonden en de profielversie, zodat een latere indeling ze niet anders uitlegt.
+  const VAST_V = 1;
+  const vhLeerlijn = (S, id) => { let n = null; ((ond(S, 'leerlijnen') || {}).items || []).forEach((l) => (l.vaardigheden || []).forEach((x) => { if (x.id === id) n = l.id; })); return n; };
+  const maakVast = (S, v, bron) => { const k = koppeling(S, v); const pr = profiel(S);
+    return { v: VAST_V, vormId: v.id, pid: profielId(S), pv: pr && pr.versie != null ? String(pr.versie) : null, gs: k.primair || null, ook: (k.ook || []).slice(),
+      vh: (v.vaardigheden || []).map((id) => ({ id, ll: vhLeerlijn(S, id) })), op: D.vandaag(), bron }; };
+  const vastGeldig = (S, o) => { const x = o.vast; return !!(x && x.v === VAST_V && x.vormId === o.vormId && x.pid === profielId(S)
+    && (x.gs === null || typeof x.gs === 'string') && Array.isArray(x.ook) && Array.isArray(x.vh)); };
+  // Wat telt voor een plek: de momentopname (gegeven training), of de vorm zoals hij nu is; nooit stil terugvallen op de vorm
+  const gsVan = (S, p, o) => { if (p && p.gegeven && o.vast) return vastGeldig(S, o) ? { gs: o.vast.gs, ook: o.vast.ook, vh: o.vast.vh.map((x) => x.id), bron: 'vast' } : { gs: null, ook: [], vh: [], bron: 'ongeldig' };
+    const v = o.vormId && vorm(S, o.vormId); if (!v) return { gs: null, ook: [], vh: [], bron: 'geen' };
+    const k = koppeling(S, v); return { gs: k.primair || null, ook: k.ook || [], vh: v.vaardigheden || [], bron: 'vorm' }; };
+  // Telt deze plek mee? Een vorm in de bank, of een momentopname van een gegeven training
+  const telt = (S, p, o) => !!(o.vormId && (vorm(S, o.vormId) || (p.gegeven && o.vast)));
+  // Vastleggen bij de eerste keer 'gegeven' (vastOp = datum). Opnieuw aanvinken legt niets nieuws vast; 'oud' = was al gegeven
+  // vóór deze regel en is daarna teruggezet: ook dan niets vastleggen (anders zou de koppeling van nu als 'toen' gelden).
+  const legVast = (S, p) => { if (!profiel(S) || p.vastOp) return;
+    (p.onderdelen || []).forEach((o) => { const v = o.vormId && vorm(S, o.vormId); if (v && !o.vast) o.vast = maakVast(S, v, 'gegeven'); }); p.vastOp = D.vandaag(); };
+  const vastlegbaar = (p) => !!(p.gegeven && p.vastOp && p.vastOp !== 'oud');
+  // Een vorm op een plek gezet (of vervangen): de oude momentopname hoort bij een andere vorm en vervalt; op een gegeven training
+  // (met vastlegging) is dit een correctie en wordt de nieuwe vorm meteen vastgelegd
+  const naPlaatsen = (S, p, o) => { if (o.vast && o.vast.vormId === o.vormId) return; delete o.vast;
+    const v = vastlegbaar(p) && profiel(S) && o.vormId && vorm(S, o.vormId); if (v) o.vast = maakVast(S, v, 'correctie'); };
   // Weerstand: getallen uit de aantallen, perspectief uit het hoofdleerdoel. Neutralen spelen mee met de partij in balbezit.
   CC.weerstand = (S, v) => {
     const a = v.aantal; if (!a || (a.aanval == null && a.verdediging == null)) return null;
@@ -135,10 +166,10 @@
   // A = ..., B = ...: het hoofdleerdoel van de eerste vorm in elk blok
   const blokDoelen = (S, p) => ['A', 'B'].map((b) => { const n = ldNaam(S, blokDoel(S, p, b)); return n ? `${b} = ${esc(n)}${blokDoelBron(S, p, b) === 'week' ? ' (weekvoorstel)' : ''}` : ''; }).filter(Boolean).join(' · ');
   // Leerdoel per blok: zelf gekozen, anders het hoofdleerdoel van de eerste vorm in dat blok
-  const blokDoel = (S, p, b) => (p.blokDoel || {})[b] || (() => { const v = (p.onderdelen || []).filter((o) => blokSoort(o.blok) === b).map((o) => o.vormId && vorm(S, o.vormId)).find(Boolean); return v ? koppeling(S, v).primair : (p.blokDoel || {})[b] === null ? null : CC.trWeekDoel ? CC.trWeekDoel(S, p, b) : null; })();
+  const blokDoel = (S, p, b) => (p.blokDoel || {})[b] || (() => { const v = (p.onderdelen || []).filter((o) => blokSoort(o.blok) === b).find((o) => telt(S, p, o)); return v ? gsVan(S, p, v).gs : (p.blokDoel || {})[b] === null ? null : CC.trWeekDoel ? CC.trWeekDoel(S, p, b) : null; })();
   // Waar komt het gereedschap van een blok vandaan (Besluit 144): eigen keuze, de eerste gekozen vorm, of het weekvoorstel (geen keuze van de trainer)
-  const blokDoelBron = (S, p, b) => { const e = (p.blokDoel || {})[b]; if (e) return 'eigen'; const v = (p.onderdelen || []).filter((o) => blokSoort(o.blok) === b).map((o) => o.vormId && vorm(S, o.vormId)).find(Boolean);
-    if (v) return koppeling(S, v).primair ? 'vorm' : null; return e !== null && CC.trWeekDoel && CC.trWeekDoel(S, p, b) ? 'week' : null; };
+  const blokDoelBron = (S, p, b) => { const e = (p.blokDoel || {})[b]; if (e) return 'eigen'; const v = (p.onderdelen || []).filter((o) => blokSoort(o.blok) === b).find((o) => telt(S, p, o));
+    if (v) return gsVan(S, p, v).gs ? 'vorm' : null; return e !== null && CC.trWeekDoel && CC.trWeekDoel(S, p, b) ? 'week' : null; };
   const blokKopTekst = (S, p, b) => { const n = ldNaam(S, blokDoel(S, p, b)); if (!n) return 'kies een leerdoel'; const w = blokDoelBron(S, p, b);
     return w === 'week' ? `<span class="tr-gvoorstel">weekvoorstel: ${esc(n)}</span>` : w === 'vorm' ? `${esc(n)} <span class="tr-gvoorstel">· uit gekozen vorm</span>` : esc(n); };
   // Na afloop pas de terugblik (Principe 10: op het juiste moment)
@@ -204,7 +235,8 @@
         m.regOnzeker ? `Waarvan ${m.regOnzeker} min ingevuld vóór ${ZEKER_TEKST}: niet zeker of dat de echte minuten zijn` : '',
         m.zonderReg > 0 ? `Niet geregistreerd: ${m.zonderReg} van ${m.gepland} geplande min (${m.ok || m.onzeker ? '' : 'oefenvormen, '}start zonder vorm, spacing, ombouw of lege plekken). Dit is dus niet de volledige trainingsduur.` : '')}
       ${rij('Uitgevoerd in oefenvormen', `${m.vormen} min`, nc(m.vormenNc))}
-      ${rij('Toegerekend aan een gereedschap', `${m.gsTotaal} min`, gs.map(([x, n]) => `${esc(ldNaam(S, x) || 'onbekend')} ${n}`).join(' · '), nc(m.gsNc))}
+      ${rij('Toegerekend aan een gereedschap', `${m.gsTotaal} min`, gs.map(([x, n]) => `${esc(ldNaam(S, x) || 'onbekend')} ${n}`).join(' · '), nc(m.gsNc),
+        m.ongeldig ? `${m.ongeldig} min niet toegerekend: het vastgelegde gereedschap past niet bij de vorm op die plek. ClubComm vult dit niet zelf in.` : '')}
       <details class="uitklap"><summary>Wat betekenen deze getallen?</summary>
         <p class="klein"><b>Geplande trainingsduur:</b> alle plekken en de organisatie samen.</p>
         <p class="klein"><b>Werkelijke trainingsduur:</b> alleen wat echt is ingevuld. Start, spacing en ombouw horen bij de trainingsduur, maar tellen niet voor de leerlijn; spacing en ombouw vul je niet apart in. Daarom staat erbij hoeveel minuten niet zijn geregistreerd.</p>
@@ -216,8 +248,8 @@
   const toepassing = (S, p, a) => { if (!p.gegeven) return ''; const q = evVragen(S).find((x) => x.id === TRANSFER); if (!q) return '';
     const w = (p.evaluatie || {})[q.id] || null; const m = CC.trMethodiekVan ? CC.trMethodiekVan(S, p) : p.methodiek || {};
     const partij = (p.onderdelen || []).filter((o) => o.blok === 'P' && o.vormId).map((o) => vorm(S, o.vormId)).filter(Boolean);
-    const verwacht = ['A', 'B'].map((b) => { const ld = blokDoel(S, p, b); const vs = (p.onderdelen || []).filter((o) => blokSoort(o.blok) === b && o.vormId).map((o) => vorm(S, o.vormId)).filter(Boolean);
-      const vh = [...new Set(vs.flatMap((v) => v.vaardigheden || []))].map((x) => vhNaam(S, x)).filter(Boolean);
+    const verwacht = ['A', 'B'].map((b) => { const ld = blokDoel(S, p, b); const os = (p.onderdelen || []).filter((o) => blokSoort(o.blok) === b && telt(S, p, o));
+      const vh = [...new Set(os.flatMap((o) => gsVan(S, p, o).vh))].map((x) => vhNaam(S, x)).filter(Boolean);
       return ld || vh.length ? `<li><b>${b} · ${esc(ldNaam(S, ld) || 'geen gereedschap')}${ld && blokDoelBron(S, p, b) === 'week' ? ' (weekvoorstel)' : ''}</b>${vh.length ? ` — accenten in gekozen vormen: ${esc(vh.join(', '))}` : ''}</li>` : ''; }).join('');
     return `<div class="tr-toep"><b>Toepassing${partij.length ? ` · ${esc(partij.map((v) => v.naam).join(', '))}` : ''}</b>
       <p>Kwam het gewenste gedrag uit de eerdere trainingsblokken terug in het partijspel?</p>
@@ -270,6 +302,7 @@
   // Gepland ≠ uitgevoerd: na "Training is gegeven" de echte minuten per vorm (Besluit 131)
   CC.autosave.tpTerug = (f) => { const S = CC.S(); const p = plan(S, f.dataset.id); if (!p) return; const was = !!p.gegeven;
     p.gegeven = f.gegeven.checked; p.anders = f.anders.value.trim();
+    if (!was && p.gegeven) legVast(S, p); else if (was && !p.gegeven && !p.vastOp && profiel(S)) p.vastOp = 'oud'; // Besluit 147 (zonder profiel: niets)
     (p.onderdelen || []).forEach((o) => { const x = f.elements[`uit-${o.id}`]; if (x) o.minUit = x.value === '' ? null : Number(x.value); });
     if (was !== p.gegeven) setTimeout(() => CC.render(), 0); };
   // Na het invullen (verlaten van het vak) de maandtelling bijwerken; tijdens het typen niet opnieuw tekenen
@@ -394,16 +427,16 @@
     CC.ui.vk = {}; CC.sheet(`Kies oefenvorm${o ? ` · ${plekNaam(o)}` : ''}`, `<div data-vk>${kvHtml(S, el.dataset.id, i)}</div>`, { groot: true }); });
   // Op de plek zetten (of achteraan); daarna 8 seconden "Ongedaan maken": alleen deze plek gaat terug, de rest van de training blijft
   const zetIn = (p, v, i) => { const o = i != null && i !== '' && p.onderdelen[Number(i)];
-    if (o) { o.vormId = v.id; if (!o.min) o.min = Number(v.duur) || 0; return o; }
-    const n = { id: nieuwId('o'), vormId: v.id, min: Number(v.duur) || 0, spacing: false }; p.onderdelen.push(n); return n; };
+    if (o) { o.vormId = v.id; if (!o.min) o.min = Number(v.duur) || 0; naPlaatsen(CC.S(), p, o); return o; }
+    const n = { id: nieuwId('o'), vormId: v.id, min: Number(v.duur) || 0, spacing: false }; p.onderdelen.push(n); naPlaatsen(CC.S(), p, n); return n; };
   const metTerug = (S, p, v, i, doe) => { const o = i != null && i !== '' ? p.onderdelen[Number(i)] : null;
-    CC.ui.kvTerug = { plan: p.id, v: v.id, oud: o ? { id: o.id, vormId: o.vormId || null, min: o.min } : null };
+    CC.ui.kvTerug = { plan: p.id, v: v.id, oud: o ? { id: o.id, vormId: o.vormId || null, min: o.min, vast: o.vast ? JSON.parse(JSON.stringify(o.vast)) : null } : null };
     const n = doe(); if (!o && n) CC.ui.kvTerug.nieuw = n.id; return n; };
   const terugMelding = (tekst) => CC.toast(tekst, '', { knop: 'Ongedaan maken', act: 'tpOngedaan' });
   CC.on('tpVormErbij', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); const v = vorm(S, el.dataset.v); if (!p || !v) return;
     const n = metTerug(S, p, v, el.dataset.i, () => zetIn(p, v, el.dataset.i)); CC.save(); CC.closeSheet(); CC.render(); terugMelding(`In ${el.dataset.i != null && el.dataset.i !== '' ? plekNaam(n) : 'de training'} gezet`); });
   CC.on('tpOngedaan', () => { const u = CC.ui.kvTerug; CC.ui.kvTerug = null; const S = CC.S(); const p = u && plannen(S).find((x) => x.id === u.plan); if (!p) return;
-    if (u.oud) { const o = p.onderdelen.find((x) => x.id === u.oud.id); if (o && o.vormId === u.v) { if (u.oud.vormId) o.vormId = u.oud.vormId; else delete o.vormId; o.min = u.oud.min; } }
+    if (u.oud) { const o = p.onderdelen.find((x) => x.id === u.oud.id); if (o && o.vormId === u.v) { if (u.oud.vormId) o.vormId = u.oud.vormId; else delete o.vormId; o.min = u.oud.min; if (u.oud.vast) o.vast = u.oud.vast; else delete o.vast; } }
     else if (u.nieuw) p.onderdelen = p.onderdelen.filter((x) => !(x.id === u.nieuw && x.vormId === u.v));
     CC.save(); CC.render(); CC.toast('Ongedaan gemaakt'); });
   // Eerdere training als basis: opbouw, thema en leerdoelen overnemen
@@ -415,7 +448,7 @@
       : '<p class="zacht">Je hebt nog geen eerdere training met een opbouw.</p>');
   });
   CC.on('tpKopieOk', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); const van = plannen(S).find((x) => x.id === el.dataset.van); if (!p || !van) return;
-    p.onderdelen = (p.onderdelen || []).concat(van.onderdelen.map((o) => ({ ...o, id: nieuwId('o'), minUit: null })));
+    p.onderdelen = (p.onderdelen || []).concat(van.onderdelen.map((o) => { const n = { ...o, id: nieuwId('o'), minUit: null }; delete n.vast; return n; })); // Besluit 147: een kopie is nieuwe planning
     if (!p.overig && van.overig) p.overig = { ...van.overig }; if (!p.sjabloon && van.sjabloon) p.sjabloon = van.sjabloon;
     if (!p.thema) p.thema = van.thema; if (!(p.leerdoelen || []).length) p.leerdoelen = (van.leerdoelen || []).slice();
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Opbouw overgenomen'); });
@@ -425,9 +458,9 @@
   CC.minutenPerLeerdoel = (S, maand) => {
     const r = { min: {}, ook: {}, gepland: 0, uit: 0, nc: 0, trainingen: 0 };
     plannen(S).filter((p) => p.eigenaar === ik() && p.gegeven && String(actVan(S, p).datum || '').slice(0, 7) === maand).forEach((p) => { r.trainingen++;
-      (p.onderdelen || []).filter((o) => o.vormId && !o.spacing && o.blok !== 'start').forEach((o) => { const v = vorm(S, o.vormId); if (!v) return;
+      (p.onderdelen || []).filter((o) => o.vormId && !o.spacing && o.blok !== 'start').forEach((o) => { if (!telt(S, p, o)) return;
         const uit = o.minUit != null ? Number(o.minUit) : Number(o.min) || 0; r.gepland += Number(o.min) || 0; r.uit += uit; if (minStatus(S, p, o) !== 'ok') r.nc += uit;
-        const k = koppeling(S, v); if (k.primair) r.min[k.primair] = (r.min[k.primair] || 0) + uit; if (uit) k.ook.forEach((x) => { r.ook[x] = (r.ook[x] || 0) + 1; }); }); });
+        const k = gsVan(S, p, o); if (k.gs) r.min[k.gs] = (r.min[k.gs] || 0) + uit; if (uit) k.ook.forEach((x) => { r.ook[x] = (r.ook[x] || 0) + 1; }); }); });
     return r;
   };
   // Besluit 141 (optie A): vier minutengetallen per training, zonder meer zekerheid te suggereren dan er is geregistreerd.
@@ -438,13 +471,14 @@
   const minStatus = (S, p, o) => { if (o.minUit == null) return 'open'; const d = String(actVan(S, p).datum || p.datum || '');
     return d && d < ZEKER_VANAF && Number(o.minUit) === (Number(o.min) || 0) ? 'onzeker' : 'ok'; };
   CC.trMinuten = (S, p) => { const o = p.onderdelen || [];
-    const r = { gepland: totaal(p), reg: 0, regOnzeker: 0, zonderReg: totaal(p), vormen: 0, vormenNc: 0, gs: {}, gsTotaal: 0, gsNc: 0, open: 0, onzeker: 0, ok: 0 };
+    const r = { gepland: totaal(p), reg: 0, regOnzeker: 0, zonderReg: totaal(p), vormen: 0, vormenNc: 0, gs: {}, gsTotaal: 0, gsNc: 0, ongeldig: 0, open: 0, onzeker: 0, ok: 0 };
     o.filter((x) => x.vormId && !x.spacing).forEach((x) => { const st = minStatus(S, p, x); r[st]++; if (st === 'open') return;
       r.zonderReg -= Number(x.min) || 0; if (st === 'ok') r.reg += Number(x.minUit) || 0; else r.regOnzeker += Number(x.minUit) || 0; });
     if (!p.gegeven) return r;
     o.filter((x) => x.vormId && !x.spacing && x.blok !== 'start').forEach((x) => { const uit = x.minUit != null ? Number(x.minUit) : Number(x.min) || 0; const nc = minStatus(S, p, x) !== 'ok';
       r.vormen += uit; if (nc) r.vormenNc += uit;
-      const v = vorm(S, x.vormId); const pr = v && koppeling(S, v).primair; if (pr) { r.gs[pr] = (r.gs[pr] || 0) + uit; r.gsTotaal += uit; if (nc) r.gsNc += uit; } });
+      const g = telt(S, p, x) ? gsVan(S, p, x) : { gs: null }; const pr = g.gs; if (g.bron === 'ongeldig') r.ongeldig += uit;
+      if (pr) { r.gs[pr] = (r.gs[pr] || 0) + uit; r.gsTotaal += uit; if (nc) r.gsNc += uit; } });
     return r; };
   CC.trMinStatus = minStatus;
   const ZEKER_TEKST = (() => { const d = D.parse(ZEKER_VANAF); return `${d.getDate()} ${D.MAAND[d.getMonth()]}`; })();
@@ -530,7 +564,7 @@
     const S = CC.S(); const p = plan(S, z.dataset.dropPlan); const v = vorm(S, e.dataTransfer.getData('text/plain')); if (!p || !v) return;
     const r = e.target.closest('[data-drop-i]'); const i = r ? Number(r.dataset.dropI) : null;
     if (i != null && leegSlot(p.onderdelen[i])) zetIn(p, v, i);
-    else if (i != null) p.onderdelen.splice(i + 1, 0, { id: nieuwId('o'), vormId: v.id, min: Number(v.duur) || 0, spacing: false, blok: p.onderdelen[i].blok && p.onderdelen[i].blok !== 'S' ? p.onderdelen[i].blok : undefined });
+    else if (i != null) { p.onderdelen.splice(i + 1, 0, { id: nieuwId('o'), vormId: v.id, min: Number(v.duur) || 0, spacing: false, blok: p.onderdelen[i].blok && p.onderdelen[i].blok !== 'S' ? p.onderdelen[i].blok : undefined }); naPlaatsen(S, p, p.onderdelen[i + 1]); }
     else zetIn(p, v, null);
     CC.save(); CC.render(); });
   // Aanwezigheid opnemen in een venster; het venster tekent mee als je een naam aantikt, en sluit na Opslaan
@@ -569,7 +603,7 @@
   CC.on('tpKopieNaar', (el) => { const S = CC.S(); const lijst = doelTrainingen(S, el.dataset.id);
     CC.sheet('Kopiëren naar…', `${lijst.length ? dagKnoppen(S, lijst, 'tpKopieNaarOk', `data-van="${esc(el.dataset.id)}"`) : '<p class="zacht">Geen komende trainingen in de planning.</p>'}
       <form data-submit="tpKopieNaarDatum" data-van="${esc(el.dataset.id)}" class="codeform"><label for="kn-d">Of op een datum (los)</label><input id="kn-d" name="datum" type="date" required value="${D.addDays(D.vandaag(), 7)}"><button class="knop licht vol">Kopiëren naar deze datum</button></form>`); });
-  const kopieer = (van, naar) => { naar.onderdelen = van.onderdelen.map((o) => ({ ...JSON.parse(JSON.stringify(o)), id: nieuwId('o'), minUit: null }));
+  const kopieer = (van, naar) => { naar.onderdelen = van.onderdelen.map((o) => { const n = { ...JSON.parse(JSON.stringify(o)), id: nieuwId('o'), minUit: null }; delete n.vast; return n; });
     Object.assign(naar, { thema: van.thema, sjabloon: van.sjabloon || null, overig: van.overig ? { ...van.overig } : null, blokDoel: van.blokDoel ? { ...van.blokDoel } : undefined, leerdoelen: (van.leerdoelen || []).slice(), gegeven: false, anders: '' }); };
   CC.on('tpKopieNaarOk', (el) => { const S = CC.S(); const van = plan(S, el.dataset.van); const doel = plan(S, el.dataset.naar); if (!van) return;
     if (doel && (doel.onderdelen || []).length && !el.dataset.vervang) { CC.sheet('Die training is al gevuld', `<p>${esc(dagNaam(actVan(S, doel)))} heeft al ${doel.onderdelen.length} onderdelen. Vervangen door deze training?</p><div class="knoppen"><button class="knop rood" data-act="tpKopieNaarOk" data-van="${esc(el.dataset.van)}" data-naar="${esc(el.dataset.naar)}" data-vervang="1">Vervangen</button><button class="knop licht" data-act="sluit">Annuleren</button></div>`); return; }
@@ -620,7 +654,7 @@
     const perWeek = {};
     plannen(S).filter((p) => p.eigenaar === ik() && !p.week).forEach((p) => { const a = actVan(S, p); if (!a.datum) return; const w = ma(a.datum); if (!weken.includes(w)) return;
       (perWeek[w] = perWeek[w] || []).push(p);
-      (p.onderdelen || []).filter((o) => o.vormId && !o.spacing && o.blok !== 'start').forEach((o) => { const v = vorm(S, o.vormId); const pr = v && koppeling(S, v).primair; if (!pr) return;
+      (p.onderdelen || []).filter((o) => o.vormId && !o.spacing && o.blok !== 'start').forEach((o) => { const pr = telt(S, p, o) && gsVan(S, p, o).gs; if (!pr) return;
         tel(w, pr, Number(o.min) || 0, p.gegeven ? (o.minUit != null ? Number(o.minUit) : Number(o.min) || 0) : null); }); });
     if (!lds.length) return `${CC.trWeekthema ? CC.trWeekthema(S) : ''}${h.leeg('Er staan nog geen leerdoelen in het opleidingsprofiel van de club. Daarom zie je hier nog geen minuten per leerdoel; het weekthema kun je al gebruiken.', 'list-checks')}`;
     // Besluit 138: bij de methodiek (DCG) één overzicht; de minuten van deze maand ingeklapt eronder (alleen als er iets gegeven is)
@@ -731,7 +765,7 @@
     const precies = VT.precies.filter((x) => x.type === ty); const num = (n, x) => `<input name="${n}" type="number" inputmode="numeric" min="0" max="30" aria-label="${n}" value="${x == null ? '' : x}">`;
     return `<div class="tr-cls"><b class="tr-cls-kop">Classificatie</b><small class="zacht">Alles mag leeg blijven.</small>
       ${lds.length ? `${h.sectie(`Leerdoel · ${esc((profiel(S) || {}).naam || 'opleidingsprofiel')}`)}<div class="chips">${lds.map((l) => kies(v, 'ld', l.id, `${k.primair === l.id ? '★ ' : k.ook.includes(l.id) ? '+ ' : ''}${esc(l.naam)}`, k.primair === l.id || k.ook.includes(l.id))).join('')}</div>
-        <small class="zacht">Eerste tik = hoofdleerdoel (★): bepaalt de minuten en het perspectief. Daarna = ook (+).</small>
+        <small class="zacht">Eerste tik = hoofdleerdoel (★): bepaalt de minuten en het perspectief. Daarna = ook (+).</small>${vastMelding(S, v)}
         ${[k.primair, ...k.ook].filter((x) => x && vaardigheden(S, x).length).map((x) => `<div class="chips tr-vh"><span class="zacht klein tr-lbl">${esc(ldNaam(S, x))}</span>${vaardigheden(S, x).map((vh) => kies(v, 'vh', vh.id, esc(vh.naam), (v.vaardigheden || []).includes(vh.id))).join('')}</div>`).join('')}` : ''}
       ${h.sectie('Aantallen per groepje')}<div class="tr-num"><span>aanval</span>${num('aan', a.aanval)}<span>verdediging</span>${num('ver', a.verdediging)}<span>neutraal</span>${num('neu', a.neutraal)}<span>keepers</span>${num('kee', a.keepers)}</div>
       <div class="tr-auto" aria-live="polite" ${w ? '' : 'hidden'}>${w ? esc(w.kort) : ''}</div>${w && !w.rel && !w.kant && !v.weerstandExtra && !koppeling(S, v).primair ? '<small class="zacht">Kies een hoofdleerdoel voor over- of ondertal.</small>' : ''}
@@ -816,7 +850,7 @@
   CC.on('vormWegOk', (el) => { const S = CC.S(); const v = vorm(S, el.dataset.id); if (v) v.weg = true; CC.save(); CC.closeSheet(); if (CC.terug) CC.terug(); else CC.render(); });
 
   // Gedeelde hulpjes voor periodisering.js (Besluit 133)
-  CC.tr = { plan, plannen, vorm, ik, actVan, ond, leerdoelen, ldNaam, sjablonen, blokDoel, nieuwId, afgelopen, dagNaam, totaal, leegSlot, code, blokSoort, niveaus, niveauNaam, profielId, leeromgevingen, vaardigheden, vhNaam, koppeling: (S, v) => koppeling(S, v), aantalSp: (S, p, a) => aantalSp(S, p, a) };
+  CC.tr = { plan, plannen, vorm, ik, actVan, ond, leerdoelen, ldNaam, sjablonen, blokDoel, nieuwId, afgelopen, dagNaam, totaal, leegSlot, code, blokSoort, niveaus, niveauNaam, profielId, leeromgevingen, vaardigheden, vhNaam, koppeling: (S, v) => koppeling(S, v), gsVan: (S, p, o) => gsVan(S, p, o), telt: (S, p, o) => telt(S, p, o), aantalSp: (S, p, a) => aantalSp(S, p, a) };
   // Tekening maken of aanpassen (hoofdtekening of variant) met de tekentool
   const tekenOpen = (t, klaar) => { if (!window.DrawTool) { CC.toast('De tekentool is niet geladen', 'fout'); return; } window.DrawTool.open(t || null, (blob, data) => { klaar(data); CC.save(); CC.render(); }); };
   // Na het tekenen de vorm opnieuw opzoeken: de app kan de gegevens intussen ververst hebben (anders gaat de tekening verloren)
