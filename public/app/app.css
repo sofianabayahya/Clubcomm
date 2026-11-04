@@ -373,8 +373,13 @@ body.sheet-open { overflow: hidden; }
 .pv-logo { width: 56px; height: 56px; border-radius: 12px; }
 
 /* Toast */
-.toast { position: fixed; left: 50%; bottom: calc(var(--nav-h) + 16px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 20px); opacity: 0; pointer-events: none; z-index: 60; display: flex; gap: 8px; align-items: center; max-width: min(92vw, 480px); padding: 10px 14px; border-radius: 12px; background: var(--inkt); color: var(--grond); font-size: 14px; font-weight: 600; transition: opacity .2s, transform .2s; }
+.toast { position: fixed; left: 50%; bottom: calc(var(--nav-h) + 16px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 0); opacity: 0; pointer-events: none; z-index: 60; display: flex; gap: 8px; align-items: center; max-width: min(92vw, 480px); padding: 10px 14px; border-radius: 12px; background: var(--inkt); color: var(--grond); font-size: 14px; font-weight: 600; transition: opacity .2s; } /* Besluit 150: alleen vervagen, niet schuiven: de melding staat vanaf het eerste moment op zijn plek */
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
+/* Besluit 150: zichtbaar = vangt de tik zelf (ook tijdens het vervagen); daarna pointer-events: none */
+.toast.show, .toast.weg { pointer-events: auto; cursor: pointer; }
+.toast.weg { opacity: 1; transition: opacity .25s; }
+@media (prefers-reduced-motion: no-preference) { .toast.weg { opacity: 0; } } /* met Beperk beweging: zichtbaar tot hij weg is */
+@media (prefers-reduced-motion: reduce) { .toast, .toast.weg { transition: none !important; } }
 .toast .ic { color: #4ade80; } .toast.fout .ic { color: #f87171; }
 
 /* Inloggen */
@@ -970,3 +975,15 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .tr-grens { position: absolute; top: 0; bottom: 0; width: 3px; background: #0f172a; }
 .tr-twaarsch { background: #fff4e5; color: #7a3e00; border-radius: 10px; padding: 8px 10px; font-size: 15px; }
 .tr-tok { color: var(--groen); font-weight: 700; }
+
+/* Besluit 150: eerste keuzes bij een lege training en in de oefenvormkiezer */
+.tr-start { display: grid; gap: 10px; margin: 6px 0 4px; }
+.tr-start-vraag { margin: 0; font-size: 16px; }
+.tr-startkaart { border: 1px solid var(--lijn); border-radius: var(--r-s); padding: 14px; background: var(--vlak); }
+.tr-startkaart > b { display: block; font-size: 17px; margin-bottom: 2px; }
+.tr-startkaart p { margin: 0 0 8px; font-size: 16px; color: var(--zacht); }
+.tr-startkaart .knoppen { margin-bottom: 6px; }
+.tr-startkaart small { display: block; font-size: 15px; }
+.kv-nieuw { margin-top: 12px; }
+.kv-aanbevolen { margin: 8px 0 0; }
+@media (min-width: 900px) { .tr-start { grid-template-columns: 1fr 1fr; } .tr-start-vraag { grid-column: 1 / -1; } .tr-start.een { grid-template-columns: 1fr; } }

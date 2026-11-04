@@ -142,10 +142,10 @@ test('oefenvorm kiezen (Besluit 139): twee tikken, redenen, toch kiezen en onged
   await expect(rij('v-rondo').locator('.kv-w')).toContainText('vorige week ook');
   expect(await volgorde(page)).toEqual(zonderNiveau);
   if (process.env.SHOTS) { await page.waitForTimeout(400); await page.screenshot({ path: `${process.env.SHOTS}/k1-dcg-tel.png` }); }
-  // Niets uitgesloten: te groot staat bij Past deels, met de reden; een ander gereedschap staat ingeklapt bij Alle andere vormen
+  // Niets uitgesloten: te groot staat bij Past deels, met de reden; een ander gereedschap staat ingeklapt bij Alle andere oefenvormen
   await expect(page.locator('#sheet .kv-groep', { hasText: 'Past deels' })).toContainText('(1)');
   await expect(rij('v-groot').locator('.kv-w .o')).toContainText('voor 16–20 sp');
-  await expect(page.locator('#sheet .kv-rest summary')).toContainText('Alle andere vormen (1)');
+  await expect(page.locator('#sheet .kv-rest summary')).toContainText('Alle andere oefenvormen (1)'); // Besluit 150: overal 'oefenvorm'
   await expect(rij('v-pass').locator('.kv-w .o')).toContainText('ander gereedschap: 1v1 aanvallend');
   // ⓘ = meer: de minimumvariant en bewust toch kiezen
   await rij('v-groot').locator('[data-act="kvMeer"]').click();
