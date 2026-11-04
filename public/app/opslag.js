@@ -47,7 +47,7 @@
     // aanzet en de trainer een traject heeft (migratie 032 en 034). De rest van de vormenbank blijft 'eigen'.
     ['vormen', (r, I) => (I.vormInTraining(r) ? 'trainerplan' : 'eigen'), (r) => ({ persoon: r.eigenaar, team: r.teamId || null })],
     ['trainingsplannen', (r) => (r.week ? 'eigen' : 'trainerplan'), (r) => ({ persoon: r.eigenaar, team: r.teamId || null, act: r.actId || null })],
-    // Besluit NNN: feedback van de begeleider op een training (de begeleider schrijft, de trainer leest; zoals het dossier)
+    // Besluit 159: feedback van de begeleider op een training (de begeleider schrijft, de trainer leest; zoals het dossier)
     ['trainingFeedback', 'trainerdossier', (r) => ({ persoon: r.trainerId })],
     ['signaalAfgedaan', 'teamstaf', (r) => ({ team: r.teamId, speler: r.spelerId || null }), (r) => `${r.sleutel}|${r.tijd}`],
   ];

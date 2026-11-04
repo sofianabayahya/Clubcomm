@@ -1,4 +1,4 @@
-// ClubComm — Besluit 134 en Besluit NNN: de begeleider kijkt mee met de trainingen van een trainer (alleen lezen) en geeft feedback.
+// ClubComm — Besluit 134 en Besluit 159: de begeleider kijkt mee met de trainingen van een trainer (alleen lezen) en geeft feedback.
 // De rechten zelf (wie de rijen mag lezen) staan in de database (migratie 032 en 034) en worden getest in npm run test:veilig.
 const { test, expect } = require('@playwright/test');
 const { volgFouten, controleer, nepDatabase, inloggen, nepDb } = require('./hulp');

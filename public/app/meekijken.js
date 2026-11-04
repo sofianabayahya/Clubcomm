@@ -1,4 +1,4 @@
-// ClubComm — Besluit 134 en Besluit NNN: de begeleider (HO of TC) kijkt mee met de trainingen van een trainer en geeft feedback.
+// ClubComm — Besluit 134 en Besluit 159: de begeleider (HO of TC) kijkt mee met de trainingen van een trainer en geeft feedback.
 // Alleen lezen. De database (migratie 032 en 034) bepaalt wie het ziet: de trainer zelf, en een HO of TC van zijn bouw als de club
 // meekijken aanzet en de trainer dit seizoen een traject heeft (gehad). Alleen trainingen en de oefenvormen die erin staan; de rest
 // van de vormenbank blijft privé (scope 'eigen', zie opslag.js).
@@ -38,7 +38,9 @@
         <p class="zacht klein">Alleen lezen. Alleen ${voor} kan zijn trainingen wijzigen.</p>`
         : `<p class="zacht klein">${voor} heeft nog geen training voorbereid in ClubComm.</p>`;
     }
-    return { ...basis, html: basis.html + h.sectie('Trainingen') + `<div class="kaartje">${inhoud}</div>` };
+    // Direct onder het traject (actie eerst); valt het dossier anders uit, dan onderaan
+    const blok = h.sectie('Trainingen') + `<div class="kaartje">${inhoud}</div>`; const na = h.sectie('Kennismaking'); const i = basis.html.indexOf(na);
+    return { ...basis, html: i >= 0 ? basis.html.slice(0, i) + blok + basis.html.slice(i) : basis.html + blok };
   };
 
   const onderdeel = (S, o) => { const v = o.vormId ? vorm(S, o.vormId) : null; const naam = o.spacing ? (v ? `Spacing · ${v.naam}` : 'Spacing') : v ? v.naam : (o.naam || 'Lege plek');

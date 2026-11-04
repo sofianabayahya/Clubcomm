@@ -35,7 +35,7 @@
     const rijen = await alleRijen();
     const S = CC.uitRijen(rijen, D.vandaag());
     CC.zetS(S); if (CC.trBorgOrigineel) CC.trBorgOrigineel(S); snapshot(S); L.geladen = Date.now();
-    // Besluit NNN: eigen trainingen en vormen die nog met een oude scope in de database staan (bijv. 'eigen' van vóór meekijken),
+    // Besluit 159: eigen trainingen en vormen die nog met een oude scope in de database staan (bijv. 'eigen' van vóór meekijken),
     // één keer opnieuw opslaan met de scope die de app nu bepaalt. Alleen eigen rijen; nooit die van een ander.
     const ik = L.pid || (CC.me && CC.me() ? CC.me().id : null); let om = 0;
     rijen.forEach((r) => { if (!ik || r.persoon_id !== ik || !['vormen', 'trainingsplannen'].includes(r.soort)) return;
