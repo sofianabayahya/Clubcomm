@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 4 november 2026 (t/m Besluit 148; 146 staat in een open pull request)
+Laatst bijgewerkt: 4 november 2026 (t/m Besluit 151; 146, 149 en 150 staan in open pull requests)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -21,6 +21,7 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 148; 146 staat in een open pull 
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
+| 151 | 3 | Documentatie en presentatie: functiekaarten in docs/handleiding (nieuw) als enige bron (blokken per niveau, bundels per uitgave); drie statussen (Concept · Gereed · Gepubliceerd, alleen wat in productie is); blok Documentatie-impact in elke pull request; borging pas na de bevestigde release; vast scenario bestuursdemo | ✅ geldt | |
 | 148 | 3 | Tekentool, rugnummers: een nummerknop **verwijdert nooit** meer; staat het nummer er al, dan **kiest** hij die speler (bij een dubbel nummer eerst de eerst neergezette, nog een keer = de volgende). Een met de knop gekozen speler houdt zijn nummer; nummer wijzigen = de speler op het veld aantikken en dan een nummer (dubbel mag, geen ruil meer) of *Ander nummer…* (1–99). Nieuwe speler = **eerste vrije** nummer. *Opstelling* gebruikt de nummers van de balk (keeper hoort bij het team en is 1; spits 3-3-1 = 9). Oude tekeningen ongewijzigd, geen migratie | ✅ besloten (wacht op samenvoegen) |  |
 | 147 | 3 | Gereedschap vastleggen bij een gegeven training: per plek een momentopname (`vast`: gereedschap, *ook*, vaardigheden met hun leerlijn van toen, profiel en versie, datum, bron) bij de eerste keer *gegeven*. Daarna telt die, ook als de koppeling in de Vormenbank verandert. Ongeldige momentopname = minuten bij geen gereedschap, nooit stil terugvallen op de koppeling van nu. Terugzetten bewaart; opnieuw aanvinken legt niets nieuws vast. Correctie (andere vorm, toevoegen, ook na terugzetten) = meteen vastleggen; plek zonder momentopname op een vastgelegde training = niet toegerekend; kopiëren neemt niets mee, ook geen vastlegdatum van de doeltraining. Oude gegeven trainingen blijven ongewijzigd. Melding in de Vormenbank | geldt | — |
 | 145 | 3 | Een geplaatste vorm verplaatsen: in het venster van de vorm *Verplaatsen naar* Start · A1 · A2 · B1 · B2 · Partij; lege plek = erheen, bezette plek = wisselen; minuten, variant, notitie, vastgezet leerniveau en fase gaan mee, de plek houdt code en voorstellen; tijd blijft gelijk; ongedaan maken. Start is niet verplicht. Geen nieuw veld | ✅ geldt |  |
@@ -682,6 +683,26 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
 ### Vuistregel voor nieuwe ideeën
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
+
+---
+
+## Besluit 151 — Documentatie en presentatie: functiekaarten als enige bron, statussen en borging (Spoor 3, maat S)
+*Besloten 4 november 2026: de initiatiefnemer ging akkoord met de functiekaarten uit het voorstel voor ontwikkelgebied F (`docs/onderzoek/documentatie-borging/README.md`). Alleen werkwijze: er verandert niets aan de app, de database, de rechten of aan de bestaande PowerPoints en PDF's.*
+- **Documentatie hoort bij "afgerond".** Een wijziging is pas af als de documentatie is bijgewerkt, of als er uitdrukkelijk *Geen documentatie-impact* staat.
+- **Productie is leidend.** Een functie op een onderzoeksbranch of in een open pull request staat nooit in gepubliceerde documentatie. In een bestuursdemo mag hij alleen op de dia *In ontwikkeling*.
+- **Eén bron: functiekaarten.** Per functie één Markdown-kaart in een nieuwe map docs/handleiding.
+  - **Bovenaan:** de status in de app (*In productie* met commit · *In open pull request #…* · *Onderzoek*), de besluiten, de schermafbeeldingen en de doelgroepen.
+  - **Blokken per niveau,** alleen wat nodig is: *Kort* (beginner trainer, hoogstens vijf handelingen), *Meer* (ervaren trainer: methodiek, leerlijnen, periodisering, tekentool), *HJO*, *Beheerder*, *Let op* (uitzonderingen).
+  - **Bundels** bepalen welke kaarten in welke uitgave komen (snelstart, handleiding trainer, HJO, clubbeheerder, ouders, teamleider, bestuursdemo). Een instructie wordt op één plek aangepast; alle uitgaven worden daaruit opnieuw gemaakt. Dezelfde tekst wordt nooit los in meerdere PDF's bijgewerkt.
+  - **Hergebruik:** besluiten geven het *waarom* (de kaart verwijst ernaar en herhaalt ze niet); `docs/kaart.md` wordt het register van de kaarten; `docs/presentaties/maak.js` en `shots*.js` maken de dia's, PDF's en beelden (demo, alleen verzonnen namen).
+- **Drie statussen per uitgave:** *Concept* (intern) → *Gereed voor publicatie* (klopt met de klaarstaande pull request) → *Gepubliceerd* (klopt met productie; versieregel met datum en commit). Een gepubliceerde bundel bevat alleen kaarten met *In productie*.
+- **Vrijwilligersprincipe (Besluit 149):** geen één groot handboek. De niveaus volgen de lagen (Draaien, Trainen, Ontwikkelen); HJO en clubbeheerder krijgen een eigen uitgave. Wat niet hoeft, staat er als *mag*.
+- **Documentatie-impact in elke pull request:** zes vragen (handeling, navigatie, knopnaam, scherm, wat een trainer of HJO moet weten, wat de bestuursdemo toont). Bij een *ja*: welke kaarten, PDF's, demo-onderdelen en schermafbeeldingen, en of alleen de techniek of ook de taak van de gebruiker verandert. Anders uitdrukkelijk *Geen documentatie-impact*.
+- **Werkwijze:** Inbox → Onderzoek → Besluit → Bouw → Controle → **Borging** → Afgerond. Bij de bouw wordt de kaart bijgewerkt op dezelfde branch (*Concept*); bij de controle *Gereed*. Bij de borging, **pas na de bevestigde release** (`list_deployments`): instructies nalopen tegen productie (alleen kijken), schermafbeeldingen controleren, demo nalopen, uitgaven opnieuw maken met versieregel, oude versies archiveren. Versturen alleen na akkoord van de initiatiefnemer.
+- **Wie:** Spoor 3 houdt kaarten, bundels, generator, controles en statussen bij en zet uitgaven klaar. Spoor 1 en 2 leveren het blok *Meer* (en voor Swift het blok *HJO*) per clubprofiel aan als *"Voorstel Spoor X — …"*; inhoud van Spoor 1 komt nooit in een uitgave voor een andere club. De initiatiefnemer beslist over publiceren en versturen.
+- **Bestuursdemo, vast scenario:** het probleem · tijdwinst voor vrijwilligers · een training voorbereiden · de HJO begeleidt een trainer · kennis blijft in de club · *Nu / In ontwikkeling*. Nalopen na elke relevante release. Nieuwe stappen in de rondleiding (`public/app/demo.js`) zijn een appwijziging (maat M) en gaan apart.
+- **Overgang:** de bestaande PowerPoints en PDF's blijven staan tot hun opvolger gepubliceerd is, en worden niet aangepast zonder apart akkoord.
+- **Volgende stappen (elk apart, na akkoord):** sjabloon voor pull requests met het blok Documentatie-impact · de eerste 5–6 trainerskaarten + *Snelstart vrijwillige trainer* als Concept · `maak.js` laten lezen uit de kaarten (PDF via de Chromium van de tests) · handleiding HJO en clubbeheerder · rondleiding aanvullen.
 
 ---
 
@@ -2365,6 +2386,8 @@ Een ouder regelt dit **zelf** in het profiel, zonder tussenkomst van de club.
 
 PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking voor clubs staan in `docs/presentaties/` (maken met `maak.js`). **Worden bijgewerkt na de HO-stappen van Besluit 95**, samen met nieuwe voor de HO en de coördinator (verkoopmap, zie Openstaand).
 
+**Sinds Besluit 151 (4-11):** nieuwe handleidingen en presentaties komen uit de functiekaarten (map docs/handleiding, nieuw). De PowerPoints hierboven zijn verouderd (laatst inhoudelijk 9-10) en blijven staan tot hun opvolger gepubliceerd is.
+
 ---
 
 ## Later / ideeën
@@ -2402,6 +2425,7 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 ---
 
 ## Nog te bespreken
+- **Documentatie (Besluit 151):** blijven de PowerPoints naast de PDF's bestaan (advies: ja voor bestuur en presentatie, alleen PDF voor trainers)? En wie mag een uitgave versturen: alleen de initiatiefnemer, of ook een HJO van een club?
 - **KNVB-profiel vullen** (Besluit 135): leerlijnen, leerdoelen per leeftijd en sjablonen van de KNVB, gecontroleerd. Nodig voor A/B en minuten per leerdoel bij Swift en nieuwe clubs. Wie levert de inhoud, en welke bron is leidend?
 - **Rechtenwijziging meekijken en clubbank** (Besluit 134): akkoord op het rechtenvoorstel.
 - **Wat is spacing inhoudelijk?** (Besluit 131) Loslaten (het geleerde laten rusten), herstel, contrast of spelend leren? Pas daarna krijgt spacing een eigen soort of regels.
