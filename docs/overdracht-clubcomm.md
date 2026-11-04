@@ -13,7 +13,9 @@
 | PR | Wat | Stand |
 |---|---|---|
 | #107 | Besluit 145: een geplaatste vorm verplaatsen; met `main` (#109, #111) en `'vast'` in `MEE` | akkoord 04-11 om samen te voegen |
-| #108, #110, #112 | Besluiten 146, 148, 149 (andere sessies) | open |
+| #108, #112 | Besluiten 146, 149 (andere sessies) | open |
+
+- Samengevoegd 04-11: #110, **Besluit 148** (tekentool, rugnummers voorspelbaar); productie draait `d724bfd` (Vercel, nagegaan).
 
 - Samengevoegd 04-11: #111, vaste datum in drie datumafhankelijke tests (nieuwe fase; twee roostertests die vanaf eind mei 2027 zouden falen). Proef op 7 datums t/m 20-09-2027. Idee *demoseizoen laten meeschuiven* staat in Openstaand.
 
@@ -27,5 +29,6 @@
 - Bevinding: uitvoerrecht van drie `priv`-functies intrekken (onbereikbaar voor anon). Een account hoort bij precies één club (getest 10/10).
 
 ## Volgende technische stap
+- **Tekentool, wacht op keuze:** onbedoeld plaatsen bij het sluiten van een menu, `docs/onderzoek/tekentool/menu-sluiten.md` (branch `onderzoek/tekentool-menu-sluiten`). Advies A + B. Daarna: veldlijnen (penaltystip, halve maan, hoekschopboogjes), voorstel volgt.
 - Later, eigen besluit: vaardigheidsaccenten per trainingsplek (de vorm blijft herbruikbaar; de trainer kiest per training het accent). Wat ontbreekt: `docs/onderzoek/trainingskaart/README.md`. Nu niet bouwen.
 - Voorstel (L): het opleidingsprofiel veilig leesbaar maken voor trainers (onderzoeksbranch `onderzoek/profiel-leesrechten`).
