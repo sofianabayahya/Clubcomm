@@ -61,10 +61,11 @@
     return JSON.stringify(geordend(pad(p) ?? null)) === JSON.stringify(geordend(pad(p.origineel) ?? null)) ? 'periodisering' : 'eigen'; };
   const LAB = { eigen: ['Eigen', 'e'], periodisering: ['Periodisering', 'p'], week: ['Weekvoorstel', 'w'] };
   const lab = (k) => ` <span class="tr-her ${LAB[k][1]}">${LAB[k][0]}</span>`;
-  // Accenten en gereedschap staan bij de oefenvormen, niet bij de trainingsplek: daarom "in gekozen vormen" (nog geen trainingsaccent)
-  const inVormen = (S, p) => { const vs = (p.onderdelen || []).filter((o) => o.vormId && !o.spacing).map((o) => T().vorm(S, o.vormId)).filter(Boolean);
-    const vh = [...new Set(vs.flatMap((v) => v.vaardigheden || []))].map((x) => T().vhNaam(S, x)).filter(Boolean);
-    const gs = [...new Set(vs.map((v) => T().koppeling(S, v).primair).filter(Boolean))].map((x) => T().ldNaam(S, x)).filter(Boolean);
+  // Handelingen en gereedschap staan bij de oefenvormen, niet bij de trainingsplek: daarom "in gekozen vormen" (Besluit 155: geen 'accent', dat woord is voor het trainingsaccent)
+  // Besluit 147: bij een gegeven training de momentopname van toen (T().gsVan), anders de vorm zoals hij nu is
+  const inVormen = (S, p) => { const os = (p.onderdelen || []).filter((o) => o.vormId && !o.spacing && T().telt(S, p, o)).map((o) => T().gsVan(S, p, o));
+    const vh = [...new Set(os.flatMap((g) => g.vh))].map((x) => T().vhNaam(S, x)).filter(Boolean);
+    const gs = [...new Set(os.map((g) => g.gs).filter(Boolean))].map((x) => T().ldNaam(S, x)).filter(Boolean);
     const tel = {}; (p.onderdelen || []).forEach((o) => { if (!o.spacing && o.niveau) tel[o.niveau] = (tel[o.niveau] || 0) + 1; });
     const niv = T().niveaus(S).filter((n) => tel[n.id]).map((n) => `${n.naam} ${tel[n.id]}×`);
     return { vh, gs, niv }; };
@@ -111,7 +112,7 @@
       const [wA, wB] = AB(wv, 'w');
       rijen.push(['Welke', `${eA || eB ? `${abTekst(eA, eB)}${lab(bronVan(p, (x) => x.blokDoel || {}))}` : ''}${ondersteunendVan(S, m) ? `<small>Ondersteunend: ${esc(ondersteunendVan(S, m))}</small>` : ''}`
         + `${m.gedrag ? `<small class="tr-gedrag">Gewenst gedrag: ${esc(m.gedrag)}${lab(bronVan(p, (x) => (x.methodiek || {}).gedrag))}</small>` : ''}`
-        + `<small>Accenten in gekozen vormen: ${iv.vh.length ? `<b>${esc(iv.vh.join(' · '))}</b>${lab('eigen')}` : (p.onderdelen || []).some((o) => o.vormId) ? 'geen vastgelegd' : 'nog geen vormen gekozen'}</small>`
+        + `<small>Handelingen in gekozen vormen: ${iv.vh.length ? `<b>${esc(iv.vh.join(' · '))}</b>${lab('eigen')}` : (p.onderdelen || []).some((o) => o.vormId) ? 'geen vastgelegd' : 'nog geen vormen gekozen'}</small>`
         + `${!eA && !eB && iv.gs.length ? `<small>Gereedschap in gekozen vormen: ${esc(iv.gs.join(' · '))}${lab('eigen')}</small>` : ''}${!eA && !eB ? wbox(abTekst(wA, wB) + (wv.gedrag && !m.gedrag ? `<small>Gewenst gedrag: ${esc(wv.gedrag)}</small>` : '')) : !m.gedrag && wv.gedrag ? wbox(`Gewenst gedrag: ${esc(wv.gedrag)}`) : ''}`]);
       rijen.push(['Niveau', (m.niveaus || []).length ? `<span class="tr-niv">${esc(nv(S, m.niveaus))}</span>${lab(bronVan(p, (x) => (x.methodiek || {}).niveaus || []))}${m.route ? `<small>Leerroute: ${esc(m.route)}</small>` : ''}`
         : `<span class="zacht">Niet gekozen voor de training</span>${iv.niv.length ? `<small>In gekozen vormen: ${esc(iv.niv.join(' · '))}${lab('eigen')}</small>` : ''}`]);

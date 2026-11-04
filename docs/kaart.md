@@ -13,21 +13,21 @@
 | **Berichten en automatisch werk** | `autoberichten.js`, `core.js` (berichten), `push.js`, `sw.js`; server: `supabase/functions/automaat`, `supabase/functions/melding` | 19, 36, 57, 75, 77, 79–82, 107 | `berichten\|ouder: verlopen` + `node --test tests/automaat.test.mjs` |
 | **Taken, vervoer, meehelpen, materiaal** | `taken.js`, `meehelpen.js`, `materiaal.js`, `waardering.js` | 17, 25, 28, 31, 64, 95, 98 | `taken:\|chauffeur` |
 | **Ontwikkelgesprekken en beoordeling** | `beoordeling.js`, `gesprek.js` | 23, 65–72, 101 | `spelerskaart` |
-| **Trainers begeleiden (HO, TC)** | `trainers.js`, `begeleiding.js`, `howeek.js` (week op Home, compacte lijst), `hjohome.js`, `hjofilter.js` (`CC.werkgebied` in `hjo.js`) | 42, 97, 99, 100, 129, 134, 140, 143, 146 | `trainers begeleiden\|begeleidingsmoment\|technisch coördinator\|HO-Home\|bouwen\|pakket Alleen\|eigen reflectie\|week van de begeleider` + `tests/ho-week.spec.js` + `npm run test:veilig` |
-| **Trainingsmodule** | `training.js` (kiezer, Plannen, Week, Vormenbank), `periodisering.js` (methodiek, Lijn), `vormtypes.js` | 121, 128, 130–135, 137, 138, 139, 141, 142, 144 | `trainingsmodule\|oefenvorm\|trainingskaart` + `tests/kiezer.spec.js`, `tests/trainingskaart.spec.js` |
+| **Trainers begeleiden (HO, TC)** | `trainers.js`, `begeleiding.js`, `howeek.js` (week op Home, compacte lijst), `hjohome.js`, `hjofilter.js` (`CC.werkgebied` in `hjo.js`) | 42, 97, 99, 100, 129, 134, 140, 143, 146, 154 | `trainers begeleiden\|begeleidingsmoment\|technisch coördinator\|HO-Home\|bouwen\|pakket Alleen\|eigen reflectie\|week van de begeleider` + `tests/ho-week.spec.js` + `npm run test:veilig` |
+| **Trainingsmodule** | `training.js` (kiezer, Plannen, Week, Vormenbank), `periodisering.js` (methodiek, Lijn), `vormtypes.js` | 121, 128, 130–135, 137, 138, 139, 141, 142, 144, 145, 147, 155 | `trainingsmodule\|oefenvorm\|trainingskaart\|vastleggen\|korte evaluatie\|labels` + `tests/kiezer.spec.js`, `tests/trainingskaart.spec.js`, `tests/vastleggen.spec.js`, `tests/korte-evaluatie.spec.js` |
 | **Opleidingsprofielen** | `opslag.js` (leest `S.profielen`), `training.js` (`profiel`, `ond`); bron: `supabase/profielen/` | 121, 123, 133 | `opleidingsprofiel\|trainingsmodule` |
-| **Tekentool** | `tekentool.js` + `.css`, `tekenen.html` | 124–127 | `tekentool` |
+| **Tekentool** | `tekentool.js` + `.css`, `tekenen.html` | 124–127, 148 (rugnummers), 152 (menu sluiten), 153 (veldlijnen), 156 (paneel Spelers) | `tekentool` (ook `tests/tekentool-nummering.spec.js`) |
 | **Demo en rondleiding** | `demo.js` (`STAPPEN`), `data.js` (democlub) | 89, 114 | `rondleiding\|uitnodiging\|demo:\|elke stap` |
-| **Schermen, tabbladen, vensters** | `core.js` (`CC.sheet`, `CC.toast`, `CC.on`), `index.html`, `app.css` | 30, 34, 102–104, 111, 113, 118, 122 | `tabbladen\|venster\|tikvlakken\|dubbel tikken\|rol wisselen\|automatisch bewaren` |
+| **Schermen, tabbladen, vensters** | `core.js` (`CC.sheet`, `CC.toast`, `CC.on`), `index.html`, `app.css` | 30, 34, 102–104, 111, 113, 118, 122, 149 | `tabbladen\|venster\|tikvlakken\|dubbel tikken\|rol wisselen\|automatisch bewaren` |
 | **Inloggen, opslag, rechten** ⚠️ altijd maat L | `live.js`, `opslag.js` (scopes), `core.js` (inloggen, privacy); `supabase/migrations/` | 1, 14, 24, 45, 52, 72, 119, 143 | alle tests + rechtentest (zie onder) |
 | **Inrichten en clubbeheer** | `hjo.js` (Regels, Rollen, Seizoen), `onderhoud.js` | 6, 12, 96, 112, 120 | `schermgebruik\|kop:` |
-| **Presentaties en handleidingen** | `docs/presentaties/` (`maak.js`, `shots*.js`) | 89, 114 | geen (handmatig) |
+| **Presentaties en handleidingen** | `docs/presentaties/` (`maak.js`, `shots*.js`); functiekaarten (Besluit 151, map volgt); voorstel `docs/onderzoek/documentatie-borging/README.md` | 89, 114, 151 | geen (handmatig) |
 
 ## Wie leest wat
 - **Spoor 1 (persoonlijke methodiek):** `docs/methodiek/persoonlijk/overdracht.md` en het kerndocument; code via Spoor 3.
 - **Spoor 2 (Swift):** `docs/methodiek/swift/overdracht.md` en `docs/methodiek/swift/README.md`.
 - **Spoor 3 (ClubComm):** `docs/overdracht-clubcomm.md`, deze kaart, en bij twijfel `docs/architectuur.md` (lagen en voorwaarden).
-- **Schermwerk:** ook `docs/app-controle.md`. **Gegevens of meerdere rollen:** ook `docs/pilotlog.md` (patronen van eerdere fouten).
+- **Schermwerk:** ook `docs/app-controle.md` en de ontwerpregels en toetsvragen van Besluit 149 (vrijwilligersprincipe). **Gegevens of meerdere rollen:** ook `docs/pilotlog.md` (patronen van eerdere fouten).
 - **Planning en volgende stappen:** `docs/productie-en-groei.md` → **Openstaand**.
 
 ## Documenten
@@ -50,7 +50,7 @@
 - `public/index.html` + `public/app/*.js`: één webapp voor de telefoon (vanilla JS, geen build), installeerbaar (manifest + `sw.js`).
 - `data.js`: demodata en rekenregels. `opslag.js`: app-gegevens ↔ databaserijen. `core.js`: inloggen, kop, profiel, berichten, afmelden, planning aanpassen, privacy, feedback. `live.js`: echte versie (Supabase: inloggen met e-mailcode, laden, automatisch opslaan, beheer).
 - Schermen per rol: `ouder.js`, `trainer.js`, `teamleider.js`, `hjo.js` (ook clubbeheerder), `hjohome.js`; coördinator via `taken.js`.
-- `trainers.js`: scopes `trainerzelf`, `trainerdossier`, `hoprive` (migratie 024; 025: ook de TC, notities per bouw). Besluit 143 (migratie 033): `trainerzelf` schrijft alleen de trainer zelf (HO/TC alleen *gevraagd*); `trainerzelf` en `trainerdossier` niet voor een beheerder zonder rol HO/TC; tests `begeleiding-eigenaarschap.sql` en `app-opslag.sql` (+ `tests/eigen-reflectie.spec.js`). Rol `tc`, werkgebied `bouwen` (`CC.werkgebied`), pakket *Alleen Trainers begeleiden* (`club.pakket = 'trainers'`, `CC.pakketTrainers`).
+- `trainers.js`: scopes `trainerzelf`, `trainerdossier`, `hoprive` (migratie 024; 025: ook de TC, notities per bouw). Besluit 143 (migratie 033): `trainerzelf` schrijft alleen de trainer zelf (HO/TC alleen *gevraagd*); `trainerzelf` en `trainerdossier` niet voor een beheerder zonder rol HO/TC; tests `begeleiding-eigenaarschap.sql` en `app-opslag.sql` (+ `tests/eigen-reflectie.spec.js`). Besluit 154 (voorstel `supabase/migrations/034_begeleider_werkgebied.sql.voorstel`, niet toegepast): werkgebied ook in de database, via de beperkende regel `rij_begeleiding`; test `supabase/tests/lokaal/begeleider-werkgebied.sql` (en `-032.sql` samen met 032). Rol `tc`, werkgebied `bouwen` (`CC.werkgebied`), pakket *Alleen Trainers begeleiden* (`club.pakket = 'trainers'`, `CC.pakketTrainers`).
 - **Formulieren (Besluit 103):** lange formulieren krijgen `data-autosave="naam"` en `CC.autosave.naam(form)`; de knop heet *Klaar*. Knopnamen zijn uniek (`CC.on`; bewuste vervanging met `{ vervangt: true }`, Besluit 102).
 - `opstelling.js`: speelvorm per team `team.speelCat` (`M.wedCat`); keuze van de staf in `S.teamKeuze`.
 - `adres.js`: adres via PDOK (`data-adres`). `push.js`: pushmeldingen (Besluit 53). `onderhoud.js`: foutregistratie en zelf verversen (`versie.json` uit `versie-maken.js`, Besluit 63).
@@ -68,7 +68,7 @@
 
 ## Testen
 - Lokaal: `npm install && npm start` → http://localhost:5000/?demo. Chromium staat in `/opt/pw-browsers` (niet `playwright install`).
-- `npm test` = node-tests (`tests/automaat.test.mjs`: servermotor, `tests/verwijzingen.test.mjs`: paden) + Playwright (`tests/*.spec.js`: elke rol doorklikken in de demo én in de kleine nagebootste club, `supabase/tests/fake-supabase.js`, code 123456). Draait ook op GitHub (Actions *Tests*); **rood = niet samenvoegen**.
+- `npm test` = node-tests (`tests/automaat.test.mjs`: servermotor, `tests/verwijzingen.test.mjs`: paden, `tests/besluitnummers.test.mjs`: elk besluitnummer één keer, als kop en in het Register) + Playwright (`tests/*.spec.js`: elke rol doorklikken in de demo én in de kleine nagebootste club, `supabase/tests/fake-supabase.js`, code 123456). Draait ook op GitHub (Actions *Tests*); **rood = niet samenvoegen**.
 - **Altijd ook de echte, bijna lege club testen** (teamnaam ≠ teamcode, weinig spelers, geen telefoonnummers), niet alleen de demo. Nieuwe functie of gevonden fout → test erbij.
 - Rechten per rol: `select * from priv.rechtentest() where not ok;` (Besluit 119, migratie 030; elke nacht, alarm via `rpc/gezondheid`). Nieuwe rechten of een nieuwe soort gegevens: controle erbij. (Het oude `rls_test.sql` is vervangen.)
 - Presentaties opnieuw maken: `shots*.js`, dan `node docs/presentaties/maak.js product`; voor een andere club `CONTACT_NAAM=… CONTACT_MAIL=… node docs/presentaties/maak.js clubs "Clubnaam"` → `uit/` (niet in git); PDF met `soffice --headless --convert-to pdf` (lettertype Carlito).

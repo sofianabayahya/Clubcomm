@@ -24,3 +24,15 @@ for (const b of open) { max = Math.max(max, hoogste(b)); const zelfde = regels(g
 console.log(`Open werk (branches niet in main): ${open.length ? open.map((b) => b.replace('origin/', '')).join(', ') : 'geen'}`);
 console.log(overlap.length ? `Zelfde bestanden als ander open werk:\n  ${overlap.join('\n  ')}` : 'Geen ander open werk raakt jouw bestanden');
 console.log(`Hoogste besluit in main: ${hoogste('origin/main')} · eerstvolgende vrije nummer (ook gekeken in open werk): ${max + 1}`);
+// Besluitnummers (werkafspraak 04-11): tijdens het werk heet een nieuw besluit `Besluit NNN`; het nummer pas bij "overdracht bijwerken".
+// (a) Waar staat in jouw branch nog NNN? (b) Staat een nummer dat niet in main zit in twee branches met een andere titel?
+// Uitleg over de afspraak staat tussen `…` of *…* en telt niet mee
+const nnn = [...new Set(regels(git('grep -n -w NNN -- "*.md" "*.js" "*.mjs" "*.json" "*.sql" "*.voorstel" "*.html" "*.css" ":(exclude)scripts/check.mjs" ":(exclude)docs/onderzoek/besluitnummers"'))
+  .filter((l) => /\bNNN\b/.test(l.replace(/^[^:]*:\d+:/, '').replace(/`[^`]*`|\*[^*\s][^*]*\*/g, ''))).map((l) => l.split(':')[0]))];
+console.log(nnn.length ? `Nog zonder besluitnummer (NNN) in: ${nnn.join(', ')} → vlak vóór samenvoegen nummeren met ${max + 1}` : 'Geen NNN meer in jouw branch');
+const koppen = (ref) => new Map([...git(`show ${ref}:docs/besluiten.md`).matchAll(/^## Besluit (\d+)\s*[—-]\s*(.*)$/gm)].map((m) => [Number(m[1]), m[2].trim()]));
+// Zelfde nummer en zelfde titel = hetzelfde besluit (een branch die een andere heeft binnengehaald); andere titel = dubbel
+const inMain = koppen('origin/main'); const wie = new Map();
+for (const b of [...open, 'HEAD']) for (const [n, titel] of koppen(b)) if (!inMain.has(n)) { const t = wie.get(n) || new Map(); t.set(titel, [...(t.get(titel) || []), b === 'HEAD' ? tak : b.replace('origin/', '')]); wie.set(n, t); }
+const dubbel = [...wie].filter(([, t]) => t.size > 1);
+console.log(dubbel.length ? `Besluitnummer dubbel in open werk: ${dubbel.map(([n, t]) => `${n} (${[...t.values()].map((bs) => bs[0]).join(' en ')})`).join(' · ')} → wie later samenvoegt, krijgt een nieuw nummer` : 'Geen dubbel besluitnummer in open werk');
