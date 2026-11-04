@@ -223,7 +223,6 @@
         <div class="tr-lijst">${uit.map((o) => { const v = vorm(S, o.vormId); return `<div class="tr-rij tr-uit">${o.blok ? `<span class="tr-code">${esc(code(o))}</span>` : ''}<span class="tr-t"><b>${esc(v ? v.naam : 'Vorm')}</b><small>gepland ${Number(o.min) || 0} min${o.blok === 'start' ? ' · telt niet voor de leerlijn' : ''}</small></span><input name="uit-${esc(o.id)}" type="number" inputmode="numeric" min="0" max="120" aria-label="Minuten echt: ${esc(v ? v.naam : 'vorm')}" placeholder="${Number(o.min) || 0}" value="${o.minUit != null ? o.minUit : ''}"></div>`; }).join('')}</div>
         ${open ? `<button type="button" class="knop licht vol" data-act="tpKloptZo" data-id="${esc(a.id)}">${icon('check')}Klopt zoals gepland (${open} ${open === 1 ? 'vorm' : 'vormen'})</button>` : ''}` : ''}
       ${p.gegeven ? minutenKaart(S, p) : ''}
-      ${toepassing(S, p, a)}
       ${evalKaart(S, p, a)}
       <label for="tp-an">${evVragen(S).length ? 'Wat doen we de volgende keer anders?' : 'Wat doe je de volgende keer anders?'}</label><textarea id="tp-an" name="anders" rows="3" placeholder="${evVragen(S).length ? 'Eén concrete wijziging, bijv. verdediger mag direct druk zetten' : 'Bijv. de 10 en de 6 als neutrale speler'}">${esc(p.anders || '')}</textarea>
       ${evVragen(S).length ? '<small class="zacht">Komt bij de volgende training met hetzelfde probleem als voorstel te staan (niet automatisch doorgevoerd).</small>' : ''}
@@ -254,20 +253,26 @@
     const partij = (p.onderdelen || []).filter((o) => o.blok === 'P' && o.vormId).map((o) => vorm(S, o.vormId)).filter(Boolean);
     const verwacht = ['A', 'B'].map((b) => { const ld = blokDoel(S, p, b); const os = (p.onderdelen || []).filter((o) => blokSoort(o.blok) === b && telt(S, p, o));
       const vh = [...new Set(os.flatMap((o) => gsVan(S, p, o).vh))].map((x) => vhNaam(S, x)).filter(Boolean);
-      return ld || vh.length ? `<li><b>${b} · ${esc(ldNaam(S, ld) || 'geen gereedschap')}${ld && blokDoelBron(S, p, b) === 'week' ? ' (weekvoorstel)' : ''}</b>${vh.length ? ` — accenten in gekozen vormen: ${esc(vh.join(', '))}` : ''}</li>` : ''; }).join('');
+      return ld || vh.length ? `<li><b>${b} · ${esc(ldNaam(S, ld) || 'geen gereedschap')}${ld && blokDoelBron(S, p, b) === 'week' ? ' (weekvoorstel)' : ''}</b>${vh.length ? ` — handelingen in gekozen vormen: ${esc(vh.join(', '))}` : ''}</li>` : ''; }).join('');
     return `<div class="tr-toep"><b>Toepassing${partij.length ? ` · ${esc(partij.map((v) => v.naam).join(', '))}` : ''}</b>
       <p>Kwam het gewenste gedrag uit de eerdere trainingsblokken terug in het partijspel?</p>
       ${verwacht ? `<small class="zacht">Verwacht gedrag:</small><ul class="tr-verwacht">${verwacht}</ul>` : ''}${m.gedrag ? `<small class="zacht">Gewenst gedrag van de training: ${esc(m.gedrag)}</small>` : (() => { const wv = CC.trWeekVoorstel ? CC.trWeekVoorstel(S, p) : {}; return wv.gedrag ? `<small class="zacht">Weekvoorstel, gewenst gedrag: ${esc(wv.gedrag)}</small>` : ''; })()}
       ${partij.length ? '' : '<small class="zacht">Geen partijvorm gebruikt. Beoordeel dan het vrije spel elders in de training.</small>'}
       <div class="chips">${q.schaal.map((x) => `<button type="button" class="chipknop ${w === x ? 'aan' : ''}" aria-pressed="${w === x}" data-act="tpEval" data-id="${esc(a.id)}" data-q="${esc(q.id)}" data-w="${esc(x)}">${esc(x)}</button>`).join('')}<button type="button" class="chipknop ${w ? '' : 'aan'}" aria-pressed="${!w}" data-act="tpEval" data-id="${esc(a.id)}" data-q="${esc(q.id)}" data-w="">Niet beoordeeld</button></div></div>`; };
-  // Evaluatiekaart uit het profiel (kerndocument §14): drie vragen open, de rest onder Verdiepende analyse; alles optioneel
+  // Evaluatiekaart uit het profiel (kerndocument §14): de korte vragen open, de rest onder Verdiepende analyse; alles optioneel
   const evVragen = (S) => (ond(S, 'evaluatie') || {}).vragen || [];
-  const EV_OPEN = ['ev-probleem', 'ev-gedrag', 'ev-weerstand'];
+  // Besluit 155: welke vragen open staan komt uit het profiel (evaluatie.kort, in die volgorde); zonder kort de drie van Besluit 133.
+  // Transfer (Toepassing) is altijd het blok Toepassing: met kort op zijn plek in de volgorde, zonder kort bovenaan zoals voorheen.
+  const EV_OPEN_STANDAARD = ['ev-probleem', 'ev-gedrag', 'ev-weerstand'];
+  const evKort = (S) => { const k = (ond(S, 'evaluatie') || {}).kort; return Array.isArray(k) && k.length ? k : null; };
+  const evOpen = (S) => evKort(S) || EV_OPEN_STANDAARD;
   const terugkeer = (p) => ['A', 'B'].some((b) => (p.onderdelen || []).filter((o) => blokSoort(o.blok) === b && !o.spacing).length > 1);
   const evRij = (p, a, q) => { const w = (p.evaluatie || {})[q.id];
     return `<div class="tr-ev"><b>${esc(q.vraag)}</b><div class="chips">${q.schaal.map((x) => `<button type="button" class="chipknop ${w === x ? 'aan' : ''}" aria-pressed="${w === x}" data-act="tpEval" data-id="${esc(a.id)}" data-q="${esc(q.id)}" data-w="${esc(x)}">${esc(x)}</button>`).join('')}</div></div>`; };
-  const evalKaart = (S, p, a) => (p.gegeven ? evVragen(S).filter((q) => EV_OPEN.includes(q.id)).map((q) => evRij(p, a, q)).join('') : '');
-  const evalDiep = (S, p, a) => { if (!p.gegeven) return ''; const l = evVragen(S).filter((q) => !EV_OPEN.includes(q.id) && (!q.alleenBijTerugkeer || terugkeer(p)));
+  const evalKaart = (S, p, a) => { if (!p.gegeven) return ''; const k = evKort(S);
+    if (!k) return `${toepassing(S, p, a)}${evVragen(S).filter((q) => EV_OPEN_STANDAARD.includes(q.id)).map((q) => evRij(p, a, q)).join('')}`;
+    return k.map((id) => { if (id === TRANSFER) return toepassing(S, p, a); const q = evVragen(S).find((x) => x.id === id); return q ? evRij(p, a, q) : ''; }).join(''); };
+  const evalDiep = (S, p, a) => { if (!p.gegeven) return ''; const l = evVragen(S).filter((q) => !evOpen(S).includes(q.id) && (!q.alleenBijTerugkeer || terugkeer(p)));
     const ingevuld = l.filter((q) => (p.evaluatie || {})[q.id]).length;
     // Transfer staat bij Toepassing; hier hetzelfde antwoord ter info (één plek om te kiezen)
     return l.length ? `<details class="uitklap tr-diep" ${ingevuld ? 'open' : ''}><summary>Verdiepende analyse${ingevuld ? ` (${ingevuld})` : ''}</summary>${l.map((q) => (q.id === TRANSFER ? `<div class="tr-ev"><b>${esc(q.vraag)}</b><small>${esc((p.evaluatie || {})[q.id] || 'Niet beoordeeld')} · kies bij Toepassing</small></div>` : evRij(p, a, q))).join('')}<p></p></details>` : ''; };

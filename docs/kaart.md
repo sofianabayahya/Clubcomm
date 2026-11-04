@@ -14,11 +14,11 @@
 | **Taken, vervoer, meehelpen, materiaal** | `taken.js`, `meehelpen.js`, `materiaal.js`, `waardering.js` | 17, 25, 28, 31, 64, 95, 98 | `taken:\|chauffeur` |
 | **Ontwikkelgesprekken en beoordeling** | `beoordeling.js`, `gesprek.js` | 23, 65–72, 101 | `spelerskaart` |
 | **Trainers begeleiden (HO, TC)** | `trainers.js`, `begeleiding.js`, `hjohome.js`, `hjofilter.js` (`CC.werkgebied` in `hjo.js`) | 42, 97, 99, 100, 129, 134, 140, 143, 154 | `trainers begeleiden\|begeleidingsmoment\|technisch coördinator\|HO-Home\|bouwen\|pakket Alleen\|eigen reflectie` + `npm run test:veilig` |
-| **Trainingsmodule** | `training.js` (kiezer, Plannen, Week, Vormenbank), `periodisering.js` (methodiek, Lijn), `vormtypes.js` | 121, 128, 130–135, 137, 138, 139, 141, 142, 144, 145, 147 | `trainingsmodule\|oefenvorm\|trainingskaart\|vastleggen` + `tests/kiezer.spec.js`, `tests/trainingskaart.spec.js`, `tests/vastleggen.spec.js` |
+| **Trainingsmodule** | `training.js` (kiezer, Plannen, Week, Vormenbank), `periodisering.js` (methodiek, Lijn), `vormtypes.js` | 121, 128, 130–135, 137, 138, 139, 141, 142, 144, 145, 147, 155 | `trainingsmodule\|oefenvorm\|trainingskaart\|vastleggen\|korte evaluatie\|labels` + `tests/kiezer.spec.js`, `tests/trainingskaart.spec.js`, `tests/vastleggen.spec.js`, `tests/korte-evaluatie.spec.js` |
 | **Opleidingsprofielen** | `opslag.js` (leest `S.profielen`), `training.js` (`profiel`, `ond`); bron: `supabase/profielen/` | 121, 123, 133 | `opleidingsprofiel\|trainingsmodule` |
 | **Tekentool** | `tekentool.js` + `.css`, `tekenen.html` | 124–127, 148 (rugnummers), 152 (menu sluiten), 153 (veldlijnen) | `tekentool` (ook `tests/tekentool-nummering.spec.js`) |
 | **Demo en rondleiding** | `demo.js` (`STAPPEN`), `data.js` (democlub) | 89, 114 | `rondleiding\|uitnodiging\|demo:\|elke stap` |
-| **Schermen, tabbladen, vensters** | `core.js` (`CC.sheet`, `CC.toast`, `CC.on`), `index.html`, `app.css` | 30, 34, 102–104, 111, 113, 118, 122 | `tabbladen\|venster\|tikvlakken\|dubbel tikken\|rol wisselen\|automatisch bewaren` |
+| **Schermen, tabbladen, vensters** | `core.js` (`CC.sheet`, `CC.toast`, `CC.on`), `index.html`, `app.css` | 30, 34, 102–104, 111, 113, 118, 122, 149 | `tabbladen\|venster\|tikvlakken\|dubbel tikken\|rol wisselen\|automatisch bewaren` |
 | **Inloggen, opslag, rechten** ⚠️ altijd maat L | `live.js`, `opslag.js` (scopes), `core.js` (inloggen, privacy); `supabase/migrations/` | 1, 14, 24, 45, 52, 72, 119, 143 | alle tests + rechtentest (zie onder) |
 | **Inrichten en clubbeheer** | `hjo.js` (Regels, Rollen, Seizoen), `onderhoud.js` | 6, 12, 96, 112, 120 | `schermgebruik\|kop:` |
 | **Presentaties en handleidingen** | `docs/presentaties/` (`maak.js`, `shots*.js`); functiekaarten (Besluit 151, map volgt); voorstel `docs/onderzoek/documentatie-borging/README.md` | 89, 114, 151 | geen (handmatig) |
@@ -27,7 +27,7 @@
 - **Spoor 1 (persoonlijke methodiek):** `docs/methodiek/persoonlijk/overdracht.md` en het kerndocument; code via Spoor 3.
 - **Spoor 2 (Swift):** `docs/methodiek/swift/overdracht.md` en `docs/methodiek/swift/README.md`.
 - **Spoor 3 (ClubComm):** `docs/overdracht-clubcomm.md`, deze kaart, en bij twijfel `docs/architectuur.md` (lagen en voorwaarden).
-- **Schermwerk:** ook `docs/app-controle.md`. **Gegevens of meerdere rollen:** ook `docs/pilotlog.md` (patronen van eerdere fouten).
+- **Schermwerk:** ook `docs/app-controle.md` en de ontwerpregels en toetsvragen van Besluit 149 (vrijwilligersprincipe). **Gegevens of meerdere rollen:** ook `docs/pilotlog.md` (patronen van eerdere fouten).
 - **Planning en volgende stappen:** `docs/productie-en-groei.md` → **Openstaand**.
 
 ## Documenten

@@ -2006,7 +2006,7 @@ test('trainingsmodule: periodisering laden, methodiek, evaluatie en observatiepu
   await page.locator('#perBestand').setInputFiles({ name: 'dcg-o13-fase1.csv', mimeType: 'text/csv', buffer: Buffer.from(csv, 'utf8') });
   await expect(page.locator('.tr-pv tr.concept')).toHaveCount(0);
   await page.locator('#sheet [data-act="sluit"].knop').click();
-  // Evaluatie p0 (afgelopen, in Week): drie vragen open, de rest onder Verdiepende analyse; aanpassing als voorstel bij p2
+  // Evaluatie p0 (afgelopen, in Week): de korte vragen uit het profiel open (Besluit 155), de rest onder Verdiepende analyse; aanpassing als voorstel bij p2
   await page.locator('[data-act="seg"][data-val="week"]').click();
   await page.locator('.weekstrook [data-val="p0"]').click();
   await page.locator('form[data-autosave="tpTerug"] label.schakel').click();
@@ -2017,8 +2017,11 @@ test('trainingsmodule: periodisering laden, methodiek, evaluatie en observatiepu
   await expect(page.locator('.tr-toep')).toContainText('Geen partijvorm gebruikt');
   await expect(page.locator('.tr-toep [aria-pressed="true"]')).toHaveText('Niet beoordeeld');
   await page.locator('[data-act="tpEval"][data-q="ev-transfer"][data-w="duidelijk"]').click();
+  await expect(page.locator('.tr-toep [aria-pressed="true"]')).toHaveText('duidelijk');
+  // Besluit 155: Transfer hoort bij de korte vragen, dus geen tweede regel onder Verdiepende analyse; Weerstand staat daar wel
   await page.locator('.tr-diep summary').click();
-  await expect(page.locator('.tr-diep')).toContainText('duidelijk · kies bij Toepassing');
+  await expect(page.locator('.tr-diep')).not.toContainText('kies bij Toepassing');
+  await expect(page.locator('.tr-diep')).toContainText('Weerstand');
   await page.fill('#tp-an', 'Verdediger mag direct druk zetten'); await page.locator('#tp-an').press('Tab');
   await expect.poll(async () => { const r = (await rijen()).find((x) => x.act_id === 'p0'); const e = (r && r.data.evaluatie) || {}; return r ? `${r.data.gegeven}|${e['ev-probleem']}|${e['ev-transfer']}` : ''; }).toBe('true|deels|duidelijk');
   await page.locator('.weekstrook [data-val="p2"]').click();
