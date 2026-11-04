@@ -6,6 +6,13 @@
 
 **Rechtzetting:** in mijn feedback op Leerlijn v2 schreef ik dat de themalessen in het DCG-profiel leeg waren. Dat klopt niet. Er staan **6 onderwerpen** in, met status *eigen*: opbouwen tegen twee of drie drukzettende spelers, de rol van de nummer 6, vrijlopen en aanspeelbaar worden, passlijnen herkennen, jagen en de bal terugveroveren, en positiewisselingen. De documenten noemen een andere route van **11 lessen** (Samen op reis … Teamtactiek). Dat verschil staat in B.
 
+**Rechtzetting 2 (04-11, na het meten voor oplevering 1):**
+- De omschakelcodes `tf-omsch-*` worden in **geen** weekplan of training gebruikt; ze staan alleen in het profiel.
+- De minuten in Lijn volgen de **koppeling van een vorm aan een gereedschap**, niet de vaardigheden. Een vaardigheid anders indelen (bijvoorbeeld de derde man) verandert dus geen minuten.
+- *Beschermen en vrijmaken* valt volgens jouw correctie helemaal binnen 1v1 aanvallend.
+
+Zie `voorstel-spoor1-begrippenlijst.md`. Waar dit document iets anders zegt (B2, E), geldt de begrippenlijst.
+
 ---
 
 ## Kern in vijf zinnen
