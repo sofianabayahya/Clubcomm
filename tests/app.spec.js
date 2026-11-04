@@ -1348,11 +1348,14 @@ test('tekentool: nummerbalk en rood schijfje', { tag: ['@tekentool', '@training'
   for (const n of [1, 3, 4, 6, 9, 10]) await page.locator(`[data-nr="rood|${n}"]`).click();
   await page.locator('[data-nr="rood|4"]').click(); // staat er al: speler 4 wordt gekozen, niet verwijderd (reparatie 4-11)
   await expect(page.locator('#drawSelBar')).toBeVisible();
-  await page.locator('[data-nr="geel|0"]').click(); // knop van het andere team: geldt niet voor de gekozen speler
+  // Besluit 156: één team tegelijk; Tegenstander kiezen geldt niet voor de gekozen speler van het eigen team
+  await page.locator('[data-team="geel"]').click();
   await page.locator('[data-nr="geel|0"]').click();
+  await page.locator('[data-nr="geel|0"]').click();
+  await expect(page.locator('[data-nr="geel|0"]')).toContainText('(2)');
+  await page.locator('[data-team="rood"]').click();
   await expect(page.locator('[data-nr="rood|3"]')).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('[data-nr="rood|4"]')).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.locator('[data-nr="geel|0"]')).toContainText('(2)');
   // speler 9 kiezen en nummer 11 geven (menu dicht, speler aanklikken, menu Spelers weer open)
   await page.locator('.draw-fly-x').click();
   await page.locator('[data-draw-select]').click();
@@ -1370,7 +1373,7 @@ test('tekentool: nummerbalk en rood schijfje', { tag: ['@tekentool', '@training'
   expect(fouten).toEqual([]);
 });
 
-// Besluit 125: rondje/driehoek per team wisselen (wordt bewaard bij de tekening) en de nummerbalk in- en uitklappen
+// Besluit 125 en 156: vorm per team kiezen (rondje, driehoek, vierkant; wordt bewaard bij de tekening) en het menu Spelers open en dicht
 test('tekentool: vorm per team wisselen, menu Spelers open en dicht', { tag: ['@tekentool', '@training'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await page.setViewportSize({ width: 1366, height: 820 });
@@ -1379,7 +1382,7 @@ test('tekentool: vorm per team wisselen, menu Spelers open en dicht', { tag: ['@
   await page.locator('[data-rail="spelers"]').click();
   await page.locator('[data-nr="rood|6"]').click();
   await expect(page.locator('#drawSvg g[data-i] circle')).toHaveCount(1);
-  await page.locator('[data-vorm="rood"]').click();
+  await page.locator('[data-vorm-kies="t"]').click(); // vorm van het gekozen team (Eigen team)
   await expect(page.locator('#drawSvg g[data-i] circle')).toHaveCount(0);
   await expect(page.locator('#drawSvg g[data-i] path')).toHaveCount(1);
   // Besluit 126: de nummers zitten in het menu Spelers; menu dicht = nummers weg, rail-knop = weer open
