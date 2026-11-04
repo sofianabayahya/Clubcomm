@@ -59,44 +59,29 @@ Een HO of TC mag de gegevens van een trainer lezen en schrijven (de schrijfregel
 - **Swift:** de standaardbouwen zijn Middenbouw 13–15 en Bovenbouw 16–19. *HJO bovenbouw O14–O19* klopt pas als Swift zijn bouwen zo instelt. Dat moet vóór het invoeren nagekeken worden (alleen lezen).
 - **De trainer zelf** blijft altijd zijn eigen gegevens zien.
 
-## 5. Schets van de wijziging (niet uitgevoerd, niet getest)
+## 5. De wijziging: migratie 034 (gebouwd als voorstel, alleen lokaal getest)
 
-Een nieuwe migratie (034, als `.sql.voorstel`). Die komt **na 033**, en past daarna de 032 aan vóór die wordt toegepast.
+Het bestand is `supabase/migrations/034_begeleider_werkgebied.sql.voorstel`. Het is **niet toegepast** in productie.
 
-```sql
--- De bouwen van een persoon: uit de teams waar hij trainer is, met de bouwen van de club (anders de standaard).
-create or replace function priv.cc_bouwen_van(p_persoon text) returns text[] language sql stable security definer set search_path = public as $$
-  with bw as (
-    select coalesce(nullif((select c.data->'bouwen' from public.rij c where c.club_id = priv.cc_club() and c.soort = 'club' and c.id = 'club'), '[]'::jsonb),
-      '[{"naam":"Mini''s","van":6,"tot":7},{"naam":"Onderbouw","van":8,"tot":12},{"naam":"Middenbouw","van":13,"tot":15},{"naam":"Bovenbouw","van":16,"tot":19}]'::jsonb) b),
-  lft as (
-    select coalesce(substring(coalesce(t.data->>'cat', t.id) from '(\d+)')::int, 0) l
-    from public.rij p cross join jsonb_array_elements(coalesce(p.data->'rollen','[]'::jsonb)) r
-    join public.rij t on t.club_id = p.club_id and t.soort = 'teams' and t.id = r->>'teamId'
-    where p.club_id = priv.cc_club() and p.soort = 'people' and p.id = p_persoon and r->>'rol' = 'trainer')
-  select coalesce(array_agg(distinct coalesce(
-           (select x->>'naam' from bw, jsonb_array_elements(bw.b) x where lft.l between (x->>'van')::int and (x->>'tot')::int limit 1), 'Overig')),
-         array['Overig'])
-  from lft $$;
+**Anders dan de eerste schets.** In de schets paste ik `priv.cc_mag` aan. Bij het bouwen bleek een veiligere weg mogelijk, op dezelfde manier als 033: `priv.cc_mag` blijft ongewijzigd en alleen de **beperkende regel** `rij_begeleiding` uit 033 wordt vervangen.
+- **Oude voorwaarde:** de persoon zelf of *een* begeleider.
+- **Nieuwe voorwaarde:** de persoon zelf of een *begeleider van deze persoon*.
 
--- Ben ik begeleider van deze persoon? (rol hjo of tc, en werkgebied leeg of een gedeelde bouw)
-create or replace function priv.cc_begeleider_van(p_persoon text) returns boolean language sql stable security definer set search_path = public as $$
-  select exists (select 1 from priv.cc_rollen() r where r->>'rol' in ('hjo','tc')
-    and (jsonb_array_length(coalesce(r->'bouwen','[]'::jsonb)) = 0
-         or exists (select 1 from unnest(priv.cc_bouwen_van(p_persoon)) b where r->'bouwen' ? b))) $$;
-```
+Waarom dit beter is:
+- **032 in elke volgorde:** 032 schrijft `priv.cc_mag` helemaal opnieuw. Een aanpassing daarin zou 032 dus overschrijven, of 032 die van 034. Met de beperkende regel kunnen 032 en 034 elkaar niet overschrijven; getest in beide volgordes.
+- **`admin` telt niet meer** voor deze gegevens, zonder dat `priv.cc_mag` verandert. Een beperkende regel geldt namelijk bovenop alle andere toegang.
+- **De scope `trainerplan` van 032** valt er ook onder, ook als 032 later komt.
 
-**In `priv.cc_mag`:**
-- `trainerzelf`: `p_persoon = ik or priv.cc_begeleider_van(p_persoon)`
-- `trainerdossier`: `(not p_schrijven and p_persoon = ik) or priv.cc_begeleider_van(p_persoon)`
+**Wat erin staat:**
+- `priv.cc_bouwen_van(persoon)`: de bouwen van de teams waar iemand trainer is. Dat zijn de bouwen van de club, of anders de standaard; zonder team is de uitkomst *Overig*.
+- `priv.cc_begeleider_van(persoon)`: rol hjo of tc, met een leeg werkgebied of een gedeelde bouw.
+- De nieuwe `rij_begeleiding` voor `trainerzelf`, `trainerdossier` en `trainerplan`.
+- Uitvoerrecht alleen voor ingelogde gebruikers, niet voor *anon*; dat controleert de vaste test.
+- Bovenin de manier om het terug te draaien: terug naar de regel van 033.
 
-**Verder:**
-- **Beperkende regel van 033:** `priv.cc_begeleider()` vervangen door `priv.cc_begeleider_van(persoon_id)`.
-- **In voorstel 032** (scope `trainerplan`) hetzelfde.
-- **Rechten op de nieuwe functies:** `revoke all … from public`, zoals bij de andere `priv`-functies.
-- **Terugdraaien:** de functies van 033 opnieuw zetten (staat in het bestand van 033).
+**Volgorde:** **na 033**. Draait iemand 033 later nog een keer, dan zet dat de oude regel terug; dat staat ook in het bestand. De volgorde ten opzichte van 032 maakt niet uit.
 
-**De `admin` valt weg** uit deze twee scopes. `admin` betekent nu "rol hjo of beheerder", zodat een HJO met een klein werkgebied via `admin` toch alles zou zien. Met 033 was de clubbeheerder zonder begeleidersrol er al uit.
+**Snelheid:** de regel rekent per rij. Bij een club van deze grootte (tientallen trainers) is dat verwaarloosbaar. Bij honderden trainers zou ik het opnieuw meten.
 
 ## 6. Privacy (welke gegevens, wie ziet ze, hoe lang)
 
@@ -114,38 +99,46 @@ create or replace function priv.cc_begeleider_van(p_persoon text) returns boolea
   - telt een signaal of teller in de app per ongeluk ook trainers buiten het werkgebied? Dan zou die na de wijziging lager worden;
   - de demo-rechtenfilter op `demo/swift-trainer` volgt dezelfde regel.
 
-## 8. Testplan (na akkoord, alleen lokaal)
+## 8. Tests (uitgevoerd op 4-11, alleen lokaal)
 
-Met de bestaande lokale rechtentest (`supabase/tests/rechtentest-lokaal.sh`, een tijdelijke database, nooit de echte):
+**Hoe:** met de bestaande lokale rechtentest (`supabase/tests/rechtentest-lokaal.sh`). Die gebruikt een tijdelijke database op deze computer, zonder netwerk en nooit de echte database.
 
-| # | Wie | Wat | Verwacht |
-|---|---|---|---|
-| 1 | HO met werkgebied Bovenbouw | dossier van een O17-trainer lezen | mag |
-| 2 | HO met werkgebied Bovenbouw | dossier van een O10-trainer lezen | **mag niet** |
-| 3 | TC Onderbouw | begeleidingsmoment van een O17-trainer schrijven | **mag niet** |
-| 4 | HO zonder werkgebied | alle dossiers | mag |
-| 5 | Trainer van O10 én O17 | zichtbaar voor HO Onderbouw en HO Bovenbouw | mag (beide) |
-| 6 | Trainer zonder team | HO Bovenbouw / HO hele club | mag niet / mag |
-| 7 | De trainer zelf | eigen kennismaking lezen en schrijven | mag (033 blijft gelden) |
-| 8 | HO Bovenbouw | kennismaking van een bovenbouwtrainer *wijzigen* | **mag niet** (033: alleen *gevraagd* zetten) |
-| 9 | Clubbeheerder zonder begeleidersrol | dossier lezen | mag niet |
-| 10 | HO van club A | dossier van club B | mag niet (clubscheiding) |
-| 11 | Clubbeheerder past de bouwen aan | de zichtbaarheid volgt direct | ja |
-| 12 | 032 + 033 + 034 | in beide volgordes toepassen; alle bestaande rechtentests blijven groen | ja |
+**Twee nieuwe testbestanden:**
+- `supabase/tests/lokaal/begeleider-werkgebied.sql`: 36 controles. Ze dekken de twaalf punten uit het eerste plan en de situaties die in productie voorkomen:
+  - de HO met Middenbouw + Bovenbouw, zoals bij Swift;
+  - categorie O12 bij *O13 talententeam*, zoals bij DCG;
+  - een team zonder categorie (de bouw komt dan uit de teamcode);
+  - een HO die ook clubbeheerder is;
+  - de clubscheiding;
+  - een niet-ingelogde gebruiker.
+- `supabase/tests/lokaal/begeleider-werkgebied-032.sql`: 7 controles voor meekijken (`trainerplan`). Draait alleen samen met 032.
 
-Daarna: de app-tests (`npm test`) en de controle `priv.rechtentest()`.
+**Aangepast:** in de test van 033 (`supabase/tests/lokaal/begeleiding-eigenaarschap.sql`) staat nu één extra rij, het team van de trainer (O14). Zo blijft *HO met bouw (Middenbouw)* ook onder 034 zijn trainer zien. De controles zelf zijn niet veranderd.
+
+| Opbouw | Uitkomst |
+|---|---|
+| Zonder 034 (zoals productie, met 033) | **13 van 36 fout**: een begeleider buiten zijn werkgebied mag lezen en schrijven. Dit is het lek. |
+| Met 034 | alles goed: rechten per rol 37/37, clubscheiding 12/12, vaste regels 82/82, test 033 55/55, app-opslag 10/10, werkgebied 36/36 |
+| 032 → 034 | alles goed: rechten per rol 56/56, vaste regels 86/86, werkgebied 36/36, meekijken 7/7 |
+| 034 → 032 | alles goed: dezelfde cijfers |
+| Alleen 032 (zonder 034) | meekijken 1 van 7 fout: de HO Bovenbouw kijkt mee bij een O10-trainer |
+
+**Opnieuw draaien:**
+- `EXTRA_SQL=supabase/tests/lokaal/begeleider-werkgebied.sql npm run test:veilig -- 034`
+- met 032: `EXTRA_SQL="supabase/tests/lokaal/begeleider-werkgebied.sql supabase/tests/lokaal/begeleider-werkgebied-032.sql" npm run test:veilig -- 032 034`
+
+**Niet getest:**
+- de echte productiedatabase;
+- de app tegen een database met 034. De app filtert al zelf op werkgebied; dat is gezien in de code, niet in een proef.
 
 ## 9. Volgorde en akkoord
 
-1. **Jouw akkoord op de richting** (A, zonder de extra regel voor `traject.door`). Dan Besluit 154 (Besluit 100 krijgt *"aangevuld door 152"*).
-2. Bouwen als `034_….sql.voorstel` + de tests van § 8, alleen lokaal. Voorstel 032 erop aanpassen.
-3. **Apart akkoord** op het toepassen in productie, samen met of na 033. Daarna `priv.rechtentest()` en de app controleren.
-
-**Nog na te gaan, alleen lezen:**
-- welke bouwen DCG en Swift in productie hebben;
-- of er nu een HO of TC met een werkgebied is.
-
-Als iedereen de hele club heeft, verandert er voor de pilot nu niets zichtbaar, maar het is wel goed geregeld vóór er een tweede begeleider komt.
+1. ~~Akkoord op richting A~~ ✅ Besluit 154 (4-11, #118).
+2. ~~Stand in productie lezen~~ ✅ § 10 (alleen gelezen).
+3. ~~034 als voorstel + lokale tests~~ ✅ § 5 en § 8. **Voorstel 032 hoeft niet te worden aangepast:** 034 werkt via de beperkende regel en geldt ook voor `trainerplan`.
+4. **Nog te doen, apart akkoord:** 034 toepassen in productie, **na 033** (033 is ook nog niet toegepast). Daarna:
+   - `priv.rechtentest()` draaien;
+   - in de app nalopen als HO (DCG) en als beide HO's (Swift): ziet ieder nog alle trainers? Volgens § 10 hoort dat zo.
 
 **Extra bevinding (apart, niet in dit voorstel).**
 - **Wat:** de rol `hjo` telt in de database als `admin` (`priv.cc_admin()`). Een HJO met werkgebied *Bovenbouw* heeft daardoor voor de **club**gegevens (regels, teams, signalen) nog steeds de rechten van de hele club.
