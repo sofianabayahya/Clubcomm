@@ -21,6 +21,7 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 157; 146 en 150 staan in open pu
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
+| NNN | 3 | Tekentool, twee kleine verbeteringen: de **kleurrondjes** bij *kleur wijzigen* krijgen een **tikvlak van 44 px** (het rondje blijft ± 28 px; met schermlezernaam en *aan/uit*); de **tip** op de telefoon wijkt zolang het paneel *Spelers* open is, zodat het veld ook de eerste keer volledig zichtbaar is | ✅ besloten (wacht op samenvoegen) |  |
 | 157 | 3 | Tekentool, telefoon **gekanteld** (breed en lager dan 500 px): eigen indeling met de rail **links**, de bovenbalk op **één regel**, geen tip en geen hulptekst, het veld **past in de hoogte**; het paneel *Spelers* ligt **rechts naast het veld** (hoogstens 330 px, scrollt). Staand, tablet en laptop ongewijzigd | ✅ besloten (wacht op samenvoegen) |  |
 | 156 | 3 | Tekentool, paneel *Spelers*: één team tegelijk met zes teamkleuren (nieuw: **oranje** en **roze**), per team **rondje of driehoek**, nummers 1–11 en *Zonder nummer* voor **elk** team, *＋ Losse speler*, Trainer en Keeper in het paneel. Telefoon: het paneel ligt **vast onderaan** en het veld blijft erboven zichtbaar; bovenbalk in twee regels (↶ ↷); de tip blijft weg na wegtikken. Laptop: hetzelfde paneel naast de rail. Oude tekeningen ongewijzigd | ◐ deels herzien | door 157 (gekanteld ligt het paneel rechts naast het veld) |
 | 155 | 3 | Korte evaluatie en labels uit het profiel: `evaluatie.kort` bepaalt welke vragen na de training open staan en in welke volgorde (DCG: doel/situatie · gedrag · toepassing · volgende leerstap; *Weerstand* naar Verdiepende analyse); zonder `kort` alles zoals voorheen; vraagteksten en antwoorden ongewijzigd. *Handelingen in gekozen vormen* in plaats van *Accenten*. DCG-profiel v4: *Loskomen uit de dekkingsschaduw*, *Afremmen* (codes ongewijzigd); database-update apart akkoord | geldt (profiel v4 in de database sinds 04-11) | — |
@@ -690,6 +691,15 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
 ### Vuistregel voor nieuwe ideeën
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
+
+---
+
+## Besluit NNN — Tekentool: kleurrondjes met een tikvlak van 44 px; de tip wijkt voor het paneel Spelers (Spoor 3, maat M)
+*Besloten 4 november 2026: de initiatiefnemer vroeg de twee verbeteringen te bouwen die na Besluit 157 werden voorgesteld.*
+- **Kleur wijzigen:** elk kleurrondje in de balk onder het veld is nu een knop van 44 × 44 px (norm `docs/app-controle.md`); het rondje zelf blijft ± 28 px. De schermlezer noemt *Kleur rood* enzovoort, en welke kleur aan staat. Was 26 × 26 px, op laptop en telefoon.
+- **Tip op de telefoon:** zolang het paneel *Spelers* open is, neemt de tip *"tekenen gaat sneller op een laptop"* geen ruimte in; zo ligt het hele veld boven het paneel, ook de eerste keer. Gaat het paneel dicht, dan komt de tip terug tot je hem wegtikt (Besluit 156).
+- **Gevonden, niet in dit besluit:** op de telefoon staand ligt de balk onder het veld (*Dupliceren · kleuren · Verwijderen*) achter het paneel *Spelers* als je een speler kiest; eerst het paneel sluiten. Gekanteld (Besluit 157) en op de laptop staat de balk wel vrij. Voorstel volgt.
+- Geen gegevens; opgeslagen tekeningen ongewijzigd. Tests: `tests/tekentool-tip-kleuren.spec.js` (op de oude code falen ze allebei).
 
 ---
 

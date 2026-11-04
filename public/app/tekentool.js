@@ -257,7 +257,9 @@
         : soort === "cone" ? HAT : soort === "dish" ? DISH : null;
       el("drawKleur").hidden = !palet;
       el("drawKleur").innerHTML = palet ? Object.keys(palet).map(function(k){
-        return '<button type="button" class="draw-swatch' + (gekozen.every(function(g){ return g.c === k; }) ? ' active' : '') + '" data-kleur="' + k + '" title="' + k + '" style="background:' + palet[k] + '"></button>';
+        // Besluit NNN: tikvlak 44 px, het rondje zelf blijft ± 28 px.
+        var aan = gekozen.every(function(g){ return g.c === k; });
+        return '<button type="button" class="draw-swatch' + (aan ? ' active' : '') + '" data-kleur="' + k + '" title="' + k + '" aria-label="Kleur ' + k + '" aria-pressed="' + aan + '"><span style="background:' + palet[k] + '"></span></button>';
       }).join("") : "";
       Array.prototype.forEach.call(document.querySelectorAll("[data-draw-tool]"), function(b){
         b.classList.toggle("active", st.tool != null && b.getAttribute("data-draw-tool") === String(st.tool));
@@ -330,6 +332,8 @@
       var h = f && !f.hidden && railOpen === "spelers" && window.matchMedia("(max-width: 899px)").matches ? f.offsetHeight : 0;
       stage.style.setProperty("--paneel", h + "px");
       stage.classList.toggle("paneel-open", h > 0);
+      // Besluit NNN: de tip neemt op de telefoon geen ruimte in zolang het paneel Spelers open is.
+      el("drawOverlay").classList.toggle("spelers-open", h > 0);
     }
     function sluitMenus(){
       if (railOpen){ railOpen = null; var f = el("drawFly"); if (f) f.hidden = true; renderRail(); paneelRuimte(); }

@@ -166,3 +166,9 @@
   #drawOverlay .draw-stage.paneel-open { padding-right: calc(6px + min(330px, 42vw)); }
   #drawOverlay .draw-fly:not(.draw-fly-spelers) { left: 80px; right: auto; top: 6px; max-width: calc(100% - 96px); max-height: calc(100% - 12px); overflow-y: auto; }
 }
+/* Besluit NNN: kleur wijzigen met een tikvlak van 44 px (het rondje blijft ± 28 px); de tip wijkt voor het paneel Spelers. */
+#drawOverlay .draw-swatch { width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: none; box-shadow: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+#drawOverlay .draw-swatch span { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px #888; box-sizing: border-box; }
+#drawOverlay .draw-swatch.active span { box-shadow: 0 0 0 3px #00B3FF; }
+#drawOverlay .draw-kleur { gap: 0; padding: 0; flex-wrap: wrap; }
+#drawOverlay.spelers-open #drawPhone { display: none; }
