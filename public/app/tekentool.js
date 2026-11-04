@@ -15,15 +15,25 @@
       vak:     { w: 800, h: 560, label: "Vak" }
     };
     var SHIRT = { oranje: "#F57C00", blauw: "#1E4FD8", geel: "#F2C200", zwart: "#1A1A1A" }; // oude tekeningen
-    // Spelers: 4 kleuren in 2 vormen (rondje/driehoek), plus trainer (T) en keeper (K). Tekstkleur voor leesbaarheid.
+    // Spelers: 6 teamkleuren in 2 vormen (rondje c, driehoek t), plus trainer (T) en keeper (K). Tekstkleur voor leesbaarheid.
     var TEAM = {
       rood:       { shape: "c", fill: "#E53935", ink: "#fff" },
       lichtblauw: { shape: "c", fill: "#8FD3F0", ink: "#0b2230" },
       geel:       { shape: "t", fill: "#F2D100", ink: "#1a1400" },
       blauw:      { shape: "t", fill: "#1E88E5", ink: "#fff" },
+      // Besluit 156: oranje en roze als team (oranje rondje, roze driehoek); bewust een andere tint dan de oranje en roze hoedjes.
+      oranje:     { shape: "c", fill: "#FFA000", ink: "#1a1000" },
+      roze:       { shape: "t", fill: "#F06292", ink: "#1a0010" },
       trainer:    { shape: "t", fill: "#1A1A1A", ink: "#fff", letter: "T" },
       keeper:     { shape: "t", fill: "#1A1A1A", ink: "#fff", letter: "K" }
     };
+    // De vorm van een speler in het paneel (Besluit 125 en 156): rondje of driehoek. r = straal van het rondje.
+    function vormSvg(v, fill, r, rand){
+      rand = rand || 'stroke="#fff" stroke-width="2"';
+      if (v === "t") return '<path d="M 0 ' + (-1.28 * r) + ' L ' + (1.16 * r) + ' ' + (0.8 * r) + ' L ' + (-1.16 * r) + ' ' + (0.8 * r) + ' Z" fill="' + fill + '" ' + rand + ' stroke-linejoin="round"/>';
+      return '<circle r="' + r + '" fill="' + fill + '" ' + rand + '/>';
+    }
+    var VORMNAAM = { c: "rondje", t: "driehoek" };
     // Trainingshoedjes (ø 30 cm) in de kleuren die ART gebruikt; oude pionnen zonder kleur worden oranje.
     var HAT = { oranje: "#F26A1B", blauw: "#1F4FD1", rood: "#D91E1E", geel: "#F5D90A", groen: "#4CD137", roze: "#E91E8C" };
     function hatSvg(c, k){
@@ -48,6 +58,7 @@
       { group: "Spelers", items: [
         { t: "p", c: "rood", label: "Speler rood (rondje)", key: "1" }, { t: "p", c: "lichtblauw", label: "Speler lichtblauw (rondje)", key: "2" },
         { t: "p", c: "geel", label: "Speler geel (driehoek)", key: "3" }, { t: "p", c: "blauw", label: "Speler blauw (driehoek)", key: "4" },
+        { t: "p", c: "oranje", label: "Speler oranje (rondje)", key: "5" }, { t: "p", c: "roze", label: "Speler roze (driehoek)", key: "6" },
         { t: "p", c: "trainer", label: "Trainer", key: "T" }, { t: "p", c: "keeper", label: "Keeper", key: "K" } ] },
       { group: "Spullen", items: [
         { t: "ball", label: "Bal", key: "B" }, { t: "hatzone", label: "Vak met hoedjes: sleep een rechthoek, op elke hoek komt een hoedje (kleur van het laatst gekozen hoedje)", key: "V" },
@@ -242,7 +253,7 @@
       // Kleur achteraf wijzigen: spelers, hoedjes en schijfjes (ook meerdere tegelijk, zelfde soort).
       var gekozen = (meer ? st.multi : (st.sel != null ? [st.sel] : [])).map(function(j){ return st.items[j]; }).filter(Boolean);
       var soort = gekozen.length && gekozen.every(function(g){ return g.t === gekozen[0].t; }) ? gekozen[0].t : null;
-      var palet = soort === "p" && gekozen.every(function(g){ return !TEAM[g.c].letter; }) ? { rood: TEAM.rood.fill, lichtblauw: TEAM.lichtblauw.fill, geel: TEAM.geel.fill, blauw: TEAM.blauw.fill }
+      var palet = soort === "p" && gekozen.every(function(g){ return !TEAM[g.c].letter; }) ? { rood: TEAM.rood.fill, lichtblauw: TEAM.lichtblauw.fill, geel: TEAM.geel.fill, blauw: TEAM.blauw.fill, oranje: TEAM.oranje.fill, roze: TEAM.roze.fill }
         : soort === "cone" ? HAT : soort === "dish" ? DISH : null;
       el("drawKleur").hidden = !palet;
       el("drawKleur").innerHTML = palet ? Object.keys(palet).map(function(k){
@@ -251,7 +262,7 @@
       Array.prototype.forEach.call(document.querySelectorAll("[data-draw-tool]"), function(b){
         b.classList.toggle("active", st.tool != null && b.getAttribute("data-draw-tool") === String(st.tool));
       });
-      renderRail();
+      renderRail(); paneelRuimte();
       // Selecteren licht op als er geen gereedschap aan staat; de muis laat zien wat er gebeurt.
       var selKnop = document.querySelector("[data-draw-select]");
       if (selKnop) selKnop.classList.toggle("active", st.tool == null);
@@ -270,7 +281,8 @@
       var s = '<svg viewBox="-20 -20 40 40" width="34" height="34" aria-hidden="true">';
       if (t.t === "p"){
         var tm = TEAM[t.c];
-        s += vormVan(t.c) === "c" ? '<circle r="12" fill="' + tm.fill + '" stroke="#333" stroke-width="1"/>' : '<path d="M 0 -14 L 13 10 L -13 10 Z" fill="' + tm.fill + '" stroke="#333" stroke-width="1"/>';
+        var tv = vormVan(t.c);
+        s += tv === "c" ? '<circle r="12" fill="' + tm.fill + '" stroke="#333" stroke-width="1"/>' : '<path d="M 0 -14 L 13 10 L -13 10 Z" fill="' + tm.fill + '" stroke="#333" stroke-width="1"/>';
         if (tm.letter) s += '<text y="8" text-anchor="middle" font-size="12" font-weight="700" font-family="Arial" fill="#fff">' + tm.letter + '</text>';
       }
       else if (t.t === "board") s += '<rect x="-15" y="-5" width="30" height="10" rx="2" fill="#3b3b3b"/>';
@@ -310,8 +322,15 @@
       return '<button type="button" class="draw-tool" data-draw-tool="' + n + '" title="' + t.label + (key ? " (toets " + key + ")" : "") + '" aria-label="' + t.label + '">' +
         toolIcon(t) + (t.key ? '<span class="draw-key">' + t.key + '</span>' : '') + '</button>';
     }
+    // Besluit 156: op de telefoon ligt het paneel Spelers onderaan; het veld schuift erboven (ruimte = hoogte van het paneel).
+    function paneelRuimte(){
+      var f = el("drawFly"), stage = document.querySelector("#drawOverlay .draw-stage"); if (!stage) return;
+      var h = f && !f.hidden && railOpen === "spelers" && window.matchMedia("(max-width: 899px)").matches ? f.offsetHeight : 0;
+      stage.style.setProperty("--paneel", h + "px");
+      stage.classList.toggle("paneel-open", h > 0);
+    }
     function sluitMenus(){
-      if (railOpen){ railOpen = null; var f = el("drawFly"); if (f) f.hidden = true; renderRail(); }
+      if (railOpen){ railOpen = null; var f = el("drawFly"); if (f) f.hidden = true; renderRail(); paneelRuimte(); }
       Array.prototype.forEach.call(document.querySelectorAll(".draw-menu[open]"), function(d){ d.open = false; });
     }
     function openRail(id){
@@ -326,10 +345,11 @@
       if (id === "spelers"){ if (st.tool != null && railVan(st.tool) !== r) st.tool = null; }
       else if ((st.sel == null && !(st.multi && st.multi.length > 1)) && (st.tool == null || railVan(st.tool) !== r)){ st.tool = laatste(r); }
       el("drawFlyH").textContent = r.naam;
-      el("drawFlyGrid").innerHTML = l.map(toolKnop).join("");
+      el("drawFlyGrid").innerHTML = id === "spelers" ? "" : l.map(toolKnop).join(""); // Besluit 156: bij Spelers staat alles in het paneel
+      el("drawFlyGrid").hidden = id === "spelers";
       el("drawNummers").hidden = id !== "spelers";
       var knop = document.querySelector('[data-rail="' + id + '"]'), body = f.parentNode;
-      f.hidden = false;
+      f.hidden = false; f.classList.toggle("draw-fly-spelers", id === "spelers");
       if (window.matchMedia("(min-width: 900px)").matches){
         var top = knop.getBoundingClientRect().top - body.getBoundingClientRect().top;
         f.style.top = Math.max(8, Math.min(top, body.clientHeight - f.offsetHeight - 8)) + "px";
@@ -360,8 +380,15 @@
           var tk = e.target.closest("[data-draw-tool]");
           if (tk){ var n = Number(tk.getAttribute("data-draw-tool")), r = railVan(n); railLaatst[r.id] = n; pickTool(n, true); if (r.id !== "spelers") sluitMenus(); return; }
           if (e.target.closest("[data-klap]")){ nrDicht = !nrDicht; try { localStorage.setItem("cc-draw-nummers", nrDicht ? "dicht" : "open"); } catch(x){} renderNummers(); return; }
-          var v = e.target.closest("[data-vorm]");
-          if (v){ var c = v.getAttribute("data-vorm"); st.vormen[c] = vormVan(c) === "c" ? "t" : "c"; spelerIconen(); render(); return; }
+          var tm = e.target.closest("[data-team]");
+          if (tm){
+            // Ander team kiezen: een gekozen speler van een ander team is niet meer gekozen; "losse speler" gaat mee naar het nieuwe team.
+            nrTeam = tm.getAttribute("data-team"); var gs = gekozenSpeler(); if (gs && gs.c !== nrTeam){ st.sel = null; st.viaBalk = null; }
+            if (st.tool != null && toolDef(st.tool).t === "p" && !TEAM[toolDef(st.tool).c].letter) st.tool = spelerTool(nrTeam);
+            render(); return;
+          }
+          var vk = e.target.closest("[data-vorm-kies]");
+          if (vk){ st.vormen[nrTeam] = vk.getAttribute("data-vorm-kies"); spelerIconen(); render(); return; }
           if (e.target.closest("[data-nr-ander]")){ anderNummer(); return; }
           var b = e.target.closest("[data-nr]"); if (!b) return; var x = b.getAttribute("data-nr").split("|"); tikNummer(x[0], Number(x[1]));
         });
@@ -493,7 +520,11 @@
        dan krijgt die het nummer (of geen nummer); dubbel mag bewust. Reparatie 4-11, Besluit 148. */
     var NR_PLEK = { 1: [0.5, 0.94], 2: [0.85, 0.78], 3: [0.62, 0.81], 4: [0.38, 0.81], 5: [0.15, 0.78], 6: [0.5, 0.7],
       8: [0.7, 0.63], 10: [0.3, 0.63], 7: [0.82, 0.56], 9: [0.5, 0.54], 11: [0.18, 0.56] };
-    var NR_TEAMS = [["rood", "Eigen team", "●"], ["geel", "Tegenstander", "▲"]];
+    // Besluit 156: nummers voor elk team, één team tegelijk in het paneel. Rood = eigen team, geel = tegenstander (gespiegeld).
+    var NR_TEAMS = ["rood", "geel", "lichtblauw", "blauw", "oranje", "roze"];
+    var TEAMNAAM = { rood: "Eigen team", geel: "Tegenstander", lichtblauw: "Lichtblauw", blauw: "Blauw", oranje: "Oranje", roze: "Roze" };
+    var nrTeam = "rood"; // het team in het paneel: dat van de gekozen speler, anders het laatst gekozen team
+    function spelerTool(kleur){ return flatTools().findIndex(function(t){ return t.t === "p" && t.c === kleur; }); }
     function plekOpVeld(fx, fy, tegen){
       var f = FIELDS[st.field], m = 30, staand = /^(staand|f8|f6|half)$/.test(st.field);
       if (tegen){ fx = 1 - fx; fy = 1 - fy; }
@@ -544,7 +575,7 @@
     }
     // Knoppen bij Spelers (links) tonen dezelfde vorm als op het veld
     function spelerIconen(){
-      Array.prototype.forEach.call(document.querySelectorAll("[data-draw-tool]"), function(b){
+      Array.prototype.forEach.call(document.querySelectorAll(".draw-fly-grid [data-draw-tool]"), function(b){
         var t = toolDef(Number(b.getAttribute("data-draw-tool")));
         if (t && t.t === "p") b.innerHTML = toolIcon(t) + (t.key ? '<span class="draw-key">' + t.key + '</span>' : '');
       });
@@ -552,27 +583,34 @@
     function renderNummers(){
       var bak = el("drawNummers"); if (!bak) return;
       var gk = nrDoel(), gekozen = gekozenSpeler();
-      var inMenu = !!(bak.closest && bak.closest(".draw-fly")), dicht = nrDicht && !inMenu;
-      bak.classList.toggle("dicht", dicht);
-      var kop = inMenu ? '<b class="draw-nr-titel">Rugnummers</b>' : '<button type="button" class="draw-nr-klap" data-klap aria-expanded="' + !dicht + '"><b>Rugnummers</b>' + (dicht ? '<small>tik om te openen</small>' : '') + '<span aria-hidden="true">' + (dicht ? '▾' : '▴') + '</span></button>';
-      if (dicht){ bak.innerHTML = kop; return; }
-      bak.innerHTML = kop + NR_TEAMS.map(function(tm){
-        var kleur = tm[0], ink = TEAM[kleur].ink, fill = TEAM[kleur].fill;
-        var zonder = st.items.filter(function(x){ return x.t === "p" && x.c === kleur && !x.n; }).length;
-        var aantal = function(n){ return st.items.filter(function(x){ return x.t === "p" && x.c === kleur && x.n === n; }).length + (n === 1 ? st.items.filter(function(x){ return x.t === "p" && x.c === "keeper" && x.team === kleur; }).length : 0); }; // elke keeper van het team telt als 1
-        var knop = function(n){
-          var keer = aantal(n), aan = gk ? gk.c === kleur && (gk.n || 0) === n : keer > 0;
-          // Met een gekozen speler blijft zichtbaar welke nummers in het team al op het veld staan (omrand).
-          return '<button type="button" class="draw-nr' + (aan ? ' aan' : (gk && keer ? ' bezet' : '')) + '" data-nr="' + kleur + '|' + n + '"' + (aan ? ' style="background:' + fill + ';color:' + ink + ';border-color:' + fill + '"' : '') +
-            ' aria-pressed="' + aan + '" aria-label="' + tm[1] + ' nummer ' + n + (keer > 1 ? ', staat er ' + keer + ' keer' : '') + '">' + n + (keer > 1 ? '<sup aria-hidden="true">' + keer + '×</sup>' : '') + '</button>';
-        };
-        var vorm = vormVan(kleur);
-        return '<div class="draw-nr-rij"><button type="button" class="draw-nr-vorm" data-vorm="' + kleur + '" title="Rondje of driehoek wisselen" aria-label="' + tm[1] + ': ' + (vorm === "c" ? "rondje" : "driehoek") + ', tik om te wisselen">' +
-          '<svg viewBox="-16 -16 32 32" width="22" height="22" aria-hidden="true">' + (vorm === "c" ? '<circle r="11" fill="' + fill + '" stroke="#333" stroke-width="1"/>' : '<path d="M 0 -12 L 11 8 L -11 8 Z" fill="' + fill + '" stroke="#333" stroke-width="1"/>') + '</svg>' +
-          '<span>' + tm[1] + '</span><small aria-hidden="true">⇄</small></button><div class="draw-nr-knoppen">' + [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(knop).join("") +
+      if (gekozen && TEAMNAAM[gekozen.c]) nrTeam = gekozen.c;
+      var kleur = nrTeam, tm = TEAM[kleur], naam = TEAMNAAM[kleur], fill = tm.fill, ink = tm.ink, vorm = vormVan(kleur);
+      var icoon = function(v, f, extra){ return '<svg viewBox="-16 -16 32 32" width="26" height="26" aria-hidden="true">' + vormSvg(v, f, 11, 'stroke="#333" stroke-width="1"') + (extra || "") + '</svg>'; };
+      var zonder = st.items.filter(function(x){ return x.t === "p" && x.c === kleur && !x.n; }).length;
+      var aantal = function(n){ return st.items.filter(function(x){ return x.t === "p" && x.c === kleur && x.n === n; }).length + (n === 1 ? st.items.filter(function(x){ return x.t === "p" && x.c === "keeper" && x.team === kleur; }).length : 0); }; // elke keeper van het team telt als 1
+      var knop = function(n){
+        var keer = aantal(n), aan = gk ? (gk.n || 0) === n : keer > 0;
+        // Met een gekozen speler blijft zichtbaar welke nummers in het team al op het veld staan (omrand).
+        return '<button type="button" class="draw-nr' + (aan ? ' aan' : (gk && keer ? ' bezet' : '')) + '" data-nr="' + kleur + '|' + n + '"' + (aan ? ' style="background:' + fill + ';color:' + ink + ';border-color:' + fill + '"' : '') +
+          ' aria-pressed="' + aan + '" aria-label="' + naam + ' nummer ' + n + (keer > 1 ? ', staat er ' + keer + ' keer' : '') + '">' + n + (keer > 1 ? '<sup aria-hidden="true">' + keer + '×</sup>' : '') + '</button>';
+      };
+      var los = spelerTool(kleur), tr = flatTools().findIndex(function(t){ return t.c === "trainer"; }), kp = flatTools().findIndex(function(t){ return t.c === "keeper"; });
+      var letter = function(l){ return '<text y="5" text-anchor="middle" font-size="11" font-weight="700" font-family="Arial" fill="#fff">' + l + '</text>'; };
+      bak.innerHTML =
+        '<div class="draw-teams" role="group" aria-label="Team">' + NR_TEAMS.map(function(k){
+          return '<button type="button" class="draw-team' + (k === kleur ? ' aan' : '') + '" data-team="' + k + '" aria-pressed="' + (k === kleur) + '" aria-label="' + TEAMNAAM[k] + '" title="' + TEAMNAAM[k] + '">' + icoon(vormVan(k), TEAM[k].fill) + '</button>'; }).join("") + '</div>' +
+        '<div class="draw-team-kop"><b>' + naam + '</b><span class="draw-vormen" role="group" aria-label="Vorm van ' + naam + '">' + ["c", "t"].map(function(v){
+          return '<button type="button" class="draw-vorm-knop' + (v === vorm ? ' aan' : '') + '" data-vorm-kies="' + v + '" aria-pressed="' + (v === vorm) + '" aria-label="' + VORMNAAM[v] + '" title="' + VORMNAAM[v] + '">' + icoon(v, fill) + '</button>'; }).join("") + '</span></div>' +
+        '<div class="draw-nr-knoppen">' + [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(knop).join("") +
           '<button type="button" class="draw-nr leeg" data-nr="' + kleur + '|0">' + (gk ? 'Zonder nummer' : '+ Zonder nummer' + (zonder ? ' (' + zonder + ')' : '')) + '</button>' +
-          (gekozen && gekozen.c === kleur ? '<button type="button" class="draw-nr leeg" data-nr-ander>Ander nummer…</button>' : '') + '</div></div>';
-      }).join("") + '<small>' + (gk ? 'Tik een nummer: de gekozen speler krijgt dat nummer (dubbel mag). Weghalen: Verwijderen onder het veld.' : (gekozen ? 'Gekozen: nummer ' + (gekozen.n || 'zonder') + '. Een ander nummer tikken kiest die speler of zet hem neer. Nummer wijzigen: Ander nummer… of tik de speler op het veld en dan een nummer. ' : '') + 'Tik een nummer: staat het er nog niet, dan komt de speler op zijn plek (1-4-3-3); staat het er al, dan kies je die speler. Weghalen: kies de speler en tik Verwijderen. Tik op ● of ▲ om rondje en driehoek te wisselen.') + '</small>';
+          (gekozen ? '<button type="button" class="draw-nr leeg" data-nr-ander>Ander nummer…</button>' : '') + '</div>' +
+        '<div class="draw-los"><button type="button" class="draw-tool draw-los-knop" data-draw-tool="' + los + '" title="Tik daarna op het veld">＋ Losse speler</button>' +
+          '<button type="button" class="draw-tool" data-draw-tool="' + tr + '" aria-label="Trainer" title="Trainer (toets T)">' + icoon("t", "#1A1A1A", letter("T")) + '</button>' +
+          '<button type="button" class="draw-tool" data-draw-tool="' + kp + '" aria-label="Keeper" title="Keeper (toets K)">' + icoon("t", "#1A1A1A", letter("K")) + '</button></div>' +
+        '<small>' + (gk ? 'Tik een nummer: de gekozen speler krijgt dat nummer (dubbel mag). Weghalen: Verwijderen onder het veld.'
+          : gekozen ? 'Gekozen: nummer ' + (gekozen.n || 'zonder') + '. Een ander nummer kiest of zet neer. Nummer wijzigen: Ander nummer… of tik de speler op het veld en dan een nummer.'
+          : 'Kies een team en tik een nummer: de speler staat op zijn plek. Staat hij er al, dan kies je hem.') + '</small>';
+      Array.prototype.forEach.call(bak.querySelectorAll("[data-draw-tool]"), function(b){ b.classList.toggle("active", st.tool != null && b.getAttribute("data-draw-tool") === String(st.tool)); });
     }
 
     // Knop kiezen; nog een keer dezelfde knop = stoppen. Hoedjeskleur onthouden voor "Vak met hoedjes" en toets H.
@@ -769,7 +807,9 @@
       spelerIconen();
       el("drawZoom").checked = st.zoom;
       // Telefoon of tablet: advies om op de laptop te tekenen (sluitbaar).
-      el("drawPhone").hidden = !window.matchMedia("(max-width: 899px), (pointer: coarse)").matches;
+      // A+ (Besluit 156): weggetikt = weg op dit toestel.
+      var tipWeg = (function(){ try { return localStorage.getItem("cc-draw-tip") === "weg"; } catch(e){ return false; } })();
+      el("drawPhone").hidden = tipWeg || !window.matchMedia("(max-width: 899px), (pointer: coarse)").matches;
       el("drawOverlay").hidden = false;
       render();
     }
@@ -830,7 +870,7 @@
     });
     el("drawUndo").addEventListener("click", undo);
     el("drawRedo").addEventListener("click", redo);
-    el("drawPhoneX").addEventListener("click", function(){ el("drawPhone").hidden = true; });
+    el("drawPhoneX").addEventListener("click", function(){ el("drawPhone").hidden = true; try { localStorage.setItem("cc-draw-tip", "weg"); } catch(e){} });
     el("drawCancel").addEventListener("click", close);
     el("drawSave").addEventListener("click", function(){
       var b = el("drawSave"); b.disabled = true;

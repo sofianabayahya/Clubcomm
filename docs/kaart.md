@@ -16,7 +16,7 @@
 | **Trainers begeleiden (HO, TC)** | `trainers.js`, `begeleiding.js`, `hjohome.js`, `hjofilter.js` (`CC.werkgebied` in `hjo.js`) | 42, 97, 99, 100, 129, 134, 140, 143, 154 | `trainers begeleiden\|begeleidingsmoment\|technisch coördinator\|HO-Home\|bouwen\|pakket Alleen\|eigen reflectie` + `npm run test:veilig` |
 | **Trainingsmodule** | `training.js` (kiezer, Plannen, Week, Vormenbank), `periodisering.js` (methodiek, Lijn), `vormtypes.js` | 121, 128, 130–135, 137, 138, 139, 141, 142, 144, 145, 147, 155 | `trainingsmodule\|oefenvorm\|trainingskaart\|vastleggen\|korte evaluatie\|labels` + `tests/kiezer.spec.js`, `tests/trainingskaart.spec.js`, `tests/vastleggen.spec.js`, `tests/korte-evaluatie.spec.js` |
 | **Opleidingsprofielen** | `opslag.js` (leest `S.profielen`), `training.js` (`profiel`, `ond`); bron: `supabase/profielen/` | 121, 123, 133 | `opleidingsprofiel\|trainingsmodule` |
-| **Tekentool** | `tekentool.js` + `.css`, `tekenen.html` | 124–127, 148 (rugnummers), 152 (menu sluiten), 153 (veldlijnen) | `tekentool` (ook `tests/tekentool-nummering.spec.js`) |
+| **Tekentool** | `tekentool.js` + `.css`, `tekenen.html` | 124–127, 148 (rugnummers), 152 (menu sluiten), 153 (veldlijnen), 156 (paneel Spelers) | `tekentool` (ook `tests/tekentool-nummering.spec.js`) |
 | **Demo en rondleiding** | `demo.js` (`STAPPEN`), `data.js` (democlub) | 89, 114 | `rondleiding\|uitnodiging\|demo:\|elke stap` |
 | **Schermen, tabbladen, vensters** | `core.js` (`CC.sheet`, `CC.toast`, `CC.on`), `index.html`, `app.css` | 30, 34, 102–104, 111, 113, 118, 122, 149 | `tabbladen\|venster\|tikvlakken\|dubbel tikken\|rol wisselen\|automatisch bewaren` |
 | **Inloggen, opslag, rechten** ⚠️ altijd maat L | `live.js`, `opslag.js` (scopes), `core.js` (inloggen, privacy); `supabase/migrations/` | 1, 14, 24, 45, 52, 72, 119, 143 | alle tests + rechtentest (zie onder) |
@@ -68,7 +68,7 @@
 
 ## Testen
 - Lokaal: `npm install && npm start` → http://localhost:5000/?demo. Chromium staat in `/opt/pw-browsers` (niet `playwright install`).
-- `npm test` = node-tests (`tests/automaat.test.mjs`: servermotor, `tests/verwijzingen.test.mjs`: paden) + Playwright (`tests/*.spec.js`: elke rol doorklikken in de demo én in de kleine nagebootste club, `supabase/tests/fake-supabase.js`, code 123456). Draait ook op GitHub (Actions *Tests*); **rood = niet samenvoegen**.
+- `npm test` = node-tests (`tests/automaat.test.mjs`: servermotor, `tests/verwijzingen.test.mjs`: paden, `tests/besluitnummers.test.mjs`: elk besluitnummer één keer, als kop en in het Register) + Playwright (`tests/*.spec.js`: elke rol doorklikken in de demo én in de kleine nagebootste club, `supabase/tests/fake-supabase.js`, code 123456). Draait ook op GitHub (Actions *Tests*); **rood = niet samenvoegen**.
 - **Altijd ook de echte, bijna lege club testen** (teamnaam ≠ teamcode, weinig spelers, geen telefoonnummers), niet alleen de demo. Nieuwe functie of gevonden fout → test erbij.
 - Rechten per rol: `select * from priv.rechtentest() where not ok;` (Besluit 119, migratie 030; elke nacht, alarm via `rpc/gezondheid`). Nieuwe rechten of een nieuwe soort gegevens: controle erbij. (Het oude `rls_test.sql` is vervangen.)
 - Presentaties opnieuw maken: `shots*.js`, dan `node docs/presentaties/maak.js product`; voor een andere club `CONTACT_NAAM=… CONTACT_MAIL=… node docs/presentaties/maak.js clubs "Clubnaam"` → `uit/` (niet in git); PDF met `soffice --headless --convert-to pdf` (lettertype Carlito).
