@@ -83,13 +83,13 @@ for (const breed of [false, true]) {
     await expect(page.locator('.tr-stap .tr-niv')).toHaveText('Herkennen → Kiezen');
     await controleer(page, fouten, 'kaart vr');
 
-    // do: eigen voorbereiding, periodisering niet toegepast; weekvoorstel apart; niets ingevuld; accenten in gekozen vormen
+    // do: eigen voorbereiding, periodisering niet toegepast; weekvoorstel apart; niets ingevuld; handelingen in gekozen vormen (Besluit 154)
     await plannen(page, 't-do');
     await expect(kaart(page).locator('.tr-stand')).toHaveText('Eigen voorbereiding – periodisering niet toegepast');
     await expect(kaart(page)).toContainText('Niet vastgelegd');
     await expect(kaart(page).locator('.tr-wv').first()).toContainText('Weekvoorstel');
     await expect(kaart(page).locator('.tr-wv').first()).toContainText('Vooruitgang creëren');
-    await expect(kaart(page)).toContainText('Accenten in gekozen vormen: Eerste contact van druk af · Vooruit inspelen');
+    await expect(kaart(page)).toContainText('Handelingen in gekozen vormen: Eerste contact van druk af · Vooruit inspelen');
     await expect(kaart(page)).toContainText('In gekozen vormen: Uitvoeren 1× · Herkennen 2×');
     await expect(kaart(page)).toContainText('Niet gekozen voor de training');
     await expect(kaart(page)).toContainText('Periodisering voor deze dag (niet toegepast): Technische onderbouw opbouwen · Uitvoeren → Herkennen');
@@ -128,7 +128,7 @@ for (const breed of [false, true]) {
     expect((await plan(page, 'tp-di')).blokDoel).toBeUndefined(); // bekijken schrijft niets
     await page.evaluate(() => { const p = CC.S().trainingsplannen.find((x) => x.id === 'tp-di'); p.onderdelen[0].vormId = 'v-a2'; CC.save(); CC.render(); });
     await expect(page.locator('.tr-gkop.tr-A').first()).toHaveText('A · Aannemen en meenemen · uit gekozen vorm ▾');
-    await expect(kaart(page)).toContainText('Accenten in gekozen vormen: Eerste contact van druk af');
+    await expect(kaart(page)).toContainText('Handelingen in gekozen vormen: Eerste contact van druk af');
     await controleer(page, fouten, 'blokkop');
   });
 }

@@ -12,15 +12,18 @@
 ## Open pull requests
 | PR | Wat | Stand |
 |---|---|---|
-| #108, #112, #113 | Besluiten 146, 149, 150 (andere sessies) | open |
-| #116 | Openstaand bijgewerkt (trainingsmodule, volgende stappen; geen besluitnummer, andere sessie) | open |
+| #108, #112, #113, #117 | Besluiten 146, 149, 150, 152 en 153 (andere sessies) | open |
+| (nieuw) `bouw/stap3-labels` | **Besluit 154**: korte evaluatie en labels uit het profiel, DCG-profiel v4 in `dcg.json` | 6 + 106 groen; wacht op akkoord (niet samenvoegen) |
 
-- Samengevoegd 04-11: #115, Besluit 151 (documentatie en presentatie; alleen werkwijze). #114, in de werkwijze de stap *overdracht bijwerken* vóór samenvoegen. #111, vaste datum in drie datumafhankelijke tests (nieuwe fase; twee roostertests die vanaf eind mei 2027 zouden falen). Proef op 7 datums t/m 20-09-2027. Idee *demoseizoen laten meeschuiven* staat in Openstaand.
+Eerstvolgende vrije besluitnummer: **155**.
+
+- Samengevoegd 04-11: #116, Openstaand bijgewerkt (trainingsmodule). #115, Besluit 151 (documentatie en presentatie; alleen werkwijze). #114, in de werkwijze de stap *overdracht bijwerken* vóór samenvoegen. #111, vaste datum in drie datumafhankelijke tests (nieuwe fase; twee roostertests die vanaf eind mei 2027 zouden falen). Proef op 7 datums t/m 20-09-2027. Idee *demoseizoen laten meeschuiven* staat in Openstaand.
 
 ## Analyse (geen PR)
 - Branch `analyse/methodiek-aansluiting`: ontwikkelvoorstel, begrippenlijst v2.1 (Spoor 1 akkoord als uitgangspunt), technische punten T1–T9 (T1 gebouwd), oplevering 2 (KNVB-basisprofiel: opt-in, ClubComm-startset, nog toetsen aan KNVB-bronnen; `www.knvb.nl` is niet bereikbaar vanuit deze omgeving), oplevering 3 (praktijktoets week 46).
 
 ## Wacht op akkoord van de gebruiker (in deze volgorde)
+0. Na het samenvoegen van Besluit 154, apart: DCG-profiel in de database naar v4, `supabase/scripts/2026-11-04_dcg_profiel_v4.sql.voorstel` (alleen als het nog exact v3 is; reservekopie en terugdraaiscript erbij; lokaal getest 6 van 6; **niet uitgevoerd**).
 1. Correctie van de acht DCG-weekplannen, `supabase/scripts/2026-10-30_dcg_weekplannen_correctie.sql.voorstel` (gecontroleerd tegen de CSV, **niet uitgevoerd**).
 2. Apart: 033 toepassen in productie (dan controleren met `priv.rechtentest()` en de app).
 - Rechtenvoorstel 032 (begeleider kijkt mee, clubbank): lokaal getest; samen met 033 in beide volgordes goed (56/56).
