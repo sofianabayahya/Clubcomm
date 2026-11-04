@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 4 november 2026 (t/m Besluit 153; 146 en 150 staan in open pull requests)
+Laatst bijgewerkt: 4 november 2026 (t/m Besluit 154; 146 en 150 staan in open pull requests)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -21,6 +21,7 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 153; 146 en 150 staan in open pu
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
+| 154 | 3 | Begeleider (HO, TC) ziet alleen trainers in zijn werkgebied, ook in de database: werkgebied leeg = hele club, anders een gedeelde bouw met een team waar de persoon trainer is (berekend uit het team, niets opgeslagen); geldt voor `trainerzelf`, `trainerdossier` en straks `trainerplan`; geen toewijzing per begeleider; `admin` telt hier niet; uitvoering (034) apart | ✅ geldt (nog niet gebouwd) | |
 | 153 | 3 | Tekentool, veldlijnen: **penaltystip** (11 m), **halve maan** (9,15 m rond de stip, buiten de 16), **hoekschopboogjes** (1 m) en **middenstip** op 11×11 (liggend en staand) en Half veld; niet op 8×8, 6×6 en Vak (pupillenvelden pas met hun KNVB-maat). Bestaande tekeningen krijgen de lijnen vanzelf; gegevens ongewijzigd | ✅ besloten (wacht op samenvoegen) |  |
 | 152 | 3 | Tekentool: een menu sluiten zet niets onbedoeld neer. **×** = klaar (het gereedschap gaat uit, in elk menu); het menu **Spelers** zet bij openen geen gereedschap aan (losse speler = kleur tikken, dan het veld; sneltoetsen ongewijzigd). De snelle route *Hoedjes → tik op het veld* blijft. Geen gegevenswijziging | ✅ besloten (wacht op samenvoegen) |  |
 | 151 | 3 | Documentatie en presentatie: functiekaarten in docs/handleiding (nieuw) als enige bron (blokken per niveau, bundels per uitgave); drie statussen (Concept · Gereed · Gepubliceerd, alleen wat in productie is); blok Documentatie-impact in elke pull request; borging pas na de bevestigde release; vast scenario bestuursdemo | ✅ geldt | |
@@ -72,7 +73,7 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 153; 146 en 150 staan in open pu
 | 103 | 3 | Automatisch bewaren in formulieren; Rollen opgeschoond | ✅ geldt |  |
 | 102 | 3 | Snelle winsten: dringend bovenaan, Observeren op de dag zelf, unieke knopnamen | ✅ geldt |  |
 | 101 | 3 | Voorgesprek als voormeting: eigen vragen voor training en wedstrijd | ✅ geldt |  |
-| 100 | 3 | Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden" | ◐ deels herzien | door 101 (vragen kort en uitgebreid per soort); 143 (overgenomen reflectie is begeleiderstekst) |
+| 100 | 3 | Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden" | ◐ deels herzien | door 101 (vragen kort en uitgebreid per soort); 143 (overgenomen reflectie is begeleiderstekst); aangevuld door 154 (werkgebied ook in de database) |
 | 99 | 3 | Trainers begeleiden via een traject, met de KNVB-begeleidingscyclus; tabblad Trainers | ◐ deels herzien | door 100 (vragenlijst kort of uitgebreid per niveau; notities gedeeld per bouw met de TC); door 101 (vragenlijst vooraf per soort); 129 (observeren: snelle notities tijdens, aandachtspunten na afloop); 134 (moment verplaatsen of *niet doorgegaan*); 143 (kennismaking en reflectie alleen door de trainer; geen toegang voor een beheerder zonder begeleidersrol) |
 | 98 | 3 | Verantwoordelijkheid: iedere rol doet zijn eigen werk, de laag erboven is het vangnet | ✅ geldt |  |
 | 97 | 3 | Bouwen, werkgebied en focus, signalen die ertoe doen, trainersdossier | ◐ deels herzien | door 99 (traject per trainer in plaats van 2 + 2; tabblad Trainers; VOG en diploma bij de coördinator); door 100 (werkgebied bij de rol, rol TC gebouwd) |
@@ -686,6 +687,20 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
 ### Vuistregel voor nieuwe ideeën
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
+
+---
+
+## Besluit 154 — Begeleider ziet alleen trainers in zijn werkgebied, ook in de database (Spoor 3, maat L)
+> Vult Besluit 100 aan (werkgebied) en raakt Besluit 134 (meekijken, voorstel 032) en 143 (migratie 033).
+*Besloten 4 november 2026: de initiatiefnemer koos richting A uit `docs/onderzoek/hjo-werkgebied-rechten/voorstel.md`. Aanleiding: bij de controle van het benchmarkrapport bleek dat het werkgebied (Besluit 100) in de app geldt, maar in de database alleen bij de notities. Dit besluit legt de regel vast; de databasewijziging zelf is nog niet gebouwd of toegepast.*
+- **De regel.** Een HO of TC leest en schrijft de gegevens van een trainer alleen als zijn werkgebied **leeg** is (de hele club) of een **bouw deelt** met een team waar die persoon **trainer** is. Dit geldt voor kennismaking en eigen reflectie (`trainerzelf`), dossier, traject en begeleidingsmomenten (`trainerdossier`) en straks de trainingen bij meekijken (`trainerplan`, voorstel 032). De notities (`hoprive`) werkten al zo.
+- **De bouw wordt in de database berekend** uit het team van de trainer (de leeftijd in de categorie of teamcode) en de bouwen van de club, net als `CC.bouwVan` in de app. Niets wordt bij de rij opgeslagen; na een teamwissel of een andere indeling van de bouwen volgt de zichtbaarheid vanzelf.
+- **Het werkgebied ís de toewijzing.** Geen aparte toewijzing per begeleider (`traject.door`) en geen extra regel voor de oude begeleider na een teamwissel: HO en TC van dezelfde bouw werken samen en kunnen elkaar vervangen (Besluit 98, 100).
+- **Randgevallen:** trainer van teams in twee bouwen → beide werkgebieden; trainer zonder team of zonder leeftijd in de teamnaam → *Overig*, alleen een begeleider van de hele club; de trainer ziet altijd zijn eigen gegevens.
+- **`admin` telt hier niet meer.** De rol `hjo` geeft via `admin` geen toegang tot deze trainersgegevens buiten het werkgebied; de clubbeheerder zonder begeleidersrol ziet ze niet (zoals met 033).
+- **Privacy:** het gaat om gegevens over volwassen vrijwilligers (kennismaking, reflectie, observaties, ontwikkelpunt), geen spelersgegevens. Na de wijziging: de trainer zelf en de HO's en TC's van zijn bouw of van de hele club. Een bewaartermijn voor trainersdossiers is nog niet afgesproken (zie *Nog te bespreken*).
+- **Uitvoering, elk na apart akkoord:** (1) migratie 034 als voorstel, met de twaalf lokale tests uit het voorstel en 032 erop aangepast; (2) toepassen in productie samen met of na 033, daarna `priv.rechtentest()` en de app nalopen. Vooraf alleen lezen: welke bouwen DCG en Swift ingesteld hebben (bij Swift past *HJO bovenbouw O14–O19* niet vanzelf op de standaard Middenbouw 13–15 · Bovenbouw 16–19) en of er nu een HO of TC met een kleiner werkgebied is.
+- **Nog niet besloten:** of de rol `hjo` met een werkgebied voor de clubgegevens (regels, teams, signalen) nog de rechten van de hele club houdt (`priv.cc_admin()`). Apart bespreken.
 
 ---
 
@@ -1423,6 +1438,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Elke vraag hoort bij een onderdeel van het A4** (trainingsdoel, organisatie, leersituatie creëren, leersituatie beïnvloeden, coachgedrag, persoonlijk leerdoel). De begeleider ziet dat label bij elk antwoord, zodat een vaag antwoord meteen laat zien waar hij moet kijken. De trainer ziet alleen de vragen.
 
 ## Besluit 100 — Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden"
+> **◐ Aangevuld door Besluit 154** (het werkgebied geldt ook in de database voor kennismaking, reflectie, dossier en begeleidingsmomenten, niet alleen voor de notities).
 > **◐ Deels herzien door Besluit 143** (overnemen uit het evaluatieformulier: de reflectie wordt begeleiderstekst in het moment, de trainer neemt hem zelf over).
 *Besloten 10 oktober 2026, voor de test bij een tweede club (HO + TC, twee trainers, geen ouders). Vult Besluit 97, 98 en 99 aan.*
 > **◐ Deels herzien door Besluit 101** (de vragenlijst vooraf: eigen vragen voor training en wedstrijd, als voormeting).
@@ -2495,6 +2511,7 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 ---
 
 ## Nog te bespreken
+- **Bewaartermijn trainersdossiers (Besluit 154):** bijvoorbeeld seizoen + 1 jaar archiveren, verwijderen als iemand geen trainer meer is. **Rol HJO met werkgebied:** houdt die voor de clubgegevens de rechten van de hele club (`priv.cc_admin()`)?
 - **Documentatie (Besluit 151):** blijven de PowerPoints naast de PDF's bestaan (advies: ja voor bestuur en presentatie, alleen PDF voor trainers)? En wie mag een uitgave versturen: alleen de initiatiefnemer, of ook een HJO van een club?
 - **KNVB-profiel vullen** (Besluit 135): leerlijnen, leerdoelen per leeftijd en sjablonen van de KNVB, gecontroleerd. Nodig voor A/B en minuten per leerdoel bij Swift en nieuwe clubs. Wie levert de inhoud, en welke bron is leidend?
 - **Rechtenwijziging meekijken en clubbank** (Besluit 134): akkoord op het rechtenvoorstel.
