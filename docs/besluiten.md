@@ -692,12 +692,12 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Nummerknop, nummer staat er al:** die speler wordt **gekozen** (verplaatsen, nummer wijzigen, bewust verwijderen). Een nummerknop verwijdert **nooit**; verwijderen gaat alleen met *Verwijderen* (of Delete) en kan ongedaan worden gemaakt.
   - **Dubbel nummer:** eerst de speler die het eerst is neergezet; nog een keer tikken = de volgende met dat nummer, daarna weer de eerste. Kiezen verandert niets aan de tekening.
   - Een speler die **met een knop** is gekozen, **houdt zijn nummer**: een volgende knop kiest of zet neer (5 en dan 7 tikken = speler 7 kiezen, niet speler 5 hernummeren).
-- **Nummer wijzigen:** tik de speler **op het veld** aan en tik een nummer (geen ruil meer; dubbel mag, de knop toont *2×*), of *Ander nummer…* (1–99, leeg = zonder nummer; werkt ook na kiezen met een knop, handig op de telefoon). Een knop van het **andere team** wijzigt de gekozen speler niet.
+- **Nummer wijzigen:** tik de speler **op het veld** aan en tik een nummer (geen ruil meer; dubbel mag, de knop toont *2×*). Dat is **één** wijziging: daarna kiest of plaatst de volgende knop weer (nog eens wijzigen = de speler opnieuw aantikken). Of *Ander nummer…*: alleen een **heel getal van 1 tot en met 99** (`12abc`, `3.5`, `0` en `100` worden geweigerd), leeg = zonder nummer; werkt ook na kiezen met een knop, handig op de telefoon. Een knop van het **andere team** wijzigt de gekozen speler niet.
 - **Nieuwe speler** (gereedschap, dupliceren, ander team kiezen): het **eerste vrije** nummer in dat team, niet meer *hoogste + 1*.
-- **Opstelling** gebruikt de nummers van de balk: elke plek heeft een vast nummer uit de 1-4-3-3 (2-1-2 = 3, 4, 6, 8, 10; 3-3-1 = 2, 3, 5, 6, 8, 9, 10 met de spits 9); de keeper hoort bij zijn team (nieuw, optioneel `team`) en telt als nummer 1. Is een nummer al bezet, dan het dichtstbijzijnde vrije.
+- **Opstelling** gebruikt de nummers van de balk: elke plek heeft een vast nummer uit de 1-4-3-3 (2-1-2 = 3, 4, 6, 8, 10; 3-3-1 = 2, 3, 5, 6, 8, 9, 10 met de spits 9); de keeper hoort bij zijn team (nieuw, optioneel `team`) en telt als nummer 1. Is een nummer al bezet, dan het dichtstbijzijnde vrije. Staan er meer keepers van één team, dan telt elke keeper als 1 (de knop toont *2×*) en kiest de knop ze om de beurt.
 - **Bestaande tekeningen:** de tekencode en het opslagformaat zijn niet veranderd. Openen en opslaan geeft precies dezelfde gegevens; oude dubbele nummers, nummer 12 en een keeper zonder team blijven zoals ze zijn (zo'n keeper telt nergens mee). Geen migratie.
 - **Niet in dit besluit** (apart bespreken, prioriteiten 3–6 in de chat *Ontwikkeling Tekentool*): het kleine aanraakvlak op de telefoon, het menu dat op de telefoon het veld bedekt, veld wisselen verplaatst spelers, objectverhoudingen en veldweergaven.
-- Tests: `tests/tekentool-nummering.spec.js` (8) en `tests/app.spec.js` (*nummerbalk en rood schijfje*).
+- Tests: `tests/tekentool-nummering.spec.js` (11) en `tests/app.spec.js` (*nummerbalk en rood schijfje*).
 
 ---
 

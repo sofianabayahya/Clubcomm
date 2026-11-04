@@ -118,7 +118,16 @@
 - Veld wisselen verplaatst niets: na 3-3-1 voor beide teams op *11×11 liggend* staan op *11×11 staand* 7 spelers buiten de lijnen.
 - Op *Half veld* komt de keeper van het eigen team bij de middenlijn, niet in het doel.
 
-**Tests (4-11):** `tests/tekentool-nummering.spec.js` 8 tests, alle 13 `@tekentool` groen. Volledige `npm test`: 88 van 89 groen. De ene fout (*nieuwe fase: pas een kleur vanaf 6 keer gemeten*, `@afmelden`) faalt op `main` precies zo (3 van 3), hangt af van de datum van vandaag in de demo en heeft niets met de tekentool te maken.
+**Tests (4-11):** `tests/tekentool-nummering.spec.js` 11 tests, alle 16 `@tekentool` groen. Volledige `npm test`: 88 van 89 groen. De ene fout (*nieuwe fase: pas een kleur vanaf 6 keer gemeten*, `@afmelden`) faalt op `main` precies zo (3 van 3), hangt af van de datum van vandaag in de demo en heeft niets met de tekentool te maken.
+
+## Controles 2, na bespreking met ChatGPT (4-11)
+| # | Vraag | Uitkomst | Soort | Gevolg |
+|---|---|---|---|---|
+| 5 | Accepteert *Ander nummer…* alleen hele getallen 1–99? | **Nee:** `12abc` werd 12 en `3.5` werd 3 (de invoer werd vanaf het begin gelezen). `0`, `100`, `-5` en `abc` werden wel geweigerd; leeg gaf zonder nummer | bevestigde fout | **Hersteld:** alleen 1 of 2 cijfers, 1–99; spaties eromheen mogen. Getest met `12abc`, `3.5`, `0`, `100`, `-5`, `1e1`, `abc`, `7 8`, ` 14 `, `99`, `1` en leeg |
+| 6 | Meerdere keepers van hetzelfde team | Kiezen ging goed (om de beurt) en de telling voor nieuwe spelers ook (geen tweede 1). **Maar** knop 1 toonde niet *2×* en de schermlezer zei geen *"staat er 2 keer"* | bevestigde fout (weergave) | **Hersteld:** elke keeper van het team telt mee in de weergave |
+| 7 | Reeks: kiezen met de knop → op het veld → ander team → opnieuw een nummer | Kiezen met de knop, een knop van het andere team, en kleur wisselen gaven geen onbedoelde wijziging. **Maar:** na een speler op het veld te kiezen en een nummer te geven, bleef hij "in wijzigen". Een volgende tik (bedoeld om speler 3 te kiezen) gaf hém ook nummer 3 → twee keer 3 | bevestigde fout | **Hersteld:** op het veld kiezen geeft **één** nummerwijziging; daarna kiest of plaatst de volgende knop weer |
+
+**Theoretisch risico (niet aangepast):** welke speler "met een knop gekozen" is, wordt onthouden als plek in de lijst. Als spelers worden verwijderd terwijl die keuze nog onthouden is, kan de plek in theorie bij een andere speler horen. In alle gangbare handelingen (verwijderen, ongedaan maken, alles wissen, opnieuw kiezen) wordt de keuze gewist of opnieuw gezet. Geen reeks gevonden waarin dit misgaat.
 
 ## Nog te doen vóór samenvoegen
 1. Pull request controleren, CI groen op GitHub.

@@ -494,7 +494,9 @@
         // Gekozen speler krijgt dit nummer. Heeft een teamgenoot het al, dan komt het bewust twee keer voor (geen ruil meer).
         // Zelfde nummer nog eens tikken: niets wijzigen; staat het er dubbel, dan de volgende speler met dat nummer kiezen.
         if ((gk.n || 0) === (n || 0)){ var zelf = n ? indexenVanNummer(kleur, n) : []; if (zelf.length > 1) kiesVolgende(zelf); return; }
-        snapshot(); gk.n = n || 0; render(); return;
+        // Eén nummer per keer: daarna houdt de speler zijn nummer (de volgende knop kiest of zet neer, zoals na kiezen met
+        // een knop). Nog eens wijzigen = de speler opnieuw op het veld aantikken.
+        snapshot(); gk.n = n || 0; st.viaBalk = st.sel; render(); return;
       }
       if (!n){
         snapshot();
@@ -515,9 +517,10 @@
       var gk = gekozenSpeler(); if (!gk) return;
       var t = window.prompt("Rugnummer (1–99, leeg = zonder nummer)", gk.n ? String(gk.n) : "");
       if (t == null) return;
-      var n = parseInt(String(t).trim(), 10);
-      if (String(t).trim() !== "" && !(n >= 1 && n <= 99)){ showToast("Kies een nummer van 1 tot en met 99"); return; }
-      snapshot(); gk.n = String(t).trim() === "" ? 0 : n; render();
+      // Alleen een heel getal van 1 tot en met 99 (geen "12abc", "3.5" of "1e1"); leeg = zonder nummer.
+      var tekst = String(t).trim(), n = /^[0-9]{1,2}$/.test(tekst) ? Number(tekst) : NaN;
+      if (tekst !== "" && !(n >= 1 && n <= 99)){ showToast("Kies een heel nummer van 1 tot en met 99"); return; }
+      snapshot(); gk.n = tekst === "" ? 0 : n; render();
     }
     // Knoppen bij Spelers (links) tonen dezelfde vorm als op het veld
     function spelerIconen(){
@@ -536,7 +539,7 @@
       bak.innerHTML = kop + NR_TEAMS.map(function(tm){
         var kleur = tm[0], ink = TEAM[kleur].ink, fill = TEAM[kleur].fill;
         var zonder = st.items.filter(function(x){ return x.t === "p" && x.c === kleur && !x.n; }).length;
-        var aantal = function(n){ return st.items.filter(function(x){ return x.t === "p" && x.c === kleur && x.n === n; }).length + (n === 1 && st.items.some(function(x){ return x.t === "p" && x.c === "keeper" && x.team === kleur; }) ? 1 : 0); };
+        var aantal = function(n){ return st.items.filter(function(x){ return x.t === "p" && x.c === kleur && x.n === n; }).length + (n === 1 ? st.items.filter(function(x){ return x.t === "p" && x.c === "keeper" && x.team === kleur; }).length : 0); }; // elke keeper van het team telt als 1
         var knop = function(n){
           var keer = aantal(n), aan = gk ? gk.c === kleur && (gk.n || 0) === n : keer > 0;
           // Met een gekozen speler blijft zichtbaar welke nummers in het team al op het veld staan (omrand).

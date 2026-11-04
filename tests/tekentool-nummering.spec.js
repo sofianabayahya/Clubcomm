@@ -250,3 +250,89 @@ test('nummering: telefoon, nummerknoppen geven geen onbedoelde plaatsing of verw
   expect((await spelers(page)).sort()).toEqual(voor);
   expect(fouten).toEqual([]);
 });
+
+// Controles 2 (na bespreking met ChatGPT): invoer van Ander nummer…, meerdere keepers van één team, en een reeks
+// wisselingen tussen kiezen met de knop, kiezen op het veld en een ander team.
+test('nummering: Ander nummer… accepteert alleen hele getallen 1 tot en met 99; leeg = zonder nummer', TAG, async ({ page }) => {
+  const fouten = volgFouten(page);
+  await open(page);
+  await menuSpelers(page);
+  await page.locator('[data-nr="rood|4"]').click(); // speler 4 neerzetten
+  await page.locator('[data-nr="rood|4"]').click(); // en kiezen
+  const geef = async (tekst) => { page.once('dialog', (dl) => dl.accept(tekst)); await page.locator('[data-nr-ander]').click(); return page.evaluate(() => { const g = document.querySelector('#drawSvg g[filter]'); return g ? (g.querySelector('text') || { textContent: '' }).textContent : null; }); };
+  for (const fout of ['12abc', '3.5', '0', '100', '-5', '1e1', 'abc', '7 8']) expect(await geef(fout), `invoer "${fout}"`).toBe('4'); // geweigerd, nummer blijft 4
+  expect(await geef(' 14 ')).toBe('14'); // spaties eromheen mogen
+  expect(await geef('99')).toBe('99');
+  expect(await geef('1')).toBe('1');
+  expect(await geef('')).toBe(''); // leeg = zonder nummer
+  const d = await opslaan(page);
+  expect(d.items.filter((x) => x.t === 'p').map((x) => x.n || 0)).toEqual([0]);
+  expect(fouten).toEqual([]);
+});
+
+test('nummering: twee keepers van hetzelfde team (telling, kiezen, weergave)', TAG, async ({ page }) => {
+  const fouten = volgFouten(page);
+  await laadOud(page, { field: 'liggend', zoom: true, items: [
+    { t: 'p', c: 'keeper', team: 'rood', x: 60, y: 300 }, { t: 'p', c: 'keeper', team: 'rood', x: 60, y: 400 }, { t: 'p', c: 'rood', n: 2, x: 200, y: 340 } ] });
+  await menuSpelers(page);
+  await expect(page.locator('[data-nr="rood|1"]')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('[data-nr="rood|1"]')).toHaveAttribute('aria-label', /staat er 2 keer/);
+  await page.locator('[data-nr="rood|1"]').click();
+  expect(await gekozenPlek(page)).toBe('translate(60 300)');
+  await page.locator('[data-nr="rood|1"]').click();
+  expect(await gekozenPlek(page)).toBe('translate(60 400)');
+  await page.locator('[data-nr="rood|1"]').click();
+  expect(await gekozenPlek(page)).toBe('translate(60 300)');
+  // Met een keeper gekozen: een vrij nummer tikken zet een veldspeler neer, de keeper verandert niet
+  await page.locator('[data-nr="rood|5"]').click();
+  await page.locator('.draw-fly-x').click(); await page.locator('[data-draw-select]').click();
+  const veld = await page.locator('#drawSvg').boundingBox();
+  await page.keyboard.press('1');
+  await page.mouse.click(veld.x + veld.width * 0.5, veld.y + veld.height * 0.15);
+  const d = await opslaan(page);
+  expect(d.items.filter((x) => x.c === 'keeper')).toEqual([{ t: 'p', c: 'keeper', team: 'rood', x: 60, y: 300 }, { t: 'p', c: 'keeper', team: 'rood', x: 60, y: 400 }]);
+  expect(d.items.filter((x) => x.c === 'rood').map((x) => x.n).sort((a, b) => a - b)).toEqual([2, 3, 5]); // nieuw = 3, geen tweede 1
+  expect(fouten).toEqual([]);
+});
+
+test('nummering: kiezen met de knop, op het veld, ander team, opnieuw een nummer: geen onbedoelde wijziging', TAG, async ({ page }) => {
+  const fouten = volgFouten(page);
+  await open(page);
+  await menuSpelers(page);
+  for (const n of [2, 3, 5]) await page.locator(`[data-nr="rood|${n}"]`).click();
+  for (const n of [4, 9]) await page.locator(`[data-nr="geel|${n}"]`).click();
+  const start = ['geel4', 'geel9', 'rood2', 'rood3', 'rood5'];
+  const stand = () => page.evaluate(() => [...document.querySelectorAll('#drawSvg g[data-i]')].map((g) => ({ '#E53935': 'rood', '#F2D100': 'geel' }[g.querySelector('circle,path').getAttribute('fill')] + g.querySelector('text').textContent)).sort());
+  // 1. kiezen met de knop (3), dan andere knoppen van hetzelfde team: kiezen, nooit hernummeren
+  await page.locator('[data-nr="rood|3"]').click();
+  await page.locator('[data-nr="rood|5"]').click();
+  expect(await gekozenLabel(page)).toBe('5'); expect(await stand()).toEqual(start);
+  // 2. knop van het andere team terwijl rood 5 met de knop gekozen is: kiest geel 9
+  await page.locator('[data-nr="geel|9"]').click();
+  expect(await gekozenLabel(page)).toBe('9'); expect(await stand()).toEqual(start);
+  // 3. op het veld rood 2 kiezen, dan een knop van het andere team (geel 4): rood 2 blijft 2, geel 4 wordt gekozen
+  await kiesSpeler(page, '2');
+  await page.locator('[data-nr="geel|4"]').click();
+  expect(await gekozenLabel(page)).toBe('4'); expect(await stand()).toEqual(start);
+  // 4. weer met de knop (rood 2), dan een vrij nummer (rood 7): er komt een speler 7 bij, 2 blijft 2
+  await page.locator('[data-nr="rood|2"]').click();
+  await page.locator('[data-nr="rood|7"]').click();
+  expect(await stand()).toEqual([...start, 'rood7'].sort());
+  // 5. op het veld rood 7 kiezen en bewust nummer 8 geven: alleen dat is een hernummering
+  await kiesSpeler(page, '7');
+  await page.locator('[data-nr="rood|8"]').click();
+  expect(await stand()).toEqual([...start, 'rood8'].sort());
+  // 6. daarna met de knop rood 3 kiezen en geel 9: geen wijziging
+  await page.locator('[data-nr="rood|3"]').click();
+  await page.locator('[data-nr="geel|9"]').click();
+  expect(await stand()).toEqual([...start, 'rood8'].sort());
+  // 7. teamkleur van een gekozen speler wisselen (rood 3 → geel): eerste vrije geel nummer, daarna een rode knop wijzigt hem niet
+  await page.locator('.draw-fly-x').click();
+  await kiesOpVeld(page, '3');
+  await page.locator('#drawKleur [data-kleur="geel"]').click();
+  await page.locator('[data-rail="spelers"]').click();
+  await page.locator('[data-nr="rood|5"]').click();
+  expect(await stand()).toEqual(['geel1', 'geel4', 'geel9', 'rood2', 'rood5', 'rood8']);
+  expect(await gekozenLabel(page)).toBe('5');
+  expect(fouten).toEqual([]);
+});
