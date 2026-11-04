@@ -24,6 +24,7 @@ insert into public.lid (auth_uid, club_id, persoon_id) values
   ('00000000-0000-0000-0000-0000000000e9','be','OU');
 insert into public.rij (club_id, soort, id, scope, team_id, speler_id, persoon_id, act_id, data) values
   ('be','club','club','club',null,null,null,null,'{"naam":"Club BE"}'),
+  ('be','teams','T1','club','T1',null,null,null,'{"id":"T1","cat":"O14"}'),  -- O14 = Middenbouw, zodat 'HO met bouw' ook onder Besluit 154 (voorstel 034) zijn trainer ziet
   ('be','people','TR','persoon',null,null,'TR',null,'{"id":"TR","rollen":[{"rol":"trainer","teamId":"T1"}]}'),
   ('be','people','T2','persoon',null,null,'T2',null,'{"id":"T2","rollen":[{"rol":"trainer","teamId":"T2"}]}'),
   ('be','people','HO','persoon',null,null,'HO',null,'{"id":"HO","rollen":[{"rol":"hjo"}]}'),
