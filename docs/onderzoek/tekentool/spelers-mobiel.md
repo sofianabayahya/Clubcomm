@@ -65,3 +65,40 @@
 4. De wissel rondje ⇄ driehoek werkt in het paneel.
 5. Een weggetikte tip blijft weg bij de volgende tekening.
 6. De laptop is ongewijzigd: de bestaande `@tekentool`-tests blijven groen.
+
+## 6. Voorbeeld: A + A+ samen met roze en oranje als team (4-11)
+*Akkoord op A + A+. De vraag erbij: roze en oranje als team, met een vorm die je zelf kiest. Simulatie in de browser, niets gebouwd. De oefenvorm op het veld is verzonnen.*
+
+![Telefoon 390 px: compacte bovenbalk, paneel onderaan, team Oranje gekozen](spelers-kleuren-390.png) ![Telefoon 360 px](spelers-kleuren-360.png)
+
+![Laptop: hetzelfde paneel naast de rail](spelers-kleuren-laptop.png)
+
+**Wat je ziet:**
+- **Bovenbalk telefoon (A+):** twee vaste regels, *Annuleren · ↶ ↷ · Opslaan* en *Veld · Opstelling · ⚙*: 111 px in plaats van 171 (390 px) of 223 (360 px). De tip staat er niet meer, omdat hij is weggetikt en onthouden.
+- **Teamkeuze:** zes knoppen met kleur én vorm: rood ●, geel ▲, lichtblauw ●, blauw ▲, **oranje ■** en **roze ■**. Rood heet *Eigen team*, geel *Tegenstander*; de andere teams heten naar hun kleur.
+- **Vorm per team:** naast de teamnaam kies je **rondje, driehoek of vierkant** (nieuw: vierkant). De keuze wordt per tekening bewaard, net als nu (`vormen`, Besluit 125).
+- **Nummers 1–11, *Zonder nummer* en *Ander nummer…*** voor het gekozen team. Dat geldt dus voor **alle** teamkleuren, niet meer alleen voor rood en geel.
+- ***＋ Losse speler*** (in het gekozen team; daarna tik je op het veld, zoals in Besluit 152), **Trainer** en **Keeper**.
+
+**Gemeten in het voorbeeld:**
+| Scherm | Veld | Paneel | Veld zichtbaar |
+|---|---|---|---|
+| 390 × 844 | 196–424 px | vanaf 464 px | **volledig** |
+| 360 × 780 | 196–391 px | vanaf 350 px | ± 80% |
+| laptop | ongewijzigde plek | 394 px hoog, naast de rail | zoals nu |
+
+**Kleuren:**
+- **Oranje team:** `#FFA000` met donkere cijfers (contrast ± 10 : 1).
+- **Roze team:** `#F06292` met donkere cijfers (± 6,5 : 1).
+- Ze zijn bewust anders dan de oranje en roze **hoedjes** (`#F26A1B`, `#E91E8C`). Een hoedje heeft bovendien zijn eigen vorm.
+- Op het materiaalbriefje tellen ze mee als hesjes, net als lichtblauw, geel en blauw.
+
+**Bestaande tekeningen:**
+- Er verandert niets aan wat er al staat.
+- Teams zonder gekozen vorm houden hun huidige vorm.
+- Het vierkant komt er alleen bij als je het kiest.
+
+**Keuzes:**
+1. **Op de laptop hetzelfde paneel** (één team tegelijk, zoals in het beeld), of daar beide rijen (*Eigen team* en *Tegenstander*) tegelijk houden zoals nu? Mijn advies: hetzelfde paneel. Je leert de bediening één keer, en met zes teams passen niet alle rijen tegelijk.
+2. **Standaardvorm van oranje en roze:** vierkant (zoals in het beeld)? Mijn advies is ja, want zo zijn ze naast rood ● en geel ▲ direct te onderscheiden.
+3. **Een derde vorm:** vierkant (mijn advies), of liever een ruit?
