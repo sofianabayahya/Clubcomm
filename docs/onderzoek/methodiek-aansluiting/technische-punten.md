@@ -16,6 +16,8 @@ En de **maat** volgens CLAUDE.md:
 
 ## T1. Een koppeling aanpassen verandert achteraf de minuten — **noodzakelijk** · M, plus een eenmalig script (L-controle)
 
+> **Uitgewerkt in `t1-bouwvoorstel-gereedschap-vastleggen.md` (04-11).** Dat document vervangt het voorstel hieronder.
+
 ### Wat ik heb gecontroleerd
 - **De afspraak (Besluit 121):** *"Vorm ≠ uitvoering. Een vorm in de bank heeft versies die niet meer wijzigen; een uitvoering op een training is een momentopname met een verwijzing naar de bron."*
 - **Hoe het werkelijk werkt:**
@@ -56,7 +58,7 @@ En de **maat** volgens CLAUDE.md:
 | Code | Nu | Wordt |
 |---|---|---|
 | `vh-vrijmaken-uit-de-dekkingsschaduw` | Vrijmaken uit de dekkingsschaduw | Loskomen uit de dekkingsschaduw |
-| `vh-vertragen` | Vertragen | Afremmen (open punt 1 in Spoor 1) |
+| `vh-vertragen` | Vertragen | Afremmen (akkoord 04-11) |
 | onderdeel `voetbalproblemen` | getoond als "voetbalprobleem" | "voetbalprobleemcategorie" in de app |
 | `tf-omsch-va`, `tf-omsch-av` | teamfunctie | status *vervallen* |
 
@@ -75,7 +77,7 @@ En de **maat** volgens CLAUDE.md:
 - **Voorstel:**
   - een lijst `evaluatie.kort` in het profiel: `['ev-probleem', 'ev-gedrag', 'ev-transfer', 'ev-volgende']`;
   - zonder lijst blijft het zoals nu;
-  - de vraag van `ev-probleem` wordt *"Ontstond de bedoelde situatie vaak genoeg?"*. De schaal blijft ja / deels / nee, dus de betekenis blijft gelijk.
+  - de vraagtekst van `ev-probleem` blijft **ongewijzigd**: antwoorden bewaren alleen de code en niet de tekst, dus een nieuwe tekst zou de betekenis van oude antwoorden veranderen (zie de begrippenlijst §7).
 - De bestaande antwoorden blijven geldig.
 
 ## T6. Nieuwe, optionele profielvelden — **noodzakelijk** voor de afspraken in Spoor 1 · M

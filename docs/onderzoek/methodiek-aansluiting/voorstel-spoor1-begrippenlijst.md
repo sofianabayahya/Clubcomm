@@ -1,4 +1,4 @@
-# Voorstel Spoor 1 — Begrippenlijst (versie 2, ter vaststelling, 04-11-2026)
+# Voorstel Spoor 1 — Begrippenlijst (versie 2.1, inhoudelijk akkoord als uitgangspunt, 04-11-2026)
 
 *Verwerkt de keuzes uit jouw beoordeling van 04-11. Dit is een **voorstel ter vaststelling** in Spoor 1. Het staat met opzet nog niet in `docs/methodiek/persoonlijk/`. Er is **niets** veranderd aan code, profielen, database of productie.*
 
@@ -53,7 +53,7 @@
 | Term | Afspraak | In ClubComm | Behoud |
 |---|---|---|---|
 | **Loskomen uit de dekkingsschaduw** | Nieuwe naam voor de bestaande vaardigheid onder **Vrijkomen – Timen**: de speler zonder bal maakt zichzelf aanspeelbaar. Dit is **niet** hetzelfde als *vrijmaken* bij 1v1 aanvallend. | `vh-vrijmaken-uit-de-dekkingsschaduw` (0 vormen) | De **code blijft**; alleen het label verandert. |
-| **Afremmen** | **Handeling** van de verdediger (onder 1v1 verdedigen – Controleren), bijvoorbeeld afstand houden en meebewegen in plaats van instappen. | Er is nu alleen `vh-vertragen` (0 vormen). Zie het open punt hieronder. | De code blijft. |
+| **Afremmen** | **Handeling** van de verdediger (onder 1v1 verdedigen – Controleren), bijvoorbeeld afstand houden en meebewegen in plaats van instappen. | `vh-vertragen` krijgt het label **Afremmen** (akkoord 04-11). | De code `vh-vertragen` blijft; 0 vormen, dus er verandert niets. |
 | **Vertragen** | **Beoogd effect**: de aanval komt minder snel vooruit, zodat medespelers kunnen herstellen. Je beschrijft en observeert het als effect, niet als handeling. | Geen eigen veld. Het past bij gedrag en effect in het weekplan. | — |
 | **Kaatsen** | Een individuele passhandeling. Ze is wel een onderdeel van de derde man en de één-twee. | `vh-kaatsen` | Ongewijzigd. |
 
@@ -69,7 +69,7 @@
 | Begrip | Afspraak | In ClubComm | Behoud |
 |---|---|---|---|
 | **Gepland · aangeboden · toegepast** | Drie lagen. "Het zat in de training" is niet hetzelfde als "het is geleerd". | Weekplan en `origineel` · status en minuten · `ev-transfer` en wedstrijdobservaties | Ongewijzigd. |
-| **Korte evaluatie** (4 vragen) | 1. **Doel/situatie:** ontstond de bedoelde situatie vaak genoeg? 2. **Gedrag:** was het gewenste gedrag zichtbaar? 3. **Toepassing:** kwam het terug in vrij spel of in de partij? 4. **Volgende leerstap:** behouden, één ding aanpassen, of een ander niveau? | Bestaat al als `ev-probleem`, `ev-gedrag`, `ev-transfer` en `ev-volgende`. Nu staan standaard open: probleem, gedrag, weerstand. | De 4 bestaande codes worden hergebruikt **met dezelfde betekenis en schaal**. De andere 7 vragen blijven beschikbaar (ingeklapt). De antwoorden van 29-10 en 30-10 blijven leesbaar. |
+| **Korte evaluatie** (4 vragen) | Vier onderwerpen: **doel/situatie**, **gedrag**, **toepassing** en **volgende leerstap**. Bij DCG gebruiken ze de bestaande vragen **met de tekst van nu**: *Probleem vaak genoeg ontstaan?* · *Gewenst gedrag zichtbaar?* · *Transfer naar vrij spel* · *Volgende training*. | Bestaat al als `ev-probleem`, `ev-gedrag`, `ev-transfer` en `ev-volgende`. Nu staan standaard open: probleem, gedrag, weerstand. | De 4 bestaande codes worden hergebruikt **met dezelfde vraagtekst, betekenis en schaal**. Gecontroleerd: bij een antwoord wordt alleen de code en de keuze bewaard (bijvoorbeeld `"ev-probleem": "ja"`), **niet de vraagtekst**. Een nieuwe tekst zou dus ook de oude antwoorden een andere vraag geven. Daarom verandert de tekst van `ev-probleem` niet. Wil je later toch een andere formulering, dan wordt dat een **nieuwe code** (bijvoorbeeld `ev-situatie`) en krijgt `ev-probleem` de status *vervallen*. De andere 7 vragen blijven beschikbaar (ingeklapt). De antwoorden van 29-10 en 30-10 blijven leesbaar. |
 | **Adaptieve periodisering** | Twee dingen tegelijk: een **geplande ontwikkelroute** en **bijsturing op wat je ziet**. De volgende leerstap hangt af van het gedrag van de spelers. Een volgorde als kennismaken → verdiepen → meer weerstand → toepassen is een **voorbeeld**, geen verplichte ladder. | Principes en model in het profiel. `ev-volgende` werkt al als bijsturingsknop. | De planning blijft bewaard (`origineel`). Een bijsturing verandert alleen latere weken. |
 
 ## 8. Themalessen
@@ -83,8 +83,7 @@
 
 ## Nog open in Spoor 1 (inhoud, geen bouwwerk)
 
-1. **De code `vh-vertragen` en het onderscheid afremmen/vertragen.** De vaardigheid is een handeling, dus het label zou **Afremmen** worden. *Vertragen* blijft dan het woord voor het effect. Akkoord? (Er hangen 0 vormen aan, dus er gaat niets mis.)
-2. **Welke trainingsaccenten komen er** naast *Beschermen en vrijmaken*? Advies: pas iets toevoegen als het in trainingen echt terugkomt.
-3. **Wie vult de bibliotheek met voorbeeldsituaties aan:** alleen de HO, of ook de trainer (eigen uitdaging bewaren als voorbeeld)?
-4. **Inhoud van de 11 themalessen** (draaiboeken). Pas daarna kunnen we de relatie met de 6 onderwerpen bepalen.
-5. **Positiegebonden handelingen:** de uitwerking in Spoor 1.
+1. **Welke trainingsaccenten komen er** naast *Beschermen en vrijmaken*? Advies: pas iets toevoegen als het in trainingen echt terugkomt.
+2. **Wie vult de bibliotheek met voorbeeldsituaties aan:** alleen de HO, of ook de trainer (eigen uitdaging bewaren als voorbeeld)?
+3. **Inhoud van de 11 themalessen** (draaiboeken). Pas daarna kunnen we de relatie met de 6 onderwerpen bepalen.
+4. **Positiegebonden handelingen:** de uitwerking in Spoor 1.

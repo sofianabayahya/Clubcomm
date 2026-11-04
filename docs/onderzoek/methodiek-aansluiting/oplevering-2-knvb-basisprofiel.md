@@ -34,7 +34,7 @@ Herkomst:
 | 1 | **Teamfuncties** | Aanvallen · Verdedigen | KNVB | noodzakelijk |
 | 2 | **Teamtaken** met intentie | Opbouwen (scoringskans creëren) · Scoren (scoringskans benutten) · Verstoren van het opbouwen (scoringskans voorkomen) · Voorkomen van scoren (benutten van een scoringskans voorkomen) | KNVB (de sheet uit Matrix v3/Compact v1; zie §4) | noodzakelijk |
 | 3 | **Overgangsmomenten** | Balverlies · balverovering | KNVB-begrip *omschakelen*; ClubComm-formulering als "moment" | optioneel |
-| 4 | **Voetbalhandelingen** (= de leerlijnen, voor A en B en de minuten in Lijn) | Aannemen en meenemen · Passen · Dribbelen en passeren · Schieten · Vrijlopen · Bal afpakken (druk zetten en duel) | KNVB, te controleren. Vrijlopen is een ClubComm-aanvulling, ook te controleren. | noodzakelijk |
+| 4 | **ClubComm-startset voetbalhandelingen** (= de leerlijnen, voor A en B en de minuten in Lijn) | Aannemen en meenemen · Passen · Dribbelen en passeren · Schieten · Vrijlopen · Bal afpakken (druk zetten en duel) | **ClubComm-startset**, géén vastgestelde officiële KNVB-indeling (04-11). De woorden zijn KNVB-herkenbaar; ze moeten getoetst worden aan gecontroleerde KNVB-bronnen, waaronder het *overzicht teamfuncties en doelstellingen*. | noodzakelijk |
 | 5 | **Voorbeeldsituaties** (2 per teamtaak, uitbreidbaar) | zie §3 | ClubComm | optioneel (de trainer kan altijd zelf formuleren) |
 | 6 | **Trainingsopbouw** | Sjabloon *60 min*: Start (warming-up) 10 · A voetbalvorm 15 · B voetbalvorm 15 · Toepassing · partij 20. Sjabloon *75 min*: 10 · 20 · 20 · 25. | Volgorde: KNVB (warming-up → voetbalvormen → partijvorm), te controleren. Minuten: ClubComm. | noodzakelijk |
 | 7 | **Methodiek, 3 uitgangspunten** | (a) Van wedstrijd naar training en weer terug naar de wedstrijd. (b) Leren in een echte voetbalsituatie, met tegenstander en medespelers. (c) Veel spelen, veel balcontacten, plezier. | KNVB, te controleren | noodzakelijk (als korte uitleg) |
@@ -113,8 +113,14 @@ Bewust **niet** overgenomen uit de DCG-hoofdcases (Spoor 1).
 | Een paar basisvormen voor een nieuwe club | ✖ | later | Tot die tijd: een eigen vorm of een link naar Rinus |
 | Eén Lijn-scherm voor iedereen | ◐ | optioneel | |
 
+## 6a. Bekende beperking: geen oefenvormen voor een nieuwe club
+
+**Een club die net begint, heeft een lege Vormenbank.** Daardoor kan een beginnende trainer nu nog **geen volledige leerweek voorbereiden zonder zelf vormen te maken**. Wat er wel is: zelf een vorm aanmaken (met de tekentool) en een link naar Rinus bij een vorm.
+
+Dit is een **erkende beperking** tot er een startaanbod is. Een startaanbod moet uit eigen ClubComm-vormen bestaan (geen kopieën van Rinus en geen DCG-vormen zonder toestemming van Spoor 1). Het hoort bij een latere stap.
+
 ## 7. Wat jij moet beslissen
 
-1. **Voetbalhandelingen als leerlijnen:** akkoord met deze 6, waarvan vrijlopen een aanvulling van ons is? Of wil je minder?
-2. **Opt-in:** de club kiest zelf voor de standaard en krijgt hem niet vanzelf. Akkoord?
+1. ~~Voetbalhandelingen als leerlijnen~~ → besloten 04-11: **ClubComm-startset**, nog toetsen aan gecontroleerde KNVB-bronnen. Daarvoor moet `www.knvb.nl` in de netwerkinstellingen van deze omgeving worden toegestaan; nu lukt het niet.
+2. ~~Opt-in~~ → akkoord 04-11: de club kiest de KNVB-gebaseerde standaard, een afgeleid profiel of een eigen profiel.
 3. **KNVB-sheet:** wil je de bron (titel, datum, versie) aanleveren, zodat de teamtaken de status *gecontroleerd* kunnen krijgen?
