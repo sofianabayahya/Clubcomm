@@ -137,7 +137,7 @@ Daarna: de app-tests (`npm test`) en de controle `priv.rechtentest()`.
 
 ## 9. Volgorde en akkoord
 
-1. **Jouw akkoord op de richting** (A, zonder de extra regel voor `traject.door`). Dan Besluit 152 (Besluit 100 krijgt *"aangevuld door 152"*).
+1. **Jouw akkoord op de richting** (A, zonder de extra regel voor `traject.door`). Dan Besluit 154 (Besluit 100 krijgt *"aangevuld door 152"*).
 2. Bouwen als `034_….sql.voorstel` + de tests van § 8, alleen lokaal. Voorstel 032 erop aanpassen.
 3. **Apart akkoord** op het toepassen in productie, samen met of na 033. Daarna `priv.rechtentest()` en de app controleren.
 
