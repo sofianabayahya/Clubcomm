@@ -1337,7 +1337,7 @@ test('opleidingsprofiel: de app leest het en laat het staan', { tag: ['@profiel'
   await controleer(page, fouten, 'profiel');
 });
 
-// Besluit 124: nummerbalk in de tekentool (nummer tikken = speler op zijn plek, nog een keer = weg, zonder nummer, nummer van een gekozen speler wijzigen)
+// Besluit 124 (deels herzien 4-11): nummerbalk in de tekentool (nummer tikken = speler op zijn plek; staat het nummer er al, dan wordt die speler gekozen en niet verwijderd; zonder nummer; nummer van een gekozen speler wijzigen)
 test('tekentool: nummerbalk en rood schijfje', { tag: ['@tekentool', '@training'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await page.setViewportSize({ width: 1366, height: 820 });
@@ -1346,11 +1346,12 @@ test('tekentool: nummerbalk en rood schijfje', { tag: ['@tekentool', '@training'
   await expect(page.locator('#drawSelBar')).toBeHidden();
   await page.locator('[data-rail="spelers"]').click(); // Besluit 126: nummers staan in het menu Spelers
   for (const n of [1, 3, 4, 6, 9, 10]) await page.locator(`[data-nr="rood|${n}"]`).click();
-  await page.locator('[data-nr="rood|4"]').click(); // weg
-  await page.locator('[data-nr="geel|0"]').click();
+  await page.locator('[data-nr="rood|4"]').click(); // staat er al: speler 4 wordt gekozen, niet verwijderd (reparatie 4-11)
+  await expect(page.locator('#drawSelBar')).toBeVisible();
+  await page.locator('[data-nr="geel|0"]').click(); // knop van het andere team: geldt niet voor de gekozen speler
   await page.locator('[data-nr="geel|0"]').click();
   await expect(page.locator('[data-nr="rood|3"]')).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.locator('[data-nr="rood|4"]')).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('[data-nr="rood|4"]')).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('[data-nr="geel|0"]')).toContainText('(2)');
   // speler 9 kiezen en nummer 11 geven (menu dicht, speler aanklikken, menu Spelers weer open)
   await page.locator('.draw-fly-x').click();
@@ -1365,7 +1366,7 @@ test('tekentool: nummerbalk en rood schijfje', { tag: ['@tekentool', '@training'
   await page.locator('#drawSave').click();
   await expect(page.locator('#drawOverlay')).toBeHidden({ timeout: 20000 });
   const items = await page.evaluate(() => JSON.parse(localStorage.getItem('cc-tekentool-test'))[0].data.items.filter((x) => x.t === 'p').map((x) => `${x.c}${x.n || ''}`).sort());
-  expect(items).toEqual(['geel', 'geel', 'rood1', 'rood10', 'rood11', 'rood3', 'rood6']);
+  expect(items).toEqual(['geel', 'geel', 'rood1', 'rood10', 'rood11', 'rood3', 'rood4', 'rood6']);
   expect(fouten).toEqual([]);
 });
 

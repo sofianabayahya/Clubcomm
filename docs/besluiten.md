@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 4 november 2026 (t/m Besluit 147; 146 staat in een open pull request)
+Laatst bijgewerkt: 4 november 2026 (t/m Besluit 148; 146 staat in een open pull request)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -21,6 +21,7 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 147; 146 staat in een open pull 
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
+| 148 | 3 | Tekentool, rugnummers: een nummerknop **verwijdert nooit** meer; staat het nummer er al, dan **kiest** hij die speler (bij een dubbel nummer eerst de eerst neergezette, nog een keer = de volgende). Een met de knop gekozen speler houdt zijn nummer; nummer wijzigen = de speler op het veld aantikken en dan een nummer (dubbel mag, geen ruil meer) of *Ander nummer…* (1–99). Nieuwe speler = **eerste vrije** nummer. *Opstelling* gebruikt de nummers van de balk (keeper hoort bij het team en is 1; spits 3-3-1 = 9). Oude tekeningen ongewijzigd, geen migratie | ✅ besloten (wacht op samenvoegen) |  |
 | 147 | 3 | Gereedschap vastleggen bij een gegeven training: per plek een momentopname (`vast`: gereedschap, *ook*, vaardigheden met hun leerlijn van toen, profiel en versie, datum, bron) bij de eerste keer *gegeven*. Daarna telt die, ook als de koppeling in de Vormenbank verandert. Ongeldige momentopname = minuten bij geen gereedschap, nooit stil terugvallen op de koppeling van nu. Terugzetten bewaart; opnieuw aanvinken legt niets nieuws vast. Correctie (andere vorm, toevoegen, ook na terugzetten) = meteen vastleggen; plek zonder momentopname op een vastgelegde training = niet toegerekend; kopiëren neemt niets mee, ook geen vastlegdatum van de doeltraining. Oude gegeven trainingen blijven ongewijzigd. Melding in de Vormenbank | geldt | — |
 | 145 | 3 | Een geplaatste vorm verplaatsen: in het venster van de vorm *Verplaatsen naar* Start · A1 · A2 · B1 · B2 · Partij; lege plek = erheen, bezette plek = wisselen; minuten, variant, notitie, vastgezet leerniveau en fase gaan mee, de plek houdt code en voorstellen; tijd blijft gelijk; ongedaan maken. Start is niet verplicht. Geen nieuw veld | ✅ geldt |  |
 | 144 | 3 | Trainingskaart in Plannen: vijf vaste regels *Wat · Waar · Welke · Niveau · Mee uit vorige*, elk met herkomst (*Eigen · Periodisering · Weekvoorstel*); het weekvoorstel staat apart en vult nooit vanzelf in; *Accenten in gekozen vormen* (geen trainingsaccent); *Mee uit vorige* toont alleen een zin die begint met *Afspraak:* plus de bestaande evaluatiegegevens, met een link; wedstrijdsituatie apart van het dagthema; één momentopname *Oorspronkelijke planning* bij de eerste wijziging van een concept; weekplan alleen weekvelden. Bestaande trainingen en weekplannen ongewijzigd | ✅ geldt (bestaande weekplannen: correctie wacht op akkoord) |  |
@@ -43,7 +44,7 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 147; 146 staat in een open pull 
 | 127 | 3 | Tekentool: loopactie en pass met boog als vaste soort | ✅ geldt |  |
 | 126 | 3 | Tekentool clean (rail met menu's, Veld/Opstelling/⚙ boven) en pijlen met boog en aanpasbare lengte | ✅ geldt |  |
 | 125 | 3 | Tekentool: rondje of driehoek per team kiezen; nummerbalk in- en uitklappen | ◐ deels herzien | door 126 (in- en uitklappen = het menu Spelers openen en sluiten) |
-| 124 | 3 | Tekentool: nummerbalk (rugnummers 1–11 en zonder nummer per team, op hun plek in de 1-4-3-3) en rood schijfje | ◐ deels herzien | door 126 (de nummerbalk staat in het menu Spelers) |
+| 124 | 3 | Tekentool: nummerbalk (rugnummers 1–11 en zonder nummer per team, op hun plek in de 1-4-3-3) en rood schijfje | ◐ deels herzien | door 126 (de nummerbalk staat in het menu Spelers); door 148 (een bestaand nummer tikken kiest de speler in plaats van verwijderen; geen ruil meer; eerste vrije nummer) |
 | 123 | 1 · 3 | Opleidingsprofiel als gegevens; DCG-fundament ingevoerd (rest open), KNVB-standaard als bestand | ◐ deels herzien | door 131 (DCG-profiel versie 2: kant per leerlijn, 8 plekken spelprincipes, sjabloon DCG 75) |
 | 122 | 3 | Tabbladen gelijk (Home links, Berichten rechts), één keer signaleren, Regels en Inzicht ingeklapt, laptop met menu links | ◐ deels herzien | door 130 (trainer met module Trainingen: Training in plaats van Planning) en 131 (laptop vanaf 900 px) |
 | 121 | 3 | Richting trainingsmodule: opleidingsprofiel per club (standaard KNVB), vorm ≠ uitvoering, bouwen in fases, ClubComm stelt voor en de trainer kiest | ✅ geldt |  |
@@ -684,6 +685,23 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 148 — Tekentool: rugnummers voorspelbaar (kiezen in plaats van verwijderen, eerste vrije nummer, één nummersysteem) (Spoor 3, maat M)
+> Herziet Besluit 124 deels.
+*Besloten 4 november 2026: de initiatiefnemer keurde de richting van voorstel A goed (`docs/onderzoek/tekentool/reparatie-nummering.md`), na drie extra controles (dubbel nummer, keeper, selectie op de telefoon). Geen database-, rechten- of opslagwijziging.*
+- **Begrippen apart:** een speler is een object op het veld; het **rugnummer** (`n`) is alleen een label dat je mag aanpassen en dat bewust dubbel mag; de **teamkleur** (`c`) is iets anders.
+- **Nummerknop, nummer staat er nog niet:** de speler komt op zijn plek in de 1-4-3-3 (gelijk aan Besluit 124).
+- **Nummerknop, nummer staat er al:** die speler wordt **gekozen** (verplaatsen, nummer wijzigen, bewust verwijderen). Een nummerknop verwijdert **nooit**; verwijderen gaat alleen met *Verwijderen* (of Delete) en kan ongedaan worden gemaakt.
+  - **Dubbel nummer:** eerst de speler die het eerst is neergezet; nog een keer tikken = de volgende met dat nummer, daarna weer de eerste. Kiezen verandert niets aan de tekening.
+  - Een speler die **met een knop** is gekozen, **houdt zijn nummer**: een volgende knop kiest of zet neer (5 en dan 7 tikken = speler 7 kiezen, niet speler 5 hernummeren).
+- **Nummer wijzigen:** tik de speler **op het veld** aan en tik een nummer (geen ruil meer; dubbel mag, de knop toont *2×*). Dat is **één** wijziging: daarna kiest of plaatst de volgende knop weer (nog eens wijzigen = de speler opnieuw aantikken). Of *Ander nummer…*: alleen een **heel getal van 1 tot en met 99** (`12abc`, `3.5`, `0` en `100` worden geweigerd), leeg = zonder nummer; werkt ook na kiezen met een knop, handig op de telefoon. Een knop van het **andere team** wijzigt de gekozen speler niet.
+- **Nieuwe speler** (gereedschap, dupliceren, ander team kiezen): het **eerste vrije** nummer in dat team, niet meer *hoogste + 1*.
+- **Opstelling** gebruikt de nummers van de balk: elke plek heeft een vast nummer uit de 1-4-3-3 (2-1-2 = 3, 4, 6, 8, 10; 3-3-1 = 2, 3, 5, 6, 8, 9, 10 met de spits 9); de keeper hoort bij zijn team (nieuw, optioneel `team`) en telt als nummer 1. Is een nummer al bezet, dan het dichtstbijzijnde vrije. Staan er meer keepers van één team, dan telt elke keeper als 1 (de knop toont *2×*) en kiest de knop ze om de beurt.
+- **Bestaande tekeningen:** de tekencode en het opslagformaat zijn niet veranderd. Openen en opslaan geeft precies dezelfde gegevens; oude dubbele nummers, nummer 12 en een keeper zonder team blijven zoals ze zijn (zo'n keeper telt nergens mee). Geen migratie.
+- **Niet in dit besluit** (apart bespreken, prioriteiten 3–6 in de chat *Ontwikkeling Tekentool*): het kleine aanraakvlak op de telefoon, het menu dat op de telefoon het veld bedekt, veld wisselen verplaatst spelers, objectverhoudingen en veldweergaven.
+- Tests: `tests/tekentool-nummering.spec.js` (11) en `tests/app.spec.js` (*nummerbalk en rood schijfje*).
+
+---
+
 ## Besluit 147 — Gereedschap vastleggen bij een gegeven training (Spoor 3, maat M)
 *Besloten 4 november 2026, na het bouwvoorstel `docs/onderzoek/methodiek-aansluiting/t1-bouwvoorstel-gereedschap-vastleggen.md` (branch `analyse/methodiek-aansluiting`) en het akkoord van de initiatiefnemer met drie aanvullingen. Werkt Besluit 121 uit voor de minuten (*"een uitvoering is een momentopname"*); herziet Besluit 141 deels. Geen migratie, geen nieuwe rechten; geen versiebeheer van vormen.*
 - **Probleem:** de minuten per gereedschap werden steeds opnieuw berekend uit de **huidige** koppeling van een vorm. Een koppeling aanpassen in de Vormenbank veranderde dus ongemerkt de minuten van trainingen die al gegeven waren.
@@ -1104,6 +1122,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ## Besluit 124 — Tekentool: nummerbalk voor rugnummers en een rood schijfje
 > **◐ Deels herzien door Besluit 126 (de nummerbalk staat in het menu Spelers)** (zie Register).
+> **◐ Deels herzien door Besluit 148:** *nog een keer tikken = weg* geldt niet meer (een bestaand nummer tikken kiest de speler; verwijderen alleen met *Verwijderen*); een gekozen speler krijgt het nummer **zonder ruil** (dubbel mag bewust), alleen als hij op het veld is gekozen; nieuwe spelers krijgen het eerste vrije nummer.
 *Besloten 27 oktober 2026, na een voorbeeld (`docs/onderzoek/trainingsmodule-2/t-nummerbalk.png`). Aanleiding: voor de juiste rugnummers moest je eerst 1 t/m 10 neerzetten en de rest weer verwijderen, voor beide teams; een speler zonder nummer kon niet.*
 - **Nummerbalk boven het veld:** per team (*Eigen team* rood, *Tegenstander* geel) de knoppen 1–11 en *+ Zonder nummer*.
   - Tik een nummer: die speler staat meteen op zijn plek in de 1-4-3-3 (eigen team verdedigt onder of links, de tegenstander gedraaid). Nog een keer tikken = weg. Gekleurde knop = staat op het veld.
