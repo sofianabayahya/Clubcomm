@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 4 november 2026 (t/m Besluit 149; 145, 146 en 148 staan in open pull requests)
+Laatst bijgewerkt: 4 november 2026 (t/m Besluit 153; 146 en 150 staan in open pull requests)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -21,14 +21,19 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 149; 145, 146 en 148 staan in op
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
+| 153 | 3 | Tekentool, veldlijnen: **penaltystip** (11 m), **halve maan** (9,15 m rond de stip, buiten de 16), **hoekschopboogjes** (1 m) en **middenstip** op 11×11 (liggend en staand) en Half veld; niet op 8×8, 6×6 en Vak (pupillenvelden pas met hun KNVB-maat). Bestaande tekeningen krijgen de lijnen vanzelf; gegevens ongewijzigd | ✅ besloten (wacht op samenvoegen) |  |
+| 152 | 3 | Tekentool: een menu sluiten zet niets onbedoeld neer. **×** = klaar (het gereedschap gaat uit, in elk menu); het menu **Spelers** zet bij openen geen gereedschap aan (losse speler = kleur tikken, dan het veld; sneltoetsen ongewijzigd). De snelle route *Hoedjes → tik op het veld* blijft. Geen gegevenswijziging | ✅ besloten (wacht op samenvoegen) |  |
+| 151 | 3 | Documentatie en presentatie: functiekaarten in docs/handleiding (nieuw) als enige bron (blokken per niveau, bundels per uitgave); drie statussen (Concept · Gereed · Gepubliceerd, alleen wat in productie is); blok Documentatie-impact in elke pull request; borging pas na de bevestigde release; vast scenario bestuursdemo | ✅ geldt | |
 | 149 | 3 | Vrijwilligersprincipe (algemene ontwerpstandaard): *een trainer krijgt altijd hulp aangeboden, maar hoeft niets onnodig in te vullen*. Drie lagen als gebruiksmogelijkheden (Draaien · Trainen · Ontwikkelen), geen rollen of niveaus en nooit invloed op rechten; vrijwillig behalve beveiliging, gegevensintegriteit en afspraken tussen mensen (bijv. minimale voorbereiding bij een aangekondigde observatie); tien ontwerpregels en vier toetsvragen | ✅ geldt |  |
+| 148 | 3 | Tekentool, rugnummers: een nummerknop **verwijdert nooit** meer; staat het nummer er al, dan **kiest** hij die speler (bij een dubbel nummer eerst de eerst neergezette, nog een keer = de volgende). Een met de knop gekozen speler houdt zijn nummer; nummer wijzigen = de speler op het veld aantikken en dan een nummer (dubbel mag, geen ruil meer) of *Ander nummer…* (1–99). Nieuwe speler = **eerste vrije** nummer. *Opstelling* gebruikt de nummers van de balk (keeper hoort bij het team en is 1; spits 3-3-1 = 9). Oude tekeningen ongewijzigd, geen migratie | ✅ besloten (wacht op samenvoegen) |  |
 | 147 | 3 | Gereedschap vastleggen bij een gegeven training: per plek een momentopname (`vast`: gereedschap, *ook*, vaardigheden met hun leerlijn van toen, profiel en versie, datum, bron) bij de eerste keer *gegeven*. Daarna telt die, ook als de koppeling in de Vormenbank verandert. Ongeldige momentopname = minuten bij geen gereedschap, nooit stil terugvallen op de koppeling van nu. Terugzetten bewaart; opnieuw aanvinken legt niets nieuws vast. Correctie (andere vorm, toevoegen, ook na terugzetten) = meteen vastleggen; plek zonder momentopname op een vastgelegde training = niet toegerekend; kopiëren neemt niets mee, ook geen vastlegdatum van de doeltraining. Oude gegeven trainingen blijven ongewijzigd. Melding in de Vormenbank | geldt | — |
+| 145 | 3 | Een geplaatste vorm verplaatsen: in het venster van de vorm *Verplaatsen naar* Start · A1 · A2 · B1 · B2 · Partij; lege plek = erheen, bezette plek = wisselen; minuten, variant, notitie, vastgezet leerniveau en fase gaan mee, de plek houdt code en voorstellen; tijd blijft gelijk; ongedaan maken. Start is niet verplicht. Geen nieuw veld | ✅ geldt |  |
 | 144 | 3 | Trainingskaart in Plannen: vijf vaste regels *Wat · Waar · Welke · Niveau · Mee uit vorige*, elk met herkomst (*Eigen · Periodisering · Weekvoorstel*); het weekvoorstel staat apart en vult nooit vanzelf in; *Accenten in gekozen vormen* (geen trainingsaccent); *Mee uit vorige* toont alleen een zin die begint met *Afspraak:* plus de bestaande evaluatiegegevens, met een link; wedstrijdsituatie apart van het dagthema; één momentopname *Oorspronkelijke planning* bij de eerste wijziging van een concept; weekplan alleen weekvelden. Bestaande trainingen en weekplannen ongewijzigd | ✅ geldt (bestaande weekplannen: correctie wacht op akkoord) |  |
 | 143 | 3 | De trainer is eigenaar van zijn eigen teksten (kennismaking, vragenlijst vooraf, reflectie): HO, TC en beheerder kunnen ze niet namens hem schrijven, wijzigen of verwijderen; alleen *gevraagd* zetten. Overnemen uit het evaluatieformulier = **begeleiderstekst** in het moment; de trainer kan die zelf overnemen en aanpassen. Een clubbeheerder zonder begeleidersrol heeft geen toegang tot het begeleidingsdossier. Migratie 033 (bewaker + beperkende regel, `cc_mag` ongewijzigd, samen met 032 in elke volgorde) | ✅ besloten (wacht op samenvoegen en migratie) |  |
 | 142 | 3 | Tijd vóór de training, voor elke club: bovenaan Plannen *veldtijd (kalender) − organisatie (de bestaande regel ombouw, door de trainer aan te passen, ook zonder sjabloon) = oefentijd*, de gekleurde balk met de grens, en een waarschuwing als de ingeplande minuten de oefentijd overschrijden (nooit blokkeren). Organisatie telt één keer. Geen nieuw veld; DCG-sjabloon 68 + 7 blijft. Geen registratie of samenvatting van uitloop | ✅ geldt |  |
 | 141 | 3 | Trainingsmodule stap 1: Lijn (ontwikkeling) · Plannen (voorbereiden) · Week (uitvoeren en evalueren) · Vormenbank (oefenstof, voor alle clubs). Lijn: weekdetail met *Opbouw van de week*, *Beheer* met *Periodeplanning vastleggen* (niets vergrendeld). Plannen: *Stap x van y*, blok *Toepassing · partij*. Week: vier minutengetallen (optie A, de berekening blijft) met *inclusief nog niet gecontroleerde minuten*, echte minuten leeg = *nog niet gecontroleerd*, *Klopt zoals gepland*, label in Lijn; oude trainingen (vóór 30-10, gelijk aan gepland) = *niet zeker gecontroleerd*, gegevens ongewijzigd; Transfer naar vrij spel bij Toepassing (zelfde antwoord, *Niet beoordeeld*). Geen nieuw veld | ◐ deels herzien | door 142 (*75 van 75 min gepland* en de losse regel ombouw staan nu in de tijdsbalk; ombouw heet organisatie); door 144 (Lijn toont het leerniveau alleen van de training zelf, niet uit het weekplan); door 147 (bij een gegeven training tellen de minuten op het vastgelegde gereedschap van toen) |
 | 140 | 3 | Trainer uitnodigen bij pakket Trainers begeleiden: welkomstmail met de bedoeling (begeleiden, ontwikkelen niet beoordelen; wie ziet wat) en de functie van de HO; aanmelden altijd via e-mail, WhatsApp als persoonlijk seintje (nu en later opnieuw vanuit de trainerkaart) | ✅ geldt |  |
-| 139 | 3 | Eén oefenvormkiezer voor elke club: dezelfde bediening, inhoud uit het profiel (gereedschap, vaardigheid, leerniveau alleen als het profiel ze heeft); compacte regel per vorm met redenen, meer achter ⓘ; niets uitgesloten (past het best · past deels · alle andere); *Ongedaan maken* na het plaatsen; leerniveau bij een vorm alleen ter informatie (nooit oranje of lager) | ◐ deels herzien | door 141 (*Mijn vormen* heet *Vormenbank*; blok Partij heet *Toepassing · partij*) |
+| 139 | 3 | Eén oefenvormkiezer voor elke club: dezelfde bediening, inhoud uit het profiel (gereedschap, vaardigheid, leerniveau alleen als het profiel ze heeft); compacte regel per vorm met redenen, meer achter ⓘ; niets uitgesloten (past het best · past deels · alle andere); *Ongedaan maken* na het plaatsen; leerniveau bij een vorm alleen ter informatie (nooit oranje of lager) | ◐ deels herzien | door 141 (*Mijn vormen* heet *Vormenbank*; blok Partij heet *Toepassing · partij*); door 145 (een geplaatste vorm verplaatsen zonder opnieuw te kiezen) |
 | 138 | 1 · 3 | Tabblad Training bij de DCG-methodiek: *Mijn lijn* als één overzicht per week (bolletjes per training, leerniveau begin → eind, uitgevoerde minuten), vaststellen, afgelaste training één keer signaleren (doorschuiven of laten vervallen), titel = hoofdthema, vaardigheden per gereedschap (profiel), lege plek opent *Vorm kiezen* gefilterd op gereedschap, vaardigheid en aantal spelers | ◐ deels herzien | door 139 (één oefenvormkiezer voor elke club; geen knop *past bij*, niets uitgesloten); door 141 (tik op een week = weekdetail; *Vaststellen* heet *Periodeplanning vastleggen*, status *Vastgelegd*; knoppen onder *Beheer*) |
 | 137 | 1 · 3 | DCG-periodisering O13 invoeren: kolommen van het Excel-spoorboekje werken direct; hoofdthema, teamfunctie en ondersteunend gereedschap erbij (in de onderbouwing); contrathema gekoppeld aan één probleem (+ eventueel een ondersteunend) met behoud van de eigen tekst, nooit op losse woorden; handelingsketen vrije tekst; contra telt niet mee in de minuten | ◐ deels herzien | door 144 (hoofdthema, leerniveaus en route horen bij de dag, niet bij het weekplan; contrathema als *Weekvoorstel*) |
 | 136 | 3 | Teams, trainingsdagen en wedstrijden zelf beheren (clubbeheerder en HO): team toevoegen, trainer koppelen, trainingen pas in de kalender als er een trainer is, wedstrijden plakken van voetbal.nl, trainingsschema laden (vanaf een gekozen leeftijd) | ✅ geldt |  |
@@ -41,9 +46,9 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 149; 145, 146 en 148 staan in op
 | 129 | 3 | Observeren: klok en turven bovenaan, snelle notities met minuut en onderwerp, aandachtspunten na afloop | ✅ geldt |  |
 | 128 | 3 | Trainingsmodule (proef): eigen oefenvormen en trainingen met spacing, varianten en aantallen | ◐ deels herzien | door 130 (de training staat in het tabblad Training) en 131 (soort → vormtype, vorm opent als venster); 134 (de begeleider ziet de trainingen, na akkoord op de rechten) |
 | 127 | 3 | Tekentool: loopactie en pass met boog als vaste soort | ✅ geldt |  |
-| 126 | 3 | Tekentool clean (rail met menu's, Veld/Opstelling/⚙ boven) en pijlen met boog en aanpasbare lengte | ✅ geldt |  |
+| 126 | 3 | Tekentool clean (rail met menu's, Veld/Opstelling/⚙ boven) en pijlen met boog en aanpasbare lengte | ◐ deels herzien | door 152 (Spelers zet bij openen geen gereedschap aan; × zet het gereedschap uit) |
 | 125 | 3 | Tekentool: rondje of driehoek per team kiezen; nummerbalk in- en uitklappen | ◐ deels herzien | door 126 (in- en uitklappen = het menu Spelers openen en sluiten) |
-| 124 | 3 | Tekentool: nummerbalk (rugnummers 1–11 en zonder nummer per team, op hun plek in de 1-4-3-3) en rood schijfje | ◐ deels herzien | door 126 (de nummerbalk staat in het menu Spelers) |
+| 124 | 3 | Tekentool: nummerbalk (rugnummers 1–11 en zonder nummer per team, op hun plek in de 1-4-3-3) en rood schijfje | ◐ deels herzien | door 126 (de nummerbalk staat in het menu Spelers); door 148 (een bestaand nummer tikken kiest de speler in plaats van verwijderen; geen ruil meer; eerste vrije nummer) |
 | 123 | 1 · 3 | Opleidingsprofiel als gegevens; DCG-fundament ingevoerd (rest open), KNVB-standaard als bestand | ◐ deels herzien | door 131 (DCG-profiel versie 2: kant per leerlijn, 8 plekken spelprincipes, sjabloon DCG 75) |
 | 122 | 3 | Tabbladen gelijk (Home links, Berichten rechts), één keer signaleren, Regels en Inzicht ingeklapt, laptop met menu links | ◐ deels herzien | door 130 (trainer met module Trainingen: Training in plaats van Planning) en 131 (laptop vanaf 900 px) |
 | 121 | 3 | Richting trainingsmodule: opleidingsprofiel per club (standaard KNVB), vorm ≠ uitvoering, bouwen in fases, ClubComm stelt voor en de trainer kiest | ✅ geldt |  |
@@ -684,6 +689,48 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 153 — Tekentool: penaltystip, halve maan, hoekschopboogjes en middenstip (Spoor 3, maat M)
+*Besloten 4 november 2026: de initiatiefnemer miste deze lijnen; voorstel met proefbeelden `docs/onderzoek/tekentool/veldlijnen.md`; gekozen: middenstip ja, alleen 11×11 en Half veld.*
+- **Op schaal** (± 10 beeldpunten per meter): penaltystip op 11 m van de doellijn; halve maan met straal 9,15 m (gelijk aan de middencirkel) rond de stip, alleen het deel buiten het strafschopgebied; hoekschopboogje van 1 m in elke hoek (op Half veld alleen bij de doellijn); middenstip.
+- **Velden:** 11×11 liggend, 11×11 staand en Half veld. **Niet** op 8×8 en 6×6: die velden hebben nog niet de KNVB-maat (prioriteit 3, veldcoördinaten), en of 6×6 een strafschopgebied heeft is een voetbalvraag. **Vak** blijft een vrij vak zonder lijnen.
+- **Bestaande tekeningen:** de lijnen worden bij elke weergave uit de gegevens getekend, dus ook oude tekeningen (tegel, vormkaart, printen) tonen ze; de gegevens veranderen niet. In productie (4-11): 5 tekeningen *11×11 liggend* en 3 *Half veld*; de 11 op *Vak* blijven gelijk.
+- Dezelfde lijndikte en kleur als de bestaande lijnen; niet aan te tikken.
+- Tests: `tests/tekentool-veld.spec.js`.
+
+---
+
+## Besluit 152 — Tekentool: een menu sluiten zet niets onbedoeld neer (Spoor 3, maat M)
+> Herziet Besluit 126 deels.
+*Besloten 4 november 2026: de initiatiefnemer koos advies A + B uit het onderzoek `docs/onderzoek/tekentool/menu-sluiten.md` (gemeten op laptop en telefoon). Alleen bediening; geen gegevens, database of rechten.*
+- **Probleem (gemeten):** een menu openen zette meteen het laatst gekozen gereedschap aan, en sluiten zette het niet uit. Een tik op het veld (om het menu weg te klikken, of na ×) zette daardoor een speler, hoedje, schijfje, doel of volgordenummer neer. Bij *Spelers*, dat je vooral voor de nummerknoppen opent, was dat bijna altijd onbedoeld.
+- **A — × = klaar:** sluiten met × zet in elk menu ook het gereedschap uit (net als *Kies*).
+- **B — Spelers zet bij openen niets aan:** een losse speler plaats je door in het menu een kleur te tikken en dan het veld. Stond er gereedschap van een ander menu aan, dan gaat dat uit. Sneltoetsen (1–4, T, K) werken zoals voorheen.
+- **Blijft:** de snelle route uit Besluit 126 (*Hoedjes*, tik op het veld = hoedje in de laatste kleur; ook bij Schijfjes, Doelen en Markeren). Esc sluit eerst het menu, een tweede Esc zet het gereedschap uit.
+- **Niet in dit besluit:** op de telefoon bedekt het menu *Spelers* bijna het hele veld (prioriteit 6, mobiele bediening).
+- Tests: `tests/tekentool-menu.spec.js` (laptop en telefoon, elk menu).
+
+---
+
+## Besluit 151 — Documentatie en presentatie: functiekaarten als enige bron, statussen en borging (Spoor 3, maat S)
+*Besloten 4 november 2026: de initiatiefnemer ging akkoord met de functiekaarten uit het voorstel voor ontwikkelgebied F (`docs/onderzoek/documentatie-borging/README.md`). Alleen werkwijze: er verandert niets aan de app, de database, de rechten of aan de bestaande PowerPoints en PDF's.*
+- **Documentatie hoort bij "afgerond".** Een wijziging is pas af als de documentatie is bijgewerkt, of als er uitdrukkelijk *Geen documentatie-impact* staat.
+- **Productie is leidend.** Een functie op een onderzoeksbranch of in een open pull request staat nooit in gepubliceerde documentatie. In een bestuursdemo mag hij alleen op de dia *In ontwikkeling*.
+- **Eén bron: functiekaarten.** Per functie één Markdown-kaart in een nieuwe map docs/handleiding.
+  - **Bovenaan:** de status in de app (*In productie* met commit · *In open pull request #…* · *Onderzoek*), de besluiten, de schermafbeeldingen en de doelgroepen.
+  - **Blokken per niveau,** alleen wat nodig is: *Kort* (beginner trainer, hoogstens vijf handelingen), *Meer* (ervaren trainer: methodiek, leerlijnen, periodisering, tekentool), *HJO*, *Beheerder*, *Let op* (uitzonderingen).
+  - **Bundels** bepalen welke kaarten in welke uitgave komen (snelstart, handleiding trainer, HJO, clubbeheerder, ouders, teamleider, bestuursdemo). Een instructie wordt op één plek aangepast; alle uitgaven worden daaruit opnieuw gemaakt. Dezelfde tekst wordt nooit los in meerdere PDF's bijgewerkt.
+  - **Hergebruik:** besluiten geven het *waarom* (de kaart verwijst ernaar en herhaalt ze niet); `docs/kaart.md` wordt het register van de kaarten; `docs/presentaties/maak.js` en `shots*.js` maken de dia's, PDF's en beelden (demo, alleen verzonnen namen).
+- **Drie statussen per uitgave:** *Concept* (intern) → *Gereed voor publicatie* (klopt met de klaarstaande pull request) → *Gepubliceerd* (klopt met productie; versieregel met datum en commit). Een gepubliceerde bundel bevat alleen kaarten met *In productie*.
+- **Vrijwilligersprincipe (Besluit 149):** geen één groot handboek. De niveaus volgen de lagen (Draaien, Trainen, Ontwikkelen); HJO en clubbeheerder krijgen een eigen uitgave. Wat niet hoeft, staat er als *mag*.
+- **Documentatie-impact in elke pull request:** zes vragen (handeling, navigatie, knopnaam, scherm, wat een trainer of HJO moet weten, wat de bestuursdemo toont). Bij een *ja*: welke kaarten, PDF's, demo-onderdelen en schermafbeeldingen, en of alleen de techniek of ook de taak van de gebruiker verandert. Anders uitdrukkelijk *Geen documentatie-impact*.
+- **Werkwijze:** Inbox → Onderzoek → Besluit → Bouw → Controle → **Borging** → Afgerond. Bij de bouw wordt de kaart bijgewerkt op dezelfde branch (*Concept*); bij de controle *Gereed*. Bij de borging, **pas na de bevestigde release** (`list_deployments`): instructies nalopen tegen productie (alleen kijken), schermafbeeldingen controleren, demo nalopen, uitgaven opnieuw maken met versieregel, oude versies archiveren. Versturen alleen na akkoord van de initiatiefnemer.
+- **Wie:** Spoor 3 houdt kaarten, bundels, generator, controles en statussen bij en zet uitgaven klaar. Spoor 1 en 2 leveren het blok *Meer* (en voor Swift het blok *HJO*) per clubprofiel aan als *"Voorstel Spoor X — …"*; inhoud van Spoor 1 komt nooit in een uitgave voor een andere club. De initiatiefnemer beslist over publiceren en versturen.
+- **Bestuursdemo, vast scenario:** het probleem · tijdwinst voor vrijwilligers · een training voorbereiden · de HJO begeleidt een trainer · kennis blijft in de club · *Nu / In ontwikkeling*. Nalopen na elke relevante release. Nieuwe stappen in de rondleiding (`public/app/demo.js`) zijn een appwijziging (maat M) en gaan apart.
+- **Overgang:** de bestaande PowerPoints en PDF's blijven staan tot hun opvolger gepubliceerd is, en worden niet aangepast zonder apart akkoord.
+- **Volgende stappen (elk apart, na akkoord):** sjabloon voor pull requests met het blok Documentatie-impact · de eerste 5–6 trainerskaarten + *Snelstart vrijwillige trainer* als Concept · `maak.js` laten lezen uit de kaarten (PDF via de Chromium van de tests) · handleiding HJO en clubbeheerder · rondleiding aanvullen.
+
+---
+
 ## Besluit 149 — Vrijwilligersprincipe: ClubComm biedt aan en verplicht niets onnodigs (Spoor 3, algemene ontwerpstandaard)
 *Besloten 4 november 2026, na de integrale UX-audit (map docs/onderzoek/ux-audit op branch `onderzoek/ux-audit`) en twee beoordelingsrondes van de initiatiefnemer ("akkoord als algemeen ontwerpbesluit"). Vult Besluit 30 en 34 en Principe 10 aan. **Dit is een ontwerpstandaard; het akkoord geldt niet automatisch voor code- of databasewijzigingen.***
 
@@ -726,6 +773,23 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 148 — Tekentool: rugnummers voorspelbaar (kiezen in plaats van verwijderen, eerste vrije nummer, één nummersysteem) (Spoor 3, maat M)
+> Herziet Besluit 124 deels.
+*Besloten 4 november 2026: de initiatiefnemer keurde de richting van voorstel A goed (`docs/onderzoek/tekentool/reparatie-nummering.md`), na drie extra controles (dubbel nummer, keeper, selectie op de telefoon). Geen database-, rechten- of opslagwijziging.*
+- **Begrippen apart:** een speler is een object op het veld; het **rugnummer** (`n`) is alleen een label dat je mag aanpassen en dat bewust dubbel mag; de **teamkleur** (`c`) is iets anders.
+- **Nummerknop, nummer staat er nog niet:** de speler komt op zijn plek in de 1-4-3-3 (gelijk aan Besluit 124).
+- **Nummerknop, nummer staat er al:** die speler wordt **gekozen** (verplaatsen, nummer wijzigen, bewust verwijderen). Een nummerknop verwijdert **nooit**; verwijderen gaat alleen met *Verwijderen* (of Delete) en kan ongedaan worden gemaakt.
+  - **Dubbel nummer:** eerst de speler die het eerst is neergezet; nog een keer tikken = de volgende met dat nummer, daarna weer de eerste. Kiezen verandert niets aan de tekening.
+  - Een speler die **met een knop** is gekozen, **houdt zijn nummer**: een volgende knop kiest of zet neer (5 en dan 7 tikken = speler 7 kiezen, niet speler 5 hernummeren).
+- **Nummer wijzigen:** tik de speler **op het veld** aan en tik een nummer (geen ruil meer; dubbel mag, de knop toont *2×*). Dat is **één** wijziging: daarna kiest of plaatst de volgende knop weer (nog eens wijzigen = de speler opnieuw aantikken). Of *Ander nummer…*: alleen een **heel getal van 1 tot en met 99** (`12abc`, `3.5`, `0` en `100` worden geweigerd), leeg = zonder nummer; werkt ook na kiezen met een knop, handig op de telefoon. Een knop van het **andere team** wijzigt de gekozen speler niet.
+- **Nieuwe speler** (gereedschap, dupliceren, ander team kiezen): het **eerste vrije** nummer in dat team, niet meer *hoogste + 1*.
+- **Opstelling** gebruikt de nummers van de balk: elke plek heeft een vast nummer uit de 1-4-3-3 (2-1-2 = 3, 4, 6, 8, 10; 3-3-1 = 2, 3, 5, 6, 8, 9, 10 met de spits 9); de keeper hoort bij zijn team (nieuw, optioneel `team`) en telt als nummer 1. Is een nummer al bezet, dan het dichtstbijzijnde vrije. Staan er meer keepers van één team, dan telt elke keeper als 1 (de knop toont *2×*) en kiest de knop ze om de beurt.
+- **Bestaande tekeningen:** de tekencode en het opslagformaat zijn niet veranderd. Openen en opslaan geeft precies dezelfde gegevens; oude dubbele nummers, nummer 12 en een keeper zonder team blijven zoals ze zijn (zo'n keeper telt nergens mee). Geen migratie.
+- **Niet in dit besluit** (apart bespreken, prioriteiten 3–6 in de chat *Ontwikkeling Tekentool*): het kleine aanraakvlak op de telefoon, het menu dat op de telefoon het veld bedekt, veld wisselen verplaatst spelers, objectverhoudingen en veldweergaven.
+- Tests: `tests/tekentool-nummering.spec.js` (11) en `tests/app.spec.js` (*nummerbalk en rood schijfje*).
+
+---
+
 ## Besluit 147 — Gereedschap vastleggen bij een gegeven training (Spoor 3, maat M)
 *Besloten 4 november 2026, na het bouwvoorstel `docs/onderzoek/methodiek-aansluiting/t1-bouwvoorstel-gereedschap-vastleggen.md` (branch `analyse/methodiek-aansluiting`) en het akkoord van de initiatiefnemer met drie aanvullingen. Werkt Besluit 121 uit voor de minuten (*"een uitvoering is een momentopname"*); herziet Besluit 141 deels. Geen migratie, geen nieuwe rechten; geen versiebeheer van vormen.*
 - **Probleem:** de minuten per gereedschap werden steeds opnieuw berekend uit de **huidige** koppeling van een vorm. Een koppeling aanpassen in de Vormenbank veranderde dus ongemerkt de minuten van trainingen die al gegeven waren.
@@ -746,6 +810,19 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - **Vormenbank:** onder het hoofdgereedschap, alleen als de vorm in een gegeven training staat: *"Staat in 1 gegeven training. Die houdt het gereedschap van toen; een wijziging geldt voor nieuwe en geplande trainingen."* en zo nodig *"1 gegeven training van vóór deze regel volgt de vorm nog wel."* Informatie, geen vraag; 16 px.
 - **Niet in dit besluit:** versies van vormen (Besluit 121, fase 2), naam en tekening vastleggen, de momentopname tonen.
 - **Tests:** `tests/vastleggen.spec.js` (390 px en 1366 px).
+
+---
+
+## Besluit 145 — Een geplaatste vorm naar een andere plek verplaatsen (Spoor 3)
+*Besloten 30 oktober 2026, na het voorstel `docs/onderzoek/verplaatsen/voorstel.md` met voorbeelden op 390 px. Aanleiding: een droge technische vorm voor *Aannemen en meenemen* stond op Start en kon niet naar A1 zonder opnieuw te kiezen. ↑/↓ schoof de hele regel mee, inclusief de code. Herziet Besluit 139 deels.*
+- **In het venster van een geplaatste vorm** staat bovenaan **Verplaatsen naar** met de plekken van de training: Start · A1 · A2 · B1 · B2 · Partij (geen spacing). Per plek staat wat er nu op staat (*leeg · 6 min* of de naam van de vorm); de huidige plek is grijs.
+- **Eén tik:** een lege plek → de vorm gaat erheen, de oude plek wordt leeg. Een bezette plek → de twee wisselen. Daarna *Naar A1 verplaatst · Ongedaan maken*.
+- **De vorm neemt mee:** de vorm, de minuten (gepland en echt), de variant, de notitie, het vastgezette leerniveau en de vastgezette fase. Bij een gegeven training gaat ook het **vastgelegde gereedschap** mee (`vast`, Besluit 147; aangevuld 4-11). **De plek houdt:** de code, de naam van de plek, het leerniveauvoorstel uit de periodisering en het fasevoorstel uit het sjabloon. Het totaal en de tijdsbalk (Besluit 142) blijven gelijk.
+- **Start is niet verplicht.** Een trainer mag direct met A1 beginnen, en een droge technische vorm mag op A1 staan; ClubComm waarschuwt daar niet over. Een lege Start toont *niet verplicht · kies een vorm of haal weg*; weghalen kan met de bestaande knop *Weghalen* (via *Minuten en leerniveau van de plek*).
+- **Zonder plekcodes** (een training zonder sjabloon, bijv. Swift) is er geen rij plekken; ↑/↓ blijft.
+- **Gegevens:** geen nieuw veld, geen migratie; alleen velden van twee regels binnen dezelfde training wisselen. De Vormenbank, evaluaties en andere trainingen veranderen niet.
+- **Later en apart:** slepen van een geplaatste regel naar een andere plek op de laptop.
+- **Getest:** DCG-sjabloon op 390 px: vorm van Start naar A1 (minuten 8, variant, leerniveau, notitie mee; A1 houdt zijn plek; Start leeg met 6 min), tijd gelijk, ongedaan maken, wisselen met een bezette plek, opgeslagen; club zonder sjabloon: geen rij plekken, ↑/↓ blijft.
 
 ---
 
@@ -864,7 +941,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 ---
 
 ## Besluit 139 — Eén oefenvormkiezer voor elke club (Spoor 3)
-> **◐ Deels herzien door Besluit 141** (*Mijn vormen* heet *Vormenbank*; blok Partij heet *Toepassing · partij*).
+> **◐ Deels herzien door Besluit 141** (*Mijn vormen* heet *Vormenbank*; blok Partij heet *Toepassing · partij*). En door **Besluit 145** (een geplaatste vorm verplaatsen zonder opnieuw te kiezen).
 *Besloten 29 oktober 2026, na het voorbeeld op 390 px. Vervangt de drie manieren van kiezen: *Vorm kiezen* van de DCG-methodiek (Besluit 138), de eenvoudige lijst voor andere clubs, en het voorstel uit PR #92 (dat nooit is samengevoegd). Uitgangspunt: consistente bediening, profielafhankelijke inhoud (`docs/architectuur.md`).*
 - **Eén venster, twee tikken.** Een lege plek aantikken opent *Kies oefenvorm · [plek]*, bij elke club (ook zonder methodiek). Een vorm aantikken zet hem op de plek. Ook *+ Vorm* en *Kies een vorm* in het venster van een plek openen dit venster.
 - **Compact.** Per vorm één regel: tekening, naam en in één regel waarom hij past (✓) of minder past (oranje, vooraan). Meer staat achter **ⓘ**: soort, aantallen en duur, de minimumvariant bij te weinig spelers, *Zet in …* of bewust *Toch in … zetten*, en *Vorm bekijken*.
@@ -1110,6 +1187,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - In het menu *Pijlen* staan nu ook **Loopactie met boog** en **Pass met boog**. Bij het trekken groeit de boog mee (een derde van de lengte opzij, links van de looprichting). Daarna aanpassen met de bolletjes zoals in Besluit 126.
 
 ## Besluit 126 — Tekentool clean (ontwerp A) en pijlen met boog en aanpasbare lengte
+> **◐ Deels herzien door Besluit 152:** *de knop onthoudt de laatst gekozen variant* geldt bij het openen niet meer voor *Spelers*; sluiten met × zet het gereedschap uit (Esc en klikken op het veld werken zoals hieronder).
 *Besloten 27 oktober 2026, na analyse en drie ontwerpen (`docs/onderzoek/tekentool/`); de initiatiefnemer koos het advies: ontwerp A met de contextbalk uit B.*
 - **Smalle rail links** met één knop per soort: *Kies · Spelers · Bal · Hoedjes · Schijfjes · Doelen · Pijlen · Markeren*.
   - Een knop opent een klein menu met de varianten (kleuren, soorten pijlen).
@@ -1133,6 +1211,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ## Besluit 124 — Tekentool: nummerbalk voor rugnummers en een rood schijfje
 > **◐ Deels herzien door Besluit 126 (de nummerbalk staat in het menu Spelers)** (zie Register).
+> **◐ Deels herzien door Besluit 148:** *nog een keer tikken = weg* geldt niet meer (een bestaand nummer tikken kiest de speler; verwijderen alleen met *Verwijderen*); een gekozen speler krijgt het nummer **zonder ruil** (dubbel mag bewust), alleen als hij op het veld is gekozen; nieuwe spelers krijgen het eerste vrije nummer.
 *Besloten 27 oktober 2026, na een voorbeeld (`docs/onderzoek/trainingsmodule-2/t-nummerbalk.png`). Aanleiding: voor de juiste rugnummers moest je eerst 1 t/m 10 neerzetten en de rest weer verwijderen, voor beide teams; een speler zonder nummer kon niet.*
 - **Nummerbalk boven het veld:** per team (*Eigen team* rood, *Tegenstander* geel) de knoppen 1–11 en *+ Zonder nummer*.
   - Tik een nummer: die speler staat meteen op zijn plek in de 1-4-3-3 (eigen team verdedigt onder of links, de tegenstander gedraaid). Nog een keer tikken = weg. Gekleurde knop = staat op het veld.
@@ -2377,6 +2456,8 @@ Een ouder regelt dit **zelf** in het profiel, zonder tussenkomst van de club.
 
 PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking voor clubs staan in `docs/presentaties/` (maken met `maak.js`). **Worden bijgewerkt na de HO-stappen van Besluit 95**, samen met nieuwe voor de HO en de coördinator (verkoopmap, zie Openstaand).
 
+**Sinds Besluit 151 (4-11):** nieuwe handleidingen en presentaties komen uit de functiekaarten (map docs/handleiding, nieuw). De PowerPoints hierboven zijn verouderd (laatst inhoudelijk 9-10) en blijven staan tot hun opvolger gepubliceerd is.
+
 ---
 
 ## Later / ideeën
@@ -2414,6 +2495,7 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 ---
 
 ## Nog te bespreken
+- **Documentatie (Besluit 151):** blijven de PowerPoints naast de PDF's bestaan (advies: ja voor bestuur en presentatie, alleen PDF voor trainers)? En wie mag een uitgave versturen: alleen de initiatiefnemer, of ook een HJO van een club?
 - **KNVB-profiel vullen** (Besluit 135): leerlijnen, leerdoelen per leeftijd en sjablonen van de KNVB, gecontroleerd. Nodig voor A/B en minuten per leerdoel bij Swift en nieuwe clubs. Wie levert de inhoud, en welke bron is leidend?
 - **Rechtenwijziging meekijken en clubbank** (Besluit 134): akkoord op het rechtenvoorstel.
 - **Wat is spacing inhoudelijk?** (Besluit 131) Loslaten (het geleerde laten rusten), herstel, contrast of spelend leren? Pas daarna krijgt spacing een eigen soort of regels.

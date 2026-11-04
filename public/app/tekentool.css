@@ -66,6 +66,8 @@
 
 .draw-nr-knoppen { min-width: 0; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: thin; }
 .draw-nr { flex: none; min-width: 44px; height: 44px; border-radius: 10px; border: 1px solid #c9d3df; background: #fff; font-weight: 700; font-size: 16px; color: #0b1f33; cursor: pointer; }
+.draw-nr.bezet { border: 2px solid #5b6b7d; }
+.draw-nr sup { font-size: 10px; margin-left: 1px; }
 .draw-nr.leeg { border-style: dashed; font-weight: 600; font-size: 14px; padding: 0 10px; }
 .draw-nummers small { color: #5b6b7d; font-size: 13px; }
 @media (max-width: 899px) { .draw-nr-rij { flex-direction: column; align-items: stretch; gap: 4px; } .draw-nr-rij > b { min-width: 0; } .draw-nr-knoppen { flex-wrap: wrap; overflow: visible; } }

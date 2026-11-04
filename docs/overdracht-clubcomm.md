@@ -2,16 +2,22 @@
 
 *Alleen Spoor 3 schrijft hier. Kort houden (hoogstens ongeveer 30 regels); aan het eind van elke ronde overschrijven. Spoor 1 en 2 hebben hun eigen overdracht (`docs/methodiek/persoonlijk/overdracht.md`, `docs/methodiek/swift/overdracht.md`).*
 
-**Bijgewerkt:** 30-10-2026
+**Bijgewerkt:** 04-11-2026
 
 ## Stand
-- `main` = `51e5a12` (#105, Besluit 144). **Migratie 033 is niet toegepast.** Het eerstvolgende vrije besluitnummer is **145**.
+- `main` = #112 (**Besluit 149**: vrijwilligersprincipe, algemene ontwerpstandaard) op #117 (**Besluit 152 en 153**, tekentool: een menu sluiten zet niets onbedoeld neer; penaltystip, halve maan, hoekschopboogjes en middenstip op 11×11 en Half veld) op #115 (**Besluit 151**: documentatie en presentatie, functiekaarten als enige bron) op `358a6ab` (#114, werkwijze: overdracht bijwerken vóór samenvoegen, in `CLAUDE.md`), daarvoor `33d9ebb` (#107, **Besluit 145**: vorm verplaatsen). Daarvoor op 04-11: #110 (Besluit 148), #111 (vaste datums in de tests), #109 (Besluit 147; productie gecontroleerd). **Migratie 033 is niet toegepast.** Het eerstvolgende vrije besluitnummer is **154** (146 en 150 zijn bezet door open PR's). Let op: de branch `demo/swift-trainer` gebruikt óók 146; vóór samenvoegen hernummeren.
+- De drie gegeven DCG-trainingen (27/29/30-10) zijn onveranderd; ze hebben geen vastlegging. Er is geen herstelscript (akkoord 04-11). De onzekere koppelingen (6v6 27-10, A2 29-10) staan in `docs/onderzoek/methodiek-aansluiting/t1-bouwvoorstel-gereedschap-vastleggen.md`.
 - Productiedatabase (29/30-10, alleen gelezen): functioneel gelijk aan `main` (de md5 van alle `priv`-functies is gelijk, zonder commentaarregels). Het migratielogboek mist 027–030 (via losse SQL toegepast; alle objecten bestaan). Niet aanpassen zonder apart akkoord.
 
 ## Open pull requests
 | PR | Wat | Stand |
 |---|---|---|
-| #106 | Test (S): tekentool-tests wachten 20 s op Opslaan (onder drukte soms > 5 s, gemeten tot 7 s; geen hang), branch `claude/intelligent-cannon-t4430r` | 600/600 onder drukte, `npm test` groen; wacht op akkoord |
+| #108, #113 | Besluiten 146, 150 (andere sessies; beide eerst `main` binnenhalen: conflict in `besluiten.md`, `kaart.md` en `app.css`) | open |
+
+- Samengevoegd 04-11: #112, Besluit 149 (vrijwilligersprincipe; alleen documenten). #117, Besluit 152 en 153 (tekentool; onderzoek en voorstel in `docs/onderzoek/tekentool/menu-sluiten.md` en `veldlijnen.md`; volgende tekentool-stap: op de telefoon bedekt het menu *Spelers* het veld, prioriteit 6). #116, Openstaand bijgewerkt. #115, Besluit 151 (documentatie en presentatie; alleen werkwijze). #114, in de werkwijze de stap *overdracht bijwerken* vóór samenvoegen. #111, vaste datum in drie datumafhankelijke tests (nieuwe fase; twee roostertests die vanaf eind mei 2027 zouden falen). Proef op 7 datums t/m 20-09-2027. Idee *demoseizoen laten meeschuiven* staat in Openstaand.
+
+## Analyse (geen PR)
+- Branch `analyse/methodiek-aansluiting`: ontwikkelvoorstel, begrippenlijst v2.1 (Spoor 1 akkoord als uitgangspunt), technische punten T1–T9 (T1 gebouwd), oplevering 2 (KNVB-basisprofiel: opt-in, ClubComm-startset, nog toetsen aan KNVB-bronnen; `www.knvb.nl` is niet bereikbaar vanuit deze omgeving), oplevering 3 (praktijktoets week 46).
 
 ## Wacht op akkoord van de gebruiker (in deze volgorde)
 1. Correctie van de acht DCG-weekplannen, `supabase/scripts/2026-10-30_dcg_weekplannen_correctie.sql.voorstel` (gecontroleerd tegen de CSV, **niet uitgevoerd**).
@@ -21,4 +27,5 @@
 
 ## Volgende technische stap
 - Later, eigen besluit: vaardigheidsaccenten per trainingsplek (de vorm blijft herbruikbaar; de trainer kiest per training het accent). Wat ontbreekt: `docs/onderzoek/trainingskaart/README.md`. Nu niet bouwen.
+- Gebied F (documentatie en presentatie): **Besluit 151** staat op `main` (#115). Volgende stap, elk apart na akkoord: sjabloon voor pull requests met het blok Documentatie-impact, dan de eerste 5–6 trainerskaarten + *Snelstart vrijwillige trainer* als Concept. Open vragen (PowerPoints naast PDF's; wie verstuurt) staan bij *Nog te bespreken*.
 - Voorstel (L): het opleidingsprofiel veilig leesbaar maken voor trainers (onderzoeksbranch `onderzoek/profiel-leesrechten`).
