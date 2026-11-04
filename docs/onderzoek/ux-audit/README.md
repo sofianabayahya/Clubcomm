@@ -246,10 +246,21 @@ Trainers zijn vrijwilligers, ook als ze een diploma hebben. Hoeveel tijd iemand 
 
 ---
 
+## Bijgewerkt 4-11 (na de reactie van de initiatiefnemer)
+- **Akkoord op de richting.** De drie lagen zijn gebruiksmogelijkheden, geen rollen. Uitgewerkt als besluitvoorstel: `besluit-voorstel-vrijwilligersprincipe.md`.
+- **Drie kleine verbeteringen** (lege training, lege kiezer, meldingen) met schermen en acceptatiecriteria: `voorstel-drie-kleine-verbeteringen.md`. Daarin ook:
+  - het onderzoek naar de Lijn (niet verbergen; een lege toestand);
+  - de tikvlakken per element: de 222 waren een screening; één kandidaat-fout, de rolknop van 21 px.
+- **Stand van de pull requests** (zie ook de volgorde in §9):
+  - #109 is samengevoegd;
+  - #107 is bijgewerkt met `main` en botst niet;
+  - #110 en #108 botsen alleen in `docs/besluiten.md` (en #108 ook in `docs/kaart.md`);
+  - #111 is overbodig geworden: `main` heeft de vaste datum voor de test al via #109, en #111 botst nu in `tests/app.spec.js`.
+
 ## 9. Gefaseerde verbeterroute
 | Fase | Wat | Voorwaarde |
 |---|---|---|
-| **0 — nu afronden** | PR's in deze volgorde: #107 → #109 → #110 → #108 (§ advies hieronder); 033 toepassen | jouw akkoord per PR; 033 apart |
+| **0 — nu afronden** | #109 is samengevoegd (4-11). Nu: **#107 → #110 → #108**, elk eerst `main` erin en CI groen; #111 sluiten (overbodig); 033 apart | jouw akkoord per PR; 033 apart |
 | **1 — snelle winst (S/M)** | §6 punt 1–3; vaktaal en lege Lijn (#8) | voorbeeld akkoord (dit rapport) |
 | **2 — keten trainer ↔ HJO (M)** | vorige-afspraaklus; reflectie na de training | 033; Spoor 2 (vragen) |
 | **3 — rechten (L)** | toewijzing begeleider ↔ trainer of team; delen per training; vervangt 032 | privacytoets, lokale rechtentest |
