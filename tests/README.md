@@ -2,7 +2,7 @@
 
 | Opdracht | Wat | Duur (29-10, 4 cores) | Wanneer |
 |---|---|---|---|
-| `npm run test:snel -- @training` | Paden in de documenten + alleen de tests met dat label | 8–13 s | Tijdens het bouwen (alle maten) |
+| `npm run test:snel -- @training` | Paden in de documenten, dubbele besluitnummers + alleen de tests met dat label | 8–13 s | Tijdens het bouwen (alle maten) |
 | `npm run test:server` | Servermotor (`tests/automaat.test.mjs`) | 7 s | Als je regels voor berichten of automatisch werk wijzigt |
 | `npm test` | Alles: node-tests + alle Playwright-tests | 44 s (was 71 s) | **Altijd vóór samenvoegen**, daarna ook groen op GitHub (*Tests*) |
 | `npm run test:veilig` | Zware controle op een tijdelijke lokale database: rechten per rol, clubscheiding, vaste regels, begeleidingsdossier en de rijen die de app werkelijk opslaat (Besluit 143) | 3 s | **Maat L**, vóór samenvoegen; ook vanzelf op GitHub (*Beveiliging*) bij database- of gegevenswijzigingen |
