@@ -11,7 +11,7 @@
 ## Open pull requests
 | PR | Wat | Stand |
 |---|---|---|
-| #111 | Test (S): `nieuwe fase: pas een kleur vanaf 6 keer gemeten` met vaste datum 14-10-2026 (sinds demo-fase 2 op 31-10 begon, waren er terecht geen signalen meer en faalde de test op `main`), branch `claude/dazzling-babbage-y6ns5j` | `npm test` groen (6/6 + 81/81); wacht op akkoord |
+| #111 | Test (S): `nieuwe fase: pas een kleur vanaf 6 keer gemeten` met vaste datum 14-10-2026 (sinds demo-fase 2 op 31-10 begon, waren er terecht geen signalen meer en faalde de test op `main`), daarna ook de twee roostertests (kleine club, teams en trainingsdagen) die vanaf eind mei 2027 zouden falen (te weinig trainingen tot het seizoenseinde 05-06-2027). Gevonden met een proef op 7 datums t/m 20-09-2027; de andere tests hangen niet van de datum af. Branch `claude/dazzling-babbage-y6ns5j` | `npm test` groen (6/6 + 81/81); wacht op akkoord |
 
 ## Wacht op akkoord van de gebruiker (in deze volgorde)
 1. Correctie van de acht DCG-weekplannen, `supabase/scripts/2026-10-30_dcg_weekplannen_correctie.sql.voorstel` (gecontroleerd tegen de CSV, **niet uitgevoerd**).
