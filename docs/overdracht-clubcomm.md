@@ -13,6 +13,7 @@
 | PR | Wat | Stand |
 |---|---|---|
 | #108, #113 | Besluiten 146, 150 (andere sessies; beide eerst `main` binnenhalen: conflict in `besluiten.md`, `kaart.md` en `app.css`) | open |
+| #119 | Korte evaluatie en labels uit het profiel (andere sessie, branch `bouw/stap3-labels`). ⚠️ Heet *Besluit 154*, maar 154 staat al op `main` (#118): vóór samenvoegen hernummeren naar het eerstvolgende vrije nummer | open |
 
 - Samengevoegd 04-11: #112, Besluit 149 (vrijwilligersprincipe; alleen documenten). #118, Besluit 154 (rechten begeleider per werkgebied; alleen besluit en voorstel). #117, Besluit 152 en 153 (tekentool; onderzoek en voorstel in `docs/onderzoek/tekentool/menu-sluiten.md` en `veldlijnen.md`; volgende tekentool-stap: op de telefoon bedekt het menu *Spelers* het veld, prioriteit 6). #116, Openstaand bijgewerkt. #115, Besluit 151 (documentatie en presentatie; alleen werkwijze). #114, in de werkwijze de stap *overdracht bijwerken* vóór samenvoegen. #111, vaste datum in drie datumafhankelijke tests (nieuwe fase; twee roostertests die vanaf eind mei 2027 zouden falen). Proef op 7 datums t/m 20-09-2027. Idee *demoseizoen laten meeschuiven* staat in Openstaand.
 
