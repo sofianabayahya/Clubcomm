@@ -15,6 +15,8 @@
 | Label *Herkomst onbekend* (trainingskaart) | `bouw/herkomst-onbekend` (lokaal) | wacht op akkoord voor push/PR |
 | Demo Swift (nep-database) | `demo/swift-trainer` | alleen voorbeeldversie; **nooit samenvoegen** |
 | Functioneel ontwerp begeleidingsproces + 2 technische voorstellen | `onderzoek/begeleidingsproces`, `docs/onderzoek/begeleidingsproces/` | besluiten 4-11 verwerkt; alleen documenten |
+| Analyse: ClubComm voor verschillende trainers (vrijwilliger → selectietrainer, Rinus, drie startroutes) | `onderzoek/trainersdifferentiatie` | alleen documenten; wacht op beoordeling |
+| Analyse: tekentool (nummers, verhoudingen, veldweergaven; 4 fouten nagespeeld) | `onderzoek/tekentool-gebruik` | alleen documenten; advies: eerst nummerlogica repareren |
 
 ## Wacht op akkoord van de gebruiker
 1. Correctie van de acht DCG-weekplannen (`supabase/scripts/2026-10-30_dcg_weekplannen_correctie.sql.voorstel`, **niet uitgevoerd**).
