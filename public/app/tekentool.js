@@ -257,7 +257,9 @@
         : soort === "cone" ? HAT : soort === "dish" ? DISH : null;
       el("drawKleur").hidden = !palet;
       el("drawKleur").innerHTML = palet ? Object.keys(palet).map(function(k){
-        return '<button type="button" class="draw-swatch' + (gekozen.every(function(g){ return g.c === k; }) ? ' active' : '') + '" data-kleur="' + k + '" title="' + k + '" style="background:' + palet[k] + '"></button>';
+        // Besluit 158: tikvlak 44 px, het rondje zelf blijft ± 28 px.
+        var aan = gekozen.every(function(g){ return g.c === k; });
+        return '<button type="button" class="draw-swatch' + (aan ? ' active' : '') + '" data-kleur="' + k + '" title="' + k + '" aria-label="Kleur ' + k + '" aria-pressed="' + aan + '"><span style="background:' + palet[k] + '"></span></button>';
       }).join("") : "";
       Array.prototype.forEach.call(document.querySelectorAll("[data-draw-tool]"), function(b){
         b.classList.toggle("active", st.tool != null && b.getAttribute("data-draw-tool") === String(st.tool));
@@ -330,6 +332,8 @@
       var h = f && !f.hidden && railOpen === "spelers" && window.matchMedia("(max-width: 899px)").matches ? f.offsetHeight : 0;
       stage.style.setProperty("--paneel", h + "px");
       stage.classList.toggle("paneel-open", h > 0);
+      // Besluit 158: de tip neemt op de telefoon geen ruimte in zolang het paneel Spelers open is.
+      el("drawOverlay").classList.toggle("spelers-open", h > 0);
     }
     function sluitMenus(){
       if (railOpen){ railOpen = null; var f = el("drawFly"); if (f) f.hidden = true; renderRail(); paneelRuimte(); }
@@ -374,10 +378,13 @@
       // Uitklapmenu (één voor alle soorten) naast de rail; bij Spelers met de nummerbalk.
       if (!el("drawFly")){
         var f = document.createElement("div"); f.id = "drawFly"; f.className = "draw-fly"; f.hidden = true;
-        f.innerHTML = '<div class="draw-fly-h"><b id="drawFlyH"></b><button type="button" class="draw-fly-x" aria-label="Menu sluiten">×</button></div><div class="draw-fly-grid" id="drawFlyGrid"></div><div id="drawNummers" class="draw-nummers"></div>';
+        f.innerHTML = '<div class="draw-fly-h"><b id="drawFlyH"></b><span class="draw-fly-acties" id="drawFlyActies"></span><button type="button" class="draw-fly-x" aria-label="Menu sluiten">×</button></div><div class="draw-fly-grid" id="drawFlyGrid"></div><div id="drawNummers" class="draw-nummers"></div>';
         el("drawTools").parentNode.appendChild(f);
         f.addEventListener("click", function(e){
           if (!st) return;
+          // Besluit 158: Kopie en Weg voor de gekozen speler in de kop van het paneel (telefoon staand).
+          if (e.target.closest("[data-paneel-dup]")){ duplicate(); return; }
+          if (e.target.closest("[data-paneel-weg]")){ removeSel(); return; }
           if (e.target.closest(".draw-fly-x")){ sluitMenus(); st.tool = null; render(); return; } // Besluit 152: × = klaar, gereedschap uit
           var tk = e.target.closest("[data-draw-tool]");
           if (tk){ var n = Number(tk.getAttribute("data-draw-tool")), r = railVan(n); railLaatst[r.id] = n; pickTool(n, true); if (r.id !== "spelers") sluitMenus(); return; }
@@ -582,7 +589,19 @@
         if (t && t.t === "p") b.innerHTML = toolIcon(t) + (t.key ? '<span class="draw-key">' + t.key + '</span>' : '');
       });
     }
+    // Besluit 158: kop van het paneel Spelers. Met een gekozen speler: zijn naam en de knoppen Kopie en Weg (op de telefoon
+    // staand ligt de balk onder het veld anders achter het paneel). Op de laptop en gekanteld verbergt de opmaak de knoppen.
+    var IC_DUP = '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 16V6a2 2 0 0 1 2-2h10" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+    var IC_WEG = '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+    function paneelKop(){
+      var h = el("drawFlyH"), a = el("drawFlyActies"); if (!h || !a || railOpen !== "spelers") { if (a) a.innerHTML = ""; return; }
+      var it = st.sel != null && !(st.multi && st.multi.length > 1) ? st.items[st.sel] : null, sp = it && it.t === "p" ? it : null;
+      h.textContent = !sp ? "Spelers" : sp.c === "keeper" ? "Keeper" : sp.c === "trainer" ? "Trainer" : "Speler" + (sp.n ? " " + sp.n : "");
+      a.innerHTML = sp ? '<button type="button" class="draw-fly-actie" data-paneel-dup aria-label="Dupliceren">' + IC_DUP + '<span>Kopie</span></button>' +
+        '<button type="button" class="draw-fly-actie weg" data-paneel-weg aria-label="Verwijderen">' + IC_WEG + '<span>Weg</span></button>' : "";
+    }
     function renderNummers(){
+      paneelKop();
       var bak = el("drawNummers"); if (!bak) return;
       var gk = nrDoel(), gekozen = gekozenSpeler();
       if (gekozen && TEAMNAAM[gekozen.c]) nrTeam = gekozen.c;
@@ -609,8 +628,8 @@
         '<div class="draw-los"><button type="button" class="draw-tool draw-los-knop" data-draw-tool="' + los + '" title="Tik daarna op het veld">＋ Losse speler</button>' +
           '<button type="button" class="draw-tool" data-draw-tool="' + tr + '" aria-label="Trainer" title="Trainer (toets T)">' + icoon("t", "#1A1A1A", letter("T")) + '</button>' +
           '<button type="button" class="draw-tool" data-draw-tool="' + kp + '" aria-label="Keeper" title="Keeper (toets K)">' + icoon("t", "#1A1A1A", letter("K")) + '</button></div>' +
-        '<small>' + (gk ? 'Tik een nummer: de gekozen speler krijgt dat nummer (dubbel mag). Weghalen: Verwijderen onder het veld.'
-          : gekozen ? 'Gekozen: nummer ' + (gekozen.n || 'zonder') + '. Een ander nummer kiest of zet neer. Nummer wijzigen: Ander nummer… of tik de speler op het veld en dan een nummer.'
+        '<small>' + (gk ? 'Tik een nummer: de gekozen speler krijgt dat nummer (dubbel mag).'
+          : gekozen ? 'Gekozen: nummer ' + (gekozen.n || 'zonder') + '. Wijzigen: Ander nummer… of tik de speler op het veld en dan een nummer.'
           : 'Kies een team en tik een nummer: de speler staat op zijn plek. Staat hij er al, dan kies je hem.') + '</small>';
       Array.prototype.forEach.call(bak.querySelectorAll("[data-draw-tool]"), function(b){ b.classList.toggle("active", st.tool != null && b.getAttribute("data-draw-tool") === String(st.tool)); });
     }
