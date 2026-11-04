@@ -73,7 +73,7 @@ Er is geen migratie nodig. Besluit 148 verandert het opslagformaat en de tekenco
 3. **Nummerknoppen voor lichtblauw en blauw?** Alleen als trainers echt vier genummerde teams tekenen. Dat is eerst een vraag aan de doelgroep.
 
 ## 7. Tests die nodig zijn (status)
-- ✅ Nummering (8 tests in `tests/tekentool-nummering.spec.js`): opstelling = balk (wie welk nummer heeft), eerste vrije, dubbel, *Ander nummer…*, verwijderen alleen met *Verwijderen*, keeper, telefoon zonder onbedoelde plaatsing, oude tekening ongewijzigd.
+- ✅ Nummering (8 tests in pull request #110): opstelling = balk (wie welk nummer heeft), eerste vrije, dubbel, *Ander nummer…*, verwijderen alleen met *Verwijderen*, keeper, telefoon zonder onbedoelde plaatsing, oude tekening ongewijzigd.
 - ☐ Bij B1: menu *Spelers* sluiten met een klik op het veld zet niets neer.
 - ☐ Bij B5: veld wisselen met spelers (pas na het ontwerp voor veldcoördinaten).
 - ☐ Telefoon: tikvlak van een speler ≥ 44 pt (na het mobiele ontwerp).
