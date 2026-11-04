@@ -1,7 +1,7 @@
 // ClubComm — Besluit 134 en Besluit NNN: de begeleider kijkt mee met de trainingen van een trainer (alleen lezen) en geeft feedback.
 // De rechten zelf (wie de rijen mag lezen) staan in de database (migratie 032 en 034) en worden getest in npm run test:veilig.
 const { test, expect } = require('@playwright/test');
-const { volgFouten, controleer } = require('./hulp');
+const { volgFouten, controleer, nepDatabase, inloggen, nepDb } = require('./hulp');
 
 test.describe('Besluit 134: meekijken met trainingen', () => {
   test('HO ziet de training met tekening, geeft feedback; trainer ziet het bij zijn training', { tag: ['@begeleiden'] }, async ({ page }) => {
@@ -75,5 +75,22 @@ test.describe('Besluit 134: meekijken met trainingen', () => {
     await page.locator('form[data-submit="mkRegel"] button.knop').click();
     expect(await page.evaluate(() => CC.S().club.begeleiderKijktMee)).toBe(true);
     await controleer(page, fouten, 'meekijken: Regels');
+  });
+
+  test('bestaande eigen trainingen worden na inloggen één keer omgezet; andermans rijen nooit', { tag: ['@begeleiden', '@veilig'] }, async ({ page }) => {
+    const fouten = volgFouten(page);
+    await nepDatabase(page);
+    await page.evaluate(() => { const db = JSON.parse(sessionStorage.getItem('fake-sb-db'));
+      const rij = (soort, id, persoon, data) => { db.rows[`dcg|${soort}|${id}`] = { club_id: 'dcg', soort, id, scope: 'eigen', team_id: 'O12-1', speler_id: null, persoon_id: persoon, act_id: null, data: { id, eigenaar: persoon, ...data } }; };
+      rij('vormen', 'v-oud', 'p-beheer', { naam: 'Rondo', teamId: 'O12-1' });
+      rij('vormen', 'v-los', 'p-beheer', { naam: 'Los idee', teamId: 'O12-1' });
+      rij('trainingsplannen', 'tp-oud', 'p-beheer', { actId: 'x1', teamId: 'O12-1', datum: '2026-10-28', onderdelen: [{ id: 'o1', vormId: 'v-oud', min: 15 }] });
+      rij('trainingsplannen', 'wk-oud', 'p-beheer', { week: true, teamId: 'O12-1', datum: '2026-10-26', onderdelen: [] });
+      rij('trainingsplannen', 'tp-ander', 'p-ander', { actId: 'x2', teamId: 'O12-1', datum: '2026-10-28', onderdelen: [] });
+      sessionStorage.setItem('fake-sb-db', JSON.stringify(db)); });
+    await inloggen(page, 'admin@test.nl');
+    const scopes = async () => Object.fromEntries(Object.values((await nepDb(page)).rows).filter((r) => ['v-oud', 'v-los', 'tp-oud', 'wk-oud', 'tp-ander'].includes(r.id)).map((r) => [r.id, r.scope]));
+    await expect.poll(scopes, { message: 'eigen trainingen omgezet' }).toEqual({ 'v-oud': 'trainerplan', 'v-los': 'eigen', 'tp-oud': 'trainerplan', 'wk-oud': 'eigen', 'tp-ander': 'eigen' });
+    await controleer(page, fouten, 'meekijken: omzetten');
   });
 });
