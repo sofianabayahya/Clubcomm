@@ -26,6 +26,7 @@
 - Bevinding: uitvoerrecht van drie `priv`-functies intrekken (onbereikbaar voor anon). Een account hoort bij precies één club (getest 10/10).
 
 ## Volgende technische stap
+- **Tekentool, wacht op keuze:** menu *Spelers* op de telefoon (bedekt het hele veld; op 360 px en gekanteld zijn de knoppen van de tegenstander onbereikbaar). Onderzoek en concepten: `docs/onderzoek/tekentool/spelers-mobiel.md` (branch `onderzoek/tekentool-spelers-mobiel`). Advies A + A+ (vast paneel onderaan met één team tegelijk; compacte bovenbalk; tip onthouden). Bouwen pas na akkoord.
 - Later, eigen besluit: vaardigheidsaccenten per trainingsplek (de vorm blijft herbruikbaar; de trainer kiest per training het accent). Wat ontbreekt: `docs/onderzoek/trainingskaart/README.md`. Nu niet bouwen.
 - Gebied F (documentatie en presentatie): **Besluit 151** staat op `main` (#115). Volgende stap, elk apart na akkoord: sjabloon voor pull requests met het blok Documentatie-impact, dan de eerste 5–6 trainerskaarten + *Snelstart vrijwillige trainer* als Concept. Open vragen (PowerPoints naast PDF's; wie verstuurt) staan bij *Nog te bespreken*.
 - Voorstel (L): het opleidingsprofiel veilig leesbaar maken voor trainers (onderzoeksbranch `onderzoek/profiel-leesrechten`).
