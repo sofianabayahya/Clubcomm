@@ -5,7 +5,7 @@
 **Bijgewerkt:** 04-11-2026
 
 ## Stand
-- `main` = #109 (Besluit 147) + #111 (vaste datums in de tests). **Migratie 033 is niet toegepast.** Het eerstvolgende vrije besluitnummer is **150** (145, 146, 148 en 149 zijn bezet door open PR's).
+- `main` = #109 (Besluit 147) + #111 (vaste datums in de tests). **Migratie 033 is niet toegepast.** Het eerstvolgende vrije besluitnummer is **152** (151 = documentatie, open PR) (145, 146, 148 en 149 zijn bezet door open PR's).
 - Productiedatabase (29/30-10, alleen gelezen): functioneel gelijk aan `main` (de md5 van alle `priv`-functies is gelijk, zonder commentaarregels). Het migratielogboek mist 027–030 (via losse SQL toegepast; alle objecten bestaan). Niet aanpassen zonder apart akkoord.
 
 ## Open pull requests
@@ -23,5 +23,5 @@
 
 ## Volgende technische stap
 - Later, eigen besluit: vaardigheidsaccenten per trainingsplek (de vorm blijft herbruikbaar; de trainer kiest per training het accent). Wat ontbreekt: `docs/onderzoek/trainingskaart/README.md`. Nu niet bouwen.
-- Voorstel gebied F (documentatie en presentatie): `docs/onderzoek/documentatie-borging/README.md` (branch `onderzoek/documentatie-borging`), wacht op akkoord; niets gepubliceerd.
+- Gebied F (documentatie en presentatie): **Besluit 151** vastgelegd op branch `onderzoek/documentatie-borging` (pull request open, wacht op akkoord om samen te voegen). Volgende stap na akkoord: sjabloon voor pull requests, dan de eerste trainerskaarten + snelstart als Concept.
 - Voorstel (L): het opleidingsprofiel veilig leesbaar maken voor trainers (onderzoeksbranch `onderzoek/profiel-leesrechten`).
