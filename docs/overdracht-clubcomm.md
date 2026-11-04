@@ -5,15 +5,15 @@
 **Bijgewerkt:** 4-11-2026 (chat *Ontwikkeling Tekentool*)
 
 ## Stand
-- `main` = `eb4dcd0` (#106 samengevoegd). **Migratie 033 is niet toegepast.** Het eerstvolgende vrije besluitnummer is **149** (145–148 staan in open pull requests).
+- `main` = `4bf2e97` (#109, Besluit 147, samengevoegd). **Migratie 033 is niet toegepast.** Het eerstvolgende vrije besluitnummer is **149** (145, 146 en 148 staan in open pull requests).
 - Productiedatabase: zie de vorige stand (29/30-10). Niet aanpassen zonder apart akkoord.
-- `npm test` op `main` (4-11): *nieuwe fase: pas een kleur vanaf 6 keer gemeten* (`@afmelden`) faalt 3 van 3 keer. Die test hangt af van de datum (demo); hij heeft niets met de tekentool te maken. Nog te onderzoeken.
+- Datumtest *nieuwe fase: pas een kleur vanaf 6 keer gemeten*: faalde op `eb4dcd0` (3/3), slaagt op `4bf2e97` (3/3), want #109 gaf hem een vaste datum. PR #111 (andere sessie) pakt de overige datumafhankelijke tests aan.
 
 ## Open pull requests
 | PR | Wat | Stand |
 |---|---|---|
-| #107 · #108 · #109 | Besluiten 145, 146, 147 (andere sessies) | zie de pull requests |
-| #110 | **Besluit 148**: tekentool, rugnummers voorspelbaar (voorstel A), branch `bouw/tekentool-nummering` | 13/13 `@tekentool`; `npm test` 88/89 (de datumtest hierboven); **wacht op akkoord om samen te voegen** |
+| #107 · #108 · #111 | Besluiten 145, 146; vaste datum in tests (andere sessies) | zie de pull requests |
+| #110 | **Besluit 148**: tekentool, rugnummers voorspelbaar (voorstel A), branch `bouw/tekentool-nummering` | controles 1 en 2 gedaan (6 bevestigde fouten hersteld); `main` erin; 16/16 `@tekentool`, `npm test` 100/100; **wacht op akkoord om samen te voegen** |
 
 ## Wacht op akkoord van de gebruiker
 1. Samenvoegen van #110 (= publiceren). Daarna met `list_deployments` nagaan dat productie de commit van `main` draait.
