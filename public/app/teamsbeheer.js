@@ -32,7 +32,7 @@
   const wacht = () => {
     if (!CC.rollen || !CC.rollen.beheerder || !CC.rollen.hjo) return setTimeout(wacht, 0);
     const sz = CC.rollen.beheerder.schermen.seizoen; CC.rollen.beheerder.schermen.seizoen = (S) => CC.teamsBlok(S) + sz(S);
-    const tr = CC.rollen.hjo.schermen.trainers; CC.rollen.hjo.schermen.trainers = (S) => { const html = tr(S); if (!(CC.pakketTrainers && CC.pakketTrainers(S)) || (CC.rol() || {}).rol !== 'hjo') return html;
+    const tr = CC.rollen.hjo.schermen.trainers; CC.rollen.hjo.schermen.trainers = (S) => { const html = tr(S); if (!(CC.pakketTrainers && CC.pakketTrainers(S)) || (CC.rol() || {}).rol !== 'hjo' || CC.hoWeek) return html; // Besluit 146: Teams is een eigen tabblad
       const zonder = S.teams.filter((t) => !t.trainerId).length;
       return `${html}${h.sectie('Teams')}<div class="lijst">${h.rij({ ic: 'shield', titel: 'Teams, trainingsdagen en wedstrijden', sub: `${S.teams.length} team${S.teams.length === 1 ? '' : 's'}${zonder ? ` · ${zonder} zonder trainer` : ''}`, act: 'open', attrs: 'data-view="teamsBeheer"' })}${h.rij({ ic: 'user-plus', titel: 'Trainer toevoegen', sub: 'Naam en e-mailadres; koppel meteen het team', act: 'stafNieuw' })}</div>`; };
   };

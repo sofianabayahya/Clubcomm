@@ -70,9 +70,17 @@
 
   // ---------- Tabblad Trainers ----------
   CC.rollen.hjo.schermen.trainers = (S) => {
-    const f = CC.hoFocus ? CC.hoFocus.focus(S) : 'alle'; const deel = h.segVal('trDeel', 'traject');
-    const kop = `${CC.hoFocus ? CC.hoFocus.chips(S, f) : ''}${h.seg('trDeel', [['traject', 'Traject'], ['alle', 'Alle trainers']], 'traject')}`;
-    const alle = trainersIn(S, f);
+    const f = CC.hoFocus ? CC.hoFocus.focus(S) : 'alle'; const alle = trainersIn(S, f); const inTraject = alle.filter((p) => traject(S, p.id));
+    // Besluit 146: bij het pakket eerst Alle (compacte lijst), met de aantallen in de knoppen
+    const pk = CC.pakketTrainers(S); const deel = h.segVal('trDeel', pk ? 'alle' : 'traject');
+    const kop = `${h.seg('trDeel', [['alle', `Alle (${alle.length})`], ['traject', `Traject (${inTraject.length})`]], pk ? 'alle' : 'traject')}${CC.hoFocus ? CC.hoFocus.chips(S, f) : ''}`;
+    if (deel === 'alle' && pk && CC.hoTrainerRij) {
+      const zoek = (h.segVal('trZoek', '') || '').toLowerCase(); const nGevraagd = alle.filter((p) => !kennisStatus(S, p.id)).length; const nIn = alle.filter((p) => kennisStatus(S, p.id) === 'ingevuld').length;
+      const l = alle.filter((p) => !zoek || p.naam.toLowerCase().includes(zoek) || teamsVan(S, p).some((t) => t.naam.toLowerCase().includes(zoek))).sort((a, b) => a.naam.localeCompare(b.naam));
+      return `${kop}<div class="zoek">${icon('search')}<input type="search" placeholder="Zoek trainer of team" value="${esc(h.segVal('trZoek', ''))}" data-input="zoekTrainer" aria-label="Zoek trainer of team"></div>
+        ${CC.hoTrajectRegel(S, alle)}${l.length ? `<div class="lijst compact">${l.map((p) => CC.hoTrainerRij(S, p)).join('')}</div>` : h.leeg('Geen trainer gevonden', 'user-check')}
+        <p class="zacht klein">Kennismaking: ${nIn} van ${alle.length} ingevuld.${nGevraagd ? ` <button class="linkknop" data-act="kennisUitnodigen">Uitnodigen (${nGevraagd})</button>` : ''} · <button class="linkknop" data-act="kennisPrintLeeg">Lege vragenlijst printen</button></p>`;
+    }
     if (deel === 'alle') {
       const zoek = (h.segVal('trZoek', '') || '').toLowerCase();
       const nGevraagd = alle.filter((p) => !kennisStatus(S, p.id)).length; const nIn = alle.filter((p) => kennisStatus(S, p.id) === 'ingevuld').length;
@@ -83,13 +91,15 @@
           <p class="zacht klein">Elke trainer krijgt één uitnodiging: "We willen je graag beter leren kennen." Geen herinneringen.</p></div>
         ${rapport}`;
     }
-    const inTraject = alle.filter((p) => traject(S, p.id));
     const totaal = inTraject.reduce((n, p) => { const t = traject(S, p.id); return n + (t.plan.wedstrijd || 0) + (t.plan.training || 0); }, 0);
     const klaar = inTraject.reduce((n, p) => n + gedaan(S, p.id), 0);
     // Schoon overzicht: per trainer naam, leerdoel en de geplande momenten, afgevinkt als ze klaar zijn
     const kaart = (p) => { const t = traject(S, p.id);
       return `<div class="kaartje traject"><button class="linkknop traject-kop" data-act="open" data-view="trainerDetail" data-id="${p.id}"><b>${esc(p.naam)}</b> <small class="zacht">${esc(teamsVan(S, p).map((x) => x.naam).join(', '))}</small>${icon('chevron-right')}</button>
         ${t.leerdoel ? `<p class="klein"><b>Leerdoel:</b> ${esc(t.leerdoel)}</p>` : ''}${trajectStappen(S, p.id, t)}</div>`; };
+    // Besluit 146: compact (één regel per trainer, snelvenster); zonder het pakket blijft de kaart per trainer
+    if (pk && CC.hoTrainerRij) return `${kop}${CC.hoTrajectRegel(S, alle)}${inTraject.length ? `<div class="lijst compact">${inTraject.sort((a, b) => a.naam.localeCompare(b.naam)).map((p) => CC.hoTrainerRij(S, p)).join('')}</div>` : h.leeg('Nog niemand in een traject', 'user-check')}
+      <button class="knop licht vol" data-act="trajectKies">${icon('plus')}Traject toevoegen</button>`;
     return `${kop}<button class="knop vol" data-act="trajectKies">${icon('plus')}Traject toevoegen</button>
       ${inTraject.length ? `<div class="clubregel"><span><b>${inTraject.length}</b> in traject</span><span><b>${klaar}/${totaal}</b> gedaan</span></div>${inTraject.map(kaart).join('')}` : h.leeg('Nog niemand in een traject', 'user-check')}`;
   };
