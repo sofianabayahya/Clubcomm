@@ -116,3 +116,35 @@
   .draw-menu-lijst { left: 0; right: auto; }
   .draw-menu-rechts .draw-menu-lijst { left: auto; right: 0; min-width: 260px; }
 }
+/* Besluit 156: paneel Spelers met één team tegelijk (zes teamkleuren, drie vormen); op de telefoon vast onderaan,
+   met een compacte bovenbalk (A+). Tikvlakken 44 px. */
+.draw-fly-spelers .draw-nummers { display: flex; flex-direction: column; gap: 8px; padding-top: 0; border-top: 0; }
+.draw-teams, .draw-vormen, .draw-los { display: flex; gap: 6px; flex-wrap: wrap; }
+.draw-team, .draw-vorm-knop { width: 44px; height: 44px; padding: 0; border: 1px solid #c9d3df; border-radius: 10px; background: #fff; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+.draw-team.aan, .draw-vorm-knop.aan { border: 3px solid #0b2545; background: #eef3f8; }
+.draw-team-kop { display: flex; align-items: center; gap: 8px; font-size: 15px; }
+.draw-team-kop .draw-vormen { margin-left: auto; }
+.draw-los .draw-tool { width: 44px; height: 44px; aspect-ratio: auto; }
+.draw-los .draw-los-knop { flex: 1; width: auto; font: 600 14px inherit; font-family: inherit; color: var(--ink); padding: 0 12px; }
+.draw-fly-spelers .draw-nr-knoppen { flex-wrap: wrap; overflow: visible; }
+@media (min-width: 900px) { .draw-fly-spelers { width: 420px; } }
+@media (max-width: 899px) {
+  .draw-fly.draw-fly-spelers { position: fixed; left: 0; right: 0; bottom: 0; top: auto !important; max-width: none; max-height: 62vh; overflow-y: auto;
+    border-radius: 16px 16px 0 0; padding: 8px 12px calc(10px + env(safe-area-inset-bottom, 0px)); gap: 8px; box-shadow: 0 -6px 24px rgba(11,37,69,.25); z-index: 30; }
+  #drawOverlay .draw-stage { padding-bottom: calc(12px + var(--paneel, 0px)); }
+  /* A+: bovenbalk in twee vaste regels: Annuleren · ↶ ↷ · Opslaan, daaronder Veld · Opstelling · ⚙ */
+  #drawOverlay .draw-top { flex-wrap: wrap; row-gap: 6px; gap: 6px; padding: 8px; padding-top: calc(8px + env(safe-area-inset-top, 0px)); }
+  #drawOverlay .draw-title { display: none; }
+  #drawOverlay .draw-top-act { display: contents; }
+  #drawOverlay #drawUndo { order: 2; margin-left: auto; } #drawOverlay #drawRedo { order: 3; } #drawOverlay #drawSave { order: 4; }
+  #drawOverlay #drawUndo, #drawOverlay #drawRedo { font-size: 0; min-width: 44px; padding: 0; justify-content: center; }
+  #drawOverlay #drawUndo::before { content: "↶"; font-size: 22px; } #drawOverlay #drawRedo::before { content: "↷"; font-size: 22px; }
+  #drawOverlay .draw-menus { order: 5; flex: 1 1 100%; flex-wrap: nowrap; gap: 6px; }
+  #drawOverlay .draw-menu > summary { padding: 0 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .draw-fly { transition: none; } }
+@media (max-width: 899px) {
+  #drawOverlay .draw-stage.paneel-open { justify-content: flex-start; padding-top: 8px; }
+  #drawOverlay .draw-stage.paneel-open #drawHint { display: none; } /* het paneel heeft zijn eigen uitleg */
+  #drawOverlay .draw-stage.paneel-open #drawSvg { max-height: 100%; }
+}
