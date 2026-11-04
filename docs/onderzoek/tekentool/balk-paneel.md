@@ -1,6 +1,6 @@
 # Tekentool: de balk onder het veld achter het paneel Spelers (telefoon staand)
 
-*4-11-2026. Spoor 3. **Voorstel met conceptbeelden. Gekozen: B, met de adviezen = Besluit NNN.** Gevonden bij het bouwen van de kleurrondjes van 44 px. Gemeten op 390 × 844 met de versie van de Besluiten 156 en 157. De concepten zijn een simulatie in de browser; de app is niet aangepast.*
+*4-11-2026. Spoor 3. **Voorstel met conceptbeelden. Gekozen: B, met de adviezen = Besluit 158.** Gevonden bij het bouwen van de kleurrondjes van 44 px. Gemeten op 390 × 844 met de versie van de Besluiten 156 en 157. De concepten zijn een simulatie in de browser; de app is niet aangepast.*
 
 ## 1. Wat er nu gebeurt (gemeten)
 Kies je op de telefoon (staand) een speler terwijl het paneel *Spelers* open is, dan verschijnt de balk onder het veld (*Dupliceren · kleuren · Verwijderen*). Die balk ligt **volledig achter het paneel**:
@@ -30,7 +30,7 @@ Gekanteld (Besluit 157) en op de laptop staat de balk wel vrij.
 - Laptop, gekanteld en het paneel dicht blijven gelijk.
 - *Weg* is dezelfde handeling als *Verwijderen*, dus *Ongedaan maken* werkt (Besluit 148).
 - Geen gegevens; opgeslagen tekeningen ongewijzigd.
-- Maat **M**: een besluit (`Besluit NNN`, nummer vlak vóór het samenvoegen).
+- Maat **M**: een besluit (`Besluit 158`, nummer vlak vóór het samenvoegen).
 - In *Afgewezen ideeën* staat niets over dit onderwerp (gezocht 4-11).
 
 ## 3. Doelgroepen

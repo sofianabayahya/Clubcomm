@@ -1,4 +1,4 @@
-// Tekentool, Besluit NNN: kleur wijzigen met een tikvlak van 44 px, en de tip op de telefoon wijkt zolang het paneel
+// Tekentool, Besluit 158: kleur wijzigen met een tikvlak van 44 px, en de tip op de telefoon wijkt zolang het paneel
 // Spelers open is (het veld blijft dan volledig zichtbaar, ook de eerste keer).
 const { test, expect } = require('@playwright/test');
 const { volgFouten } = require('./hulp');
@@ -48,7 +48,7 @@ test('telefoon: de tip wijkt voor het paneel Spelers en komt daarna terug (tot j
   expect(fouten).toEqual([]);
 });
 
-// Besluit NNN (B): op de telefoon staand staan Kopie en Weg in de kop van het paneel Spelers; de balk onder het veld lag daar
+// Besluit 158 (B): op de telefoon staand staan Kopie en Weg in de kop van het paneel Spelers; de balk onder het veld lag daar
 // achter het paneel. Het veld blijft helemaal boven het paneel. Laptop: de balk onder het veld zoals het was.
 test('telefoon: Kopie en Weg in de kop van het paneel, het veld blijft zichtbaar', TAG, async ({ page }) => {
   const fouten = volgFouten(page);

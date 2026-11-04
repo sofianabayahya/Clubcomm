@@ -257,7 +257,7 @@
         : soort === "cone" ? HAT : soort === "dish" ? DISH : null;
       el("drawKleur").hidden = !palet;
       el("drawKleur").innerHTML = palet ? Object.keys(palet).map(function(k){
-        // Besluit NNN: tikvlak 44 px, het rondje zelf blijft ± 28 px.
+        // Besluit 158: tikvlak 44 px, het rondje zelf blijft ± 28 px.
         var aan = gekozen.every(function(g){ return g.c === k; });
         return '<button type="button" class="draw-swatch' + (aan ? ' active' : '') + '" data-kleur="' + k + '" title="' + k + '" aria-label="Kleur ' + k + '" aria-pressed="' + aan + '"><span style="background:' + palet[k] + '"></span></button>';
       }).join("") : "";
@@ -332,7 +332,7 @@
       var h = f && !f.hidden && railOpen === "spelers" && window.matchMedia("(max-width: 899px)").matches ? f.offsetHeight : 0;
       stage.style.setProperty("--paneel", h + "px");
       stage.classList.toggle("paneel-open", h > 0);
-      // Besluit NNN: de tip neemt op de telefoon geen ruimte in zolang het paneel Spelers open is.
+      // Besluit 158: de tip neemt op de telefoon geen ruimte in zolang het paneel Spelers open is.
       el("drawOverlay").classList.toggle("spelers-open", h > 0);
     }
     function sluitMenus(){
@@ -382,7 +382,7 @@
         el("drawTools").parentNode.appendChild(f);
         f.addEventListener("click", function(e){
           if (!st) return;
-          // Besluit NNN: Kopie en Weg voor de gekozen speler in de kop van het paneel (telefoon staand).
+          // Besluit 158: Kopie en Weg voor de gekozen speler in de kop van het paneel (telefoon staand).
           if (e.target.closest("[data-paneel-dup]")){ duplicate(); return; }
           if (e.target.closest("[data-paneel-weg]")){ removeSel(); return; }
           if (e.target.closest(".draw-fly-x")){ sluitMenus(); st.tool = null; render(); return; } // Besluit 152: × = klaar, gereedschap uit
@@ -589,7 +589,7 @@
         if (t && t.t === "p") b.innerHTML = toolIcon(t) + (t.key ? '<span class="draw-key">' + t.key + '</span>' : '');
       });
     }
-    // Besluit NNN: kop van het paneel Spelers. Met een gekozen speler: zijn naam en de knoppen Kopie en Weg (op de telefoon
+    // Besluit 158: kop van het paneel Spelers. Met een gekozen speler: zijn naam en de knoppen Kopie en Weg (op de telefoon
     // staand ligt de balk onder het veld anders achter het paneel). Op de laptop en gekanteld verbergt de opmaak de knoppen.
     var IC_DUP = '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 16V6a2 2 0 0 1 2-2h10" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
     var IC_WEG = '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" fill="none" stroke="currentColor" stroke-width="2"/></svg>';

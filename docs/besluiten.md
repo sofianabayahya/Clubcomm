@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 4 november 2026 (t/m Besluit 157; 146 en 150 staan in open pull requests)
+Laatst bijgewerkt: 4 november 2026 (t/m Besluit 158; 146 en 150 staan in open pull requests)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -21,7 +21,7 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 157; 146 en 150 staan in open pu
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
-| NNN | 3 | Tekentool, drie verbeteringen op de telefoon en daarbuiten: op de telefoon staand staan **Kopie** en **Weg** voor de gekozen speler in de **kop van het paneel** *Spelers* (de balk onder het veld lag daar achter het paneel) en het veld krimpt mee als het paneel hoger wordt; de **kleurrondjes** bij *kleur wijzigen* krijgen een **tikvlak van 44 px** (het rondje blijft ± 28 px; met schermlezernaam en *aan/uit*); de **tip** op de telefoon wijkt zolang het paneel *Spelers* open is, zodat het veld ook de eerste keer volledig zichtbaar is | ✅ besloten (wacht op samenvoegen) |  |
+| 158 | 3 | Tekentool, drie verbeteringen op de telefoon en daarbuiten: op de telefoon staand staan **Kopie** en **Weg** voor de gekozen speler in de **kop van het paneel** *Spelers* (de balk onder het veld lag daar achter het paneel) en het veld krimpt mee als het paneel hoger wordt; de **kleurrondjes** bij *kleur wijzigen* krijgen een **tikvlak van 44 px** (het rondje blijft ± 28 px; met schermlezernaam en *aan/uit*); de **tip** op de telefoon wijkt zolang het paneel *Spelers* open is, zodat het veld ook de eerste keer volledig zichtbaar is | ✅ besloten (wacht op samenvoegen) |  |
 | 157 | 3 | Tekentool, telefoon **gekanteld** (breed en lager dan 500 px): eigen indeling met de rail **links**, de bovenbalk op **één regel**, geen tip en geen hulptekst, het veld **past in de hoogte**; het paneel *Spelers* ligt **rechts naast het veld** (hoogstens 330 px, scrollt). Staand, tablet en laptop ongewijzigd | ✅ besloten (wacht op samenvoegen) |  |
 | 156 | 3 | Tekentool, paneel *Spelers*: één team tegelijk met zes teamkleuren (nieuw: **oranje** en **roze**), per team **rondje of driehoek**, nummers 1–11 en *Zonder nummer* voor **elk** team, *＋ Losse speler*, Trainer en Keeper in het paneel. Telefoon: het paneel ligt **vast onderaan** en het veld blijft erboven zichtbaar; bovenbalk in twee regels (↶ ↷); de tip blijft weg na wegtikken. Laptop: hetzelfde paneel naast de rail. Oude tekeningen ongewijzigd | ◐ deels herzien | door 157 (gekanteld ligt het paneel rechts naast het veld) |
 | 155 | 3 | Korte evaluatie en labels uit het profiel: `evaluatie.kort` bepaalt welke vragen na de training open staan en in welke volgorde (DCG: doel/situatie · gedrag · toepassing · volgende leerstap; *Weerstand* naar Verdiepende analyse); zonder `kort` alles zoals voorheen; vraagteksten en antwoorden ongewijzigd. *Handelingen in gekozen vormen* in plaats van *Accenten*. DCG-profiel v4: *Loskomen uit de dekkingsschaduw*, *Afremmen* (codes ongewijzigd); database-update apart akkoord | geldt (profiel v4 in de database sinds 04-11) | — |
@@ -694,7 +694,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
-## Besluit NNN — Tekentool: Kopie en Weg in het paneel Spelers; kleurrondjes met een tikvlak van 44 px; de tip wijkt voor het paneel (Spoor 3, maat M)
+## Besluit 158 — Tekentool: Kopie en Weg in het paneel Spelers; kleurrondjes met een tikvlak van 44 px; de tip wijkt voor het paneel (Spoor 3, maat M)
 *Besloten 4 november 2026: de initiatiefnemer vroeg de twee verbeteringen te bouwen die na Besluit 157 werden voorgesteld, en koos daarna advies B uit `docs/onderzoek/tekentool/balk-paneel.md` (met de adviezen: kleur wijzigen blijft zoals het is; *Kopie* en *Weg* met een pictogram).*
 - **Kopie en Weg in het paneel (telefoon staand):** kies je een speler terwijl het paneel *Spelers* open is, dan toont de kop *Speler 6 · Kopie · Weg · ×* (ook *Keeper* of *Trainer*). De balk onder het veld (*Dupliceren · kleuren · Verwijderen*) lag daar achter het paneel en is weg zolang het paneel open is. *Weg* = *Verwijderen* (ongedaan te maken), *Kopie* = *Dupliceren*; de schermlezer noemt die namen. Het veld krimpt mee als het paneel hoger wordt (was: de onderste 48 px achter het paneel). Kleur wijzigen: paneel dicht, dan de balk onder het veld (zoals nu). Laptop en gekanteld: zoals het was.
 - **Kleur wijzigen:** elk kleurrondje in de balk onder het veld is nu een knop van 44 × 44 px (norm `docs/app-controle.md`); het rondje zelf blijft ± 28 px. De schermlezer noemt *Kleur rood* enzovoort, en welke kleur aan staat. Was 26 × 26 px, op laptop en telefoon.
