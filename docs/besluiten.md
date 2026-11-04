@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 4 november 2026 (t/m Besluit 151; 146, 149 en 150 staan in open pull requests)
+Laatst bijgewerkt: 4 november 2026 (t/m Besluit 153; 146, 149 en 150 staan in open pull requests)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -21,6 +21,8 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 151; 146, 149 en 150 staan in op
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
+| 153 | 3 | Tekentool, veldlijnen: **penaltystip** (11 m), **halve maan** (9,15 m rond de stip, buiten de 16), **hoekschopboogjes** (1 m) en **middenstip** op 11×11 (liggend en staand) en Half veld; niet op 8×8, 6×6 en Vak (pupillenvelden pas met hun KNVB-maat). Bestaande tekeningen krijgen de lijnen vanzelf; gegevens ongewijzigd | ✅ besloten (wacht op samenvoegen) |  |
+| 152 | 3 | Tekentool: een menu sluiten zet niets onbedoeld neer. **×** = klaar (het gereedschap gaat uit, in elk menu); het menu **Spelers** zet bij openen geen gereedschap aan (losse speler = kleur tikken, dan het veld; sneltoetsen ongewijzigd). De snelle route *Hoedjes → tik op het veld* blijft. Geen gegevenswijziging | ✅ besloten (wacht op samenvoegen) |  |
 | 151 | 3 | Documentatie en presentatie: functiekaarten in docs/handleiding (nieuw) als enige bron (blokken per niveau, bundels per uitgave); drie statussen (Concept · Gereed · Gepubliceerd, alleen wat in productie is); blok Documentatie-impact in elke pull request; borging pas na de bevestigde release; vast scenario bestuursdemo | ✅ geldt | |
 | 148 | 3 | Tekentool, rugnummers: een nummerknop **verwijdert nooit** meer; staat het nummer er al, dan **kiest** hij die speler (bij een dubbel nummer eerst de eerst neergezette, nog een keer = de volgende). Een met de knop gekozen speler houdt zijn nummer; nummer wijzigen = de speler op het veld aantikken en dan een nummer (dubbel mag, geen ruil meer) of *Ander nummer…* (1–99). Nieuwe speler = **eerste vrije** nummer. *Opstelling* gebruikt de nummers van de balk (keeper hoort bij het team en is 1; spits 3-3-1 = 9). Oude tekeningen ongewijzigd, geen migratie | ✅ besloten (wacht op samenvoegen) |  |
 | 147 | 3 | Gereedschap vastleggen bij een gegeven training: per plek een momentopname (`vast`: gereedschap, *ook*, vaardigheden met hun leerlijn van toen, profiel en versie, datum, bron) bij de eerste keer *gegeven*. Daarna telt die, ook als de koppeling in de Vormenbank verandert. Ongeldige momentopname = minuten bij geen gereedschap, nooit stil terugvallen op de koppeling van nu. Terugzetten bewaart; opnieuw aanvinken legt niets nieuws vast. Correctie (andere vorm, toevoegen, ook na terugzetten) = meteen vastleggen; plek zonder momentopname op een vastgelegde training = niet toegerekend; kopiëren neemt niets mee, ook geen vastlegdatum van de doeltraining. Oude gegeven trainingen blijven ongewijzigd. Melding in de Vormenbank | geldt | — |
@@ -43,7 +45,7 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 151; 146, 149 en 150 staan in op
 | 129 | 3 | Observeren: klok en turven bovenaan, snelle notities met minuut en onderwerp, aandachtspunten na afloop | ✅ geldt |  |
 | 128 | 3 | Trainingsmodule (proef): eigen oefenvormen en trainingen met spacing, varianten en aantallen | ◐ deels herzien | door 130 (de training staat in het tabblad Training) en 131 (soort → vormtype, vorm opent als venster); 134 (de begeleider ziet de trainingen, na akkoord op de rechten) |
 | 127 | 3 | Tekentool: loopactie en pass met boog als vaste soort | ✅ geldt |  |
-| 126 | 3 | Tekentool clean (rail met menu's, Veld/Opstelling/⚙ boven) en pijlen met boog en aanpasbare lengte | ✅ geldt |  |
+| 126 | 3 | Tekentool clean (rail met menu's, Veld/Opstelling/⚙ boven) en pijlen met boog en aanpasbare lengte | ◐ deels herzien | door 152 (Spelers zet bij openen geen gereedschap aan; × zet het gereedschap uit) |
 | 125 | 3 | Tekentool: rondje of driehoek per team kiezen; nummerbalk in- en uitklappen | ◐ deels herzien | door 126 (in- en uitklappen = het menu Spelers openen en sluiten) |
 | 124 | 3 | Tekentool: nummerbalk (rugnummers 1–11 en zonder nummer per team, op hun plek in de 1-4-3-3) en rood schijfje | ◐ deels herzien | door 126 (de nummerbalk staat in het menu Spelers); door 148 (een bestaand nummer tikken kiest de speler in plaats van verwijderen; geen ruil meer; eerste vrije nummer) |
 | 123 | 1 · 3 | Opleidingsprofiel als gegevens; DCG-fundament ingevoerd (rest open), KNVB-standaard als bestand | ◐ deels herzien | door 131 (DCG-profiel versie 2: kant per leerlijn, 8 plekken spelprincipes, sjabloon DCG 75) |
@@ -686,6 +688,28 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 153 — Tekentool: penaltystip, halve maan, hoekschopboogjes en middenstip (Spoor 3, maat M)
+*Besloten 4 november 2026: de initiatiefnemer miste deze lijnen; voorstel met proefbeelden `docs/onderzoek/tekentool/veldlijnen.md`; gekozen: middenstip ja, alleen 11×11 en Half veld.*
+- **Op schaal** (± 10 beeldpunten per meter): penaltystip op 11 m van de doellijn; halve maan met straal 9,15 m (gelijk aan de middencirkel) rond de stip, alleen het deel buiten het strafschopgebied; hoekschopboogje van 1 m in elke hoek (op Half veld alleen bij de doellijn); middenstip.
+- **Velden:** 11×11 liggend, 11×11 staand en Half veld. **Niet** op 8×8 en 6×6: die velden hebben nog niet de KNVB-maat (prioriteit 3, veldcoördinaten), en of 6×6 een strafschopgebied heeft is een voetbalvraag. **Vak** blijft een vrij vak zonder lijnen.
+- **Bestaande tekeningen:** de lijnen worden bij elke weergave uit de gegevens getekend, dus ook oude tekeningen (tegel, vormkaart, printen) tonen ze; de gegevens veranderen niet. In productie (4-11): 5 tekeningen *11×11 liggend* en 3 *Half veld*; de 11 op *Vak* blijven gelijk.
+- Dezelfde lijndikte en kleur als de bestaande lijnen; niet aan te tikken.
+- Tests: `tests/tekentool-veld.spec.js`.
+
+---
+
+## Besluit 152 — Tekentool: een menu sluiten zet niets onbedoeld neer (Spoor 3, maat M)
+> Herziet Besluit 126 deels.
+*Besloten 4 november 2026: de initiatiefnemer koos advies A + B uit het onderzoek `docs/onderzoek/tekentool/menu-sluiten.md` (gemeten op laptop en telefoon). Alleen bediening; geen gegevens, database of rechten.*
+- **Probleem (gemeten):** een menu openen zette meteen het laatst gekozen gereedschap aan, en sluiten zette het niet uit. Een tik op het veld (om het menu weg te klikken, of na ×) zette daardoor een speler, hoedje, schijfje, doel of volgordenummer neer. Bij *Spelers*, dat je vooral voor de nummerknoppen opent, was dat bijna altijd onbedoeld.
+- **A — × = klaar:** sluiten met × zet in elk menu ook het gereedschap uit (net als *Kies*).
+- **B — Spelers zet bij openen niets aan:** een losse speler plaats je door in het menu een kleur te tikken en dan het veld. Stond er gereedschap van een ander menu aan, dan gaat dat uit. Sneltoetsen (1–4, T, K) werken zoals voorheen.
+- **Blijft:** de snelle route uit Besluit 126 (*Hoedjes*, tik op het veld = hoedje in de laatste kleur; ook bij Schijfjes, Doelen en Markeren). Esc sluit eerst het menu, een tweede Esc zet het gereedschap uit.
+- **Niet in dit besluit:** op de telefoon bedekt het menu *Spelers* bijna het hele veld (prioriteit 6, mobiele bediening).
+- Tests: `tests/tekentool-menu.spec.js` (laptop en telefoon, elk menu).
+
+---
+
 ## Besluit 151 — Documentatie en presentatie: functiekaarten als enige bron, statussen en borging (Spoor 3, maat S)
 *Besloten 4 november 2026: de initiatiefnemer ging akkoord met de functiekaarten uit het voorstel voor ontwikkelgebied F (`docs/onderzoek/documentatie-borging/README.md`). Alleen werkwijze: er verandert niets aan de app, de database, de rechten of aan de bestaande PowerPoints en PDF's.*
 - **Documentatie hoort bij "afgerond".** Een wijziging is pas af als de documentatie is bijgewerkt, of als er uitdrukkelijk *Geen documentatie-impact* staat.
@@ -1120,6 +1144,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 - In het menu *Pijlen* staan nu ook **Loopactie met boog** en **Pass met boog**. Bij het trekken groeit de boog mee (een derde van de lengte opzij, links van de looprichting). Daarna aanpassen met de bolletjes zoals in Besluit 126.
 
 ## Besluit 126 — Tekentool clean (ontwerp A) en pijlen met boog en aanpasbare lengte
+> **◐ Deels herzien door Besluit 152:** *de knop onthoudt de laatst gekozen variant* geldt bij het openen niet meer voor *Spelers*; sluiten met × zet het gereedschap uit (Esc en klikken op het veld werken zoals hieronder).
 *Besloten 27 oktober 2026, na analyse en drie ontwerpen (`docs/onderzoek/tekentool/`); de initiatiefnemer koos het advies: ontwerp A met de contextbalk uit B.*
 - **Smalle rail links** met één knop per soort: *Kies · Spelers · Bal · Hoedjes · Schijfjes · Doelen · Pijlen · Markeren*.
   - Een knop opent een klein menu met de varianten (kleuren, soorten pijlen).
