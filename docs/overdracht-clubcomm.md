@@ -23,4 +23,5 @@
 
 ## Volgende technische stap
 - Later, eigen besluit: vaardigheidsaccenten per trainingsplek (de vorm blijft herbruikbaar; de trainer kiest per training het accent). Wat ontbreekt: `docs/onderzoek/trainingskaart/README.md`. Nu niet bouwen.
+- Voorstel gebied F (documentatie en presentatie): `docs/onderzoek/documentatie-borging/README.md` (branch `onderzoek/documentatie-borging`), wacht op akkoord; niets gepubliceerd.
 - Voorstel (L): het opleidingsprofiel veilig leesbaar maken voor trainers (onderzoeksbranch `onderzoek/profiel-leesrechten`).
