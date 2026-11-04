@@ -153,3 +153,22 @@ Als iedereen de hele club heeft, verandert er voor de pilot nu niets zichtbaar, 
 - **Hoe verder:** eerst bespreken, dan eventueel een eigen voorstel.
 
 **Status:** alleen een voorstel. Er is niets aangepast aan de database, de rechten, de app of productie.
+
+## 10. Stand in productie (4-11, alleen gelezen)
+
+*Gelezen met vijf leesopdrachten op de productiedatabase: geen namen, niets gewijzigd.*
+
+| | DCG | Swift |
+|---|---|---|
+| Eigen bouwen ingesteld | nee → standaard (Mini's 6–7 · Onderbouw 8–12 · Middenbouw 13–15 · Bovenbouw 16–19) | nee → standaard |
+| HO's (rol `hjo`) en werkgebied | 1 · hele club | 2 · één met **Middenbouw + Bovenbouw**, één met de hele club |
+| TC's | geen | geen |
+| Teams (categorie → bouw) met trainer | O12-1, categorie O12 → Onderbouw (1 trainer) | JO15-1 ZO en JO15-1 ZA, O15 → Middenbouw (elk 1 trainer); JO16-2 ZO, O16 → Bovenbouw (1); JO19-1 ZA, O19 → Bovenbouw (geen trainer) |
+| Trainers zonder team of met een onbekend team | 0 | 0 |
+| Rijen met trainersgegevens (`trainerzelf`, `trainerdossier`, `hoprive`) | 0 | 15 |
+
+**Wat Besluit 154 hier nu zou veranderen: niets zichtbaar.** Bij DCG heeft de enige HO de hele club. Bij Swift valt elk team met een trainer in Middenbouw of Bovenbouw, dus beide HO's blijven alle trainers zien. De regel gaat pas iets doen als er een team onder de 13 jaar bijkomt, of als iemand een kleiner werkgebied krijgt.
+
+**Om op te letten:**
+- **Swift:** *HJO bovenbouw O14–O19* is ingesteld als Middenbouw + Bovenbouw, dus 13–19 jaar. Een O13-team zou daar ook onder vallen. Wil Swift precies O14–O19, dan moet de clubbeheerder eigen bouwen instellen (bijvoorbeeld Middenbouw 14–15). Dat is een keuze van de club, en het verandert niets aan dit voorstel.
+- **DCG:** het team heet *O13 talententeam*, maar de categorie is O12. De database rekent daarom met Onderbouw, net als de app. Zolang de HO de hele club heeft, maakt dat niet uit.
