@@ -66,6 +66,8 @@
     && (x.gs === null || typeof x.gs === 'string') && Array.isArray(x.ook) && Array.isArray(x.vh)); };
   // Wat telt voor een plek: de momentopname (gegeven training), of de vorm zoals hij nu is; nooit stil terugvallen op de vorm
   const gsVan = (S, p, o) => { if (p && p.gegeven && o.vast) return vastGeldig(S, o) ? { gs: o.vast.gs, ook: o.vast.ook, vh: o.vast.vh.map((x) => x.id), bron: 'vast' } : { gs: null, ook: [], vh: [], bron: 'ongeldig' };
+    // Een gegeven training met vastlegging, maar deze plek heeft geen momentopname: niet toerekenen (geen stille terugval op de vorm van nu)
+    if (p && p.gegeven && vastlegbaar(p) && o.vormId && !o.spacing) return { gs: null, ook: [], vh: [], bron: 'zonder' };
     const v = o.vormId && vorm(S, o.vormId); if (!v) return { gs: null, ook: [], vh: [], bron: 'geen' };
     const k = koppeling(S, v); return { gs: k.primair || null, ook: k.ook || [], vh: v.vaardigheden || [], bron: 'vorm' }; };
   // Telt deze plek mee? Een vorm in de bank, of een momentopname van een gegeven training
@@ -74,7 +76,9 @@
   // vóór deze regel en is daarna teruggezet: ook dan niets vastleggen (anders zou de koppeling van nu als 'toen' gelden).
   const legVast = (S, p) => { if (!profiel(S) || p.vastOp) return;
     (p.onderdelen || []).forEach((o) => { const v = o.vormId && vorm(S, o.vormId); if (v && !o.vast) o.vast = maakVast(S, v, 'gegeven'); }); p.vastOp = D.vandaag(); };
-  const vastlegbaar = (p) => !!(p.gegeven && p.vastOp && p.vastOp !== 'oud');
+  // Al eens gegeven (vastOp = datum), ook als hij nu teruggezet is: een vorm die erbij komt of wordt vervangen is een bewuste
+  // correctie van de trainer en wordt op dat moment vastgelegd (bron 'correctie'). Opnieuw aanvinken legt niets vast.
+  const vastlegbaar = (p) => !!(p.vastOp && p.vastOp !== 'oud');
   // Een vorm op een plek gezet (of vervangen): de oude momentopname hoort bij een andere vorm en vervalt; op een gegeven training
   // (met vastlegging) is dit een correctie en wordt de nieuwe vorm meteen vastgelegd
   const naPlaatsen = (S, p, o) => { if (o.vast && o.vast.vormId === o.vormId) return; delete o.vast;
@@ -236,7 +240,7 @@
         m.zonderReg > 0 ? `Niet geregistreerd: ${m.zonderReg} van ${m.gepland} geplande min (${m.ok || m.onzeker ? '' : 'oefenvormen, '}start zonder vorm, spacing, ombouw of lege plekken). Dit is dus niet de volledige trainingsduur.` : '')}
       ${rij('Uitgevoerd in oefenvormen', `${m.vormen} min`, nc(m.vormenNc))}
       ${rij('Toegerekend aan een gereedschap', `${m.gsTotaal} min`, gs.map(([x, n]) => `${esc(ldNaam(S, x) || 'onbekend')} ${n}`).join(' · '), nc(m.gsNc),
-        m.ongeldig ? `${m.ongeldig} min niet toegerekend: het vastgelegde gereedschap past niet bij de vorm op die plek. ClubComm vult dit niet zelf in.` : '')}
+        m.ongeldig ? `${m.ongeldig} min niet toegerekend: op die plek staat geen geldig vastgelegd gereedschap van toen. ClubComm vult dit niet zelf in.` : '')}
       <details class="uitklap"><summary>Wat betekenen deze getallen?</summary>
         <p class="klein"><b>Geplande trainingsduur:</b> alle plekken en de organisatie samen.</p>
         <p class="klein"><b>Werkelijke trainingsduur:</b> alleen wat echt is ingevuld. Start, spacing en ombouw horen bij de trainingsduur, maar tellen niet voor de leerlijn; spacing en ombouw vul je niet apart in. Daarom staat erbij hoeveel minuten niet zijn geregistreerd.</p>
@@ -448,7 +452,8 @@
       : '<p class="zacht">Je hebt nog geen eerdere training met een opbouw.</p>');
   });
   CC.on('tpKopieOk', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); const van = plannen(S).find((x) => x.id === el.dataset.van); if (!p || !van) return;
-    p.onderdelen = (p.onderdelen || []).concat(van.onderdelen.map((o) => { const n = { ...o, id: nieuwId('o'), minUit: null }; delete n.vast; return n; })); // Besluit 147: een kopie is nieuwe planning
+    const erbij = van.onderdelen.map((o) => { const n = { ...o, id: nieuwId('o'), minUit: null }; delete n.vast; return n; }); // Besluit 147: een kopie is nieuwe planning
+    p.onderdelen = (p.onderdelen || []).concat(erbij); erbij.forEach((o) => naPlaatsen(S, p, o)); // al eens gegeven: bewuste correctie
     if (!p.overig && van.overig) p.overig = { ...van.overig }; if (!p.sjabloon && van.sjabloon) p.sjabloon = van.sjabloon;
     if (!p.thema) p.thema = van.thema; if (!(p.leerdoelen || []).length) p.leerdoelen = (van.leerdoelen || []).slice();
     CC.save(); CC.closeSheet(); CC.render(); CC.toast('Opbouw overgenomen'); });
@@ -477,7 +482,7 @@
     if (!p.gegeven) return r;
     o.filter((x) => x.vormId && !x.spacing && x.blok !== 'start').forEach((x) => { const uit = x.minUit != null ? Number(x.minUit) : Number(x.min) || 0; const nc = minStatus(S, p, x) !== 'ok';
       r.vormen += uit; if (nc) r.vormenNc += uit;
-      const g = telt(S, p, x) ? gsVan(S, p, x) : { gs: null }; const pr = g.gs; if (g.bron === 'ongeldig') r.ongeldig += uit;
+      const g = telt(S, p, x) ? gsVan(S, p, x) : { gs: null }; const pr = g.gs; if (g.bron === 'ongeldig' || g.bron === 'zonder') r.ongeldig += uit;
       if (pr) { r.gs[pr] = (r.gs[pr] || 0) + uit; r.gsTotaal += uit; if (nc) r.gsNc += uit; } });
     return r; };
   CC.trMinStatus = minStatus;
@@ -604,7 +609,8 @@
     CC.sheet('Kopiëren naar…', `${lijst.length ? dagKnoppen(S, lijst, 'tpKopieNaarOk', `data-van="${esc(el.dataset.id)}"`) : '<p class="zacht">Geen komende trainingen in de planning.</p>'}
       <form data-submit="tpKopieNaarDatum" data-van="${esc(el.dataset.id)}" class="codeform"><label for="kn-d">Of op een datum (los)</label><input id="kn-d" name="datum" type="date" required value="${D.addDays(D.vandaag(), 7)}"><button class="knop licht vol">Kopiëren naar deze datum</button></form>`); });
   const kopieer = (van, naar) => { naar.onderdelen = van.onderdelen.map((o) => { const n = { ...JSON.parse(JSON.stringify(o)), id: nieuwId('o'), minUit: null }; delete n.vast; return n; });
-    Object.assign(naar, { thema: van.thema, sjabloon: van.sjabloon || null, overig: van.overig ? { ...van.overig } : null, blokDoel: van.blokDoel ? { ...van.blokDoel } : undefined, leerdoelen: (van.leerdoelen || []).slice(), gegeven: false, anders: '' }); };
+    Object.assign(naar, { thema: van.thema, sjabloon: van.sjabloon || null, overig: van.overig ? { ...van.overig } : null, blokDoel: van.blokDoel ? { ...van.blokDoel } : undefined, leerdoelen: (van.leerdoelen || []).slice(), gegeven: false, anders: '' });
+    delete naar.vastOp; }; // Besluit 147: nieuwe planning, dus geen vastlegging van een vorige uitvoering (anders legt 'gegeven' straks niets vast)
   CC.on('tpKopieNaarOk', (el) => { const S = CC.S(); const van = plan(S, el.dataset.van); const doel = plan(S, el.dataset.naar); if (!van) return;
     if (doel && (doel.onderdelen || []).length && !el.dataset.vervang) { CC.sheet('Die training is al gevuld', `<p>${esc(dagNaam(actVan(S, doel)))} heeft al ${doel.onderdelen.length} onderdelen. Vervangen door deze training?</p><div class="knoppen"><button class="knop rood" data-act="tpKopieNaarOk" data-van="${esc(el.dataset.van)}" data-naar="${esc(el.dataset.naar)}" data-vervang="1">Vervangen</button><button class="knop licht" data-act="sluit">Annuleren</button></div>`); return; }
     const naar = planVoor(S, el.dataset.naar); if (!naar) return; kopieer(van, naar); CC.save(); CC.closeSheet(); CC.render(); CC.toast(`Gekopieerd naar ${dagNaam(actVan(S, naar))}`); });

@@ -108,15 +108,20 @@ test('vastleggen: terugzetten bewaart, opnieuw aanvinken legt niets nieuws vast;
   // Tussendoor de koppeling wijzigen en een vorm toevoegen aan de teruggezette training
   await koppelingWijzigen(page);
   await doe(page, { act: 'tpVormErbij', id: 't-x', v: 'v-c', i: '2' });
-  expect((await pl(page, 'tp-x')).onderdelen[2].vast).toBeUndefined(); // niet gegeven: geen vastlegging
+  // Al eens gegeven: een vorm erbij is een bewuste correctie en wordt nu (met de koppeling van nu) vastgelegd; de andere plekken blijven van toen
+  const c3 = kopie((await pl(page, 'tp-x')).onderdelen[2].vast);
+  expect(c3).toMatchObject({ vormId: 'v-c', gs: 'll-1v1-aanvallend', bron: 'correctie' });
   // Weer aan: dezelfde momentopnames, geen nieuwe classificatie (ook niet voor de toegevoegde vorm)
   await naarWeek(page, 't-x');
   await gegeven(page);
   p = await pl(page, 'tp-x');
   expect(p.gegeven).toBe(true); expect(p.vastOp).toBe(eerst.vastOp);
   expect(p.onderdelen[0].vast).toEqual(eerst.onderdelen[0].vast); expect(p.onderdelen[1].vast).toEqual(eerst.onderdelen[1].vast);
-  expect(p.onderdelen[2].vast).toBeUndefined();
-  expect((await minuten(page, 'tp-x')).gs).toEqual({ 'll-aannemen': 10, 'll-passen': 10, 'll-1v1-aanvallend': 20 }); // A1 van toen; de nieuwe plek volgt de vorm
+  expect(p.onderdelen[2].vast).toEqual(c3); // opnieuw aanvinken legt niets nieuws vast
+  expect((await minuten(page, 'tp-x')).gs).toEqual({ 'll-aannemen': 10, 'll-passen': 10, 'll-1v1-aanvallend': 20 }); // A1 van toen; de toegevoegde plek van het moment van toevoegen
+  // Daarna de koppeling van v-c wijzigen: de gegeven training verandert niet meer (de toegevoegde plek volgt de vorm niet)
+  await page.evaluate(() => { const v = CC.S().vormen.find((x) => x.id === 'v-c'); v.koppelingen.dcg = { primair: 'll-passen', ook: [] }; CC.save(); });
+  expect((await minuten(page, 'tp-x')).gs).toEqual({ 'll-aannemen': 10, 'll-passen': 10, 'll-1v1-aanvallend': 20 });
 
   // Oude gegeven training (van vóór deze regel): uit en weer aan legt niets vast; de koppeling van nu geldt niet als 'toen'
   await naarWeek(page, 't-oud');
@@ -175,7 +180,7 @@ test('vastleggen: ongeldige momentopname wordt nooit stil vervangen; classificat
   expect(await minuten(page, 'tp-x')).toEqual({ gs: {}, ongeldig: 20, gsTotaal: 0 });
   expect(await blok(page, 'tp-x', 'A')).toBeNull(); // niet terugvallen op de koppeling van nu
   await naarWeek(page, 't-x');
-  await expect(page.locator('.tr-minuten')).toContainText('20 min niet toegerekend: het vastgelegde gereedschap past niet bij de vorm op die plek. ClubComm vult dit niet zelf in.');
+  await expect(page.locator('.tr-minuten')).toContainText('20 min niet toegerekend: op die plek staat geen geldig vastgelegd gereedschap van toen. ClubComm vult dit niet zelf in.');
   // Uit en weer aan, en de koppeling wijzigen: de ongeldige momentopnames blijven precies zoals ze waren
   await gegeven(page); await gegeven(page); await koppelingWijzigen(page);
   expect((await pl(page, 'tp-x')).onderdelen.map((o) => o.vast || null)).toEqual(voor);
@@ -187,7 +192,8 @@ test('vastleggen: ongeldige momentopname wordt nooit stil vervangen; classificat
     a.vaardigheden = a.vaardigheden.filter((x) => x !== vh); ll.find((l) => l.id === 'll-1v1-aanvallend').vaardigheden.push(vh); pr.versie = 4; });
   const o = (await pl(page, 'tp-x')).onderdelen[0];
   expect(o.vast.vh).toEqual([{ id: 'vh-eerste-contact-van-druk-af', ll: 'll-aannemen' }]); expect(o.vast.pv).toBe('3');
-  expect(await minuten(page, 'tp-x')).toEqual({ gs: { 'll-aannemen': 10, 'll-passen': 10 }, ongeldig: 0, gsTotaal: 20 }); // A1: leerlijn van toen; plek 2 zonder momentopname volgt de vorm (zoals een oude training)
+  // A1: leerlijn van toen. Plek 2 heeft geen momentopname op een vastgelegde training: niet toegerekend (controle 4-11; geen stille terugval op de vorm)
+  expect(await minuten(page, 'tp-x')).toEqual({ gs: { 'll-aannemen': 10 }, ongeldig: 10, gsTotaal: 10 });
   await controleer(page, fouten, 'ongeldig');
 });
 
@@ -241,4 +247,49 @@ test('vastleggen + verplaatsen (PR #107): de momentopname gaat mee met de vorm, 
   await doe(page, { act: 'tpVerplaatsTerug' });
   p = await pl(page, 'tp-x'); expect(p.onderdelen[2].vast).toEqual(voor.onderdelen[0].vast);
   await controleer(page, fouten, 'verplaatsen');
+});
+
+// Controle 4-11 (1): kopiëren naar een bestaande doeltraining die vandaag al gegeven was. De nieuwe planning erft geen vastlegging
+// van de vorige uitvoering: na 'gegeven' wordt de nieuwe planning gewoon vastgelegd.
+test('vastleggen: kopiëren naar een al gegeven doeltraining erft geen vastlegdatum; daarna gewoon vastleggen', { tag: ['@training', '@profiel'] }, async ({ page }) => {
+  const fouten = volgFouten(page);
+  await start(page);
+  // Doeltraining van vandaag, afgelopen en al gegeven met een momentopname (vorige uitvoering)
+  await page.evaluate(() => { const S = CC.S(); const D = CC.date; const ik = CC.me().id;
+    S.acts.push({ id: 't-nu', teamId: 'O12-1', soort: 'training', datum: D.vandaag(), tijd: '00:00', eind: '00:01' });
+    S.trainingsplannen.push({ id: 'tp-nu', actId: 't-nu', teamId: 'O12-1', datum: D.vandaag(), eigenaar: ik, thema: 'Vorige uitvoering', leerdoelen: [], gegeven: true, vastOp: D.vandaag(),
+      onderdelen: [{ id: 'n1', blok: 'A1', vormId: 'v-c', min: 15, minUit: 15, vast: { v: 1, vormId: 'v-c', pid: 'dcg', pv: '3', gs: 'll-1v1-aanvallend', ook: [], vh: [], op: D.vandaag(), bron: 'gegeven' } }] });
+    CC.save(); });
+  await doe(page, { act: 'tpKopieNaarOk', van: 't-plan', naar: 't-nu', vervang: '1' });
+  let p = await pl(page, 'tp-nu');
+  expect(p.gegeven).toBe(false); expect(p.vastOp).toBeUndefined();
+  expect(p.onderdelen.map((o) => o.vormId)).toEqual(['v-a2']); expect(p.onderdelen.every((o) => o.vast === undefined)).toBe(true);
+  // Nu als gegeven aanvinken: de nieuwe planning wordt vastgelegd (niet de vorige uitvoering, niet niets)
+  await naarWeek(page, 't-nu');
+  await gegeven(page);
+  p = await pl(page, 'tp-nu');
+  expect(p.gegeven).toBe(true); expect(p.vastOp).toBe(await page.evaluate(() => CC.date.vandaag()));
+  expect(p.onderdelen[0].vast).toMatchObject({ vormId: 'v-a2', gs: 'll-aannemen', bron: 'gegeven' });
+  expect((await minuten(page, 'tp-nu')).gs).toEqual({ 'll-aannemen': 12 });
+  await controleer(page, fouten, 'kopiëren naar gegeven doeltraining');
+});
+
+// Controle 4-11 (2): een plek zonder momentopname op een training met vastlegging (bijv. van buitenaf of een oud pad) telt bij geen
+// gereedschap en staat in de melding; ClubComm valt niet stil terug op de vorm van nu. Een bewuste correctie heeft bron 'correctie'.
+test('vastleggen: plek zonder momentopname op een vastgelegde training wordt niet toegerekend (geen stille terugval)', { tag: ['@training', '@profiel'] }, async ({ page }) => {
+  const fouten = volgFouten(page);
+  await start(page);
+  await naarWeek(page, 't-x');
+  await gegeven(page);
+  await page.evaluate(() => { const p = CC.S().trainingsplannen.find((x) => x.id === 'tp-x'); delete p.onderdelen[1].vast; CC.save(); });
+  expect(await minuten(page, 'tp-x')).toEqual({ gs: { 'll-aannemen': 10 }, ongeldig: 10, gsTotaal: 10 });
+  expect(await blok(page, 'tp-x', 'B')).toBeNull();
+  await page.evaluate(() => CC.render());
+  await expect(page.getByText(/10 min niet toegerekend/).first()).toBeAttached();
+  // Bewust corrigeren (dezelfde plek een vorm geven) legt de plek weer vast, met bron 'correctie'
+  await doe(page, { act: 'tpVormErbij', id: 't-x', v: 'v-b2', i: '1' });
+  const p = await pl(page, 'tp-x');
+  expect(p.onderdelen[1].vast).toMatchObject({ vormId: 'v-b2', gs: 'll-passen', bron: 'correctie' });
+  expect((await minuten(page, 'tp-x')).ongeldig).toBe(0);
+  await controleer(page, fouten, 'zonder momentopname');
 });
