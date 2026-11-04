@@ -43,6 +43,8 @@ rapport "clubscheiding" "$("${PSQL[@]}" -tAF'|' -f supabase/tests/lokaal/clubsch
 rapport "vaste regels (RLS, search_path, anon)" "$("${PSQL[@]}" -tAF'|' -f supabase/tests/lokaal/statisch.sql)"
 rapport "begeleidingsdossier (Besluit 143)" "$("${PSQL[@]}" -tAF'|' -f supabase/tests/lokaal/begeleiding-eigenaarschap.sql | grep '|')"
 rapport "app-opslag begeleiding (Besluit 143)" "$("${PSQL[@]}" -tAF'|' -f supabase/tests/lokaal/app-opslag.sql | grep '|')"
+rapport "werkgebied begeleider (Besluit 154)" "$("${PSQL[@]}" -tAF'|' -f supabase/tests/lokaal/begeleider-werkgebied.sql | grep '|')"
+rapport "meekijken per werkgebied (Besluit 134, 154)" "$("${PSQL[@]}" -tAF'|' -f supabase/tests/lokaal/begeleider-werkgebied-032.sql | grep '|')"
 # Extra controles (bijv. een onderzoek): EXTRA_SQL="pad/naar/bestand.sql" npm run test:veilig
 for x in ${EXTRA_SQL:-}; do rapport "extra: $(basename "$x")" "$("${PSQL[@]}" -tAF'|' -f "$x" | grep '|')"; done
 [ "$fout" -eq 0 ] && echo "Alle automatische beveiligingscontroles goed. Privacy (welke gegevens, wie ziet ze, hoe lang) blijft een handmatige stap: zie docs/kaart.md." || echo "Er zijn afwijkingen: niet samenvoegen."

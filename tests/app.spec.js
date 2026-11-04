@@ -1457,7 +1457,7 @@ test('tekentool: loopactie met boog', { tag: ['@tekentool', '@training'] }, asyn
 });
 
 // Besluit 128: trainingsmodule (proef) in de echte versie: training voorbereiden, spacing, nieuwe vorm met leerdoel uit het profiel.
-// Alles komt in de database met scope 'eigen' op naam van de trainer.
+// Alles komt in de database met scope 'trainerplan' (trainingen en de vormen erin, Besluit 134) of 'eigen' (weekplannen, overige vormen), op naam van de trainer.
 test('trainingsmodule: training voorbereiden en eigen vorm (echte versie)', { tag: ['@training', '@kleineclub'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await nepDatabase(page);
@@ -1498,8 +1498,8 @@ test('trainingsmodule: training voorbereiden en eigen vorm (echte versie)', { ta
   await page.locator('#sheet [data-act="tpDupliceer"]').click();
   await expect(page.locator('.tr-midden .tr-rij')).toHaveCount(3);
   await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'trainingsplannen').map((r) => `${r.scope}|${r.persoon_id}|${r.act_id}|${r.data.onderdelen.length}|${r.data.leerdoelen.join()}`).join(), { message: 'training in de database' })
-    .toBe('eigen|p-beheer|tTest|3|');
-  await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'vormen').map((r) => `${r.scope}|${r.persoon_id}|${r.data.naam}`).join()).toBe('eigen|p-beheer|Skills passeren in kruisvorm');
+    .toBe('trainerplan|p-beheer|tTest|3|');
+  await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'vormen').map((r) => `${r.scope}|${r.persoon_id}|${r.data.naam}`).join()).toBe('trainerplan|p-beheer|Skills passeren in kruisvorm');
   // Week op de telefoon: de training om te controleren
   await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
   await expect(page.locator('.tr-weekkaart')).toContainText('Skills passeren in kruisvorm');
@@ -1552,7 +1552,7 @@ test('trainingsmodule: training op datum zonder planning (pakket Trainers begele
   await page.locator('[data-act="seg"][data-val="lijn"]').click();
   await expect(page.locator('[data-act="perLaden"], .tr-per')).toHaveCount(0);
   await expect(page.locator('.tr-weken')).toBeVisible(); // weekthema werkt ook zonder leerdoelen (alleen het thema)
-  await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'trainingsplannen').map((r) => `${r.scope}|${r.persoon_id}|${r.data.los}|${r.data.datum}|${r.data.onderdelen.length}`).join()).toBe('eigen|p-beheer|true|2026-11-03|1');
+  await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'trainingsplannen').map((r) => `${r.scope}|${r.persoon_id}|${r.data.los}|${r.data.datum}|${r.data.onderdelen.length}`).join()).toBe('trainerplan|p-beheer|true|2026-11-03|1');
   // Besluit 141: na afloop dezelfde minutenkaart; zonder de vraag Transfer in het profiel geen Toepassing
   await page.locator('[data-act="seg"][data-val="plannen"]').click();
   await page.locator('[data-act="tpLosNieuw"]').click();

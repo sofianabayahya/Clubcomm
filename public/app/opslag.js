@@ -18,7 +18,9 @@
   // Hulp: team van een speler en van een activiteit
   const index = (S) => {
     const sp = {}, act = {}; S.players.forEach((p) => { sp[p.id] = p.teamId || null; }); S.acts.forEach((a) => { act[a.id] = a.teamId || null; });
-    return { teamVanSpeler: (id) => sp[id] || null, teamVanAct: (id) => act[id] || null };
+    // Besluit 134: welke vormen staan in een training van hun eigenaar (die worden 'trainerplan', de rest blijft 'eigen')
+    const inPlan = new Set(); (S.trainingsplannen || []).forEach((p) => { if (!p.week) (p.onderdelen || []).forEach((o) => { if (o.vormId) inPlan.add(`${p.eigenaar}|${o.vormId}`); }); });
+    return { teamVanSpeler: (id) => sp[id] || null, teamVanAct: (id) => act[id] || null, vormInTraining: (v) => inPlan.has(`${v.eigenaar}|${v.id}`) };
   };
 
   // Eenvoudige lijsten: [soort, scope, velden(rec) → {team, speler, persoon, act}, id(rec)]
@@ -40,9 +42,13 @@
     ['trainerLog', 'teamstaf', (r) => ({ team: r.teamId, act: r.actId })],
     ['trainerGesprekken', 'hjo', () => ({})],
     ['ontwGesprek', 'team', (r) => ({ team: r.teamId, speler: r.spelerId || null })],
-    // Besluit 128: eigen oefenvormen en trainingen van de trainer (scope eigen: alleen de maker leest en schrijft)
-    ['vormen', 'eigen', (r) => ({ persoon: r.eigenaar, team: r.teamId || null })],
-    ['trainingsplannen', 'eigen', (r) => ({ persoon: r.eigenaar, team: r.teamId || null, act: r.actId || null })],
+    // Besluit 128 en 134: eigen oefenvormen en trainingen van de trainer. Alleen de maker schrijft. Trainingen (niet de weekplannen)
+    // en de vormen die in een training staan zijn 'trainerplan': ook een begeleider van zijn bouw leest ze, als de club meekijken
+    // aanzet en de trainer een traject heeft (migratie 032 en 034). De rest van de vormenbank blijft 'eigen'.
+    ['vormen', (r, I) => (I.vormInTraining(r) ? 'trainerplan' : 'eigen'), (r) => ({ persoon: r.eigenaar, team: r.teamId || null })],
+    ['trainingsplannen', (r) => (r.week ? 'eigen' : 'trainerplan'), (r) => ({ persoon: r.eigenaar, team: r.teamId || null, act: r.actId || null })],
+    // Besluit NNN: feedback van de begeleider op een training (de begeleider schrijft, de trainer leest; zoals het dossier)
+    ['trainingFeedback', 'trainerdossier', (r) => ({ persoon: r.trainerId })],
     ['signaalAfgedaan', 'teamstaf', (r) => ({ team: r.teamId, speler: r.spelerId || null }), (r) => `${r.sleutel}|${r.tijd}`],
   ];
   // Objecten met één rij per sleutel: [soort, pad, scope, velden(sleutel, waarde) ]
@@ -90,7 +96,7 @@
     const I = index(S); const uit = new Map();
     const zet = (soort, id, scope, v, data) => { if (id == null) return; uit.set(`${soort}|${id}`, { club_id: club, soort, id: String(id), scope, team_id: v.team || null, speler_id: v.speler || null, persoon_id: v.persoon || null, act_id: v.act || null, data }); };
     ENKEL.forEach(([soort, p, scope]) => { const o = pad(S, p); if (o && Object.keys(o).length) zet(soort, soort === 'club' ? 'club' : soort, scope, {}, o); });
-    LIJSTEN.forEach(([soort, scope, velden, idf]) => (S[soort] || []).forEach((r) => zet(soort, idf ? idf(r) : r.id, scope, velden(r, I), r)));
+    LIJSTEN.forEach(([soort, scope, velden, idf]) => (S[soort] || []).forEach((r) => zet(soort, idf ? idf(r) : r.id, typeof scope === 'function' ? scope(r, I) : scope, velden(r, I), r)));
     MAPPEN.forEach(([soort, p, scope, velden]) => Object.entries(pad(S, p) || {}).forEach(([k, v]) => zet(soort, k, scope, velden(k, v, I), inpak(v))));
     // Personen: naam en rollen voor iedereen in de club, e-mail en telefoon apart (strengere rechten)
     (S.people || []).forEach((p) => { const { email, tel, ...rest } = p; zet('people', p.id, 'persoon', { persoon: p.id }, rest); zet('contact', p.id, 'contact', { persoon: p.id }, { email: email || '', tel: tel || '' }); });
