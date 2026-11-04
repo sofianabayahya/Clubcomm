@@ -102,7 +102,7 @@
   - draait de integratietests;
   - publiceert.
 - Alleen gecontroleerde commits op `main` gaan online.
-- Samenvoegen met `main` publiceert vanzelf (Vercel); werkbranches krijgen alleen een afgeschermde voorbeeldversie. Daarom samenvoegen alleen na akkoord, en daarna controleren dat productie gelijk is aan die commit.
+- Samenvoegen met `main` publiceert vanzelf (Vercel); werkbranches worden niet gepubliceerd (sinds 04-11 alleen `main`, `public/vercel.json`). Daarom samenvoegen alleen na akkoord, en daarna controleren dat productie gelijk is aan die commit.
 
 **Wat er gebouwd is**
 - Zie het register; hoogste besluit nu: **139**.

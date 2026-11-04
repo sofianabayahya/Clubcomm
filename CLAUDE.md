@@ -35,7 +35,7 @@ Twijfel tussen twee maten: kies de grotere.
 **Vlak vóór samenvoegen:** dezelfde controle opnieuw, volledige tests lokaal én groen op GitHub. Bij een conflict: stoppen, beschrijven, voorstel doen. Nooit nieuwere functionaliteit overschrijven.
 
 ## Publiceren
-- **Samenvoegen met `main` publiceert vanzelf** naar productie (Vercel, gekoppeld aan GitHub; gecontroleerd 29-10). Een push naar een andere branch geeft alleen een afgeschermde voorbeeldversie. Dus samenvoegen alleen na **akkoord van de gebruiker**, en daarna met `list_deployments` nagaan dat productie de commit van `main` draait.
+- **Samenvoegen met `main` publiceert vanzelf** naar productie (Vercel, gekoppeld aan GitHub; gecontroleerd 29-10). Een push naar een andere branch publiceert niets: sinds 04-11 maakt Vercel alleen van `main` een versie (`git.deploymentEnabled` in `public/vercel.json`), omdat het gratis abonnement 100 publicaties per 24 uur toestaat en voorbeeldversies die opmaakten. Controleren gebeurt met de lokale tests en GitHub. Dus samenvoegen alleen na **akkoord van de gebruiker**, en daarna met `list_deployments` nagaan dat productie de commit van `main` draait.
 - Nooit een werkbranch naar productie (`create_deployment` alleen om `main` opnieuw te publiceren: project `clubcomm`, target production, gitSource github `sofianabayahya/Clubcomm`, ref `main`, zonder teamId).
 - Database: migraties en eenmalige scripts alleen na akkoord (`supabase/migrations/` + `apply_migration`, `supabase/scripts/` + `execute_sql`).
 
