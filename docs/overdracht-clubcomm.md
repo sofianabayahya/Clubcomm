@@ -11,7 +11,7 @@
 ## Open pull requests
 | PR | Wat | Stand |
 |---|---|---|
-| nieuw | Werkwijze (S): in `CLAUDE.md` de stap *overdracht bijwerken* vóór samenvoegen, branch `claude/dazzling-babbage-y6ns5j` | wacht op akkoord |
+| #114 | Werkwijze (S): in `CLAUDE.md` de stap *overdracht bijwerken* vóór samenvoegen, branch `claude/dazzling-babbage-y6ns5j` | wacht op akkoord |
 | #107, #108, #110, #112 | Besluiten 145, 146, 148, 149 (andere sessies) | open |
 
 - Samengevoegd 04-11: #111, vaste datum in drie datumafhankelijke tests (nieuwe fase; twee roostertests die vanaf eind mei 2027 zouden falen). Proef op 7 datums t/m 20-09-2027. Idee *demoseizoen laten meeschuiven* staat in Openstaand.
