@@ -5,9 +5,9 @@
   "naam": "DCG-opleidingslijn",
   "modus": "eigen",
   "basis": null,
-  "versie": 3,
+  "versie": 4,
   "status": "concept",
-  "bijgewerkt": "2026-10-28",
+  "bijgewerkt": "2026-11-04",
   "bron": "Methodologisch model leren voetballen, kerndocument v1.0 (26-09-2026), met de uitwerkingen Acht universele voetbalproblemen, HO-spoor en Trainersspoor (docs/methodiek/dcg/). Het kerndocument is leidend. Alleen voor DCG; andere clubs volgen de KNVB.",
   "onderdelen": {
     "visie": {
@@ -233,7 +233,7 @@
             },
             {
               "id": "vh-vrijmaken-uit-de-dekkingsschaduw",
-              "naam": "Vrijmaken uit de dekkingsschaduw"
+              "naam": "Loskomen uit de dekkingsschaduw"
             },
             {
               "id": "vh-diepteloop",
@@ -272,7 +272,7 @@
             },
             {
               "id": "vh-vertragen",
-              "naam": "Vertragen"
+              "naam": "Afremmen"
             },
             {
               "id": "vh-passlijn-dichtzetten",
@@ -1439,7 +1439,13 @@
         }
       ],
       "wijziging": "Volgende keer: één concrete wijziging.",
-      "noot": "Veldmaten zijn geen absolute waarheid: de juiste maat is de maat waarbij het bedoelde probleem en de gewenste keuzes daadwerkelijk ontstaan. Evaluatie per oefenvorm en per training."
+      "noot": "Veldmaten zijn geen absolute waarheid: de juiste maat is de maat waarbij het bedoelde probleem en de gewenste keuzes daadwerkelijk ontstaan. Evaluatie per oefenvorm en per training.",
+      "kort": [
+        "ev-probleem",
+        "ev-gedrag",
+        "ev-transfer",
+        "ev-volgende"
+      ]
     },
     "themalessen": {
       "status": "eigen",

@@ -57,7 +57,7 @@ test('vastleggen: gereedschap ligt vast bij gegeven, koppeling later wijzigen ve
   await gegeven(page);
   let p = await pl(page, 'tp-x');
   expect(p.gegeven).toBe(true); expect(p.vastOp).toBe(await page.evaluate(() => CC.date.vandaag()));
-  expect(p.onderdelen[0].vast).toMatchObject({ v: 1, vormId: 'v-a2', pid: 'dcg', pv: '3', gs: 'll-aannemen', ook: [], bron: 'gegeven', vh: [{ id: 'vh-eerste-contact-van-druk-af', ll: 'll-aannemen' }] });
+  expect(p.onderdelen[0].vast).toMatchObject({ v: 1, vormId: 'v-a2', pid: 'dcg', pv: String(PROFIEL.versie), gs: 'll-aannemen', ook: [], bron: 'gegeven', vh: [{ id: 'vh-eerste-contact-van-druk-af', ll: 'll-aannemen' }] });
   expect(p.onderdelen[1].vast).toMatchObject({ vormId: 'v-b2', gs: 'll-passen', ook: ['ll-vrijkomen'], vh: [{ id: 'vh-vooruit-inspelen', ll: 'll-passen' }] });
   expect(p.onderdelen[2].vast).toBeUndefined(); // lege plek
   const vast0 = kopie(p.onderdelen.map((o) => o.vast || null));
@@ -189,9 +189,9 @@ test('vastleggen: ongeldige momentopname wordt nooit stil vervangen; classificat
   await page.evaluate(() => { const S = CC.S(); const p = S.trainingsplannen.find((x) => x.id === 'tp-x'); p.onderdelen[0].vormId = 'v-a2'; delete p.onderdelen[1].vast; CC.save(); });
   await page.evaluate(() => { const S = CC.S(); const pr = S.profielen.dcg; const ll = pr.onderdelen.leerlijnen.items;
     const a = ll.find((l) => l.id === 'll-aannemen'); const vh = a.vaardigheden.find((x) => x.id === 'vh-eerste-contact-van-druk-af');
-    a.vaardigheden = a.vaardigheden.filter((x) => x !== vh); ll.find((l) => l.id === 'll-1v1-aanvallend').vaardigheden.push(vh); pr.versie = 4; });
+    a.vaardigheden = a.vaardigheden.filter((x) => x !== vh); ll.find((l) => l.id === 'll-1v1-aanvallend').vaardigheden.push(vh); pr.versie = Number(pr.versie) + 1; });
   const o = (await pl(page, 'tp-x')).onderdelen[0];
-  expect(o.vast.vh).toEqual([{ id: 'vh-eerste-contact-van-druk-af', ll: 'll-aannemen' }]); expect(o.vast.pv).toBe('3');
+  expect(o.vast.vh).toEqual([{ id: 'vh-eerste-contact-van-druk-af', ll: 'll-aannemen' }]); expect(o.vast.pv).toBe(String(PROFIEL.versie));
   // A1: leerlijn van toen. Plek 2 heeft geen momentopname op een vastgelegde training: niet toegerekend (controle 4-11; geen stille terugval op de vorm)
   expect(await minuten(page, 'tp-x')).toEqual({ gs: { 'll-aannemen': 10 }, ongeldig: 10, gsTotaal: 10 });
   await controleer(page, fouten, 'ongeldig');
