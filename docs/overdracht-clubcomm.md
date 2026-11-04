@@ -31,6 +31,7 @@ Eerstvolgende vrije besluitnummer: **157**.
 - Bevinding: uitvoerrecht van drie `priv`-functies intrekken (onbereikbaar voor anon). Een account hoort bij precies één club (getest 10/10).
 
 ## Volgende technische stap
+- **Tekentool, wacht op keuze:** telefoon gekanteld (13–32% van het veld zichtbaar, niet te scrollen; met het paneel *Spelers* 0%). Onderzoek en concept: `docs/onderzoek/tekentool/gekanteld.md` (branch `onderzoek/tekentool-gekanteld`). Advies A: eigen indeling voor een gekantelde telefoon (rail links, bovenbalk op één regel, paneel rechts naast het veld). Bouwen pas na akkoord.
 - Later, eigen besluit: vaardigheidsaccenten per trainingsplek (de vorm blijft herbruikbaar; de trainer kiest per training het accent). Wat ontbreekt: `docs/onderzoek/trainingskaart/README.md`. Nu niet bouwen.
 - Gebied F (documentatie en presentatie): **Besluit 151** staat op `main` (#115). Volgende stap, elk apart na akkoord: sjabloon voor pull requests met het blok Documentatie-impact, dan de eerste 5–6 trainerskaarten + *Snelstart vrijwillige trainer* als Concept. Open vragen (PowerPoints naast PDF's; wie verstuurt) staan bij *Nog te bespreken*.
 - **Besluit 154** (L) staat op `main` (#118): begeleider ziet alleen trainers in zijn werkgebied, ook in de database (richting A; `docs/onderzoek/hjo-werkgebied-rechten/voorstel.md`). Alleen het besluit; migratie 034 nog niet gebouwd, niets in de database. Volgende stap na akkoord: 034 als voorstel + lokale tests; vooraf alleen lezen welke bouwen DCG en Swift hebben.
