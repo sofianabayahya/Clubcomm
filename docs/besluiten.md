@@ -685,7 +685,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 ---
 
 ## Besluit 149 — Vrijwilligersprincipe: ClubComm biedt aan en verplicht niets onnodigs (Spoor 3, algemene ontwerpstandaard)
-*Besloten 4 november 2026, na de integrale UX-audit (`docs/onderzoek/ux-audit/`, branch `onderzoek/ux-audit`) en twee beoordelingsrondes van de initiatiefnemer ("akkoord als algemeen ontwerpbesluit"). Vult Besluit 30 en 34 en Principe 10 aan. **Dit is een ontwerpstandaard; het akkoord geldt niet automatisch voor code- of databasewijzigingen.***
+*Besloten 4 november 2026, na de integrale UX-audit (map docs/onderzoek/ux-audit op branch `onderzoek/ux-audit`) en twee beoordelingsrondes van de initiatiefnemer ("akkoord als algemeen ontwerpbesluit"). Vult Besluit 30 en 34 en Principe 10 aan. **Dit is een ontwerpstandaard; het akkoord geldt niet automatisch voor code- of databasewijzigingen.***
 
 **Uitgangspunt:** *"Een trainer krijgt altijd hulp aangeboden, maar hoeft niets onnodig in te vullen."* Trainers, teamleiders en begeleiders zijn vrijwilligers, ook als ze een diploma hebben; hoeveel tijd en ambitie iemand heeft, verschilt. ClubComm beperkt de administratieve belasting en werkt zonder extra trainingsadministratie. Een vereniging kan wel afspraken maken over begeleiding en de voorbereiding die daarvoor nodig is.
 
@@ -722,7 +722,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 3. Hoeveel tikken kost de eenvoudigste route op 390 px?
 4. Verandert het rechten, gegevens of de navigatie?
 
-**Niet in dit besluit:** de clubbibliotheek (rechten, maat L), de drie startroutes (wachten op de bibliotheek), de lege toestand van de Lijn (apart ontwerp), het opruimen van een lege nieuwe oefenvorm (apart voorstel). Uitwerking en metingen: `docs/onderzoek/ux-audit/README.md` en `voorstel-drie-kleine-verbeteringen.md` (branch `onderzoek/ux-audit`).
+**Niet in dit besluit:** de clubbibliotheek (rechten, maat L), de drie startroutes (wachten op de bibliotheek), de lege toestand van de Lijn (apart ontwerp), het opruimen van een lege nieuwe oefenvorm (apart voorstel). Uitwerking en metingen: README.md en voorstel-drie-kleine-verbeteringen.md in docs/onderzoek/ux-audit (branch `onderzoek/ux-audit`).
 
 ---
 
