@@ -175,6 +175,34 @@ test.describe('Demo Swift (simulatie)', () => {
     expect(r).toEqual({ voor: 'Middenbouw', na: 'Bovenbouw', o14: 'Bovenbouw', o13: 'Middenbouw', inGebied: true });
   });
 
+  test('ontwerpvoorstel trainer: eerst eigen reflectie, dan feedback; openen schrijft niets; oude antwoorden bij hun eigen vragen', async ({ page }) => {
+    const iso = await ISOLATIE(page); const f = fouten(page);
+    await page.goto('/?stand=nu'); await inloggen(page, 'trainer@demo.invalid');
+    await page.locator('#demo-banner [data-ux="voorstel"]').click();
+    await expect(page.locator('#app')).toContainText('Mijn volgende training'); await expect(page.locator('#app')).toContainText('Mijn ontwikkelpunt');
+    await expect(page.locator('#app')).toContainText('Kijk terug op je training van');
+    await page.locator('#app [data-view="begelVerslag"]').first().click();
+    await expect(page.locator('.ux-dicht')).toContainText('zodra je je eigen reflectie hebt vastgelegd');
+    await expect(page.locator('#app')).not.toContainText('Duidelijke uitleg'); // de feedback is nog niet te zien
+    expect(await page.evaluate(() => window.DEMO_SWIFT.db.rows['begeleidZelf|demo-bm1'] || null)).toBeNull(); // openen schrijft niets
+    await page.fill('#ux-g1', 'De uitleg was kort'); await page.locator('#ux-g1').press('Tab');
+    await expect(page.locator('[data-ux-chip="g1"]')).toHaveText('✓ bewaard');
+    await page.reload(); await expect(page.locator('nav.nav')).toBeVisible(); await page.locator('#app [data-view="begelVerslag"]').first().click();
+    await expect(page.locator('#ux-g1')).toHaveValue('De uitleg was kort'); await expect(page.locator('.ux-dicht')).toBeVisible(); // concept, nog niet vastgelegd
+    await page.locator('.ux-form button.knop').click();
+    await expect(page.locator('#app')).toContainText('Vastgelegd op'); await expect(page.locator('#app')).toContainText('Begeleider: Demo HJO');
+    await expect(page.locator('#app')).toContainText('Samen afgesproken'); await expect(page.locator('#app')).toContainText('Eerst kijken, dan coachen');
+    await expect.poll(async () => page.evaluate(() => !!(window.DEMO_SWIFT.db.rows['begeleidZelf|demo-bm1'] || { data: {} }).data.reflectieOp)).toBe(true);
+    const z = await page.evaluate(() => window.DEMO_SWIFT.db.rows['begeleidZelf|demo-bm1'].data);
+    expect(z).toMatchObject({ g: { g1: 'De uitleg was kort' }, vragenVersie: 2 }); expect(z.reflectieOp).toBeTruthy(); expect(z.r).toBeUndefined();
+    // Een oude reflectie (r1–r3) staat bij de vragen van toen
+    await page.evaluate(() => { const z = CC.S().begeleidZelf['demo-bm1']; delete z.g; z.r = { r1: 'Oud antwoord', r2: '', r3: '' }; CC.render(); });
+    await expect(page.locator('#app')).toContainText('Wat heb ik geleerd over mijn eigen coachgedrag?'); await expect(page.locator('#app')).toContainText('Ingevuld met de vragen van toen');
+    // Huidig scherm blijft beschikbaar
+    await page.locator('#demo-banner [data-ux="huidig"]').click(); await expect(page.locator('#app')).toContainText('JOUW REFLECTIE'.toLowerCase(), { ignoreCase: true });
+    expect(iso.buiten).toEqual([]); expect(f).toEqual([]);
+  });
+
   // Gegevens voor de vergelijking met de echte database (supabase/tests/demo-rechten.sh): alle rijen na de route + het oordeel
   // van de demo per identiteit per rij (lezen en schrijven).
   test('rechten: uitvoer voor de vergelijking met de echte regels', async ({ page }) => {

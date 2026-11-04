@@ -37,3 +37,10 @@ Vercel-toegangsbeveiliging is dus **geen** onderdeel van de isolatie; die komt e
 | HO ziet de trainingen van de trainer (en de vormen daarin), alleen lezen | **Concept** van voorstel 032, in beide standen gelabeld *CONCEPT · voorstel 032*; bij de trainer onder *Trainingen van de trainer*. Rechten: scope `trainerplan`, vergeleken met migratie 032 (128/128) |
 
 **Gevonden bij het nabootsen van 032 (30-10):** bestaande trainingen zijn `eigen`; de trigger `priv.cc_bewaak` verbiedt een trainer de scope te wijzigen. Met 032 zoals het nu is, blijven bestaande trainingen dus onzichtbaar en geeft opslaan met de nieuwe scope *"Scope wijzigen mag niet"* (lokaal getest). 032 heeft daarom nog een eenmalige omzetting of een uitzondering eigen → trainerplan nodig. De demo doet die omzetting zelf.
+
+## Ontwerpvoorstel trainer (4-11-2026, alleen in de demo)
+Schakel in de oranje balk tussen **Huidig** en **Voorstel** (`app/demo/ux-voorstel.js`). Geen besluit, niet in de echte app.
+- **Home:** *Nu te doen* (alleen als er iets openstaat, in eenvoudige woorden) · *Mijn volgende training* (één knop) · *Mijn ontwikkeling* (ontwikkelpunt eerst, aantal momenten klein).
+- **Verslag:** *Doel van de training* → *Mijn eigen reflectie* (3 vragen onder elkaar, geen voorbeeldantwoorden) → pas na *Reflectie vastleggen*: *Feedback van je begeleider* (naam uit `door` van het moment, datum uit `gedeeld`), *Samen afgesproken* en de volledige observatie als verdieping.
+- **Opslag (CONCEPT, apart technisch besluit nodig):** nieuwe vragen onder `g1`–`g3` met `vragenVersie: 2`; oude antwoorden (`r1`–`r3`) blijven bij hun eigen vragen. Openen schrijft niets; typen = concept; *Reflectie vastleggen* = `reflectieOp`.
+

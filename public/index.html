@@ -13,6 +13,30 @@
     #demo-banner a, #demo-banner button { color: #7c2d12; font: inherit; font-weight: 600; min-height: 44px; display: inline-flex; align-items: center; background: none; border: 0; padding: 0 4px; text-decoration: underline; cursor: pointer; }
     .demo-concept { display: inline-block; margin: 0 0 8px; padding: 2px 8px; border: 1px dashed #b45309; border-radius: 6px; background: #fff4d6; color: #7c2d12; font: 600 13px/1.4 system-ui, sans-serif; }
     .demo-blokken { padding-left: 20px; } .demo-blokken li { margin: 4px 0; }
+    /* Ontwerpvoorstel trainer (demo, 4-11) */
+    .ux { padding-bottom: 8px; } .ux-concept { display: inline-block; margin: 0 0 4px; padding: 2px 8px; border: 1px dashed #b45309; border-radius: 6px; background: #fff4d6; color: #7c2d12; font: 600 12px/1.4 system-ui, sans-serif; }
+    .ux-h { font-size: 17px; font-weight: 700; margin: 18px 0 8px; color: var(--inkt); }
+    .ux-blok { background: #fff; border: 1px solid var(--lijn); border-radius: 12px; padding: 14px 16px; }
+    .ux-blok + .ux-blok { margin-top: 0; }
+    .ux-blok > .ux-h { margin-top: 0; }
+    section.ux-blok { margin-top: 14px; }
+    .ux-tag { font-size: 14px; color: var(--zacht); margin: 0 0 8px; }
+    .ux-z { font-size: 14px; color: var(--zacht); } p.ux-z { margin: 2px 0 10px; }
+    .ux-groot { font-size: 17px; font-weight: 700; margin: 0 0 2px; color: var(--inkt); }
+    .ux-r { display: flex; gap: 12px; padding: 10px 0; border-top: 1px solid var(--lijn); font-size: 16px; line-height: 1.4; }
+    .ux-r:first-of-type { border-top: 0; } .ux-r .ic { flex: none; width: 20px; height: 20px; margin-top: 2px; color: var(--zacht); } .ux-r b, .ux-r span { display: block; }
+    .ux-q { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; font-weight: 700; font-size: 16px; margin: 14px 0 6px; }
+    .ux-chip { flex: none; white-space: nowrap; font-size: 13px; font-weight: 600; border: 1px solid var(--lijn); border-radius: 999px; padding: 1px 8px; color: var(--zacht); }
+    .ux-chip.ok { color: var(--groen); border-color: #a8d5b5; }
+    .ux-ta { width: 100%; font-size: 16px; min-height: 64px; border: 1px solid #b9c5d3; border-radius: 10px; padding: 10px; font-family: inherit; resize: none; overflow: hidden; }
+    .ux-form .knop { margin-top: 4px; min-height: 48px; }
+    .ux-dicht { display: flex; gap: 8px; align-items: flex-start; margin: 0; font-size: 15px; color: var(--zacht); } .ux-dicht .ic { flex: none; width: 18px; height: 18px; margin-top: 2px; }
+    .ux-link { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 8px; min-height: 44px; margin-top: 10px; border: 0; border-top: 1px solid var(--lijn); background: none; padding: 8px 0 0; font: inherit; font-size: 16px; color: var(--inkt); text-align: left; }
+    .ux-link .ic { flex: none; width: 18px; height: 18px; }
+    .ux-dl dt { font-weight: 700; margin-top: 10px; } .ux-dl dd { margin: 2px 0 0; font-size: 16px; }
+    .ux-meer { margin-top: 10px; border-top: 1px solid var(--lijn); padding-top: 8px; } .ux-meer summary { min-height: 44px; display: flex; align-items: center; font-weight: 600; color: var(--blauw); cursor: pointer; }
+    .ux-obs { padding-left: 18px; font-size: 15px; } .ux-obs li { margin: 8px 0; }
+    .ux-2 { display: grid; grid-template-columns: 1fr; gap: 0 24px; } @media (min-width: 900px) { .ux-2 { grid-template-columns: 1fr 1fr; } }
     #demo-rand { position: fixed; inset: 0; border: 3px solid #b45309; pointer-events: none; z-index: 2147483647; }
   </style>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -99,6 +123,7 @@
   <script src="app/adres.js"></script>
   <script src="app/push.js"></script>
   <script src="app/demo/meekijken.js"></script>
+  <script src="app/demo/ux-voorstel.js"></script>
   <script src="app/live.js"></script>
   <script src="app/demo.js"></script>
   <script src="app/onderhoud.js"></script>

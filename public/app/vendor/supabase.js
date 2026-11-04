@@ -240,8 +240,12 @@
     el.innerHTML = `<b>SIMULATIE</b> · ${STANDEN[STAND]} · fictieve gegevens, geen verbinding met ClubComm
       <span class="demo-knoppen"><a href="?stand=${STAND === 'nu' ? 'knvb' : 'nu'}">Naar ${STANDEN[STAND === 'nu' ? 'knvb' : 'nu']}</a>
       <button type="button" id="demo-wis">Alles wissen</button></span>
+      <span class="demo-knoppen">Ontwerp trainer: <button type="button" data-ux="huidig">Huidig</button> <button type="button" data-ux="voorstel">Voorstel</button></span>
       <small>Inloggen: hjo@demo.invalid of trainer@demo.invalid · code 123456</small>`;
     document.body.prepend(el);
+    const uxStand = () => { let v = 'huidig'; try { v = localStorage.getItem('demo-ux') === 'voorstel' ? 'voorstel' : 'huidig'; } catch (e) { /* */ } el.querySelectorAll('[data-ux]').forEach((b) => { b.setAttribute('aria-pressed', String(b.dataset.ux === v)); b.style.textDecoration = b.dataset.ux === v ? 'none' : 'underline'; b.style.fontWeight = b.dataset.ux === v ? '800' : '600'; }); };
+    el.querySelectorAll('[data-ux]').forEach((b) => b.addEventListener('click', () => { if (window.DEMO_UX) window.DEMO_UX.zet(b.dataset.ux); else { try { localStorage.setItem('demo-ux', b.dataset.ux); } catch (e) { /* */ } } uxStand(); }));
+    uxStand();
     el.querySelector('#demo-wis').addEventListener('click', () => {
       if (!window.confirm('Alle demo-gegevens op dit apparaat wissen (beide standen)?')) return;
       try { localStorage.clear(); sessionStorage.clear(); } catch (e) { /* leeg */ }
