@@ -13,6 +13,7 @@
 | PR | Wat | Stand |
 |---|---|---|
 | #108, #112, #113, #115 | Besluiten 146, 149, 150, 151 (andere sessies) | open |
+| #116 | Openstaand bijgewerkt (trainingsmodule, volgende stappen; geen besluitnummer, andere sessie) | open |
 
 - Samengevoegd 04-11: #114, in de werkwijze de stap *overdracht bijwerken* vóór samenvoegen. #111, vaste datum in drie datumafhankelijke tests (nieuwe fase; twee roostertests die vanaf eind mei 2027 zouden falen). Proef op 7 datums t/m 20-09-2027. Idee *demoseizoen laten meeschuiven* staat in Openstaand.
 
