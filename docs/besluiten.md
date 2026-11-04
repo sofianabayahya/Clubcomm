@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 4 november 2026 (t/m Besluit 156; 146 en 150 staan in open pull requests)
+Laatst bijgewerkt: 4 november 2026 (t/m Besluit 157; 146 en 150 staan in open pull requests)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -21,7 +21,8 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 156; 146 en 150 staan in open pu
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
-| 156 | 3 | Tekentool, paneel *Spelers*: één team tegelijk met zes teamkleuren (nieuw: **oranje** en **roze**), per team **rondje of driehoek**, nummers 1–11 en *Zonder nummer* voor **elk** team, *＋ Losse speler*, Trainer en Keeper in het paneel. Telefoon: het paneel ligt **vast onderaan** en het veld blijft erboven zichtbaar; bovenbalk in twee regels (↶ ↷); de tip blijft weg na wegtikken. Laptop: hetzelfde paneel naast de rail. Oude tekeningen ongewijzigd | ✅ besloten (wacht op samenvoegen) |  |
+| 157 | 3 | Tekentool, telefoon **gekanteld** (breed en lager dan 500 px): eigen indeling met de rail **links**, de bovenbalk op **één regel**, geen tip en geen hulptekst, het veld **past in de hoogte**; het paneel *Spelers* ligt **rechts naast het veld** (hoogstens 330 px, scrollt). Staand, tablet en laptop ongewijzigd | ✅ besloten (wacht op samenvoegen) |  |
+| 156 | 3 | Tekentool, paneel *Spelers*: één team tegelijk met zes teamkleuren (nieuw: **oranje** en **roze**), per team **rondje of driehoek**, nummers 1–11 en *Zonder nummer* voor **elk** team, *＋ Losse speler*, Trainer en Keeper in het paneel. Telefoon: het paneel ligt **vast onderaan** en het veld blijft erboven zichtbaar; bovenbalk in twee regels (↶ ↷); de tip blijft weg na wegtikken. Laptop: hetzelfde paneel naast de rail. Oude tekeningen ongewijzigd | ◐ deels herzien | door 157 (gekanteld ligt het paneel rechts naast het veld) |
 | 155 | 3 | Korte evaluatie en labels uit het profiel: `evaluatie.kort` bepaalt welke vragen na de training open staan en in welke volgorde (DCG: doel/situatie · gedrag · toepassing · volgende leerstap; *Weerstand* naar Verdiepende analyse); zonder `kort` alles zoals voorheen; vraagteksten en antwoorden ongewijzigd. *Handelingen in gekozen vormen* in plaats van *Accenten*. DCG-profiel v4: *Loskomen uit de dekkingsschaduw*, *Afremmen* (codes ongewijzigd); database-update apart akkoord | geldt (profiel v4 in de database sinds 04-11) | — |
 | 154 | 3 | Begeleider (HO, TC) ziet alleen trainers in zijn werkgebied, ook in de database: werkgebied leeg = hele club, anders een gedeelde bouw met een team waar de persoon trainer is (berekend uit het team, niets opgeslagen); geldt voor `trainerzelf`, `trainerdossier` en straks `trainerplan`; geen toewijzing per begeleider; `admin` telt hier niet; uitvoering (034) apart | ✅ geldt (nog niet gebouwd) | |
 | 153 | 3 | Tekentool, veldlijnen: **penaltystip** (11 m), **halve maan** (9,15 m rond de stip, buiten de 16), **hoekschopboogjes** (1 m) en **middenstip** op 11×11 (liggend en staand) en Half veld; niet op 8×8, 6×6 en Vak (pupillenvelden pas met hun KNVB-maat). Bestaande tekeningen krijgen de lijnen vanzelf; gegevens ongewijzigd | ✅ besloten (wacht op samenvoegen) |  |
@@ -692,7 +693,21 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 157 — Tekentool: een eigen indeling voor de gekantelde telefoon (Spoor 3, maat M)
+> Herziet Besluit 156 deels (gekanteld ligt het paneel *Spelers* rechts, niet onderaan).
+*Besloten 4 november 2026: de initiatiefnemer koos advies A uit `docs/onderzoek/tekentool/gekanteld.md`, met de adviezen bij de keuzes (grens lager dan 500 px; een tablet en een Pro Max gekanteld houden hun huidige indeling).*
+- **Probleem (gemeten):** met een gekantelde telefoon was maar 13–32% van het veld zichtbaar en kon je niet scrollen naar de rest; met het paneel *Spelers* open 0%. Bovenaan stonden de bovenbalk, de tip, de rail als rij en de hulptekst onder elkaar, samen ± 75% van de hoogte.
+- **Wanneer:** smaller dan 900 px, breder dan hoog en lager dan 500 px. Een tablet en een grote telefoon die gekanteld breder is dan 900 px (zoals een Pro Max) houden de laptopindeling; daar past het veld al.
+- **Indeling:** de rail staat links (zoals op de laptop). De bovenbalk staat op één regel (*Annuleren · Veld · Opstelling · ⚙ · ↶ ↷ · Opslaan*). De tip en de hulptekst vallen weg. Het veld past in de hoogte die over is. Het paneel *Spelers* ligt rechts naast het veld, onder de bovenbalk (hoogstens 330 px breed, en het scrollt). De andere menu's openen naast de rail.
+- **Gemeten:** 100% van het veld zichtbaar op 667 × 375, 780 × 360 en 844 × 390, met en zonder paneel. Spelers zijn gekanteld ± 12–14 px (staand ± 9 px).
+- **Draaien** met het paneel open: het veld en het paneel gaan vanzelf naar hun nieuwe plek.
+- Staand (Besluit 156), tablet en laptop blijven gelijk. Geen gegevens; opgeslagen tekeningen ongewijzigd.
+- Tests: `tests/tekentool-gekanteld.spec.js` (op de oude code falen ze alle drie).
+
+---
+
 ## Besluit 156 — Tekentool: paneel Spelers met één team tegelijk, oranje en roze, en het veld zichtbaar op de telefoon (Spoor 3, maat M)
+> **◐ Deels herzien door Besluit 157:** met de telefoon gekanteld ligt het paneel rechts naast het veld, niet onderaan.
 > Herziet de Besluiten 124, 125 en 126 deels.
 *Besloten 4 november 2026: de initiatiefnemer koos A + A+ uit `docs/onderzoek/tekentool/spelers-mobiel.md` en vroeg er roze en oranje als team bij; voorbeeld op 390 px en laptop in §6 van dat document. Keuzes: op de laptop hetzelfde paneel; alleen rondje en driehoek (geen vierkant, op verzoek van de initiatiefnemer).*
 - **Probleem (gemeten):** op elke telefoon bedekte het menu *Spelers* het hele veld; op 360 px en gekanteld waren de knoppen van de tegenstander niet te bereiken (het menu was langer dan het scherm). De tip *"tekenen gaat sneller op een laptop"* kwam bij elke tekening terug.

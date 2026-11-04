@@ -325,6 +325,8 @@
     // Besluit 156: op de telefoon ligt het paneel Spelers onderaan; het veld schuift erboven (ruimte = hoogte van het paneel).
     function paneelRuimte(){
       var f = el("drawFly"), stage = document.querySelector("#drawOverlay .draw-stage"); if (!stage) return;
+      // Besluit 157: gekanteld ligt het paneel rechts, direct onder de bovenbalk.
+      var kop = document.querySelector("#drawOverlay .draw-top"); if (kop) el("drawOverlay").style.setProperty("--kop", Math.round(kop.getBoundingClientRect().bottom) + "px");
       var h = f && !f.hidden && railOpen === "spelers" && window.matchMedia("(max-width: 899px)").matches ? f.offsetHeight : 0;
       stage.style.setProperty("--paneel", h + "px");
       stage.classList.toggle("paneel-open", h > 0);
@@ -870,6 +872,8 @@
     });
     el("drawUndo").addEventListener("click", undo);
     el("drawRedo").addEventListener("click", redo);
+    // Draaien van de telefoon: het paneel en het veld opnieuw plaatsen (Besluit 156 en 157).
+    window.addEventListener("resize", function(){ if (st && !el("drawOverlay").hidden) paneelRuimte(); });
     el("drawPhoneX").addEventListener("click", function(){ el("drawPhone").hidden = true; try { localStorage.setItem("cc-draw-tip", "weg"); } catch(e){} });
     el("drawCancel").addEventListener("click", close);
     el("drawSave").addEventListener("click", function(){
