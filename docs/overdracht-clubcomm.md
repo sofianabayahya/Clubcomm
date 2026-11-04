@@ -2,7 +2,11 @@
 
 *Alleen Spoor 3 schrijft hier. Kort houden (hoogstens ongeveer 30 regels); aan het eind van elke ronde overschrijven. Spoor 1 en 2 hebben hun eigen overdracht (`docs/methodiek/persoonlijk/overdracht.md`, `docs/methodiek/swift/overdracht.md`).*
 
-**Bijgewerkt:** 30-10-2026
+**Bijgewerkt:** 30-10-2026 (aanvulling 04-11 hieronder)
+
+## Analyse methodiek-aansluiting (04-11, branch `analyse/methodiek-aansluiting`, geen PR)
+- In `docs/onderzoek/methodiek-aansluiting/`: ontwikkelvoorstel, begrippenlijst v2 (voorstel Spoor 1, nog vast te stellen), technische punten T1–T9, oplevering 2 (KNVB-basisprofiel) en oplevering 3 (praktijktoets week 46).
+- Alleen analyse: geen code, profiel of database gewijzigd. Wacht op beoordeling. Daarna bepaalt de gebruiker de bouwstappen. Belangrijkste: **T1** (een koppeling aanpassen verandert achteraf de minuten).
 
 ## Stand
 - `main` = `51e5a12` (#105, Besluit 144). **Migratie 033 is niet toegepast.** Het eerstvolgende vrije besluitnummer is **145**.
