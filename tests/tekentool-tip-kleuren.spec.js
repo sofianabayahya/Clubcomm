@@ -47,3 +47,45 @@ test('telefoon: de tip wijkt voor het paneel Spelers en komt daarna terug (tot j
   expect(await page.evaluate(() => localStorage.getItem('cc-draw-tip'))).toBe(null);
   expect(fouten).toEqual([]);
 });
+
+// Besluit NNN (B): op de telefoon staand staan Kopie en Weg in de kop van het paneel Spelers; de balk onder het veld lag daar
+// achter het paneel. Het veld blijft helemaal boven het paneel. Laptop: de balk onder het veld zoals het was.
+test('telefoon: Kopie en Weg in de kop van het paneel, het veld blijft zichtbaar', TAG, async ({ page }) => {
+  const fouten = volgFouten(page);
+  await open(page, { width: 390, height: 844 });
+  await page.locator('#drawPhoneX').click();
+  await page.locator('.draw-menu summary', { hasText: 'Opstelling' }).click(); await page.locator('[data-draw-form="331|"]').click();
+  await page.locator('[data-rail="spelers"]').click();
+  await expect(page.locator('#drawFlyH')).toHaveText('Spelers');
+  await expect(page.locator('[data-paneel-weg]')).toHaveCount(0);
+  await page.locator('[data-nr="rood|6"]').click(); // kiest speler 6
+  await expect(page.locator('#drawFlyH')).toHaveText('Speler 6');
+  await expect(page.locator('[data-paneel-dup]')).toBeVisible();
+  await expect(page.locator('[data-paneel-weg]')).toHaveAccessibleName('Verwijderen');
+  await expect(page.locator('#drawSelBar')).toBeHidden();
+  const p = await page.evaluate(() => { const svg = document.querySelector('#drawSvg'), vb = svg.viewBox.baseVal, m = svg.getScreenCTM(); return { B: m.f + vb.height * m.d, P: document.querySelector('#drawFly').getBoundingClientRect().top }; });
+  expect(p.B).toBeLessThanOrEqual(p.P + 1);
+  const aantal = () => page.locator('#drawSvg g[data-i]').count();
+  const voor = await aantal();
+  await page.locator('[data-paneel-weg]').click();
+  expect(await aantal()).toBe(voor - 1);
+  await expect(page.locator('#drawFlyH')).toHaveText('Spelers');
+  await page.locator('#drawUndo').click();
+  expect(await aantal()).toBe(voor);
+  await page.locator('[data-nr="rood|6"]').click();
+  await page.locator('[data-paneel-dup]').click();
+  expect(await aantal()).toBe(voor + 1);
+  expect(fouten).toEqual([]);
+});
+
+test('laptop: geen Kopie en Weg in het paneel, de balk onder het veld blijft', TAG, async ({ page }) => {
+  const fouten = volgFouten(page);
+  await open(page, { width: 1366, height: 820 });
+  await page.locator('[data-rail="spelers"]').click();
+  await page.locator('[data-nr="rood|6"]').click(); await page.locator('[data-nr="rood|6"]').click();
+  await expect(page.locator('#drawFlyH')).toHaveText('Speler 6');
+  await expect(page.locator('[data-paneel-weg]')).toBeHidden();
+  await expect(page.locator('#drawSelBar')).toBeVisible();
+  await expect(page.locator('#drawDelete')).toBeVisible();
+  expect(fouten).toEqual([]);
+});
