@@ -83,7 +83,7 @@ for (const breed of [false, true]) {
     await expect(page.locator('.tr-stap .tr-niv')).toHaveText('Herkennen → Kiezen');
     await controleer(page, fouten, 'kaart vr');
 
-    // do: eigen voorbereiding, periodisering niet toegepast; weekvoorstel apart; niets ingevuld; handelingen in gekozen vormen (Besluit 154)
+    // do: eigen voorbereiding, periodisering niet toegepast; weekvoorstel apart; niets ingevuld; handelingen in gekozen vormen (Besluit 155)
     await plannen(page, 't-do');
     await expect(kaart(page).locator('.tr-stand')).toHaveText('Eigen voorbereiding – periodisering niet toegepast');
     await expect(kaart(page)).toContainText('Niet vastgelegd');

@@ -1,4 +1,4 @@
--- Terugdraaien van Besluit 154: DCG-profiel terug naar versie 3 (reservekopie van 04-11). Alleen uitvoeren na akkoord.
+-- Terugdraaien van Besluit 155: DCG-profiel terug naar versie 3 (reservekopie van 04-11). Alleen uitvoeren na akkoord.
 -- Veilig: alleen als het profiel nog exact versie 4 uit dit besluit is (controlesom 3f17480db4927f60088501cefa3471b0).
 update public.rij set data = $p3${
   "schema": "clubcomm-profiel",

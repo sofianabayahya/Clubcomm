@@ -1,4 +1,4 @@
--- Besluit 154: DCG-profiel versie 4 (labels Loskomen uit de dekkingsschaduw en Afremmen; evaluatie.kort). NOG NIET UITVOEREN zonder akkoord.
+-- Besluit 155: DCG-profiel versie 4 (labels Loskomen uit de dekkingsschaduw en Afremmen; evaluatie.kort). NOG NIET UITVOEREN zonder akkoord.
 -- Veilig: vervangt het profiel ALLEEN als het nog exact versie 3 is (controlesom 07838a2c6d6c8de1c8808054b05a7599, gecontroleerd 04-11), anders gebeurt er niets.
 -- Reservekopie: supabase/backups/2026-11-04_dcg_profiel_v3.json. Terugdraaien: 2026-11-04_dcg_profiel_v4_terug.sql.voorstel.
 -- Na afloop controleren: md5(data::text) = '3f17480db4927f60088501cefa3471b0' (gelijk aan supabase/profielen/dcg.json).

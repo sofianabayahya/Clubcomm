@@ -83,6 +83,17 @@
     }
     function snapshot(){ st.undo.push(JSON.stringify({ field: st.field, items: st.items })); if (st.undo.length > 60) st.undo.shift(); st.redo = []; }
 
+    /* Besluit 153: penaltystip (11 m), halve maan (straal 9,15 m rond de stip, alleen buiten het strafschopgebied),
+       hoekschopboogjes (1 m) en middenstip; alleen op 11x11 en Half veld (8x8 en 6x6 pas met hun KNVB-maat).
+       g = midden van de doellijn, d = richting het veld in, stip = afstand van de stip, diep = diepte van de 16, r = straal. */
+    function strafLijnen(gx, gy, dx, dy, stip, diep, r, L){
+      var sx = gx + dx * stip, sy = gy + dy * stip, t = Math.acos(Math.min(1, (diep - stip) / r)), a0 = Math.atan2(dy, dx), d = "", i, N = 16;
+      for (i = 0; i <= N; i++){ var a = a0 - t + 2 * t * i / N; d += (i ? " L " : "M ") + (sx + r * Math.cos(a)).toFixed(1) + " " + (sy + r * Math.sin(a)).toFixed(1); }
+      return stipSvg(sx, sy) + '<path class="veld-boog" d="' + d + '" ' + L + '/>';
+    }
+    function stipSvg(x, y){ return '<circle class="veld-stip" cx="' + x + '" cy="' + y + '" r="3.5" fill="#fff" opacity=".9"/>'; }
+    // Hoekschopboogje in hoek (x, y); kx en ky = richting het veld in (+1 of -1).
+    function hoekSvg(x, y, kx, ky, L){ var r = 10; return '<path class="veld-hoek" d="M ' + (x + kx * r) + ' ' + y + ' A ' + r + ' ' + r + ' 0 0 ' + (kx * ky > 0 ? 1 : 0) + ' ' + x + ' ' + (y + ky * r) + '" ' + L + '/>'; }
     function fieldSvg(){
       var f = FIELDS[st.field], w = f.w, h = f.h, s = "", n = 10, i;
       var vertical = st.field === "staand" || st.field === "f8" || st.field === "f6";
@@ -96,7 +107,9 @@
       if (st.field === "liggend"){
         s += '<line x1="' + w / 2 + '" y1="' + m + '" x2="' + w / 2 + '" y2="' + (h - m) + '" ' + L + '/><circle cx="' + w / 2 + '" cy="' + h / 2 + '" r="90" ' + L + '/>' +
           '<rect x="' + m + '" y="' + (h / 2 - 200) + '" width="160" height="400" ' + L + '/><rect x="' + (w - m - 160) + '" y="' + (h / 2 - 200) + '" width="160" height="400" ' + L + '/>' +
-          '<rect x="' + m + '" y="' + (h / 2 - 90) + '" width="55" height="180" ' + L + '/><rect x="' + (w - m - 55) + '" y="' + (h / 2 - 90) + '" width="55" height="180" ' + L + '/>';
+          '<rect x="' + m + '" y="' + (h / 2 - 90) + '" width="55" height="180" ' + L + '/><rect x="' + (w - m - 55) + '" y="' + (h / 2 - 90) + '" width="55" height="180" ' + L + '/>' +
+          strafLijnen(m, h / 2, 1, 0, 110, 160, 90, L) + strafLijnen(w - m, h / 2, -1, 0, 110, 160, 90, L) + stipSvg(w / 2, h / 2) +
+          hoekSvg(m, m, 1, 1, L) + hoekSvg(w - m, m, -1, 1, L) + hoekSvg(m, h - m, 1, -1, L) + hoekSvg(w - m, h - m, -1, -1, L);
       } else if (vertical){
         // 11x11, 8x8 en 6x6 staand: zelfde opbouw, geschaald naar de veldmaat.
         var cr = st.field === "staand" ? 90 : (st.field === "f8" ? 62 : 48);
@@ -104,9 +117,13 @@
         s += '<line x1="' + m + '" y1="' + h / 2 + '" x2="' + (w - m) + '" y2="' + h / 2 + '" ' + L + '/><circle cx="' + w / 2 + '" cy="' + h / 2 + '" r="' + cr + '" ' + L + '/>' +
           '<rect x="' + (w / 2 - pbw / 2) + '" y="' + m + '" width="' + pbw + '" height="' + pbh + '" ' + L + '/><rect x="' + (w / 2 - pbw / 2) + '" y="' + (h - m - pbh) + '" width="' + pbw + '" height="' + pbh + '" ' + L + '/>' +
           '<rect x="' + (w / 2 - gaw / 2) + '" y="' + m + '" width="' + gaw + '" height="' + gah + '" ' + L + '/><rect x="' + (w / 2 - gaw / 2) + '" y="' + (h - m - gah) + '" width="' + gaw + '" height="' + gah + '" ' + L + '/>';
+        // Besluit 153: alleen 11x11 staand (zelfde maten als liggend, gedraaid)
+        if (st.field === "staand") s += strafLijnen(w / 2, m, 0, 1, 110, pbh, 90, L) + strafLijnen(w / 2, h - m, 0, -1, 110, pbh, 90, L) + stipSvg(w / 2, h / 2) +
+          hoekSvg(m, m, 1, 1, L) + hoekSvg(w - m, m, -1, 1, L) + hoekSvg(m, h - m, 1, -1, L) + hoekSvg(w - m, h - m, -1, -1, L);
       } else if (st.field === "half"){
         s += '<rect x="' + (w / 2 - 200) + '" y="' + m + '" width="400" height="160" ' + L + '/><rect x="' + (w / 2 - 90) + '" y="' + m + '" width="180" height="55" ' + L + '/>' +
-          '<path d="M ' + (w / 2 - 90) + ' ' + (h - m) + ' A 90 90 0 0 1 ' + (w / 2 + 90) + ' ' + (h - m) + '" ' + L + '/>';
+          '<path d="M ' + (w / 2 - 90) + ' ' + (h - m) + ' A 90 90 0 0 1 ' + (w / 2 + 90) + ' ' + (h - m) + '" ' + L + '/>' +
+          strafLijnen(w / 2, m, 0, 1, 110, 160, 90, L) + stipSvg(w / 2, h - m) + hoekSvg(m, m, 1, 1, L) + hoekSvg(w - m, m, -1, 1, L);
       }
       return s;
     }
@@ -304,7 +321,10 @@
       railOpen = id;
       // Meteen de laatst gebruikte variant kiezen: één tik op Hoedjes = verder met dezelfde kleur.
       // Is er iets gekozen (bijv. een speler voor een ander nummer), dan blijft die gekozen.
-      if ((st.sel == null && !(st.multi && st.multi.length > 1)) && (st.tool == null || railVan(st.tool) !== r)){ st.tool = laatste(r); }
+      // Besluit 152: Spelers zet bij openen niets aan (het menu is vooral voor de nummerknoppen); een losse speler = tik
+      // een kleur en dan het veld. Stond er gereedschap van een ander menu aan, dan gaat dat uit.
+      if (id === "spelers"){ if (st.tool != null && railVan(st.tool) !== r) st.tool = null; }
+      else if ((st.sel == null && !(st.multi && st.multi.length > 1)) && (st.tool == null || railVan(st.tool) !== r)){ st.tool = laatste(r); }
       el("drawFlyH").textContent = r.naam;
       el("drawFlyGrid").innerHTML = l.map(toolKnop).join("");
       el("drawNummers").hidden = id !== "spelers";
@@ -336,7 +356,7 @@
         el("drawTools").parentNode.appendChild(f);
         f.addEventListener("click", function(e){
           if (!st) return;
-          if (e.target.closest(".draw-fly-x")){ sluitMenus(); return; }
+          if (e.target.closest(".draw-fly-x")){ sluitMenus(); st.tool = null; render(); return; } // Besluit 152: × = klaar, gereedschap uit
           var tk = e.target.closest("[data-draw-tool]");
           if (tk){ var n = Number(tk.getAttribute("data-draw-tool")), r = railVan(n); railLaatst[r.id] = n; pickTool(n, true); if (r.id !== "spelers") sluitMenus(); return; }
           if (e.target.closest("[data-klap]")){ nrDicht = !nrDicht; try { localStorage.setItem("cc-draw-nummers", nrDicht ? "dicht" : "open"); } catch(x){} renderNummers(); return; }

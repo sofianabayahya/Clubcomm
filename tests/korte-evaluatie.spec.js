@@ -1,4 +1,4 @@
-// ClubComm — Besluit 154: korte evaluatie uit het profiel (evaluatie.kort) en nieuwe labels (DCG-profiel v4).
+// ClubComm — Besluit 155: korte evaluatie uit het profiel (evaluatie.kort) en nieuwe labels (DCG-profiel v4).
 // Verzonnen gegevens, nep-database. Nooit tegen de productiedatabase.
 const { test, expect } = require('@playwright/test');
 const fs = require('fs');

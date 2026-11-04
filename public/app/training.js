@@ -261,7 +261,7 @@
       <div class="chips">${q.schaal.map((x) => `<button type="button" class="chipknop ${w === x ? 'aan' : ''}" aria-pressed="${w === x}" data-act="tpEval" data-id="${esc(a.id)}" data-q="${esc(q.id)}" data-w="${esc(x)}">${esc(x)}</button>`).join('')}<button type="button" class="chipknop ${w ? '' : 'aan'}" aria-pressed="${!w}" data-act="tpEval" data-id="${esc(a.id)}" data-q="${esc(q.id)}" data-w="">Niet beoordeeld</button></div></div>`; };
   // Evaluatiekaart uit het profiel (kerndocument §14): de korte vragen open, de rest onder Verdiepende analyse; alles optioneel
   const evVragen = (S) => (ond(S, 'evaluatie') || {}).vragen || [];
-  // Besluit 154: welke vragen open staan komt uit het profiel (evaluatie.kort, in die volgorde); zonder kort de drie van Besluit 133.
+  // Besluit 155: welke vragen open staan komt uit het profiel (evaluatie.kort, in die volgorde); zonder kort de drie van Besluit 133.
   // Transfer (Toepassing) is altijd het blok Toepassing: met kort op zijn plek in de volgorde, zonder kort bovenaan zoals voorheen.
   const EV_OPEN_STANDAARD = ['ev-probleem', 'ev-gedrag', 'ev-weerstand'];
   const evKort = (S) => { const k = (ond(S, 'evaluatie') || {}).kort; return Array.isArray(k) && k.length ? k : null; };
