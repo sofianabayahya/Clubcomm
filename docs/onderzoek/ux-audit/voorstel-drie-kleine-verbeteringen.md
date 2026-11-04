@@ -1,6 +1,6 @@
 # Definitief voorstel: drie kleine UX-verbeteringen
 
-*4-11-2026, bijgewerkt na de tweede beoordeling. Spoor 3, maat M: alleen bestaande schermen, geen nieuwe gegevens, geen rechten, geen migratie. **Ontwerp ter beoordeling, niet gebouwd.** Gemeten op `main` (`4bf2e97`) in de demo met verzonnen gegevens. Bewijs: **Gezien** (gemeten in de app of in een prototype in de testbrowser), **Afgeleid** (uit de code).*
+*4-11-2026, bijgewerkt na de derde beoordeling; **gebouwd in PR #113** (Besluit 150; niet samengevoegd). Spoor 3, maat M: alleen bestaande schermen, geen nieuwe gegevens, geen rechten, geen migratie. **Ontwerp ter beoordeling, niet gebouwd.** Gemeten op `main` (`4bf2e97`) in de demo met verzonnen gegevens. Bewijs: **Gezien** (gemeten in de app of in een prototype in de testbrowser), **Afgeleid** (uit de code).*
 
 Valt onder het voorstel *Vrijwilligersprincipe*, regels 2, 3, 4 en 9.
 
@@ -26,7 +26,7 @@ Valt onder het voorstel *Vrijwilligersprincipe*, regels 2, 3, 4 en 9.
 ## 2. Lege oefenvormkiezer verduidelijken
 | | Nu (Gezien) | Gewenst |
 |---|---|---|
-| Lege Vormenbank | *Past het best (0)* · *Je hebt nog geen vormen* · *Nieuwe vorm* | één kaart **Nieuwe oefenvorm maken**, met daaronder **"Wat gebeurt er?"**: *"Je opent een scherm voor deze oefenvorm: geef hem een naam, beschrijf hoe hij werkt en teken hem als je wilt. Alles wordt vanzelf bewaard. Met ‹ ga je terug naar je training."* |
+| Lege Vormenbank | *Past het best (0)* · *Je hebt nog geen vormen* · *Nieuwe vorm* | één kaart **Nieuwe oefenvorm maken**, met daaronder **"Wat gebeurt er?"**: *"Je opent een scherm voor deze oefenvorm: geef hem een naam, beschrijf hoe hij werkt en teken hem als je wilt. Wat je invult, wordt vanzelf bewaard. Met ‹ ga je terug naar je training."* |
 | Met oefenvormen | *Past het best* · *Past deels* · *Alle andere* · *Nieuwe vorm* | **dezelfde groepen en volgorde** (Besluit 139); de kop wordt **Aanbevolen voor deze plek · geen verplichting**; onderaan dezelfde kaart |
 | Eén kiezer | ja | ja: geen tweede lijst, geen tweede ingang |
 
@@ -38,11 +38,10 @@ Valt onder het voorstel *Vrijwilligersprincipe*, regels 2, 3, 4 en 9.
 - De oefenvorm wordt meteen gemaakt en op de plek gezet. Het scherm *Nieuwe vorm* opent: bovenaan *Tekening maken*, dan *Naam* (ingevuld met "Nieuwe vorm"), dan de classificatie (*Alles mag leeg blijven*).
 - Ga je meteen terug, dan blijft een lege *Nieuwe vorm* staan in de bank en op de plek. Dat kan met de bestaande knoppen worden weggehaald, maar een beginner weet dat niet.
 
-**Open keuze (niet in dit voorstel):**
-- een lege nieuwe oefenvorm bij teruggaan vanzelf opruimen, met *Ongedaan maken*;
-- het naamveld leeg laten in plaats van "Nieuwe vorm".
-
-Beide raken gedrag en gegevens, en zijn daarom een apart besluit.
+**Apart UX-probleem (niet in deze bouw):** een lege nieuwe oefenvorm blijft nu achter in de bank en op de plek. De uitleg zegt daarom niet meer *"Alles wordt vanzelf bewaard"*, maar *"Wat je invult, wordt vanzelf bewaard"*.
+- **Voorkeursrichting van de initiatiefnemer:** een *tijdelijk concept* dat pas definitief wordt zodra de trainer bewust inhoud toevoegt of opslaat.
+- Werk dat al is ingevoerd of getekend blijft altijd beschermd.
+- Dit wordt een apart voorstel met tests.
 
 ## 3. Meldingen: geen onbedoelde handelingen
 **Nu (Gezien, prototype op 390 px):**
@@ -55,7 +54,7 @@ Beide raken gedrag en gegevens, en zijn daarom een apart besluit.
 | S2 tabbalk tikken terwijl de melding er is | werkt | werkt | werkt |
 | S3 zichtbare knop elders | werkt | werkt | werkt |
 | S4 *Ongedaan maken* | werkt (in de app) | werkt | werkt |
-| S5 tik **net na het verdwijnen** op de plek van *Ongedaan maken* | ⚠️ **opende een onderdeel** eronder | opgevangen (nalooptijd 0,4 s) | opgevangen |
+| S5 tik **net na het verdwijnen** op de plek van *Ongedaan maken* | ⚠️ **opende een onderdeel** eronder | opgevangen (zichtbaar vervagen 0,25 s) | opgevangen |
 | S6 tik **op het moment van verschijnen** | ⚠️ ging door naar de knop eronder | melding gesloten, niets bediend | melding gesloten |
 | S7 rolknop in de kop terwijl de melding er is | werkt | werkt | ⚠️ geblokkeerd tot de melding weg is |
 
@@ -65,7 +64,10 @@ Beide raken gedrag en gegevens, en zijn daarom een apart besluit.
 
 **Oplossing 1, zwevend boven de tabbalk:**
 - De hele melding vangt de tik: een tik sluit hem, de knop is *Ongedaan maken*.
-- Na het verdwijnen vangt een onzichtbare strook nog **0,4 s** de tik op (nalooptijd).
+- **Nalooptijd onderzocht (4-11):** een onzichtbare strook van 0,4 s blokkeert tikken die de gebruiker niet kan verklaren. Beter en gebouwd (PR #113):
+  - de melding **vervaagt 0,25 s zichtbaar** en vangt in die tijd de tik nog zelf op; daarna blokkeert hij niets;
+  - hij verschijnt **zonder te schuiven**. Bij schuiven kon een tik tijdens het verschijnen nog langs de melding glippen; dat is in de test gezien;
+  - met *Beperk beweging* is er geen overgang, en de melding blijft volledig zichtbaar tot hij weg is.
 - Tabbalk en kop blijven bereikbaar.
 - Een strook inhoud is 2,6 s (gewone melding) of 8 s (met *Ongedaan maken*) bedekt; één tik maakt hem vrij.
 - *Ongedaan maken* blijft in de duimzone.
@@ -79,7 +81,7 @@ Beide raken gedrag en gegevens, en zijn daarom een apart besluit.
 
 **Samen met beide oplossingen:**
 - de melding *"Welkom, …"* na het inloggen vervalt (akkoord);
-- op de laptop verandert de plek niet (rechtsonder naast het menu); de melding vangt daar ook de klik en heeft dezelfde nalooptijd;
+- op de laptop verandert de plek niet (rechtsonder naast het menu); de melding vangt daar ook de klik en vervaagt op dezelfde manier;
 - de schermlezer leest meldingen al voor (`role="status"`, `aria-live="polite"`).
 
 ---
@@ -92,7 +94,7 @@ Beide raken gedrag en gegevens, en zijn daarom een apart besluit.
 | Trainer met een **gevulde** training | **niets verandert** (⋯, kopiëren, printen, *Eerdere training overnemen* om toe te voegen) |
 | Club met profiel (DCG) | *Sjabloon …* staat in *Zelf samenstellen*; methodiek, kiezer met gereedschap en Lijn ongewijzigd |
 | Week (telefoon, controleren) | ongewijzigd |
-| Alle meldingen in de app (± 200 aanroepen van `CC.toast`) | zelfde tekst en duur; alleen de bediening verandert (tik vangen, nalooptijd); de welkomstmelding vervalt |
+| Alle meldingen in de app (± 200 aanroepen van `CC.toast`) | zelfde tekst en duur; alleen de bediening verandert (tik vangen, zichtbaar vervagen, niet schuiven); de welkomstmelding vervalt |
 | Gegevens | geen wijziging: alle bestaande trainingen, oefenvormen en tekeningen blijven gelijk |
 
 ## Acceptatiecriteria

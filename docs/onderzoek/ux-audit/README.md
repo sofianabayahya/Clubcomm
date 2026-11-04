@@ -246,6 +246,13 @@ Trainers zijn vrijwilligers, ook als ze een diploma hebben. Hoeveel tijd iemand 
 
 ---
 
+## Bijgewerkt 4-11 (derde beoordeling)
+- Besluit 149 (vrijwilligersprincipe) staat klaar in PR #112, alleen documentatie.
+- De drie verbeteringen zijn gebouwd als Besluit 150 in PR #113: `npm test` 6 + 99 groen, 10 nieuwe tests.
+- De nalooptijd is nu een zichtbare uitfade in plaats van een onzichtbare strook.
+- Een lege nieuwe oefenvorm en de Lijn zijn aparte vervolgvoorstellen.
+- Niets is samengevoegd.
+
 ## Bijgewerkt 4-11 (tweede beoordeling)
 - **Besluitvoorstel aangescherpt:**
   - één duidelijke hoofdactie plus alleen relevante keuzes;
