@@ -29,4 +29,5 @@
 ## Volgende technische stap
 - Later, eigen besluit: vaardigheidsaccenten per trainingsplek (de vorm blijft herbruikbaar; de trainer kiest per training het accent). Wat ontbreekt: `docs/onderzoek/trainingskaart/README.md`. Nu niet bouwen.
 - Gebied F (documentatie en presentatie): **Besluit 151** staat op `main` (#115). Volgende stap, elk apart na akkoord: sjabloon voor pull requests met het blok Documentatie-impact, dan de eerste 5–6 trainerskaarten + *Snelstart vrijwillige trainer* als Concept. Open vragen (PowerPoints naast PDF's; wie verstuurt) staan bij *Nog te bespreken*.
+- Voorstel (L): begeleider ziet alleen trainers in zijn werkgebied, ook in de database (`docs/onderzoek/hjo-werkgebied-rechten/voorstel.md`, branch `onderzoek/hjo-werkgebied-rechten`); wacht op akkoord op richting A. Niets uitgevoerd.
 - Voorstel (L): het opleidingsprofiel veilig leesbaar maken voor trainers (onderzoeksbranch `onderzoek/profiel-leesrechten`).
