@@ -71,3 +71,21 @@ Cijfer 1–10 = hoe goed de techniek ClubComm **nu** helpt (minder klikken, zond
 
 1. De vaste maat uit hoofdstuk 2 als regel vastleggen (dan meten de tests het voortaan mee)?
 2. Welke van de top 5 eerst? Mijn advies: **1 en 2 samen** (klein, groot effect voor de beheerder), daarna **3**.
+
+## 6. Voorbeelden van 1 en 2 (390 px, echte opmaak van de app; nog niets gebouwd)
+
+**1. Rollen — `vb1-rollen.jpg`**
+- Bovenaan **Persoon toevoegen** en **Zoeken** (naam, team of rol). Zoeken toont meteen de gevonden mensen, ook uit ingeklapte groepen.
+- De mensen staan **per rol ingeklapt**: *Trainers (15) · Teamleiders (13) · Coördinatoren (1) · Hoofd jeugdopleiding (1) · Clubbeheerders (1) · Ouders (169)*. De eerste groep staat open. Iemand met twee rollen staat in beide groepen.
+- *Optioneel* (signaleren): één oranje regel als een team geen trainer of teamleider heeft (*2 teams zonder teamleider*). In het voorbeeld zijn de teams verzonnen; gebouwd telt ClubComm het echt.
+- **Gemeten nu:** 213 woorden, 3,2 schermen, 138 knoppen. **Straks:** ±60 woorden, 1 scherm, ±12 knoppen in beeld.
+- **Tikken:** iemand vinden: scrollen door 197 mensen → typen in Zoeken (0 tikken extra) of 1 tik op de groep.
+
+**2. Seizoen — `vb2-seizoen.jpg` (dicht) en `vb2b-seizoen-open.jpg` (één bouw open)**
+- *Team toevoegen*, *Trainingsschema laden* en **Zoek team of trainer** bovenaan.
+- De teams staan **per bouw ingeklapt** (*Mini's (3 teams · 1 zonder trainer) · Onderbouw (13 teams)*), met in de kop wat aandacht vraagt.
+- Daaronder blijven *Communicatieplan* en de andere seizoensblokken staan, nu meteen in beeld.
+- **Gemeten nu:** 369 woorden, 3,5 schermen. **Straks:** ±80 woorden, ongeveer 1 scherm als alles dicht is.
+- **Eerlijk nadeel:** een grote bouw blijft lang als je hem openklapt (in de demo Onderbouw met 13 teams). Zoeken vangt dat op. Alternatief: per leeftijd (O8, O9 …) groeperen; dat geeft meer kopjes (7 in de demo) en past minder bij het werkgebied van de HO. **Advies: per bouw**, zoals het werkgebied (Besluit 154).
+
+**Gegevens en rechten:** niets nieuws; alleen de indeling van twee beheerpagina's. Maat M.
