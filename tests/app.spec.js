@@ -1587,8 +1587,9 @@ test('tijdsbalk: DCG-sjabloon 75 − 7 = 68, organisatie aanpassen, waarschuwing
   await page.locator('[data-act="tpNieuw"]').click();
   await page.locator('[data-act="tpSjabloon"][data-s="dcg-75"]').click();
   // 68 + 7 = 75: past precies; de organisatie telt niet dubbel
+  await page.evaluate(() => document.querySelectorAll('.tr-pmid .tr-tijdkort').forEach((d) => { d.open = true; })); // Besluit 167: tijd in één regel, eerst openen
   await expect(page.locator('.tr-pmid .tr-tijd-r')).toHaveText(/75\s*veldtijd\s*−\s*7 organisatie ✎\s*=\s*68\s*oefentijd/);
-  await expect(page.locator('.tr-pmid .tr-tok')).toHaveText('✓ 68 van 68 min ingepland · past precies');
+  await expect(page.locator('.tr-pmid .tr-tijdkort > summary')).toHaveText('✓ 68 van 68 min ingepland');
   // Organisatie naar 10: keuzes uit eigen waarden (het sjabloon), geen vaste norm; daarna 3 te veel, de partij valt erbuiten
   await page.locator('.tr-orgknop').click();
   await expect(page.locator('#sheet [data-act="tpOverigZet"]')).toHaveText(['7 · sjabloon DCG 75 – spacing']);
@@ -1627,13 +1628,14 @@ test('tijdsbalk: club zonder profiel (zoals Swift), eigen veldtijd en organisati
   await page.locator('[data-act="seg"][data-val="plannen"]').click();
   await page.locator('.weekstrook [data-val="tS"]').click();
   // Zonder sjabloon geen organisatie: ClubComm vult niets in en vergelijkt met de veldtijd
+  await page.evaluate(() => document.querySelectorAll('.tr-pmid .tr-tijdkort').forEach((d) => { d.open = true; })); // Besluit 167: tijd in één regel, eerst openen
   await expect(page.locator('.tr-pmid .tr-orgknop')).toHaveText('+ organisatie');
-  await expect(page.locator('.tr-pmid .tr-tok')).toHaveText('✓ 45 van 60 min ingepland · nog 15 min vrij');
+  await expect(page.locator('.tr-pmid .tr-tijdkort > summary')).toHaveText('✓ 45 van 60 min ingepland · nog 15 min vrij');
   await page.locator('.tr-orgknop').click();
   await expect(page.locator('#sheet [data-act="tpOverigZet"]')).toHaveCount(0);
   await page.fill('#ov-m', '8');
   await page.locator('#sheet form button.knop').click();
-  await expect(page.locator('.tr-pmid .tr-tok')).toHaveText('✓ 45 van 52 min ingepland · nog 7 min vrij');
+  await expect(page.locator('.tr-pmid .tr-tijdkort > summary')).toHaveText('✓ 45 van 52 min ingepland · nog 7 min vrij');
   await page.evaluate(() => { CC.tr.plan(CC.S(), 'tS').onderdelen[2].min = 30; CC.save(); CC.render(); });
   await expect(page.locator('.tr-pmid .tr-twaarsch')).toContainText('55 van 52 min ingepland: 3 te veel.');
   await expect(page.locator('.tr-pmid .tr-twaarsch')).toContainText('Partij 8 tegen 8 (laatste 3 min)');
@@ -1677,7 +1679,7 @@ test('verplaatsen: vorm van Start naar A1, wisselen en ongedaan maken (390 px)',
   expect(await ond()).toEqual(['start:-:6::::', 'A1:v-droog:8:1:ln-uitvoeren:accent opendraaien:', 'S:-:3::::', 'A2:-:10::::']);
   // De tijd blijft gelijk; Start is leeg en niet verplicht
   await expect.poll(() => page.locator('.tr-pmid .tr-tijd-r').innerText()).toBe(tijd);
-  await expect(page.locator('.tr-pmid .tr-tok')).toHaveText('✓ 68 van 68 min ingepland · past precies');
+  await expect(page.locator('.tr-pmid .tr-tijdkort > summary')).toHaveText('✓ 68 van 68 min ingepland');
   await expect(page.locator('.tr-pmid .tr-rij').first()).toContainText('niet verplicht');
   // Ongedaan maken: alles terug
   await page.locator('[data-act="tpVerplaatsTerug"]').click();
@@ -2049,6 +2051,7 @@ test('trainingsmodule: periodisering laden, methodiek, evaluatie en observatiepu
   // p2 aanpassen (methodiek) en terugdraaien: p5 (niet aangepast) verdwijnt; p0 (gegeven), p2 (aangepast) en de eigen training blijven
   await page.locator('[data-act="seg"][data-val="plannen"]').click();
   await page.locator('.weekstrook [data-val="p2"]').click();
+  await page.evaluate(() => document.querySelectorAll('.tr-waarom').forEach((d) => { d.open = true; })); // Besluit 167: onderbouwing ingeklapt
   await page.locator('.tr-meth [data-act="tpMethodiek"]').click();
   await page.fill('#pm-g', 'Zelf aangepast'); await page.locator('#pm-g').press('Tab');
   await page.locator('#sheet select[name="contra"]').selectOption('');
@@ -2140,6 +2143,7 @@ test('trainingsmodule: DCG-periodisering O13 met hoofdthema, teamfunctie, contra
   await page.locator('[data-act="seg"][data-val="plannen"]').click();
   await page.locator('.weekstrook [data-val="a-o12-20261105"]').click();
   if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/4-plannen.png`, fullPage: true });
+  await page.evaluate(() => document.querySelectorAll('.tr-waarom').forEach((d) => { d.open = true; })); // Besluit 167: onderbouwing ingeklapt
   await page.locator('.tr-meth [data-act="tpMethodiek"]').click();
   if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/5-aanpassen.png`, fullPage: true });
   await page.fill('#pm-h', 'Vrije speler herkennen'); await page.locator('#pm-h').press('Tab');
