@@ -28,11 +28,12 @@
 
 ## Wacht op akkoord van de gebruiker (in deze volgorde)
 1. Correctie van de acht DCG-weekplannen, `supabase/scripts/2026-10-30_dcg_weekplannen_correctie.sql.voorstel` (gecontroleerd tegen de CSV, **niet uitgevoerd**).
-2. Apart: 033 toepassen in productie (dan controleren met `priv.rechtentest()` en de app).
-- Rechtenvoorstel 032 (begeleider kijkt mee, clubbank): lokaal getest; samen met 033 in beide volgordes goed (56/56).
+2. Trainerspilot (Besluit NNN): snelstartgids (`docs/handleiding/tekenen-snelstart.md`, Concept) bekijken; daarna als PDF voor de bijeenkomst.
+- ~~033, 032, 034 toepassen~~ ✅ 4-11 (rechtentest 56/56).
 - Bevinding: uitvoerrecht van drie `priv`-functies intrekken (onbereikbaar voor anon). Een account hoort bij precies één club (getest 10/10).
 
 ## Volgende technische stap
+- **Focus (Besluit NNN, 5-11):** trainerspilot, trainers tekenen zelf oefenvormen; tekentool getest en klaar (`tests/trainerspilot.spec.js`). Clubbibliotheek: geen bouwprioriteit. Kleine telefoonpunten pas na de bijeenkomst wegen (`docs/onderzoek/trainerspilot/README.md`).
 - Later, eigen besluit: vaardigheidsaccenten per trainingsplek (de vorm blijft herbruikbaar; de trainer kiest per training het accent). Wat ontbreekt: `docs/onderzoek/trainingskaart/README.md`. Nu niet bouwen.
 - Gebied F (documentatie en presentatie): **Besluit 151** staat op `main` (#115). Volgende stap, elk apart na akkoord: sjabloon voor pull requests met het blok Documentatie-impact, dan de eerste 5–6 trainerskaarten + *Snelstart vrijwillige trainer* als Concept. Open vragen (PowerPoints naast PDF's; wie verstuurt) staan bij *Nog te bespreken*.
 - **Besluit 154 en 159** staan op `main`; 034 en 032 zijn toegepast (4-11). Volgende stap (idee, niet besloten): melding op Home van de begeleider als een trainer met een traject een nieuwe training klaarzet.
