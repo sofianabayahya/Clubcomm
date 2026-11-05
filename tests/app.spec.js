@@ -804,14 +804,15 @@ test.describe('Demo', () => {
     const vraag = async () => page.evaluate(() => { const S = CC.S(), M = CC.m; CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer'));
       const a = M.komend(S, 'O10-1').find((x) => x.soort === 'training' && !x.afgelast && !x.trainerAfwezig);
       const b = document.createElement('button'); b.dataset.act = 'kanNiet'; b.dataset.id = a.id; document.body.appendChild(b); b.click(); b.remove();
+      const uitleg = (document.querySelector('#sheet').innerText.match(/Vervanger zoeken: de (.+?) krijgen direct/) || [])[1];
       const f = document.querySelector('#sheet form[data-submit="kanNietOk"]'); f.r.value = 'werk'; f.requestSubmit();
       const m = S.msgs.filter((x) => /Vervanger nodig/.test(x.onderwerp)).pop();
-      return { esther: m.ontvangers.includes(S.demo.esther), peter: m.ontvangers.includes(S.demo.peter), linda: m.ontvangers.includes(S.demo.linda) }; });
-    expect(await vraag()).toEqual({ esther: true, peter: false, linda: true });
+      return { esther: m.ontvangers.includes(S.demo.esther), peter: m.ontvangers.includes(S.demo.peter), linda: m.ontvangers.includes(S.demo.linda), uitleg }; });
+    expect(await vraag()).toEqual({ esther: true, peter: false, linda: true, uitleg: 'teamleider en coördinator' }); // de uitleg in het venster zegt hetzelfde
     await expect(page.locator('#toast')).toContainText('teamleider en coördinator');
     await page.waitForTimeout(1600);
     await page.evaluate(() => { CC.S().club.coordinatorAan = false; CC.save(); });
-    expect(await vraag()).toEqual({ esther: false, peter: true, linda: true });
+    expect(await vraag()).toEqual({ esther: false, peter: true, linda: true, uitleg: await page.evaluate(() => `teamleider en ${CC.S().club.labels.hjo}`) });
   });
 
   // Besluit 116: minuten en speeltijd ziet alleen de trainer (niet de teamleider of de timekeeper)

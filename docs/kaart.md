@@ -6,7 +6,7 @@
 
 | Onderwerp | Code (`public/app/`) | Besluiten | Snelle test (`npx playwright test -g "…"`) |
 |---|---|---|---|
-| **Afmelden, aanwezigheid, kaarten** | `core.js` (afmelden), `data.js` (aanwezigheid, zones, kaarten per seizoen), `afwezig.js`, `trainerafw.js` | 5, 10, 20, 21, 32, 91, 94, 105 | `ouder meldt af\|trainer kan niet\|trainer niet gekomen\|afgelast\|nieuwe fase` |
+| **Afmelden, aanwezigheid, kaarten** | `core.js` (afmelden), `data.js` (aanwezigheid, zones, kaarten per seizoen), `afwezig.js`, `trainerafw.js` · functiekaarten `docs/handleiding/aanwezigheid.md` en `zelf-afmelden.md` | 5, 10, 20, 21, 32, 91, 94, 105 | `ouder meldt af\|trainer kan niet\|trainer niet gekomen\|afgelast\|nieuwe fase` |
 | **Planning en rooster** | `hjo.js` (rooster: `CC.rooster`), `trainer.js`, `teamleider.js`, `agenda.js` | 13, 73, 87, 108, 110 | `rooster\|verzameltijd\|oefenwedstrijd` |
 | **Teams en wedstrijden zelf beheren** | `teamsbeheer.js` (`CC.wedLezen`, `CC.schemaLezen`, `CC.trainingenKlaarzetten`) | 136 | `teams en trainingsdagen` |
 | **Wedstrijd, speeltijd, opstelling** | `opstelling.js` (`M.zelfAfleiden`, `M.wedCat`), `data.js` (speeltijd), `trainer.js` | 33, 39, 60, 62, 106, 109, 116, 117 | `wisselschema\|speeltijd\|timekeeper` |
@@ -19,9 +19,9 @@
 | **Tekentool** | `tekentool.js` + `.css`, `tekenen.html` · functiekaart `docs/handleiding/tekentool.md` | 124–127, 148 (rugnummers), 152 (menu sluiten), 153 (veldlijnen), 156 (paneel Spelers), 157 (gekanteld), 158 (Kopie en Weg in het paneel, tikvlak kleuren, tip), 160 (tikvlak 44 px), 161 (trainerspilot; PDF snelstart uit deze kaart) | `tekentool` (ook `tests/tekentool-nummering.spec.js`, `tests/trainerspilot.spec.js`) |
 | **Demo en rondleiding** | `demo.js` (`STAPPEN`), `data.js` (democlub) | 89, 114 | `rondleiding\|uitnodiging\|demo:\|elke stap` |
 | **Schermen, tabbladen, vensters** | `core.js` (`CC.sheet`, `CC.toast`, `CC.on`), `index.html`, `app.css` | 30, 34, 102–104, 111, 113, 118, 122, 149, 150 | `tabbladen\|venster\|tikvlakken\|dubbel tikken\|rol wisselen\|automatisch bewaren` |
-| **Inloggen, opslag, rechten** ⚠️ altijd maat L | `live.js`, `opslag.js` (scopes), `core.js` (inloggen, privacy); `supabase/migrations/` | 1, 14, 24, 45, 52, 72, 119, 143 | alle tests + rechtentest (zie onder) |
+| **Inloggen, opslag, rechten** ⚠️ altijd maat L | `live.js`, `opslag.js` (scopes), `core.js` (inloggen, privacy); `supabase/migrations/` · functiekaart `docs/handleiding/inloggen.md` | 1, 14, 24, 45, 52, 72, 119, 143 | alle tests + rechtentest (zie onder) |
 | **Inrichten en clubbeheer** | `hjo.js` (Regels, Rollen, Seizoen), `onderhoud.js` | 6, 12, 96, 112, 120 | `schermgebruik\|kop:` |
-| **Presentaties en handleidingen** | `docs/presentaties/` (`maak.js`, `shots*.js`); functiekaarten in `docs/handleiding/` (Besluit 151; overzicht in `README.md`); voorstel `docs/onderzoek/documentatie-borging/README.md` | 89, 114, 151 | geen (handmatig) |
+| **Presentaties en handleidingen** | `docs/presentaties/` (`maak.js`, `shots*.js`); functiekaarten in `docs/handleiding/` (Besluit 151; overzicht in `README.md`, uitgaven in `bundels.md`); voorstel `docs/onderzoek/documentatie-borging/README.md` | 89, 114, 151 | geen (handmatig) |
 
 ## Wie leest wat
 - **Spoor 1 (persoonlijke methodiek):** `docs/methodiek/persoonlijk/overdracht.md` en het kerndocument; code via Spoor 3.
