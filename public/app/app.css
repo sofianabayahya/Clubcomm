@@ -1021,7 +1021,7 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .vg-balk { display: block; height: 6px; margin-top: 6px; max-width: 220px; background: var(--lijn); border-radius: 9px; overflow: hidden; }
 .vg-balk i { display: block; height: 100%; background: var(--groen); }
 .label.oranje { color: var(--oranje); background: var(--oranje-l); border-color: transparent; }
-/* Besluit NNN: Plannen minder dubbel */
+/* Besluit 167: Plannen minder dubbel */
 .tr-midden > .tr-mee { font-size: 16px; margin: 8px 0; padding: 10px 12px; }
 .tr-midden > .tr-mee small, .tr-midden > .tr-mee .tr-link { display: block; margin-top: 4px; }
 .tr-midden > .tr-waarom, .tr-midden > .tr-tijdkort { margin: 10px 0; }

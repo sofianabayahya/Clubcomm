@@ -68,7 +68,7 @@ for (const breed of [false, true]) {
     // vr: concept uit de periodisering
     await plannen(page, 't-vr');
     await expect(kaart(page).locator('.tr-stand')).toHaveText('Concept uit de periodisering · nog niet aangepast');
-    await expect(kaart(page).locator('.tr-kn')).toHaveText(['Wat', 'Waar', 'Welke', 'Niveau']); // Besluit NNN: Mee uit vorige staat los boven de ingeklapte kaart
+    await expect(kaart(page).locator('.tr-kn')).toHaveText(['Wat', 'Waar', 'Welke', 'Niveau']); // Besluit 167: Mee uit vorige staat los boven de ingeklapte kaart
     await expect(kaart(page)).toContainText('Voetbalprobleem 2 · Vooruitgang creëren');
     await expect(kaart(page)).toContainText('Dagthema: Opbouwen tegen twee/drie jagers');
     await expect(kaart(page)).toContainText('Wedstrijdsituatie');
@@ -99,7 +99,7 @@ for (const breed of [false, true]) {
     expect((await plan(page, 'tp-do')).methodiek).toBeUndefined(); // alleen bekijken schrijft niets
 
     // Weekvoorstel alleen met een bewuste tik overnemen (lege velden)
-    await page.evaluate(() => document.querySelectorAll('.tr-waarom').forEach((d) => { d.open = true; })); // Besluit NNN: onderbouwing ingeklapt
+    await page.evaluate(() => document.querySelectorAll('.tr-waarom').forEach((d) => { d.open = true; })); // Besluit 167: onderbouwing ingeklapt
   await page.locator('.tr-tkaart [data-act="tpMethodiek"]').click();
     await expect(page.locator('#sheet .tr-wv')).toContainText('Weekvoorstel');
     await page.locator('#sheet [data-act="tpWeekOver"]').click();
@@ -145,7 +145,7 @@ test('trainingskaart: oorspronkelijke planning bij de eerste aanpassing van een 
   await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
   await plannen(page, 't-vr');
   expect((await plan(page, 't-vr')).origineel).toBeUndefined(); // ongewijzigd: geen kopie in de database
-  await page.evaluate(() => document.querySelectorAll('.tr-waarom').forEach((d) => { d.open = true; })); // Besluit NNN: onderbouwing ingeklapt
+  await page.evaluate(() => document.querySelectorAll('.tr-waarom').forEach((d) => { d.open = true; })); // Besluit 167: onderbouwing ingeklapt
   await page.locator('.tr-tkaart [data-act="tpMethodiek"]').click();
   await page.fill('#pm-g', 'Eerste contact weg van de druk'); await page.locator('#pm-g').press('Tab');
   await page.locator('#sheet [data-act="sluitRender"]').click();

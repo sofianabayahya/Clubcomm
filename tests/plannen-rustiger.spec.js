@@ -1,4 +1,4 @@
-// ClubComm — Besluit NNN: Plannen minder dubbel (afspraak los, onderbouwing en tijd ingeklapt, één regel voor vormen die niet passen,
+// ClubComm — Besluit 167: Plannen minder dubbel (afspraak los, onderbouwing en tijd ingeklapt, één regel voor vormen die niet passen,
 // Vormenbank op de telefoon ingeklapt). Verzonnen namen, nep-database. Nooit tegen de productiedatabase.
 const { test, expect } = require('@playwright/test');
 const fs = require('fs');

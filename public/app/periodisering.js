@@ -82,7 +82,7 @@
     return `<div class="tr-mee">${af ? `<b>Afspraak ${dag}:</b> ${esc(af)}` : `<span class="zacht">Geen afspraak herkend bij ${dag}.</span>`}${vk ? `<small>Evaluatie ${dag}, volgende training: ${esc(vk)}</small>` : ''}${link}</div>`; };
   // Besluit 165: in Week staat de afspraak van de vorige training los bovenaan (alleen als er een afspraak of evaluatie is)
   CC.trMee = (S, p, a) => { const v = vorigeTraining(S, p, a); if (!v || (!v.anders && !(v.evaluatie || {})['ev-volgende'])) return ''; return meeUitVorige(S, p, a); };
-  // Besluit NNN: samenvatting in de kop van de ingeklapte onderbouwing in Plannen (het voetbalprobleem of het dagthema; A en B staan al bij de blokken)
+  // Besluit 167: samenvatting in de kop van de ingeklapte onderbouwing in Plannen (het voetbalprobleem of het dagthema; A en B staan al bij de blokken)
   CC.trWaaromWat = (S, p) => { const m = eigenM(p); const pr = probleem(S, m.probleem); return (pr && pr.naam) || m.probleemTekst || m.hoofdthema || ''; };
   // Besluit 165: samenvatting in de kop van de ingeklapte onderbouwing in Week (A/B en leerniveau)
   CC.trWaaromKort = (S, p) => { const m = eigenM(p); const A = (p.blokDoel || {}).A, B = (p.blokDoel || {}).B;
