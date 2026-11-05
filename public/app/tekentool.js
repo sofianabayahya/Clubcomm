@@ -190,7 +190,7 @@
         case "ball":
           return '<g' + a + hl + ' transform="translate(' + it.x + ' ' + it.y + ')">' + ballSvg(1) + '</g>';
         case "cone":
-          // Besluit NNN: een hoedje is ongeveer 70% van een speler (20 tegen 25 breed), zodat spelers eruit springen; aantikken via het tikvlak (Besluit 160)
+          // Besluit 162: een hoedje is ongeveer 70% van een speler (20 tegen 25 breed), zodat spelers eruit springen; aantikken via het tikvlak (Besluit 160)
           return '<g' + a + hl + ' transform="translate(' + it.x + ' ' + it.y + ')">' + hatSvg(it.c, HOEDJE) + '</g>';
         case "dish":
           return '<g' + a + hl + ' transform="translate(' + it.x + ' ' + it.y + ')"><ellipse rx="12" ry="6" fill="' + DISH[it.c] + '" stroke="#555" stroke-width="1.2"/></g>';

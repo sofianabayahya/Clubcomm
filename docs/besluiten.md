@@ -21,7 +21,7 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 160)
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
-| NNN | 3 | Tekentool: een hoedje is ongeveer 70% van een speler (schaal 0,6 in plaats van 0,85); plek, kleuren, menuknop en aantikken (tikvlak, Besluit 160) blijven; bestaande tekeningen vanzelf | ✅ geldt |  |
+| 162 | 3 | Tekentool: een hoedje is ongeveer 70% van een speler (schaal 0,6 in plaats van 0,85); plek, kleuren, menuknop en aantikken (tikvlak, Besluit 160) blijven; bestaande tekeningen vanzelf | ✅ geldt |  |
 | 161 | 3 | Trainerspilot: trainers tekenen en bewaren zelf oefenvormen (geen plicht om trainingen digitaal uit te werken of te delen); clubbibliotheek niet in gebruik, geen automatische publicatie, publiceren alleen met toestemming of deelafspraak, de HJO selecteert later; geen bouwprioriteit | ✅ geldt | |
 | 160 | 3 | Tekentool: met *Kies* heeft elk object een **onzichtbaar tikvlak van 44 px**: een tik net naast een object kiest het dichtstbijzijnde binnen 22 px. Met een gereedschap aan zoals het was. Op alle schermen; de tekening verandert niet. Gemeten op de telefoon: raak 97–98% (was 15–40%) | ✅ besloten (wacht op samenvoegen) |  |
 | 159 | 3 | Meekijken met trainingen in de app: trainingen en de vormen erin `trainerplan` (rest `eigen`); begeleider van de bouw leest in het dossier (*Trainingen*, met tekeningen), alleen lezen; feedback per training (`trainingFeedback`, bericht aan de trainer); trainer ziet feedback en dat er wordt meegekeken; Regels → Meekijken | ✅ geldt | |
@@ -700,7 +700,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
-## Besluit NNN — Tekentool: hoedjes kleiner dan spelers (Spoor 3, maat M)
+## Besluit 162 — Tekentool: hoedjes kleiner dan spelers (Spoor 3, maat M)
 *Besloten 5 november 2026: de initiatiefnemer koos voorbeeld A (een hoedje ongeveer 70% van een speler), na een vergelijking op laptop en telefoon (nu · A 70% · B de helft). Alleen hoe een hoedje getekend wordt; geen gegevens, database of rechten.*
 - **Probleem:** een hoedje was op het veld even breed als een speler (laptop 28 tegen 30 px, telefoon 13 tegen 13,5 px). Bij het bouwen werden de spelers een kwart kleiner gemaakt; de hoedjes niet. Daardoor leek een hoedje even belangrijk als een speler en oogde het veld vol.
 - **Wat:** een hoedje op het veld is nu ongeveer **70%** van een speler: schaal 0,6 in plaats van 0,85 (20 tegen 25 breed in de tekening; op de laptop ± 20 px, op de telefoon staand ± 9 px). Geldt voor alle kleuren, ook de hoedjes van *Vak met hoedjes*, en overal waar een tekening staat (tekentool, Vormenbank, training, printen).

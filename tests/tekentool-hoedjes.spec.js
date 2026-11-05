@@ -1,4 +1,4 @@
-// Tekentool, Besluit NNN: een hoedje is ongeveer 70% van een speler (was even breed). Geldt voor alle kleuren, in de
+// Tekentool, Besluit 162: een hoedje is ongeveer 70% van een speler (was even breed). Geldt voor alle kleuren, in de
 // tekentool en in de vaste tekening (Vormenbank, training, printen). Plek en aantikken met Kies (tikvlak, Besluit 160) blijven.
 const { test, expect } = require('@playwright/test');
 const { volgFouten } = require('./hulp');
