@@ -1007,3 +1007,13 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .mk-tekening { background: var(--vlak2); border-radius: var(--r-s); padding: 6px; margin: 6px 0; }
 .mk-tekening svg { display: block; width: 100%; height: auto; max-height: 320px; }
 .mk-fb { background: var(--blauw-l); }
+/* Besluit NNN: Week rustiger, Bewerken korter, overnemen uit de tekening */
+.tr-weekkaart > .tr-mee { font-size: 16px; margin: 8px 0; padding: 10px 12px; }
+.tr-weekkaart > .tr-mee small, .tr-weekkaart > .tr-mee .tr-link { display: block; margin-top: 4px; }
+.tr-weekkaart > .tr-twaarsch { margin: 8px 0; }
+.tr-weekkaart .tr-waarom { margin-top: 12px; }
+.tr-weekkaart .tr-waarom > .tr-meth { margin-bottom: 4px; }
+.codeform .tr-opzet { margin: 10px 0; }
+.tr-vorm .tr-varianten, .tr-vorm .tr-groottes { margin: 12px 0; }
+.tr-uittek { background: #eaf2ff; color: #0b2a55; border-radius: 12px; padding: 12px 14px; margin: 12px 0; font-size: 16px; line-height: 1.45; }
+.tr-uittek p { margin: 4px 0 8px; }

@@ -168,6 +168,7 @@
     const regel = grens == null ? (o.length ? '<small class="zacht">Geen begin- en eindtijd in de kalender: ClubComm telt alleen de minuten op.</small>' : '')
       : over > 0 ? `<div class="tr-twaarsch" role="status">⚠ <b>${t.inp} van ${grens} min ingepland: ${over} te veel.</b> ${t.org ? 'In de organisatietijd' : 'Buiten de veldtijd'} valt: ${esc(buiten.join(', '))}.${t.veld != null && t.inp > t.veld ? ' Dat is ook langer dan de veldtijd.' : ''} Je kunt zo doorgaan.</div>`
       : o.length ? `<small class="tr-tok">✓ ${t.inp} van ${grens} min ingepland${over < 0 ? ` · nog ${-over} min vrij` : ' · past precies'}</small>` : '';
+    if (lezen === 'week') return over > 0 ? regel : ''; // Besluit NNN: in Week alleen de waarschuwing; de tijdsbalk staat in Plannen
     return `<div class="tr-tijd${lezen ? ' klein' : ''}"><div class="tr-tijd-r">${kop}</div>${o.length ? `<div class="tr-tbar" role="img" aria-label="${t.inp} minuten ingepland${grens != null ? `, ${grens} oefentijd` : ''}${t.org ? `, ${t.org} organisatie` : ''}">${delen.join('')}${lijn}</div>` : ''}${regel}</div>`; };
   // A = ..., B = ...: het hoofdleerdoel van de eerste vorm in elk blok
   const blokDoelen = (S, p) => ['A', 'B'].map((b) => { const n = ldNaam(S, blokDoel(S, p, b)); return n ? `${b} = ${esc(n)}${blokDoelBron(S, p, b) === 'week' ? ' (weekvoorstel)' : ''}` : ''; }).filter(Boolean).join(' · ');
@@ -593,10 +594,13 @@
   const strook = (S, acts, a) => `<div class="weekstrook" role="tablist">${acts.map((x) => { const d = D.parse(x.datum); return `<button role="tab" aria-selected="${x.id === a.id}" class="${x.id === a.id ? 'aan' : ''} ${x.afgelast ? 'afg' : ''} ${x.datum === D.vandaag() ? 'vandaag' : ''} ${plan(S, x.id) ? 'gedaan' : ''}" data-act="seg" data-key="aanwAct" data-val="${x.id}"><small>${D.DAG_KORT[d.getDay()]}</small><b>${d.getDate()}</b><small>${x.soort === 'training' ? 'T' : 'W'}</small></button>`; }).join('')}</div>`;
   // Week: de training om te controleren (code, tekening, naam, minuten); tik = de vorm groot
   const weekKaart = (S, p, a) => { const doelen = blokDoelen(S, p);
-    return `<div class="kaartje tr-weekkaart"><div class="tr-kop"><b>${esc(p.thema || 'Training')} · ${totaal(p)} min gepland</b>${CC.trStatus ? CC.trStatus(S, p) : doelen ? `<small class="zacht">${doelen}</small>` : ''}</div>${CC.trMethodiek ? CC.trMethodiek(S, p, a, true) : ''}${tijdsbalk(S, p, a, true)}
+    return `<div class="kaartje tr-weekkaart"><div class="tr-kop"><b>${esc(p.thema || 'Training')}</b>${CC.trStatus ? CC.trStatus(S, p) : doelen ? `<small class="zacht">${doelen}</small>` : ''}</div>${CC.trMee ? CC.trMee(S, p, a) : ''}${tijdsbalk(S, p, a, 'week')}
       ${(p.onderdelen || []).length ? `<div class="tr-lijst">${p.onderdelen.map((o, i) => { const v = o.vormId && vorm(S, o.vormId); const var_ = v && o.variant != null && (v.varianten || [])[o.variant] ? ` · ${esc(v.varianten[o.variant].naam || String.fromCharCode(65 + Number(o.variant)))}` : '';
         return `<button type="button" class="tr-rij tr-wrij" ${v ? `data-act="vormOpen" data-id="${v.id}"` : `data-act="tpOnderdeel" data-id="${a.id}" data-i="${i}"`}>${o.blok ? `<span class="tr-code">${esc(code(o))}</span>` : ''}${leegSlot(o) ? `<span class="tr-mini leeg">${icon('plus')}</span>` : mini(v, o.spacing)}<span class="tr-t"><b>${esc(v ? v.naam : o.spacing ? o.naam || 'Spacing' : o.naam || 'Nog leeg')}${var_}</b></span><span class="tr-min">${Number(o.min) || 0}′</span></button>`; }).join('')}</div>` : '<p class="zacht">Nog geen opbouw.</p>'}
-      <div class="knoppen"><button class="knop licht" data-act="open" data-view="trainingsplan" data-id="${esc(a.id)}">${icon('pencil')}Aanpassen</button><button class="knop licht" data-act="tpPrint" data-id="${esc(a.id)}" ${(p.onderdelen || []).length ? '' : 'disabled'}>${icon('printer')}Printen</button></div></div>`; };
+      <div class="knoppen"><button class="knop licht" data-act="open" data-view="trainingsplan" data-id="${esc(a.id)}">${icon('pencil')}Aanpassen</button><button class="knop licht" data-act="tpPrint" data-id="${esc(a.id)}" ${(p.onderdelen || []).length ? '' : 'disabled'}>${icon('printer')}Printen</button></div>${waarom(S, p, a)}</div>`; };
+  // Besluit NNN: de onderbouwing (Wat · Waar · Welke · Niveau, Besluit 144) staat in Week ingeklapt onder de training; open blijft open
+  const waarom = (S, p, a) => { const m = CC.trMethodiek ? CC.trMethodiek(S, p, a, true, true) : ''; if (!m) return ''; const kort = CC.trWaaromKort ? CC.trWaaromKort(S, p) : '';
+    return `<details class="uitklap tr-waarom" data-onthoud="waarom" ${onthoud('waarom', false) ? 'open' : ''}><summary>Waarom deze training${kort ? ` · ${esc(kort)}` : ''}</summary>${m}</details>`; };
   // Plannen (laptop): links je vormen, in het midden de training in blokken, rechts de week en de maand
   const plannenHtml = (S, acts) => {
     const tr = acts.filter((x) => x.soort === 'training' && !x.afgelast); if (!tr.length) return h.leeg('Geen trainingen in deze periode.', 'list-checks');
@@ -878,28 +882,33 @@
       <div class="tr-kol tr-a">
         <div class="tr-groot">${v.tekening ? tekening(v.tekening) : `<div class="leeg">${icon('pencil')}<p>Nog geen tekening</p></div>`}</div>
         <button class="knop" data-act="vormTeken" data-id="${v.id}">${icon('pencil')}${v.tekening ? 'Tekening aanpassen' : 'Tekening maken'}</button>
+        ${uitTekeningHtml(v)}
       </div>
       <div class="tr-kol tr-c">
-        ${h.sectie('Makkelijker, moeilijker en varianten')}
+        <details class="uitklap tr-varianten" data-onthoud="varianten:${v.id}" ${onthoud(`varianten:${v.id}`, false) ? 'open' : ''}><summary>Makkelijker, moeilijker en varianten · ${(v.varianten || []).length}</summary>
         ${(v.varianten || []).map((x, i) => `<div class="kaartje tr-var"><div class="tr-kop"><b>${esc(x.naam || `Variant ${String.fromCharCode(65 + i)}`)}</b><span><button class="icoonknop" data-act="vormVariant" data-id="${v.id}" data-i="${i}" aria-label="Variant aanpassen">${icon('pencil')}</button></span></div>${x.tekst ? `<p class="klein">${esc(x.tekst)}</p>` : ''}${x.tekening ? `<div class="tr-groot klein">${tekening(x.tekening)}</div>` : ''}</div>`).join('') || '<p class="zacht klein">Bijv. A: de passer loopt om het doeltje, B: tot aan het doel (diepte). Eén vorm met varianten in plaats van veel losse tekeningen.</p>'}
         <button class="knop licht vol" data-act="vormVariant" data-id="${v.id}" data-i="nieuw">${icon('plus')}Variant</button>
-        ${h.sectie('Bij andere groepsgroottes')}
+        </details>
+        <details class="uitklap tr-groottes" data-onthoud="groottes:${v.id}" ${onthoud(`groottes:${v.id}`, false) ? 'open' : ''}><summary>Bij andere groepsgroottes · ${(v.aantallen || []).length}</summary>
         ${(v.aantallen || []).map((x, i) => `<div class="rij"><span class="rij-tekst"><b>${x.spelers} spelers${x.keepers != null && x.keepers !== '' ? ` + ${x.keepers} keeper${Number(x.keepers) === 1 ? '' : 's'}` : ''}</b><small>${esc(x.tekst)}</small></span><button class="icoonknop" data-act="vormAantal" data-id="${v.id}" data-i="${i}" aria-label="Aanpassen">${icon('pencil')}</button></div>`).join('') || '<p class="zacht klein">Schrijf per groepsgrootte hoe je de vorm opzet, bijv. 14 spelers + 2 keepers: 6 tegen 6 met keepers.</p>'}
         <button class="knop licht vol" data-act="vormAantal" data-id="${v.id}" data-i="nieuw">${icon('plus')}Groepsgrootte</button>
+        </details>
       </div>
       <div class="tr-kol tr-b">
         <form class="kaartje codeform" data-autosave="vorm" data-id="${v.id}">
           <label for="v-n">Naam</label><input id="v-n" name="naam" value="${esc(v.naam)}">
-          <div class="drie"><div><label for="v-s1">Spelers van</label><input id="v-s1" name="s1" type="number" inputmode="numeric" min="0" max="40" value="${num(v.spelersMin)}"></div><div><label for="v-s2">tot</label><input id="v-s2" name="s2" type="number" inputmode="numeric" min="0" max="40" value="${num(v.spelersMax)}"></div><div><label for="v-d">Minuten</label><input id="v-d" name="duur" type="number" inputmode="numeric" min="0" max="90" value="${num(v.duur)}"></div></div>
-          <div class="twee"><div><label for="v-k1">Keepers van</label><input id="v-k1" name="k1" type="number" inputmode="numeric" min="0" max="6" value="${num(v.keepersMin)}"></div><div><label for="v-k2">tot</label><input id="v-k2" name="k2" type="number" inputmode="numeric" min="0" max="6" value="${num(v.keepersMax)}"></div></div>
-          <label for="v-af">Afmeting</label><input id="v-af" name="afmeting" value="${esc(v.afmeting || '')}" placeholder="Bijv. 25 × 20 m">
+          <details class="uitklap tr-opzet" data-onthoud="opzet:${v.id}" ${onthoud(`opzet:${v.id}`, !opzetSamen(v)) ? 'open' : ''}><summary>Opzet · ${esc(opzetSamen(v) || 'spelers, minuten, afmeting')}</summary>
+            <div class="drie"><div><label for="v-s1">Spelers van</label><input id="v-s1" name="s1" type="number" inputmode="numeric" min="0" max="40" value="${num(v.spelersMin)}"></div><div><label for="v-s2">tot</label><input id="v-s2" name="s2" type="number" inputmode="numeric" min="0" max="40" value="${num(v.spelersMax)}"></div><div><label for="v-d">Minuten</label><input id="v-d" name="duur" type="number" inputmode="numeric" min="0" max="90" value="${num(v.duur)}"></div></div>
+            <div class="twee"><div><label for="v-k1">Keepers van</label><input id="v-k1" name="k1" type="number" inputmode="numeric" min="0" max="6" value="${num(v.keepersMin)}"></div><div><label for="v-k2">tot</label><input id="v-k2" name="k2" type="number" inputmode="numeric" min="0" max="6" value="${num(v.keepersMax)}"></div></div>
+            <label for="v-af">Afmeting</label><input id="v-af" name="afmeting" value="${esc(v.afmeting || '')}" placeholder="Bijv. 25 × 20 m">
+          </details>
           <label for="v-dl">Doel (één zin)</label><input id="v-dl" name="doel" value="${esc(v.doel || '')}" placeholder="Welk voetbalgedrag moet beter? Bijv. de vrije speler vinden">
-          <label for="v-o">Organisatie</label><small class="zacht">Hoe staat het klaar: veld, vakken, doelen, teams.</small><textarea id="v-o" name="organisatie" rows="3" placeholder="Bijv. veld 30 × 20 m, twee doeltjes, 3 tegen 2">${esc(v.organisatie || '')}</textarea>
+          <label for="v-o">Organisatie</label><textarea id="v-o" name="organisatie" rows="3" placeholder="Hoe staat het klaar? Bijv. veld 30 × 20 m, twee doeltjes, 3 tegen 2">${esc(v.organisatie || '')}</textarea>
           ${!v.verloop && !v.regels && String(v.organisatie || '').split(/\n+/).filter((x) => x.trim()).length > 3 ? '<small class="zacht tr-splits">Staan hierboven ook het spelverloop of spelregels? Zet ze zelf in de velden hieronder. ClubComm verplaatst niets vanzelf.</small>' : ''}
-          <label for="v-vl">Spelverloop</label><small class="zacht">Hoe begint, loopt en eindigt een actie?</small><textarea id="v-vl" name="verloop" rows="3" placeholder="Bijv. de trainer speelt in; na een schot of balverlies begint de volgende groep">${esc(v.verloop || '')}</textarea>
-          <label for="v-rg">Spelregels</label><small class="zacht">Wat mag, moet of mag niet? Wanneer is het een punt?</small><textarea id="v-rg" name="regels" rows="3" placeholder="Bijv. scoren in het doeltje = 1 punt; maximaal 2 keer raken">${esc(v.regels || '')}</textarea>
-          <label for="v-c">Coachpunten</label><small class="zacht">Welk gedrag zie en stuur je? Eén per regel.</small><textarea id="v-c" name="coach" rows="3" placeholder="Bijv. kijk voor je de bal krijgt">${esc(v.coach || '')}</textarea>
-          <details class="uitklap tr-kenmerk" data-id="${v.id}" ${kenmerkOpen(S, v) ? 'open' : ''}><summary>Kenmerken · ${esc(kenmerkSamen(S, v) || 'mag leeg')}</summary>${classificatie(S, v)}</details>
+          <label for="v-vl">Spelverloop</label><textarea id="v-vl" name="verloop" rows="3" placeholder="Hoe begint, loopt en eindigt een actie? Bijv. de trainer speelt in; na een schot begint de volgende groep">${esc(v.verloop || '')}</textarea>
+          <label for="v-rg">Spelregels</label><textarea id="v-rg" name="regels" rows="3" placeholder="Wat mag, moet of mag niet? Bijv. scoren in het doeltje = 1 punt; maximaal 2 keer raken">${esc(v.regels || '')}</textarea>
+          <label for="v-c">Coachpunten</label><textarea id="v-c" name="coach" rows="3" placeholder="Welk gedrag stuur je? Eén per regel. Bijv. kijk voor je de bal krijgt">${esc(v.coach || '')}</textarea>
+          <details class="uitklap tr-kenmerk" data-onthoud="kenmerk:${v.id}" ${kenmerkOpen(S, v) ? 'open' : ''}><summary>Kenmerken · ${esc(kenmerkSamen(S, v) || 'mag leeg')}</summary>${classificatie(S, v)}</details>
           <details class="uitklap tr-notities"><summary>Eigen notities${v.anders || (v.tags || []).length ? ' · ingevuld' : ''}</summary>
           <label for="v-a">Wat ik de volgende keer anders doe</label><textarea id="v-a" name="anders" rows="3">${esc(v.anders || '')}</textarea>
           <label for="v-t">Eigen woorden (tags)</label><input id="v-t" name="tags" value="${esc((v.tags || []).join(', '))}" placeholder="Bijv. dreigen, bowlen">
@@ -909,12 +918,29 @@
       </div></div>` };
   };
   // Besluit 164: kenmerken ingeklapt met een samenvatting; open zolang een club met leerdoelen nog geen hoofdleerdoel heeft (dat bepaalt de minuten in Lijn)
+  const opzetSamen = (v) => [bereik(v.spelersMin, v.spelersMax, 'spelers'), bereik(v.keepersMin, v.keepersMax, v.keepersMin === 1 && (v.keepersMax == null || v.keepersMax === 1) ? 'keeper' : 'keepers'), v.duur ? `${v.duur} min` : '', v.afmeting || ''].filter(Boolean).join(' · ');
+  // Besluit NNN: wat de tekening al weet (spelers per kleur, keepers) en wat ClubComm daaruit kan overnemen. Alleen lege velden; de trainer tikt zelf.
+  const uitTekening = (v) => { const it = ((v.tekening || {}).items || []).filter((x) => x.t === 'p'); const per = {};
+    it.forEach((x) => { if (x.c === 'trainer' || x.c === 'keeper') return; per[x.c] = (per[x.c] || 0) + 1; });
+    const groepen = Object.entries(per).sort((p, q) => q[1] - p[1]); const veld = groepen.reduce((n, [, x]) => n + x, 0); const keepers = it.filter((x) => x.c === 'keeper').length;
+    if (veld < 2) return null; const a = v.aantal || {}; const zet = {};
+    if (v.spelersMin == null && v.spelersMax == null) { zet.spelersMin = veld; zet.spelersMax = veld; }
+    if (keepers && v.keepersMin == null && v.keepersMax == null) { zet.keepersMin = keepers; zet.keepersMax = keepers; }
+    if (groepen.length >= 2 && a.aanval == null && a.verdediging == null) zet.aantal = { aanval: groepen[0][1], verdediging: groepen[1][1], neutraal: groepen.slice(2).reduce((n, [, x]) => n + x, 0) || null, keepers: keepers || a.keepers || null };
+    return { groepen, veld, keepers, zet }; };
+  const uitTekeningHtml = (v) => { const u = uitTekening(v); if (!u || !Object.keys(u.zet).length || (CC.ui.nietNu || {})[v.id]) return '';
+    const tegen = u.groepen.length >= 2 ? `${u.groepen[0][1]} tegen ${u.groepen[1][1]}${u.groepen.length > 2 ? ` + ${u.groepen.slice(2).reduce((n, [, x]) => n + x, 0)}` : ''}` : '';
+    const mat = CC.materiaal(v.tekening);
+    return `<div class="tr-uittek" role="status"><b>Uit je tekening</b><p>${u.veld} spelers${u.groepen.length > 1 ? `: ${esc(u.groepen.map(([c, n]) => `${n} ${c}`).join(', '))}` : ''}${tegen ? ` → <b>${esc(tegen)}</b>` : ''}${u.keepers ? ` · ${u.keepers} keeper${u.keepers === 1 ? '' : 's'}` : ''}${mat.length ? ` · materiaal: ${esc(matTekst(mat))}` : ''}</p>
+      <div class="knoppen"><button type="button" class="knop klein" data-act="vormUitTekening" data-id="${v.id}">Overnemen</button><button type="button" class="knop licht klein" data-act="vormNietNu" data-id="${v.id}">Niet nu</button></div></div>`; };
+  CC.on('vormUitTekening', (el) => { const S = CC.S(); const v = vorm(S, el.dataset.id); const u = v && uitTekening(v); if (!u) return; Object.assign(v, u.zet); CC.save(); CC.render(); CC.toast && CC.toast('Overgenomen uit je tekening'); });
+  CC.on('vormNietNu', (el) => { (CC.ui.nietNu = CC.ui.nietNu || {})[el.dataset.id] = true; CC.render(); });
   const kenmerkSamen = (S, v) => { const k = koppeling(S, v); return [k.primair ? `★ ${ldNaam(S, k.primair)}` : '', typeNaam(typeVan(v)), schakelvorm(v) ? 'schakelvorm' : '', context({ ...v, omschakeling: null })].filter(Boolean).join(' · '); };
-  // Wie kenmerken opent, houdt ze open zolang hij in deze vorm werkt (ook na een keuze die het scherm opnieuw tekent)
-  const kenmerkOpen = (S, v) => CC.ui.kenmerkOpen === v.id || (leerdoelen(S).length > 0 && !koppeling(S, v).primair);
-  document.addEventListener('toggle', (e) => { const d = e.target; if (!d.classList || !d.classList.contains('tr-kenmerk')) return;
-    if (d.open) CC.ui.kenmerkOpen = d.dataset.id; else if (CC.ui.kenmerkOpen === d.dataset.id) CC.ui.kenmerkOpen = null; }, true);
+  const kenmerkOpen = (S, v) => onthoud(`kenmerk:${v.id}`, leerdoelen(S).length > 0 && !koppeling(S, v).primair);
   const getal = (x) => (x === '' || x == null ? null : Number(x));
+  // Besluit 164/NNN: een uitklapper die je opent of sluit, blijft zo zolang de app open is (ook als het scherm opnieuw wordt getekend)
+  const onthoud = (k, standaard) => { const u = CC.ui.uitklap || {}; return k in u ? u[k] : standaard; };
+  document.addEventListener('toggle', (e) => { const d = e.target; if (!d.dataset || !d.dataset.onthoud) return; (CC.ui.uitklap = CC.ui.uitklap || {})[d.dataset.onthoud] = d.open; }, true);
   CC.autosave.vorm = (f) => { const S = CC.S(); const v = vorm(S, f.dataset.id); if (!v) return;
     Object.assign(v, { naam: f.naam.value.trim() || 'Vorm', spelersMin: getal(f.s1.value), spelersMax: getal(f.s2.value), keepersMin: getal(f.k1.value), keepersMax: getal(f.k2.value), duur: getal(f.duur.value),
       doel: f.doel.value.trim(), organisatie: f.organisatie.value.trim(), coach: f.coach.value.trim(), verloop: f.verloop.value.trim(), regels: f.regels.value.trim(), anders: f.anders.value.trim(), afmeting: f.afmeting.value.trim(),

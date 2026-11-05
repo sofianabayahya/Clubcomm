@@ -25,6 +25,7 @@
 **De tijd** (Besluit 142)
 - Bovenaan staat **veldtijd − organisatie = oefentijd**. De veldtijd komt uit de planning. Tik **＋ organisatie** voor de tijd die geen oefentijd is (uitleg, wissels, drinken, ombouw).
 - Plan je meer minuten dan de oefentijd, dan zie je een waarschuwing en welke vorm erbuiten valt. Je kunt gewoon doorgaan: de app blokkeert nooit.
+- In **Week** staat de tijd niet; alleen als je te veel hebt ingepland, zie je daar dezelfde waarschuwing (Besluit NNN).
 
 **Een vorm in de training aanpassen**
 - Tik een vorm in de lijst aan voor **Minuten**, een **Notitie**, **Gebruiken als spacing**, **Omlaag**, **Vorm bekijken**, **Dupliceren** of **Weghalen**.
@@ -39,7 +40,7 @@
 
 **Bij een club met een opleidingsprofiel** (Besluit 141, 144, 145, 155)
 - De training heeft een **sjabloon** met vaste plekken (bijvoorbeeld Start, A1, A2, B1, B2, Partij) en bovenaan **Stap x van y**.
-- De **trainingskaart** heeft vijf regels: *Wat · Waar · Welke · Niveau · Mee uit vorige*. Een voorstel uit de week of de periodisering staat gestippeld en vult nooit vanzelf in.
+- De **trainingskaart** heeft vijf regels: *Wat · Waar · Welke · Niveau · Mee uit vorige*. Een voorstel uit de week of de periodisering staat gestippeld en vult nooit vanzelf in. In **Week** staat de afspraak van de vorige training bovenaan en de rest ingeklapt onder **Waarom deze training** (Besluit NNN).
 - **Kies oefenvorm** filtert ook op leerdoel, vaardigheid en leerniveau. Een vorm die al staat, verplaats je met **Verplaatsen naar** (een bezette plek wisselt).
 - Zonder opleidingsprofiel blijft de training één lijst in de volgorde die jij kiest; het **weekthema** kies je dan zelf bij **Lijn**.
 

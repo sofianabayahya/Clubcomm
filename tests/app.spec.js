@@ -1602,7 +1602,9 @@ test('tijdsbalk: DCG-sjabloon 75 − 7 = 68, organisatie aanpassen, waarschuwing
   // Week: dezelfde tijd, alleen lezen
   await page.locator('[data-act="seg"][data-val="week"]').click();
   await page.locator('.weekstrook [data-val="tT"]').click();
-  await expect(page.locator('.tr-weekkaart .tr-tijd')).toContainText('3 te veel');
+  // Besluit NNN: Week toont alleen de waarschuwing, de tijdsbalk staat in Plannen
+  await expect(page.locator('.tr-weekkaart .tr-twaarsch')).toContainText('3 te veel');
+  await expect(page.locator('.tr-weekkaart .tr-tijd')).toHaveCount(0);
   await expect(page.locator('.tr-weekkaart .tr-orgknop')).toHaveCount(0);
   await controleer(page, fouten, 'tijdsbalk DCG');
 });
@@ -2123,6 +2125,7 @@ test('trainingsmodule: DCG-periodisering O13 met hoofdthema, teamfunctie, contra
   if (process.env.SHOTS) { await page.locator('[data-act="seg"][data-val="lijn"]').click(); await page.screenshot({ path: `${process.env.SHOTS}/2-lijn.png`, fullPage: true }); }
   await page.locator('[data-act="seg"][data-val="week"]').click();
   await page.locator('.weekstrook [data-val="a-o12-20261105"]').click();
+  await page.locator('.tr-waarom > summary').click(); // Besluit NNN: onderbouwing ingeklapt in Week
   await expect(page.locator('.tr-meth .tr-contra')).toContainText('Vooruitgang voorkomen: passlijn door as sluiten (probleem 6) · voorstel');
   await expect(page.locator('.tr-tkaart .tr-stand')).toContainText('Concept uit de periodisering');
   await page.locator('.tr-meth-meer summary').click();
