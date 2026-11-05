@@ -5,3 +5,5 @@
 | Kaart | Functie | Status in de app | Status van de kaart |
 |---|---|---|---|
 | [tekentool.md](tekentool.md) | Een oefenvorm tekenen | In productie (`699cb9e`) | Concept |
+| [training-voorbereiden.md](training-voorbereiden.md) | Een training voorbereiden (Plannen) | In productie (`dcb59d7`) | Concept |
+| [vormenbank.md](vormenbank.md) | Eigen oefenvormen bewaren en terugvinden | In productie (`dcb59d7`) | Concept |
