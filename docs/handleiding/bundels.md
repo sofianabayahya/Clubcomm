@@ -21,6 +21,14 @@
 
 **Bewust niet in de snelstart:** wisselschema en speeltijd, berichten, spelers opvolgen, ouders uitnodigen. Die komen in de *Handleiding trainer* (Kort + Meer), zodra die kaarten er zijn.
 
+## Snelstart: een oefenvorm tekenen (trainerspilot, Besluit 161)
+
+| | |
+|---|---|
+| **Status van de uitgave** | Gepubliceerd (5-11-2026) |
+| **Kaarten** | [tekentool.md](tekentool.md): blok Kort + Let op |
+| **Bestand** | `docs/presentaties/pdf/ClubComm-snelstart-tekenen.pdf`, gemaakt met `docs/handleiding/pdf.js` |
+
 ## Nog te maken
 - Handleiding trainer (Kort + Meer van alle trainerskaarten), handleiding HJO, handleiding clubbeheerder, ouders, teamleider, bestuursdemo: zie `docs/onderzoek/documentatie-borging/README.md` § 4.1.
-- Een PDF uit deze bundel maken: aparte stap (`maak.js` laten lezen uit de kaarten), na akkoord.
+- De Snelstart vrijwillige trainer als PDF: `docs/handleiding/pdf.js` maakt nu een PDF uit één kaart; een bundel van meer kaarten lezen is een aparte stap, na akkoord.

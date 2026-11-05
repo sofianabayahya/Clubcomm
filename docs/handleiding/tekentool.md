@@ -3,9 +3,9 @@
 | | |
 |---|---|
 | **Status in de app** | In productie · commit `699cb9e` (5-11-2026) |
-| **Status van deze kaart** | Concept (Besluit 151) |
-| **Besluiten** | 124–127 · 148 · 152 · 153 · 156 · 157 · 158 · 160 |
-| **Schermafbeeldingen** | `docs/presentaties/beelden/tekentool-laptop.jpg` · `tekentool-telefoon.jpg` · `tekentool-gekanteld.jpg` |
+| **Status van deze kaart** | Gepubliceerd (Besluit 151) · PDF `docs/presentaties/pdf/ClubComm-snelstart-tekenen.pdf` (Kort + Let op, versie 5-11-2026, app `699cb9e`; opnieuw maken met `node docs/handleiding/pdf.js`) |
+| **Besluiten** | 124–127 · 148 · 152 · 153 · 156 · 157 · 158 · 160 · 161 (trainerspilot) |
+| **Schermafbeeldingen** | `docs/presentaties/beelden/tekentool-laptop.jpg` · `tekentool-telefoon.jpg` · `tekentool-gekanteld.jpg` · `tekentool-tel-spelers.jpg` · `tekentool-tel-hoedjes.jpg` · `tekentool-tel-kies.jpg` |
 | **Doelgroepen** | beginner trainer · ervaren trainer |
 
 ## Kort
@@ -13,11 +13,16 @@
 
 1. Ga naar **Training → Vormenbank** en tik **Nieuwe oefenvorm**. Bij een vorm die al bestaat: open hem en tik **Bewerken**.
 2. Tik **Tekening maken** (of **Tekening aanpassen**).
-3. Kies bovenaan het **Veld** (bijvoorbeeld *Vak* of *Half veld*). Tik links op **Spelers** en tik nummers aan: elke speler staat meteen op zijn plek.
-4. Tik links op **Hoedjes**, **Bal**, **Doelen** of **Pijlen** en tik of sleep op het veld. **Kies** = iets aantikken om het te verschuiven.
-5. Tik **Opslaan**. De tekening staat bij de vorm en in elke training waarin je die vorm gebruikt.
+3. Kies bovenaan het **Veld** (bijvoorbeeld *Vak* of *Half veld*); bij een kleine oefening zijn de spelers dan groter. Tik op **Spelers**, kies een teamkleur en tik nummers aan: elke speler staat meteen op zijn plek. Klaar? Tik op **×**.
+4. Tik op **Hoedjes**, **Bal**, **Doelen** of **Pijlen**. **Op de telefoon:** kies eerst de kleur of soort (het menu gaat dicht) en tik dan op het veld; elke tik is er één. Bij *Hoedjes* is de eerste knop *Vak met hoedjes* (slepen); voor losse hoedjes kies je een kleur.
+5. **Verschuiven of weghalen:** tik eerst op **Kies** (het pijltje), dan het voorwerp aan: slepen = verschuiven, **Verwijderen** = weg, **↶** = ongedaan maken.
+6. Tik **Opslaan**. De tekening staat bij de vorm en in elke training waarin je die vorm gebruikt.
+
+*Alles mag, niets hoeft:* classificatie, leerdoel en uitleg mogen leeg blijven, en een training digitaal uitwerken hoeft niet (Besluit 161).
 
 ![Tekentool op de laptop met het paneel Spelers](../presentaties/beelden/tekentool-laptop.jpg)
+
+![Telefoon: spelers met nummers](../presentaties/beelden/tekentool-tel-spelers.jpg) ![Telefoon: menu Hoedjes, eerst een kleur kiezen](../presentaties/beelden/tekentool-tel-hoedjes.jpg) ![Telefoon: Kies, dan Verwijderen](../presentaties/beelden/tekentool-tel-kies.jpg)
 
 ## Meer
 *Voor de trainer die vaker tekent.*
@@ -45,6 +50,9 @@
 ![Telefoon staand: speler 9 gekozen, Kopie en Weg in het paneel](../presentaties/beelden/tekentool-telefoon.jpg) ![Telefoon gekanteld: het paneel rechts naast het veld](../presentaties/beelden/tekentool-gekanteld.jpg)
 
 ## Let op
+- **Je oefenvormen zijn van jou.** ClubComm zet niets in een clubbibliotheek; delen gebeurt alleen als jij dat wilt en met de club afspreekt (Besluit 161). Heeft de club *meekijken* aan en heb je een traject, dan leest je eigen begeleider de vormen in je trainingen mee (Besluit 159).
+- **Veeg naar links** over de rij knoppen voor *Pijlen* en *Markeren* (telefoon).
+- **Lege oefenvorm?** Tik je *Nieuwe oefenvorm* en ga je terug zonder te tekenen, dan staat er een lege *Nieuwe vorm*; die kun je weggooien.
 - **Een nummerknop verwijdert nooit.** Weghalen gaat alleen met *Verwijderen* (of *Weg*) en kan ongedaan worden gemaakt.
 - **Een menu sluiten met ×** zet het gereedschap uit. Daarna tik je niets per ongeluk neer (Besluit 152).
 - **Een tekening aanpassen verandert hem in elke training** die de vorm gebruikt. Wil je een andere versie, maak dan een **variant** bij de vorm.

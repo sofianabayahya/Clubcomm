@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status in de app** | In open pull request (de uitlegtekst in het venster; de werking zelf is in productie, commit `9eff3ce`) |
+| **Status in de app** | In productie · met #136 (5-11-2026) |
 | **Status van deze kaart** | Concept (Besluit 151) |
 | **Besluiten** | 20 · 95 · 115 |
 | **Schermafbeeldingen** | `docs/presentaties/beelden/zelf-afmelden.jpg` |
