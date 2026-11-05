@@ -36,8 +36,9 @@
     ],
     // Aanvullende aanduiding (los van het type)
     aanduidingen: [{ id: 'functioneel', naam: 'functioneel / linietactisch' }],
-    // Schakelvorm is geen type maar een kenmerk: omschakeling met een richting
-    omschakeling: [{ id: 'geen', naam: 'geen', kort: '' }, { id: 'av', naam: 'aanval → verdediging', kort: 'A→V' }, { id: 'va', naam: 'verdediging → aanval', kort: 'V→A' }, { id: 'beide', naam: 'beide', kort: 'A⇄V' }],
+    // Schakelvorm is geen type maar een kenmerk (Besluit 131): schakelen na balverlies of balwinst, of tussen rollen of richtingen (Besluit 164).
+    // Alles behalve 'geen' maakt van de vorm een schakelvorm (zichtbaar op de kaart en de print, vindbaar met zoeken).
+    omschakeling: [{ id: 'geen', naam: 'geen', kort: '' }, { id: 'av', naam: 'aanval → verdediging', kort: 'A→V' }, { id: 'va', naam: 'verdediging → aanval', kort: 'V→A' }, { id: 'beide', naam: 'beide', kort: 'A⇄V' }, { id: 'rollen', naam: 'wisselende rollen of richtingen', kort: 'rollen wisselen' }],
     weerstandExtra: [{ id: 'passief', naam: 'passief' }, { id: 'afleiding', naam: 'met afleiding' }, { id: 'wisselend', naam: 'wisselend' }],
     // Zoeken: deze woorden vinden het type
     synoniemen: { ssg: 'partij', 'small-sided': 'partij', partij: 'partij', wedstrijdvorm: 'partij', unopposed: 'droog', droog: 'droog', techniek: 'droog', coordinatie: 'droog', coördinatie: 'droog', duel: 'duel', passeren: 'duel', '1v1': 'duel', rondo: 'rondo', positiespel: 'positie', afwerken: 'afwerk', schieten: 'afwerk', patroon: 'patroon', linie: 'patroon', keeper: 'keeper' },

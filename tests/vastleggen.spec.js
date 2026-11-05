@@ -45,6 +45,7 @@ const gegeven = async (page) => { await page.locator('form[data-autosave="tpTeru
 // Koppeling van v-a2 in de Vormenbank wijzigen: Aannemen eraf, Vrijkomen als hoofdgereedschap
 const koppelingWijzigen = async (page) => {
   await page.evaluate(() => CC.open('vorm', { id: 'v-a2' }));
+  await page.locator('details.tr-kenmerk > summary').click(); // Besluit 164: kenmerken staan ingeklapt zodra er een hoofdleerdoel is
   await page.locator('[data-act="vormKies"][data-veld="ld"][data-w="ll-aannemen"]').click();
   await page.locator('[data-act="vormKies"][data-veld="ld"][data-w="ll-vrijkomen"]').click();
   expect(await page.evaluate(() => CC.S().vormen.find((v) => v.id === 'v-a2').koppelingen.dcg.primair)).toBe('ll-vrijkomen');

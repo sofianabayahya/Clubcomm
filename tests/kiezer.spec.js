@@ -168,6 +168,7 @@ test('oefenvorm kiezen (Besluit 139): twee tikken, redenen, toch kiezen en onged
   await expect(page.locator('.tr-aanvul')).toHaveCount(0);
   await page.locator('.tr-kaart', { hasText: 'Groot positiespel' }).click();
   await page.locator('#sheet [data-act="vormBewerk"]').click();
+  await page.locator('details.tr-kenmerk > summary').click(); // Besluit 164: kenmerken staan ingeklapt zodra er een hoofdleerdoel is
   await page.locator('[data-act="vormKies"][data-veld="niveauAdvies"][data-w="ln-afstemmen"]').click();
   expect(await page.evaluate(() => CC.S().vormen.find((v) => v.id === 'v-groot').niveauAdvies)).toBe('ln-afstemmen');
   await controleer(page, fouten, 'kiezer 139');

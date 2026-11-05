@@ -21,6 +21,7 @@ Laatst bijgewerkt: 5 november 2026 (t/m Besluit 163)
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
+| 164 | 3 | Oefenvorm invoeren: compacte basis (naam, tekening, spelers/minuten/keepers, afmeting, doel, **organisatie**, **spelverloop**, **spelregels**, coachpunten); *Kenmerken* ingeklapt met samenvatting (open zolang een club met leerdoelen nog geen hoofdleerdoel heeft), *Eigen notities* ingeklapt; **schakelvorm** als kenmerk, ook bij *wisselende rollen of richtingen*, zichtbaar op kaart en print en vindbaar met zoeken; speelrichting *meer*. Bestaande tekst wordt niet gesplitst | geldt | |
 | 163 | 3 | Plannen: een vorm weghalen zonder de plek kwijt te raken. In het venster van een vorm op een plek staat **Vorm uit A1 halen** (de plek blijft, leeg, met zijn minuten); een lege plek heeft **Plek A1 verwijderen**; een vorm **zonder plek** krijgt in één tik weer een plek (een lege plek, of een plek die volgens het sjabloon **ontbreekt**, op de plaats uit het sjabloon). Elke manier van weghalen heeft **Ongedaan maken**, alleen als de training intussen niet is veranderd. Geen nieuw veld, geen migratie | ✅ geldt |  |
 | 162 | 3 | Tekentool: een hoedje is ongeveer 70% van een speler (schaal 0,6 in plaats van 0,85); plek, kleuren, menuknop en aantikken (tikvlak, Besluit 160) blijven; bestaande tekeningen vanzelf | ✅ geldt |  |
 | 161 | 3 | Trainerspilot: trainers tekenen en bewaren zelf oefenvormen (geen plicht om trainingen digitaal uit te werken of te delen); clubbibliotheek niet in gebruik, geen automatische publicatie, publiceren alleen met toestemming of deelafspraak, de HJO selecteert later; geen bouwprioriteit | ✅ geldt | |
@@ -52,8 +53,8 @@ Laatst bijgewerkt: 5 november 2026 (t/m Besluit 163)
 | 135 | 3 | Tabblad Training in de volgorde van het werk (laptop: Lijn · Plannen · Week · Vormen), regel *Je zit in* (week, thema, A/B; tik = Lijn), geen dubbelingen (maandoverzicht alleen in Lijn, evalueren in Week), weekthema met A/B voor clubs zonder periodisering | ◐ deels herzien | door 138 (Lijn bij de DCG-methodiek: één overzicht); door 141 (Vormen heet Vormenbank) |
 | 134 | 3 | Trainers begeleiden (KNVB): begeleiden en ontwikkelen, niet beoordelen; begeleider (HO of TC met traject) ziet het hele seizoen de trainingen van de trainer, kijkt en geeft feedback; club beslist; invoeren per club in te stellen; trainer deelt zelf vormen in een clubbank. Gebouwd: moment verplaatsen en *niet doorgegaan*. Meekijken: gebouwd met Besluit 159 (database 032 en 034 toegepast 4-11); clubbank in de app nog niet | ◐ deels herzien | door 161 (clubbank voorlopig niet in gebruik, geen bouwprioriteit) |
 | 133 | 1 · 3 | DCG-methodiek als profiel v3 (kerndocument leidend); methodiekblok compact; leerniveau per blok; status berekend; evaluatiekaart (3 open + verdiepend); periodisering laden uit CSV met voorbeeld; observatiepunten bij de wedstrijd; uitgebreide vormvelden | ◐ deels herzien | door 137 (contrathema, handelingsketen, extra kolommen); uitleg 29-10: inhoud persoonlijk (Spoor 1), technisch via het DCG-profiel; door 144 (methodiekblok = trainingskaart met vijf regels; weekplan alleen weekvelden); door 155 (welke evaluatievragen open staan komt uit het profiel, `evaluatie.kort`) |
-| 132 | 3 | Training: Week (telefoon, controleren) · Plannen (laptop: vormen · training in blokken · week) · Vormen · Lijn; vorm in Rinus-stijl met *Zet in een training…* en materiaal uit de tekening; printen; kopiëren naar een andere dag | ◐ deels herzien | door 135 (volgorde op de laptop, geen weeklijst en maandoverzicht in Plannen, evalueren in Week) |
-| 131 | 1 · 3 | Oefenvormen geclassificeerd (8 hoofdtypes, weerstand vanuit het hoofdleerdoel, omschakeling met richting), opbouw in blokken met sjabloon DCG 75 en fase-voorstel, gepland en uitgevoerd, filters; laptop vanaf 900 px | ◐ deels herzien | door 132 (geen leerdoel-chips meer in de kop van een training; vorm opent in Rinus-stijl); door 141 (echte minuten leeg = nog niet gecontroleerd; vier minutengetallen) |
+| 132 | 3 | Training: Week (telefoon, controleren) · Plannen (laptop: vormen · training in blokken · week) · Vormen · Lijn; vorm in Rinus-stijl met *Zet in een training…* en materiaal uit de tekening; printen; kopiëren naar een andere dag | ◐ deels herzien | door 135 (volgorde op de laptop, geen weeklijst en maandoverzicht in Plannen, evalueren in Week); door 164 (kaart en print: *Organisatie*, *Spelverloop*, *Spelregels* apart) |
+| 131 | 1 · 3 | Oefenvormen geclassificeerd (8 hoofdtypes, weerstand vanuit het hoofdleerdoel, omschakeling met richting), opbouw in blokken met sjabloon DCG 75 en fase-voorstel, gepland en uitgevoerd, filters; laptop vanaf 900 px | ◐ deels herzien | door 132 (geen leerdoel-chips meer in de kop van een training; vorm opent in Rinus-stijl); door 141 (echte minuten leeg = nog niet gecontroleerd; vier minutengetallen); aangevuld door 164 (schakelvorm ook bij wisselende rollen of richtingen; speelrichting *meer*) |
 | 130 | 3 | Trainer: eigen tabblad Training (week met de training bovenaan, aanwezigheid in een venster, Vormen); ook bij AVV Swift, daar trainingen op datum | ◐ deels herzien | door 132 (Training heeft Week · Plannen · Vormen · Lijn; de training staat op de laptop in Plannen) |
 | 129 | 3 | Observeren: klok en turven bovenaan, snelle notities met minuut en onderwerp, aandachtspunten na afloop | ✅ geldt |  |
 | 128 | 3 | Trainingsmodule (proef): eigen oefenvormen en trainingen met spacing, varianten en aantallen | ◐ deels herzien | door 130 (de training staat in het tabblad Training) en 131 (soort → vormtype, vorm opent als venster); 134 (de begeleider ziet de trainingen, na akkoord op de rechten) |
@@ -698,6 +699,26 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
 ### Vuistregel voor nieuwe ideeën
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
+
+---
+
+## Besluit 164 — Oefenvorm invoeren: organisatie, spelverloop en spelregels apart, kenmerken ingeklapt, schakelvorm als kenmerk (Spoor 3, maat M)
+> Voorstel en voorbeelden op 390 px: `docs/onderzoek/oefenvorm-velden/voorstel.md`. Vult Besluit 131 aan (schakelvorm is een kenmerk, geen type) en herziet een deel van Besluit 132 (de secties van de vormkaart). Neemt punt 4 van het voorstel *Lijn en vaktaal* over (classificatie inklappen).
+
+**Waarom.** Eén tekstvak *Organisatie en spelregels* mengde drie dingen: hoe het klaarstaat, hoe een actie loopt en wat de regels zijn. Een beginnende trainer weet dan niet wat erin hoort; een ervaren trainer kan het niet terugvinden. De classificatie stond midden in het formulier en voelde verplicht.
+
+**Wat.**
+1. **Basis** (altijd open, in deze volgorde): naam · tekening · spelers, minuten en keepers · afmeting · doel (één zin) · **Organisatie** (*hoe staat het klaar*) · **Spelverloop** (*hoe begint, loopt en eindigt een actie*) · **Spelregels** (*wat mag, moet of mag niet; wanneer is het een punt*) · coachpunten. Elk veld heeft één korte hulpvraag.
+2. **Kenmerken** (vormtype, aantallen, speelrichting, schakelen, leerdoel, fase …) staan ingeklapt met een samenvatting in de kop (*★ leerdoel · type · schakelvorm · speelrichting*, of *mag leeg*). Ze staan **open** zolang de club leerdoelen heeft en de vorm nog geen hoofdleerdoel: dat bepaalt de minuten in Lijn. **Eigen notities** (*wat ik anders doe*, eigen woorden) staan ingeklapt.
+3. **Schakelvorm (optie B).** Het kenmerk heet *Schakelen (schakelvorm)* en krijgt de keuze **wisselende rollen of richtingen** naast aanval → verdediging, verdediging → aanval en beide. Elke keuze behalve *geen* maakt de vorm een **schakelvorm**: dat woord staat in de soortregel van de kaart en de print en wordt gevonden met zoeken. Speelrichting krijgt **meer** (meer dan twee richtingen). Geen nieuw vormtype (Besluit 131 blijft).
+4. **Bestaande tekst wordt nooit vanzelf gesplitst.** Zolang spelverloop en spelregels leeg zijn, heet het blok op kaart en print nog *Organisatie en spelregels*. Heeft het organisatieveld meer dan 3 regels, dan staat eronder: *"Staan hierboven ook het spelverloop of spelregels? Zet ze zelf in de velden hieronder. ClubComm verplaatst niets vanzelf."*
+5. Varianten heten *Makkelijker, moeilijker en varianten*.
+
+**Gegevens.** Twee nieuwe tekstvelden in de vorm (`verloop`, `regels`), in dezelfde rij als de rest van de vorm (`S.vormen`, scope eigen). Geen migratie, geen nieuwe rechten, geen persoonsgegevens. Een vorm openen verandert niets aan zijn gegevens.
+
+**Spoor.** Dit is algemene software (Spoor 3). Er staat geen DCG-begrip in de code; de leerdoelen komen uit het clubprofiel, en een club zonder profiel ziet kenmerken ingeklapt.
+
+**Tests:** `tests/oefenvorm-velden.spec.js` (390 en 1366 px).
 
 ---
 
