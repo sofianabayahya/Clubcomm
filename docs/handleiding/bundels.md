@@ -21,6 +21,17 @@
 
 **Bewust niet in de snelstart:** wisselschema en speeltijd, berichten, spelers opvolgen, ouders uitnodigen. Die komen in de *Handleiding trainer* (Kort + Meer), zodra die kaarten er zijn.
 
+## Snelstart trainersbijeenkomst (trainerspilot, Besluit 161) — deze printen
+
+| | |
+|---|---|
+| **Status van de uitgave** | Gepubliceerd (5-11-2026, app `4f6d266`) |
+| **Lezer** | trainer op de bijeenkomst: inloggen en zelf een oefenvorm tekenen |
+| **Vorm** | PDF, 2 A4 |
+| **Kaarten, in deze volgorde** | [inloggen.md](inloggen.md): Kort + Let op (eerste 3) · [tekentool.md](tekentool.md): Kort (alleen de telefoonbeelden) + Let op (eerste 4) |
+| **Bestand** | `docs/presentaties/pdf/ClubComm-snelstart-trainersbijeenkomst.pdf` |
+| **Opnieuw maken** | `node docs/handleiding/pdf.js docs/presentaties/pdf/ClubComm-snelstart-trainersbijeenkomst.pdf "Snelstart trainersbijeenkomst" Gepubliceerd "inloggen.md#Kort" "inloggen.md#Let op:3" "tekentool.md#Kort@tel" "tekentool.md#Let op:4"` |
+
 ## Snelstart: een oefenvorm tekenen (trainerspilot, Besluit 161)
 
 | | |
@@ -31,4 +42,4 @@
 
 ## Nog te maken
 - Handleiding trainer (Kort + Meer van alle trainerskaarten), handleiding HJO, handleiding clubbeheerder, ouders, teamleider, bestuursdemo: zie `docs/onderzoek/documentatie-borging/README.md` § 4.1.
-- De Snelstart vrijwillige trainer als PDF: `docs/handleiding/pdf.js` maakt nu een PDF uit één kaart; een bundel van meer kaarten lezen is een aparte stap, na akkoord.
+- De Snelstart vrijwillige trainer als PDF: `docs/handleiding/pdf.js` kan nu ook een bundel van meer kaarten maken (zie de bijeenkomst hierboven); voor deze bundel nog niet gedaan.
