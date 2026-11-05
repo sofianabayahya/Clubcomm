@@ -134,3 +134,40 @@ Na je keuze maak ik eerst voorbeeldschermen op 390 px (en 1366 px voor voorstel 
 1. Welk voorstel (of welke combinatie).
 2. Bij voorstel 1: mogen *gemaakt voor 8–12 spelers* en *aantal* weg als de vorm past?
 3. Bij voorstel 2: kloktijden in de tijdlijn (*17:23 A1*), ja of nee?
+
+---
+
+## Voorbeeld voorstel 1 op 390 px (05-11, na je akkoord)
+
+**Correctie op de analyse:** *gemaakt voor 8–12 spelers* en *aantal* staan er **niet altijd**. Ze verschijnen alleen als een vorm niet past bij het aantal verwachte spelers (in de proef 4 verwacht, vormen voor 8–12). Het is dus een terechte waarschuwing. Het probleem is dat die dubbel staat (tekst én label) en op elke regel.
+
+**Wat er in het voorbeeld verandert:**
+1. **De afspraak van de vorige training blijft zichtbaar**, net als in Week.
+2. **De onderbouwing (Wat, Waar, Welke, Niveau) is ingeklapt** onder *Waarom deze training · Vooruitgang creëren*. Het potlood om aan te passen zit erin.
+3. **De tijd staat in één regel:** *✓ 68 van 68 min ingepland*. Een tik opent de balk en de organisatie. Bij te veel minuten klapt de regel vanzelf open, met de waarschuwing.
+4. **Niet passende vormen geven één waarschuwing bovenaan:** *6 vormen zijn gemaakt voor 8–12 spelers; er worden er 4 verwacht.* Per vorm staat alleen het label **past niet**. De tekst *gemaakt voor …* staat niet meer op elke regel.
+5. *6 van 6 plekken ingevuld* is weg.
+6. **Extra (keuze):** op de telefoon is de **Vormenbank onderaan ingeklapt** (*Vormenbank · 7 vormen · zoeken*). Op de laptop blijft die als kolom staan.
+
+**A/B en leerniveau.** A en B staan nog in de weekbalk (de week) en in de kop van blok A en B. Daar kies je ze ook (▾). In de zichtbare pagina stonden ze 4 keer, nu 2 keer. Het leerniveau staat 1 keer in de kop en per plek.
+
+**Gemeten** (telefoon, met dezelfde gegevens):
+
+| | Woorden | Lengte |
+|---|---|---|
+| Nu | 372 | 4,3 schermen |
+| Voorstel 1 | 290 | 3,4 schermen |
+| Voorstel 1 + Vormenbank ingeklapt | **219** | **2,7 schermen** |
+
+Mijn schatting vooraf (± 200 woorden, 2,5 schermen) klopt dus alleen **met** de ingeklapte Vormenbank.
+
+| Nu | Voorstel 1 + Vormenbank ingeklapt |
+|---|---|
+| ![Nu](v1-nu.png) | ![Voorstel](v1-voorstel-bank.png) |
+
+**Normen:** de uitklappers en knoppen bestaan al (tikvlak 44 px, leestekst 16 px), er is geen horizontaal scrollen op 390 px, en kleur staat alleen bij de afspraak en de waarschuwing.
+
+**Voordelen:** bijna half zo lang, de waarschuwing staat één keer met uitleg, en de afspraak en de opbouw staan bovenaan.
+**Nadelen:** de onderbouwing en de tijdsbalk kosten één tik extra. Een trainer die de Vormenbank onder Plannen gebruikt op de telefoon, tikt één keer extra (of gebruikt *+ Oefenvorm*, dat opent de kiezer).
+
+**Herziet:** Besluit 142 (tijd ingeklapt in Plannen), 144 (trainingskaart ingeklapt) en 165 (dezelfde lijn als Week).
