@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status in de app** | In productie · commit `9eff3ce` (5-11-2026) |
-| **Status van deze kaart** | Concept (Besluit 151) |
+| **Status van deze kaart** | Gepubliceerd in de bundel *Snelstart trainersbijeenkomst* (5-11-2026; Kort + Let op) · Besluit 151 |
 | **Besluiten** | 1 · 52 · 54 |
 | **Schermafbeeldingen** | `docs/presentaties/beelden/kaart-inloggen.jpg` |
 | **Doelgroepen** | beginner trainer (ook ouder en teamleider) |

@@ -7,7 +7,7 @@
 | [tekentool.md](tekentool.md) | Een oefenvorm tekenen | In productie (`699cb9e`) | Gepubliceerd (PDF snelstart, 5-11) |
 | [training-voorbereiden.md](training-voorbereiden.md) | Een training voorbereiden (Plannen) | In productie (`dcb59d7`) | Concept |
 | [vormenbank.md](vormenbank.md) | Eigen oefenvormen bewaren en terugvinden | In productie (`dcb59d7`) | Concept |
-| [inloggen.md](inloggen.md) | Inloggen en de app op je beginscherm | In productie (`9eff3ce`) | Concept |
+| [inloggen.md](inloggen.md) | Inloggen en de app op je beginscherm | In productie (`9eff3ce`) | Gepubliceerd (in de bundel Snelstart trainersbijeenkomst, 5-11) |
 | [aanwezigheid.md](aanwezigheid.md) | Wie komt er, en aanwezigheid opnemen | In productie (`9eff3ce`) | Concept |
 | [zelf-afmelden.md](zelf-afmelden.md) | Kun je zelf niet? Vervanger zoeken of afgelasten | In productie (#136) | Concept |
 
