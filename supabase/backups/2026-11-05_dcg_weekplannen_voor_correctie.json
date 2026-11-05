@@ -1,0 +1,505 @@
+{
+ "toelichting": "Reservekopie van uitsluitend de 8 DCG-weekplannen (wk 44 t/m 51) vóór de correctie van 2026-10-30. Gelijk aan productie op 05-11-2026 (md5 per rij = md5(data::text) in productie). Geen andere gegevens, geen volledige databaseback-up. Terugzetten: supabase/scripts/2026-10-30_dcg_weekplannen_correctie_terug.sql.voorstel.",
+ "gecontroleerd": "2026-11-05",
+ "rijen": [
+  {
+   "club_id": "dcg",
+   "soort": "trainingsplannen",
+   "id": "wk-O12-1-2026-10-26",
+   "scope": "eigen",
+   "md5": "35c91eae12fea0c094e6a7d52ab7a597",
+   "data": {
+    "id": "wk-O12-1-2026-10-26",
+    "bron": "periodisering-o13-import-CONCEPT",
+    "week": true,
+    "datum": "2026-10-26",
+    "teamId": "O12-1",
+    "stempel": "srkyojm14vun3s",
+    "eigenaar": "p-beheer",
+    "methodiek": {
+     "hg1": "ll-aannemen",
+     "hg2": "ll-passen",
+     "fase": "Fase 1 – concept",
+     "week": "wk 44",
+     "keten": null,
+     "route": "Gerichte vorm; eerste contact en passkwaliteit; laag tempo als nodig",
+     "contra": "vp-6",
+     "gedrag": "Voor ontvangst kijken en eerste contact naar vrije ruimte; met passende pass de vrije speler helpen",
+     "contra2": null,
+     "niveaus": [
+      "ln-uitvoeren",
+      "ln-herkennen"
+     ],
+     "probleem": "vp-2",
+     "transfer": "Partijvorm: toets of het gedrag zelfstandig terugkomt; invulling door trainer",
+     "onderbouw": "",
+     "hoofdthema": "Technische onderbouw opbouwen",
+     "informatie": "Drukrichting; vrije ruimte voor de eerste lijn; medespeler achter druk",
+     "ketenTekst": "Waarnemen → voorbereiden → helpen",
+     "observatie": "",
+     "contraTekst": "Vooruitgang van tegenstander voorkomen: jagen en as sluiten",
+     "teamfunctie": "tf-aanvallen",
+     "ondersteunend": [
+      "ll-vrijkomen"
+     ],
+     "probleemTekst": "Vooruitgang creëren",
+     "teamfunctieTekst": "",
+     "ondersteunendTekst": "Vrijkomen – Timen"
+    },
+    "wedstrijd": {
+     "bron": "periodisering-o13-import-CONCEPT",
+     "actId": "w-o12-20261031",
+     "punten": [
+      {
+       "id": "obmvthr400yti",
+       "tekst": "Komt de bal gecontroleerd voorbij de eerste druklijn?",
+       "uitkomst": null
+      },
+      {
+       "id": "obmvthr400kqv",
+       "tekst": "Herkennen spelers de relevante informatie voordat zij handelen?",
+       "uitkomst": null
+      },
+      {
+       "id": "obmvthr400e17",
+       "tekst": "Wat gebeurt er direct na balwinst of balverlies?",
+       "uitkomst": null
+      }
+     ]
+    }
+   }
+  },
+  {
+   "club_id": "dcg",
+   "soort": "trainingsplannen",
+   "id": "wk-O12-1-2026-11-02",
+   "scope": "eigen",
+   "md5": "b8180d560136bd89982e7b8713d5fe01",
+   "data": {
+    "id": "wk-O12-1-2026-11-02",
+    "bron": "periodisering-o13-import-CONCEPT",
+    "week": true,
+    "datum": "2026-11-02",
+    "teamId": "O12-1",
+    "stempel": "s40pq4s1xjbn43",
+    "eigenaar": "p-beheer",
+    "methodiek": {
+     "hg1": "ll-passen",
+     "hg2": "ll-vrijkomen",
+     "fase": "Fase 1 – concept",
+     "week": "wk 45",
+     "keten": "hk-vrij-aannemen-passen",
+     "route": "A1/B1 als techniek; A2/B2 met passende druk en spacing of interleaving",
+     "contra": "vp-6",
+     "gedrag": "Pass met passende snelheid; medespeler komt op het juiste moment uit de dekkingsschaduw",
+     "contra2": null,
+     "niveaus": [
+      "ln-uitvoeren",
+      "ln-herkennen"
+     ],
+     "probleem": "vp-2",
+     "transfer": "Partijvorm: toets of het gedrag zelfstandig terugkomt; invulling door trainer",
+     "onderbouw": "",
+     "hoofdthema": "Passingkwaliteit en timing van vrijlopen",
+     "informatie": "Dekkingsschaduw; druk op bal; ruimte achter eerste druklijn",
+     "ketenTekst": "Timen → voorbereiden → helpen",
+     "observatie": "",
+     "contraTekst": "Vooruitgang voorkomen: passlijn door as sluiten",
+     "teamfunctie": "tf-aanvallen",
+     "ondersteunend": [
+      "ll-aannemen"
+     ],
+     "probleemTekst": "Vooruitgang creëren",
+     "teamfunctieTekst": "",
+     "ondersteunendTekst": "Aannemen en meenemen – Voorbereiden"
+    },
+    "wedstrijd": {
+     "bron": "periodisering-o13-import-CONCEPT",
+     "actId": "w-o12-20261107",
+     "punten": [
+      {
+       "id": "obmvthr400cjm",
+       "tekst": "Herkennen spelers de vrije speler achter de druk?",
+       "uitkomst": null
+      },
+      {
+       "id": "obmvthr400vc0",
+       "tekst": "Herkennen spelers de relevante informatie voordat zij handelen?",
+       "uitkomst": null
+      },
+      {
+       "id": "obmvthr400brv",
+       "tekst": "Wat gebeurt er direct na balwinst of balverlies?",
+       "uitkomst": null
+      }
+     ]
+    }
+   }
+  },
+  {
+   "club_id": "dcg",
+   "soort": "trainingsplannen",
+   "id": "wk-O12-1-2026-11-09",
+   "scope": "eigen",
+   "md5": "6226dd9287c89104b1b34c88cd839404",
+   "data": {
+    "id": "wk-O12-1-2026-11-09",
+    "bron": "periodisering-o13-import-CONCEPT",
+    "week": true,
+    "datum": "2026-11-09",
+    "teamId": "O12-1",
+    "stempel": "s1v9lxmk1m18xgb",
+    "eigenaar": "p-beheer",
+    "methodiek": {
+     "hg1": "ll-vrijkomen",
+     "hg2": "ll-passen",
+     "fase": "Fase 1 – concept",
+     "week": "wk 46",
+     "keten": null,
+     "route": "Veel herhalingen met varianten naar niveau",
+     "contra": "vp-6",
+     "gedrag": "Op juiste moment positie wisselen en de vrije speler voorbij druk aanspelen",
+     "contra2": null,
+     "niveaus": [
+      "ln-uitvoeren",
+      "ln-herkennen"
+     ],
+     "probleem": "vp-3",
+     "transfer": "Partijvorm: toets of het gedrag zelfstandig terugkomt; invulling door trainer",
+     "onderbouw": "",
+     "hoofdthema": "Vrijkomen en gerichte pass onder tempo",
+     "informatie": "Vrije speler; overtal; positie van 6/8/back; herstel tegenstander",
+     "ketenTekst": "Herkennen → timen → helpen → opnieuw vrijlopen",
+     "observatie": "",
+     "contraTekst": "Vooruitgang voorkomen: druk en rugdekking",
+     "teamfunctie": "tf-aanvallen",
+     "ondersteunend": [
+      "ll-1v1-aanvallend"
+     ],
+     "probleemTekst": "Voordeel uitspelen",
+     "teamfunctieTekst": "",
+     "ondersteunendTekst": "1v1 aanvallend – Manipuleren"
+    },
+    "wedstrijd": {
+     "bron": "periodisering-o13-import-CONCEPT",
+     "actId": "w-o12-20261114",
+     "punten": [
+      {
+       "id": "obmvthr400zlx",
+       "tekst": "Wordt een ontstaan overtal benut voordat de tegenstander herstelt?",
+       "uitkomst": null
+      },
+      {
+       "id": "obmvthr400f15",
+       "tekst": "Herkennen spelers de relevante informatie voordat zij handelen?",
+       "uitkomst": null
+      },
+      {
+       "id": "obmvthr400mqt",
+       "tekst": "Wat gebeurt er direct na balwinst of balverlies?",
+       "uitkomst": null
+      }
+     ]
+    }
+   }
+  },
+  {
+   "club_id": "dcg",
+   "soort": "trainingsplannen",
+   "id": "wk-O12-1-2026-11-16",
+   "scope": "eigen",
+   "md5": "4c74f4557d2ffea3bcd3f5df6b12a1a6",
+   "data": {
+    "id": "wk-O12-1-2026-11-16",
+    "bron": "periodisering-o13-import-CONCEPT",
+    "week": true,
+    "datum": "2026-11-16",
+    "teamId": "O12-1",
+    "stempel": "s8jr3a81mnjthv",
+    "eigenaar": "p-beheer",
+    "methodiek": {
+     "hg1": "ll-1v1-aanvallend",
+     "hg2": "ll-vrijkomen",
+     "fase": "Fase 1 – concept",
+     "week": "wk 47",
+     "keten": null,
+     "route": "Individueel 1v1 en simpele afwerkvervolgactie",
+     "contra": "vp-6",
+     "gedrag": "Herken ruimte voor passeren of combineren; loop zonder bal naar kansrijke positie",
+     "contra2": null,
+     "niveaus": [
+      "ln-uitvoeren",
+      "ln-kiezen"
+     ],
+     "probleem": "vp-4",
+     "transfer": "Partijvorm: toets of het gedrag zelfstandig terugkomt; invulling door trainer",
+     "onderbouw": "",
+     "hoofdthema": "1v1 richting doel en tijdig vrijlopen",
+     "informatie": "Verdediger uit balans; doelruimte; medespeler vrij; keeper",
+     "ketenTekst": "Manipuleren → timen/helpen → benutten",
+     "observatie": "",
+     "contraTekst": "Vooruitgang voorkomen: verdedigen richting eigen doel",
+     "teamfunctie": "tf-aanvallen",
+     "ondersteunend": [
+      "ll-6",
+      "ll-passen"
+     ],
+     "probleemTekst": "Een scoringskans creëren",
+     "teamfunctieTekst": "",
+     "ondersteunendTekst": "Afwerken – Benutten; Passen – Helpen"
+    },
+    "wedstrijd": {
+     "bron": "periodisering-o13-import-CONCEPT",
+     "actId": "w-o12-20261121",
+     "punten": [
+      {
+       "id": "obmvthr4005j6",
+       "tekst": "Leidt voordeel tot een bewuste doelpoging uit kansrijke positie?",
+       "uitkomst": null
+      },
+      {
+       "id": "obmvthr400j1s",
+       "tekst": "Herkennen spelers de relevante informatie voordat zij handelen?",
+       "uitkomst": null
+      },
+      {
+       "id": "obmvthr400kqk",
+       "tekst": "Wat gebeurt er direct na balwinst of balverlies?",
+       "uitkomst": null
+      }
+     ]
+    }
+   }
+  },
+  {
+   "club_id": "dcg",
+   "soort": "trainingsplannen",
+   "id": "wk-O12-1-2026-11-23",
+   "scope": "eigen",
+   "md5": "f76fcafc356f5b9f50e23c86410cbba8",
+   "data": {
+    "id": "wk-O12-1-2026-11-23",
+    "bron": "periodisering-o13-import-CONCEPT",
+    "week": true,
+    "datum": "2026-11-23",
+    "teamId": "O12-1",
+    "stempel": "s1kzo8wa5deit",
+    "eigenaar": "p-beheer",
+    "methodiek": {
+     "hg1": "ll-1v1-verdedigen",
+     "hg2": "ll-vrijkomen",
+     "fase": "Fase 1 – concept",
+     "week": "wk 48",
+     "keten": null,
+     "route": "Houding en afstand met passende weerstand",
+     "contra": "vp-2",
+     "gedrag": "Balbezitter gecontroleerd benaderen; medespelers sluiten as en geven rugdekking",
+     "contra2": null,
+     "niveaus": [
+      "ln-uitvoeren",
+      "ln-herkennen"
+     ],
+     "probleem": "vp-6",
+     "transfer": "Partijvorm: toets of het gedrag zelfstandig terugkomt; invulling door trainer",
+     "onderbouw": "",
+     "hoofdthema": "1v1 verdedigen: gecontroleerd benaderen",
+     "informatie": "Balcontrole tegenstander; drukmoment; doel-as; onderlinge afstand",
+     "ketenTekst": "Benaderen → controleren → samen afsluiten → ingrijpen",
+     "observatie": "",
+     "contraTekst": "Vooruitgang creëren: onder druk uitspelen",
+     "teamfunctie": "tf-verdedigen",
+     "ondersteunend": [
+      "ll-passen"
+     ],
+     "probleemTekst": "Vooruitgang van de tegenstander voorkomen",
+     "teamfunctieTekst": "",
+     "ondersteunendTekst": "Passen – Helpen (aanvallende contra-partij)"
+    },
+    "wedstrijd": {
+     "bron": "periodisering-o13-import-CONCEPT",
+     "actId": "w-o12-20261128",
+     "punten": [
+      {
+       "id": "obmvthr400v3p",
+       "tekst": "Wordt er samen druk gezet zonder de as open te laten?",
+       "uitkomst": null
+      },
+      {
+       "id": "obmvthr400kbe",
+       "tekst": "Herkennen spelers de relevante informatie voordat zij handelen?",
+       "uitkomst": null
+      },
+      {
+       "id": "obmvthr400o03",
+       "tekst": "Wat gebeurt er direct na balwinst of balverlies?",
+       "uitkomst": null
+      }
+     ]
+    }
+   }
+  },
+  {
+   "club_id": "dcg",
+   "soort": "trainingsplannen",
+   "id": "wk-O12-1-2026-11-30",
+   "scope": "eigen",
+   "md5": "72131b78dcc69b76d2365874b87dbccf",
+   "data": {
+    "id": "wk-O12-1-2026-11-30",
+    "bron": "periodisering-o13-import-CONCEPT",
+    "week": true,
+    "datum": "2026-11-30",
+    "teamId": "O12-1",
+    "stempel": "s2rkdbowmj0r",
+    "eigenaar": "p-beheer",
+    "methodiek": {
+     "hg1": "ll-1v1-verdedigen",
+     "hg2": "ll-aannemen",
+     "fase": "Fase 1 – concept",
+     "week": "wk 49",
+     "keten": null,
+     "route": "Herken slechte aanname; 1v1 met drukmoment",
+     "contra": "vp-1",
+     "gedrag": "Herken moment om in te grijpen en bereid na balwinst eerste vervolgactie voor",
+     "contra2": null,
+     "niveaus": [
+      "ln-uitvoeren",
+      "ln-herkennen"
+     ],
+     "probleem": "vp-7",
+     "transfer": "Partijvorm: toets of het gedrag zelfstandig terugkomt; invulling door trainer",
+     "onderbouw": "",
+     "hoofdthema": "Controle naar balverovering",
+     "informatie": "Slechte aanname; bal van voet; vrije ruimte en medespeler na winst",
+     "ketenTekst": "Controleren → veroveren → voorbereiden → helpen",
+     "observatie": "",
+     "contraTekst": "Bal behouden onder druk",
+     "teamfunctie": "tf-verdedigen",
+     "ondersteunend": [
+      "ll-passen"
+     ],
+     "probleemTekst": "De bal veroveren",
+     "teamfunctieTekst": "",
+     "ondersteunendTekst": "Passen – Helpen"
+    },
+    "wedstrijd": {
+     "bron": "periodisering-o13-import-CONCEPT",
+     "actId": "w-o12-20261205",
+     "punten": [
+      {
+       "id": "obmvthr400su2",
+       "tekst": "Veroveren spelers controle over de bal en kiezen ze daarna passend?",
+       "uitkomst": null
+      },
+      {
+       "id": "obmvthr400vve",
+       "tekst": "Herkennen spelers de relevante informatie voordat zij handelen?",
+       "uitkomst": null
+      },
+      {
+       "id": "obmvthr400fr2",
+       "tekst": "Wat gebeurt er direct na balwinst of balverlies?",
+       "uitkomst": null
+      }
+     ]
+    }
+   }
+  },
+  {
+   "club_id": "dcg",
+   "soort": "trainingsplannen",
+   "id": "wk-O12-1-2026-12-07",
+   "scope": "eigen",
+   "md5": "1838651176243f970736ff341084c391",
+   "data": {
+    "id": "wk-O12-1-2026-12-07",
+    "bron": "periodisering-o13-import-CONCEPT",
+    "week": true,
+    "datum": "2026-12-07",
+    "teamId": "O12-1",
+    "stempel": "s1g1ws7xo5zflf",
+    "eigenaar": "p-beheer",
+    "methodiek": {
+     "hg1": "ll-aannemen",
+     "hg2": "ll-1v1-aanvallend",
+     "fase": "Fase 1 – concept",
+     "week": "wk 50",
+     "keten": null,
+     "route": "Verschil technische beheersing; niveauvariaties",
+     "contra": "vp-6",
+     "gedrag": "Herken druk; houd bal onder controle via eerste contact, beschermen, wegdraaien of hulp",
+     "contra2": null,
+     "niveaus": [
+      "ln-uitvoeren",
+      "ln-herkennen"
+     ],
+     "probleem": "vp-1",
+     "transfer": "Partijvorm: toets of het gedrag zelfstandig terugkomt; invulling door trainer",
+     "onderbouw": "",
+     "hoofdthema": "Eerste contact en bal afschermen",
+     "informatie": "Drukrichting; beschikbare ruimte; steun; nieuwe vooruitmogelijkheid",
+     "ketenTekst": "Waarnemen → voorbereiden/manipuleren → helpen",
+     "observatie": "",
+     "contraTekst": "Vooruitgang voorkomen: gezamenlijk drukzetten",
+     "teamfunctie": "tf-aanvallen",
+     "ondersteunend": [
+      "ll-passen",
+      "ll-vrijkomen"
+     ],
+     "probleemTekst": "Bal behouden onder druk",
+     "teamfunctieTekst": "",
+     "ondersteunendTekst": "Passen – Helpen; Vrijkomen – Timen"
+    },
+    "wedstrijd": null
+   }
+  },
+  {
+   "club_id": "dcg",
+   "soort": "trainingsplannen",
+   "id": "wk-O12-1-2026-12-14",
+   "scope": "eigen",
+   "md5": "69dba75f08a0e9b0b8066539025c4838",
+   "data": {
+    "id": "wk-O12-1-2026-12-14",
+    "bron": "periodisering-o13-import-CONCEPT",
+    "week": true,
+    "datum": "2026-12-14",
+    "teamId": "O12-1",
+    "stempel": "sqv0trs13duqlr",
+    "eigenaar": "p-beheer",
+    "methodiek": {
+     "hg1": "ll-6",
+     "hg2": "ll-passen",
+     "fase": "Fase 1 – concept",
+     "week": "wk 51",
+     "keten": null,
+     "route": "Gericht afwerken met keuze in schotrichting",
+     "contra": null,
+     "gedrag": "Herken scoringsmoment en kies schot of betere medespeler; speel doelgericht samen",
+     "contra2": null,
+     "niveaus": [
+      "ln-uitvoeren",
+      "ln-herkennen"
+     ],
+     "probleem": "vp-5",
+     "transfer": "Partijvorm: toets of het gedrag zelfstandig terugkomt; invulling door trainer",
+     "onderbouw": "",
+     "hoofdthema": "Afwerken: moment en uitvoering",
+     "informatie": "Positie keeper; druk; scoringshoek; vrije medespeler",
+     "ketenTekst": "Timen → helpen → benutten",
+     "observatie": "",
+     "contraTekst": "Vooruitgang tegenstander voorkomen en bal veroveren",
+     "teamfunctie": "tf-aanvallen",
+     "ondersteunend": [
+      "ll-vrijkomen",
+      "ll-1v1-aanvallend"
+     ],
+     "probleemTekst": "Een scoringskans benutten",
+     "teamfunctieTekst": "",
+     "ondersteunendTekst": "Vrijkomen – Timen; 1v1 aanvallend – Manipuleren"
+    },
+    "wedstrijd": null
+   }
+  }
+ ]
+}

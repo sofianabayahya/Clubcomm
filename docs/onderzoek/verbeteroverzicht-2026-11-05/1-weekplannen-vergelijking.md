@@ -66,17 +66,36 @@
 
 **Waarom het toch zinvol is:** de oude weekplannen zien er daarna precies zo uit als wat de **huidige** import zou maken (`periodisering.js`, regels 291–295). Code die later weekplannen leest, zoals een weekevaluatie of het KNVB-profiel, vindt dan geen dagwaarden meer die er als weekwaarde uitzien.
 
-## Risico en terugdraaien
+## Inhoudelijk akkoord (Spoor 1, 05-11)
 
-- **Risico: laag.** Het script doet alles of niets en controleert eerst of elk weekplan nog precies gelijk is. Er gaan geen trainingen, observatie-uitkomsten of tekeningen verloren.
-- **Terugdraaien:** er is nog **geen** terugzetscript. Mijn voorstel is dat ik, vóór het uitvoeren:
-  1. een reservekopie van de 8 weekplannen maak in `supabase/backups/`, zoals bij profiel v3;
-  2. een terugzetscript schrijf dat alleen werkt als het weekplan nog het nieuwe stempel heeft.
+- De 6 wedstrijdsituaties zijn akkoord als **geplande** wedstrijdsituaties. Het zijn **geen** vastgestelde wedstrijdevaluaties.
+- De dagwaarden van week 44 blijven als *niet toegepast* bij do 29-10 staan. De werkelijk uitgevoerde training blijft leidend.
 
-  Dat is een kleine toevoeging aan het voorstel. Ook dat gebeurt pas na je akkoord.
+## Reservekopie en terugzetscript (voorbereid 05-11, niet uitgevoerd)
+
+| Bestand | Inhoud |
+|---|---|
+| `supabase/backups/2026-11-05_dcg_weekplannen_voor_correctie.json` | **Alleen de 8 weekplannen**, met per rij de controlesom (md5). Gelijk aan productie op 05-11: alle 8 md5's komen overeen. Er staat geen andere rij in en het is geen volledige databaseback-up. |
+| `supabase/scripts/2026-10-30_dcg_weekplannen_correctie_terug.sql.voorstel` | Zet de 8 weekplannen terug naar de reservekopie. |
+
+**Waarom het terugzetscript geen later aangepast weekplan kan overschrijven:**
+- Elk weekplan wordt alleen teruggezet als het **in zijn geheel precies gelijk** is aan de toestand direct na de correctie (vergelijking van de hele `data`, plus het nieuwe stempel). Een ingevuld observatiepunt, een ander weekthema of een andere wijziging maakt het weekplan anders. Dan stopt het script.
+- **Alles of niets:** stopt het bij één weekplan, dan wordt er ook bij de andere niets teruggezet.
+- **Gecontroleerd in productie (alleen gelezen):** geen databaseregel (trigger) verandert bij het opslaan de inhoud van een weekplan. `cc_bewaak` zet alleen de kolommen *bijgewerkt* en *door*. De toestand na de correctie is in productie dus precies dezelfde als in de test.
+
+**Getest in een tijdelijke lokale database** (alleen een socket, geen netwerk; daarna weggegooid), gevuld met precies de 8 weekplannen uit productie (md5 gelijk) plus één andere rij:
+
+| # | Situatie | Uitkomst |
+|---|---|---|
+| 0 | Correctiescript uitvoeren | *"klaar: 8 weekplannen"* |
+| 1 | Daarna terugzetten | *"teruggezet: 8 weekplannen"*; alle 8 md5 weer gelijk aan de reservekopie; de andere rij onaangeroerd |
+| 2 | Correctie, dan een observatiepunt van wk 46 ingevuld, dan terugzetten | **Gestopt** bij wk 46; niets veranderd, de ingevulde uitkomst blijft staan |
+| 3 | Correctie, dan alleen het laatste weekplan (wk 51) aangepast, dan terugzetten | **Gestopt** bij wk 51; ook de eerste 7 zijn niet teruggezet (alles of niets) |
+| 4 | Terugzetten zonder dat de correctie is uitgevoerd | **Gestopt**; niets veranderd |
+
+**Risico:** laag. Beide scripts doen alles of niets en controleren eerst de volledige inhoud. Ze raken geen trainingen, uitkomsten of tekeningen.
 
 ## Wat ik van je nodig heb
 
-1. Klopt de inhoud? In het bijzonder de 6 wedstrijdsituaties, en dat de dagwaarden van week 44 als *niet toegepast* bij do 29-10 blijven staan.
-2. Wil je de reservekopie en het terugzetscript erbij? Dat is mijn advies.
-3. Daarna, apart: akkoord om het script in productie uit te voeren.
+1. ~~Inhoud~~ akkoord (Spoor 1, 05-11). ~~Reservekopie en terugzetscript~~ voorbereid en getest.
+2. **Nog open:** een apart akkoord om het correctiescript in productie uit te voeren. Daarna controleer ik de 8 md5's en de trainingskaart van week 46.
