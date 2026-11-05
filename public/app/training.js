@@ -367,13 +367,24 @@
       ${v ? `<label class="schakel"><span>Gebruiken als spacing</span><input type="checkbox" name="spacing" ${o.spacing ? 'checked' : ''}><i></i></label>` : ''}
       <button class="knop vol">Klaar</button></form>
       <div class="knoppen">${i > 0 ? `<button class="knop licht" data-act="tpSchuif" data-id="${el.dataset.id}" data-i="${i}" data-r="-1">↑ Omhoog</button>` : ''}${i < p.onderdelen.length - 1 ? `<button class="knop licht" data-act="tpSchuif" data-id="${el.dataset.id}" data-i="${i}" data-r="1">↓ Omlaag</button>` : ''}
-        ${v ? `<button class="knop licht" data-act="vormOpen" data-id="${v.id}">${icon('pencil')}Vorm bekijken</button>` : ''}<button class="knop licht" data-act="tpDupliceer" data-id="${el.dataset.id}" data-i="${i}">${icon('repeat')}Dupliceren</button><button class="knop licht" data-act="tpOnderdeelWeg" data-id="${el.dataset.id}" data-i="${i}" style="color:var(--rood)">${icon('trash-2')}Weghalen</button></div>`);
+        ${v ? `<button class="knop licht" data-act="vormOpen" data-id="${v.id}">${icon('pencil')}Vorm bekijken</button>` : ''}<button class="knop licht" data-act="tpDupliceer" data-id="${el.dataset.id}" data-i="${i}">${icon('repeat')}Dupliceren</button>${opPlek(o) && v ? `<button class="knop licht" data-act="tpVormEruit" data-id="${el.dataset.id}" data-i="${i}" style="color:var(--rood)">${icon('x')}Vorm uit ${esc(plekNaam(o))} halen</button>` : `<button class="knop licht" data-act="tpOnderdeelWeg" data-id="${el.dataset.id}" data-i="${i}" style="color:var(--rood)">${icon('trash-2')}${opPlek(o) ? `Plek ${esc(plekNaam(o))} verwijderen` : 'Weghalen'}</button>`}</div>
+      ${opPlek(o) && v ? `<small class="zacht">${esc(plekNaam(o))} blijft in de training staan, leeg (${Number(o.min) || 0} min). Zo kies je er later een andere vorm voor.</small>` : ''}`);
   });
   // Besluit 145: een geplaatste vorm naar een andere plek (Start, A1, A2, B1, B2, Partij). Lege plek = erheen, bezette plek = wisselen.
   // De vorm neemt mee: minuten (gepland en echt), variant, notitie, vastgezet leerniveau en fase. Bij de plek blijven: code, naam, voorstellen.
   const MEE = ['vormId', 'min', 'minUit', 'variant', 'notitie', 'niveau', 'fase', 'spacing', 'vast']; // vast: Besluit 147, het vastgelegde gereedschap gaat mee met de vorm
   const plekVoorVerplaatsen = (o) => o.blok && o.blok !== 'S';
-  const verplaatsRij = (S, p, i, id) => { const o = p.onderdelen[i]; if (!o || !o.vormId || !plekVoorVerplaatsen(o)) return '';
+  // Besluit NNN: een vorm zonder plek (bijv. na het weghalen van een plek) krijgt in één tik weer een plek: een lege plek, of een plek die volgens het sjabloon ontbreekt
+  const opPlek = (o) => !!(o && o.blok && o.blok !== 'S');
+  const sjabloonVan = (S, p) => sjablonen(S).find((x) => x.id === p.sjabloon) || null;
+  const ontbrekend = (S, p) => { const sj = sjabloonVan(S, p); if (!sj) return []; const er = new Set(p.onderdelen.map((x) => x.blok)); return (sj.blokken || []).filter((b) => b.blok !== 'S' && !er.has(b.blok)); };
+  const blokNaam = (b) => (b === 'start' ? 'Start' : b === 'P' ? 'Partij' : b);
+  const zonderPlekRij = (S, p, i, id) => { const o = p.onderdelen[i]; if (!o || !o.vormId || o.blok) return '';
+    const leeg = p.onderdelen.map((x, j) => ({ x, j })).filter(({ x }) => opPlek(x) && !x.vormId); const mis = ontbrekend(S, p);
+    if (!leeg.length && !mis.length) return '';
+    return `<div class="tr-verpl"><b class="klein">Deze vorm heeft geen plek. Zet hem op</b><div class="chips">${mis.map((b) => `<button type="button" class="tr-plekchip" data-act="tpPlekGeven" data-id="${esc(id)}" data-i="${i}" data-b="${esc(b.blok)}"><b>${esc(blokNaam(b.blok))}</b><small>ontbreekt · terugzetten</small></button>`).join('')}${leeg.map(({ x, j }) => `<button type="button" class="tr-plekchip" data-act="tpPlekGeven" data-id="${esc(id)}" data-i="${i}" data-naar="${j}"><b>${esc(plekNaam(x))}</b><small>leeg · ${Number(x.min) || 0} min</small></button>`).join('')}</div>
+      <small class="zacht">De vorm krijgt deze plek. Minuten, variant, leerniveau en notitie gaan mee.</small></div>`; };
+  const verplaatsRij = (S, p, i, id) => { const o = p.onderdelen[i]; if (o && o.vormId && !o.blok) return zonderPlekRij(S, p, i, id); if (!o || !o.vormId || !plekVoorVerplaatsen(o)) return '';
     const doelen = p.onderdelen.map((x, j) => ({ x, j })).filter(({ x }) => plekVoorVerplaatsen(x)); if (doelen.length < 2) return '';
     return `<div class="tr-verpl"><b class="klein">Verplaatsen naar</b><div class="chips">${doelen.map(({ x, j }) => { const v = x.vormId && vorm(S, x.vormId);
       return `<button type="button" class="tr-plekchip" data-act="tpVerplaats" data-id="${esc(id)}" data-i="${i}" data-naar="${j}" ${j === i ? 'disabled aria-current="true"' : ''}><b>${esc(plekNaam(x))}</b><small>${j === i ? 'hier' : v ? esc(v.naam) : `leeg · ${Number(x.min) || 0} min`}</small></button>`; }).join('')}</div>
@@ -400,7 +411,27 @@
   // Dupliceren: hetzelfde onderdeel er direct onder (bijv. dezelfde vorm in variant B, of nog een keer spacing)
   CC.on('tpDupliceer', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); const i = Number(el.dataset.i); if (!p || !p.onderdelen[i]) return;
     p.onderdelen.splice(i + 1, 0, { ...JSON.parse(JSON.stringify(p.onderdelen[i])), id: nieuwId('o'), minUit: null }); CC.save(); CC.closeSheet(); CC.render(); CC.toast('Gedupliceerd'); });
-  CC.on('tpOnderdeelWeg', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); if (!p) return; p.onderdelen.splice(Number(el.dataset.i), 1); CC.save(); CC.closeSheet(); CC.render(); });
+  // Besluit NNN: weghalen kan altijd ongedaan worden gemaakt (Besluit 149, regel 10). Alleen als de opbouw sindsdien niet is veranderd.
+  const metPlekTerug = (p, doe, tekst) => { const voor = JSON.parse(JSON.stringify(p.onderdelen)); doe(); CC.ui.plekTerug = { plan: p.id, voor, na: JSON.stringify(p.onderdelen) };
+    CC.save(); CC.closeSheet(); CC.render(); CC.toast(tekst, '', { knop: 'Ongedaan maken', act: 'tpPlekTerug' }); };
+  CC.on('tpPlekTerug', () => { const u = CC.ui.plekTerug; CC.ui.plekTerug = null; const p = u && plannen(CC.S()).find((x) => x.id === u.plan); if (!p) return;
+    if (JSON.stringify(p.onderdelen) !== u.na) return CC.toast('Niet ongedaan gemaakt: de training is intussen veranderd', 'fout');
+    p.onderdelen = u.voor; CC.save(); CC.render(); CC.toast('Ongedaan gemaakt'); });
+  CC.on('tpOnderdeelWeg', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); const i = Number(el.dataset.i); const o = p && p.onderdelen[i]; if (!o) return;
+    metPlekTerug(p, () => p.onderdelen.splice(i, 1), opPlek(o) ? `Plek ${plekNaam(o)} verwijderd` : 'Weggehaald'); });
+  // Vorm eruit: de plek blijft (code, naam, geplande minuten, voorstellen); wat bij Verplaatsen met de vorm meegaat, gaat eruit (ook de vastlegging, Besluit 147)
+  CC.on('tpVormEruit', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); const o = p && p.onderdelen[Number(el.dataset.i)]; if (!o || !o.vormId) return;
+    metPlekTerug(p, () => MEE.filter((k) => k !== 'min' && k !== 'spacing').forEach((k) => delete o[k]), `${plekNaam(o)} is weer leeg`); });
+  CC.on('tpPlekGeven', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); const i = Number(el.dataset.i); const o = p && p.onderdelen[i]; if (!o || !o.vormId || o.blok) return;
+    if (el.dataset.naar != null) { const doel = p.onderdelen[Number(el.dataset.naar)]; if (!opPlek(doel) || doel.vormId) return;
+      return metPlekTerug(p, () => { MEE.forEach((k) => { if (o[k] !== undefined) doel[k] = o[k]; else delete doel[k]; }); p.onderdelen.splice(i, 1); }, `Op ${plekNaam(doel)} gezet`); }
+    const sj = sjabloonVan(S, p); const b = el.dataset.b; const sb = sj && (sj.blokken || []).find((x) => x.blok === b); if (!sb || p.onderdelen.some((x) => x.blok === b)) return;
+    metPlekTerug(p, () => { const volg = sj.blokken.map((x) => x.blok); const pos = volg.indexOf(b); const ervoor = volg.slice(0, pos).filter((x) => x !== 'S');
+      p.onderdelen.splice(i, 1); Object.assign(o, { blok: b, naam: b === 'S' ? '' : sb.naam || '', sjabloonFase: sb.fase || null });
+      let j = -1; p.onderdelen.forEach((x, k) => { if (ervoor.includes(x.blok)) j = k; }); j += 1;
+      if (volg[pos - 1] === 'S' && p.onderdelen[j] && p.onderdelen[j].blok === 'S') j += 1; // de spacing hoort bij de plek ervoor
+      p.onderdelen.splice(j, 0, o); }, `Op ${blokNaam(b)} gezet`); });
+  
   CC.on('tpSpacing', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); if (!p) return; p.onderdelen.push({ id: nieuwId('o'), spacing: true, naam: 'Hooghouden', min: 2 }); CC.save(); CC.render(); });
 
   // ---------- Besluit 139: één oefenvormkiezer voor elke club ----------
