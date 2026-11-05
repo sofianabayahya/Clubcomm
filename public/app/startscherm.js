@@ -1,4 +1,4 @@
-// ClubComm — Besluit NNN: de Home van de begeleider (HO, TC) en van de trainer bij het pakket Trainers begeleiden.
+// ClubComm — Besluit 166: de Home van de begeleider (HO, TC) en van de trainer bij het pakket Trainers begeleiden.
 // Begeleider: Vandaag · Actie nodig (trainingen om te bekijken, momenten deze week, kennismaking) · Mijn trajecten · Deze week (één regel;
 // de week van Besluit 146 staat erachter). Trainer: Actie nodig · Mijn volgende training · Van je begeleider (14 dagen) · Mijn traject.
 // Geen nieuwe gegevens of rechten: alles bestaat al (trajecten, momenten, trainingen met scope trainerplan, feedback).

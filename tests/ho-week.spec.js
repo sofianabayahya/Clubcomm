@@ -29,7 +29,7 @@ test('HO: de week van zijn trainers, filters en begeleiden in 2 tikken', { tag: 
   await club(page); await inloggen(page, 'ho@test.nl');
   await page.evaluate(() => CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'hjo')));
   await expect(page.locator('nav.nav button[data-tab]')).toHaveText(['Home', 'Trainers', 'Teams', /^Berichten/]);
-  // Besluit NNN: de week staat achter één regel Deze week op Home
+  // Besluit 166: de week staat achter één regel Deze week op Home
   await page.locator('#app [data-view="hoWeek"]').click();
   // Woensdag: vandaag geen wedstrijd, dus de eerstvolgende dag met wedstrijden (za 7) staat open
   await expect(page.locator('[data-key="hoDag"].aan')).toContainText('za 7');

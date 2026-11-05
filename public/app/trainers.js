@@ -66,7 +66,7 @@
   CC.rollen.trainer.tabs = (S) => (CC.pakketTrainers(S) ? [['home', 'Home', 'house'], CC.trainingAan && CC.trainingAan(S) ? ['aanwezigheid', 'Training', 'list-checks'] : null, origTrTabs(S).find((x) => x[0] === 'berichten')].filter(Boolean) : origTrTabs(S));
   CC.rollen.trainer.schermen.home = (S) => { if (!CC.pakketTrainers(S)) return origTrHome(S);
     const acties = CC.trainerActiesExtra(S); const me = CC.me();
-    // Besluit NNN: Home = Actie nodig · Mijn volgende training · Van je begeleider · Mijn traject (startscherm.js)
+    // Besluit 166: Home = Actie nodig · Mijn volgende training · Van je begeleider · Mijn traject (startscherm.js)
     if (CC.trainerStart) return CC.trainerStart(S, acties);
     return `${acties.length ? `${h.sectie('Actie nodig')}<div class="lijst">${acties.join('')}</div>` : ''}${h.sectie('Mijn ontwikkeling')}${heeftOntw(S, me) ? CC.views.mijnOntw(S, { opHome: true }).html : '<p class="zacht klein">Hier komt je begeleiding te staan zodra de club die met je afspreekt.</p>'}`; };
 

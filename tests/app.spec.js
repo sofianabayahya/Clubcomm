@@ -432,7 +432,7 @@ test.describe('Demo', () => {
     await page.evaluate((d) => { CC.zetSessie(d); CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer')); }, dennis);
     await page.locator('nav.nav button[data-tab="home"]').click();
     await expect(page.locator('nav.nav button')).toHaveCount(2);
-    await expect(page.locator('#app')).toContainText('Mijn traject'); // Besluit NNN: Home = Actie nodig · Mijn traject (Mijn ontwikkeling via Alles)
+    await expect(page.locator('#app')).toContainText('Mijn traject'); // Besluit 166: Home = Actie nodig · Mijn traject (Mijn ontwikkeling via Alles)
     await page.locator('#app [data-view="mijnOntw"]').click(); await expect(page.locator('#app')).toContainText('Mijn ontwikkeling');
     await controleer(page, fouten, 'technisch coördinator');
   });

@@ -1,4 +1,4 @@
-// ClubComm — Besluit NNN: de Home van de begeleider (actie eerst) en van de trainer (mijn volgende stap) bij het pakket Trainers begeleiden.
+// ClubComm — Besluit 166: de Home van de begeleider (actie eerst) en van de trainer (mijn volgende stap) bij het pakket Trainers begeleiden.
 const { test, expect } = require('@playwright/test');
 const { volgFouten, controleer } = require('./hulp');
 

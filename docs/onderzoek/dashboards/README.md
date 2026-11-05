@@ -1,6 +1,6 @@
 # Dashboards van de HO en de trainer: twee voorstellen per rol (5 november 2026)
 
-**Gekozen (5-11): HO-A en trainer-A, vastgelegd als Besluit NNN; feedback staat 14 dagen op Home.** Gebouwd: `gebouwd-ho-home.jpg`, `gebouwd-trainer-home.jpg`.
+**Gekozen (5-11): HO-A en trainer-A, vastgelegd als Besluit 166; feedback staat 14 dagen op Home.** Gebouwd: `gebouwd-ho-home.jpg`, `gebouwd-trainer-home.jpg`.
 
 *Spoor 3 — ClubComm (de indeling geldt voor elke club met het pakket* Trainers begeleiden*). Wat alleen voor Swift is, staat apart onderaan. Alleen onderzoek: er is niets veranderd aan de app, de database of productie. Gemeten in de demo (verzonnen namen) op 390 px.*
 
