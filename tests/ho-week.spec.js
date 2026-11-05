@@ -29,6 +29,8 @@ test('HO: de week van zijn trainers, filters en begeleiden in 2 tikken', { tag: 
   await club(page); await inloggen(page, 'ho@test.nl');
   await page.evaluate(() => CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'hjo')));
   await expect(page.locator('nav.nav button[data-tab]')).toHaveText(['Home', 'Trainers', 'Teams', /^Berichten/]);
+  // Besluit 166: de week staat achter één regel Deze week op Home
+  await page.locator('#app [data-view="hoWeek"]').click();
   // Woensdag: vandaag geen wedstrijd, dus de eerstvolgende dag met wedstrijden (za 7) staat open
   await expect(page.locator('[data-key="hoDag"].aan')).toContainText('za 7');
   const rijen = page.locator('#app .lijst .rij');
@@ -80,6 +82,7 @@ test('TC met werkgebied Bovenbouw: Home · Trainers · Berichten en alleen zijn 
   const fouten = volgFouten(page);
   await club(page); await inloggen(page, 'tc@test.nl');
   await expect(page.locator('nav.nav button[data-tab]')).toHaveText(['Home', 'Trainers', /^Berichten/]);
+  await page.locator('#app [data-view="hoWeek"]').click();
   await expect(page.locator('#app .lijst .rij')).toHaveCount(1); await expect(page.locator('#app .lijst .rij').first()).toContainText('JO17-1 · Dirk Duin');
   await page.locator('nav.nav button[data-tab="trainers"]').click();
   await expect(page.locator('#app [data-act="hoTrainerSnel"]')).toHaveCount(1);
