@@ -24,8 +24,8 @@
     return `<div class="kaartje tb-teams"><b>Teams en trainingsdagen</b>
       <div class="knoppen"><button class="knop" data-act="teamNieuw">${icon('plus')}Team toevoegen</button><button class="knop licht" data-act="schemaLaden">${icon('upload')}Trainingsschema laden</button></div>
       <small class="zacht">Trainingen komen in de kalender zodra er een trainer aan het team is gekoppeld.</small>
-      ${l.length ? `<div class="lijst compact">${l.map((t) => { const tr = M.persoon(S, t.trainerId); const w = wedstrijden(S, t.id).filter((a) => a.datum >= D.vandaag() && !a.afgelast).length;
-        return h.rij({ ic: 'shield', titel: esc(t.naam), sub: `${tr ? esc(tr.naam) : '<span class="tb-or">nog geen trainer</span>'} · ${(t.rooster || []).length ? `${dagenTekst(t)} ${esc(t.rooster[0].tijd)}` : '<span class="tb-or">nog geen trainingsdagen</span>'}${w ? ` · ${w} wedstrijd${w === 1 ? '' : 'en'}` : ''}`, act: 'teamBeheer', attrs: `data-team="${esc(t.id)}"` }); }).join('')}</div>` : '<p class="zacht klein">Nog geen teams.</p>'}</div>`; };
+      ${l.length ? CC.teamsGroepen(S, (t) => { const tr = M.persoon(S, t.trainerId); const w = wedstrijden(S, t.id).filter((a) => a.datum >= D.vandaag() && !a.afgelast).length;
+        return h.rij({ ic: 'shield', titel: esc(t.naam), sub: `${tr ? esc(tr.naam) : '<span class="tb-or">nog geen trainer</span>'} · ${(t.rooster || []).length ? `${dagenTekst(t)} ${esc(t.rooster[0].tijd)}` : '<span class="tb-or">nog geen trainingsdagen</span>'}${w ? ` · ${w} wedstrijd${w === 1 ? '' : 'en'}` : ''}`, act: 'teamBeheer', attrs: `data-team="${esc(t.id)}"` }); }) : '<p class="zacht klein">Nog geen teams.</p>'}</div>`; }; // Besluit NNN: per bouw ingeklapt (beheerlijsten.js)
   CC.views.teamsBeheer = (S) => ({ titel: 'Teams en trainers', html: `<div class="lijst">${h.rij({ ic: 'user-plus', titel: 'Trainer toevoegen', sub: 'Naam en e-mailadres; hij of zij krijgt een welkomstmail', act: 'stafNieuw' })}</div>${CC.teamsBlok(S)}` });
 
   // Clubbeheerder: bovenaan Seizoen. HO (pakket Trainers begeleiden): een regel onder Trainers.

@@ -255,7 +255,9 @@
       <div><label for="sn-team">Team (niet nodig voor ${esc(S.club.labels.hjo)} of TC)</label><select id="sn-team" name="team">${S.teams.map((t) => `<option value="${t.id}" ${t.id === voor ? 'selected' : ''}>${esc(t.naam)}</option>`).join('')}${S.club.coordinatorAan ? `<optgroup label="Groep (voor ${esc(S.club.labels.coordinator.toLowerCase())})">${(S.club.groepen || []).map((g) => `<option value="groep:${esc(g.naam)}">${esc(g.naam)}</option>`).join('')}</optgroup>` : ''}</select></div></div>
       ${CC.pakketTrainers && CC.pakketTrainers(S) ? `<label for="sn-f">Jouw functie (onder de welkomstmail, mag leeg)</label><input id="sn-f" name="f" autocomplete="off" placeholder="Bijv. HJO bovenbouw" value="${esc(eigenFunctie())}">` : ''}
       <button class="knop">Toevoegen en uitnodigen</button>
-      <p class="zacht klein">Hij of zij krijgt een welkomstmail met hoe je inlogt. Staat dit e-mailadres al in de club (bijv. als ouder), dan komt de rol erbij.</p></form>`); });
+      <p class="zacht klein">Hij of zij krijgt een welkomstmail met hoe je inlogt. Staat dit e-mailadres al in de club (bijv. als ouder), dan komt de rol erbij.</p></form>`);
+    // Besluit NNN: vanuit Teams zonder trainer of teamleider staat de rol al goed
+    if (el && el.dataset && el.dataset.rol) { const r = document.getElementById('sn-r'); if (r && [...r.options].some((o) => o.value === el.dataset.rol)) r.value = el.dataset.rol; } });
   CC.on('stafNieuwOk', (f) => {
     const S = CC.S(); const me = CC.me(); const naam = f.n.value.trim(); const email = f.e.value.trim().toLowerCase(); const r = f.r.value; const t = f.team.value;
     const tel = f.tel.value.replace(/[^0-9+]/g, ''); if (tel && !/^(\+\d{10,14}|0\d{9})$/.test(tel)) return CC.toast('Vul een geldig telefoonnummer in, of laat het leeg', 'fout');
@@ -516,8 +518,7 @@
           ${h.sectie('Rollen in gebruik')}<div class="lijst compact">${[['ouder', 'Ouder'], ['trainer', 'Trainer'], ['teamleider', 'Teamleider'], ['hjo', c.labels.hjo], ['tc', 'Technisch coördinator'], ...(c.coordinatorAan ? [['coordinator', c.labels.coordinator]] : []), ['beheerder', 'Clubbeheerder']].filter(([r]) => tel(r) || !['ouder', 'teamleider', 'coordinator'].includes(r) || !(CC.pakketTrainers && CC.pakketTrainers(S))).map(([r, l]) => h.rij({ ic: 'user-cog', titel: esc(l), rechts: `<b>${tel(r)}</b>` })).join('')}</div>
           <table class="tabel"><thead><tr><th></th><th>Clubbeheerder</th><th>${esc(c.labels.hjo)}</th></tr></thead><tbody><tr><td>Soort werk</td><td>inrichten (± 1× per seizoen)</td><td>jeugd sturen (wekelijks)</td></tr><tr><td>Wat</td><td>rollen, modules, regels, seizoen, vakanties</td><td>teams, staf, signalen, planning, berichten</td></tr></tbody></table>
           ${h.sectie('Mensen en hun rollen')}<button class="knop licht vol" data-act="stafNieuw">${icon('user-plus')}Persoon toevoegen</button>
-          <div class="lijst">${S.people.filter((p) => p.rollen.some((r) => r.rol !== 'ouder')).sort((a, b) => a.naam.localeCompare(b.naam)).map((p) => h.rij({ ic: h.avatar(p.naam), titel: esc(p.naam), sub: p.rollen.filter((r) => r.rol !== 'ouder').map((r) => `${esc(CC.rolNaam(r))}${r.teamId ? ' ' + esc(CC.tn(r.teamId)) : r.groep ? ' ' + esc(r.groep) : (r.bouwen || []).length ? ' (' + esc(r.bouwen.join(', ')) + ')' : ''}`).join(' · '), act: 'rollenPersoon', attrs: `data-id="${p.id}"` })).join('')}</div>
-          <p class="zacht klein">Tik op een naam om een rol te koppelen, weg te halen of het werkgebied te kiezen.</p>`;
+          ${CC.rollenLijst(S)}`;
       },
       berichten: (S) => CC.berichtenScherm(S, {}),
       modules(S) {
