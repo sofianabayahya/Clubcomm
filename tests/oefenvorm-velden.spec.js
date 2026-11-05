@@ -1,4 +1,4 @@
-// ClubComm — Besluit NNN: oefenvorm invoeren met een compacte basis (organisatie, spelverloop, spelregels, coachpunten apart),
+// ClubComm — Besluit 164: oefenvorm invoeren met een compacte basis (organisatie, spelverloop, spelregels, coachpunten apart),
 // kenmerken en eigen notities ingeklapt, schakelvorm als kenmerk (ook wisselende rollen of richtingen), speelrichting "meer".
 // Bestaande tekst wordt nooit vanzelf gesplitst. Verzonnen gegevens, nep-database. Nooit tegen de productiedatabase.
 const { test, expect } = require('@playwright/test');

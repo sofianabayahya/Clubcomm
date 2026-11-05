@@ -100,7 +100,7 @@
     const rel = wij > zij ? 'overtal' : wij < zij ? 'ondertal' : 'gelijk';
     return { kort: kant === 'verdediging' ? `vanuit verdedigers: ${V} tegen ${A + N} · ${rel}${keepers}` : `${telt} · ${rel}${keepers}`, rel, kant };
   };
-  // Besluit NNN: een vorm met schakelen (alles behalve 'geen') is een schakelvorm; dat is een kenmerk, geen type (Besluit 131)
+  // Besluit 164: een vorm met schakelen (alles behalve 'geen') is een schakelvorm; dat is een kenmerk, geen type (Besluit 131)
   const schakelvorm = (v) => !!(v && v.omschakeling && v.omschakeling !== 'geen');
   const context = (v) => [v.richting === 0 ? 'geen speelrichting' : v.richting === 1 ? 'één richting' : v.richting === 2 ? 'twee richtingen' : v.richting === 3 ? 'meer richtingen' : '',
     v.doelen === true ? 'doelen' : v.doelen === false ? 'zonder doelen' : '', ((VT.omschakeling.find((o) => o.id === v.omschakeling) || {}).kort) || ''].filter(Boolean).join(' · ');
@@ -705,7 +705,7 @@
   const PIJL = { run: 'loopactie zonder bal (stippel)', dribble: 'dribbelen met bal (golf)', pass: 'pass (lijn)', shot: 'schot (dik)' };
   const legenda = (t) => { const it = (t && t.items) || []; const k = [...new Set(it.filter((x) => x.t === 'arrow').map((x) => x.k))].filter((x) => PIJL[x]);
     return k.length ? `<p class="tr-legenda">${k.map((x) => PIJL[x]).join(' · ')}</p>` : ''; };
-  // Besluit NNN: oude tekst blijft staan; zolang spelverloop en spelregels leeg zijn, houdt het blok de oude naam (de tekst kan ze nog bevatten)
+  // Besluit 164: oude tekst blijft staan; zolang spelverloop en spelregels leeg zijn, houdt het blok de oude naam (de tekst kan ze nog bevatten)
   const orgKop = (v) => (v.verloop || v.regels ? 'Organisatie' : 'Organisatie en spelregels');
   const punten = (txt) => { const l = String(txt || '').split(/\n+/).map((x) => x.replace(/^[-•*]\s*/, '').trim()).filter(Boolean); return l.length > 1 ? `<ul>${l.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : l.length ? `<p>${esc(l[0])}</p>` : ''; };
   const vormPrint = (S, v, o) => { const k = koppeling(S, v); const w = CC.weerstand(S, v); const va = o && o.variant != null ? (v.varianten || [])[o.variant] : null;
@@ -908,7 +908,7 @@
         <div class="knoppen"><button class="knop licht" data-act="vormKopie" data-id="${v.id}">${icon('repeat')}Dupliceren</button><button class="knop licht" data-act="vormWeg" data-id="${v.id}" style="color:var(--rood)">${icon('trash-2')}Verwijderen</button></div>
       </div></div>` };
   };
-  // Besluit NNN: kenmerken ingeklapt met een samenvatting; open zolang een club met leerdoelen nog geen hoofdleerdoel heeft (dat bepaalt de minuten in Lijn)
+  // Besluit 164: kenmerken ingeklapt met een samenvatting; open zolang een club met leerdoelen nog geen hoofdleerdoel heeft (dat bepaalt de minuten in Lijn)
   const kenmerkSamen = (S, v) => { const k = koppeling(S, v); return [k.primair ? `★ ${ldNaam(S, k.primair)}` : '', typeNaam(typeVan(v)), schakelvorm(v) ? 'schakelvorm' : '', context({ ...v, omschakeling: null })].filter(Boolean).join(' · '); };
   // Wie kenmerken opent, houdt ze open zolang hij in deze vorm werkt (ook na een keuze die het scherm opnieuw tekent)
   const kenmerkOpen = (S, v) => CC.ui.kenmerkOpen === v.id || (leerdoelen(S).length > 0 && !koppeling(S, v).primair);

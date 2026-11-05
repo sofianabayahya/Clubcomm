@@ -2,7 +2,7 @@
 
 *Alleen een voorstel. Er is niets veranderd aan code, database of productie. De database is alleen gelezen: aantallen en een paar regels van eigen DCG-vormen, om het gebruik te toetsen. De schermen komen uit een tijdelijk prototype met **verzonnen** oefenvormen, op 390 en 1366 px; dat prototype staat niet in de repository. Er zit geen DCG-inhoud of DCG-begrip in de software: de namen van gereedschappen en leerdoelen blijven uit het clubprofiel komen.*
 
-**Maat: M.** Het invoerscherm en de kaart van een oefenvorm veranderen, voor alle clubs. Er komt geen migratie, er veranderen geen rechten en er komt geen nieuw scherm. Na je akkoord komt er één besluit (`Besluit NNN`), dat Besluit 131 en 132 deels herziet.
+**Maat: M.** Het invoerscherm en de kaart van een oefenvorm veranderen, voor alle clubs. Er komt geen migratie, er veranderen geen rechten en er komt geen nieuw scherm. Na je akkoord komt er één besluit (`Besluit 164`), dat Besluit 131 en 132 deels herziet.
 
 ## 1. Bestaande situatie
 
@@ -115,7 +115,7 @@
 | **Omvang** | M: het formulier herschikken (geen nieuw scherm), 2 tekstvelden, 2 nieuwe keuzewaarden, kaart, print en zoeken; ± 80 regels plus tests |
 | **Risico** | laag: geen migratie, geen rechten; oude vormen blijven precies zichtbaar. Aandachtspunt: bestaande tests die het formulier gebruiken. |
 | **Tests** | nieuwe vorm met alle velden (390/1366); bestaande vorm onveranderd (de opgeslagen gegevens blijven byte-gelijk na openen); de kop *"Organisatie en spelregels"* zolang verloop en regels leeg zijn; zoeken op *schakelvorm*; *Kenmerken* open zonder hoofdgereedschap bij een club met profiel; print |
-| **Besluit** | één besluit `NNN`. Het herziet Besluit 132 deels (de secties van de kaart) en vult Besluit 131 aan (schakelen zichtbaar, meerdere richtingen; schakelvorm blijft een kenmerk). Punt 4 van het voorstel *Lijn en vaktaal* vervalt erin. |
+| **Besluit** | één besluit `164`. Het herziet Besluit 132 deels (de secties van de kaart) en vult Besluit 131 aan (schakelen zichtbaar, meerdere richtingen; schakelvorm blijft een kenmerk). Punt 4 van het voorstel *Lijn en vaktaal* vervalt erin. |
 | **Afgewezen ideeën** | gecontroleerd: *16 vormtypes als één lijst* (131) blijft afgewezen, want de lijst groeit niet; *methodische fase vast aan een vorm* (131) speelt hier niet |
 
 ## Wat ik van je nodig heb

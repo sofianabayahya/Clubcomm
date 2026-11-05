@@ -36,7 +36,7 @@
     ],
     // Aanvullende aanduiding (los van het type)
     aanduidingen: [{ id: 'functioneel', naam: 'functioneel / linietactisch' }],
-    // Schakelvorm is geen type maar een kenmerk (Besluit 131): schakelen na balverlies of balwinst, of tussen rollen of richtingen (Besluit NNN).
+    // Schakelvorm is geen type maar een kenmerk (Besluit 131): schakelen na balverlies of balwinst, of tussen rollen of richtingen (Besluit 164).
     // Alles behalve 'geen' maakt van de vorm een schakelvorm (zichtbaar op de kaart en de print, vindbaar met zoeken).
     omschakeling: [{ id: 'geen', naam: 'geen', kort: '' }, { id: 'av', naam: 'aanval → verdediging', kort: 'A→V' }, { id: 'va', naam: 'verdediging → aanval', kort: 'V→A' }, { id: 'beide', naam: 'beide', kort: 'A⇄V' }, { id: 'rollen', naam: 'wisselende rollen of richtingen', kort: 'rollen wisselen' }],
     weerstandExtra: [{ id: 'passief', naam: 'passief' }, { id: 'afleiding', naam: 'met afleiding' }, { id: 'wisselend', naam: 'wisselend' }],
