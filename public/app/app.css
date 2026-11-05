@@ -1042,7 +1042,7 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .tr-midden > .tr-pastniet { margin: 10px 0; }
 .tr-bankklap { margin-top: 12px; }
 .tr-bankklap > .kaartje { box-shadow: none; padding: 0 0 4px; }
-/* Besluit NNN: op de laptop staan afspraak, onderbouwing en tijd rechts naast de training (smal: koppen boven de tekst) */
+/* Besluit 169: op de laptop staan afspraak, onderbouwing en tijd rechts naast de training (smal: koppen boven de tekst) */
 .tr-zijwaarom { display: flex; flex-direction: column; gap: 10px; }
 .tr-zijwaarom > .tr-mee { font-size: 15px; padding: 10px 12px; }
 .tr-zijwaarom > .tr-mee small, .tr-zijwaarom > .tr-mee .tr-link { display: block; margin-top: 4px; }

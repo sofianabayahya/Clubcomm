@@ -219,7 +219,7 @@
     const vs = ids.map((id) => vorm(S, id)).filter((v) => v && !past(v, n, k) && !voorAantal(v, n, k)); if (!vs.length) return '';
     const br = [...new Set(vs.map((v) => bereik(v.spelersMin, v.spelersMax, 'spelers')))];
     return `<div class="tr-twaarsch tr-pastniet" role="status">⚠ <b>${vs.length} ${vs.length === 1 ? 'vorm is' : 'vormen zijn'} gemaakt voor ${br.length === 1 && br[0] ? esc(br[0]) : 'een ander aantal spelers'}</b>; er ${n === 1 ? 'wordt' : 'worden'} er ${n} ${p.spelers == null || p.spelers === '' ? (S.pres[a.id] ? 'aanwezig' : 'verwacht') : 'gepland'}. Tik op een vorm voor een variant of een andere vorm.</div>`; };
-  const planMidden = (S, p, a, zij) => { // zij = op de laptop staan afspraak, onderbouwing en tijd in de rechterkolom (Besluit NNN)
+  const planMidden = (S, p, a, zij) => { // zij = op de laptop staan afspraak, onderbouwing en tijd in de rechterkolom (Besluit 169)
     const n = aantalSp(S, p, a), k = p.keepers == null || p.keepers === '' ? null : Number(p.keepers); const metCode = (p.onderdelen || []).some((o) => o.blok); const sj = sjablonen(S);
     const gezien = {};
     const gr = groepen(p).map((g) => { const min = g.items.reduce((t, i) => t + (Number(p.onderdelen[i].min) || 0), 0); const terug = gezien[g.k]; gezien[g.k] = true;
@@ -629,7 +629,7 @@
     return `<details class="uitklap tr-bankklap" data-onthoud="bank" ${onthoud('bank', false) ? 'open' : ''}><summary>Vormenbank · ${mijnVormen(S).length} ${mijnVormen(S).length === 1 ? 'vorm' : 'vormen'} · zoeken</summary>${b}</details>`; };
   // Besluit 135: geen dubbelingen. De weekstrook staat al bovenaan (alleen bij trainingen op datum hier een lijst); het maandoverzicht staat in Lijn;
   // evalueren gebeurt in Week (alleen een losse training zonder kalender evalueer je hier)
-  // Besluit NNN: op de laptop (gesplitst scherm) staan de afspraak, de onderbouwing en de tijd rechts naast de training, open: geen tikken nodig.
+  // Besluit 169: op de laptop (gesplitst scherm) staan de afspraak, de onderbouwing en de tijd rechts naast de training, open: geen tikken nodig.
   // Op de telefoon blijven ze in de training, ingeklapt (Besluit 167).
   const zijOpen = (p) => !!p && groot();
   const zijWaarom = (S, p, a) => { const mee = CC.trMee ? CC.trMee(S, p, a) : ''; const m = CC.trMethodiek ? CC.trMethodiek(S, p, a, false, true) : ''; const t = (p.onderdelen || []).length ? tijdsbalk(S, p, a) : '';

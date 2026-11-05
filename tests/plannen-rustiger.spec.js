@@ -65,7 +65,7 @@ for (const breed of [false, true]) {
     await page.evaluate(() => { CC.S().vormen.forEach((v) => { if (/^v-\d$/.test(v.id)) { v.spelersMin = 8; v.spelersMax = 12; } }); CC.save(); });
     await naarPlannen(page);
     const m = page.locator('.tr-midden');
-    if (breed) { // Besluit NNN: op de laptop staan afspraak, onderbouwing en tijd rechts, open (gesplitst scherm)
+    if (breed) { // Besluit 169: op de laptop staan afspraak, onderbouwing en tijd rechts, open (gesplitst scherm)
       const z = page.locator('.tr-pzij .tr-zijwaarom');
       await expect(z.locator(':scope > .tr-mee')).toContainText('maximaal twee coachaccenten');
       await expect(z.locator('.tr-kn', { hasText: 'Wat' })).toBeVisible();
