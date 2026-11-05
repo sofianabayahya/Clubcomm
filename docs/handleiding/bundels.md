@@ -10,6 +10,7 @@
 | **Lezer** | vrijwillige trainer die net begint (laag *Draaien*, Besluit 149) |
 | **Vorm** | PDF, hoogstens 2 A4, veel beeld |
 | **Wat je hieraan hebt** | In tien minuten kun je inloggen, zien wie er komt, de aanwezigheid opnemen en weet je wat je doet als je zelf niet kunt. |
+| **Bestand** | `docs/presentaties/pdf/ClubComm-snelstart-trainer.pdf` (2 A4), gemaakt met `node docs/handleiding/pdf.js --bundel "Snelstart vrijwillige trainer" docs/presentaties/pdf/ClubComm-snelstart-trainer.pdf` |
 
 **Kaarten, in deze volgorde (blok Kort, met de schermafbeelding van dat blok):**
 1. [inloggen.md](inloggen.md): Inloggen en de app op je beginscherm
@@ -31,4 +32,4 @@
 
 ## Nog te maken
 - Handleiding trainer (Kort + Meer van alle trainerskaarten), handleiding HJO, handleiding clubbeheerder, ouders, teamleider, bestuursdemo: zie `docs/onderzoek/documentatie-borging/README.md` § 4.1.
-- De Snelstart vrijwillige trainer als PDF: `docs/handleiding/pdf.js` maakt nu een PDF uit één kaart; een bundel van meer kaarten lezen is een aparte stap, na akkoord.
+- Een uitgave opnieuw maken na een wijziging op een kaart: draai de regel bij **Bestand** opnieuw. `pdf.js` weigert *Gepubliceerd* als een kaart niet *In productie* is.
