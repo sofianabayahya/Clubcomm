@@ -21,8 +21,8 @@ Laatst bijgewerkt: 5 november 2026 (t/m Besluit 166)
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
-| 166 | 3 | Home van begeleider en trainer bij het pakket Trainers begeleiden: **begeleider (HO, TC)** = Vandaag · *Actie nodig* (begeleidingsmomenten deze week, uitgewerkte trainingen van trainers zonder feedback als meekijken aan staat, max. 3, tot 7 dagen na de datum; *n trainers zonder kennismaking* met eerst een venster) · *Mijn trajecten* (één regel per trainer: *1 van 2 · volgend*, balk, label *plannen*; tik = dossier) · *Deze week* als één regel met **Week** (de week van Besluit 146 erachter). **Trainer** = *Actie nodig* · *Mijn volgende training* (**Training maken/openen**, **Nieuwe oefenvorm**, zin over meekijken) · *Van je begeleider* (laatste feedback, 14 dagen) · *Mijn traject* (stand en leerdoel, *Alles over mijn begeleiding*). Geen nieuwe gegevens of rechten | ✅ geldt |  |
 | NNN | 3 | Plannen minder dubbel: afspraak van de vorige training los bovenaan, onderbouwing ingeklapt (*Waarom deze training · voetbalprobleem*), tijd in één regel (*✓ 68 van 68 min ingepland*, open bij te veel), vormen die niet bij het aantal spelers passen één keer benoemd met per plek *past niet* (geen *gemaakt voor …* op elke regel), geen *x van y plekken ingevuld*, Vormenbank op de telefoon ingeklapt | ✅ geldt | |
+| 166 | 3 | Home van begeleider en trainer bij het pakket Trainers begeleiden: **begeleider (HO, TC)** = Vandaag · *Actie nodig* (begeleidingsmomenten deze week, uitgewerkte trainingen van trainers zonder feedback als meekijken aan staat, max. 3, tot 7 dagen na de datum; *n trainers zonder kennismaking* met eerst een venster) · *Mijn trajecten* (één regel per trainer: *1 van 2 · volgend*, balk, label *plannen*; tik = dossier) · *Deze week* als één regel met **Week** (de week van Besluit 146 erachter). **Trainer** = *Actie nodig* · *Mijn volgende training* (**Training maken/openen**, **Nieuwe oefenvorm**, zin over meekijken) · *Van je begeleider* (laatste feedback, 14 dagen) · *Mijn traject* (stand en leerdoel, *Alles over mijn begeleiding*). Geen nieuwe gegevens of rechten | ✅ geldt |  |
 | 165 | 3 | Week rustiger, oefenvorm sneller invullen: in Week geen *min gepland* en geen tijdsbalk (alleen de waarschuwing bij te veel ingepland; de tijd blijft in Plannen), de afspraak van de vorige training bovenaan, de onderbouwing ingeklapt onder *Waarom deze training* (samenvatting A/B en leerniveau). Bewerken: *Opzet* (spelers, keepers, minuten, afmeting) ingeklapt met samenvatting, hulpvraag in het lege vak, varianten en groepsgroottes ingeklapt met aantal. *Uit je tekening*: spelers per kleur en keepers overnemen met één tik, alleen in lege velden | ◐ deels herzien | door NNN (Plannen volgt dezelfde lijn) |
 | 164 | 3 | Oefenvorm invoeren: compacte basis (naam, tekening, spelers/minuten/keepers, afmeting, doel, **organisatie**, **spelverloop**, **spelregels**, coachpunten); *Kenmerken* ingeklapt met samenvatting (open zolang een club met leerdoelen nog geen hoofdleerdoel heeft), *Eigen notities* ingeklapt; **schakelvorm** als kenmerk, ook bij *wisselende rollen of richtingen*, zichtbaar op kaart en print en vindbaar met zoeken; speelrichting *meer*. Bestaande tekst wordt niet gesplitst | ◐ deels herzien | door 165 (hulpvraag in het lege vak in plaats van een regel eronder) |
 | 163 | 3 | Plannen: een vorm weghalen zonder de plek kwijt te raken. In het venster van een vorm op een plek staat **Vorm uit A1 halen** (de plek blijft, leeg, met zijn minuten); een lege plek heeft **Plek A1 verwijderen**; een vorm **zonder plek** krijgt in één tik weer een plek (een lege plek, of een plek die volgens het sjabloon **ontbreekt**, op de plaats uit het sjabloon). Elke manier van weghalen heeft **Ongedaan maken**, alleen als de training intussen niet is veranderd. Geen nieuw veld, geen migratie | ✅ geldt |  |
@@ -705,6 +705,29 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit NNN — Plannen minder dubbel (Spoor 3, maat M)
+> Analyse, voorstel 1 en voorbeeld op 390 px: `docs/onderzoek/training-tabbladen/voorstel.md` (akkoord op punt 1 t/m 6). Herziet deels Besluit 142 (tijd), 144 (trainingskaart) en 165 (dezelfde lijn als Week).
+
+**Waarom.** Plannen had op de telefoon 372 woorden en was 4,3 schermen lang. A en B stonden er 4 keer, het leerniveau 3 keer en minuten op 5 manieren. *gemaakt voor 8–12 spelers* en het label *aantal* stonden op elke regel waar de vorm niet past.
+
+**Wat.**
+1. De afspraak van de vorige training staat los bovenaan, zoals in Week.
+2. Wat · Waar · Welke · Niveau staan ingeklapt onder **Waarom deze training · voetbalprobleem** (of dagthema). Het potlood om aan te passen staat erin.
+3. De tijd staat in één regel (*✓ 68 van 68 min ingepland*, of *nog x min vrij*). Een tik opent de balk en de organisatie. Bij te veel minuten staat de regel vanzelf open, met de waarschuwing.
+4. Passen vormen niet bij het aantal spelers, dan zegt één regel bovenaan hoeveel en waarvoor ze gemaakt zijn (*3 vormen zijn gemaakt voor 8–12 spelers; er worden er 4 verwacht*). Per plek staat alleen **past niet**. Wat de trainer voor dit aantal schreef (Besluit 131), blijft op de regel staan.
+5. *x van y plekken ingevuld* is weg; de lijst laat het zelf zien.
+6. Op de telefoon staat de Vormenbank onder de training ingeklapt (*Vormenbank · n vormen · zoeken*). Op de laptop blijft het een kolom.
+
+Een uitklapper die je opent of sluit, blijft zo zolang de app open is (zoals Besluit 165).
+
+**Gemeten** (telefoon, voorbeeld): van 372 naar 219 woorden, van 4,3 naar 2,7 schermen.
+
+**Gegevens.** Niets. Alleen de weergave verandert.
+
+**Tests:** `tests/plannen-rustiger.spec.js` (telefoon en laptop); `tests/app.spec.js` en `tests/trainingskaart.spec.js` openen eerst de uitklapper.
+
+---
+
 ## Besluit 166 — De Home van de begeleider (actie eerst) en van de trainer (mijn volgende stap) (Spoor 3, maat M)
 > Voorstel met metingen en voorbeelden op 390 px: `docs/onderzoek/dashboards/README.md` (akkoord op HO-A en trainer-A, 5 november 2026). Herziet deels Besluit 146 (Home van de begeleider) en Besluit 100 (Home van de trainer in het pakket).
 
@@ -731,29 +754,6 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 **Gegevens en rechten.** Niets nieuws: trajecten, momenten, trainingen (scope `trainerplan`, alleen als meekijken aan staat), feedback (`trainerdossier`). Geen migratie. De begeleider ziet op Home alleen trainers in zijn werkgebied (`CC.inWerkgebied`, zoals de database, Besluit 154).
 
 **Tests:** `tests/startscherm.spec.js` (HO: actie, feedback laat de regel verdwijnen, kennismaking via venster, Week, dossier in 1 tik, meekijken uit; trainer: training maken, feedback 14 dagen, Alles); `tests/ho-week.spec.js` en `tests/app.spec.js` bijgewerkt (de week via **Week**).
-
----
-
-## Besluit NNN — Plannen minder dubbel (Spoor 3, maat M)
-> Analyse, voorstel 1 en voorbeeld op 390 px: `docs/onderzoek/training-tabbladen/voorstel.md` (akkoord op punt 1 t/m 6). Herziet deels Besluit 142 (tijd), 144 (trainingskaart) en 165 (dezelfde lijn als Week).
-
-**Waarom.** Plannen had op de telefoon 372 woorden en was 4,3 schermen lang. A en B stonden er 4 keer, het leerniveau 3 keer en minuten op 5 manieren. *gemaakt voor 8–12 spelers* en het label *aantal* stonden op elke regel waar de vorm niet past.
-
-**Wat.**
-1. De afspraak van de vorige training staat los bovenaan, zoals in Week.
-2. Wat · Waar · Welke · Niveau staan ingeklapt onder **Waarom deze training · voetbalprobleem** (of dagthema). Het potlood om aan te passen staat erin.
-3. De tijd staat in één regel (*✓ 68 van 68 min ingepland*, of *nog x min vrij*). Een tik opent de balk en de organisatie. Bij te veel minuten staat de regel vanzelf open, met de waarschuwing.
-4. Passen vormen niet bij het aantal spelers, dan zegt één regel bovenaan hoeveel en waarvoor ze gemaakt zijn (*3 vormen zijn gemaakt voor 8–12 spelers; er worden er 4 verwacht*). Per plek staat alleen **past niet**. Wat de trainer voor dit aantal schreef (Besluit 131), blijft op de regel staan.
-5. *x van y plekken ingevuld* is weg; de lijst laat het zelf zien.
-6. Op de telefoon staat de Vormenbank onder de training ingeklapt (*Vormenbank · n vormen · zoeken*). Op de laptop blijft het een kolom.
-
-Een uitklapper die je opent of sluit, blijft zo zolang de app open is (zoals Besluit 165).
-
-**Gemeten** (telefoon, voorbeeld): van 372 naar 219 woorden, van 4,3 naar 2,7 schermen.
-
-**Gegevens.** Niets. Alleen de weergave verandert.
-
-**Tests:** `tests/plannen-rustiger.spec.js` (telefoon en laptop); `tests/app.spec.js` en `tests/trainingskaart.spec.js` openen eerst de uitklapper.
 
 ---
 
