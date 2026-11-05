@@ -26,7 +26,7 @@
   const gezien = (S, key) => ((S.mijlpaalGezien || {})[key]);
   const blok = (S, p, n, zin, regels) => {
     const m = [...MIJLPALEN].reverse().find((x) => n >= x); const key = `${p.id}-${m}`;
-    const feest = m && !gezien(S, key) ? `<div class="info groen mijlpaal">${icon('star')}<span><b>${zin(m)}</b> De club is je dankbaar.<br><button class="linkknop" data-act="mijlpaalGezien" data-key="${key}">Dank je!</button></span></div>` : '';
+    const feest = m && !gezien(S, key) ? `<div class="info groen mijlpaal">${icon('star')}<span><b>${zin(m, n)}</b> De club is je dankbaar.<br><button class="linkknop" data-act="mijlpaalGezien" data-key="${key}">Dank je!</button></span></div>` : '';
     const opties = regels.filter(Boolean); const dag = Math.floor(Date.now() / 864e5);
     return feest || (opties.length ? `<p class="compliment waardering">${icon('heart')}${opties[dag % opties.length]}</p>` : '');
   };
@@ -34,7 +34,7 @@
 
   CC.waarderingTrainer = (S, p) => {
     const t = CC.trainerTeller(S, p);
-    return blok(S, p, t.gegeven, (m) => `${m} trainingen gegeven dit seizoen!`, [
+    return blok(S, p, t.gegeven, (m, n) => (n > m ? `Al ${n} trainingen gegeven dit seizoen! Je passeerde de ${m}.` : `${n} trainingen gegeven dit seizoen!`), [
       t.gegeven && `Je gaf dit seizoen al ${t.gegeven} ${t.gegeven === 1 ? 'training' : 'trainingen'}. Fantastisch!`,
       t.pct != null && t.pct >= 80 && `Je team was in ${M.blok(S, D.vandaag()).naam.toLowerCase()} ${t.pct}% aanwezig. Ze komen graag!`,
       t.opgenomen >= 3 && `Je nam al ${t.opgenomen}× de aanwezigheid op. Daar heeft de hele club wat aan.`,
@@ -43,7 +43,7 @@
   };
   CC.waarderingTeamleider = (S, p) => {
     const t = CC.teamleiderTeller(S, p);
-    return blok(S, p, t.wedstrijden, (m) => `${m} wedstrijden geregeld!`, [
+    return blok(S, p, t.wedstrijden, (m, n) => (n > m ? `Al ${n} wedstrijden geregeld! Je passeerde de ${m}.` : `${n} wedstrijden geregeld!`), [
       t.wedstrijden && `Je regelde dit seizoen al ${t.wedstrijden} ${t.wedstrijden === 1 ? 'wedstrijd' : 'wedstrijden'}: taken, begeleiding, alles. Dank je wel!`,
       t.taken && `Dankzij jou zijn er al ${t.taken} taken ingevuld.`,
       t.goed && `Je hielp ${t.goed} nieuwe ${t.goed === 1 ? 'gezin' : 'gezinnen'} op weg in ClubComm.`,
