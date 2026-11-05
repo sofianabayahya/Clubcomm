@@ -11,7 +11,7 @@
 ## Kort
 *Voor iedereen. Je hebt geen wachtwoord nodig.*
 
-1. Open ClubComm op je telefoon (het adres staat in de welkomstmail van je club).
+1. Open **mijnclubcomm.nl** op je telefoon (dat adres staat ook in de welkomstmail van je club).
 2. Vul je **e-mailadres** in en tik **Stuur mij een inlogcode**.
 3. Je krijgt een mail met een **code van 6 cijfers** (de code staat ook in het onderwerp). Typ de code over en tik **Inloggen**.
 4. Zet ClubComm op je beginscherm: tik rechtsboven op je **rondje met initialen** → **App op je beginscherm zetten** en volg de stappen.
