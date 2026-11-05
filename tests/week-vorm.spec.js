@@ -1,4 +1,4 @@
-// ClubComm — Besluit NNN: Week rustiger (afspraak bovenaan, tijd alleen als waarschuwing, onderbouwing ingeklapt),
+// ClubComm — Besluit 165: Week rustiger (afspraak bovenaan, tijd alleen als waarschuwing, onderbouwing ingeklapt),
 // Bewerken korter (Opzet ingeklapt, hulpvraag in het vak, varianten en groepsgroottes ingeklapt) en overnemen uit de tekening.
 // Verzonnen namen, nep-database. Nooit tegen de productiedatabase.
 const { test, expect } = require('@playwright/test');

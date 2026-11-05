@@ -168,7 +168,7 @@
     const regel = grens == null ? (o.length ? '<small class="zacht">Geen begin- en eindtijd in de kalender: ClubComm telt alleen de minuten op.</small>' : '')
       : over > 0 ? `<div class="tr-twaarsch" role="status">⚠ <b>${t.inp} van ${grens} min ingepland: ${over} te veel.</b> ${t.org ? 'In de organisatietijd' : 'Buiten de veldtijd'} valt: ${esc(buiten.join(', '))}.${t.veld != null && t.inp > t.veld ? ' Dat is ook langer dan de veldtijd.' : ''} Je kunt zo doorgaan.</div>`
       : o.length ? `<small class="tr-tok">✓ ${t.inp} van ${grens} min ingepland${over < 0 ? ` · nog ${-over} min vrij` : ' · past precies'}</small>` : '';
-    if (lezen === 'week') return over > 0 ? regel : ''; // Besluit NNN: in Week alleen de waarschuwing; de tijdsbalk staat in Plannen
+    if (lezen === 'week') return over > 0 ? regel : ''; // Besluit 165: in Week alleen de waarschuwing; de tijdsbalk staat in Plannen
     return `<div class="tr-tijd${lezen ? ' klein' : ''}"><div class="tr-tijd-r">${kop}</div>${o.length ? `<div class="tr-tbar" role="img" aria-label="${t.inp} minuten ingepland${grens != null ? `, ${grens} oefentijd` : ''}${t.org ? `, ${t.org} organisatie` : ''}">${delen.join('')}${lijn}</div>` : ''}${regel}</div>`; };
   // A = ..., B = ...: het hoofdleerdoel van de eerste vorm in elk blok
   const blokDoelen = (S, p) => ['A', 'B'].map((b) => { const n = ldNaam(S, blokDoel(S, p, b)); return n ? `${b} = ${esc(n)}${blokDoelBron(S, p, b) === 'week' ? ' (weekvoorstel)' : ''}` : ''; }).filter(Boolean).join(' · ');
@@ -598,7 +598,7 @@
       ${(p.onderdelen || []).length ? `<div class="tr-lijst">${p.onderdelen.map((o, i) => { const v = o.vormId && vorm(S, o.vormId); const var_ = v && o.variant != null && (v.varianten || [])[o.variant] ? ` · ${esc(v.varianten[o.variant].naam || String.fromCharCode(65 + Number(o.variant)))}` : '';
         return `<button type="button" class="tr-rij tr-wrij" ${v ? `data-act="vormOpen" data-id="${v.id}"` : `data-act="tpOnderdeel" data-id="${a.id}" data-i="${i}"`}>${o.blok ? `<span class="tr-code">${esc(code(o))}</span>` : ''}${leegSlot(o) ? `<span class="tr-mini leeg">${icon('plus')}</span>` : mini(v, o.spacing)}<span class="tr-t"><b>${esc(v ? v.naam : o.spacing ? o.naam || 'Spacing' : o.naam || 'Nog leeg')}${var_}</b></span><span class="tr-min">${Number(o.min) || 0}′</span></button>`; }).join('')}</div>` : '<p class="zacht">Nog geen opbouw.</p>'}
       <div class="knoppen"><button class="knop licht" data-act="open" data-view="trainingsplan" data-id="${esc(a.id)}">${icon('pencil')}Aanpassen</button><button class="knop licht" data-act="tpPrint" data-id="${esc(a.id)}" ${(p.onderdelen || []).length ? '' : 'disabled'}>${icon('printer')}Printen</button></div>${waarom(S, p, a)}</div>`; };
-  // Besluit NNN: de onderbouwing (Wat · Waar · Welke · Niveau, Besluit 144) staat in Week ingeklapt onder de training; open blijft open
+  // Besluit 165: de onderbouwing (Wat · Waar · Welke · Niveau, Besluit 144) staat in Week ingeklapt onder de training; open blijft open
   const waarom = (S, p, a) => { const m = CC.trMethodiek ? CC.trMethodiek(S, p, a, true, true) : ''; if (!m) return ''; const kort = CC.trWaaromKort ? CC.trWaaromKort(S, p) : '';
     return `<details class="uitklap tr-waarom" data-onthoud="waarom" ${onthoud('waarom', false) ? 'open' : ''}><summary>Waarom deze training${kort ? ` · ${esc(kort)}` : ''}</summary>${m}</details>`; };
   // Plannen (laptop): links je vormen, in het midden de training in blokken, rechts de week en de maand
@@ -919,7 +919,7 @@
   };
   // Besluit 164: kenmerken ingeklapt met een samenvatting; open zolang een club met leerdoelen nog geen hoofdleerdoel heeft (dat bepaalt de minuten in Lijn)
   const opzetSamen = (v) => [bereik(v.spelersMin, v.spelersMax, 'spelers'), bereik(v.keepersMin, v.keepersMax, v.keepersMin === 1 && (v.keepersMax == null || v.keepersMax === 1) ? 'keeper' : 'keepers'), v.duur ? `${v.duur} min` : '', v.afmeting || ''].filter(Boolean).join(' · ');
-  // Besluit NNN: wat de tekening al weet (spelers per kleur, keepers) en wat ClubComm daaruit kan overnemen. Alleen lege velden; de trainer tikt zelf.
+  // Besluit 165: wat de tekening al weet (spelers per kleur, keepers) en wat ClubComm daaruit kan overnemen. Alleen lege velden; de trainer tikt zelf.
   const uitTekening = (v) => { const it = ((v.tekening || {}).items || []).filter((x) => x.t === 'p'); const per = {};
     it.forEach((x) => { if (x.c === 'trainer' || x.c === 'keeper') return; per[x.c] = (per[x.c] || 0) + 1; });
     const groepen = Object.entries(per).sort((p, q) => q[1] - p[1]); const veld = groepen.reduce((n, [, x]) => n + x, 0); const keepers = it.filter((x) => x.c === 'keeper').length;
@@ -938,7 +938,7 @@
   const kenmerkSamen = (S, v) => { const k = koppeling(S, v); return [k.primair ? `★ ${ldNaam(S, k.primair)}` : '', typeNaam(typeVan(v)), schakelvorm(v) ? 'schakelvorm' : '', context({ ...v, omschakeling: null })].filter(Boolean).join(' · '); };
   const kenmerkOpen = (S, v) => onthoud(`kenmerk:${v.id}`, leerdoelen(S).length > 0 && !koppeling(S, v).primair);
   const getal = (x) => (x === '' || x == null ? null : Number(x));
-  // Besluit 164/NNN: een uitklapper die je opent of sluit, blijft zo zolang de app open is (ook als het scherm opnieuw wordt getekend)
+  // Besluit 164/165: een uitklapper die je opent of sluit, blijft zo zolang de app open is (ook als het scherm opnieuw wordt getekend)
   const onthoud = (k, standaard) => { const u = CC.ui.uitklap || {}; return k in u ? u[k] : standaard; };
   document.addEventListener('toggle', (e) => { const d = e.target; if (!d.dataset || !d.dataset.onthoud) return; (CC.ui.uitklap = CC.ui.uitklap || {})[d.dataset.onthoud] = d.open; }, true);
   CC.autosave.vorm = (f) => { const S = CC.S(); const v = vorm(S, f.dataset.id); if (!v) return;

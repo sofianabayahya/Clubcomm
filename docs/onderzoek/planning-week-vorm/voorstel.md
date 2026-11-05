@@ -2,7 +2,7 @@
 
 *Alleen een voorstel. Er is niets veranderd aan code, database of productie. De schermen zijn de echte app op 390 px met verzonnen gegevens. Bij de voorbeelden is de pagina in de browser nagebootst; dat staat niet in de app.*
 
-**Maat: M.** Schermen veranderen (Week, het venster van een plek, Bewerken). Er komt geen migratie, er veranderen geen rechten en er komen geen persoonsgegevens bij. Na je akkoord komt er een besluit (`Besluit NNN`).
+**Maat: M.** Schermen veranderen (Week, het venster van een plek, Bewerken). Er komt geen migratie, er veranderen geen rechten en er komen geen persoonsgegevens bij. Na je akkoord komt er een besluit (`Besluit 165`).
 
 **Wat je zei (samengevat):**
 - Lijn en Plannen zijn duidelijk.
