@@ -63,7 +63,7 @@
         ${CC.trainerAfmeldSoort && CC.trainerAfmeldSoort(S, a) === 'telaat' ? `<div class="info oranje">${icon('clock')}<span>De training begint binnen een dag. Dit telt als <b>te laat afgemeld</b>.</span></div>` : ''}
         ${CC.trainerEigenTekst ? `<p class="zacht klein">${CC.trainerEigenTekst(S, CC.me().id)}</p>` : ''}
         <button class="knop vol">Doorgeven</button>
-        <p class="zacht klein">Vervanger zoeken: de teamleider en de ${esc(S.club.labels.hjo)} krijgen direct een melding, en ouders kunnen zich aanmelden via Taken. Lukt het niet, dan kun je later alsnog afgelasten; ouders krijgen dan een pushmelding.</p></form>`);
+        <p class="zacht klein">Vervanger zoeken: de ${esc(vraagWie(S, a).tekst)} krijgen direct een melding, en ouders kunnen zich aanmelden via Taken. Lukt het niet, dan kun je later alsnog afgelasten; ouders krijgen dan een pushmelding.</p></form>`);
   });
   CC.on('kanNietOk', (f) => {
     const S = CC.S(); const a = M.act(S, f.dataset.id); const me = CC.me(); const t = M.team(S, a.teamId);
