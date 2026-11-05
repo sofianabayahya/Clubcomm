@@ -10,6 +10,7 @@
 | **Lezer** | vrijwillige trainer die net begint (laag *Draaien*, Besluit 149) |
 | **Vorm** | PDF, hoogstens 2 A4, veel beeld |
 | **Wat je hieraan hebt** | In tien minuten kun je inloggen, zien wie er komt, de aanwezigheid opnemen en weet je wat je doet als je zelf niet kunt. |
+| **Bestand** | `docs/presentaties/pdf/ClubComm-snelstart-trainer.pdf` (2 A4, Concept) |
 
 **Kaarten, in deze volgorde (blok Kort, met de schermafbeelding van dat blok):**
 1. [inloggen.md](inloggen.md): Inloggen en de app op je beginscherm
@@ -18,6 +19,11 @@
 4. [training-voorbereiden.md](training-voorbereiden.md): Training voorbereiden. *Alleen als de club de trainingsmodule gebruikt.*
 
 **Slotregel (mag, niet moet):** *Wil je meer? Bewaar je eigen oefenvormen in de Vormenbank en teken ze met de tekentool. Vragen: Profiel → Feedback, of vraag het je coördinator of HJO.*
+
+**Opnieuw maken** (de losse regels hierboven gaan als `"= …"` mee; `~naast` zet het beeld naast de stappen):
+```
+node docs/handleiding/pdf.js docs/presentaties/pdf/ClubComm-snelstart-trainer.pdf "Snelstart vrijwillige trainer" Concept "^ ClubComm · voor trainers · je eerste training" "= In tien minuten kun je inloggen, zien wie er komt, de aanwezigheid opnemen en weet je wat je doet als je zelf niet kunt." "inloggen.md#Kort~naast" "aanwezigheid.md#Kort~naast" "zelf-afmelden.md#Kort~naast" "= *Alleen als je club de trainingsmodule gebruikt:*" "training-voorbereiden.md#Kort~naast" "= Wil je meer? Bewaar je eigen oefenvormen in de Vormenbank en teken ze met de tekentool. Vragen: Profiel → Feedback, of vraag het je coördinator of HJO."
+```
 
 **Bewust niet in de snelstart:** wisselschema en speeltijd, berichten, spelers opvolgen, ouders uitnodigen. Die komen in de *Handleiding trainer* (Kort + Meer), zodra die kaarten er zijn.
 
@@ -42,4 +48,5 @@
 
 ## Nog te maken
 - Handleiding trainer (Kort + Meer van alle trainerskaarten), handleiding HJO, handleiding clubbeheerder, ouders, teamleider, bestuursdemo: zie `docs/onderzoek/documentatie-borging/README.md` § 4.1.
-- De Snelstart vrijwillige trainer als PDF: `docs/handleiding/pdf.js` kan nu ook een bundel van meer kaarten maken (zie de bijeenkomst hierboven); voor deze bundel nog niet gedaan.
+- *Gepubliceerd* maken van de Snelstart vrijwillige trainer: na akkoord van de initiatiefnemer (`pdf.js` weigert *Gepubliceerd* als een kaart niet *In productie* is).
+- De beelden van de tekentool (`tekentool-*.jpg`) tonen nog de grote hoedjes van vóór Besluit 162; daarna de twee tekenen-PDF's opnieuw (apart akkoord).

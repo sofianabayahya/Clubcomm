@@ -3,7 +3,11 @@
 //   node docs/handleiding/pdf.js docs/handleiding/tekentool.md docs/presentaties/pdf/ClubComm-snelstart-tekenen.pdf "Snelstart: een oefenvorm tekenen" Gepubliceerd
 // Bundel van meer kaarten (bundels.md): eerst het PDF-bestand, dan titel, status en per kaart een blok:
 //   node docs/handleiding/pdf.js uit.pdf "Titel" Gepubliceerd "inloggen.md#Kort" "inloggen.md#Let op:3" "tekentool.md#Kort@tel"
-//   ":3" = alleen de eerste 3 punten; "@tel" = alleen afbeeldingen waarvan het bestand "tel" bevat.
+//   ":3" = alleen de eerste 3 punten; "@tel" = alleen afbeeldingen waarvan het bestand "tel" bevat;
+//   "~naast" = compact: het eerste beeld naast de stappen (bovenste deel), zodat meer kaarten op 2 A4 passen;
+//   "= tekst" = een losse regel uit de bundel (bijvoorbeeld Wat je hieraan hebt, een noot of de slotregel);
+//   "^ tekst" = een andere regel onder de titel (standaard: ClubComm · voor trainers · je oefenvormen zijn van jou).
+// Gepubliceerd kan alleen als elke genoemde kaart de status In productie heeft (anders stopt het script).
 // Gebruikt de Chromium van de tests (Playwright); er komt geen nieuwe software bij. Onderaan elke pagina de versieregel:
 // datum · app-commit (uit de kaart; bij een bundel de commit van de repository) · status.
 const fs = require('fs');
@@ -46,11 +50,21 @@ const datum = new Date().toLocaleDateString('nl-NL', { day: 'numeric', month: 'n
 const versie = `Versie ${datum} · app ${commit} · ${status}`;
 const kop = titel || (md.match(/^# (.*)/m) || [])[1] || 'ClubComm';
 // Een deel van een bundel: kop = titel van de kaart (bij Kort) of "Goed om te weten" (bij Let op)
-const deel = (spec) => { const m = spec.match(/^([^#]+)#([^:@]+)(?::(\d+))?(?:@(.+))?$/); if (!m) throw new Error(`Onbekend deel: ${spec}`);
+const nietInProductie = new Set();
+const deel = (spec) => { if (/^=\s/.test(spec)) return `<p class="los">${inline(spec.replace(/^=\s+/, ''))}</p>`;
+  const m = spec.match(/^([^#]+)#([^:@~]+)(?::(\d+))?(?:@([^~]+))?(~naast)?$/); if (!m) throw new Error(`Onbekend deel: ${spec}`);
   const tekst = lees(m[1]); let b = blokVan(tekst, m[2]).replace(/^\*[^\n]*\*\n/, '');
+  if (!/\*\*Status in de app\*\* \| In productie/.test(tekst)) nietInProductie.add(m[1]);
   if (m[3]) { let n = 0; b = b.split('\n').filter((r) => !/^\s*-\s+/.test(r) || ++n <= Number(m[3])).join('\n'); }
   const kop = m[2] === 'Kort' ? (tekst.match(/^# (.*)/m) || [])[1] : 'Goed om te weten';
+  if (m[5]) { // compact: tekst links, eerste beeld rechts
+    const bl = [...b.matchAll(/!\[([^\]]*)\]\(([^)]+)\)/g)].filter((x) => !m[4] || x[2].includes(m[4]))[0];
+    const img = bl ? `<img class="naast" src="data:image/jpeg;base64,${fs.readFileSync(path.resolve(map, bl[2])).toString('base64')}" alt="${esc(bl[1])}">` : '';
+    return `<section class="naast"><div><h2>${esc(kop)}</h2>${naarHtml(b.replace(/^.*!\[.*$/gm, ''))}</div>${img}</section>`; }
   return `<h2${m[2] === 'Kort' ? '' : ' class="klein"'}>${esc(kop)}</h2>${naarHtml(b, m[4])}`; };
+const SUB = 'ClubComm · voor trainers · je oefenvormen zijn van jou';
+const sub = bundel && delen.find((d) => /^\^\s/.test(d)) ? delen.find((d) => /^\^\s/.test(d)).replace(/^\^\s+/, '') : SUB;
+if (bundel) delen.splice(0, delen.length, ...delen.filter((d) => !/^\^\s/.test(d)));
 const inhoud = bundel ? delen.map(deel).join('\n') : `<h2>In zes stappen</h2>${naarHtml(blok('Kort').replace(/^\*Voor elke trainer[^\n]*\n/, ''))}
   <h2>Goed om te weten</h2>${naarHtml(blok('Let op'))}`;
 const html = `<!doctype html><html lang="nl"><head><meta charset="utf-8"><style>
@@ -60,11 +74,15 @@ const html = `<!doctype html><html lang="nl"><head><meta charset="utf-8"><style>
   h2 { font-size: 15pt; margin: 12pt 0 6pt; color: #0869c2; break-after: avoid; } h2.klein { font-size: 12.5pt; color: #0b2545; margin-top: 8pt; }
   ol, ul { padding-left: 18pt; margin: 4pt 0; } li { margin: 0 0 5pt; } p { margin: 4pt 0; }
   .beelden { display: flex; gap: 8pt; margin: 8pt 0; break-inside: avoid; }
+  section.naast { display: flex; gap: 10pt; align-items: flex-start; break-inside: avoid; border-top: 1px solid #e3e9f1; padding-top: 4pt; } section.naast > div { flex: 1; }
+  img.naast { width: 44mm; height: 62mm; object-fit: cover; object-position: top; border: 1px solid #e3e9f1; border-radius: 6pt; margin-top: 12pt; } .los { margin: 8pt 0; }
   figure { margin: 0; flex: 0 1 31%; } img { width: 100%; max-height: 72mm; object-fit: contain; border: 1px solid #e3e9f1; border-radius: 6pt; } figcaption { font-size: 9pt; color: #5b6b7f; margin-top: 2pt; }
 </style></head><body>
-  <h1>${esc(kop)}</h1><p class="sub">ClubComm · voor trainers · je oefenvormen zijn van jou</p>
+  <h1>${esc(kop)}</h1><p class="sub">${esc(sub)}</p>
   ${inhoud}
 </body></html>`;
+
+if (status === 'Gepubliceerd' && nietInProductie.size) { console.error(`Niet te publiceren, niet In productie: ${[...nietInProductie].join(', ')}`); process.exit(1); }
 
 (async () => {
   const browser = await chromium.launch(); const page = await browser.newPage();
