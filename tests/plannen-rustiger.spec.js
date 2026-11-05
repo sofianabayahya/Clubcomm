@@ -65,6 +65,21 @@ for (const breed of [false, true]) {
     await page.evaluate(() => { CC.S().vormen.forEach((v) => { if (/^v-\d$/.test(v.id)) { v.spelersMin = 8; v.spelersMax = 12; } }); CC.save(); });
     await naarPlannen(page);
     const m = page.locator('.tr-midden');
+    if (breed) { // Besluit NNN: op de laptop staan afspraak, onderbouwing en tijd rechts, open (gesplitst scherm)
+      const z = page.locator('.tr-pzij .tr-zijwaarom');
+      await expect(z.locator(':scope > .tr-mee')).toContainText('maximaal twee coachaccenten');
+      await expect(z.locator('.tr-kn', { hasText: 'Wat' })).toBeVisible();
+      await expect(z.locator('.tr-kn', { hasText: 'Mee uit vorige' })).toHaveCount(0);
+      await expect(z.locator('.tr-tijd-r')).toContainText('68');
+      await expect(z.locator('.tr-orgknop')).toBeVisible();
+      await expect(m.locator(':scope > .tr-mee, :scope > details.tr-waarom, :scope > details.tr-tijdkort')).toHaveCount(0);
+      await expect(m.locator('.tr-pastniet')).toContainText('3 vormen zijn gemaakt voor 8–12 spelers');
+      await expect(page.locator('#planZoek')).toBeVisible();
+      await opbouw(page, d, { teVeel: true });
+      await expect(page.locator('.tr-zijwaarom .tr-twaarsch')).toContainText('te veel');
+      await controleer(page, fouten);
+      return;
+    }
     // Afspraak los zichtbaar, onderbouwing ingeklapt met het voetbalprobleem
     await expect(m.locator(':scope > .tr-mee')).toContainText('maximaal twee coachaccenten');
     const w = m.locator(':scope > details.tr-waarom');

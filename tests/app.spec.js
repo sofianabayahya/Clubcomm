@@ -1547,7 +1547,7 @@ test('trainingsmodule: training op datum zonder planning (pakket Trainers begele
   await page.locator('[data-act="tpSpacing"]').click();
   await expect(page.locator('.tr-pzij .tr-dag')).toContainText('Vrijlopen');
   // Besluit 142: zonder begin- en eindtijd alleen de som, geen waarschuwing
-  await expect(page.locator('.tr-pmid .tr-tijd')).toContainText('Geen begin- en eindtijd in de kalender');
+  await expect(page.locator('.tr-plan .tr-tijd')).toContainText('Geen begin- en eindtijd in de kalender');
   await expect(page.locator('.tr-pmid .tr-twaarsch')).toHaveCount(0);
   // Zoals Swift (KNVB-standaard, geen eigen profiel): niets van de DCG-methodiek (Besluit 133)
   await expect(page.locator('.tr-meth, .tr-methknop, .tr-stat, .tr-contra, .tr-niv')).toHaveCount(0);
@@ -1855,7 +1855,7 @@ test('trainingsmodule: classificatie, sjabloon, fase, minuten per leerdoel en fi
   await expect(page.locator('.tr-plan')).toBeVisible();
   // Besluit 142: de organisatie (7) staat in de tijdsbalk, niet meer als losse regel; hij telt niet bij de ingeplande minuten
   await expect(page.locator('.tr-pmid .tr-code')).toHaveText(['Start', 'A1', 'S', 'A2', 'B1', 'S', 'B2', 'P']);
-  await expect(page.locator('.tr-pmid .tr-tijd-r')).toContainText('7 organisatie');
+  await expect(page.locator('.tr-plan .tr-tijd-r')).toContainText('7 organisatie');
   // Besluit 133: met leerniveaus in het profiel staat het leerniveau in de regel (de fase zit ingeklapt in het venster)
   await expect(page.locator('.tr-pmid .tr-rij').nth(1).locator('.tr-fase')).toHaveCount(0);
   // Lege plek A1 vullen met een nieuwe vorm en die classificeren
