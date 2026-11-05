@@ -12,8 +12,8 @@
 *Voor elke trainer. In de Vormenbank bewaar je je oefenvormen; elke vorm gebruik je in zoveel trainingen als je wilt.*
 
 1. Ga naar **Training → Vormenbank** en tik **Nieuwe oefenvorm**.
-2. Geef de vorm een **naam**. Vul in wat je weet: spelers van–tot, minuten, afmeting, doel, **organisatie** (hoe het klaarstaat), **spelverloop** (hoe een actie loopt), **spelregels** en coachpunten. Alles mag leeg blijven. *Kenmerken* en *Eigen notities* staan ingeklapt; tik erop om ze te openen (Besluit 164).
-3. Tik **Tekening maken** als je hem wilt tekenen (zie de kaart *Tekentool*).
+2. Geef de vorm een **naam**. Vul in wat je weet: onder **Opzet** spelers van–tot, minuten en afmeting (ingeklapt met een samenvatting zodra er iets staat), doel, **organisatie** (hoe het klaarstaat), **spelverloop** (hoe een actie loopt), **spelregels** en coachpunten. Alles mag leeg blijven. *Kenmerken* en *Eigen notities* staan ingeklapt; tik erop om ze te openen (Besluit 164).
+3. Tik **Tekening maken** als je hem wilt tekenen (zie de kaart *Tekentool*). Staan er spelers in je tekening, dan zie je **Uit je tekening** (bijvoorbeeld *6 spelers: 4 oranje, 2 roze → 4 tegen 2*). **Overnemen** vult alleen lege velden in: spelers, keepers en de aantallen per groepje. **Niet nu** laat alles zoals het is (Besluit 165).
 4. Tik **‹** om terug te gaan. Alles wordt vanzelf bewaard.
 5. Zoek een vorm terug met het **zoekvak** of **Filter**. Tik een vorm aan om hem te bekijken.
 

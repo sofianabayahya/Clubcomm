@@ -80,6 +80,11 @@
     const link = `<button type="button" class="tr-link" data-act="trNaarWeek" data-id="${esc(va.id)}">${af || vk ? 'Hele evaluatie' : 'Evaluatie'} van ${dag} ›</button>`;
     if (!af && !vk && !v.anders) return `<small class="zacht">Geen evaluatie bij ${dag}.</small>`;
     return `<div class="tr-mee">${af ? `<b>Afspraak ${dag}:</b> ${esc(af)}` : `<span class="zacht">Geen afspraak herkend bij ${dag}.</span>`}${vk ? `<small>Evaluatie ${dag}, volgende training: ${esc(vk)}</small>` : ''}${link}</div>`; };
+  // Besluit 165: in Week staat de afspraak van de vorige training los bovenaan (alleen als er een afspraak of evaluatie is)
+  CC.trMee = (S, p, a) => { const v = vorigeTraining(S, p, a); if (!v || (!v.anders && !(v.evaluatie || {})['ev-volgende'])) return ''; return meeUitVorige(S, p, a); };
+  // Besluit 165: samenvatting in de kop van de ingeklapte onderbouwing in Week (A/B en leerniveau)
+  CC.trWaaromKort = (S, p) => { const m = eigenM(p); const A = (p.blokDoel || {}).A, B = (p.blokDoel || {}).B;
+    return [A ? `A ${T().ldNaam(S, A)}` : '', B ? `B ${T().ldNaam(S, B)}` : '', nv(S, m.niveaus)].filter(Boolean).join(' · '); };
   // Besluit 144: de oorspronkelijke planning van een geladen concept, één keer bewaard wanneer je het voor het eerst aanpast.
   // Zolang een concept nog precies is zoals geladen, staat een kopie alleen in het geheugen; geen versiebeheer.
   const ORIG = {};
@@ -90,7 +95,7 @@
     const r = (n, x) => (x ? `<dt>${n}</dt><dd>${esc(x)}</dd>` : '');
     CC.sheet('Oorspronkelijke planning', `<p class="zacht klein">Zoals geladen uit ${esc(o.bron || 'de periodisering')}. Bewaard op ${esc(D.kort(o.bewaard))}, toen je deze training voor het eerst aanpaste. Alleen ter informatie.</p>
       <dl class="antwoorden">${r('Titel', o.thema)}${r('Voetbalprobleem', pr ? `${pr.id.slice(3)} · ${pr.naam}` : m.probleemTekst)}${r('Dagthema', m.hoofdthema)}${r('Gereedschap A', T().ldNaam(S, (o.blokDoel || {}).A))}${r('Gereedschap B', T().ldNaam(S, (o.blokDoel || {}).B))}${r('Leerniveau', nv(S, m.niveaus))}${r('Leerroute', m.route)}${r('Gewenst gedrag', m.gedrag)}</dl>`); });
-  CC.trMethodiek = (S, p, a, tel) => { if (!p || p.week) return ''; const pa = actief(S); if (pa) CC.trBorgOrigineel(S);
+  CC.trMethodiek = (S, p, a, tel, zonderMee) => { if (!p || p.week) return ''; const pa = actief(S); if (pa) CC.trBorgOrigineel(S);
     const m = eigenM(p), wv = weekVoorstelVan(S, p, a), w = a.datum ? weekPlan(S, p.teamId || a.teamId, a.datum) : null; const iv = inVormen(S, p);
     const wbox = (x) => (x ? `<div class="tr-wv">${lab('week')}<span class="tr-wvt">${x}</span></div>` : '');
     const AB = (x, b) => [x[b === 'A' ? 'A' : 'hg1'], x[b === 'A' ? 'B' : 'hg2']];
@@ -123,7 +128,7 @@
       if (!p.thema && wv.thema) rijen.push(['Wat', `<span class="zacht">Nog geen thema</span>${wbox(`Weekthema: ${esc(wv.thema)}`)}`]);
       if (!eA && !eB && (wA || wB)) rijen.push(['Welke', wbox(abTekst(wA, wB))]);
     }
-    const mee = meeUitVorige(S, p, a); if (mee) rijen.push(['Mee uit vorige', mee]);
+    const mee = zonderMee ? '' : meeUitVorige(S, p, a); if (mee) rijen.push(['Mee uit vorige', mee]);
     if (!pa && !rijen.length) return '';
     if (!pa) return `<div class="tr-tkaart tr-tkaart-los">${rijen.map(([n, x]) => `<div class="tr-kr"><span class="tr-kn">${n}</span><div>${x}</div></div>`).join('')}</div>`;
     const rij = (n, x) => (x ? `<span>${n}</span><b>${esc(x)}</b>` : '');
