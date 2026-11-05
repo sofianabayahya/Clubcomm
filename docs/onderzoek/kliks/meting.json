@@ -1,0 +1,236 @@
+[
+ {
+  "naam": "ouder-home",
+  "woorden": 118,
+  "inBeeld": 108,
+  "knoppen": 18,
+  "knoppenInBeeld": 12,
+  "schermen": 1.1,
+  "blokken": 2
+ },
+ {
+  "naam": "ouder-planning",
+  "woorden": 147,
+  "inBeeld": 98,
+  "knoppen": 19,
+  "knoppenInBeeld": 10,
+  "schermen": 1.5,
+  "blokken": 4
+ },
+ {
+  "naam": "ouder-vervoer",
+  "woorden": 95,
+  "inBeeld": 89,
+  "knoppen": 11,
+  "knoppenInBeeld": 6,
+  "schermen": 1,
+  "blokken": 0
+ },
+ {
+  "naam": "ouder-taken",
+  "woorden": 159,
+  "inBeeld": 90,
+  "knoppen": 23,
+  "knoppenInBeeld": 10,
+  "schermen": 1.7,
+  "blokken": 4
+ },
+ {
+  "naam": "ouder-berichten",
+  "woorden": 66,
+  "inBeeld": 60,
+  "knoppen": 12,
+  "knoppenInBeeld": 7,
+  "schermen": 1,
+  "blokken": 1
+ },
+ {
+  "naam": "trainer-home",
+  "woorden": 131,
+  "inBeeld": 90,
+  "knoppen": 17,
+  "knoppenInBeeld": 9,
+  "schermen": 1.4,
+  "blokken": 1
+ },
+ {
+  "naam": "trainer-aanwezigheid",
+  "woorden": 110,
+  "inBeeld": 89,
+  "knoppen": 29,
+  "knoppenInBeeld": 20,
+  "schermen": 1.4,
+  "blokken": 0
+ },
+ {
+  "naam": "trainer-speeltijd",
+  "woorden": 186,
+  "inBeeld": 106,
+  "knoppen": 10,
+  "knoppenInBeeld": 5,
+  "schermen": 1.4,
+  "blokken": 1
+ },
+ {
+  "naam": "trainer-spelers",
+  "woorden": 111,
+  "inBeeld": 69,
+  "knoppen": 23,
+  "knoppenInBeeld": 12,
+  "schermen": 1.6,
+  "blokken": 1
+ },
+ {
+  "naam": "trainer-berichten",
+  "woorden": 92,
+  "inBeeld": 87,
+  "knoppen": 13,
+  "knoppenInBeeld": 8,
+  "schermen": 1,
+  "blokken": 2
+ },
+ {
+  "naam": "teamleider-home",
+  "woorden": 76,
+  "inBeeld": 69,
+  "knoppen": 12,
+  "knoppenInBeeld": 8,
+  "schermen": 1,
+  "blokken": 1
+ },
+ {
+  "naam": "hjo-home",
+  "woorden": 166,
+  "inBeeld": 72,
+  "knoppen": 24,
+  "knoppenInBeeld": 13,
+  "schermen": 1.9,
+  "blokken": 4
+ },
+ {
+  "naam": "hjo-trainers",
+  "woorden": 46,
+  "inBeeld": 41,
+  "knoppen": 16,
+  "knoppenInBeeld": 11,
+  "schermen": 1,
+  "blokken": 0
+ },
+ {
+  "naam": "hjo-teams",
+  "woorden": 165,
+  "inBeeld": 72,
+  "knoppen": 36,
+  "knoppenInBeeld": 21,
+  "schermen": 1.8,
+  "blokken": 0
+ },
+ {
+  "naam": "hjo-inzicht",
+  "woorden": 115,
+  "inBeeld": 49,
+  "knoppen": 49,
+  "knoppenInBeeld": 20,
+  "schermen": 1.9,
+  "blokken": 0
+ },
+ {
+  "naam": "hjo-berichten",
+  "woorden": 20,
+  "inBeeld": 15,
+  "knoppen": 11,
+  "knoppenInBeeld": 6,
+  "schermen": 1,
+  "blokken": 0
+ },
+ {
+  "naam": "beheerder-home",
+  "woorden": 110,
+  "inBeeld": 119,
+  "knoppen": 14,
+  "knoppenInBeeld": 9,
+  "schermen": 1.1,
+  "blokken": 2
+ },
+ {
+  "naam": "beheerder-seizoen",
+  "woorden": 369,
+  "inBeeld": 94,
+  "knoppen": 40,
+  "knoppenInBeeld": 11,
+  "schermen": 3.5,
+  "blokken": 3
+ },
+ {
+  "naam": "beheerder-regels",
+  "woorden": 60,
+  "inBeeld": 310,
+  "knoppen": 99,
+  "knoppenInBeeld": 41,
+  "schermen": 1.5,
+  "blokken": 0
+ },
+ {
+  "naam": "beheerder-rollen",
+  "woorden": 213,
+  "inBeeld": 59,
+  "knoppen": 138,
+  "knoppenInBeeld": 13,
+  "schermen": 3.2,
+  "blokken": 1
+ },
+ {
+  "naam": "beheerder-berichten",
+  "woorden": 18,
+  "inBeeld": 13,
+  "knoppen": 10,
+  "knoppenInBeeld": 5,
+  "schermen": 1,
+  "blokken": 0
+ },
+ {
+  "naam": "pakket-ho-home",
+  "woorden": 60,
+  "inBeeld": 56,
+  "knoppen": 9,
+  "knoppenInBeeld": 5,
+  "schermen": 1,
+  "blokken": 3
+ },
+ {
+  "naam": "pakket-ho-trainers",
+  "woorden": 204,
+  "inBeeld": 94,
+  "knoppen": 29,
+  "knoppenInBeeld": 15,
+  "schermen": 1.9,
+  "blokken": 0
+ },
+ {
+  "naam": "pakket-ho-teams",
+  "woorden": 204,
+  "inBeeld": 86,
+  "knoppen": 25,
+  "knoppenInBeeld": 11,
+  "schermen": 2,
+  "blokken": 0
+ },
+ {
+  "naam": "pakket-trainer-home",
+  "woorden": 84,
+  "inBeeld": 80,
+  "knoppen": 8,
+  "knoppenInBeeld": 5,
+  "schermen": 1,
+  "blokken": 3
+ },
+ {
+  "naam": "pakket-trainer-training",
+  "woorden": 83,
+  "inBeeld": 79,
+  "knoppen": 20,
+  "knoppenInBeeld": 17,
+  "schermen": 1,
+  "blokken": 0
+ }
+]
