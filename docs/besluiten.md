@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 4 november 2026 (t/m Besluit 160)
+Laatst bijgewerkt: 5 november 2026 (t/m Besluit 163)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -21,6 +21,7 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 160)
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
+| 163 | 3 | Plannen: een vorm weghalen zonder de plek kwijt te raken. In het venster van een vorm op een plek staat **Vorm uit A1 halen** (de plek blijft, leeg, met zijn minuten); een lege plek heeft **Plek A1 verwijderen**; een vorm **zonder plek** krijgt in één tik weer een plek (een lege plek, of een plek die volgens het sjabloon **ontbreekt**, op de plaats uit het sjabloon). Elke manier van weghalen heeft **Ongedaan maken**, alleen als de training intussen niet is veranderd. Geen nieuw veld, geen migratie | ✅ geldt |  |
 | 162 | 3 | Tekentool: een hoedje is ongeveer 70% van een speler (schaal 0,6 in plaats van 0,85); plek, kleuren, menuknop en aantikken (tikvlak, Besluit 160) blijven; bestaande tekeningen vanzelf | ✅ geldt |  |
 | 161 | 3 | Trainerspilot: trainers tekenen en bewaren zelf oefenvormen (geen plicht om trainingen digitaal uit te werken of te delen); clubbibliotheek niet in gebruik, geen automatische publicatie, publiceren alleen met toestemming of deelafspraak, de HJO selecteert later; geen bouwprioriteit | ✅ geldt | |
 | 160 | 3 | Tekentool: met *Kies* heeft elk object een **onzichtbaar tikvlak van 44 px**: een tik net naast een object kiest het dichtstbijzijnde binnen 22 px. Met een gereedschap aan zoals het was. Op alle schermen; de tekening verandert niet. Gemeten op de telefoon: raak 97–98% (was 15–40%) | ✅ besloten (wacht op samenvoegen) |  |
@@ -38,7 +39,7 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 160)
 | 148 | 3 | Tekentool, rugnummers: een nummerknop **verwijdert nooit** meer; staat het nummer er al, dan **kiest** hij die speler (bij een dubbel nummer eerst de eerst neergezette, nog een keer = de volgende). Een met de knop gekozen speler houdt zijn nummer; nummer wijzigen = de speler op het veld aantikken en dan een nummer (dubbel mag, geen ruil meer) of *Ander nummer…* (1–99). Nieuwe speler = **eerste vrije** nummer. *Opstelling* gebruikt de nummers van de balk (keeper hoort bij het team en is 1; spits 3-3-1 = 9). Oude tekeningen ongewijzigd, geen migratie | ✅ besloten (wacht op samenvoegen) |  |
 | 147 | 3 | Gereedschap vastleggen bij een gegeven training: per plek een momentopname (`vast`: gereedschap, *ook*, vaardigheden met hun leerlijn van toen, profiel en versie, datum, bron) bij de eerste keer *gegeven*. Daarna telt die, ook als de koppeling in de Vormenbank verandert. Ongeldige momentopname = minuten bij geen gereedschap, nooit stil terugvallen op de koppeling van nu. Terugzetten bewaart; opnieuw aanvinken legt niets nieuws vast. Correctie (andere vorm, toevoegen, ook na terugzetten) = meteen vastleggen; plek zonder momentopname op een vastgelegde training = niet toegerekend; kopiëren neemt niets mee, ook geen vastlegdatum van de doeltraining. Oude gegeven trainingen blijven ongewijzigd. Melding in de Vormenbank | geldt | — |
 | 146 | 3 | Begeleider bij het pakket Trainers begeleiden: HO = *Home · Trainers · Teams · Berichten*, TC = *Home · Trainers · Berichten*. Home = Actie nodig + de week van je trainers (dagknoppen met aantal, bouwfilter, *Wedstrijden · Trainingen · Beide*, *Alleen thuis*; per regel tijd · team · trainer · thuis/uit · tegenstander · veld) met *Begeleiden* in 2 tikken. Trainers = compacte lijst (één regel per trainer, *Alle (n) · Traject (n)*, zoeken) met een snelvenster; de grote trajectkaart wordt één regel. Geen nieuwe gegevens of rechten | ✅ geldt |  |
-| 145 | 3 | Een geplaatste vorm verplaatsen: in het venster van de vorm *Verplaatsen naar* Start · A1 · A2 · B1 · B2 · Partij; lege plek = erheen, bezette plek = wisselen; minuten, variant, notitie, vastgezet leerniveau en fase gaan mee, de plek houdt code en voorstellen; tijd blijft gelijk; ongedaan maken. Start is niet verplicht. Geen nieuw veld | ✅ geldt |  |
+| 145 | 3 | Een geplaatste vorm verplaatsen: in het venster van de vorm *Verplaatsen naar* Start · A1 · A2 · B1 · B2 · Partij; lege plek = erheen, bezette plek = wisselen; minuten, variant, notitie, vastgezet leerniveau en fase gaan mee, de plek houdt code en voorstellen; tijd blijft gelijk; ongedaan maken. Start is niet verplicht. Geen nieuw veld | ✅ geldt | aangevuld door 163 (een vorm zonder plek krijgt weer een plek) |
 | 144 | 3 | Trainingskaart in Plannen: vijf vaste regels *Wat · Waar · Welke · Niveau · Mee uit vorige*, elk met herkomst (*Eigen · Periodisering · Weekvoorstel*); het weekvoorstel staat apart en vult nooit vanzelf in; *Accenten in gekozen vormen* (geen trainingsaccent); *Mee uit vorige* toont alleen een zin die begint met *Afspraak:* plus de bestaande evaluatiegegevens, met een link; wedstrijdsituatie apart van het dagthema; één momentopname *Oorspronkelijke planning* bij de eerste wijziging van een concept; weekplan alleen weekvelden. Bestaande trainingen en weekplannen ongewijzigd | ◐ deels herzien (bestaande weekplannen: correctie wacht op akkoord) | door 155 (*Accenten in gekozen vormen* heet *Handelingen in gekozen vormen*) |
 | 143 | 3 | De trainer is eigenaar van zijn eigen teksten (kennismaking, vragenlijst vooraf, reflectie): HO, TC en beheerder kunnen ze niet namens hem schrijven, wijzigen of verwijderen; alleen *gevraagd* zetten. Overnemen uit het evaluatieformulier = **begeleiderstekst** in het moment; de trainer kan die zelf overnemen en aanpassen. Een clubbeheerder zonder begeleidersrol heeft geen toegang tot het begeleidingsdossier. Migratie 033 (bewaker + beperkende regel, `cc_mag` ongewijzigd, samen met 032 in elke volgorde) | ✅ besloten (wacht op samenvoegen en migratie) |  |
 | 142 | 3 | Tijd vóór de training, voor elke club: bovenaan Plannen *veldtijd (kalender) − organisatie (de bestaande regel ombouw, door de trainer aan te passen, ook zonder sjabloon) = oefentijd*, de gekleurde balk met de grens, en een waarschuwing als de ingeplande minuten de oefentijd overschrijden (nooit blokkeren). Organisatie telt één keer. Geen nieuw veld; DCG-sjabloon 68 + 7 blijft. Geen registratie of samenvatting van uitloop | ✅ geldt |  |
@@ -700,6 +701,27 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 163 — Plannen: een vorm weghalen zonder de plek kwijt te raken (Spoor 3, maat M)
+> Vult Besluit 145 aan (verplaatsen) en voert regel 10 van Besluit 149 uit (*Ongedaan maken* bij verwijderen).
+
+*Besloten 5 november 2026, na het voorstel `docs/onderzoek/plek-weghalen/voorstel.md` (branch `onderzoek/plek-weghalen`, voorbeelden op 390 px) en het akkoord van de initiatiefnemer. Aanleiding: bij DCG haalde de trainer per ongeluk de vorm op A1 weg. *Weghalen* haalde de hele plek A1 weg, zonder *Ongedaan maken*. Een vorm die daarna werd toegevoegd, kwam zonder plek onder *"Opbouw"*, en A1 was niet meer terug te zetten.*
+- **Vorm op een plek** (Start, A1, A2, B1, B2, Partij): de knop heet **Vorm uit A1 halen**.
+  - Alleen de vorm gaat eruit, met wat er bij *Verplaatsen* meegaat (`MEE`): variant, leerniveau, fase, echte minuten, notitie en de vastlegging (Besluit 147).
+  - De plek blijft staan, met code, naam en geplande minuten.
+  - Onder de knop staat één zin uitleg.
+- **Lege plek** (via de kiezer → *Minuten en leerniveau van A1*): **Plek A1 verwijderen**. Start blijft *niet verplicht* (Besluit 145).
+- **Vorm zonder plek** in een training met plekken: bovenaan het venster staat **"Deze vorm heeft geen plek. Zet hem op"**. Je kiest uit:
+  - de plekken die volgens het sjabloon van de training (`sjabloon`) **ontbreken**: de vorm komt op de plaats uit het sjabloon, een spacing hoort bij de plek ervoor;
+  - de **lege** plekken: de vorm gaat erheen, en de regel zonder plek verdwijnt.
+
+  Minuten, variant, leerniveau en notitie gaan mee.
+- **Ongedaan maken bij elke manier van weghalen** (ook bij een spacing en bij een training zonder plekcodes, zoals bij Swift; daar blijft *Weghalen*). De melding blijft 8 seconden staan. *Ongedaan maken* werkt alleen als de opbouw van die training intussen niet is veranderd; anders verschijnt *"Niet ongedaan gemaakt: de training is intussen veranderd"*.
+- **Gegevens:** geen nieuw veld, geen migratie. Alleen de bestaande velden van de regels binnen dezelfde training. De Vormenbank, andere trainingen, evaluaties, Week en Lijn veranderen niet.
+- **Niet gekozen:** een extra vraag *"Weet je het zeker?"*. *Ongedaan maken* is sneller en past bij Besluit 149.
+- **Tests:** `tests/plek-weghalen.spec.js` (390 en 1366 px).
+
+---
+
 ## Besluit 162 — Tekentool: hoedjes kleiner dan spelers (Spoor 3, maat M)
 *Besloten 5 november 2026: de initiatiefnemer koos voorbeeld A (een hoedje ongeveer 70% van een speler), na een vergelijking op laptop en telefoon (nu · A 70% · B de helft). Alleen hoe een hoedje getekend wordt; geen gegevens, database of rechten.*
 - **Probleem:** een hoedje was op het veld even breed als een speler (laptop 28 tegen 30 px, telefoon 13 tegen 13,5 px). Bij het bouwen werden de spelers een kwart kleiner gemaakt; de hoedjes niet. Daardoor leek een hoedje even belangrijk als een speler en oogde het veld vol.
@@ -972,6 +994,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 ---
 
 ## Besluit 145 — Een geplaatste vorm naar een andere plek verplaatsen (Spoor 3)
+> **Aangevuld door Besluit 163**: een vorm zonder plek krijgt in het venster weer een plek (ook een plek die volgens het sjabloon ontbreekt).
 *Besloten 30 oktober 2026, na het voorstel `docs/onderzoek/verplaatsen/voorstel.md` met voorbeelden op 390 px. Aanleiding: een droge technische vorm voor *Aannemen en meenemen* stond op Start en kon niet naar A1 zonder opnieuw te kiezen. ↑/↓ schoof de hele regel mee, inclusief de code. Herziet Besluit 139 deels.*
 - **In het venster van een geplaatste vorm** staat bovenaan **Verplaatsen naar** met de plekken van de training: Start · A1 · A2 · B1 · B2 · Partij (geen spacing). Per plek staat wat er nu op staat (*leeg · 6 min* of de naam van de vorm); de huidige plek is grijs.
 - **Eén tik:** een lege plek → de vorm gaat erheen, de oude plek wordt leeg. Een bezette plek → de twee wisselen. Daarna *Naar A1 verplaatst · Ongedaan maken*.
