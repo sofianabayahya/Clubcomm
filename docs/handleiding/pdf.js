@@ -56,13 +56,13 @@ const inhoud = bundel ? delen.map(deel).join('\n') : `<h2>In zes stappen</h2>${n
 const html = `<!doctype html><html lang="nl"><head><meta charset="utf-8"><style>
   @page { size: A4; margin: 16mm 16mm 18mm; }
   body { font-family: Arial, Helvetica, sans-serif; color: #0b2545; font-size: 12pt; line-height: 1.4; }
-  h1 { font-size: 22pt; margin: 0 0 4pt; } .sub { color: #5b6b7f; margin: 0 0 12pt; }
+  h1 { font-size: 22pt; margin: 0 0 4pt; } .adres { font-size: 15pt; margin: 2pt 0 4pt; padding: 6pt 10pt; background: #e7f2fe; border-radius: 6pt; display: inline-block; } .sub { color: #5b6b7f; margin: 0 0 12pt; }
   h2 { font-size: 15pt; margin: 12pt 0 6pt; color: #0869c2; break-after: avoid; } h2.klein { font-size: 12.5pt; color: #0b2545; margin-top: 8pt; }
   ol, ul { padding-left: 18pt; margin: 4pt 0; } li { margin: 0 0 5pt; } p { margin: 4pt 0; }
   .beelden { display: flex; gap: 8pt; margin: 8pt 0; break-inside: avoid; }
   figure { margin: 0; flex: 0 1 31%; } img { width: 100%; max-height: 72mm; object-fit: contain; border: 1px solid #e3e9f1; border-radius: 6pt; } figcaption { font-size: 9pt; color: #5b6b7f; margin-top: 2pt; }
 </style></head><body>
-  <h1>${esc(kop)}</h1><p class="sub">ClubComm · voor trainers · je oefenvormen zijn van jou</p>
+  <h1>${esc(kop)}</h1><p class="adres">Open <b>mijnclubcomm.nl</b> op je telefoon</p><p class="sub">ClubComm · voor trainers · je oefenvormen zijn van jou</p>
   ${inhoud}
 </body></html>`;
 
