@@ -77,9 +77,9 @@ for (const breed of [false, true]) {
     await expect(kaart(page).locator('.tr-her.p').first()).toHaveText('Periodisering');
     await expect(kaart(page).locator('.tr-her.w')).toHaveCount(0); // een concept heeft zijn eigen waarden; geen weekvoorstel nodig
     // Mee uit vorige: de afspraak van do letterlijk, plus het gekozen antwoord; niet de hele tekst
-    await expect(page.locator('.tr-midden > .tr-mee')).toContainText('ik houd maximaal twee coachaccenten centraal.');
-    await expect(page.locator('.tr-midden > .tr-mee')).toContainText('volgende training: één variabele aanpassen');
-    await expect(page.locator('.tr-midden > .tr-mee')).not.toContainText('A2 duurde langer');
+    await expect(page.locator(':is(.tr-midden, .tr-zijwaarom) > .tr-mee')).toContainText('ik houd maximaal twee coachaccenten centraal.');
+    await expect(page.locator(':is(.tr-midden, .tr-zijwaarom) > .tr-mee')).toContainText('volgende training: één variabele aanpassen');
+    await expect(page.locator(':is(.tr-midden, .tr-zijwaarom) > .tr-mee')).not.toContainText('A2 duurde langer');
     await expect(page.locator('.tr-stap .tr-niv')).toHaveText('Herkennen → Kiezen');
     await controleer(page, fouten, 'kaart vr');
 
@@ -93,7 +93,7 @@ for (const breed of [false, true]) {
     await expect(kaart(page)).toContainText('In gekozen vormen: Uitvoeren 1× · Herkennen 2×');
     await expect(kaart(page)).toContainText('Niet gekozen voor de training');
     await expect(kaart(page)).toContainText('Periodisering voor deze dag (niet toegepast): Technische onderbouw opbouwen · Uitvoeren → Herkennen');
-    await expect(page.locator('.tr-midden > .tr-mee')).toContainText('Geen afspraak herkend bij');
+    await expect(page.locator(':is(.tr-midden, .tr-zijwaarom) > .tr-mee')).toContainText('Geen afspraak herkend bij');
     await expect(page.locator('.tr-stap .tr-niv')).toHaveCount(0); // geen leerniveau dat de trainer niet koos
     await controleer(page, fouten, 'kaart do');
     expect((await plan(page, 'tp-do')).methodiek).toBeUndefined(); // alleen bekijken schrijft niets
