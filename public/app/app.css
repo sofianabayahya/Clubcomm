@@ -1021,6 +1021,18 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .vg-balk { display: block; height: 6px; margin-top: 6px; max-width: 220px; background: var(--lijn); border-radius: 9px; overflow: hidden; }
 .vg-balk i { display: block; height: 100%; background: var(--groen); }
 .label.oranje { color: var(--oranje); background: var(--oranje-l); border-color: transparent; }
+/* Besluit 168: Mijn traject als tijdlijn (oud → nieuw); de bol is extra, de tekst zegt wat klaar is */
+.tl { list-style: none; margin: 4px 0 12px; padding: 0 0 0 30px; position: relative; }
+.tl::before { content: ""; position: absolute; left: 11px; top: 12px; bottom: 12px; width: 2px; background: var(--lijn); }
+.tl-stap { position: relative; margin: 0 0 10px; }
+.tl-bol { position: absolute; left: -30px; top: 14px; width: 24px; height: 24px; border-radius: 50%; background: var(--vlak); border: 2px solid var(--lijn); display: grid; place-items: center; }
+.tl-bol svg { width: 14px; height: 14px; }
+.tl-stap.klaar .tl-bol { background: var(--groen); border-color: var(--groen); color: #fff; }
+.tl-stap.nu .tl-bol { border-color: var(--blauw); background: var(--blauw-l); color: var(--blauw); }
+.tl-stap.vervallen .tl-bol { color: var(--zacht); }
+.tl-stap .lijst, .tl-stap .kaartje { margin: 0; }
+.tl-stap.later .kaartje { background: var(--vlak2); box-shadow: none; }
+.tl-fb { background: var(--blauw-l); border-radius: 10px; padding: 8px 10px; margin: 6px 0 0; }
 /* Besluit 167: Plannen minder dubbel */
 .tr-midden > .tr-mee { font-size: 16px; margin: 8px 0; padding: 10px 12px; }
 .tr-midden > .tr-mee small, .tr-midden > .tr-mee .tr-link { display: block; margin-top: 4px; }

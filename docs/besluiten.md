@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 5 november 2026 (t/m Besluit 166)
+Laatst bijgewerkt: 5 november 2026 (t/m Besluit 168)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -21,6 +21,7 @@ Laatst bijgewerkt: 5 november 2026 (t/m Besluit 166)
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
+| 168 | 3 | Wedstrijden aanpassen en Mijn traject als tijdlijn: in het teamvenster (Teams) is elke wedstrijd tikbaar (tegenstander, datum, aftrap, thuis/uit, veld; *Afgelast* aan/uit; *Verwijderen* met bevestiging, niet zolang er een begeleidingsmoment op staat); verandert datum of aftrap, dan schuift het moment mee en krijgt de trainer één bericht. Opnieuw plakken vergelijkt per datum: *gelijk*, **gewijzigd** (*was …*) of **nieuw**, één knop; wat niet meer in het programma staat, blijft staan. Trainer: *Mijn ontwikkeling* toont *Mijn traject* als tijdlijn van oud naar nieuw (kennismaking, momenten, trainingen met feedback, het volgende moment *nu*, afronden; na 6 afgeronde stappen *Eerder*). Geen nieuwe gegevens of rechten | ✅ geldt |  |
 | 167 | 3 | Plannen minder dubbel: afspraak van de vorige training los bovenaan, onderbouwing ingeklapt (*Waarom deze training · voetbalprobleem*), tijd in één regel (*✓ 68 van 68 min ingepland*, open bij te veel), vormen die niet bij het aantal spelers passen één keer benoemd met per plek *past niet* (geen *gemaakt voor …* op elke regel), geen *x van y plekken ingevuld*, Vormenbank op de telefoon ingeklapt | ✅ geldt | |
 | 166 | 3 | Home van begeleider en trainer bij het pakket Trainers begeleiden: **begeleider (HO, TC)** = Vandaag · *Actie nodig* (begeleidingsmomenten deze week, uitgewerkte trainingen van trainers zonder feedback als meekijken aan staat, max. 3, tot 7 dagen na de datum; *n trainers zonder kennismaking* met eerst een venster) · *Mijn trajecten* (één regel per trainer: *1 van 2 · volgend*, balk, label *plannen*; tik = dossier) · *Deze week* als één regel met **Week** (de week van Besluit 146 erachter). **Trainer** = *Actie nodig* · *Mijn volgende training* (**Training maken/openen**, **Nieuwe oefenvorm**, zin over meekijken) · *Van je begeleider* (laatste feedback, 14 dagen) · *Mijn traject* (stand en leerdoel, *Alles over mijn begeleiding*). Geen nieuwe gegevens of rechten | ✅ geldt |  |
 | 165 | 3 | Week rustiger, oefenvorm sneller invullen: in Week geen *min gepland* en geen tijdsbalk (alleen de waarschuwing bij te veel ingepland; de tijd blijft in Plannen), de afspraak van de vorige training bovenaan, de onderbouwing ingeklapt onder *Waarom deze training* (samenvatting A/B en leerniveau). Bewerken: *Opzet* (spelers, keepers, minuten, afmeting) ingeklapt met samenvatting, hulpvraag in het lege vak, varianten en groepsgroottes ingeklapt met aantal. *Uit je tekening*: spelers per kleur en keepers overnemen met één tik, alleen in lege velden | ◐ deels herzien | door 167 (Plannen volgt dezelfde lijn) |
@@ -52,7 +53,7 @@ Laatst bijgewerkt: 5 november 2026 (t/m Besluit 166)
 | 139 | 3 | Eén oefenvormkiezer voor elke club: dezelfde bediening, inhoud uit het profiel (gereedschap, vaardigheid, leerniveau alleen als het profiel ze heeft); compacte regel per vorm met redenen, meer achter ⓘ; niets uitgesloten (past het best · past deels · alle andere); *Ongedaan maken* na het plaatsen; leerniveau bij een vorm alleen ter informatie (nooit oranje of lager) | ◐ deels herzien | door 141 (*Mijn vormen* heet *Vormenbank*; blok Partij heet *Toepassing · partij*); door 145 (een geplaatste vorm verplaatsen zonder opnieuw te kiezen); aangevuld door 150 |
 | 138 | 1 · 3 | Tabblad Training bij de DCG-methodiek: *Mijn lijn* als één overzicht per week (bolletjes per training, leerniveau begin → eind, uitgevoerde minuten), vaststellen, afgelaste training één keer signaleren (doorschuiven of laten vervallen), titel = hoofdthema, vaardigheden per gereedschap (profiel), lege plek opent *Vorm kiezen* gefilterd op gereedschap, vaardigheid en aantal spelers | ◐ deels herzien | door 139 (één oefenvormkiezer voor elke club; geen knop *past bij*, niets uitgesloten); door 141 (tik op een week = weekdetail; *Vaststellen* heet *Periodeplanning vastleggen*, status *Vastgelegd*; knoppen onder *Beheer*) |
 | 137 | 1 · 3 | DCG-periodisering O13 invoeren: kolommen van het Excel-spoorboekje werken direct; hoofdthema, teamfunctie en ondersteunend gereedschap erbij (in de onderbouwing); contrathema gekoppeld aan één probleem (+ eventueel een ondersteunend) met behoud van de eigen tekst, nooit op losse woorden; handelingsketen vrije tekst; contra telt niet mee in de minuten | ◐ deels herzien | door 144 (hoofdthema, leerniveaus en route horen bij de dag, niet bij het weekplan; contrathema als *Weekvoorstel*) |
-| 136 | 3 | Teams, trainingsdagen en wedstrijden zelf beheren (clubbeheerder en HO): team toevoegen, trainer koppelen, trainingen pas in de kalender als er een trainer is, wedstrijden plakken van voetbal.nl, trainingsschema laden (vanaf een gekozen leeftijd) | ✅ geldt |  |
+| 136 | 3 | Teams, trainingsdagen en wedstrijden zelf beheren (clubbeheerder en HO): team toevoegen, trainer koppelen, trainingen pas in de kalender als er een trainer is, wedstrijden plakken van voetbal.nl, trainingsschema laden (vanaf een gekozen leeftijd) | ✅ geldt | aangevuld door 168 (wedstrijden aanpassen, opnieuw plakken werkt bij) |
 | 135 | 3 | Tabblad Training in de volgorde van het werk (laptop: Lijn · Plannen · Week · Vormen), regel *Je zit in* (week, thema, A/B; tik = Lijn), geen dubbelingen (maandoverzicht alleen in Lijn, evalueren in Week), weekthema met A/B voor clubs zonder periodisering | ◐ deels herzien | door 138 (Lijn bij de DCG-methodiek: één overzicht); door 141 (Vormen heet Vormenbank) |
 | 134 | 3 | Trainers begeleiden (KNVB): begeleiden en ontwikkelen, niet beoordelen; begeleider (HO of TC met traject) ziet het hele seizoen de trainingen van de trainer, kijkt en geeft feedback; club beslist; invoeren per club in te stellen; trainer deelt zelf vormen in een clubbank. Gebouwd: moment verplaatsen en *niet doorgegaan*. Meekijken: gebouwd met Besluit 159 (database 032 en 034 toegepast 4-11); clubbank in de app nog niet | ◐ deels herzien | door 161 (clubbank voorlopig niet in gebruik, geen bouwprioriteit) |
 | 133 | 1 · 3 | DCG-methodiek als profiel v3 (kerndocument leidend); methodiekblok compact; leerniveau per blok; status berekend; evaluatiekaart (3 open + verdiepend); periodisering laden uit CSV met voorbeeld; observatiepunten bij de wedstrijd; uitgebreide vormvelden | ◐ deels herzien | door 137 (contrathema, handelingsketen, extra kolommen); uitleg 29-10: inhoud persoonlijk (Spoor 1), technisch via het DCG-profiel; door 144 (methodiekblok = trainingskaart met vijf regels; weekplan alleen weekvelden); door 155 (welke evaluatievragen open staan komt uit het profiel, `evaluatie.kort`) |
@@ -705,6 +706,27 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 168 — Wedstrijden aanpassen en Mijn traject als tijdlijn (Spoor 3, maat M)
+> Voorstel en voorbeelden op 390 px: `docs/onderzoek/tijdlijn-wedstrijden/voorstel.md` (akkoord op 1, 2 en 3, 5 november 2026). Vult Besluit 136 (wedstrijden) en Besluit 166 (*Alles over mijn begeleiding*) aan.
+
+**Waarom.** Een geplakt programma verandert: de tegenstander of het eigen team verzet een wedstrijd. Aanpassen kon niet; je kon alleen toevoegen. En de trainer zag zijn begeleiding als losse lijsten, niet als één traject.
+
+**Wat.**
+1. **Wedstrijden aanpassen** (tabblad Teams → team; bij het pakket de HO, verder wie teams beheert):
+   - Alle komende wedstrijden staan in het teamvenster (eerste 4, de rest onder *Toon alles*), ook afgelaste; elke regel is tikbaar. Een wedstrijd met een begeleidingsmoment staat erbij.
+   - **Wedstrijd aanpassen:** tegenstander, datum, aftrap, thuis/uit, veld. **Afgelast** (en *Gaat toch door*). **Verwijderen** na bevestiging, maar niet zolang er een open begeleidingsmoment op staat (eerst afgelast of het moment verplaatsen; geen gegevensverlies).
+   - Verandert de **datum of aftrap** van een wedstrijd met een open begeleidingsmoment, dan schuift het moment mee en krijgt de trainer **één bericht** (*Wedstrijd verplaatst*). Andere wijzigingen (veld, tegenstander) geven geen bericht.
+2. **Opnieuw plakken werkt bij:** ClubComm vergelijkt per datum met wat er staat: *gelijk*, **gewijzigd** (tijd, tegenstander of thuis/uit, met *was …*) of **nieuw**. Eén knop (*1 nieuw toevoegen · 1 wijzigen*); een wijziging gaat via dezelfde weg als het venster (moment mee, één bericht). Een wedstrijd die niet meer in het programma staat, haalt ClubComm **niet** vanzelf weg.
+3. **Mijn traject als tijdlijn** (trainer, *Mijn ontwikkeling*): van oud naar nieuw *Kennismaking* → begeleidingsmomenten (dezelfde regel en tik als eerder: verslag, vragenlijst) → trainingen met **feedback** van de begeleider (de tekst erbij) → het volgende moment (*nu*) → *Afronden* (als het traject loopt). Na 6 afgeronde stappen klappen de oudste in onder *Eerder*. De bol is extra; de tekst zegt wat klaar is.
+
+**Niet gedaan.** Wedstrijden vanzelf weghalen die niet meer in het programma staan. Een bericht bij elke wijziging (alleen bij een verplaatst begeleidingsmoment). Een regel *Moment verplaatsen* bij een afgelaste wedstrijd (voorgesteld, nog niet besloten).
+
+**Gegevens en rechten.** Bestaande velden van de wedstrijd (`datum`, `tijd`, `eind`, `tegen`, `thuis`, `veld`, `afgelast`) en de datum van een gekoppeld moment; een bericht aan de trainer zoals bij de kennismaking. Wie wedstrijden mag toevoegen, mag ze aanpassen. De tijdlijn toont alleen wat de trainer al zag. Geen migratie.
+
+**Tests:** `tests/wedstrijden-tijdlijn.spec.js` (aanpassen met moment en bericht, opgeslagen in de nep-database, alleen veld = geen bericht, verwijderen geweigerd met moment, afgelast heen en terug, verwijderen na bevestigen; opnieuw plakken gelijk/gewijzigd/nieuw; tijdlijn met 5 stappen in volgorde).
+
+---
+
 ## Besluit 167 — Plannen minder dubbel (Spoor 3, maat M)
 > Analyse, voorstel 1 en voorbeeld op 390 px: `docs/onderzoek/training-tabbladen/voorstel.md` (akkoord op punt 1 t/m 6). Herziet deels Besluit 142 (tijd), 144 (trainingskaart) en 165 (dezelfde lijn als Week).
 
@@ -1263,6 +1285,7 @@ Een uitklapper die je opent of sluit, blijft zo zolang de app open is (zoals Bes
 - **Niet nu:** de dinsdagse Veo-besprekingen en themalessen blijven in het Excel-spoorboekje.
 
 ## Besluit 136 — Teams, trainingsdagen en wedstrijden zelf beheren; trainingen pas bij een trainer
+> **Aangevuld door Besluit 168**: wedstrijden aanpassen in het teamvenster; opnieuw plakken toont *gelijk*, *gewijzigd* en *nieuw*.
 *Besloten 29 oktober 2026 ("bouw ze alle drie"), na voorbeelden (`docs/onderzoek/teams-zelf/`). Aanleiding: bij AVV Swift kon een nieuwe trainer (zondag O16-2) niet aan zijn team gekoppeld worden, omdat het team niet bestond, en teams, trainingsdagen en wedstrijden kon alleen Claude invoeren.*
 - **Wie:** de **clubbeheerder** (bovenaan *Seizoen*) én de **HO** (pakket Trainers begeleiden: onder *Trainers* de regels *Teams, trainingsdagen en wedstrijden* en *Trainer toevoegen*). Een TC niet.
 - **Teams en trainingsdagen:** knoppen bovenaan (*Team toevoegen*, *Trainingsschema laden*), daaronder per team trainer · dagen · aantal wedstrijden; ontbreekt iets, dan in oranje.
