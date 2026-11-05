@@ -4,7 +4,7 @@
 |---|---|
 | **Status in de app** | In productie · commit `699cb9e` (5-11-2026) |
 | **Status van deze kaart** | Gepubliceerd (Besluit 151) · PDF `docs/presentaties/pdf/ClubComm-snelstart-tekenen.pdf` (Kort + Let op, versie 5-11-2026, app `699cb9e`; opnieuw maken met `node docs/handleiding/pdf.js`) |
-| **Besluiten** | 124–127 · 148 · 152 · 153 · 156 · 157 · 158 · 160 · 161 (trainerspilot) |
+| **Besluiten** | 124–127 · 148 · 152 · 153 · 156 · 157 · 158 · 160 · 161 (trainerspilot) · 162 (hoedjes) |
 | **Schermafbeeldingen** | `docs/presentaties/beelden/tekentool-laptop.jpg` · `tekentool-telefoon.jpg` · `tekentool-gekanteld.jpg` · `tekentool-tel-spelers.jpg` · `tekentool-tel-hoedjes.jpg` · `tekentool-tel-kies.jpg` |
 | **Doelgroepen** | beginner trainer · ervaren trainer |
 
@@ -40,7 +40,7 @@
 - Onder het veld staan **Dupliceren**, de **kleuren** en **Verwijderen**. Op de telefoon (staand) met het paneel Spelers open staan *Kopie* en *Weg* bovenin het paneel (Besluit 158).
 - **↶ / Ongedaan maken** zet de laatste stap terug, ook na verwijderen.
 - **Pijlen:** *Loopactie*, *Pass*, *Dribbel* en *Schot*, ook met een boog. Sleep de witte bolletjes om een pijl langer of schuiner te maken, en het blauwe bolletje voor een boog (Besluit 126, 127).
-- **Hoedjes:** tik *Hoedjes*, kies een kleur en tik op het veld; je kunt doortikken. *Vak met hoedjes*: sleep een rechthoek en op elke hoek komt een hoedje.
+- **Hoedjes:** tik *Hoedjes*, kies een kleur en tik op het veld; je kunt doortikken. *Vak met hoedjes*: sleep een rechthoek en op elke hoek komt een hoedje. Een hoedje is kleiner dan een speler, zodat de spelers opvallen; aantikken met *Kies* lukt ook net ernaast (Besluit 162).
 
 **Op de telefoon** (Besluit 156, 157)
 - **Staand:** het paneel Spelers ligt onderaan en het veld blijft erboven zichtbaar.
