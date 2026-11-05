@@ -69,7 +69,7 @@ De overdracht is **niet** als enige bron gebruikt. Gecontroleerd is:
 
 | # | Voorstel | Status | Waarde | Risico | Omvang | Afhankelijk van |
 |---|---|---|---|---|---|---|
-| 3.1 | **Correctie van de 8 DCG-weekplannen** (`supabase/scripts/2026-10-30_dcg_weekplannen_correctie.sql.voorstel`) | Script klaar en gecontroleerd tegen de CSV. **Vandaag gecontroleerd: alle 8 weekplannen zijn nog precies zoals bij de controle** (stempels gelijk, laatst gewijzigd 29-10). Het script werkt dus nog. | **E**: Lijn, trainingskaart en *Je zit in* tonen het weekthema in plaats van de dagwaarden van één training. | Laag tot middel: het verandert gegevens, maar alles-of-niets en met een stempelcontrole. Trainingen worden niet aangeraakt. | S (script) | alleen jouw akkoord (maat L: database) |
+| 3.1 | **Correctie van de 8 DCG-weekplannen** (`supabase/scripts/2026-10-30_dcg_weekplannen_correctie.sql.voorstel`) | Script klaar en gecontroleerd tegen de CSV. **Vandaag gecontroleerd: alle 8 weekplannen zijn nog precies zoals bij de controle** (stempels gelijk, laatst gewijzigd 29-10). Het script werkt dus nog. | **E**: de gegevens kloppen weer met de huidige import. Zichtbaar: de *wedstrijdsituatie* in week 44–49, en de informatieregel bij do 29-10. *(Gecorrigeerd 05-11: de trainingskaart negeert de dagvelden al sinds Besluit 144; zie `1-weekplannen-vergelijking.md`.)* | Laag tot middel: het verandert gegevens, maar alles-of-niets en met een stempelcontrole. Trainingen worden niet aangeraakt. | S (script) | alleen jouw akkoord (maat L: database) |
 | 3.2 | **Lijn zonder profiel: rustige lege toestand** (bijlage A van de UX-audit) | Akkoord *als ontwerp*. Er is nog geen besluit. | **B**: geen *"Nog leeg"* × 7 en geen schijn van achterstand. | Laag (alleen scherm) | S–M | besluit (`NNN`); voorbeeld bestaat al |
 | 3.3 | **Vorige-afspraaklus en reflectie direct na de training** (begeleidingsproces, voorstel 1) | Besluiten van 04-11 genomen; technisch voorstel klaar. De voorwaarde (033) is **nu vervuld**. | HJO en trainer: de afspraak komt terug; reflecteren in de goede volgorde (KNVB-cyclus). | Laag: nieuwe velden in bestaande rijen, geen nieuw recht | M | besluit; voorbeeld op 390 px |
 | 3.4 | **Inrichten: startlijst voor de clubbeheerder op de laptop** (*Klaar voor gebruik?*) | Besluit 120 geldt, maar is niet gebouwd. Het voorbeeld (`docs/onderzoek/inrichten/`) is niet goedgekeurd als scherm. | Een tweede club kan zichzelf inrichten. | Laag | M | voorbeeld akkoord; samen met 4.7 (Rollen) |
@@ -116,7 +116,7 @@ Dit volgt jouw prioriteit, en eerst wat al klaarligt.
 
 | Volgorde | Wat | Waarom nu | Maat |
 |---|---|---|---|
-| 1 | **3.1 Correctie weekplannen uitvoeren** | Ligt klaar en is vandaag gecontroleerd. De weekplannen tot 14-12 worden nu getoond, dus de fout is elke week zichtbaar. | L (script, akkoord) |
+| 1 | **3.1 Correctie weekplannen uitvoeren** | Ligt klaar en is vandaag gecontroleerd. Klein zichtbaar effect (wedstrijdsituatie), maar daarna zijn de gegevens schoon voordat er nieuwe functies op bouwen. | L (script, akkoord) |
 | 2 | **4.5 Praktijktoets week 46** | Dan heeft categorie 2 echt bewijs, voordat we meer bouwen. | — |
 | 3 | **3.2 + 4.6 Lijn en vaktaal zonder profiel** | Snelle winst voor **B**, met een goedgekeurd ontwerp. Geen nieuw scherm. | S–M, 1 besluit |
 | 4 | **4.1 + 4.2 Startaanbod en KNVB-basisprofiel, als één bouwvoorstel** | Het grootste gat voor **B**. Allebei als meegeleverd bestand en opt-in, dus zonder nieuwe rechten en met dezelfde schermen als DCG. | M (bouwvoorstel eerst) |
