@@ -1,6 +1,6 @@
 # Minder klikken: welke techniek waar? (5 november 2026)
 
-**Gekozen (5-11): 1 met de regel, 2 per bouw; vastgelegd als Besluit NNN.** Gebouwd: `gebouwd-rollen.jpg`, `gebouwd-seizoen.jpg`.
+**Gekozen (5-11): 1 met de regel, 2 per bouw; vastgelegd als Besluit 169.** Gebouwd: `gebouwd-rollen.jpg`, `gebouwd-seizoen.jpg`.
 
 *Spoor 3 — ClubComm. Alleen onderzoek: er is niets veranderd aan de app, de database of productie. Gemeten in de demo (verzonnen namen) op een telefoon van 390 × 844 px; `meting.json` en `nu-*.jpg` in deze map.*
 

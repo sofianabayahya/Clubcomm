@@ -389,7 +389,7 @@ test.describe('Demo', () => {
     expect(rol).toEqual({ rol: 'tc', bouwen: ['Onderbouw'] });
     // Clubbeheerder → Rollen: de TC staat bij de rollen in gebruik en in de lijst met mensen
     await page.locator('nav.nav button[data-tab="rollen"]').click();
-    // Besluit NNN: mensen per rol ingeklapt; zoeken opent de groep met de treffer
+    // Besluit 169: mensen per rol ingeklapt; zoeken opent de groep met de treffer
     await page.fill('[data-filter="rollen"]', 'technisch');
     await expect(page.locator('#app details.bl-groep[open]', { hasText: 'Technisch coördinatoren (1)' })).toBeVisible();
     await expect(page.locator('#app [data-act="rollenPersoon"]:visible', { hasText: 'Technisch coördinator (Onderbouw)' }).first()).toBeVisible();

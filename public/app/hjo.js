@@ -256,7 +256,7 @@
       ${CC.pakketTrainers && CC.pakketTrainers(S) ? `<label for="sn-f">Jouw functie (onder de welkomstmail, mag leeg)</label><input id="sn-f" name="f" autocomplete="off" placeholder="Bijv. HJO bovenbouw" value="${esc(eigenFunctie())}">` : ''}
       <button class="knop">Toevoegen en uitnodigen</button>
       <p class="zacht klein">Hij of zij krijgt een welkomstmail met hoe je inlogt. Staat dit e-mailadres al in de club (bijv. als ouder), dan komt de rol erbij.</p></form>`);
-    // Besluit NNN: vanuit Teams zonder trainer of teamleider staat de rol al goed
+    // Besluit 169: vanuit Teams zonder trainer of teamleider staat de rol al goed
     if (el && el.dataset && el.dataset.rol) { const r = document.getElementById('sn-r'); if (r && [...r.options].some((o) => o.value === el.dataset.rol)) r.value = el.dataset.rol; } });
   CC.on('stafNieuwOk', (f) => {
     const S = CC.S(); const me = CC.me(); const naam = f.n.value.trim(); const email = f.e.value.trim().toLowerCase(); const r = f.r.value; const t = f.team.value;

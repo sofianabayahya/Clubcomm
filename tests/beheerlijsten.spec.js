@@ -1,4 +1,4 @@
-// ClubComm — Besluit NNN: Rollen per rol ingeklapt met zoeken en een regel voor teams zonder trainer of teamleider; Seizoen per bouw ingeklapt.
+// ClubComm — Besluit 169: Rollen per rol ingeklapt met zoeken en een regel voor teams zonder trainer of teamleider; Seizoen per bouw ingeklapt.
 const { test, expect } = require('@playwright/test');
 const { volgFouten, controleer } = require('./hulp');
 const TAG = { tag: ['@clubbeheer', '@schermen'] };
