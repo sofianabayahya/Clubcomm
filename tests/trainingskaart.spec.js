@@ -68,7 +68,7 @@ for (const breed of [false, true]) {
     // vr: concept uit de periodisering
     await plannen(page, 't-vr');
     await expect(kaart(page).locator('.tr-stand')).toHaveText('Concept uit de periodisering · nog niet aangepast');
-    await expect(kaart(page).locator('.tr-kn')).toHaveText(['Wat', 'Waar', 'Welke', 'Niveau', 'Mee uit vorige']);
+    await expect(kaart(page).locator('.tr-kn')).toHaveText(['Wat', 'Waar', 'Welke', 'Niveau']); // Besluit NNN: Mee uit vorige staat los boven de ingeklapte kaart
     await expect(kaart(page)).toContainText('Voetbalprobleem 2 · Vooruitgang creëren');
     await expect(kaart(page)).toContainText('Dagthema: Opbouwen tegen twee/drie jagers');
     await expect(kaart(page)).toContainText('Wedstrijdsituatie');
@@ -77,9 +77,9 @@ for (const breed of [false, true]) {
     await expect(kaart(page).locator('.tr-her.p').first()).toHaveText('Periodisering');
     await expect(kaart(page).locator('.tr-her.w')).toHaveCount(0); // een concept heeft zijn eigen waarden; geen weekvoorstel nodig
     // Mee uit vorige: de afspraak van do letterlijk, plus het gekozen antwoord; niet de hele tekst
-    await expect(kaart(page).locator('.tr-mee')).toContainText('ik houd maximaal twee coachaccenten centraal.');
-    await expect(kaart(page).locator('.tr-mee')).toContainText('volgende training: één variabele aanpassen');
-    await expect(kaart(page).locator('.tr-mee')).not.toContainText('A2 duurde langer');
+    await expect(page.locator('.tr-midden > .tr-mee')).toContainText('ik houd maximaal twee coachaccenten centraal.');
+    await expect(page.locator('.tr-midden > .tr-mee')).toContainText('volgende training: één variabele aanpassen');
+    await expect(page.locator('.tr-midden > .tr-mee')).not.toContainText('A2 duurde langer');
     await expect(page.locator('.tr-stap .tr-niv')).toHaveText('Herkennen → Kiezen');
     await controleer(page, fouten, 'kaart vr');
 
@@ -93,13 +93,14 @@ for (const breed of [false, true]) {
     await expect(kaart(page)).toContainText('In gekozen vormen: Uitvoeren 1× · Herkennen 2×');
     await expect(kaart(page)).toContainText('Niet gekozen voor de training');
     await expect(kaart(page)).toContainText('Periodisering voor deze dag (niet toegepast): Technische onderbouw opbouwen · Uitvoeren → Herkennen');
-    await expect(kaart(page).locator('.tr-mee')).toContainText('Geen afspraak herkend bij');
+    await expect(page.locator('.tr-midden > .tr-mee')).toContainText('Geen afspraak herkend bij');
     await expect(page.locator('.tr-stap .tr-niv')).toHaveCount(0); // geen leerniveau dat de trainer niet koos
     await controleer(page, fouten, 'kaart do');
     expect((await plan(page, 'tp-do')).methodiek).toBeUndefined(); // alleen bekijken schrijft niets
 
     // Weekvoorstel alleen met een bewuste tik overnemen (lege velden)
-    await page.locator('.tr-tkaart [data-act="tpMethodiek"]').click();
+    await page.evaluate(() => document.querySelectorAll('.tr-waarom').forEach((d) => { d.open = true; })); // Besluit NNN: onderbouwing ingeklapt
+  await page.locator('.tr-tkaart [data-act="tpMethodiek"]').click();
     await expect(page.locator('#sheet .tr-wv')).toContainText('Weekvoorstel');
     await page.locator('#sheet [data-act="tpWeekOver"]').click();
     const do2 = await plan(page, 'tp-do');
@@ -144,6 +145,7 @@ test('trainingskaart: oorspronkelijke planning bij de eerste aanpassing van een 
   await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
   await plannen(page, 't-vr');
   expect((await plan(page, 't-vr')).origineel).toBeUndefined(); // ongewijzigd: geen kopie in de database
+  await page.evaluate(() => document.querySelectorAll('.tr-waarom').forEach((d) => { d.open = true; })); // Besluit NNN: onderbouwing ingeklapt
   await page.locator('.tr-tkaart [data-act="tpMethodiek"]').click();
   await page.fill('#pm-g', 'Eerste contact weg van de druk'); await page.locator('#pm-g').press('Tab');
   await page.locator('#sheet [data-act="sluitRender"]').click();
