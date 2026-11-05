@@ -219,7 +219,7 @@
     const vs = ids.map((id) => vorm(S, id)).filter((v) => v && !past(v, n, k) && !voorAantal(v, n, k)); if (!vs.length) return '';
     const br = [...new Set(vs.map((v) => bereik(v.spelersMin, v.spelersMax, 'spelers')))];
     return `<div class="tr-twaarsch tr-pastniet" role="status">⚠ <b>${vs.length} ${vs.length === 1 ? 'vorm is' : 'vormen zijn'} gemaakt voor ${br.length === 1 && br[0] ? esc(br[0]) : 'een ander aantal spelers'}</b>; er ${n === 1 ? 'wordt' : 'worden'} er ${n} ${p.spelers == null || p.spelers === '' ? (S.pres[a.id] ? 'aanwezig' : 'verwacht') : 'gepland'}. Tik op een vorm voor een variant of een andere vorm.</div>`; };
-  const planMidden = (S, p, a) => {
+  const planMidden = (S, p, a, zij) => { // zij = op de laptop staan afspraak, onderbouwing en tijd in de rechterkolom (Besluit 169)
     const n = aantalSp(S, p, a), k = p.keepers == null || p.keepers === '' ? null : Number(p.keepers); const metCode = (p.onderdelen || []).some((o) => o.blok); const sj = sjablonen(S);
     const gezien = {};
     const gr = groepen(p).map((g) => { const min = g.items.reduce((t, i) => t + (Number(p.onderdelen[i].min) || 0), 0); const terug = gezien[g.k]; gezien[g.k] = true;
@@ -229,10 +229,10 @@
       <div class="tr-plankop"><div><h2>${esc(dagNaam(a))} · ${esc(p.thema || 'Training')} <button class="icoonknop" data-act="tpKopBewerk" data-id="${a.id}" aria-label="Thema en aantallen aanpassen">${icon('pencil')}</button>${CC.trStatus ? CC.trStatus(S, p) : ''}</h2>
         ${CC.trStap ? CC.trStap(S, p, a) : ''}<small class="zacht">${[a.tijd ? `${a.tijd}${a.eind ? `–${a.eind}` : ''}` : '', n ? `${n} spelers${p.spelers == null || p.spelers === '' ? (S.pres[a.id] ? ' aanwezig' : ' verwacht') : ''}` : '', k ? `${k} keeper${k === 1 ? '' : 's'}` : '', p.sjabloon ? `sjabloon ${esc((sj.find((x) => x.id === p.sjabloon) || { naam: '' }).naam)}` : ''].filter(Boolean).join(' · ')}</small></div>
         ${(p.onderdelen || []).length ? `<div class="knoppen"><button class="knop licht" data-act="tpKopieNaar" data-id="${a.id}">${icon('repeat')}Kopiëren naar…</button><button class="knop licht" data-act="tpPrint" data-id="${a.id}">${icon('printer')}Printen</button><button class="knop licht" data-act="tpMeer" data-id="${a.id}" aria-label="Meer">⋯</button></div>` : ''}</div>
-      ${CC.trMee ? CC.trMee(S, p, a) : ''}
-      ${waaromPlan(S, p, a)}
+      ${zij ? '' : CC.trMee ? CC.trMee(S, p, a) : ''}
+      ${zij ? '' : waaromPlan(S, p, a)}
       ${CC.trFeedback ? CC.trFeedback(S, p) : ''}
-      ${(p.onderdelen || []).length ? tijdsbalk(S, p, a, 'kort') : ''}
+      ${zij || !(p.onderdelen || []).length ? '' : tijdsbalk(S, p, a, 'kort')}
       ${pastNiet(S, p, a, n, k)}
       ${gr || startKeuze(S, p, a, sj)}
       ${(p.onderdelen || []).length ? `<div class="tr-kop"><div class="knoppen"><button class="knop licht" data-act="tpVormKiezen" data-id="${a.id}">${icon('plus')}Oefenvorm</button><button class="knop licht" data-act="tpSpacing" data-id="${a.id}">${icon('plus')}Spacing</button></div></div>` : ''}
@@ -621,14 +621,19 @@
     const a = tr.find((x) => x.id === h.segVal('aanwAct', standaard.id)) || standaard; const p = plan(S, a.id);
     return `${CC.trAfgelast ? CC.trAfgelast(S) : ''}${strook(S, tr, a)}${CC.trJeZitIn ? CC.trJeZitIn(S, a) : ''}${planDrie(S, p, a, null)}`; };
   const planDrie = (S, p, a, lijst) => `<div class="tr-plan">
-      <div class="tr-pmid">${p ? planMidden(S, p, a) : `<div class="kaartje"><b>${esc(dagNaam(a))}</b><small class="zacht">${a.tijd ? `${a.tijd}${a.eind ? `–${a.eind}` : ''}` : ''}</small><button class="knop vol" data-act="tpNieuw" data-id="${a.id}" data-inline="1">${icon('pencil')}Training voorbereiden</button></div>`}</div>
-      <div class="tr-pzij">${zijKolom(S, p, a, lijst)}</div>
+      <div class="tr-pmid">${p ? planMidden(S, p, a, zijOpen(p)) : `<div class="kaartje"><b>${esc(dagNaam(a))}</b><small class="zacht">${a.tijd ? `${a.tijd}${a.eind ? `–${a.eind}` : ''}` : ''}</small><button class="knop vol" data-act="tpNieuw" data-id="${a.id}" data-inline="1">${icon('pencil')}Training voorbereiden</button></div>`}</div>
+      <div class="tr-pzij">${zijOpen(p) ? zijWaarom(S, p, a) : ''}${zijKolom(S, p, a, lijst)}</div>
       <div class="tr-pbank">${p ? bankIn(S, p, a) : ''}</div></div>`;
   // Besluit 167: op de telefoon staat de Vormenbank onder de training ingeklapt (+ Oefenvorm opent de kiezer); op de laptop een kolom
   const bankIn = (S, p, a) => { const b = bankKolom(S, p, a); if (!b || groot()) return b;
     return `<details class="uitklap tr-bankklap" data-onthoud="bank" ${onthoud('bank', false) ? 'open' : ''}><summary>Vormenbank · ${mijnVormen(S).length} ${mijnVormen(S).length === 1 ? 'vorm' : 'vormen'} · zoeken</summary>${b}</details>`; };
   // Besluit 135: geen dubbelingen. De weekstrook staat al bovenaan (alleen bij trainingen op datum hier een lijst); het maandoverzicht staat in Lijn;
   // evalueren gebeurt in Week (alleen een losse training zonder kalender evalueer je hier)
+  // Besluit 169: op de laptop (gesplitst scherm) staan de afspraak, de onderbouwing en de tijd rechts naast de training, open: geen tikken nodig.
+  // Op de telefoon blijven ze in de training, ingeklapt (Besluit 167).
+  const zijOpen = (p) => !!p && groot();
+  const zijWaarom = (S, p, a) => { const mee = CC.trMee ? CC.trMee(S, p, a) : ''; const m = CC.trMethodiek ? CC.trMethodiek(S, p, a, false, true) : ''; const t = (p.onderdelen || []).length ? tijdsbalk(S, p, a) : '';
+    return mee || m || t ? `<div class="kaartje tr-zijwaarom">${mee}${m ? `<b class="tr-zijkop">Waarom deze training</b>${m}` : ''}${t}</div>` : ''; };
   const zijKolom = (S, p, a, lijst) => `${lijst ? `<div class="kaartje"><b>Trainingen</b><div class="tr-lijst">${lijst.map((x) => { const q = plan(S, x.id || x.actId); const xa = x.datum ? x : actVan(S, x);
       return `<button type="button" class="tr-rij tr-dag ${xa.id === a.id ? 'aan' : ''}" data-act="seg" data-key="${x.los ? 'losPlan' : 'aanwAct'}" data-val="${esc(xa.id)}"><span class="tr-t"><b>${esc(dagNaam(xa))}</b><small>${q ? `${esc(q.thema || 'Training')} · ${totaal(q)} min` : 'nog niet voorbereid'}${q && CC.trStatus ? CC.trStatus(S, q) : q && q.gegeven ? ' · gegeven' : ''}</small></span>${q && q.gegeven ? icon('check') : ''}</button>`; }).join('')}</div></div>` : ''}
     ${CC.trBespreek ? CC.trBespreek(S, a) : ''}${p && (lijst || p.los) ? terugblik(S, p, a) : p && afgelopen(a) ? `<button class="knop licht vol" data-act="trNaarWeek" data-id="${esc(a.id)}">${icon('clipboard-check')}${p.gegeven ? 'Evaluatie bekijken' : 'Evalueren'} (Week)</button>` : ''}`;

@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 5 november 2026 (t/m Besluit 169)
+Laatst bijgewerkt: 5 november 2026 (t/m Besluit 170)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -21,9 +21,10 @@ Laatst bijgewerkt: 5 november 2026 (t/m Besluit 169)
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
-| 169 | 3 | Lange beheerlijsten ingeklapt met zoeken: **Rollen** = mensen per rol ingeklapt (*Trainers (15) · Teamleiders · … · Ouders*; iemand met twee rollen in beide), zoeken op naam, team of rol (opent de groep met de treffer), één oranje regel *n teams zonder trainer of teamleider* (buiten het pakket ook teamleider) die per team *Persoon toevoegen* opent met de rol al gekozen. **Seizoen** (en Teams van de HO) = teams per bouw ingeklapt met *n zonder trainer* in de kop, zoeken bij meer dan 6 teams; bij weinig teams of één bouw open. Open of dicht blijft zo zolang de app open is. Geen nieuwe gegevens of rechten | ✅ geldt |  |
+| 170 | 3 | Lange beheerlijsten ingeklapt met zoeken: **Rollen** = mensen per rol ingeklapt (*Trainers (15) · Teamleiders · … · Ouders*; iemand met twee rollen in beide), zoeken op naam, team of rol (opent de groep met de treffer), één oranje regel *n teams zonder trainer of teamleider* (buiten het pakket ook teamleider) die per team *Persoon toevoegen* opent met de rol al gekozen. **Seizoen** (en Teams van de HO) = teams per bouw ingeklapt met *n zonder trainer* in de kop, zoeken bij meer dan 6 teams; bij weinig teams of één bouw open. Open of dicht blijft zo zolang de app open is. Geen nieuwe gegevens of rechten | ✅ geldt |  |
+| 169 | 3 | Plannen op de laptop als gesplitst scherm: de afspraak van de vorige training, *Waarom deze training* en de tijd staan rechts naast de training, open (geen tikken). Op de telefoon blijft het zoals Besluit 167. Geen vaste kop, geen kloktijden | ✅ geldt | |
 | 168 | 3 | Wedstrijden aanpassen en Mijn traject als tijdlijn: in het teamvenster (Teams) is elke wedstrijd tikbaar (tegenstander, datum, aftrap, thuis/uit, veld; *Afgelast* aan/uit; *Verwijderen* met bevestiging, niet zolang er een begeleidingsmoment op staat); verandert datum of aftrap, dan schuift het moment mee en krijgt de trainer één bericht. Opnieuw plakken vergelijkt per datum: *gelijk*, **gewijzigd** (*was …*) of **nieuw**, één knop; wat niet meer in het programma staat, blijft staan. Trainer: *Mijn ontwikkeling* toont *Mijn traject* als tijdlijn van oud naar nieuw (kennismaking, momenten, trainingen met feedback, het volgende moment *nu*, afronden; na 6 afgeronde stappen *Eerder*). Geen nieuwe gegevens of rechten | ✅ geldt |  |
-| 167 | 3 | Plannen minder dubbel: afspraak van de vorige training los bovenaan, onderbouwing ingeklapt (*Waarom deze training · voetbalprobleem*), tijd in één regel (*✓ 68 van 68 min ingepland*, open bij te veel), vormen die niet bij het aantal spelers passen één keer benoemd met per plek *past niet* (geen *gemaakt voor …* op elke regel), geen *x van y plekken ingevuld*, Vormenbank op de telefoon ingeklapt | ✅ geldt | |
+| 167 | 3 | Plannen minder dubbel: afspraak van de vorige training los bovenaan, onderbouwing ingeklapt (*Waarom deze training · voetbalprobleem*), tijd in één regel (*✓ 68 van 68 min ingepland*, open bij te veel), vormen die niet bij het aantal spelers passen één keer benoemd met per plek *past niet* (geen *gemaakt voor …* op elke regel), geen *x van y plekken ingevuld*, Vormenbank op de telefoon ingeklapt | ◐ deels herzien | door 169 (op de laptop rechts en open) |
 | 166 | 3 | Home van begeleider en trainer bij het pakket Trainers begeleiden: **begeleider (HO, TC)** = Vandaag · *Actie nodig* (begeleidingsmomenten deze week, uitgewerkte trainingen van trainers zonder feedback als meekijken aan staat, max. 3, tot 7 dagen na de datum; *n trainers zonder kennismaking* met eerst een venster) · *Mijn trajecten* (één regel per trainer: *1 van 2 · volgend*, balk, label *plannen*; tik = dossier) · *Deze week* als één regel met **Week** (de week van Besluit 146 erachter). **Trainer** = *Actie nodig* · *Mijn volgende training* (**Training maken/openen**, **Nieuwe oefenvorm**, zin over meekijken) · *Van je begeleider* (laatste feedback, 14 dagen) · *Mijn traject* (stand en leerdoel, *Alles over mijn begeleiding*). Geen nieuwe gegevens of rechten | ✅ geldt |  |
 | 165 | 3 | Week rustiger, oefenvorm sneller invullen: in Week geen *min gepland* en geen tijdsbalk (alleen de waarschuwing bij te veel ingepland; de tijd blijft in Plannen), de afspraak van de vorige training bovenaan, de onderbouwing ingeklapt onder *Waarom deze training* (samenvatting A/B en leerniveau). Bewerken: *Opzet* (spelers, keepers, minuten, afmeting) ingeklapt met samenvatting, hulpvraag in het lege vak, varianten en groepsgroottes ingeklapt met aantal. *Uit je tekening*: spelers per kleur en keepers overnemen met één tik, alleen in lege velden | ◐ deels herzien | door 167 (Plannen volgt dezelfde lijn) |
 | 164 | 3 | Oefenvorm invoeren: compacte basis (naam, tekening, spelers/minuten/keepers, afmeting, doel, **organisatie**, **spelverloop**, **spelregels**, coachpunten); *Kenmerken* ingeklapt met samenvatting (open zolang een club met leerdoelen nog geen hoofdleerdoel heeft), *Eigen notities* ingeklapt; **schakelvorm** als kenmerk, ook bij *wisselende rollen of richtingen*, zichtbaar op kaart en print en vindbaar met zoeken; speelrichting *meer*. Bestaande tekst wordt niet gesplitst | ◐ deels herzien | door 165 (hulpvraag in het lege vak in plaats van een regel eronder) |
@@ -54,7 +55,7 @@ Laatst bijgewerkt: 5 november 2026 (t/m Besluit 169)
 | 139 | 3 | Eén oefenvormkiezer voor elke club: dezelfde bediening, inhoud uit het profiel (gereedschap, vaardigheid, leerniveau alleen als het profiel ze heeft); compacte regel per vorm met redenen, meer achter ⓘ; niets uitgesloten (past het best · past deels · alle andere); *Ongedaan maken* na het plaatsen; leerniveau bij een vorm alleen ter informatie (nooit oranje of lager) | ◐ deels herzien | door 141 (*Mijn vormen* heet *Vormenbank*; blok Partij heet *Toepassing · partij*); door 145 (een geplaatste vorm verplaatsen zonder opnieuw te kiezen); aangevuld door 150 |
 | 138 | 1 · 3 | Tabblad Training bij de DCG-methodiek: *Mijn lijn* als één overzicht per week (bolletjes per training, leerniveau begin → eind, uitgevoerde minuten), vaststellen, afgelaste training één keer signaleren (doorschuiven of laten vervallen), titel = hoofdthema, vaardigheden per gereedschap (profiel), lege plek opent *Vorm kiezen* gefilterd op gereedschap, vaardigheid en aantal spelers | ◐ deels herzien | door 139 (één oefenvormkiezer voor elke club; geen knop *past bij*, niets uitgesloten); door 141 (tik op een week = weekdetail; *Vaststellen* heet *Periodeplanning vastleggen*, status *Vastgelegd*; knoppen onder *Beheer*) |
 | 137 | 1 · 3 | DCG-periodisering O13 invoeren: kolommen van het Excel-spoorboekje werken direct; hoofdthema, teamfunctie en ondersteunend gereedschap erbij (in de onderbouwing); contrathema gekoppeld aan één probleem (+ eventueel een ondersteunend) met behoud van de eigen tekst, nooit op losse woorden; handelingsketen vrije tekst; contra telt niet mee in de minuten | ◐ deels herzien | door 144 (hoofdthema, leerniveaus en route horen bij de dag, niet bij het weekplan; contrathema als *Weekvoorstel*) |
-| 136 | 3 | Teams, trainingsdagen en wedstrijden zelf beheren (clubbeheerder en HO): team toevoegen, trainer koppelen, trainingen pas in de kalender als er een trainer is, wedstrijden plakken van voetbal.nl, trainingsschema laden (vanaf een gekozen leeftijd) | ✅ geldt | aangevuld door 168 (wedstrijden aanpassen, opnieuw plakken werkt bij); 169 (teams per bouw ingeklapt) |
+| 136 | 3 | Teams, trainingsdagen en wedstrijden zelf beheren (clubbeheerder en HO): team toevoegen, trainer koppelen, trainingen pas in de kalender als er een trainer is, wedstrijden plakken van voetbal.nl, trainingsschema laden (vanaf een gekozen leeftijd) | ✅ geldt | aangevuld door 168 (wedstrijden aanpassen, opnieuw plakken werkt bij); 170 (teams per bouw ingeklapt) |
 | 135 | 3 | Tabblad Training in de volgorde van het werk (laptop: Lijn · Plannen · Week · Vormen), regel *Je zit in* (week, thema, A/B; tik = Lijn), geen dubbelingen (maandoverzicht alleen in Lijn, evalueren in Week), weekthema met A/B voor clubs zonder periodisering | ◐ deels herzien | door 138 (Lijn bij de DCG-methodiek: één overzicht); door 141 (Vormen heet Vormenbank) |
 | 134 | 3 | Trainers begeleiden (KNVB): begeleiden en ontwikkelen, niet beoordelen; begeleider (HO of TC met traject) ziet het hele seizoen de trainingen van de trainer, kijkt en geeft feedback; club beslist; invoeren per club in te stellen; trainer deelt zelf vormen in een clubbank. Gebouwd: moment verplaatsen en *niet doorgegaan*. Meekijken: gebouwd met Besluit 159 (database 032 en 034 toegepast 4-11); clubbank in de app nog niet | ◐ deels herzien | door 161 (clubbank voorlopig niet in gebruik, geen bouwprioriteit) |
 | 133 | 1 · 3 | DCG-methodiek als profiel v3 (kerndocument leidend); methodiekblok compact; leerniveau per blok; status berekend; evaluatiekaart (3 open + verdiepend); periodisering laden uit CSV met voorbeeld; observatiepunten bij de wedstrijd; uitgebreide vormvelden | ◐ deels herzien | door 137 (contrathema, handelingsketen, extra kolommen); uitleg 29-10: inhoud persoonlijk (Spoor 1), technisch via het DCG-profiel; door 144 (methodiekblok = trainingskaart met vijf regels; weekplan alleen weekvelden); door 155 (welke evaluatievragen open staan komt uit het profiel, `evaluatie.kort`) |
@@ -87,7 +88,7 @@ Laatst bijgewerkt: 5 november 2026 (t/m Besluit 169)
 | 106 | 3 | Eigen wisselschema voor selectieteams (opstelling 1-4-3-3, wissels, minuten en posities); speelvorm per team | ◐ deels herzien | door 116 (de timekeeper houdt het bij en slaat het op; minuten alleen voor de trainer) |
 | 105 | 3 | Aanwezigheid: pas een kleur en signaal vanaf 6 keer gemeten | ✅ geldt |  |
 | 104 | 3 | Rol wisselen met één tik in de kop, met per rol wat er wacht | ✅ geldt |  |
-| 103 | 3 | Automatisch bewaren in formulieren; Rollen opgeschoond | ✅ geldt | aangevuld door 169 (mensen per rol ingeklapt, zoeken) |
+| 103 | 3 | Automatisch bewaren in formulieren; Rollen opgeschoond | ✅ geldt | aangevuld door 170 (mensen per rol ingeklapt, zoeken) |
 | 102 | 3 | Snelle winsten: dringend bovenaan, Observeren op de dag zelf, unieke knopnamen | ✅ geldt |  |
 | 101 | 3 | Voorgesprek als voormeting: eigen vragen voor training en wedstrijd | ✅ geldt |  |
 | 100 | 3 | Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden" | ◐ deels herzien | door 101 (vragen kort en uitgebreid per soort); 143 (overgenomen reflectie is begeleiderstekst); 146 (tabbladen van HO en TC: Home met de week, Trainers compact, Teams eigen tabblad); aangevuld door 154 (werkgebied ook in de database); 166 (Home van de trainer in het pakket: volgende training, feedback, traject) |
@@ -707,7 +708,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
-## Besluit 169 — Lange beheerlijsten ingeklapt met zoeken: Rollen en Seizoen (Spoor 3, maat M)
+## Besluit 170 — Lange beheerlijsten ingeklapt met zoeken: Rollen en Seizoen (Spoor 3, maat M)
 > Onderzoek met metingen en voorbeelden op 390 px: `docs/onderzoek/kliks/README.md` (akkoord: 1 met de regel, 2 per bouw, 5 november 2026). Vult Besluit 103 (Rollen) en Besluit 136 (teams) aan.
 
 **Waarom.** De dagelijkse pagina's zijn al rustig (ongeveer één scherm). De lange pagina's zaten bij het beheer: **Rollen** was 3,2 schermen met 138 knoppen, **Seizoen** 3,5 schermen. Iemand of een team vinden betekende lang scrollen.
@@ -728,6 +729,21 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 **Gegevens en rechten.** Niets nieuws: alleen de indeling van twee beheerpagina's. De regel *zonder trainer of teamleider* telt bestaande rollen. Geen migratie.
 
 **Tests:** `tests/beheerlijsten.spec.js` (Rollen ingeklapt en kort, zoeken met treffer, niets gevonden en terugzetten, persoon openen; regel *teams zonder* met de rol al gekozen; Seizoen per bouw met *zonder trainer*, zoeken en team openen); `tests/app.spec.js` bijgewerkt (TC zoeken in Rollen).
+
+---
+
+## Besluit 169 — Plannen op de laptop: onderbouwing rechts, open (Spoor 3, maat M)
+> Onderzoek en voorbeeld (1366 px): `docs/onderzoek/navigatie-technieken/voorstel.md`, voorstel C. Herziet deels Besluit 167.
+
+**Waarom.** Op de laptop bleef de rechterkolom van Plannen leeg, terwijl de onderbouwing ingeklapt in de smalle middenkolom stond. Je plant op de laptop; daar hoort alles zonder tikken in beeld te staan.
+
+**Wat.** Op een scherm vanaf 900 px staan de afspraak van de vorige training, **Waarom deze training** (Wat · Waar · Welke · Niveau, met het potlood) en de tijd (veldtijd − organisatie = oefentijd, de balk, de waarschuwing) rechts naast de training, open en onder elkaar. In de smalle kolom staan de koppen boven de tekst. In het midden staat alleen de training. Op de telefoon verandert niets (Besluit 167).
+
+**Niet gedaan** (bewust, *niet te veel*): geen vaste kop, geen kloktijden, geen paneel van rechts, geen veldmodus. Regels, Rollen en Seizoen inklappen volgt bij stap 7 (Inrichten en Rollen).
+
+**Gegevens.** Niets; alleen de plek op het scherm verandert.
+
+**Tests:** `tests/plannen-rustiger.spec.js` (laptop: rechts, open; telefoon ongewijzigd); `tests/app.spec.js` en `tests/trainingskaart.spec.js` zoeken de tijd en de afspraak in de hele planning.
 
 ---
 
@@ -1735,7 +1751,7 @@ Een uitklapper die je opent of sluit, blijft zo zolang de app open is (zoals Bes
 - **Het profiel** heeft geen eigen rolwisselaar meer; daar staat alleen waar je wisselt. Het menu sluit bij een tik ernaast of met Escape.
 
 ## Besluit 103 — Automatisch bewaren in formulieren; Rollen opgeschoond
-> **Aangevuld door Besluit 169**: de mensen staan per rol ingeklapt, met zoeken en een regel voor teams zonder trainer of teamleider.
+> **Aangevuld door Besluit 170**: de mensen staan per rol ingeklapt, met zoeken en een regel voor teams zonder trainer of teamleider.
 *Besloten 17 oktober 2026. Uit `docs/onderzoek/verbeterplan-gebruik-2026-10.md` (P0 en P1). Vult Besluit 81 en 102 aan.*
 - **Automatisch bewaren:** in lange formulieren wordt elk veld bewaard zodra je het verlaat. Het gaat om het begeleidingsmoment (voorbereiding, planningsgesprek, reflectiegesprek, eigen terugblik), de vragenlijst en reflectie van de trainer, de kennismaking en de notities over een trainer. In de hoek van het veld staat **"Bewaard ✓"**, en pas als de database het echt heeft; anders *"Bewaren…"* of *"Nog niet bewaard: geen verbinding?"*. Er verschuift niets op het scherm. De knop heet **Klaar**: die rondt het blok af (bijvoorbeeld de vragenlijst op "ingevuld"). Een venster sluiten of een andere knop tikken kost geen tekst meer. Bij een half ingevulde vragenlijst staat bij de trainer *"Je bent begonnen; je antwoorden zijn bewaard"*.
 - **Open blokken blijven open:** wat je op een scherm hebt opengeklapt, blijft open als de app het scherm opnieuw tekent (bijvoorbeeld na een tik op *Bouw erbij*).

@@ -1,4 +1,4 @@
-// ClubComm — Besluit 169: lange beheerlijsten ingeklapt met zoeken (minder scrollen, minder klikken).
+// ClubComm — Besluit 170: lange beheerlijsten ingeklapt met zoeken (minder scrollen, minder klikken).
 // Rollen: mensen per rol ingeklapt, zoeken op naam, team of rol, één regel als een team geen trainer of teamleider heeft.
 // Seizoen (en Teams van de HO): teams per bouw ingeklapt (zoals het werkgebied, Besluit 154), zoeken op team of trainer.
 // Alleen de indeling; geen nieuwe gegevens of rechten.
