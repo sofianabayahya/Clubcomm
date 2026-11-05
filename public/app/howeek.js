@@ -84,7 +84,8 @@
     CC.rollen.hjo.tabs = (S) => { const t = hjoTabs(S); if (!pakket(S) || rol() !== 'hjo') return t;
       return [['home', 'Home', 'house'], ['trainers', 'Trainers', 'user-check'], ['teams', 'Teams', 'shield'], t.find((x) => x[0] === 'berichten')].filter(Boolean); };
     const hjoHome = CC.rollen.hjo.schermen.home;
-    const home = (S) => `${CC.begelVandaag ? CC.begelVandaag(S) : ''}${CC.hoWeek(S)}`;
+    // Besluit NNN: Home = Vandaag · Actie nodig · Mijn trajecten · Deze week (één regel); de week staat erachter (startscherm.js)
+    const home = (S) => (CC.hoHome ? CC.hoHome(S) : `${CC.begelVandaag ? CC.begelVandaag(S) : ''}${CC.hoWeek(S)}`);
     CC.rollen.hjo.schermen.home = (S) => (pakket(S) && rol() === 'hjo' ? home(S) : hjoHome(S));
     const hjoTeams = CC.rollen.hjo.schermen.teams;
     CC.rollen.hjo.schermen.teams = (S) => (pakket(S) && rol() === 'hjo' ? CC.views.teamsBeheer(S).html : hjoTeams(S));

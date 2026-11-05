@@ -21,6 +21,9 @@
   const trajectSeizoen = (S, pid) => { const d = (S.trainerDossier || {})[pid] || {}; return !!((d.traject && d.traject.actief) || (d.oud || []).some((o) => String(o.afgerond || '') >= seizoenStart())); };
   const tekening = (t) => (t && window.DrawTool ? window.DrawTool.staticSvg(t) : '');
 
+  // Voor de Home van begeleider en trainer (startscherm.js, Besluit NNN)
+  CC.mk = { aan, trajectSeizoen, plannenVan, fbVan, datumVan };
+
   // ---------- Begeleider: blok "Trainingen" in het dossier van de trainer ----------
   const origDetail = CC.views.trainerDetail;
   CC.views.trainerDetail = (S, p) => {

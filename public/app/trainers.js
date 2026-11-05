@@ -66,6 +66,8 @@
   CC.rollen.trainer.tabs = (S) => (CC.pakketTrainers(S) ? [['home', 'Home', 'house'], CC.trainingAan && CC.trainingAan(S) ? ['aanwezigheid', 'Training', 'list-checks'] : null, origTrTabs(S).find((x) => x[0] === 'berichten')].filter(Boolean) : origTrTabs(S));
   CC.rollen.trainer.schermen.home = (S) => { if (!CC.pakketTrainers(S)) return origTrHome(S);
     const acties = CC.trainerActiesExtra(S); const me = CC.me();
+    // Besluit NNN: Home = Actie nodig · Mijn volgende training · Van je begeleider · Mijn traject (startscherm.js)
+    if (CC.trainerStart) return CC.trainerStart(S, acties);
     return `${acties.length ? `${h.sectie('Actie nodig')}<div class="lijst">${acties.join('')}</div>` : ''}${h.sectie('Mijn ontwikkeling')}${heeftOntw(S, me) ? CC.views.mijnOntw(S, { opHome: true }).html : '<p class="zacht klein">Hier komt je begeleiding te staan zodra de club die met je afspreekt.</p>'}`; };
 
   // ---------- Tabblad Trainers ----------
@@ -212,7 +214,7 @@
       S.msgs.push({ id: 'b' + Date.now() + i, van: me.id, soort: 'persoonlijk', bereik: (p.rollen.find((r) => r.rol === 'trainer') || {}).teamId || '', onderwerp: 'Kennismaking: we willen je graag beter leren kennen',
         tekst: `Hoi ${p.naam.split(' ')[0]},\n\nWe willen je graag beter leren kennen, zodat we je als club goed kunnen ondersteunen. Wil je een korte vragenlijst invullen? Het kost een paar minuten. Je vindt hem op je Home in ClubComm.\n\nGroet, ${me.naam}`,
         tijd: nu, ontvangers: [p.id], gelezen: [], antw: [], urgent: false, gepland: null }); });
-    CC.save(); CC.render(); CC.toast(wie.length === 1 ? `${wie[0].naam.split(' ')[0]} is uitgenodigd` : `${wie.length} trainers uitgenodigd`);
+    CC.save(); CC.closeSheet(); CC.render(); CC.toast(wie.length === 1 ? `${wie[0].naam.split(' ')[0]} is uitgenodigd` : `${wie.length} trainers uitgenodigd`);
   });
   // Op de Home van de trainer: één regel tot hij het invult (of "Later": 30 dagen weg op deze telefoon)
   const LATER = 'cc-kennis-later';
@@ -311,6 +313,7 @@
   // ---------- De trainer zelf: Mijn ontwikkeling (Besluit 99 deel 3), in het profiel ----------
   // Alles uit zijn dossier behalve de notities van de HO; geen extra tabblad en geen melding (die staan al op zijn Home).
   const heeftOntw = (S, me) => isTrainer(me) && (traject(S, me.id) || (ken(S)[me.id] || {}).ingevuld || (CC.begelMijn && CC.begelMijn(S, me.id).length));
+  CC.heeftOntw = (S, me) => !!heeftOntw(S, me);
   CC.profielExtra = (S) => { const me = CC.me(); return heeftOntw(S, me) ? h.rij({ ic: 'graduation-cap', titel: 'Mijn ontwikkeling', sub: 'Je leerdoel, je begeleidingsmomenten en je reflecties', act: 'open', attrs: 'data-view="mijnOntw"' }) : ''; };
   CC.views.mijnOntw = (S, p = {}) => { const me = CC.me(); const t = traject(S, me.id); const k = ken(S)[me.id] || {}; const l = CC.begelMijn ? CC.begelMijn(S, me.id, p.opHome) : [];
     return { titel: 'Mijn ontwikkeling', html: `
