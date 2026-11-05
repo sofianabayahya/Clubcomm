@@ -2,7 +2,7 @@
 
 *Spoor 3 — ClubComm. Alleen onderzoek: er is niets veranderd aan de app, de database of productie.*
 
-**Afbakening (besluit van de initiatiefnemer, zie Besluit NNN):**
+**Afbakening (besluit van de initiatiefnemer, zie Besluit 161):**
 - Trainers gebruiken ClubComm voorlopig om **zelf oefenvormen te tekenen en te bewaren**.
 - Hoe ze daarmee een training ontwerpen, legt de HJO uit op een trainersbijeenkomst.
 - Geen plicht om trainingen digitaal uit te werken.
