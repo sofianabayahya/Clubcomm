@@ -374,7 +374,7 @@
   // De vorm neemt mee: minuten (gepland en echt), variant, notitie, vastgezet leerniveau en fase. Bij de plek blijven: code, naam, voorstellen.
   const MEE = ['vormId', 'min', 'minUit', 'variant', 'notitie', 'niveau', 'fase', 'spacing', 'vast']; // vast: Besluit 147, het vastgelegde gereedschap gaat mee met de vorm
   const plekVoorVerplaatsen = (o) => o.blok && o.blok !== 'S';
-  // Besluit NNN: een vorm zonder plek (bijv. na het weghalen van een plek) krijgt in één tik weer een plek: een lege plek, of een plek die volgens het sjabloon ontbreekt
+  // Besluit 163: een vorm zonder plek (bijv. na het weghalen van een plek) krijgt in één tik weer een plek: een lege plek, of een plek die volgens het sjabloon ontbreekt
   const opPlek = (o) => !!(o && o.blok && o.blok !== 'S');
   const sjabloonVan = (S, p) => sjablonen(S).find((x) => x.id === p.sjabloon) || null;
   const ontbrekend = (S, p) => { const sj = sjabloonVan(S, p); if (!sj) return []; const er = new Set(p.onderdelen.map((x) => x.blok)); return (sj.blokken || []).filter((b) => b.blok !== 'S' && !er.has(b.blok)); };
@@ -411,7 +411,7 @@
   // Dupliceren: hetzelfde onderdeel er direct onder (bijv. dezelfde vorm in variant B, of nog een keer spacing)
   CC.on('tpDupliceer', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); const i = Number(el.dataset.i); if (!p || !p.onderdelen[i]) return;
     p.onderdelen.splice(i + 1, 0, { ...JSON.parse(JSON.stringify(p.onderdelen[i])), id: nieuwId('o'), minUit: null }); CC.save(); CC.closeSheet(); CC.render(); CC.toast('Gedupliceerd'); });
-  // Besluit NNN: weghalen kan altijd ongedaan worden gemaakt (Besluit 149, regel 10). Alleen als de opbouw sindsdien niet is veranderd.
+  // Besluit 163: weghalen kan altijd ongedaan worden gemaakt (Besluit 149, regel 10). Alleen als de opbouw sindsdien niet is veranderd.
   const metPlekTerug = (p, doe, tekst) => { const voor = JSON.parse(JSON.stringify(p.onderdelen)); doe(); CC.ui.plekTerug = { plan: p.id, voor, na: JSON.stringify(p.onderdelen) };
     CC.save(); CC.closeSheet(); CC.render(); CC.toast(tekst, '', { knop: 'Ongedaan maken', act: 'tpPlekTerug' }); };
   CC.on('tpPlekTerug', () => { const u = CC.ui.plekTerug; CC.ui.plekTerug = null; const p = u && plannen(CC.S()).find((x) => x.id === u.plan); if (!p) return;
