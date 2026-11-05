@@ -1,4 +1,4 @@
-// ClubComm — Besluit NNN: wedstrijden aanpassen (HO, tabblad Teams; ook opnieuw plakken) en Mijn traject als tijdlijn (trainer).
+// ClubComm — Besluit 167: wedstrijden aanpassen (HO, tabblad Teams; ook opnieuw plakken) en Mijn traject als tijdlijn (trainer).
 const { test, expect } = require('@playwright/test');
 const { volgFouten, controleer, nepDatabase, inloggen, nepDb } = require('./hulp');
 

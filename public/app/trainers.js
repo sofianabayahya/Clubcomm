@@ -317,7 +317,7 @@
   CC.profielExtra = (S) => { const me = CC.me(); return heeftOntw(S, me) ? h.rij({ ic: 'graduation-cap', titel: 'Mijn ontwikkeling', sub: 'Je leerdoel, je begeleidingsmomenten en je reflecties', act: 'open', attrs: 'data-view="mijnOntw"' }) : ''; };
   const kennisBlok = (S, k) => `${h.sectie('Kennismaking')}${k.ingevuld ? `<details class="uitklap"><summary>Mijn antwoorden (${D.kort(k.ingevuld.slice(0, 10))})</summary><dl class="antwoorden">${CC.trainerVragen(S, true).filter((v) => (k.a || {})[v.k]).map((v) => `<dt>${esc(v.t)}</dt><dd>${esc(k.a[v.k])}</dd>`).join('')}</dl></details>` : ''}
       ${h.rij({ ic: 'pencil', titel: k.ingevuld ? 'Antwoorden aanpassen' : 'Kennismaking invullen', act: 'kennisForm' })}`;
-  // Besluit NNN: Mijn traject als tijdlijn (oud → nieuw): kennismaking, begeleidingsmomenten, trainingen met feedback, het volgende moment, afronden
+  // Besluit 167: Mijn traject als tijdlijn (oud → nieuw): kennismaking, begeleidingsmomenten, trainingen met feedback, het volgende moment, afronden
   const tijdlijn = (S, me, t, k) => {
     const stap = (status, ic, binnen, datum) => ({ datum: datum || '', html: `<li class="tl-stap ${status}"><span class="tl-bol" aria-hidden="true">${ic ? icon(ic) : ''}</span><div class="tl-inhoud">${binnen}</div></li>` });
     const st = [];

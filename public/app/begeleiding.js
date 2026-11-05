@@ -382,7 +382,7 @@
     if (m.vervallen) return h.rij({ ic: 'calendar-x', titel: esc(titelM(S, m)), sub: 'Niet doorgegaan', chevron: false });
     if (m.gevraagd && !m.klaar) return h.rij({ ic: 'list-checks', titel: esc(titelM(S, m)), sub: z.ingevuld ? 'Vragenlijst ingevuld · tik om aan te passen' : 'Vragenlijst nog invullen', kleur: z.ingevuld ? '' : 'blauw', act: 'begelZelf', attrs: `data-id="${m.id}"` });
     return h.rij({ ic: 'calendar-days', titel: esc(titelM(S, m)), sub: m.klaar ? 'Afgerond' : 'Gepland', chevron: false }); });
-  // Besluit NNN: de momenten van de trainer als stappen voor de tijdlijn (oud → nieuw), met dezelfde regel als hierboven
+  // Besluit 167: de momenten van de trainer als stappen voor de tijdlijn (oud → nieuw), met dezelfde regel als hierboven
   CC.begelMijnStappen = (S, pid) => vanTrainer(S, pid).slice().reverse().map((m, i, l) => ({ datum: m.datum, html: CC.begelMijn(S, pid).slice().reverse()[i],
     status: m.klaar ? 'klaar' : m.vervallen ? 'vervallen' : 'open' }));
   CC.begelPrintMijn = (S, pid) => vanTrainer(S, pid).filter((m) => m.gedeeld).map((m) => { const z = zelf(S)[m.id] || {};

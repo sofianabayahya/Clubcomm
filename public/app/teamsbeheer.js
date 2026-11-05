@@ -81,7 +81,7 @@
     CC.toast(nieuw ? `${(M.persoon(S, nieuw) || {}).naam || 'Trainer'} is trainer van ${t.naam}${n ? ` · ${n} trainingen in de kalender` : ''}` : 'Trainer losgekoppeld'); });
 
   // ---------- Eén wedstrijd ----------
-  // Besluit NNN: wedstrijden aanpassen (tegenstanders en eigen team verzetten wel eens iets)
+  // Besluit 167: wedstrijden aanpassen (tegenstanders en eigen team verzetten wel eens iets)
   const momOp = (S, a) => (S.begeleidMomenten || []).filter((m) => m.actId === a.id && !m.klaar && !m.vervallen);
   const wedRij = (S, a) => h.rij({ ic: a.afgelast ? 'ban' : 'trophy', titel: `${esc(D.kort(a.datum))} · ${esc(a.tijd)} · ${a.thuis === false ? 'uit' : 'thuis'}`,
     sub: `${esc(a.tegen || '')}${a.afgelast ? ' · <b>afgelast</b>' : ''}${momOp(S, a).length ? ' · <b>begeleidingsmoment</b>' : ''}`, act: 'wedBewerk', attrs: `data-id="${esc(a.id)}"` });
