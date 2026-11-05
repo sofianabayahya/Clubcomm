@@ -1,6 +1,6 @@
 # Voorstel: tijdlijn van het traject en wedstrijden aanpassen (5 november 2026)
 
-**Gekozen (5-11): akkoord op 1, 2 en 3; vastgelegd als Besluit 167.** Gebouwd: `gebouwd-tijdlijn.jpg`.
+**Gekozen (5-11): akkoord op 1, 2 en 3; vastgelegd als Besluit 168.** Gebouwd: `gebouwd-tijdlijn.jpg`.
 
 *Spoor 3 — ClubComm, maat M. Alleen voorbeelden (390 px, echte opmaak van de app, verzonnen namen); er is nog niets gebouwd.*
 

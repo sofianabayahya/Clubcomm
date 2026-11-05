@@ -1021,7 +1021,7 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .vg-balk { display: block; height: 6px; margin-top: 6px; max-width: 220px; background: var(--lijn); border-radius: 9px; overflow: hidden; }
 .vg-balk i { display: block; height: 100%; background: var(--groen); }
 .label.oranje { color: var(--oranje); background: var(--oranje-l); border-color: transparent; }
-/* Besluit 167: Mijn traject als tijdlijn (oud → nieuw); de bol is extra, de tekst zegt wat klaar is */
+/* Besluit 168: Mijn traject als tijdlijn (oud → nieuw); de bol is extra, de tekst zegt wat klaar is */
 .tl { list-style: none; margin: 4px 0 12px; padding: 0 0 0 30px; position: relative; }
 .tl::before { content: ""; position: absolute; left: 11px; top: 12px; bottom: 12px; width: 2px; background: var(--lijn); }
 .tl-stap { position: relative; margin: 0 0 10px; }
@@ -1033,3 +1033,12 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .tl-stap .lijst, .tl-stap .kaartje { margin: 0; }
 .tl-stap.later .kaartje { background: var(--vlak2); box-shadow: none; }
 .tl-fb { background: var(--blauw-l); border-radius: 10px; padding: 8px 10px; margin: 6px 0 0; }
+/* Besluit 167: Plannen minder dubbel */
+.tr-midden > .tr-mee { font-size: 16px; margin: 8px 0; padding: 10px 12px; }
+.tr-midden > .tr-mee small, .tr-midden > .tr-mee .tr-link { display: block; margin-top: 4px; }
+.tr-midden > .tr-waarom, .tr-midden > .tr-tijdkort { margin: 10px 0; }
+.tr-tijdkort .tr-tijd { box-shadow: none; padding: 0; margin: 0; }
+.tr-tijdkort.over > summary { color: #7a3e00; }
+.tr-midden > .tr-pastniet { margin: 10px 0; }
+.tr-bankklap { margin-top: 12px; }
+.tr-bankklap > .kaartje { box-shadow: none; padding: 0 0 4px; }
