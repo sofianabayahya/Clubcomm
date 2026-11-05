@@ -315,14 +315,33 @@
   const heeftOntw = (S, me) => isTrainer(me) && (traject(S, me.id) || (ken(S)[me.id] || {}).ingevuld || (CC.begelMijn && CC.begelMijn(S, me.id).length));
   CC.heeftOntw = (S, me) => !!heeftOntw(S, me);
   CC.profielExtra = (S) => { const me = CC.me(); return heeftOntw(S, me) ? h.rij({ ic: 'graduation-cap', titel: 'Mijn ontwikkeling', sub: 'Je leerdoel, je begeleidingsmomenten en je reflecties', act: 'open', attrs: 'data-view="mijnOntw"' }) : ''; };
+  const kennisBlok = (S, k) => `${h.sectie('Kennismaking')}${k.ingevuld ? `<details class="uitklap"><summary>Mijn antwoorden (${D.kort(k.ingevuld.slice(0, 10))})</summary><dl class="antwoorden">${CC.trainerVragen(S, true).filter((v) => (k.a || {})[v.k]).map((v) => `<dt>${esc(v.t)}</dt><dd>${esc(k.a[v.k])}</dd>`).join('')}</dl></details>` : ''}
+      ${h.rij({ ic: 'pencil', titel: k.ingevuld ? 'Antwoorden aanpassen' : 'Kennismaking invullen', act: 'kennisForm' })}`;
+  // Besluit NNN: Mijn traject als tijdlijn (oud → nieuw): kennismaking, begeleidingsmomenten, trainingen met feedback, het volgende moment, afronden
+  const tijdlijn = (S, me, t, k) => {
+    const stap = (status, ic, binnen, datum) => ({ datum: datum || '', html: `<li class="tl-stap ${status}"><span class="tl-bol" aria-hidden="true">${ic ? icon(ic) : ''}</span><div class="tl-inhoud">${binnen}</div></li>` });
+    const st = [];
+    st.push(stap(k.ingevuld ? 'klaar' : 'open', k.ingevuld ? 'check' : '', `<div class="lijst compact">${h.rij({ ic: 'clipboard-check', titel: 'Kennismaking', sub: k.ingevuld ? `Ingevuld ${D.kort(k.ingevuld.slice(0, 10))} · tik om aan te passen` : 'Nog invullen', act: 'kennisForm', kleur: k.ingevuld ? '' : 'blauw' })}</div>${k.ingevuld ? `<details class="uitklap"><summary>Mijn antwoorden</summary><dl class="antwoorden">${CC.trainerVragen(S, true).filter((v) => (k.a || {})[v.k]).map((v) => `<dt>${esc(v.t)}</dt><dd>${esc(k.a[v.k])}</dd>`).join('')}</dl></details>` : ''}`, '0'));
+    const ms = CC.begelMijnStappen ? CC.begelMijnStappen(S, me.id) : [];
+    const nu = ms.find((x) => x.status === 'open' && x.datum >= D.vandaag());
+    ms.forEach((x) => st.push(stap(x.status === 'klaar' ? 'klaar' : x === nu ? 'nu' : x.status === 'vervallen' ? 'vervallen' : 'later', x.status === 'klaar' ? 'check' : x.status === 'vervallen' ? 'x' : x === nu ? 'calendar-days' : '', `<div class="lijst compact">${x.html}</div>`, x.datum)));
+    // Trainingen met feedback van de begeleider (de laatste feedback per training)
+    const fb = (S.trainingFeedback || []).filter((f) => f.trainerId === me.id);
+    [...new Set(fb.map((f) => f.planId))].forEach((pid) => { const f = fb.filter((x) => x.planId === pid).sort((a, b) => String(b.op).localeCompare(String(a.op)))[0]; const pl = (S.trainingsplannen || []).find((x) => x.id === pid);
+      const d = (pl && (pl.datum || ((M.act(S, pl.actId) || {}).datum))) || String(f.op).slice(0, 10);
+      st.push(stap('klaar', 'message-circle', `<div class="kaartje"><p><b>Training ${esc(D.kort(d))}</b> <span class="zacht">· feedback</span></p><p class="tl-fb klein">${esc(f.tekst)}<br><small class="zacht">${esc(((M.persoon(S, f.door) || {}).naam || 'Begeleider').split(' ')[0])} · ${D.kort(String(f.op).slice(0, 10))}</small></p>${pl && pl.actId ? `<button class="linkknop" data-act="open" data-view="trainingsplan" data-id="${esc(pl.actId)}">Training openen</button>` : ''}</div>`, d)); });
+    const lijn = st.sort((a, b) => a.datum.localeCompare(b.datum));
+    if (t) lijn.push(stap('later', '', `<div class="kaartje"><p><b>Afronden</b></p><p class="zacht klein">Eindgesprek na het laatste moment</p></div>`, '9'));
+    // Lange lijn: de oudste afgeronde stappen klappen in (Eerder)
+    const af = lijn.filter((x) => /tl-stap klaar/.test(x.html)); const weg = af.length > 6 ? af.slice(0, af.length - 6) : [];
+    const rest = lijn.filter((x) => !weg.includes(x));
+    return `${h.sectie('Mijn traject')}${weg.length ? `<details class="uitklap"><summary>Eerder (${weg.length})</summary><ol class="tl">${weg.map((x) => x.html).join('')}</ol></details>` : ''}<ol class="tl" aria-label="Mijn traject van oud naar nieuw">${rest.map((x) => x.html).join('')}</ol>`; };
   CC.views.mijnOntw = (S, p = {}) => { const me = CC.me(); const t = traject(S, me.id); const k = ken(S)[me.id] || {}; const l = CC.begelMijn ? CC.begelMijn(S, me.id, p.opHome) : [];
     return { titel: 'Mijn ontwikkeling', html: `
       ${t ? `<div class="kaartje"><p class="klein"><b>Begeleiding dit seizoen</b> · ${planTekst(t)} · ${standTekst(S, me.id, t)}</p>
         <p><b>Leerdoel:</b> ${esc(t.leerdoel || 'nog niet afgesproken')}</p>${t.ontwikkelpunt ? `<p><b>Ontwikkelpunt:</b> ${esc(t.ontwikkelpunt)}</p>` : ''}</div>`
         : `<p class="zacht klein">Je hebt geen begeleidingstraject. Wil je graag begeleid worden? Zeg het tegen de ${esc(S.club.labels.hjo)}.</p>`}
-      ${l.length ? `${h.sectie('Begeleidingsmomenten')}<div class="lijst compact">${l.join('')}</div>` : ''}
-      ${h.sectie('Kennismaking')}${k.ingevuld ? `<details class="uitklap"><summary>Mijn antwoorden (${D.kort(k.ingevuld.slice(0, 10))})</summary><dl class="antwoorden">${CC.trainerVragen(S, true).filter((v) => (k.a || {})[v.k]).map((v) => `<dt>${esc(v.t)}</dt><dd>${esc(k.a[v.k])}</dd>`).join('')}</dl></details>` : ''}
-      ${h.rij({ ic: 'pencil', titel: k.ingevuld ? 'Antwoorden aanpassen' : 'Kennismaking invullen', act: 'kennisForm' })}
+      ${p.opHome ? `${l.length ? `${h.sectie('Begeleidingsmomenten')}<div class="lijst compact">${l.join('')}</div>` : ''}${kennisBlok(S, k)}` : tijdlijn(S, me, t, k)}
       <button class="knop licht klein" data-act="mijnOntwPrint">${icon('printer')}Printen</button>
       <p class="zacht klein">Alleen jij en de ${esc(S.club.labels.hjo)} zien dit. De persoonlijke notities van de ${esc(S.club.labels.hjo)} staan hier niet in.</p>` }; };
   CC.on('mijnOntwPrint', () => { const S = CC.S(); const me = CC.me(); const t = traject(S, me.id);

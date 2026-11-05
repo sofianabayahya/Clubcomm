@@ -11,7 +11,7 @@
   const magBeheren = (S) => { const r = (CC.rol() || {}).rol; return r === 'beheerder' || r === 'hjo'; };
   const dagenTekst = (t) => (t.rooster || []).slice().sort((a, b) => ((a.dag + 6) % 7) - ((b.dag + 6) % 7)).map((r) => D.DAG_KORT[r.dag]).join(', ');
   const trainers = (S) => S.people.filter((p) => p.rollen.some((r) => r.rol === 'trainer')).sort((a, b) => a.naam.localeCompare(b.naam));
-  const wedstrijden = (S, tid) => S.acts.filter((a) => a.teamId === tid && M.isWed(a) && !a.afgelast).sort((a, b) => (a.datum + a.tijd).localeCompare(b.datum + b.tijd));
+  const wedstrijden = (S, tid) => S.acts.filter((a) => a.teamId === tid && M.isWed(a)).sort((a, b) => (a.datum + a.tijd).localeCompare(b.datum + b.tijd));
   const toekomst = (S, tid) => S.acts.filter((a) => a.teamId === tid && a.soort === 'training' && a.datum >= D.vandaag());
 
   // Trainingen uit het klaargezette rooster, zodra er een trainer is (alleen als het team nog geen komende trainingen heeft)
@@ -24,7 +24,7 @@
     return `<div class="kaartje tb-teams"><b>Teams en trainingsdagen</b>
       <div class="knoppen"><button class="knop" data-act="teamNieuw">${icon('plus')}Team toevoegen</button><button class="knop licht" data-act="schemaLaden">${icon('upload')}Trainingsschema laden</button></div>
       <small class="zacht">Trainingen komen in de kalender zodra er een trainer aan het team is gekoppeld.</small>
-      ${l.length ? `<div class="lijst compact">${l.map((t) => { const tr = M.persoon(S, t.trainerId); const w = wedstrijden(S, t.id).filter((a) => a.datum >= D.vandaag()).length;
+      ${l.length ? `<div class="lijst compact">${l.map((t) => { const tr = M.persoon(S, t.trainerId); const w = wedstrijden(S, t.id).filter((a) => a.datum >= D.vandaag() && !a.afgelast).length;
         return h.rij({ ic: 'shield', titel: esc(t.naam), sub: `${tr ? esc(tr.naam) : '<span class="tb-or">nog geen trainer</span>'} · ${(t.rooster || []).length ? `${dagenTekst(t)} ${esc(t.rooster[0].tijd)}` : '<span class="tb-or">nog geen trainingsdagen</span>'}${w ? ` · ${w} wedstrijd${w === 1 ? '' : 'en'}` : ''}`, act: 'teamBeheer', attrs: `data-team="${esc(t.id)}"` }); }).join('')}</div>` : '<p class="zacht klein">Nog geen teams.</p>'}</div>`; };
   CC.views.teamsBeheer = (S) => ({ titel: 'Teams en trainers', html: `<div class="lijst">${h.rij({ ic: 'user-plus', titel: 'Trainer toevoegen', sub: 'Naam en e-mailadres; hij of zij krijgt een welkomstmail', act: 'stafNieuw' })}</div>${CC.teamsBlok(S)}` });
 
@@ -69,7 +69,7 @@
         : '<p class="tb-or">Nog geen trainingsdagen</p>'}
       <button class="knop licht vol" data-act="roosterTeam" data-team="${esc(t.id)}">${icon('calendar-days')}Trainingsdagen ${(t.rooster || []).length ? 'aanpassen' : 'instellen'}</button>
       ${h.sectie(`Wedstrijden (${komend.length})`)}
-      ${komend.length ? `<div class="lijst compact">${komend.slice(0, 4).map((a) => h.rij({ ic: 'trophy', titel: `${esc(D.kort(a.datum))} · ${esc(a.tijd)} · ${a.thuis ? 'thuis' : 'uit'}`, sub: esc(a.tegen || ''), chevron: false })).join('')}${komend.length > 4 ? `<p class="zacht klein">… en nog ${komend.length - 4}</p>` : ''}</div>` : '<p class="zacht klein">Nog geen wedstrijden.</p>'}
+      ${komend.length ? `${h.eerst(komend.map((a) => wedRij(S, a)), 4)}<p class="zacht klein">Tik op een wedstrijd om hem aan te passen.</p>` : '<p class="zacht klein">Nog geen wedstrijden.</p>'}
       <div class="knoppen"><button class="knop licht" data-act="wedNieuw" data-team="${esc(t.id)}">${icon('plus')}Wedstrijd</button><button class="knop" data-act="wedPlak" data-team="${esc(t.id)}">${icon('list-checks')}Wedstrijden plakken</button></div>`, { groot: true }); };
   CC.on('teamBeheer', (el) => openTeam(el.dataset.team));
   CC.autosave.teamGeg = (f) => { const S = CC.S(); const t = M.team(S, f.dataset.team); if (!t) return; const n = f.n.value.trim().replace(/\s+/g, ' ');
@@ -81,6 +81,40 @@
     CC.toast(nieuw ? `${(M.persoon(S, nieuw) || {}).naam || 'Trainer'} is trainer van ${t.naam}${n ? ` · ${n} trainingen in de kalender` : ''}` : 'Trainer losgekoppeld'); });
 
   // ---------- Eén wedstrijd ----------
+  // Besluit NNN: wedstrijden aanpassen (tegenstanders en eigen team verzetten wel eens iets)
+  const momOp = (S, a) => (S.begeleidMomenten || []).filter((m) => m.actId === a.id && !m.klaar && !m.vervallen);
+  const wedRij = (S, a) => h.rij({ ic: a.afgelast ? 'ban' : 'trophy', titel: `${esc(D.kort(a.datum))} · ${esc(a.tijd)} · ${a.thuis === false ? 'uit' : 'thuis'}`,
+    sub: `${esc(a.tegen || '')}${a.afgelast ? ' · <b>afgelast</b>' : ''}${momOp(S, a).length ? ' · <b>begeleidingsmoment</b>' : ''}`, act: 'wedBewerk', attrs: `data-id="${esc(a.id)}"` });
+  // Eén plek voor elke wijziging (venster en opnieuw plakken): het moment schuift mee en de trainer krijgt één bericht
+  CC.wedWijzig = (S, a, nieuw) => { const oud = { datum: a.datum, tijd: a.tijd }; const t = M.team(S, a.teamId);
+    Object.assign(a, nieuw); if (nieuw.tijd && t) a.eind = eindVan(S, t, a.tijd);
+    if (oud.datum === a.datum && oud.tijd === a.tijd) return 0;
+    const me = CC.me(); const nu = new Date().toISOString(); let n = 0;
+    momOp(S, a).forEach((m) => { m.datum = a.datum; const tr = M.persoon(S, m.trainerId); if (!tr) return; n++;
+      S.msgs.push({ id: `b${Date.now()}${n}`, van: me.id, soort: 'persoonlijk', bereik: a.teamId, onderwerp: `Wedstrijd verplaatst: ${D.kort(a.datum)} ${a.tijd}`,
+        tekst: `Hoi ${tr.naam.split(' ')[0]},\n\nDe wedstrijd tegen ${a.tegen || 'de tegenstander'} van ${D.kort(oud.datum)} ${oud.tijd} is verplaatst naar ${D.lang(a.datum)} ${a.tijd}. Het begeleidingsmoment schuift mee.\n\nGroet, ${me.naam}`,
+        tijd: nu, ontvangers: [tr.id], gelezen: [], antw: [], urgent: false, gepland: null }); });
+    return n; };
+  CC.on('wedBewerk', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.id); if (!a) return; const t = M.team(S, a.teamId); const mo = momOp(S, a);
+    const tr = mo.map((m) => (M.persoon(S, m.trainerId) || {}).naam).filter(Boolean).map((x) => esc(x.split(' ')[0]));
+    CC.sheet(`Wedstrijd aanpassen · ${t ? t.naam : ''}`, `<form data-submit="wedBewerkOk" data-id="${esc(a.id)}" class="codeform"><label for="wb-t">Tegenstander</label><input id="wb-t" name="tegen" required value="${esc(a.tegen || '')}">
+      <div class="twee"><div><label for="wb-d">Datum</label><input id="wb-d" name="datum" type="date" required value="${esc(a.datum)}"></div><div><label for="wb-a">Aftrap</label><input id="wb-a" name="tijd" type="time" required value="${esc(a.tijd || '')}"></div></div>
+      <label class="vink"><input type="checkbox" name="thuis" ${a.thuis === false ? '' : 'checked'}><span>Thuis</span></label>
+      <label for="wb-v">Veld (mag leeg)</label><input id="wb-v" name="veld" value="${esc(a.veld || '')}">
+      ${mo.length ? `<p class="zacht klein">${icon('user-check')} Er staat een begeleidingsmoment op deze wedstrijd. Verandert de datum of de aftrap, dan schuift het moment mee en krijgt ${tr.join(' en ')} een bericht.</p>` : ''}
+      <button class="knop vol">Opslaan</button></form>
+      <div class="knoppen"><button class="knop licht" data-act="wedAfgelast" data-id="${esc(a.id)}">${icon(a.afgelast ? 'undo-2' : 'ban')}${a.afgelast ? 'Gaat toch door' : 'Afgelast'}</button>
+      <button class="knop licht" data-act="wedWeg" data-id="${esc(a.id)}">${icon('trash-2')}Verwijderen</button></div>`); });
+  CC.on('wedBewerkOk', (f) => { const S = CC.S(); const a = M.act(S, f.dataset.id); if (!a) return;
+    const n = CC.wedWijzig(S, a, { tegen: f.tegen.value.trim(), datum: f.datum.value, tijd: f.tijd.value, thuis: f.thuis.checked, veld: f.veld.value.trim() });
+    S.acts.sort((x, y) => (x.datum + x.tijd).localeCompare(y.datum + y.tijd)); CC.save(); CC.render(); openTeam(a.teamId);
+    CC.toast(n ? `Opgeslagen · ${n === 1 ? 'de trainer krijgt' : `${n} trainers krijgen`} een bericht` : 'Wedstrijd opgeslagen'); });
+  CC.on('wedAfgelast', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.id); if (!a) return; a.afgelast = !a.afgelast;
+    CC.save(); CC.render(); openTeam(a.teamId); CC.toast(a.afgelast ? 'Wedstrijd staat op afgelast' : 'Wedstrijd gaat toch door'); });
+  CC.on('wedWeg', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.id); if (!a) return;
+    if (momOp(S, a).length) { CC.toast('Er staat een begeleidingsmoment op. Zet de wedstrijd op afgelast of verplaats eerst het moment.'); return; }
+    if (!confirm(`Wedstrijd van ${D.kort(a.datum)} tegen ${a.tegen || ''} verwijderen?`)) return;
+    S.acts = S.acts.filter((x) => x !== a); CC.save(); CC.render(); openTeam(a.teamId); CC.toast('Wedstrijd verwijderd'); });
   const eindVan = (S, t, tijd) => CC.plusMin ? CC.plusMin(tijd, CC.categorie(t.speelCat || t.cat).duur + 15) : tijd;
   CC.on('wedNieuw', (el) => { const S = CC.S(); const t = M.team(S, el.dataset.team);
     CC.sheet(`Wedstrijd · ${t.naam}`, `<form data-submit="wedNieuwOk" data-team="${esc(t.id)}" class="codeform"><label for="wn-t">Tegenstander</label><input id="wn-t" name="tegen" required placeholder="Bijv. AFC O16-2">
@@ -108,20 +142,28 @@
     return { eigen, lijst: uit, dubbel: ok.length - uit.length, fout: lijst.length - ok.length }; };
   const PL = () => CC.ui.wedPlak || (CC.ui.wedPlak = {});
   const plakVoorbeeld = (S, t) => { const r = CC.wedLezen(PL().tekst); if (!r.lijst.length) return PL().tekst ? '<p class="zacht klein">Nog geen wedstrijden herkend. Kopieer het programma inclusief de datumregels (bijv. "Zondag 1 november 2026").</p>' : '';
-    const al = (x) => S.acts.some((a) => a.teamId === t.id && M.isWed(a) && a.datum === x.datum);
-    const nieuw = r.lijst.filter((x) => !al(x));
+    const st = (x) => wedStand(S, t, x); const nieuw = r.lijst.filter((x) => st(x).soort === 'nieuw'); const anders = r.lijst.filter((x) => st(x).soort === 'gewijzigd');
     return `<p><b>Gevonden: ${r.lijst.length} wedstrijd${r.lijst.length === 1 ? '' : 'en'}</b>${r.dubbel ? ` <span class="zacht">· ${r.dubbel} dubbel, één keer genomen</span>` : ''}${r.fout ? ` <span class="tb-or">· ${r.fout} niet herkend</span>` : ''}</p>
       <p class="zacht klein">Eigen team volgens het programma: <b>${esc(r.eigen)}</b>. Thuis of uit leest ClubComm uit de volgorde (eerst genoemd = thuis).</p>
-      <div class="tr-tabel"><table class="tb-wed"><tbody>${r.lijst.map((x) => `<tr class="${al(x) ? 'zacht' : ''}"><td>${esc(D.kort(x.datum))}</td><td>${esc(x.tijd)}</td><td>${x.thuis ? 'thuis' : 'uit'}</td><td>${esc(x.tegen)}${al(x) ? ' <small>(staat er al)</small>' : ''}</td></tr>`).join('')}</tbody></table></div>
-      <div class="knoppen"><button class="knop" data-act="wedPlakOk" data-team="${esc(t.id)}" ${nieuw.length ? '' : 'disabled'}>${nieuw.length} wedstrijd${nieuw.length === 1 ? '' : 'en'} toevoegen</button><button class="knop licht" data-act="teamBeheer" data-team="${esc(t.id)}">Terug</button></div>`; };
+      <div class="tr-tabel"><table class="tb-wed"><tbody>${r.lijst.map((x) => { const s0 = st(x); return `<tr class="${s0.soort === 'gelijk' ? 'zacht' : ''}"><td>${esc(D.kort(x.datum))}</td><td>${s0.soort === 'gewijzigd' && s0.was.tijd !== x.tijd ? `<b>${esc(x.tijd)}</b>` : esc(x.tijd)}</td><td>${x.thuis ? 'thuis' : 'uit'}</td><td>${esc(x.tegen)} <small>${s0.soort === 'gelijk' ? '(gelijk)' : s0.soort === 'nieuw' ? '<b>nieuw</b>' : `<b>gewijzigd</b>: was ${esc(s0.wasTekst)}`}</small></td></tr>`; }).join('')}</tbody></table></div>
+      <p class="zacht klein">Een wedstrijd die niet meer in het programma staat, haalt ClubComm niet vanzelf weg.</p>
+      <div class="knoppen"><button class="knop" data-act="wedPlakOk" data-team="${esc(t.id)}" ${nieuw.length || anders.length ? '' : 'disabled'}>${[nieuw.length ? `${nieuw.length} nieuw toevoegen` : '', anders.length ? `${anders.length} wijzigen` : ''].filter(Boolean).join(' · ') || 'Niets te doen'}</button><button class="knop licht" data-act="teamBeheer" data-team="${esc(t.id)}">Terug</button></div>`; };
   CC.on('wedPlak', (el) => { const S = CC.S(); const t = M.team(S, el.dataset.team); PL().tekst = ''; PL().team = t.id;
     CC.sheet(`Wedstrijden plakken · ${t.naam}`, `<p class="zacht klein">Kopieer het programma van <b>${esc(t.naam)}</b> op voetbal.nl (of in de app) en plak het hier. Je ziet eerst wat er gebeurt.</p>
       <textarea id="wedPlakTekst" rows="6" placeholder="Zondag 1 november 2026&#10;9e ronde&#10;Swift O16-2&#10;10:30&#10;Kon. HFC O16-1"></textarea><div id="wedPlakVb"></div>`, { groot: true }); });
   document.addEventListener('input', (e) => { if (e.target.id !== 'wedPlakTekst') return; PL().tekst = e.target.value; const S = CC.S(); const t = M.team(S, PL().team); const v = document.getElementById('wedPlakVb'); if (t && v) v.innerHTML = plakVoorbeeld(S, t); });
   CC.on('wedPlakOk', (el) => { const S = CC.S(); const t = M.team(S, el.dataset.team); const r = CC.wedLezen(PL().tekst); let n = 0;
-    r.lijst.forEach((x) => { if (S.acts.some((a) => a.teamId === t.id && M.isWed(a) && a.datum === x.datum)) return;
+    let w = 0, b = 0;
+    r.lijst.forEach((x) => { const s0 = wedStand(S, t, x);
+      if (s0.soort === 'gewijzigd') { b += CC.wedWijzig(S, s0.a, { tijd: x.tijd, tegen: x.tegen, thuis: x.thuis }); w++; return; }
+      if (s0.soort !== 'nieuw') return;
       S.acts.push({ id: `w${Date.now()}${n}`, teamId: t.id, soort: 'wedstrijd', datum: x.datum, tijd: x.tijd, eind: eindVan(S, t, x.tijd), tegen: x.tegen, thuis: x.thuis, veld: '', afgelast: false, uitslag: null }); n++; });
-    S.acts.sort((x, y) => (x.datum + x.tijd).localeCompare(y.datum + y.tijd)); PL().tekst = ''; CC.save(); CC.render(); openTeam(t.id); CC.toast(`${n} wedstrijd${n === 1 ? '' : 'en'} toegevoegd`); });
+    S.acts.sort((x, y) => (x.datum + x.tijd).localeCompare(y.datum + y.tijd)); PL().tekst = ''; CC.save(); CC.render(); openTeam(t.id);
+    CC.toast([n ? `${n} toegevoegd` : '', w ? `${w} gewijzigd` : '', b ? `${b === 1 ? 'de trainer krijgt' : `${b} trainers krijgen`} een bericht` : ''].filter(Boolean).join(' · ') || 'Niets veranderd'); });
+  // Per datum vergelijken met wat er al staat: gelijk, gewijzigd (tijd, tegenstander of thuis/uit) of nieuw
+  const wedStand = (S, t, x) => { const a = S.acts.find((y) => y.teamId === t.id && M.isWed(y) && y.datum === x.datum); if (!a) return { soort: 'nieuw' };
+    const was = []; if (a.tijd !== x.tijd) was.push(a.tijd); if ((a.tegen || '') !== x.tegen) was.push(a.tegen || '—'); if ((a.thuis !== false) !== x.thuis) was.push(a.thuis === false ? 'uit' : 'thuis');
+    return was.length ? { soort: 'gewijzigd', a, was: { tijd: a.tijd }, wasTekst: was.join(', ') } : { soort: 'gelijk', a }; };
 
   // ---------- Trainingsschema laden ----------
   const DAGNR = { maandag: 1, dinsdag: 2, woensdag: 3, donderdag: 4, vrijdag: 5, zaterdag: 6, zondag: 0 };
