@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 4 november 2026 (t/m Besluit 159)
+Laatst bijgewerkt: 4 november 2026 (t/m Besluit 160)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -21,7 +21,7 @@ Laatst bijgewerkt: 4 november 2026 (t/m Besluit 159)
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
-| NNN | 3 | Tekentool: met *Kies* heeft elk object een **onzichtbaar tikvlak van 44 px**: een tik net naast een object kiest het dichtstbijzijnde binnen 22 px. Met een gereedschap aan zoals het was. Op alle schermen; de tekening verandert niet. Gemeten op de telefoon: raak 97–98% (was 15–40%) | ✅ besloten (wacht op samenvoegen) |  |
+| 160 | 3 | Tekentool: met *Kies* heeft elk object een **onzichtbaar tikvlak van 44 px**: een tik net naast een object kiest het dichtstbijzijnde binnen 22 px. Met een gereedschap aan zoals het was. Op alle schermen; de tekening verandert niet. Gemeten op de telefoon: raak 97–98% (was 15–40%) | ✅ besloten (wacht op samenvoegen) |  |
 | 159 | 3 | Meekijken met trainingen in de app: trainingen en de vormen erin `trainerplan` (rest `eigen`); begeleider van de bouw leest in het dossier (*Trainingen*, met tekeningen), alleen lezen; feedback per training (`trainingFeedback`, bericht aan de trainer); trainer ziet feedback en dat er wordt meegekeken; Regels → Meekijken | ✅ geldt | |
 | 158 | 3 | Tekentool, drie verbeteringen op de telefoon en daarbuiten: op de telefoon staand staan **Kopie** en **Weg** voor de gekozen speler in de **kop van het paneel** *Spelers* (de balk onder het veld lag daar achter het paneel) en het veld krimpt mee als het paneel hoger wordt; de **kleurrondjes** bij *kleur wijzigen* krijgen een **tikvlak van 44 px** (het rondje blijft ± 28 px; met schermlezernaam en *aan/uit*); de **tip** op de telefoon wijkt zolang het paneel *Spelers* open is, zodat het veld ook de eerste keer volledig zichtbaar is | ✅ besloten (wacht op samenvoegen) |  |
 | 157 | 3 | Tekentool, telefoon **gekanteld** (breed en lager dan 500 px): eigen indeling met de rail **links**, de bovenbalk op **één regel**, geen tip en geen hulptekst, het veld **past in de hoogte**; het paneel *Spelers* ligt **rechts naast het veld** (hoogstens 330 px, scrollt). Staand, tablet en laptop ongewijzigd | ✅ besloten (wacht op samenvoegen) |  |
@@ -698,7 +698,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
-## Besluit NNN — Tekentool: een onzichtbaar tikvlak van 44 px rond elk object (Spoor 3, maat M)
+## Besluit 160 — Tekentool: een onzichtbaar tikvlak van 44 px rond elk object (Spoor 3, maat M)
 *Besloten 5 november 2026: de initiatiefnemer koos advies A uit `docs/onderzoek/tekentool/tikvlak.md`, met de adviezen (alleen met *Kies*; op alle schermen; inzoomen eventueel later apart).*
 - **Probleem (gemeten):** een speler is op de telefoon 9–16 px; een vingertik raakte maar in 15–40% van de keren de bedoelde speler (norm: tikvlak 44 pt, `docs/app-controle.md`). Mis je, dan begon er een selectievak of koos je een buurspeler.
 - **Wat:** met *Kies* (geen gereedschap aan) kiest een tik die niet precies op een object valt het **dichtstbijzijnde object binnen 22 schermpunten** (samen een cirkel van 44 px). Dat geldt voor spelers, hoedjes, schijfjes, ballen, doelen, kaatsborden, nummers en tekst. Pijlen, lijnen en vakken hadden al een brede rand (Besluit 126) en blijven zoals ze zijn. Kiezen, slepen en Shift+klik werken met het tikvlak zoals met een directe tik.

@@ -662,7 +662,7 @@
       var p = svgPt(evt), target = evt.target.closest("[data-i]");
       sluitMenus(); st.viaBalk = null; // op het veld gekozen = het getikte nummer gaat naar deze speler
       var greep = evt.target.closest("[data-h]");
-      // Besluit NNN: met Kies (geen gereedschap aan) heeft elk object een onzichtbaar tikvlak van 44 px. Tik je net naast een
+      // Besluit 160: met Kies (geen gereedschap aan) heeft elk object een onzichtbaar tikvlak van 44 px. Tik je net naast een
       // object, dan kies je het dichtstbijzijnde binnen 22 schermpunten. Met een gereedschap aan blijft het zoals het was.
       if (!target && !greep && st.tool == null) target = dichtbij(p);
       if (greep && st.sel != null){ snapshot(); st.drag = { mode: "greep", i: st.sel, h: greep.getAttribute("data-h"), moved: false }; evt.preventDefault(); return; }

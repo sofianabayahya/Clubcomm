@@ -1,6 +1,6 @@
 # Tekentool: spelers zijn op de telefoon te klein om aan te tikken
 
-*4-11-2026. Spoor 3. **Onderzoek met een conceptbeeld. Gekozen: A, met de adviezen = Besluit NNN.** Gemeten met de versie van de Besluiten 156–158 op `/tekenen`, met *Opstelling 3-3-1* voor beide teams (16 spelers). Een vingertik is nagebootst als een punt rond het midden van de speler, met een spreiding van 7 px (ongeveer 2 mm). Per speler zijn 40 tikken gesimuleerd, steeds met dezelfde reeks zodat de meting herhaalbaar is.*
+*4-11-2026. Spoor 3. **Onderzoek met een conceptbeeld. Gekozen: A, met de adviezen = Besluit 160.** Gemeten met de versie van de Besluiten 156–158 op `/tekenen`, met *Opstelling 3-3-1* voor beide teams (16 spelers). Een vingertik is nagebootst als een punt rond het midden van de speler, met een spreiding van 7 px (ongeveer 2 mm). Per speler zijn 40 tikken gesimuleerd, steeds met dezelfde reeks zodat de meting herhaalbaar is.*
 
 ## 1. Wat er nu gebeurt (gemeten)
 | Scherm | Veld | Speler op het scherm | Tik raakt de juiste speler — **nu** | — met een **tikvlak van 44 px** | Dichtste buren |
@@ -41,7 +41,7 @@
 
 **Gevolgen van A:**
 - Alleen bediening; de tekening, de opslag en de bestaande tekeningen veranderen niet.
-- Maat **M** (gedrag): een besluit (`Besluit NNN`), en geen nieuw scherm.
+- Maat **M** (gedrag): een besluit (`Besluit 160`), en geen nieuw scherm.
 - Herziet niets: Besluit 126 (*klik iets aan om het te verplaatsen*) wordt alleen ruimer.
 - In *Afgewezen ideeën* staat niets over dit onderwerp (gezocht 4-11).
 

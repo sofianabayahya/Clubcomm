@@ -1,4 +1,4 @@
-// Tekentool, Besluit NNN: met Kies heeft elk object een onzichtbaar tikvlak van 44 px (het dichtstbijzijnde object binnen
+// Tekentool, Besluit 160: met Kies heeft elk object een onzichtbaar tikvlak van 44 px (het dichtstbijzijnde object binnen
 // 22 schermpunten). Met een gereedschap aan blijft het zoals het was. De tekening zelf verandert niet.
 const { test, expect } = require('@playwright/test');
 const { volgFouten } = require('./hulp');
