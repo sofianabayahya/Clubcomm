@@ -36,6 +36,7 @@
     var VORMNAAM = { c: "rondje", t: "driehoek" };
     // Trainingshoedjes (ø 30 cm) in de kleuren die ART gebruikt; oude pionnen zonder kleur worden oranje.
     var HAT = { oranje: "#F26A1B", blauw: "#1F4FD1", rood: "#D91E1E", geel: "#F5D90A", groen: "#4CD137", roze: "#E91E8C" };
+    var HOEDJE = 0.6; // schaal van een hoedje op het veld (was 0.85, even breed als een speler)
     function hatSvg(c, k){
       k = k || 1;
       var f = HAT[c] || HAT.oranje, m = function(n){ return Math.round(n * k * 10) / 10; };
@@ -189,7 +190,8 @@
         case "ball":
           return '<g' + a + hl + ' transform="translate(' + it.x + ' ' + it.y + ')">' + ballSvg(1) + '</g>';
         case "cone":
-          return '<g' + a + hl + ' transform="translate(' + it.x + ' ' + it.y + ')">' + hatSvg(it.c, 0.85) + '</g>';
+          // Besluit NNN: een hoedje is ongeveer 70% van een speler (20 tegen 25 breed), zodat spelers eruit springen; aantikken via het tikvlak (Besluit 160)
+          return '<g' + a + hl + ' transform="translate(' + it.x + ' ' + it.y + ')">' + hatSvg(it.c, HOEDJE) + '</g>';
         case "dish":
           return '<g' + a + hl + ' transform="translate(' + it.x + ' ' + it.y + ')"><ellipse rx="12" ry="6" fill="' + DISH[it.c] + '" stroke="#555" stroke-width="1.2"/></g>';
         case "goal":
