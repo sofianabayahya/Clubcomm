@@ -1804,15 +1804,16 @@ test('trainingsmodule: volgorde, je zit in en weekthema (KNVB-profiel)', { tag: 
   // A komt als voorstel uit de week; de training heeft het niet zelf opgeslagen
   expect(await page.evaluate((x) => { const S = CC.S(); const p = CC.tr.plan(S, 'tW'); return [CC.tr.blokDoel(S, p, 'A') === x, !(p.blokDoel || {}).A]; }, ld)).toEqual([true, true]);
   await expect.poll(async () => Object.values((await nepDb(page)).rows).filter((r) => r.soort === 'trainingsplannen' && r.data.week).map((r) => `${r.scope}|${r.data.methodiek.thema}`).join()).toBe('eigen|Vrijlopen');
-  // Lege training: printen en kopiëren kan nog niet
-  await expect(page.locator('.tr-pmid [data-act="tpPrint"]')).toBeDisabled();
-  await expect(page.locator('.tr-pmid [data-act="tpKopieNaar"]')).toBeDisabled();
+  // Lege training (Besluit 150): printen, kopiëren en ⋯ staan er nog niet; wel de vraag hoe je wilt beginnen
+  await expect(page.locator('.tr-pmid [data-act="tpPrint"], .tr-pmid [data-act="tpKopieNaar"], .tr-pmid [data-act="tpMeer"]')).toHaveCount(0);
+  await expect(page.locator('.tr-pmid .tr-start')).toContainText('Hoe wil je beginnen?');
   // Team zonder spelers (zoals Swift): geen knop Aanwezigheid in Week
   await page.locator('[data-act="seg"][data-val="week"]').click();
   await expect(page.locator('.tr-aanw')).toHaveCount(1);
   await page.evaluate(() => { const S = CC.S(); S.players = S.players.filter((x) => x.teamId !== 'O12-1'); CC.render(); });
   await expect(page.locator('.tr-aanw')).toHaveCount(0);
-  // Telefoon: geen 'sleep' (werkt daar niet)
+  // Telefoon: geen 'sleep' (werkt daar niet). Besluit 150: de bankstrook staat er alleen als de Vormenbank iets bevat
+  await page.evaluate(() => { const S = CC.S(); S.vormen = (S.vormen || []).concat([{ id: 'v-hint', eigenaar: CC.me().id, naam: 'Rondo', duur: 8 }]); CC.render(); });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.locator('[data-act="seg"][data-val="plannen"]').click();
   await expect(page.locator('#planBank + small')).toHaveText('Tik op + (komt op de eerste passende lege plek).');
@@ -2153,8 +2154,9 @@ test('trainingsmodule: DCG-periodisering O13 met hoofdthema, teamfunctie, contra
   await expect(page.locator('#sheet .tr-vh')).toContainText('Vooruit inspelen');
   await page.waitForTimeout(400);
   if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/6-vorm-kiezen.png`, fullPage: false });
-  // Besluit 139: geen aparte knop 'past bij'; de groepen tonen wat past (niets wordt uitgesloten)
-  await expect(page.locator('#sheet .kv-groep').first()).toContainText('Past het best');
+  // Besluit 139: geen aparte knop 'past bij'. Besluit 150: bij een lege Vormenbank geen lege groepen, wel één kaart Nieuwe oefenvorm maken
+  await expect(page.locator('#sheet .kv-groep')).toHaveCount(0);
+  await expect(page.locator('#sheet .kv-nieuw')).toContainText('Je Vormenbank is nog leeg');
   await page.locator('#sheet summary', { hasText: 'Ander gereedschap' }).click();
   await page.locator('#sheet [data-act="vkZet"][data-k="gs"][data-w="ll-1v1-aanvallend"]').click();
   await expect(page.locator('#sheet .tr-vh')).toContainText('Passeren');

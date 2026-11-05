@@ -645,12 +645,26 @@
       }
       st.tool = st.tool === n && !vast ? null : n; st.sel = null; render();
     }
+    var TIKVLAK = 22; // halve breedte van het tikvlak, in schermpunten (44 px samen)
+    function dichtbij(p){
+      var svg = el("drawSvg"), m = svg.getScreenCTM(); if (!m || !m.a) return null;
+      var r = TIKVLAK / m.a, best = -1, bd = r;
+      st.items.forEach(function(it, j){
+        if (!("x" in it)) return; // pijlen, lijnen en vakken hebben al een brede rand om aan te tikken (Besluit 126)
+        var d = Math.sqrt((it.x - p.x) * (it.x - p.x) + (it.y - p.y) * (it.y - p.y));
+        if (d <= bd){ bd = d; best = j; }
+      });
+      return best === -1 ? null : svg.querySelector('[data-i="' + best + '"]');
+    }
     function onDown(evt){
       if (evt.button === 2) return; // rechtermuisknop = stoppen (zie contextmenu)
       if (!st) return;
       var p = svgPt(evt), target = evt.target.closest("[data-i]");
       sluitMenus(); st.viaBalk = null; // op het veld gekozen = het getikte nummer gaat naar deze speler
       var greep = evt.target.closest("[data-h]");
+      // Besluit 160: met Kies (geen gereedschap aan) heeft elk object een onzichtbaar tikvlak van 44 px. Tik je net naast een
+      // object, dan kies je het dichtstbijzijnde binnen 22 schermpunten. Met een gereedschap aan blijft het zoals het was.
+      if (!target && !greep && st.tool == null) target = dichtbij(p);
       if (greep && st.sel != null){ snapshot(); st.drag = { mode: "greep", i: st.sel, h: greep.getAttribute("data-h"), moved: false }; evt.preventDefault(); return; }
       if (st.tool != null && !(target && !isDragTool(toolDef(st.tool)))){
         var t = toolDef(st.tool);
