@@ -8,11 +8,11 @@
 
 | | |
 |---|---|
-| **Status van de uitgave** | Concept |
+| **Status van de uitgave** | Gepubliceerd (6-11-2026, akkoord van de initiatiefnemer) |
 | **Lezer** | vrijwillige trainer die net begint (laag *Draaien*, Besluit 149) |
 | **Vorm** | PDF, hoogstens 2 A4, veel beeld |
 | **Wat je hieraan hebt** | In tien minuten kun je inloggen, zien wie er komt, de aanwezigheid opnemen en weet je wat je doet als je zelf niet kunt. |
-| **Bestand** | `docs/presentaties/pdf/ClubComm-snelstart-trainer.pdf` (2 A4, Concept; 6-11-2026 opnieuw met de nieuwe tabnamen en beelden) |
+| **Bestand** | `docs/presentaties/pdf/ClubComm-snelstart-trainer.pdf` (2 A4, Gepubliceerd 6-11-2026) |
 
 **Kaarten, in deze volgorde (blok Kort, met de schermafbeelding van dat blok):**
 1. [inloggen.md](inloggen.md): Inloggen en de app op je beginscherm
@@ -24,7 +24,7 @@
 
 **Opnieuw maken** (de losse regels hierboven gaan als `"= …"` mee; `~naast` zet het beeld naast de stappen):
 ```
-node docs/handleiding/pdf.js docs/presentaties/pdf/ClubComm-snelstart-trainer.pdf "Snelstart vrijwillige trainer" Concept "^ ClubComm · voor trainers · je eerste training" "= In tien minuten kun je inloggen, zien wie er komt, de aanwezigheid opnemen en weet je wat je doet als je zelf niet kunt." "inloggen.md#Kort~naast" "aanwezigheid.md#Kort~naast" "zelf-afmelden.md#Kort~naast" "= *Alleen als je club de trainingsmodule gebruikt:*" "training-voorbereiden.md#Kort~naast" "= Wil je meer? Bewaar je eigen oefenvormen bij Vormen en teken ze met de tekentool. Vragen: Profiel → Feedback, of vraag het je coördinator of HJO."
+node docs/handleiding/pdf.js docs/presentaties/pdf/ClubComm-snelstart-trainer.pdf "Snelstart vrijwillige trainer" Gepubliceerd "^ ClubComm · voor trainers · je eerste training" "= In tien minuten kun je inloggen, zien wie er komt, de aanwezigheid opnemen en weet je wat je doet als je zelf niet kunt." "inloggen.md#Kort~naast" "aanwezigheid.md#Kort~naast" "zelf-afmelden.md#Kort~naast" "= *Alleen als je club de trainingsmodule gebruikt:*" "training-voorbereiden.md#Kort~naast" "= Wil je meer? Bewaar je eigen oefenvormen bij Vormen en teken ze met de tekentool. Vragen: Profiel → Feedback, of vraag het je coördinator of HJO."
 ```
 
 **Bewust niet in de snelstart:** wisselschema en speeltijd, berichten, spelers opvolgen, ouders uitnodigen. Die komen in de *Handleiding trainer* (Kort + Meer), zodra die kaarten er zijn.
@@ -50,4 +50,3 @@ node docs/handleiding/pdf.js docs/presentaties/pdf/ClubComm-snelstart-trainer.pd
 
 ## Nog te maken
 - Handleiding trainer (Kort + Meer van alle trainerskaarten), handleiding HJO, handleiding clubbeheerder, ouders, teamleider, bestuursdemo: zie `docs/onderzoek/documentatie-borging/README.md` § 4.1.
-- *Gepubliceerd* maken van de Snelstart vrijwillige trainer: na akkoord van de initiatiefnemer (`pdf.js` weigert *Gepubliceerd* als een kaart niet *In productie* is).

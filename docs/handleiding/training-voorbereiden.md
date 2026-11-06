@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status in de app** | In productie · commit `dcb59d7` (5-11-2026) |
-| **Status van deze kaart** | Concept (Besluit 151) |
+| **Status van deze kaart** | Gepubliceerd in de bundel *Snelstart vrijwillige trainer* (6-11-2026; Kort) · Besluit 151 |
 | **Besluiten** | 128 · 130 · 132 · 135 · 139 · 141 · 142 · 144 · 145 · 150 · 155 · 173 · 175 · 176 · 179 |
 | **Schermafbeeldingen** | `docs/presentaties/beelden/training-plannen.jpg` · `training-kies-oefenvorm.jpg` |
 | **Doelgroepen** | beginner trainer · ervaren trainer |
