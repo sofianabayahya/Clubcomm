@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status in de app** | In productie · commit `699cb9e` (5-11-2026) |
-| **Status van deze kaart** | Gepubliceerd (Besluit 151) · PDF `docs/presentaties/pdf/ClubComm-snelstart-tekenen.pdf` (Kort + Let op, versie 5-11-2026, app `699cb9e`; opnieuw maken met `node docs/handleiding/pdf.js`) |
+| **Status van deze kaart** | Gepubliceerd (Besluit 151) · PDF `docs/presentaties/pdf/ClubComm-snelstart-tekenen.pdf` (Kort + Let op, versie 6-11-2026, app `7a44e84`; opnieuw maken met `node docs/handleiding/pdf.js`) |
 | **Besluiten** | 124–127 · 148 · 152 · 153 · 156 · 157 · 158 · 160 · 161 (trainerspilot) · 162 (hoedjes) |
 | **Schermafbeeldingen** | `docs/presentaties/beelden/tekentool-laptop.jpg` · `tekentool-telefoon.jpg` · `tekentool-gekanteld.jpg` · `tekentool-tel-spelers.jpg` · `tekentool-tel-hoedjes.jpg` · `tekentool-tel-kies.jpg` |
 | **Doelgroepen** | beginner trainer · ervaren trainer |
