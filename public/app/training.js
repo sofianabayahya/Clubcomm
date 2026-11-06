@@ -590,7 +590,7 @@
         <div class="knoppen"><button type="button" class="knop ${oranje ? 'licht' : ''} klein" data-act="tpVormErbij" data-id="${esc(id)}" data-v="${x.v.id}" ${slot}>${oranje ? `Toch in ${esc(c.label)} zetten` : `Zet in ${esc(c.label)}`}</button><button type="button" class="knop licht klein" data-act="vormOpen" data-id="${x.v.id}">Vorm bekijken</button></div></div>` : ''}</div>`; };
   const kvHtml = (S, id, i) => { const p = plan(S, id); if (!p) return ''; const r = advies(S, p, i); const c = r.ctx; const slot = i != null && i !== '' ? `data-i="${i}"` : '';
     const kop = [c.gs ? `<b>${c.soort === 'A' || c.soort === 'B' ? `${esc(c.soort)} · ` : ''}${esc(ldNaam(S, c.gs))}</b>` : c.o ? `<b>${esc(c.label)}</b>` : '', c.nv ? esc(niveauNaam(S, c.nv)) : '', c.fs ? esc(faseNaam(S, c.fs.id)) : '',
-      c.n ? `${c.n} spelers${c.k != null ? `, ${c.k} keeper${c.k === 1 ? '' : 's'}` : ''}` : '', c.o ? `${Number(c.o.min) || 0} min` : ''].filter(Boolean).join(' · ');
+      c.n ? `${c.n} spelers${c.k ? `, ${c.k} keeper${c.k === 1 ? '' : 's'}` : ''}` : '', c.o ? `${Number(c.o.min) || 0} min` : ''].filter(Boolean).join(' · ');
     const chip = (k, w, naam, aan) => `<button type="button" class="chipknop ${aan ? 'aan' : ''}" aria-pressed="${!!aan}" data-act="vkZet" data-k="${k}" data-w="${esc(w)}" data-id="${esc(id)}" ${slot}>${naam}</button>`;
     const leeg = c.gs ? `Nog geen oefenvorm voor ${esc(ldNaam(S, c.gs))}${c.vh ? ` · ${esc(vhNaam(S, c.vh))}` : ''}${c.n ? ` bij ${c.n} spelers` : ''}.` : 'Nog geen oefenvorm die helemaal past.';
     const bankLeeg = !mijnVormen(S).length;
