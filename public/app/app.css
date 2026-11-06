@@ -1094,3 +1094,12 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .seg:has([data-key="trSeg"]) button { flex: auto; padding: 8px 4px; white-space: nowrap; }
 /* Besluit 178: de volgende stap in de lijst Trainers (alleen ③ en ④ in kleur) */
 .st-volg { color: var(--blauw); font-weight: 600; }
+
+/* Besluit 179: opstelling per kleur */
+.tr-wiekleur { margin: 10px 0 6px; }
+.tr-wiekleur button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.tr-wiekleur small { font-weight: 500; color: var(--zacht); }
+.tr-wstip { width: 12px; height: 12px; border-radius: 50%; display: inline-block; border: 1px solid rgba(0,0,0,.2); }
+.tr-wbol { width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; flex: none; }
+.tr-wrij2 { gap: 12px; min-height: 52px; }
+.tr-wierijen .tr-t b { font-size: 16px; }
