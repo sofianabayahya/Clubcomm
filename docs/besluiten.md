@@ -748,6 +748,9 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 **Gegevens.** Niets nieuws: de positie *keeper* bestaat al per speler. Geen migratie.
 
 **Tests:** `tests/keepers-tellen.spec.js`, `tests/tekentool-nummerbalk-open.spec.js` (390 en 1366 px).
+
+---
+
 ## Besluit 171 — Lijst en detail naast elkaar op de laptop: Trainers en Berichten (Spoor 3, maat M)
 > Voorstel en voorbeelden op 1366 px: `docs/onderzoek/laptop-lijst-detail/voorstel.md` (voorstel 3 uit `docs/onderzoek/kliks/README.md`; akkoord op 1, 2 en 3, 6 november 2026). Vult Besluit 113 aan (drie lagen); zelfde patroon als Besluit 169 (Plannen op de laptop).
 
