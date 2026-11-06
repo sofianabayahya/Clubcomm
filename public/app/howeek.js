@@ -75,8 +75,9 @@
     const mRij = (m) => h.rij({ ic: m.klaar ? 'circle-check' : 'calendar-days', titel: `${D.kort(m.datum)} · ${m.soort === 'wedstrijd' ? 'wedstrijd' : 'training'}`, sub: m.klaar ? 'Afgerond' : 'Gepland', act: 'open', attrs: `data-view="begelMoment" data-id="${esc(m.id)}"` });
     CC.sheet(`${esc(p.naam)}`, `<p class="zacht klein">${esc(teamsVan(S, p).map((x) => x.naam).join(', '))}${bouwVan(S, p) ? ` · ${esc(bouwVan(S, p))}` : ''} · ${t ? `traject sinds ${D.kort(t.sinds)}${t.leerdoel ? ` · leerdoel: ${esc(t.leerdoel)}` : ''}` : esc(kennis(S, p.id))}</p>
       ${[...kom, ...laatst].length ? `<div class="lijst compact">${[...kom, ...laatst].map(mRij).join('')}</div>` : ''}
+      ${CC.trStappen && CC.trStappen(S, p) ? `${CC.trStappen(S, p)}<div class="knoppen kolom"><button class="knop licht vol" data-act="open" data-view="trainerDetail" data-id="${esc(p.id)}">${icon('user')}Volledig dossier</button></div>` : `
       <div class="knoppen kolom">${t ? `<button class="knop vol" data-act="begelNieuw" data-id="${esc(p.id)}">${icon('plus')}Begeleidingsmoment plannen</button>` : `<button class="knop vol" data-act="trajectSheet" data-id="${esc(p.id)}">${icon('play')}Traject starten</button>`}
-        <button class="knop licht vol" data-act="open" data-view="trainerDetail" data-id="${esc(p.id)}">${icon('user')}Volledig dossier</button></div>`); });
+        <button class="knop licht vol" data-act="open" data-view="trainerDetail" data-id="${esc(p.id)}">${icon('user')}Volledig dossier</button></div>`}`); });
 
   // ---------- Tabbladen: HO = Home · Trainers · Teams · Berichten; TC = Home · Trainers · Berichten ----------
   const wacht = () => {
