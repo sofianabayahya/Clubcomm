@@ -1,4 +1,4 @@
-// ClubComm — Besluit NNN: met het paneel Spelers open een speler op het veld tikken houdt het paneel open en kiest die speler,
+// ClubComm — Besluit 172: met het paneel Spelers open een speler op het veld tikken houdt het paneel open en kiest die speler,
 // zodat het volgende nummer meteen naar hem gaat (eerder ging het paneel dicht). Een leeg stuk veld sluit het paneel (Besluit 152).
 const { test, expect } = require('@playwright/test');
 const { volgFouten } = require('./hulp');

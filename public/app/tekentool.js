@@ -662,7 +662,7 @@
       if (evt.button === 2) return; // rechtermuisknop = stoppen (zie contextmenu)
       if (!st) return;
       var p = svgPt(evt), target = evt.target.closest("[data-i]");
-      // Besluit NNN: staat het paneel Spelers open en tik je een speler, dan blijft het paneel open en kies je die speler,
+      // Besluit 172: staat het paneel Spelers open en tik je een speler, dan blijft het paneel open en kies je die speler,
       // zodat het volgende nummer meteen naar hem gaat. Een leeg stuk veld (of ×) sluit het paneel zoals in Besluit 152.
       var t0 = target || (st.tool == null && !evt.target.closest("[data-h]") ? dichtbij(p) : null), it0 = t0 && st.items[Number(t0.getAttribute("data-i"))];
       if (!(railOpen === "spelers" && it0 && it0.t === "p")) sluitMenus();
