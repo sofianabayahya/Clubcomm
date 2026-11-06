@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Herkenningstest ClubComm</title>
+<style>
+:root { --inkt: #1B1F24; --zacht: #5A626C; --lijn: #D9DDE2; --vlak: #F3F4F5; --accent: #0869C2; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #fff; color: var(--inkt); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 1180px; margin: 0 auto; padding: 24px 16px 48px; }
+h1 { font-size: 28px; margin: 0 0 4px; } h2 { font-size: 21px; margin: 32px 0 8px; }
+p, li { max-width: 75ch; } .zacht { color: var(--zacht); }
+ol.stappen { padding-left: 22px; } ol.stappen li { margin-bottom: 6px; }
+.voorbeeld { border: 1px solid var(--lijn); border-radius: 10px; overflow: hidden; max-width: 760px; }
+.voorbeeld img { width: 100%; display: block; }
+.bediening { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; position: sticky; top: 0; background: #fff; padding: 8px 0; z-index: 2; }
+button { font: 600 16px/1 inherit; min-height: 44px; padding: 0 16px; border-radius: 8px; border: 2px solid var(--accent); background: #fff; color: var(--accent); cursor: pointer; }
+button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+.tegels { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+figure { margin: 0; border: 1px solid var(--lijn); border-radius: 10px; overflow: hidden; background: var(--vlak); }
+figure .beeld { aspect-ratio: 390 / 760; overflow: hidden; }
+figure img { width: 100%; display: block; transition: filter .2s; }
+body.wazig figure img { filter: blur(4px) saturate(1.05); }
+figcaption { padding: 8px 12px; font-weight: 800; font-size: 20px; text-align: center; background: #fff; border-top: 1px solid var(--lijn); }
+table { border-collapse: collapse; width: 100%; max-width: 900px; }
+.rol { overflow-x: auto; }
+th, td { border: 1px solid var(--lijn); padding: 8px 10px; text-align: left; vertical-align: top; }
+th { background: var(--vlak); font-size: 15px; }
+td.leeg { height: 40px; }
+details { margin-top: 28px; border: 1px solid var(--lijn); border-radius: 10px; padding: 12px 16px; }
+summary { cursor: pointer; font-weight: 700; min-height: 32px; }
+.score li { margin-bottom: 4px; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 800px) { .tegels { grid-template-columns: 1fr 1fr; } }
+@media (prefers-reduced-motion: reduce) { figure img { transition: none; } }
+@media print {
+  .bediening, details, .scherm-alleen { display: none !important; }
+  main { padding: 0; } .tegels { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  h2 { break-before: auto; } .formulier { break-before: page; }
+  figure { break-inside: avoid; }
+}
+</style>
+</head>
+<body class="wazig">
+<main>
+  <h1>Herkent iemand ClubComm zonder logo?</h1>
+  <p class="zacht">Herkenningstest voor de merkrichting <b>Krijtbord in ClubComm-blauw</b> (onderzoek Spoor 3). Alle namen, clubs en tegenstanders zijn verzonnen; ook de tegels van "andere apps" zijn eigen ontwerpen, geen echte producten.</p>
+
+  <h2>Zo doe je de test (5 minuten per persoon)</h2>
+  <ol class="stappen">
+    <li>Kies drie mensen die het nieuwe ontwerp nog niet kennen, liefst één beginnende oudertrainer, één ervaren breedtetrainer en één selectietrainer of HJO.</li>
+    <li><b>Voorbeeld (10 seconden):</b> laat het scherm hieronder zien en zeg: "Dit is ClubComm." Daarna weg.</li>
+    <li><b>Ronde 1, wazig (30 seconden):</b> laat de acht tegels wazig zien. Vraag: "Welke schermen zijn van dezelfde app als het voorbeeld?" Laat ze de nummers noemen en zeggen hoe zeker ze zijn (1 = gok, 3 = zeker).</li>
+    <li><b>Ronde 2, scherp:</b> zet de tegels op <i>Scherp</i>. Vraag opnieuw welke het zijn, en: "Waaraan herken je het?"</li>
+    <li>Schrijf de antwoorden op het formulier. Geen namen nodig; noteer alleen het soort gebruiker.</li>
+  </ol>
+  <p class="zacht">Op een telefoon of laptop laten zien werkt het best. Printen kan ook; de tegels worden dan scherp geprint, dus doe ronde 1 op het scherm.</p>
+
+  <h2>Voorbeeld: dit is ClubComm</h2>
+  <div class="voorbeeld"><img src="tegels/voorbeeld.jpg" alt="Voorbeeld: het scherm Trainers van ClubComm in de nieuwe stijl, met logo"></div>
+
+  <h2>De acht tegels</h2>
+  <p class="zacht">Logo, appnaam en clubnaam zijn weggehaald. Alle tegels tonen dezelfde soort inhoud, zodat alleen de vormgeving verschilt.</p>
+  <div class="bediening" role="group" aria-label="Weergave van de tegels">
+    <button id="wazig" aria-pressed="true">Ronde 1: wazig</button>
+    <button id="scherp" aria-pressed="false">Ronde 2: scherp</button>
+  </div>
+  <div class="tegels">
+    <figure><div class="beeld"><img src="tegels/tegel-1.jpg" alt="Tegel 1"></div><figcaption>1</figcaption></figure>
+    <figure><div class="beeld"><img src="tegels/tegel-2.jpg" alt="Tegel 2"></div><figcaption>2</figcaption></figure>
+    <figure><div class="beeld"><img src="tegels/tegel-3.jpg" alt="Tegel 3"></div><figcaption>3</figcaption></figure>
+    <figure><div class="beeld"><img src="tegels/tegel-4.jpg" alt="Tegel 4"></div><figcaption>4</figcaption></figure>
+    <figure><div class="beeld"><img src="tegels/tegel-5.jpg" alt="Tegel 5"></div><figcaption>5</figcaption></figure>
+    <figure><div class="beeld"><img src="tegels/tegel-6.jpg" alt="Tegel 6"></div><figcaption>6</figcaption></figure>
+    <figure><div class="beeld"><img src="tegels/tegel-7.jpg" alt="Tegel 7"></div><figcaption>7</figcaption></figure>
+    <figure><div class="beeld"><img src="tegels/tegel-8.jpg" alt="Tegel 8"></div><figcaption>8</figcaption></figure>
+  </div>
+
+  <h2 class="formulier">Antwoordformulier</h2>
+  <div class="rol"><table>
+    <thead><tr><th>Persoon</th><th>Soort gebruiker</th><th>Ronde 1 (wazig): nummers + zekerheid 1–3</th><th>Ronde 2 (scherp): nummers</th><th>Waaraan herkend? (letterlijk opschrijven)</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td class="leeg">oudertrainer / breedte / selectie-HJO</td><td class="leeg"></td><td class="leeg"></td><td class="leeg"></td></tr>
+      <tr><td>2</td><td class="leeg">oudertrainer / breedte / selectie-HJO</td><td class="leeg"></td><td class="leeg"></td><td class="leeg"></td></tr>
+      <tr><td>3</td><td class="leeg">oudertrainer / breedte / selectie-HJO</td><td class="leeg"></td><td class="leeg"></td><td class="leeg"></td></tr>
+    </tbody>
+  </table></div>
+
+  <details class="scherm-alleen">
+    <summary>Antwoordsleutel en beoordeling (pas openen na de test)</summary>
+    <div class="rol"><table style="margin-top:12px">
+      <thead><tr><th>Tegel</th><th>Wat het is</th><th>Telt als</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Richting A · Matchday, Home</td><td>andere app</td></tr>
+        <tr><td>2</td><td><b>ClubComm Krijtbord-blauw, Teams</b></td><td><b>ClubComm</b></td></tr>
+        <tr><td>3</td><td>De huidige ClubComm (Home HJO)</td><td>huidige stijl: laat zien of het blauw alleen genoeg is om te verwarren</td></tr>
+        <tr><td>4</td><td><b>ClubComm Krijtbord-blauw, Training</b></td><td><b>ClubComm</b></td></tr>
+        <tr><td>5</td><td>Richting D · Clubhuis, Home</td><td>andere app</td></tr>
+        <tr><td>6</td><td>Richting B · Leerlijn, Training</td><td>andere app</td></tr>
+        <tr><td>7</td><td><b>ClubComm Krijtbord-blauw, Home HJO</b></td><td><b>ClubComm</b></td></tr>
+        <tr><td>8</td><td><b>ClubComm Krijtbord-blauw, Tekentool</b></td><td><b>ClubComm</b></td></tr>
+      </tbody>
+    </table></div>
+    <h3 style="margin:16px 0 6px">Wanneer is de identiteit herkenbaar genoeg?</h3>
+    <ul class="score">
+      <li><b>Geslaagd:</b> minstens 2 van de 3 mensen vinden in ronde 1 (wazig) minstens 3 van de 4 ClubComm-tegels (2, 4, 7, 8), en kiezen hooguit één andere tegel.</li>
+      <li><b>Tegel 3 gekozen</b> (de huidige app)? Dan herkennen mensen vooral het blauw, niet de vormen. De rondjes, pionnen en looplijnen moeten dan sterker.</li>
+      <li><b>Tegel 8 gemist</b> (tekentool)? Dan valt het groene veld buiten de identiteit; overweeg het blauwe menu of de rondjes daar duidelijker te maken.</li>
+      <li><b>"Waaraan herkend?"</b> Tel hoe vaak genoemd wordt: rondjes met letters, pionnen/driehoekjes, stippellijnen, de letter, blauw. Het merk is sterk als vormen vaker genoemd worden dan kleur.</li>
+      <li>Drie mensen is een eerste indruk, geen bewijs. Bij twijfel herhalen met drie anderen.</li>
+    </ul>
+  </details>
+</main>
+<script>
+const zet = (wazig) => { document.body.classList.toggle('wazig', wazig);
+  document.getElementById('wazig').setAttribute('aria-pressed', wazig); document.getElementById('scherp').setAttribute('aria-pressed', !wazig); };
+document.getElementById('wazig').onclick = () => zet(true);
+document.getElementById('scherp').onclick = () => zet(false);
+</script>
+</body>
+</html>
