@@ -1,4 +1,4 @@
-// ClubComm — Besluit 173 en NNN-a: wie speelt waar, nu in de tekening zelf (ook spelers zonder nummer), wisselen in twee tikken. Per training, bij de vorm waar je het wilt (meestal de partij): de nummers uit de tekening,
+// ClubComm — Besluit 173 en 175: wie speelt waar, nu in de tekening zelf (ook spelers zonder nummer), wisselen in twee tikken. Per training, bij de vorm waar je het wilt (meestal de partij): de nummers uit de tekening,
 // per nummer de speler die die rol vandaag speelt, uit wie er is. Ook in Week en op de print. Verzonnen namen, nep-database.
 const { test, expect } = require('@playwright/test');
 const fs = require('fs');

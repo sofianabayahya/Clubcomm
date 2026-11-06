@@ -1077,7 +1077,7 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
   .vb-naast .ld-r .tr-legenda { color: #fff; }
 }
 
-/* Besluit NNN-a: opstelling met namen in de tekening */
+/* Besluit 175: opstelling met namen in de tekening */
 .tr-wieveld { margin: 8px 0 6px; }
 .tr-wieveld svg circle[data-act] { cursor: pointer; }
 .tr-wieteam { margin: 4px 0; font-size: 16px; line-height: 1.5; }
@@ -1085,5 +1085,5 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .tr-wiep { white-space: nowrap; }
 .tr-namenknop { margin-top: 8px; }
 
-/* Besluit NNN-b: de vier tabbladen van Training passen op één regel (Op het veld · Voorbereiden · Vormen · Seizoen) */
+/* Besluit 176: de vier tabbladen van Training passen op één regel (Op het veld · Voorbereiden · Vormen · Seizoen) */
 .seg:has([data-key="trSeg"]) button { flex: auto; padding: 8px 4px; white-space: nowrap; }

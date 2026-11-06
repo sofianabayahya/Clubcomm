@@ -24,7 +24,7 @@ Ook nu bijna: #122 gebruikt 156. Een sessie die vandaag "het vrije nummer" uit d
 ## De afspraak (voorstel)
 
 1. **Tijdens het werk heeft een nieuw besluit geen nummer.** Overal waar het nummer zou staan, schrijf je **`Besluit NNN`**: in de kop (`## Besluit NNN — …`), in het Register, in codecommentaren, in tests, in de kaart en in de titel van de pull request.
-   - Twee nieuwe besluiten in één pull request: `NNN-a` en `NNN-b`.
+   - Twee nieuwe besluiten in één pull request: `175` en `176`.
    - Verwijzen naar een besluit dat al op `main` staat, gaat gewoon met het echte nummer (*"◐ Deels herzien door Besluit NNN"*).
 2. **Het nummer komt pas bij de stap "overdracht bijwerken"**, dus na jouw akkoord en vlak voor het samenvoegen. Die stap bestaat al (#114), dus er komt geen extra ronde bij:
    - `npm run check` geeft het eerstvolgende vrije nummer;

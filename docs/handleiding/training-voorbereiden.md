@@ -4,7 +4,7 @@
 |---|---|
 | **Status in de app** | In productie · commit `dcb59d7` (5-11-2026) |
 | **Status van deze kaart** | Concept (Besluit 151) |
-| **Besluiten** | 128 · 130 · 132 · 135 · 139 · 141 · 142 · 144 · 145 · 150 · 155 · 173 · NNN-a · NNN-b |
+| **Besluiten** | 128 · 130 · 132 · 135 · 139 · 141 · 142 · 144 · 145 · 150 · 155 · 173 · 175 · 176 |
 | **Schermafbeeldingen** | `docs/presentaties/beelden/training-plannen.jpg` · `training-kies-oefenvorm.jpg` |
 | **Doelgroepen** | beginner trainer · ervaren trainer |
 
@@ -27,7 +27,7 @@
 - Plan je meer minuten dan de oefentijd, dan staat die regel vanzelf open met een waarschuwing en welke vorm erbuiten valt. Je kunt gewoon doorgaan: de app blokkeert nooit.
 - Bij **Op het veld** staat de tijd niet; alleen als je te veel hebt ingepland, zie je daar dezelfde waarschuwing (Besluit 165).
 
-**Wie speelt waar** (Besluit 173 en NNN-a)
+**Wie speelt waar** (Besluit 173 en 175)
 - Heeft de vorm een tekening met spelers, dan staat in het venster van die plek **Wie speelt waar · namen erbij** (ingeklapt). Tik erop als je wilt indelen, meestal bij een grote partijvorm. Zodra er namen zijn, staat het open.
 - Tik een speler in de tekening en tik een naam. Staat die naam al ergens, dan **wisselen** ze. Je ziet wie er is, hoe vaak hij trainde en wat hij vorige keer speelde. ClubComm stelt niemand voor.
 - Onder de tekening staat de **lijst per team**: *Rood: K Bram · 2 Daan · 4 Finn …* Een nummer in de tekening is het overzichtelijkst (nummer = positie), maar een speler zonder nummer kan ook een naam krijgen (*– Yassin*).
