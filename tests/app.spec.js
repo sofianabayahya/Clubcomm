@@ -1931,11 +1931,11 @@ test('trainingsmodule: classificatie, sjabloon, fase, minuten per leerdoel en fi
   await page.fill('#vormZoek', 'positiespel');
   await expect(page.locator('.tr-kaart')).toHaveCount(1);
   await page.locator('.tr-kaart').click();
-  await expect(page.locator('#sheet .tr-soort')).toContainText('Positiespel · functioneel / linietactisch');
-  await expect(page.locator('#sheet .tr-meta')).toContainText('V→A');
+  await expect(page.locator(':is(#sheet, .vb-naast .ld-r) .tr-soort')).toContainText('Positiespel · functioneel / linietactisch');
+  await expect(page.locator(':is(#sheet, .vb-naast .ld-r) .tr-meta')).toContainText('V→A'); // Besluit NNN: op de laptop staat de vorm rechts
   await controleer(page, fouten, 'classificatie en sjabloon');
   // Besluit 132: vorm in een training zetten (morgen: lege training krijgt het sjabloon, de vorm komt in het blok met hetzelfde leerdoel of de eerste lege plek)
-  await page.locator('#sheet [data-act="vormNaarTraining"]').click();
+  await page.locator(':is(#sheet, .vb-naast .ld-r) [data-act="vormNaarTraining"]').click();
   await page.locator('#sheet [data-act="vormNaarTrainingOk"][data-naar="tMorgen"]').click();
   await expect.poll(async () => { const r = Object.values((await nepDb(page)).rows).find((x) => x.soort === 'trainingsplannen' && x.act_id === 'tMorgen'); return r ? `${r.data.sjabloon}|${r.data.onderdelen.filter((o) => o.vormId).map((o) => o.blok).join()}` : ''; }).toBe('dcg-75|A1');
   // Lijn: de opleidingslijn per week (uitgevoerd vet)

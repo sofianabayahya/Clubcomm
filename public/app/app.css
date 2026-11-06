@@ -1066,3 +1066,15 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
   .ld-leeg { margin: 24px 0; text-align: center; }
   .ld .gekozen { background: var(--blauw-l); box-shadow: inset 3px 0 0 var(--blauw); }
 }
+/* Besluit NNN: Vormenbank op de laptop, compacte lijst links en de vorm rechts */
+@media (min-width: 1100px) {
+  .vb-naast { margin-top: 4px; }
+  .vb-naast .ld-l .tr-raster { display: flex; flex-direction: column; gap: 6px; }
+  .vb-naast .ld-l .tr-kaart { flex-direction: row; align-items: center; gap: 12px; padding: 6px 10px 6px 6px; min-height: 56px; border-radius: 12px; }
+  .vb-naast .ld-l .tr-teken { width: 84px; height: 54px; aspect-ratio: auto; flex: none; border-radius: 8px; }
+  .vb-naast .ld-l .tr-kaart .tr-t { padding: 0; }
+  .vb-naast .ld-l .tr-kaart.gekozen { background: var(--blauw-l); box-shadow: inset 3px 0 0 var(--blauw); }
+  .vb-naast .ld-r .tr-rv { display: grid; grid-template-columns: 1.1fr 1fr; gap: 18px; align-items: start; }
+  .vb-naast .ld-r .tr-rv-l { background: #5fb87a; padding: 12px; border-radius: 14px; }
+  .vb-naast .ld-r .tr-legenda { color: #fff; }
+}

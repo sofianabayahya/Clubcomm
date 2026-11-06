@@ -21,6 +21,7 @@ Laatst bijgewerkt: 5 november 2026 (t/m Besluit 171)
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
+| NNN | 3 | Vormenbank op de laptop (vanaf 1100 px): compacte lijst links (kleine tekening, naam, spelers, minuten; zoeken, filter en *Nieuwe oefenvorm* erboven), de gekozen vorm rechts met dezelfde inhoud als het venster (tekening, *Zet in een training…*, *Dupliceren*, *Printen*, *Bewerken*, organisatie, coachpunten, materiaal); zonder keuze de eerste vorm open; 1 tik per vorm. Smaller dan 1100 px en op de telefoon ongewijzigd (kaarten en het venster). Geen nieuwe gegevens of rechten | ✅ geldt |  |
 | 173 | 3 | Wie speelt waar: per training, bij de vorm waar je het wilt (meestal de partij), per nummer uit de tekening (teamkleur + rugnummer, keeper = K) de speler die die rol vandaag speelt, uit wie er is. ClubComm stelt niemand voor; het toont hoe vaak iemand trainde (laatste 6) en wat hij vorige keer speelde. Zichtbaar in het venster van de plek, op de regel in Plannen, als link in Week en op de print onder de tekening. Bewaard in de training (scope eigen); geen migratie, rechten ongewijzigd | ✅ geldt | |
 | 172 | 3 | Keepers tellen mee en het nummerbalkje blijft open. Uit de aanwezigheid (anders: niet afgemeld) telt ClubComm **veldspelers en keepers apart** (*13 spelers + 2 keepers verwacht*); een vorm **past** als het totaal klopt (spelers + keepers van de vorm), een extra keeper **speelt mee in het veld** (één zin, geen waarschuwing). Tekentool: met het paneel *Spelers* open een **speler** tikken houdt het paneel open en kiest die speler; een leeg stuk veld sluit het (Besluit 152 blijft) | ✅ geldt | |
 | 171 | 3 | Lijst en detail naast elkaar op de laptop (vanaf 1100 px): **Trainers** (HO en TC bij het pakket) = lijst links, dossier van de gekozen trainer rechts (1 tik per trainer, geen snelvenster); **Berichten** (elke rol) = lijst links, gesprek rechts met het reactievak, het eerste gesprek dat op je wacht staat meteen open. Gekozen regel blauw gemarkeerd; het menu links blijft staan. Smaller dan 1100 px en op de telefoon ongewijzigd (Besluit 113). Geen nieuwe gegevens of rechten | ✅ geldt |  |
@@ -708,6 +709,28 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
 ### Vuistregel voor nieuwe ideeën
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
+
+---
+
+## Besluit NNN — Vormenbank op de laptop: compacte lijst links, de vorm rechts (Spoor 3, maat M)
+> Voorstel en voorbeelden op 1366 px: `docs/onderzoek/vormenbank-laptop/voorstel.md` (akkoord op 1 en 2, 6 november 2026). Zelfde patroon als Besluit 171 (Trainers en Berichten) en 169 (Plannen).
+
+**Waarom.** Op de laptop stonden de vormen als grote kaarten (4 in beeld). Elke vorm opende een venster dat je weer moest sluiten: 2 tikken per vorm, en vergelijken was lastig.
+
+**Wat (vanaf 1100 px breed, tabblad Training → Vormenbank).**
+1. De tabbladen *Lijn · Plannen · Week · Vormenbank* blijven bovenaan.
+2. **Links** zoeken, *Filter* en *Nieuwe oefenvorm*, daaronder een **compacte lijst**: kleine tekening (± 84 × 54 px), naam, spelers en minuten. Ongeveer 8 vormen in beeld.
+3. **Rechts** de gekozen vorm met dezelfde inhoud als het venster: tekening, *Zet in een training…*, *Dupliceren*, *Printen*, *Bewerken*, organisatie, coachpunten en het materiaal uit de tekening. *Bewerken* en *Ook voor …* werken zoals eerder.
+4. Zonder keuze staat de **eerste vorm** open. De gekozen vorm is blauw gemarkeerd (`aria-current`); zoeken en filteren houden de keuze zolang de vorm in de lijst staat.
+5. **Smaller dan 1100 px en op de telefoon** niets veranderd: grote kaarten en het venster. Vanuit Plannen opent een vorm nog steeds in het venster.
+
+**Tikken.** Vijf vormen na elkaar bekijken: 10 → 5.
+
+**Niet gedaan.** Een label *in training* in de lijst (voorgesteld, nog niet besloten). Grote kaarten links met de vorm rechts (afgeraden: 1 kaart per scherm).
+
+**Gegevens en rechten.** Niets nieuws; alleen de plek op het scherm. De vormen blijven van de trainer (Besluit 159).
+
+**Tests:** `tests/vormenbank-laptop.spec.js` (laptop: eerste vorm open, wisselen zonder venster, compact, zoeken houdt de keuze, *Bewerken*; 1000 px: kaarten en het venster zoals eerder).
 
 ---
 

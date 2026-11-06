@@ -6,7 +6,7 @@
   const CC = window.CC; const esc = CC.esc, M = CC.m;
   const mq = window.matchMedia ? window.matchMedia('(min-width: 1100px)') : null;
   CC.ldAan = () => !!(mq && mq.matches) && !document.body.classList.contains('rl');
-  if (mq) { const opnieuw = () => { if (CC.S && CC.S() && !CC.ui.view && ['trainers', 'berichten'].includes(CC.ui.tab)) CC.render(); }; /* alleen waar de indeling verandert */ if (mq.addEventListener) mq.addEventListener('change', opnieuw); else if (mq.addListener) mq.addListener(opnieuw); }
+  if (mq) { const opnieuw = () => { if (CC.S && CC.S() && !CC.ui.view && ['trainers', 'berichten', 'aanwezigheid'].includes(CC.ui.tab)) CC.render(); }; /* alleen waar de indeling verandert (ook de Vormenbank) */ if (mq.addEventListener) mq.addEventListener('change', opnieuw); else if (mq.addListener) mq.addListener(opnieuw); }
   const rol = () => (CC.rol() || {}).rol;
   const pakket = (S) => !!(CC.pakketTrainers && CC.pakketTrainers(S));
   const opTrainers = (S) => CC.ldAan() && pakket(S) && !CC.ui.view && ['hjo', 'tc'].includes(rol());
