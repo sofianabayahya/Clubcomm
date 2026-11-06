@@ -256,7 +256,7 @@ button.staaf { min-height: 44px; } /* Besluit 118: aantikbare balkjes */
 .antwoord small { color: var(--zacht); font-size: 12px; } .antwoord p { margin: 2px 0 0; }
 .reageer { display: flex; gap: 8px; align-items: flex-end; padding: 8px 0 0; margin-top: auto; }
 /* In een gesprek geen knoppenbalk onderin (zoals WhatsApp; terug via het pijltje), zodat het reactievak nergens achter valt (Besluit 58) */
-body:has(.reageer) .nav { display: none; }
+body:has(.reageer):not(:has(.ld)) .nav { display: none; } /* Besluit NNN: naast de lijst (laptop) blijft het menu staan */
 /* Het reactievak hoort bij de pagina (zoals WhatsApp): het staat onderaan en als het groeit, schuift alles erboven mee omhoog */
 body:has(.reageer) .inhoud { padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)); min-height: calc(100dvh - var(--kop-h, 64px)); box-sizing: border-box; }
 .reageer input, .reageer textarea { flex: 1; min-height: 44px; border-radius: 22px; border: 1px solid var(--lijn); padding: 0 16px; background: var(--vlak); }
@@ -1050,3 +1050,12 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .tr-zijwaarom .tr-kr { display: block; }
 .tr-zijwaarom .tr-kn { display: block; margin: 6px 0 2px; }
 .tr-zijwaarom .tr-tijd { box-shadow: none; padding: 0; margin: 0; }
+/* Besluit NNN: lijst en detail naast elkaar op de laptop (vanaf 1100 px) */
+@media (min-width: 1100px) {
+  .ld { display: grid; grid-template-columns: minmax(300px, 400px) 1fr; gap: 20px; align-items: start; }
+  .ld-l { position: sticky; top: 12px; max-height: calc(100vh - 120px); overflow: auto; padding: 2px 4px 2px 2px; }
+  .ld-r { background: var(--vlak); border-radius: var(--r); padding: 16px 20px; box-shadow: var(--schaduw); min-height: 50vh; min-width: 0; }
+  .ld-kop { margin: 0 0 8px; font-size: 22px; }
+  .ld-leeg { margin: 24px 0; text-align: center; }
+  .ld .gekozen { background: var(--blauw-l); box-shadow: inset 3px 0 0 var(--blauw); }
+}
