@@ -83,7 +83,7 @@ for (const [naam, telefoon] of [['telefoon', true], ['laptop', false]]) {
     await page.locator('nav.nav button[data-tab="aanwezigheid"]').first().click();
     await page.locator('[data-act="seg"][data-val="vormen"]').click();
     await page.locator('.tr-kaart', { hasText: 'Rondo 4 tegen 2' }).click();
-    await page.locator('#sheet [data-act="vormBewerk"]').click();
+    await page.locator(':is(#sheet, .vb-naast .ld-r) [data-act="vormBewerk"]').click(); // Besluit 174: op de laptop staat de vorm rechts
     await page.locator('[data-act="vormTeken"]').click();
     await expect(page.locator('#drawOverlay')).toBeVisible();
     expect(await items(page), 'na opnieuw openen dezelfde tekening').toBe(7);
