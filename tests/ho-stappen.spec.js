@@ -95,3 +95,18 @@ test('lijst Trainers: de volgende stap achter elke naam; alleen ③ en ④ in kl
   await expect(page.locator('#sheet [data-act="kennisUitnodigen"]')).toBeVisible();
   await controleer(page, fouten, 'volgende stap');
 });
+
+test('Home van de HO: één regel bij Actie nodig met hoeveel trainers op een stap wachten; tik = de lijst Trainers', TAG, async ({ page }) => {
+  const fouten = volgFouten(page);
+  await ho(page, "const p = (n) => S.people.find((x) => x.naam === n); S.trainerKennis[p('Mark Jansen').id] = { gevraagd: '2026-11-01T10:00:00.000Z', ingevuld: '2026-11-03T10:00:00.000Z', a: {} }; S.trainerDossier[p('Iris Peters').id] = { traject: { actief: true, sinds: '2026-11-01', plan: { wedstrijd: 1, training: 1 }, niveau: 'kort' } };");
+  await page.evaluate(() => CC.go('home'));
+  const regel = page.locator('#app [data-act="hoNaarTrainers"]');
+  await expect(regel).toContainText('2 trainers wachten op een stap van jou');
+  await regel.click();
+  await expect(page.locator('#app')).toContainText('2 trainers wachten op een stap van jou (③ of ④)');
+  expect(await page.evaluate(() => CC.ui.tab)).toBe('trainers');
+  // Niemand wacht: geen regel
+  await page.evaluate(() => { const S = CC.S(); S.people.forEach((p) => { (S.trainerKennis[p.id] || {}).ingevuld = null; }); delete S.trainerDossier[S.people.find((x) => x.naam === 'Iris Peters').id]; CC.go('home'); });
+  await expect(page.locator('#app [data-act="hoNaarTrainers"]')).toHaveCount(0);
+  await controleer(page, fouten, 'home telling');
+});

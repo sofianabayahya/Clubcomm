@@ -31,6 +31,9 @@
     const zonder = trainersVan(S).filter((p) => !((S.trainerKennis || {})[p.id] || {}).gevraagd && !((S.trainerKennis || {})[p.id] || {}).ingevuld && (!CC.hoFocus || teams(S, p).some((tid) => CC.hoFocus.inFocus(S, f, tid))));
     const acties = [...week, ...bekijk.slice(0, 3).map(bRij),
       ...(bekijk.length > 3 ? [h.rij({ ic: 'list-checks', titel: `Nog ${bekijk.length - 3} ${bekijk.length - 3 === 1 ? 'training' : 'trainingen'} om te bekijken`, sub: 'Staan in het dossier van de trainer, blok Trainingen', act: 'tab', attrs: 'data-tab="trainers"' })] : []),
+      // Besluit NNN: hoeveel trainers op een stap van jou wachten (③ traject starten of ④ eerste moment plannen); tik = de lijst Trainers
+      ...((() => { const n = CC.trVolgende ? trainersVan(S).filter((p) => ['traject', 'moment'].includes(CC.trVolgende(S, p))).length : 0;
+        return n ? [h.rij({ ic: 'user-check', titel: `${n} ${n === 1 ? 'trainer wacht' : 'trainers wachten'} op een stap van jou`, sub: '③ traject starten of ④ eerste moment plannen', act: 'hoNaarTrainers', kleur: 'blauw' })] : []; })()),
       ...(zonder.length ? [h.rij({ ic: 'send', titel: `${zonder.length} ${zonder.length === 1 ? 'trainer' : 'trainers'} zonder kennismaking`, sub: 'Nodig ze uit voor de korte vragenlijst', act: 'hoKennisVraag' })] : [])];
     const inT = trainersVan(S).filter((p) => traject(S, p.id)).sort((a, b) => ((volgende(S, a.id) || {}).datum || '9').localeCompare((volgende(S, b.id) || {}).datum || '9') || a.naam.localeCompare(b.naam));
     const tRij = (p) => { const t = traject(S, p.id); const leeg = !volgende(S, p.id) && gedaan(S, p.id) < planN(t);
@@ -43,6 +46,7 @@
       ${h.actieBlok(acties, 'een training van een trainer om te bekijken of een begeleidingsmoment deze week')}
       ${h.sectie(`Mijn trajecten${inT.length ? ` · ${inT.length}` : ''}`)}${inT.length ? `<div class="lijst compact">${inT.map(tRij).join('')}</div>` : '<p class="zacht klein">Nog geen trainer in een traject. Start er een bij Trainers.</p>'}
       ${h.sectie('Deze week')}<div class="lijst">${h.rij({ ic: 'calendar-days', titel: `${nW} ${nW === 1 ? 'wedstrijd' : 'wedstrijden'} · ${nT} ${nT === 1 ? 'training' : 'trainingen'}`, sub: `De komende 7 dagen${nW ? ` · ${thuis} thuis` : ''} · kies wat je bezoekt`, rechts: '<span class="knop licht klein">Week</span>', act: 'open', attrs: 'data-view="hoWeek"', chevron: false })}</div>`; };
+  CC.on('hoNaarTrainers', () => { CC.ui.seg.trDeel = 'alle'; CC.ui.seg.trZoek = ''; CC.go('trainers'); });
   CC.views.hoWeek = (S) => ({ titel: 'Week van je trainers', html: CC.hoWeek(S) });
   CC.on('hoKennisVraag', () => { const S = CC.S(); const f = CC.hoFocus ? CC.hoFocus.focus(S) : 'alle';
     const zonder = trainersVan(S).filter((p) => !((S.trainerKennis || {})[p.id] || {}).gevraagd && !((S.trainerKennis || {})[p.id] || {}).ingevuld && (!CC.hoFocus || teams(S, p).some((tid) => CC.hoFocus.inFocus(S, f, tid))));
