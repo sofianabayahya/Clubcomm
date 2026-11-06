@@ -1,6 +1,6 @@
 # Voorstel A: de stappen van de HO, per trainer op één plek (6 november 2026)
 
-**Gekozen (6-11): akkoord op A, de tekst en het voorstel kort/uitgebreid; vastgelegd als Besluit NNN.** Gebouwd: `gebouwd-stappen.jpg`, `gebouwd-traject.jpg`.
+**Gekozen (6-11): akkoord op A, de tekst en het voorstel kort/uitgebreid; vastgelegd als Besluit 175.** Gebouwd: `gebouwd-stappen.jpg`, `gebouwd-traject.jpg`.
 
 *Spoor 3 — ClubComm, maat M (de inhoud volgt de HO-A-begeleiding van de KNVB, Spoor 2 Swift). Alleen voorbeelden op 390 px in de echte opmaak, met verzonnen namen. Er is nog niets gebouwd. Uitgangspunt: KISS, simpel en gericht, met het doel voor ogen: de trainer ontwikkelt zich in een paar begeleidingsmomenten.*
 

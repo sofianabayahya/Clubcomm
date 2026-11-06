@@ -203,7 +203,7 @@
       <p class="zacht klein">${eerste.length ? `${voor} krijgt de vragen meteen voor het eerste moment. ` : ''}Standaard: selectie 2 + 2, breedte 1 + 1.</p></form>`);
   });
 
-  // ---------- Besluit NNN: de stappen van de HO per trainer, op één plek ----------
+  // ---------- Besluit 175: de stappen van de HO per trainer, op één plek ----------
   // Voorstel voor de vragen vooraf: uitgebreid bij een KNVB-diploma of opleiding (kennismaking of administratie), anders kort. De HO beslist.
   CC.niveauVoorstel = (S, pid) => { const k = ken(S)[pid] || {}; const a = k.a || {}; const dip = String(a.diploma || (adm(S)[pid] || {}).diploma || '').trim();
     const heeftDip = dip && !/^(geen|nee|nog niet|niet|-|n\.?v\.?t\.?)\b/i.test(dip); const opl = /opleiding|doorgroeien/i.test(a.ambitie || '');
@@ -237,7 +237,7 @@
     const S = CC.S(); const d = dos(S)[f.dataset.id] || (dos(S)[f.dataset.id] = {}); const oud = d.traject && d.traject.actief ? d.traject : null;
     d.traject = { actief: true, sinds: oud ? oud.sinds : D.vandaag(), door: CC.me().id, plan: { wedstrijd: Number(f.w.value), training: Number(f.t.value) }, leerdoel: f.l.value.trim(), niveau: f.n.value, ontwikkelpunt: f.o ? f.o.value.trim() : (oud ? oud.ontwikkelpunt || '' : '') };
     CC.save(); CC.closeSheet(); CC.render();
-    // Besluit NNN: meteen het eerste moment; de trainer krijgt de vragen vooraf (zoals Begeleiden in de week)
+    // Besluit 175: meteen het eerste moment; de trainer krijgt de vragen vooraf (zoals Begeleiden in de week)
     if (!oud && f.m && f.m.value && CC.begelPlanOpAct) return CC.begelPlanOpAct(S, f.dataset.id, f.m.value);
     CC.toast(oud ? 'Traject opgeslagen' : 'Traject gestart');
   });

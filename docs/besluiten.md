@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 5 november 2026 (t/m Besluit 174)
+Laatst bijgewerkt: 5 november 2026 (t/m Besluit 175)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -21,7 +21,7 @@ Laatst bijgewerkt: 5 november 2026 (t/m Besluit 174)
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
-| NNN | 3 | De stappen van de HO per trainer op één plek (pakket *Trainers begeleiden*): in het snelvenster en het dossier *Van start tot eerste moment* (① Toegevoegd ② Kennismaking ③ Traject starten ④ Eerste begeleidingsmoment) met één knop voor de volgende stap, weg zodra er een moment is. *Trainer toevoegen*: kennismaking meteen in de welkomstmail (standaard aan). *Traject starten* in eenvoudige taal volgens de HO-A (voorbereiding → planningsgesprek → praktijk → reflectiegesprek → nazorg); *Vragen vooraf (de voorbereiding)*: kort 4 of uitgebreid 8 (training) / 9 (wedstrijd), voorstel uit de kennismaking (uitgebreid bij KNVB-diploma of opleiding); meteen het eerste moment kiezen (of later). Geen nieuwe gegevens of rechten | ✅ geldt |  |
+| 175 | 3 | De stappen van de HO per trainer op één plek (pakket *Trainers begeleiden*): in het snelvenster en het dossier *Van start tot eerste moment* (① Toegevoegd ② Kennismaking ③ Traject starten ④ Eerste begeleidingsmoment) met één knop voor de volgende stap, weg zodra er een moment is. *Trainer toevoegen*: kennismaking meteen in de welkomstmail (standaard aan). *Traject starten* in eenvoudige taal volgens de HO-A (voorbereiding → planningsgesprek → praktijk → reflectiegesprek → nazorg); *Vragen vooraf (de voorbereiding)*: kort 4 of uitgebreid 8 (training) / 9 (wedstrijd), voorstel uit de kennismaking (uitgebreid bij KNVB-diploma of opleiding); meteen het eerste moment kiezen (of later). Geen nieuwe gegevens of rechten | ✅ geldt |  |
 | 174 | 3 | Vormenbank op de laptop (vanaf 1100 px): compacte lijst links (kleine tekening, naam, spelers, minuten; zoeken, filter en *Nieuwe oefenvorm* erboven), de gekozen vorm rechts met dezelfde inhoud als het venster (tekening, *Zet in een training…*, *Dupliceren*, *Printen*, *Bewerken*, organisatie, coachpunten, materiaal); zonder keuze de eerste vorm open; 1 tik per vorm. Smaller dan 1100 px en op de telefoon ongewijzigd (kaarten en het venster). Geen nieuwe gegevens of rechten | ✅ geldt |  |
 | 173 | 3 | Wie speelt waar: per training, bij de vorm waar je het wilt (meestal de partij), per nummer uit de tekening (teamkleur + rugnummer, keeper = K) de speler die die rol vandaag speelt, uit wie er is. ClubComm stelt niemand voor; het toont hoe vaak iemand trainde (laatste 6) en wat hij vorige keer speelde. Zichtbaar in het venster van de plek, op de regel in Plannen, als link in Week en op de print onder de tekening. Bewaard in de training (scope eigen); geen migratie, rechten ongewijzigd | ✅ geldt | |
 | 172 | 3 | Keepers tellen mee en het nummerbalkje blijft open. Uit de aanwezigheid (anders: niet afgemeld) telt ClubComm **veldspelers en keepers apart** (*13 spelers + 2 keepers verwacht*); een vorm **past** als het totaal klopt (spelers + keepers van de vorm), een extra keeper **speelt mee in het veld** (één zin, geen waarschuwing). Tekentool: met het paneel *Spelers* open een **speler** tikken houdt het paneel open en kiest die speler; een leeg stuk veld sluit het (Besluit 152 blijft) | ✅ geldt | |
@@ -95,9 +95,9 @@ Laatst bijgewerkt: 5 november 2026 (t/m Besluit 174)
 | 104 | 3 | Rol wisselen met één tik in de kop, met per rol wat er wacht | ✅ geldt |  |
 | 103 | 3 | Automatisch bewaren in formulieren; Rollen opgeschoond | ✅ geldt | aangevuld door 170 (mensen per rol ingeklapt, zoeken) |
 | 102 | 3 | Snelle winsten: dringend bovenaan, Observeren op de dag zelf, unieke knopnamen | ✅ geldt |  |
-| 101 | 3 | Voorgesprek als voormeting: eigen vragen voor training en wedstrijd | ✅ geldt | aangevuld door NNN (kort of uitgebreid met een voorstel uit de kennismaking; tekst 8 of 9 vragen) |
+| 101 | 3 | Voorgesprek als voormeting: eigen vragen voor training en wedstrijd | ✅ geldt | aangevuld door 175 (kort of uitgebreid met een voorstel uit de kennismaking; tekst 8 of 9 vragen) |
 | 100 | 3 | Technisch coördinator, werkgebied per HO en TC, pakket "Alleen Trainers begeleiden" | ◐ deels herzien | door 101 (vragen kort en uitgebreid per soort); 143 (overgenomen reflectie is begeleiderstekst); 146 (tabbladen van HO en TC: Home met de week, Trainers compact, Teams eigen tabblad); aangevuld door 154 (werkgebied ook in de database); 166 (Home van de trainer in het pakket: volgende training, feedback, traject) |
-| 99 | 3 | Trainers begeleiden via een traject, met de KNVB-begeleidingscyclus; tabblad Trainers | ◐ deels herzien | door 100 (vragenlijst kort of uitgebreid per niveau; notities gedeeld per bouw met de TC); door 101 (vragenlijst vooraf per soort); 129 (observeren: snelle notities tijdens, aandachtspunten na afloop); 134 (moment verplaatsen of *niet doorgegaan*); 143 (kennismaking en reflectie alleen door de trainer; geen toegang voor een beheerder zonder begeleidersrol); aangevuld door NNN (de stappen per trainer, kennismaking in de welkomstmail) |
+| 99 | 3 | Trainers begeleiden via een traject, met de KNVB-begeleidingscyclus; tabblad Trainers | ◐ deels herzien | door 100 (vragenlijst kort of uitgebreid per niveau; notities gedeeld per bouw met de TC); door 101 (vragenlijst vooraf per soort); 129 (observeren: snelle notities tijdens, aandachtspunten na afloop); 134 (moment verplaatsen of *niet doorgegaan*); 143 (kennismaking en reflectie alleen door de trainer; geen toegang voor een beheerder zonder begeleidersrol); aangevuld door 175 (de stappen per trainer, kennismaking in de welkomstmail) |
 | 98 | 3 | Verantwoordelijkheid: iedere rol doet zijn eigen werk, de laag erboven is het vangnet | ✅ geldt |  |
 | 97 | 3 | Bouwen, werkgebied en focus, signalen die ertoe doen, trainersdossier | ◐ deels herzien | door 99 (traject per trainer in plaats van 2 + 2; tabblad Trainers; VOG en diploma bij de coördinator); door 100 (werkgebied bij de rol, rol TC gebouwd) |
 | 96 | 3 | Eén aanspreekpunt: de clubbeheerder (van de club) en de ClubComm-adviseur (van ons) | ◐ deels herzien | door 120 (startlijst en Inrichten voor de clubbeheerder, Mijn clubs voor de adviseur; meekijken alleen met toestemming) |
@@ -713,7 +713,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
-## Besluit NNN — De stappen van de HO per trainer op één plek (Spoor 3, maat M)
+## Besluit 175 — De stappen van de HO per trainer op één plek (Spoor 3, maat M)
 > Voorstel A en voorbeelden op 390 px: `docs/onderzoek/ho-stappen/voorstel.md` (akkoord op A, de nieuwe tekst en het voorstel kort/uitgebreid, 6 november 2026). Vult Besluit 99 (trainers begeleiden) en 101 (vragen vooraf) aan. KISS: simpel en gericht, met het doel voor ogen.
 
 **De visie (HO-A).** Eerst de trainer **leren kennen**, dan **samen afspreken** wat hij wil leren (traject en leerdoel), dan een paar **begeleidingsmomenten**, elk volgens de HO-A: voorbereiding → planningsgesprek → praktijk → reflectiegesprek → nazorg.

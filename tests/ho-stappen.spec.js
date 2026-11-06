@@ -1,4 +1,4 @@
-// ClubComm — Besluit NNN: de stappen van de HO per trainer op één plek (toegevoegd → kennismaking → traject → eerste moment),
+// ClubComm — Besluit 175: de stappen van de HO per trainer op één plek (toegevoegd → kennismaking → traject → eerste moment),
 // Traject starten volgens de HO-A met een voorstel kort/uitgebreid en meteen het eerste moment; kennismaking in de welkomstmail.
 const { test, expect } = require('@playwright/test');
 const { volgFouten, controleer } = require('./hulp');

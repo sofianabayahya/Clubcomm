@@ -276,7 +276,7 @@
     const wat = `${CC.rolNaam(rol).toLowerCase()}${team ? ` van ${team.naam}` : rol.groep ? ` ${rol.groep}` : ''}`;
     if (f.f) { CC.ui.functie = f.f.value.trim(); try { localStorage.setItem('cc-functie', CC.ui.functie); } catch (e) { /* alleen gemak */ } }
     const w = CC.welkom(S, p, rol, email);
-    // Besluit NNN: kennismaking in dezelfde mail (alleen trainers bij het pakket)
+    // Besluit 175: kennismaking in dezelfde mail (alleen trainers bij het pakket)
     const km = f.km && f.km.checked && r === 'trainer' && CC.kennisGevraagd;
     if (km) { CC.kennisGevraagd(S, p.id); w.tekst = w.tekst.replace('Vragen? ', `Eerste stap: vul na het inloggen de korte kennismaking in (een paar minuten). Je vindt hem bovenaan je Home. Zo stemmen we de begeleiding af op jou.\n\nVragen? `); }
     S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'persoonlijk', welkom: true, bereik: p.naam, onderwerp: w.onderwerp, tekst: w.tekst, tijd: new Date().toISOString(), ontvangers: [p.id], gelezen: [], antw: [], urgent: false, gepland: null });
