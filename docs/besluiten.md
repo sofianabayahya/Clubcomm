@@ -751,7 +751,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 2. **Kiezen of wisselen in twee tikken:** tik een speler in de tekening en tik een naam. Staat die naam al ergens, dan **wisselen** ze. Per naam staat ter informatie: *vrij · x van 6 getraind · vorige keer …* of *nu rood 3 · wisselt*. *Leeg laten* maakt de plek vrij. **ClubComm stelt niemand voor.**
 3. **Lijst per team** onder de tekening, om te lezen: *Rood: K Bram · 2 Daan · 4 Finn …* (keeper eerst, dan op nummer, zonder nummer achteraan met *–*, een lege plek grijs als *8 …*). Het nummer is de positie, dus de lijst zegt ook waar iemand staat; je ziet in één oogopslag hoe de teams tegen elkaar verdeeld zijn. Indelen gebeurt alleen in de tekening (geen tweede manier).
 4. **Op het veld:** een tik op de vorm toont de tekening **met namen** en de lijst per team, met *Namen aanpassen* (opent het venster van de plek) en *Zonder namen* (de namen uit de tekening; de lijst blijft; *Met namen* zet ze terug). Open je de vorm vanuit een training zonder indeling, dan staat er *Namen erbij*.
-5. **Print:** de namen staan in de tekening, met dezelfde lijst per team eronder.
+5. **Print:** de namen staan in de tekening, met de lijst per team eronder; op papier alleen de ingevulde namen, zonder lege plekken (*8 …*) (aanvulling 06-11, maat S).
 6. De namen horen bij **de training**, niet bij de vorm: de tekening in Vormen verandert niet.
 
 **Niet gedaan.** Geen vaste posities per speler, geen voorstel, geen *Zoals vorige training*. Dat kan later met een eigen besluit.
