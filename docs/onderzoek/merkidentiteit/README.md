@@ -158,3 +158,7 @@ Frontend Design-skill: op verzoek geïnstalleerd in `.claude/skills/frontend-des
 ## 9. Herkenningstest
 
 `herkenningstest/index.html`: voorbeeldscherm (met logo), acht tegels zonder logo en clubnaam (wazig en scherp), antwoordformulier en een antwoordsleutel om pas na de test te openen. Vier tegels zijn Krijtbord-blauw, één is de huidige app, drie zijn de richtingen A, B en D. Beelden: `herkenningstest/blad-wazig.jpg` en `blad-scherp.jpg`.
+
+## 10. Review en C2.1
+
+Kritische review van C2 en de verbeterde versie C2.1: `c21/REVIEW.md` (één document, met aanbeveling), prototype `c21/c21.html`, beelden `c21/beelden/` (`vgl-*` = C2 naast C2.1), metingen `c21/meting.txt`. Het bestaande logo blijft ongewijzigd. Lettertype lokaal in `c21/fonts/` (OFL-licentie).
