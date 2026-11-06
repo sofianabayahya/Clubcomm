@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 5 november 2026 (t/m Besluit 170)
+Laatst bijgewerkt: 5 november 2026 (t/m Besluit 171)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -21,6 +21,7 @@ Laatst bijgewerkt: 5 november 2026 (t/m Besluit 170)
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
+| 171 | 3 | Lijst en detail naast elkaar op de laptop (vanaf 1100 px): **Trainers** (HO en TC bij het pakket) = lijst links, dossier van de gekozen trainer rechts (1 tik per trainer, geen snelvenster); **Berichten** (elke rol) = lijst links, gesprek rechts met het reactievak, het eerste gesprek dat op je wacht staat meteen open. Gekozen regel blauw gemarkeerd; het menu links blijft staan. Smaller dan 1100 px en op de telefoon ongewijzigd (Besluit 113). Geen nieuwe gegevens of rechten | ✅ geldt |  |
 | 170 | 3 | Lange beheerlijsten ingeklapt met zoeken: **Rollen** = mensen per rol ingeklapt (*Trainers (15) · Teamleiders · … · Ouders*; iemand met twee rollen in beide), zoeken op naam, team of rol (opent de groep met de treffer), één oranje regel *n teams zonder trainer of teamleider* (buiten het pakket ook teamleider) die per team *Persoon toevoegen* opent met de rol al gekozen. **Seizoen** (en Teams van de HO) = teams per bouw ingeklapt met *n zonder trainer* in de kop, zoeken bij meer dan 6 teams; bij weinig teams of één bouw open. Open of dicht blijft zo zolang de app open is. Geen nieuwe gegevens of rechten | ✅ geldt |  |
 | 169 | 3 | Plannen op de laptop als gesplitst scherm: de afspraak van de vorige training, *Waarom deze training* en de tijd staan rechts naast de training, open (geen tikken). Op de telefoon blijft het zoals Besluit 167. Geen vaste kop, geen kloktijden | ✅ geldt | |
 | 168 | 3 | Wedstrijden aanpassen en Mijn traject als tijdlijn: in het teamvenster (Teams) is elke wedstrijd tikbaar (tegenstander, datum, aftrap, thuis/uit, veld; *Afgelast* aan/uit; *Verwijderen* met bevestiging, niet zolang er een begeleidingsmoment op staat); verandert datum of aftrap, dan schuift het moment mee en krijgt de trainer één bericht. Opnieuw plakken vergelijkt per datum: *gelijk*, **gewijzigd** (*was …*) of **nieuw**, één knop; wat niet meer in het programma staat, blijft staan. Trainer: *Mijn ontwikkeling* toont *Mijn traject* als tijdlijn van oud naar nieuw (kennismaking, momenten, trainingen met feedback, het volgende moment *nu*, afronden; na 6 afgeronde stappen *Eerder*). Geen nieuwe gegevens of rechten | ✅ geldt |  |
@@ -78,7 +79,7 @@ Laatst bijgewerkt: 5 november 2026 (t/m Besluit 170)
 | 116 | 3 | De timekeeper slaat de wedstrijd echt op; minuten en speeltijd ziet alleen de trainer | ✅ geldt |  |
 | 115 | 3 | "Vervanger nodig" naar teamleider en coördinator (HO alleen als terugval); coördinator in de rondleiding | ✅ geldt |  |
 | 114 | 3 | De demo is één verhaal (een week bij de democlub); het bestuur kiest de hoofdstukken; afmelden gebeurt echt | ✅ geldt |  |
-| 113 | 3 | Drie lagen: tabblad → venster → pagina; spelerskaart, trainerkaart en "Aangekomen bij" als venster, vegen om te sluiten | ◐ deels herzien | door 131 (venster in het midden vanaf 900 px) |
+| 113 | 3 | Drie lagen: tabblad → venster → pagina; spelerskaart, trainerkaart en "Aangekomen bij" als venster, vegen om te sluiten | ◐ deels herzien | door 131 (venster in het midden vanaf 900 px); aangevuld door 171 (laptop: lijst en detail naast elkaar) |
 | 112 | 3 | Anoniem tellen welke schermen gebruikt worden; overzicht voor de clubbeheerder | ✅ geldt |  |
 | 111 | 3 | App-controle: dubbel tikken, Beperk beweging, kleur statusbalk, notch op de inlogpagina | ◐ deels herzien | door 120 (laptop met kolommen voor de schermen van de clubbeheerder); 122 (laptop: menu als kolom links) |
 | 110 | 3 | Verzamelen voor wedstrijden is clubbeleid, per leeftijd | ✅ geldt |  |
@@ -705,6 +706,27 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
 ### Vuistregel voor nieuwe ideeën
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
+
+---
+
+## Besluit 171 — Lijst en detail naast elkaar op de laptop: Trainers en Berichten (Spoor 3, maat M)
+> Voorstel en voorbeelden op 1366 px: `docs/onderzoek/laptop-lijst-detail/voorstel.md` (voorstel 3 uit `docs/onderzoek/kliks/README.md`; akkoord op 1, 2 en 3, 6 november 2026). Vult Besluit 113 aan (drie lagen); zelfde patroon als Besluit 169 (Plannen op de laptop).
+
+**Waarom.** Op de laptop stond de lijst smal in het midden en bleef de rest van het scherm leeg. Elke trainer of elk gesprek opende op een eigen pagina; voor de volgende moest je terug. Vijf trainers bekijken kostte 15 tikken, drie gesprekken beantwoorden 6.
+
+**Wat (vanaf 1100 px breed).**
+1. **Trainers** (HO en TC bij het pakket *Trainers begeleiden*): links de lijst (*Alle · Traject*, bouw, zoeken), rechts het **dossier** van de gekozen trainer (traject, momenten, trainingen, kennismaking, notities). Een tik op een trainer kiest hem; er komt geen snelvenster. Zonder keuze staat rechts *Kies links een trainer*.
+2. **Berichten** (elke rol): links de lijst, rechts het **gesprek** met het reactievak. Het eerste gesprek dat **op je wacht** staat meteen open; staat er niets te wachten, dan *Kies links een gesprek*.
+3. De gekozen regel is blauw gemarkeerd (`aria-current`). De lijst blijft staan als je rechts scrolt. Het menu links blijft zichtbaar, ook met een reactievak in beeld.
+4. **Smaller dan 1100 px** (kleine laptop, tablet staand, telefoon): niets verandert; daar blijft het lijst → venster → pagina (Besluit 113). Wordt het venster smaller of breder, dan past de indeling zich meteen aan.
+
+**Tikken.** Vijf trainers na elkaar: 15 → 5. Drie gesprekken beantwoorden: 6 → 3.
+
+**Niet gedaan.** Vormenbank en Rollen in hetzelfde patroon (later, apart). Een eigen terugknop of browsergeschiedenis per keuze (niet nodig: je kiest links).
+
+**Gegevens en rechten.** Niets nieuws: alleen de plek op het scherm. De HO ziet precies wat hij al zag (werkgebied, Besluit 154). Een gesprek dat rechts openstaat, telt als gelezen, net als wanneer je het opende.
+
+**Tests:** `tests/lijstdetail.spec.js` (laptop Trainers: dossier rechts, wisselen, geen venster, actie in het dossier; 1000 px: snelvenster zoals eerder; laptop Berichten: eerste wachtende gesprek open, wisselen, reageren, menu zichtbaar; telefoon: gesprek op een eigen pagina).
 
 ---
 
