@@ -23,7 +23,7 @@
 *Waar je de aanwezigheid ook vindt.*
 
 - **Zonder trainingsmodule:** tabblad **Planning → Opnemen**, tik bovenaan de dag.
-- **Met trainingsmodule:** tabblad **Training → Week**, tik **Aanwezigheid · … verwacht** onder de training (Besluit 130).
+- **Met trainingsmodule:** tabblad **Training → Op het veld**, tik **Aanwezigheid · … verwacht** onder de training (Besluit 130).
 - Bij **Planning → Overzicht** en op de pagina van een speler kijk je terug.
 - **Actie nodig** op Home toont alleen wat jij moet doen, bijvoorbeeld een ouder bellen na een rode kaart (niet afgemeld en niet gekomen). Bel of app de ouder, of leg vast dat het begrijpelijk was.
 

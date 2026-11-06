@@ -1053,8 +1053,6 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 /* Besluit 173: wie speelt waar */
 .tr-wie { margin: 0 0 12px; }
 .tr-wteam { display: block; margin: 10px 0 4px; font-size: 15px; }
-.tr-wbol { width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; flex: none; }
-.tr-wrij2 { gap: 10px; }
 .tr-wal { opacity: .6; }
 .tr-wielink { display: block; margin: 8px 0 0; text-align: left; }
 /* Besluit 171: lijst en detail naast elkaar op de laptop (vanaf 1100 px) */
@@ -1078,8 +1076,19 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
   .vb-naast .ld-r .tr-rv-l { background: #5fb87a; padding: 12px; border-radius: 14px; }
   .vb-naast .ld-r .tr-legenda { color: #fff; }
 }
-/* Besluit 175: de stappen van de HO per trainer (van start tot eerste moment) */
+/* Besluit 177: de stappen van de HO per trainer (van start tot eerste moment) */
 .st-nr { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--lijn); font-size: 13px; color: var(--zacht); }
 .st-nr.nu { border-color: var(--blauw); color: var(--blauw); }
 .st-stappen .st-ok { color: var(--groen); }
 .st-stappen + .knop { margin-top: 10px; }
+
+/* Besluit 175: opstelling met namen in de tekening */
+.tr-wieveld { margin: 8px 0 6px; }
+.tr-wieveld svg circle[data-act] { cursor: pointer; }
+.tr-wieteam { margin: 4px 0; font-size: 16px; line-height: 1.5; }
+.tr-wie > summary { font-weight: 600; }
+.tr-wiep { white-space: nowrap; }
+.tr-namenknop { margin-top: 8px; }
+
+/* Besluit 176: de vier tabbladen van Training passen op één regel (Op het veld · Voorbereiden · Vormen · Seizoen) */
+.seg:has([data-key="trSeg"]) button { flex: auto; padding: 8px 4px; white-space: nowrap; }
