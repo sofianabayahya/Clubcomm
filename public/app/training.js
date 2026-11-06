@@ -444,7 +444,7 @@
     const S = CC.S(); const p = plan(S, el.dataset.id); const i = Number(el.dataset.i); const o = p && p.onderdelen[i]; if (!o) return;
     const v = o.vormId && vorm(S, o.vormId); const fs = fasen(S); const f = faseVan(S, o);
     const titel = v ? v.naam : o.spacing ? 'Spacing' : `${code(o) ? `${code(o)} · ` : ''}${o.naam || 'Kies een vorm'}`;
-    CC.sheet(titel, `${verplaatsRij(S, p, i, el.dataset.id)}${wieHtml(S, p, i, el.dataset.id)}${!v ? `<button class="knop vol" data-act="tpVormKiezen" data-id="${el.dataset.id}" data-i="${i}">${icon('plus')}${o.spacing ? 'Kies een vorm als spacing' : 'Kies een vorm'}</button>` : ''}
+    CC.sheet(titel, `${wieHtml(S, p, i, el.dataset.id)}${verplaatsRij(S, p, i, el.dataset.id)}${!v ? `<button class="knop vol" data-act="tpVormKiezen" data-id="${el.dataset.id}" data-i="${i}">${icon('plus')}${o.spacing ? 'Kies een vorm als spacing' : 'Kies een vorm'}</button>` : ''}
       <form data-submit="tpOnderdeelOk" data-id="${el.dataset.id}" data-i="${i}" class="codeform">
       ${o.spacing && !v ? `<label for="on-n">Wat doen ze?</label><input id="on-n" name="naam" value="${esc(o.naam || '')}" placeholder="Bijv. Hooghouden">${methodiekActief(S) && spacingVoorstel(S, p).length ? `<div class="chips"><span class="zacht klein tr-lbl">Eerder</span>${spacingVoorstel(S, p).map((x) => `<button type="button" class="chipknop" data-act="tpSpacingNaam" data-w="${esc(x)}">${esc(x)}</button>`).join('')}</div>` : ''}` : ''}
       <div class="twee"><div><label for="on-m">Minuten (gepland)</label><input id="on-m" name="min" type="number" inputmode="numeric" min="0" max="90" value="${Number(o.min) || 0}"></div>
