@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>B · Leerlijn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kader.css">
+<style>
+/* ===== B · Leerlijn (was: Academy) — elke trainer is onderweg ===== */
+:root {
+  --inkt: #1A2530; --zacht: #4D5B67; --papier: #FFFFFF; --lucht: #EEF3F7; --lijn: #D8E0E7;
+  --groei: #0F6E5A;          /* merkkleur ClubComm B: groei-groen. Wit erop 6,3:1 */
+  --groei-licht: #DDF0EA;
+  --zon: #FFC53D;            /* de stap waar je nu bent; inkt erop 11:1 */
+  --zon-licht: #FFF3D1;
+  --let: #8A4B00; --fout: #B42318;
+  --club: #B3122E; --club-op: #fff;
+  --kop: 'Bricolage Grotesque', system-ui, sans-serif; --tekst: 'Atkinson Hyperlegible', system-ui, sans-serif;
+  --r: 16px;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--lucht); color: var(--inkt); font: 400 17px/1.5 var(--tekst); }
+h1, h2, h3 { font-family: var(--kop); margin: 0; letter-spacing: -.015em; line-height: 1.1; font-weight: 700; }
+section[data-deel] { padding: 32px 24px 56px; max-width: 1366px; margin: 0 auto; }
+body.los section[data-deel] { padding: 0; max-width: none; }
+.notitie { color: var(--zacht); max-width: 70ch; font-size: 16px; }
+.deelkop { font-size: 40px; margin-bottom: 8px; font-weight: 800; }
+
+/* Bord */
+.bord { display: grid; grid-template-columns: repeat(12, 1fr); gap: 14px; }
+.tegel { background: var(--papier); border-radius: var(--r); padding: 20px; grid-column: span 4; min-height: 160px; }
+.tegel h3 { font-size: 22px; margin-bottom: 6px; } .tegel p { margin: 0; color: var(--zacht); font-size: 16px; }
+.tegel.breed { grid-column: span 8; background: var(--groei); color: #fff; } .tegel.breed p { color: #D7EEE6; }
+.kleuren { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-top: 12px; }
+.kleur { border-radius: 12px; padding: 54px 12px 12px; font-size: 14px; background: #fff; }
+.kleur b { display: block; font-size: 15px; }
+
+/* App */
+.app { background: var(--lucht); min-height: 820px; border-radius: 20px; overflow: hidden; box-shadow: 0 0 0 1px var(--lijn); }
+body.los .app { border-radius: 0; box-shadow: none; min-height: 100vh; }
+.top { display: flex; align-items: center; gap: 28px; padding: 14px 32px; background: var(--papier); border-bottom: 1px solid var(--lijn); }
+.cc { font: 800 22px/1 var(--kop); letter-spacing: -.02em; color: var(--inkt); display: flex; align-items: center; gap: 8px; }
+.cc i { width: 22px; height: 22px; border-radius: 50%; background: conic-gradient(var(--groei) 0 75%, var(--zon) 75% 100%); display: inline-block; }
+.top nav { display: flex; gap: 4px; }
+.top nav a { padding: 10px 14px; min-height: 44px; border-radius: 999px; color: var(--zacht); text-decoration: none; font-weight: 700; display: flex; align-items: center; }
+.top nav a[aria-current] { background: var(--groei-licht); color: var(--groei); }
+.club { margin-left: auto; display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--zacht); }
+.clubbadge { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: var(--club); color: var(--club-op); font: 800 13px/1 var(--kop); }
+.binnen { max-width: 1120px; margin: 0 auto; padding: 32px 32px 48px; }
+.groet h1 { font-size: 44px; font-weight: 800; max-width: 22ch; }
+.groet h1 em { font-style: normal; color: var(--groei); }
+.groet p { color: var(--zacht); margin: 6px 0 24px; }
+.raster { display: grid; grid-template-columns: 1.15fr 1fr; gap: 28px; align-items: start; }
+.vak h2 { font-size: 24px; margin-bottom: 12px; }
+.taak { display: grid; grid-template-columns: 44px 1fr; gap: 14px; padding: 16px; border-radius: var(--r); background: var(--papier); text-decoration: none; color: inherit; margin-bottom: 10px; align-items: start; transition: transform .15s ease; }
+.taak:hover { transform: translateX(3px); }
+.taak .stip { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--lucht); font: 800 17px/1 var(--kop); color: var(--groei); }
+.taak.eerst { background: var(--zon-licht); box-shadow: inset 0 0 0 2px var(--zon); }
+.taak.eerst .stip { background: var(--zon); color: var(--inkt); }
+.taak b { display: block; font-size: 18px; } .taak small { display: block; color: var(--zacht); font-size: 16px; margin-top: 2px; }
+.taak .doe { display: inline-block; margin-top: 10px; font-weight: 700; color: var(--groei); text-decoration: underline; text-underline-offset: 3px; }
+.pad { background: var(--papier); border-radius: var(--r); padding: 18px 18px 6px; }
+.reis { padding-bottom: 14px; margin-bottom: 14px; border-bottom: 1px solid var(--lijn); }
+.reis:last-child { border-bottom: 0; }
+.reis-kop { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.reis-kop b { font-size: 18px; } .reis-kop span { color: var(--zacht); font-size: 15px; }
+.reis .doel { color: var(--zacht); font-size: 16px; margin: 2px 0 10px; }
+.reis .doel::before { content: '“'; } .reis .doel::after { content: '”'; }
+.stations { display: flex; align-items: center; }
+.station { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--groei); display: grid; place-items: center; font: 700 13px/1 var(--tekst); color: var(--groei); background: #fff; flex: none; }
+.station.af { background: var(--groei); color: #fff; }
+.station.nu { background: var(--zon); border-color: var(--inkt); color: var(--inkt); }
+.spoor { flex: 1; height: 3px; background: var(--lijn); }
+.spoor.af { background: var(--groei); }
+.stations .eind { margin-left: 10px; font-size: 15px; color: var(--zacht); white-space: nowrap; }
+.weekrij { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; background: var(--papier); border-radius: var(--r); padding: 12px; }
+.weekrij a { border-radius: 12px; padding: 8px 4px; text-align: center; text-decoration: none; color: var(--inkt); min-height: 64px; }
+.weekrij a span { display: block; font-size: 14px; color: var(--zacht); } .weekrij a b { font: 700 22px/1.2 var(--kop); }
+.weekrij a.vandaag { background: var(--groei); color: #fff; } .weekrij a.vandaag span { color: #D7EEE6; }
+.weekrij a small { display: block; font-size: 13px; }
+.weeksom { color: var(--zacht); margin: 10px 4px 0; font-size: 16px; }
+.knop { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 22px; border-radius: 999px; border: 0; font: 700 17px/1 var(--tekst); cursor: pointer; text-decoration: none; transition: transform .1s, box-shadow .15s; }
+.knop:active { transform: scale(.98); }
+.knop.hoofd { background: var(--groei); color: #fff; }
+.knop.tweede { background: var(--groei-licht); color: var(--groei); }
+.knop.rand { background: #fff; color: var(--inkt); box-shadow: inset 0 0 0 2px var(--lijn); }
+.knop.stil { background: transparent; color: var(--groei); text-decoration: underline; text-underline-offset: 3px; padding: 0 8px; }
+:focus-visible { outline: 3px solid var(--inkt); outline-offset: 3px; box-shadow: 0 0 0 6px var(--zon); }
+.tabs { display: none; }
+
+/* Training */
+.tr-kop { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+.tr-kop h1 { font-size: 38px; font-weight: 800; } .tr-kop p { margin: 4px 0 0; color: var(--zacht); }
+.seg { display: inline-flex; background: var(--papier); border-radius: 999px; padding: 4px; margin-bottom: 20px; gap: 2px; }
+.seg a { padding: 10px 16px; border-radius: 999px; text-decoration: none; color: var(--zacht); font-weight: 700; min-height: 44px; display: flex; align-items: center; }
+.seg a[aria-current] { background: var(--groei); color: #fff; }
+.thema { background: var(--groei); color: #fff; border-radius: var(--r); padding: 18px 20px; display: grid; grid-template-columns: 1fr auto; gap: 6px 16px; align-items: center; margin-bottom: 20px; }
+.thema h2 { font-size: 26px; } .thema p { margin: 0; color: #D7EEE6; }
+.minuten { font: 800 34px/1 var(--kop); text-align: right; } .minuten small { display: block; font: 400 15px/1.2 var(--tekst); color: #D7EEE6; }
+.stappen { position: relative; padding-left: 0; list-style: none; margin: 0; }
+.stappen li { display: grid; grid-template-columns: 56px 1fr auto; gap: 14px; align-items: center; position: relative; padding: 10px 0; }
+.stappen li::before { content: ''; position: absolute; left: 27px; top: 0; bottom: 0; width: 3px; background: var(--groei-licht); z-index: 0; }
+.stappen li:first-child::before { top: 50%; } .stappen li:last-child::before { bottom: 50%; }
+.stappen .code { position: relative; z-index: 1; width: 56px; height: 56px; border-radius: 50%; background: #fff; border: 3px solid var(--groei); display: grid; place-items: center; font: 800 15px/1 var(--kop); color: var(--groei); }
+.stappen li.nu .code { background: var(--zon); border-color: var(--inkt); color: var(--inkt); }
+.stappen .kaart { background: #fff; border-radius: 14px; padding: 12px 16px; }
+.stappen .kaart b { display: block; font-size: 18px; } .stappen .kaart small { color: var(--zacht); font-size: 16px; }
+.stappen .min { font: 700 20px/1 var(--kop); color: var(--inkt); background: #fff; border-radius: 999px; padding: 10px 14px; }
+.afspraak { background: var(--zon-licht); border-radius: var(--r); padding: 14px 18px; margin-top: 16px; }
+.afspraak b { display: block; font-family: var(--kop); font-size: 18px; }
+.tekening { background: #fff; border-radius: var(--r); padding: 12px; } .tekening svg { width: 100%; display: block; height: auto; }
+
+/* Kit */
+.kit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.kitvak { background: #fff; border-radius: var(--r); padding: 20px; }
+.kitvak h3 { font-size: 22px; margin-bottom: 12px; }
+.rijknop { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.status { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; font-weight: 700; font-size: 15px; }
+.status::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: currentColor; }
+.status.gepland { background: var(--lucht); color: var(--zacht); }
+.status.nu { background: var(--zon); color: var(--inkt); }
+.status.klaar { background: var(--groei-licht); color: var(--groei); }
+.status.let { background: #FCE7D2; color: var(--let); }
+.status.af { background: #FBE1DE; color: var(--fout); }
+.status.af::before { border-radius: 0; height: 2px; }
+.beweging { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; } .beweging p { margin: 6px 0 0; color: var(--zacht); font-size: 16px; }
+
+@keyframes groei { from { transform: scaleX(0); } }
+.spoor.af { transform-origin: left; animation: groei .6s cubic-bezier(.3,.7,.2,1) both; }
+.reis:nth-child(2) .spoor.af { animation-delay: .1s; } .reis:nth-child(3) .spoor.af { animation-delay: .2s; }
+@keyframes tik { 0% { transform: scale(1); } 50% { transform: scale(1.12); } 100% { transform: scale(1); } }
+.station.nu { animation: tik .5s .6s ease-out both; }
+
+@media (max-width: 900px) {
+  section[data-deel] { padding: 20px 16px 40px; }
+  .bord { grid-template-columns: 1fr; } .tegel, .tegel.breed { grid-column: auto; }
+  .kleuren { grid-template-columns: repeat(2, 1fr); }
+  .top { padding: calc(10px + env(safe-area-inset-top)) 16px 10px; } .top nav { display: none; } .club span { display: none; }
+  .binnen { padding: 20px 16px 96px; }
+  .groet h1 { font-size: 32px; }
+  .raster { grid-template-columns: 1fr; gap: 24px; }
+  .tabs { display: grid; grid-template-columns: repeat(5, 1fr); background: #fff; border-top: 1px solid var(--lijn); padding: 6px 6px calc(6px + env(safe-area-inset-bottom)); position: sticky; bottom: 0; }
+  body:not(.los) .tabs { position: relative; }
+  .tabs a { min-height: 52px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; border-radius: 14px; text-decoration: none; color: var(--zacht); font-size: 13px; font-weight: 700; }
+  .tabs a i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity: .5; }
+  .tabs a[aria-current] { background: var(--groei-licht); color: var(--groei); } .tabs a[aria-current] i { opacity: 1; }
+  .tr-kop h1 { font-size: 30px; } .seg { display: flex; overflow-x: auto; } .seg a { white-space: nowrap; padding: 10px 12px; }
+  .thema h2 { font-size: 21px; }
+  .stappen li { grid-template-columns: 48px 1fr auto; gap: 10px; } .stappen .code { width: 48px; height: 48px; font-size: 13px; } .stappen li::before { left: 23px; }
+  .stappen .min { padding: 8px 10px; font-size: 17px; }
+  .kit, .beweging { grid-template-columns: 1fr; }
+  .trgrid { grid-template-columns: 1fr !important; }
+}
+</style>
+</head>
+<body>
+
+<section id="bord" data-deel="bord" data-naam="Moodboard">
+  <h1 class="deelkop">B · Leerlijn</h1>
+  <p class="notitie"><b>Idee:</b> ClubComm is de plek waar trainers groeien. Alles is een weg met stations: het traject van een trainer, de stappen van de HO (① tot ④), de blokken van een training. Je ziet altijd waar je bent (zon-geel) en wat daarna komt. De toon is een goede begeleider: hele zinnen, je spreekt de gebruiker aan, nooit belerend. <b>Referenties (niet gekopieerd):</b> lijnenkaarten van het openbaar vervoer, leerroutes van taal- en muziekapps, lesboeken met heldere stappen, de rust van goede zorg-apps, het lettertype dat het Braille Institute voor slechtzienden liet maken.</p>
+  <div class="bord">
+    <div class="tegel breed"><h3>De lijnenkaart</h3><p>Een traject is een lijn met stations. Gedaan = gevuld, nu = geel, nog niet = open. Dezelfde vorm voor trainers, stappen en trainingsblokken.</p>
+      <div class="stations" style="margin-top:22px;max-width:460px"><span class="station af">1</span><span class="spoor af" style="background:#fff"></span><span class="station af" style="background:#fff;color:var(--groei)">2</span><span class="spoor"></span><span class="station nu">3</span><span class="spoor"></span><span class="station">4</span></div></div>
+    <div class="tegel"><h3>Hele zinnen</h3><p>"Peter, drie dingen voor vandaag." In plaats van "Actie nodig (3)". De beginnende oudertrainer leest wat hij moet doen.</p></div>
+    <div class="tegel"><h3>Atkinson Hyperlegible</h3><p>Gemaakt voor lezers met een visuele beperking: I, l en 1 zijn nooit verwarrend. Goed voor ouders op een telefoon in de zon.</p><p style="font:700 34px/1.1 var(--tekst);color:var(--inkt);margin-top:12px">Il1 0O 6b9</p></div>
+    <div class="tegel"><h3>Zon = hier ben je</h3><p>Geel is nooit versiering. Het staat alleen op de stap die nu aan de beurt is.</p><div style="margin-top:14px"><span class="status nu">Nu: ④ eerste moment</span></div></div>
+    <div class="tegel" style="background:var(--club);color:var(--club-op)"><h3>Clublaag</h3><p style="color:inherit;opacity:.9">Het clubembleem rechtsboven, de clubnaam in de begroeting. De weg en het groen blijven van ClubComm.</p>
+      <div style="margin-top:16px;display:flex;gap:10px;align-items:center"><span class="clubbadge" style="box-shadow:0 0 0 2px #fff" data-clubkort>VDV</span><b data-clubnaam>VV De Voorbeeldclub</b></div></div>
+  </div>
+  <h2 class="deelkop" style="font-size:28px;margin-top:28px">Kleuren</h2>
+  <div class="kleuren">
+    <div class="kleur" style="background:var(--groei);color:#fff"><b>Groei #0F6E5A</b>Merk, hoofdknop. Wit: 6,3:1.</div>
+    <div class="kleur" style="background:var(--zon)"><b>Zon #FFC53D</b>Alleen "nu". Inkt: 11:1.</div>
+    <div class="kleur" style="background:var(--inkt);color:#fff"><b>Inkt #1A2530</b>Tekst 15:1.</div>
+    <div class="kleur" style="background:var(--lucht)"><b>Lucht #EEF3F7</b>Achtergrond, koel (geen crème).</div>
+    <div class="kleur" style="background:var(--groei-licht);color:var(--groei)"><b>Groei-licht</b>Gekozen tab, klaar.</div>
+    <div class="kleur" style="background:#FCE7D2;color:var(--let)"><b>Let op #8A4B00</b>Wacht op jou.</div>
+  </div>
+  <h2 class="deelkop" style="font-size:28px;margin-top:28px">Letters</h2>
+  <p class="notitie"><b>Bricolage Grotesque</b> (700–800) voor koppen: een warme grotesk met een beetje eigenwijsheid, zodat het menselijk voelt zonder kinderlijk te worden. <b>Atkinson Hyperlegible</b> (400/700) voor alle tekst, 17 px. Geen schreeflettertype: dat gaat snel richting "magazine" en past niet bij snel lezen langs het veld.</p>
+</section>
+
+<section id="home" data-deel="home" data-naam="Home HJO">
+  <div class="app">
+    <header class="top"><span class="cc"><i></i>ClubComm</span>
+      <nav aria-label="Menu"><a href="#" aria-current="page">Home</a><a href="#">Trainers</a><a href="#">Teams</a><a href="#">Training</a><a href="#">Berichten</a></nav>
+      <span class="club"><span data-clubnaam>VV De Voorbeeldclub</span><span class="clubbadge" data-clubkort>VDV</span></span></header>
+    <main class="binnen">
+      <div class="groet"><h1>Peter, <em>drie dingen</em> voor vandaag.</h1><p>Vrijdag 6 november · Hoofd jeugdopleiding</p></div>
+      <div class="raster">
+        <div class="vak">
+          <a class="taak eerst" href="#"><span class="stip">2</span><span><b>Twee trainers wachten op een stap van jou</b><small>Bij de één ③ een traject starten, bij de ander ④ het eerste moment plannen.</small><span class="doe">Naar de trainers</span></span></a>
+          <a class="taak" href="#"><span class="stip">di</span><span><b>Kijk naar de training van Dennis Peters</b><small>O9-1 · dinsdag 10 november · Opbouwen onder druk</small></span></a>
+          <a class="taak" href="#"><span class="stip">za</span><span><b>Zaterdag kijk je bij O9-1</b><small>Begeleidingsmoment · Dennis vulde de voorbereiding in</small></span></a>
+          <h2 style="margin-top:26px">Deze week</h2>
+          <div class="weekrij">
+            <a href="#"><span>ma</span><b>9</b><small>1</small></a><a href="#"><span>di</span><b>10</b><small>7</small></a><a href="#"><span>wo</span><b>11</b><small>9</small></a><a href="#"><span>do</span><b>12</b><small>6</small></a><a href="#" class="vandaag"><span>vr</span><b>13</b><small>4</small></a><a href="#"><span>za</span><b>14</b><small>15</small></a><a href="#"><span>zo</span><b>15</b><small>–</small></a>
+          </div>
+          <p class="weeksom">15 wedstrijden en 27 trainingen, 8 wedstrijden thuis.</p>
+        </div>
+        <div class="vak"><h2>Onderweg met drie trainers</h2>
+          <div class="pad">
+            <div class="reis"><div class="reis-kop"><b>Dennis Peters</b><span>O9-1</span></div><p class="doel">Spelers vaker zelf laten oplossen</p>
+              <div class="stations"><span class="station af">1</span><span class="spoor af"></span><span class="station nu">2</span><span class="eind">za 14 nov</span></div></div>
+            <div class="reis"><div class="reis-kop"><b>Samira Brouwer</b><span>O8-1</span></div><p class="doel">Eerst kijken, dan coachen</p>
+              <div class="stations"><span class="station af">1</span><span class="spoor af"></span><span class="station af">2</span><span class="spoor af"></span><span class="station nu">3</span><span class="eind">za 21 nov</span></div></div>
+            <div class="reis"><div class="reis-kop"><b>Anouk van Vliet</b><span>O10-2</span></div><p class="doel">Rust bij de uitleg</p>
+              <div class="stations"><span class="station">1</span><span class="spoor"></span><span class="station">2</span><span class="eind">④ plan het eerste moment</span></div></div>
+          </div>
+          <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap"><a class="knop hoofd" href="#">Trainer toevoegen</a><a class="knop stil" href="#">Alle trainers</a></div>
+        </div>
+      </div>
+    </main>
+    <nav class="tabs" aria-label="Menu"><a href="#" aria-current="page"><i></i>Home</a><a href="#"><i></i>Trainers</a><a href="#"><i></i>Teams</a><a href="#"><i></i>Training</a><a href="#"><i></i>Meer</a></nav>
+  </div>
+</section>
+
+<section id="training" data-deel="training" data-naam="Training">
+  <div class="app">
+    <header class="top"><span class="cc"><i></i>ClubComm</span>
+      <nav aria-label="Menu"><a href="#">Home</a><a href="#">Trainers</a><a href="#">Teams</a><a href="#" aria-current="page">Training</a><a href="#">Berichten</a></nav>
+      <span class="club"><span data-clubnaam>VV De Voorbeeldclub</span><span class="clubbadge" data-clubkort>VDV</span></span></header>
+    <main class="binnen">
+      <div class="seg"><a href="#">Seizoen</a><a href="#" aria-current="page">Voorbereiden</a><a href="#">Op het veld</a><a href="#">Vormen</a></div>
+      <div class="tr-kop"><div><h1>Training O10-1</h1><p>Vrijdag 6 november · 17:00 tot 18:15</p></div><a class="knop hoofd" href="#">Naar het veld</a></div>
+      <div class="thema"><div><p>Thema van deze week</p><h2>Opbouwen onder druk</h2></div><div class="minuten">68 min<small>van 75 gepland</small></div></div>
+      <div class="trgrid" style="display:grid;grid-template-columns:1.3fr 1fr;gap:24px;align-items:start">
+        <ol class="stappen">
+          <li><span class="code">Start</span><span class="kaart"><b>Rondo 5 tegen 2</b><small>7 spelers</small></span><span class="min">10′</span></li>
+          <li><span class="code">A1</span><span class="kaart"><b>Passen in driehoeken</b><small>9 spelers</small></span><span class="min">12′</span></li>
+          <li class="nu"><span class="code">A2</span><span class="kaart"><b>Positiespel 5 tegen 3 met doelen</b><small>8 spelers · hier ben je</small></span><span class="min">14′</span></li>
+          <li><span class="code">B1</span><span class="kaart"><b>Afwerken na kaats</b><small>10 spelers</small></span><span class="min">12′</span></li>
+          <li><span class="code">Partij</span><span class="kaart"><b>Partij 6 tegen 6</b><small>12 spelers</small></span><span class="min">20′</span></li>
+        </ol>
+        <div><div class="tekening" id="tekB"></div><div class="afspraak"><b>Onze afspraak</b>Bij elke vorm eerst 2 minuten alleen kijken.</div></div>
+      </div>
+    </main>
+    <nav class="tabs" aria-label="Menu"><a href="#"><i></i>Home</a><a href="#"><i></i>Trainers</a><a href="#"><i></i>Teams</a><a href="#" aria-current="page"><i></i>Training</a><a href="#"><i></i>Meer</a></nav>
+  </div>
+</section>
+
+<section id="kit" data-deel="kit" data-naam="Componenten">
+  <h1 class="deelkop">Componenten</h1>
+  <div class="kit">
+    <div class="kitvak"><h3>Knoppen</h3><div class="rijknop"><a class="knop hoofd" href="#">Opslaan</a><a class="knop tweede" href="#">Plannen</a><a class="knop rand" href="#">Annuleren</a><a class="knop stil" href="#">Later</a></div><p class="notitie">Pil-vorm, 48 px. De hoofdknop is groen; geel nooit op een knop (geel = waar je bent).</p></div>
+    <div class="kitvak"><h3>Status</h3><div class="rijknop"><span class="status gepland">Gepland</span><span class="status nu">Nu</span><span class="status klaar">Klaar</span><span class="status let">Wacht op jou</span><span class="status af">Afgelast</span></div><p class="notitie">Stip + woord. Afgelast krijgt een streep in plaats van een stip.</p></div>
+    <div class="kitvak"><h3>Taak (kaart)</h3><a class="taak eerst" href="#" style="margin:0 0 10px"><span class="stip">2</span><span><b>Twee trainers wachten op jou</b><small>③ of ④</small></span></a><a class="taak" href="#" style="background:var(--lucht);margin:0"><span class="stip" style="background:#fff">za</span><span><b>Zaterdag kijk je bij O9-1</b></span></a><p class="notitie">De eerste taak staat altijd in het geel; de rest is rustig. Geen schaduw.</p></div>
+    <div class="kitvak"><h3>Voortgang = stations</h3><div class="stations"><span class="station af">1</span><span class="spoor af"></span><span class="station af">2</span><span class="spoor af"></span><span class="station nu">3</span><span class="spoor"></span><span class="station">4</span><span class="eind">stap 3 van 4</span></div>
+      <p class="notitie">Ook voor ① tot ④ van de HO en voor het seizoen (periodes als stations).</p></div>
+  </div>
+  <h1 class="deelkop" style="margin-top:28px">Beweging</h1>
+  <div class="beweging">
+    <div class="kitvak"><h3>Het spoor groeit</h3><p>Bij openen tekent het gevulde spoor zich van links naar rechts (600 ms), daarna tikt het gele station één keer aan. Dat is het hele moment.</p></div>
+    <div class="kitvak"><h3>Taak schuift mee</h3><p>Bij aanwijzen schuift een taak 3 px naar rechts: "hier kun je verder". Op telefoon geen effect.</p></div>
+    <div class="kitvak"><h3>Beperk beweging</h3><p>Sporen staan meteen gevuld, geen tik. Focus is altijd zichtbaar (zwart + geel).</p></div>
+  </div>
+</section>
+
+<script src="inhoud.js"></script>
+<script>document.getElementById('tekB').innerHTML = VELDJE('#3F8E6E', 'rgba(255,255,255,.85)', '#FFC53D', '#1A2530').replace(/fill="#fff" font-family/g, 'fill="#1A2530" font-family');</script>
+<script src="kader.js"></script>
+</body>
+</html>
