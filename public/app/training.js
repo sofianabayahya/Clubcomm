@@ -411,11 +411,11 @@
   const wieKort = (k) => { const [t2, n2] = k.split('|'); return t2 === 'keeper' ? 'op doel' : n2 && n2[0] === '#' ? (TEAMNAAM[t2] || t2).toLowerCase() : `${(TEAMNAAM[t2] || t2).toLowerCase()} ${n2}`; };
   const ingedeeld = (o, nrs) => nrs.filter((x) => (o.indeling || {})[x.k]).length;
   // De tekening met namen (en, om in te delen, een tikvlak per speler)
-  // Besluit NNN: de tekening zonder namen (te druk); bij het indelen alleen tikvlakken op de spelers. De namen staan in de lijst per kleur
+  // Besluit 179: de tekening zonder namen (te druk); bij het indelen alleen tikvlakken op de spelers. De namen staan in de lijst per kleur
   const wieTekening = (v, tik) => { if (!v || !v.tekening || !window.DrawTool) return ''; if (!tik) return tekening(v.tekening); const tv = {};
     wieNummers(v).forEach((x) => { tv[x.idx] = `data-act="tpWieKies" data-id="${esc(tik.aid)}" data-i="${tik.i}" data-k="${esc(x.k)}" role="button" aria-label="${esc(wieTitel(x))}"`; });
     return window.DrawTool.staticSvg(v.tekening, { tik: tv }); };
-  // Besluit NNN: opstelling per kleur. Tik Rood of Geel; daaronder nummer, positie en naam van dat team (keeper eerst). In de training tikbaar, Op het veld alleen lezen
+  // Besluit 179: opstelling per kleur. Tik Rood of Geel; daaronder nummer, positie en naam van dat team (keeper eerst). In de training tikbaar, Op het veld alleen lezen
   const wieRij = (x) => `<span class="tr-wbol" style="background:${x.n == null && !x.los ? '#0f1b2d' : TEAMKLEUR[x.team] || '#0f1b2d'};color:${x.n != null || x.los ? (['geel', 'oranje', 'lichtblauw'].includes(x.team) ? '#1a1000' : '#fff') : '#fff'}">${esc(wieLabel(x) || '–')}</span>`;
   const wieKleuren = (S, a, o, v, ctx) => { const nrs = wieNummers(v); if (!nrs.length) return ''; const ind = (o && o.indeling) || {}; const team = a && a.teamId ? M.spelers(S, a.teamId) : [];
     const kleuren = [...new Set(nrs.map((x) => x.team))]; const kl = kleuren.includes(CC.ui.wieKleur) ? CC.ui.wieKleur : kleuren[0];

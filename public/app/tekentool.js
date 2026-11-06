@@ -944,8 +944,8 @@
     /* Tekening als losse SVG uit de tekengegevens (tekening_json), zonder de tekentool te openen. Voor vormen zonder
        opgeslagen plaatje (bv. ingevoerd door de beheerder); zelfde inzoomen als bij opslaan. Eigen id's per tekening. */
     var svgSeq = 0;
-    // Besluit 175 en NNN: extra (optioneel) = { tik: { index: 'data-…="…"' } }: een onzichtbaar tikvlak per speler (opstelling indelen).
-    // De tekening van de vorm zelf verandert niet; namen staan niet in de tekening (Besluit NNN: te druk).
+    // Besluit 175 en 179: extra (optioneel) = { tik: { index: 'data-…="…"' } }: een onzichtbaar tikvlak per speler (opstelling indelen).
+    // De tekening van de vorm zelf verandert niet; namen staan niet in de tekening (Besluit 179: te druk).
     function staticSvg(json, extra){
       if (!json || !FIELDS[json.field]) return "";
       var saved = st;
