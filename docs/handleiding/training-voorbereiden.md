@@ -13,11 +13,11 @@
 
 1. Ga naar **Training → Voorbereiden** en tik bovenaan de **dag** van de training.
 2. Tik **Training voorbereiden**. De app vraagt *Hoe wil je beginnen?*: kies **Eerdere training gebruiken** (als je er al een hebt) of **＋ Oefenvorm**.
-3. Kies in **Kies oefenvorm** een vorm uit je Vormenbank. Bovenaan staat wat het best past bij het aantal spelers; niets is verboden. Staat er niets bij, tik **Nieuwe oefenvorm**.
-4. Herhaal **＋ Oefenvorm** (of **＋ Spacing**) tot de training vol is. De balk laat zien hoeveel minuten je hebt ingepland en hoeveel er nog vrij zijn.
+3. Kies in **Kies oefenvorm** een vorm uit **Vormen**. Bovenaan staat wat het best past bij het aantal spelers; niets is verboden. Staat er niets bij, tik **Nieuwe oefenvorm**.
+4. Herhaal **＋ Oefenvorm** (of **＋ Spacing**) tot de training vol is. De regel boven de vormen laat zien hoeveel minuten je hebt ingepland en hoeveel er nog vrij zijn.
 5. Klaar. Alles wordt vanzelf bewaard. Met **Printen** krijg je een A4 voor op het veld.
 
-![Plannen: een training met drie oefenvormen en de tijdbalk](../presentaties/beelden/training-plannen.jpg)
+![Voorbereiden: een training met drie oefenvormen en de tijd in één regel](../presentaties/beelden/training-plannen.jpg)
 
 ## Meer
 *Voor de trainer die vaker voorbereidt.*
@@ -41,12 +41,12 @@
 **Sneller voorbereiden**
 - **Kopiëren naar…** zet deze opbouw in een andere training (of op een losse datum). Daarna pas je aan wat anders moet.
 - **⋯ → Eerdere training overnemen** haalt de opbouw van een eerdere training hierheen; **⋯ → Training leegmaken** begint opnieuw.
-- Vanuit de **Vormenbank** kan het ook andersom: open een vorm en tik **Zet in een training…**.
-- Onder de training staat je Vormenbank als lijst: tik **＋** en de vorm komt op de eerste passende lege plek.
+- Vanuit **Vormen** kan het ook andersom: open een vorm en tik **Zet in een training…**.
+- Onder de training staan je vormen als lijst (*Vormen · n vormen · zoeken*): tik **＋** en de vorm komt op de eerste passende lege plek.
 
 **Bij een club met een opleidingsprofiel** (Besluit 141, 144, 145, 155)
 - De training heeft een **sjabloon** met vaste plekken (bijvoorbeeld Start, A1, A2, B1, B2, Partij) en bovenaan **Stap x van y**.
-- In Plannen staat de afspraak van de vorige training los bovenaan; de onderbouwing staat ingeklapt onder **Waarom deze training** (Besluit 167). ClubComm telt veldspelers en keepers apart (*13 spelers + 2 keepers verwacht*); een keeper die niet op doel hoeft, speelt mee in het veld (Besluit 172). Past een vorm niet bij het aantal spelers, dan zie je één regel bovenaan en per vorm het label **past niet**. Op de laptop staan de afspraak, **Waarom deze training** en de tijd rechts naast de training, open (Besluit 169). Op de telefoon staat de Vormenbank onder de training ingeklapt; **+ Oefenvorm** opent de kiezer.
+- Bij Voorbereiden staat de afspraak van de vorige training los bovenaan; de onderbouwing staat ingeklapt onder **Waarom deze training** (Besluit 167). ClubComm telt veldspelers en keepers apart (*13 spelers + 2 keepers verwacht*); een keeper die niet op doel hoeft, speelt mee in het veld (Besluit 172). Past een vorm niet bij het aantal spelers, dan zie je één regel bovenaan en per vorm het label **past niet**. Op de laptop staan de afspraak, **Waarom deze training** en de tijd rechts naast de training, open (Besluit 169). Op de telefoon staat de Vormenbank onder de training ingeklapt; **+ Oefenvorm** opent de kiezer.
 - De **trainingskaart** heeft vijf regels: *Wat · Waar · Welke · Niveau · Mee uit vorige*. Een voorstel uit de week of de periodisering staat gestippeld en vult nooit vanzelf in. In **Week** staat de afspraak van de vorige training bovenaan en de rest ingeklapt onder **Waarom deze training** (Besluit 165).
 - **Kies oefenvorm** filtert ook op leerdoel, vaardigheid en leerniveau. Een vorm die al staat, verplaats je met **Verplaatsen naar** (een bezette plek wisselt).
 - Zonder opleidingsprofiel blijft de training één lijst in de volgorde die jij kiest; het **weekthema** kies je dan zelf bij **Seizoen**.
@@ -57,4 +57,4 @@
 - **Een tekening of beschrijving wijzig je bij Vormen,** niet in de training. Die wijziging zie je in elke training waarin de vorm staat.
 - **Een waarschuwing is een signaal, geen fout.** ClubComm signaleert, jij beslist.
 - **Voorbereiden is iets anders dan vastleggen.** Na de training leg je bij **Op het veld** vast wat er echt gegeven is (*Training voorbereiden of vastleggen*); dat krijgt later een eigen kaart.
-- Een training die je weghaalt of leegmaakt, laat de vormen in je Vormenbank staan.
+- Een training die je weghaalt of leegmaakt, laat de vormen in **Vormen** staan.
