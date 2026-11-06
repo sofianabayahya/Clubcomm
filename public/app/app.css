@@ -1076,6 +1076,11 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
   .vb-naast .ld-r .tr-rv-l { background: #5fb87a; padding: 12px; border-radius: 14px; }
   .vb-naast .ld-r .tr-legenda { color: #fff; }
 }
+/* Besluit 177: de stappen van de HO per trainer (van start tot eerste moment) */
+.st-nr { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--lijn); font-size: 13px; color: var(--zacht); }
+.st-nr.nu { border-color: var(--blauw); color: var(--blauw); }
+.st-stappen .st-ok { color: var(--groen); }
+.st-stappen + .knop { margin-top: 10px; }
 
 /* Besluit 175: opstelling met namen in de tekening */
 .tr-wieveld { margin: 8px 0 6px; }

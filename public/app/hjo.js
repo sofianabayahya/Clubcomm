@@ -254,6 +254,7 @@
       <div class="twee"><div><label for="sn-r">Rol</label><select id="sn-r" name="r"><option value="trainer">Trainer</option>${CC.pakketTrainers && CC.pakketTrainers(S) ? '' : '<option value="teamleider">Teamleider</option>'}${S.club.coordinatorAan && !(CC.pakketTrainers && CC.pakketTrainers(S)) ? `<option value="coordinator">${esc(S.club.labels.coordinator)}</option>` : ''}<option value="hjo">${esc(S.club.labels.hjo)}</option><option value="tc">Technisch coördinator</option></select></div>
       <div><label for="sn-team">Team (niet nodig voor ${esc(S.club.labels.hjo)} of TC)</label><select id="sn-team" name="team">${S.teams.map((t) => `<option value="${t.id}" ${t.id === voor ? 'selected' : ''}>${esc(t.naam)}</option>`).join('')}${S.club.coordinatorAan ? `<optgroup label="Groep (voor ${esc(S.club.labels.coordinator.toLowerCase())})">${(S.club.groepen || []).map((g) => `<option value="groep:${esc(g.naam)}">${esc(g.naam)}</option>`).join('')}</optgroup>` : ''}</select></div></div>
       ${CC.pakketTrainers && CC.pakketTrainers(S) ? `<label for="sn-f">Jouw functie (onder de welkomstmail, mag leeg)</label><input id="sn-f" name="f" autocomplete="off" placeholder="Bijv. HJO bovenbouw" value="${esc(eigenFunctie())}">` : ''}
+      ${CC.pakketTrainers && CC.pakketTrainers(S) && CC.kennisGevraagd ? '<label class="vink" id="sn-km-l"><input type="checkbox" name="km" checked> <span>Kennismaking meteen meesturen<br><small class="zacht">Eén mail: welkom + een paar vragen, zodat je het traject kunt afstemmen</small></span></label>' : ''}
       <button class="knop">Toevoegen en uitnodigen</button>
       <p class="zacht klein">Hij of zij krijgt een welkomstmail met hoe je inlogt. Staat dit e-mailadres al in de club (bijv. als ouder), dan komt de rol erbij.</p></form>`);
     // Besluit 170: vanuit Teams zonder trainer of teamleider staat de rol al goed
@@ -275,6 +276,9 @@
     const wat = `${CC.rolNaam(rol).toLowerCase()}${team ? ` van ${team.naam}` : rol.groep ? ` ${rol.groep}` : ''}`;
     if (f.f) { CC.ui.functie = f.f.value.trim(); try { localStorage.setItem('cc-functie', CC.ui.functie); } catch (e) { /* alleen gemak */ } }
     const w = CC.welkom(S, p, rol, email);
+    // Besluit 177: kennismaking in dezelfde mail (alleen trainers bij het pakket)
+    const km = f.km && f.km.checked && r === 'trainer' && CC.kennisGevraagd;
+    if (km) { CC.kennisGevraagd(S, p.id); w.tekst = w.tekst.replace('Vragen? ', `Eerste stap: vul na het inloggen de korte kennismaking in (een paar minuten). Je vindt hem bovenaan je Home. Zo stemmen we de begeleiding af op jou.\n\nVragen? `); }
     S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'persoonlijk', welkom: true, bereik: p.naam, onderwerp: w.onderwerp, tekst: w.tekst, tijd: new Date().toISOString(), ontvangers: [p.id], gelezen: [], antw: [], urgent: false, gepland: null });
     CC.save(); CC.closeSheet(); CC.render();
     CC.sheet('Toegevoegd', `<p><b>${esc(p.naam)}</b> is nu ${esc(wat)}${bestond ? ' (stond al in de club; de rol is erbij gekomen)' : ''}.</p><p class="zacht">Er gaat een welkomstmail naar ${esc(email)} met hoe je inlogt. Wil je het ook zelf even laten weten?</p>

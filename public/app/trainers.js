@@ -135,7 +135,7 @@
           ${t.plan.wedstrijd ? stap(gedaan(S, tr.id, 'wedstrijd') >= t.plan.wedstrijd, gedaan(S, tr.id, 'wedstrijd') > 0, `Wedstrijd ${gedaan(S, tr.id, 'wedstrijd')} van ${t.plan.wedstrijd}`) : ''}</ul>
         ${CC.begelBlok ? CC.begelBlok(S, tr.id) : ''}
         <div class="knoppen"><button class="knop licht klein" data-act="trajectSheet" data-id="${tr.id}">${icon('pencil')}Traject aanpassen</button><button class="knop licht klein" data-act="trajectStop" data-id="${tr.id}">Traject afronden</button></div></div>`
-      : `<div class="kaartje"><p class="klein">${plezier(S, tr.id) ? `${esc(tr.naam.split(' ')[0])} traint vooral voor het plezier (kennismaking). Dat is prima: geen traject, geen signalen.` : `${esc(tr.naam.split(' ')[0])} heeft geen traject. Begeleiden doe je als de trainer zich wil ontwikkelen.`}</p>
+      : CC.trStappen(S, tr) ? `<div class="kaartje">${CC.trStappen(S, tr)}</div>` : `<div class="kaartje"><p class="klein">${plezier(S, tr.id) ? `${esc(tr.naam.split(' ')[0])} traint vooral voor het plezier (kennismaking). Dat is prima: geen traject, geen signalen.` : `${esc(tr.naam.split(' ')[0])} heeft geen traject. Begeleiden doe je als de trainer zich wil ontwikkelen.`}</p>
         <button class="knop ${plezier(S, tr.id) ? 'licht' : ''} klein" data-act="trajectSheet" data-id="${tr.id}">${icon('play')}Traject starten</button></div>`;
     const kennisBlok = k.ingevuld ? `<details class="uitklap"><summary><b>Kennismaking</b> <small class="zacht">ingevuld ${D.kort(k.ingevuld.slice(0, 10))}</small></summary>
         <dl class="antwoorden">${vragen.filter((v) => (k.a || {})[v.k]).map((v) => `<dt>${esc(v.t)}</dt><dd>${esc(k.a[v.k])}</dd>`).join('')}</dl></details>`
@@ -188,19 +188,58 @@
     const std = t ? t.plan : sel(teamsVan(S, tr)) ? { wedstrijd: 2, training: 2 } : { wedstrijd: 1, training: 1 };
     const kies = (n, v) => `<select name="${n}">${[0, 1, 2, 3, 4].map((i) => `<option value="${i}" ${i === v ? 'selected' : ''}>${i}</option>`).join('')}</select>`;
     const k = (ken(S)[tr.id] || {}).a || {};
+    const voorstel = CC.niveauVoorstel(S, tr.id); const niveau = t ? (t.niveau || 'kort') : voorstel.niveau;
+    const eerste = t || (S.begeleidMomenten || []).some((m) => m.trainerId === tr.id && !m.vervallen) ? [] : CC.komendeActs(S, tr, std);
+    const voor = esc(tr.naam.split(' ')[0]);
     CC.sheet(t ? 'Traject aanpassen' : 'Traject starten', `<form data-submit="trajectOk" data-id="${tr.id}" class="codeform">
-      <p class="zacht klein">Een traject is voor ${esc(tr.naam.split(' ')[0])}${k.ambitie ? ` (kennismaking: "${esc(k.ambitie)}")` : ''}. Spreek het samen af.</p>
-      <div class="twee"><div><label>Wedstrijden begeleiden</label>${kies('w', std.wedstrijd || 0)}</div><div><label>Trainingen begeleiden</label>${kies('t', std.training || 0)}</div></div>
-      <label for="tj-l">Leerdoel voor dit seizoen (mag later)</label><textarea id="tj-l" name="l" rows="2" placeholder="${esc(k.beter || 'Bijv. spelers vaker zelf laten oplossen door vragen te stellen')}">${esc(t ? t.leerdoel || '' : k.beter || '')}</textarea>
-      <label for="tj-n">Vragenlijst vooraf</label><select id="tj-n" name="n"><option value="kort" ${(t || {}).niveau !== 'uitgebreid' ? 'selected' : ''}>Kort: 4 eenvoudige vragen (starters, geen opleiding)</option><option value="uitgebreid" ${(t || {}).niveau === 'uitgebreid' ? 'selected' : ''}>Uitgebreid: 9 vragen (ervaren of in opleiding)</option></select>
+      <p class="klein">Een traject is een paar begeleidingsmomenten dit seizoen. Elk moment loopt volgens de HO-A: <b>voorbereiding → planningsgesprek → praktijk → reflectiegesprek → nazorg</b>.${k.ambitie ? ` <span class="zacht">Kennismaking: "${esc(k.ambitie)}".</span>` : ''}</p>
+      <div class="twee"><div><label for="tj-w">Wedstrijden</label>${kies('w', std.wedstrijd || 0).replace('<select ', '<select id="tj-w" ')}</div><div><label for="tj-t">Trainingen</label>${kies('t', std.training || 0).replace('<select ', '<select id="tj-t" ')}</div></div>
+      <label for="tj-l">Leerdoel van ${voor} (mag later)</label><textarea id="tj-l" name="l" rows="2" placeholder="${esc(k.beter || 'Bijv. spelers vaker zelf laten oplossen door vragen te stellen')}">${esc(t ? t.leerdoel || '' : k.beter || '')}</textarea>
+      <label for="tj-n">Vragen vooraf (de voorbereiding)</label><select id="tj-n" name="n"><option value="kort" ${niveau !== 'uitgebreid' ? 'selected' : ''}>Kort · 4 vragen · voor starters</option><option value="uitgebreid" ${niveau === 'uitgebreid' ? 'selected' : ''}>Uitgebreid · 8 (training) of 9 (wedstrijd) vragen · ervaren of in opleiding</option></select>
+      ${t ? '' : `<small class="zacht">${esc(voorstel.waarom)}</small>`}
       ${t ? `<label for="tj-o">Ontwikkelpunt nu</label><input id="tj-o" name="o" value="${esc(t.ontwikkelpunt || '')}">` : ''}
-      <button class="knop">${t ? 'Opslaan' : 'Traject starten'}</button>
-      <p class="zacht klein">Standaard: selectie 2 + 2, breedte 1 + 1. Het plan bepaalt de werkdruk en wanneer de app signaleert.</p></form>`);
+      ${eerste.length ? `<label for="tj-m">Eerste moment</label><select id="tj-m" name="m">${eerste.map((a, i) => `<option value="${esc(a.id)}" ${i === 0 ? 'selected' : ''}>${esc(CC.actLabel(S, a))}</option>`).join('')}<option value="">Later kiezen</option></select>` : ''}
+      <button class="knop vol">${t ? 'Opslaan' : 'Traject starten'}</button>
+      <p class="zacht klein">${eerste.length ? `${voor} krijgt de vragen meteen voor het eerste moment. ` : ''}Standaard: selectie 2 + 2, breedte 1 + 1.</p></form>`);
   });
+
+  // ---------- Besluit 177: de stappen van de HO per trainer, op één plek ----------
+  // Voorstel voor de vragen vooraf: uitgebreid bij een KNVB-diploma of opleiding (kennismaking of administratie), anders kort. De HO beslist.
+  CC.niveauVoorstel = (S, pid) => { const k = ken(S)[pid] || {}; const a = k.a || {}; const dip = String(a.diploma || (adm(S)[pid] || {}).diploma || '').trim();
+    const heeftDip = dip && !/^(geen|nee|nog niet|niet|-|n\.?v\.?t\.?)\b/i.test(dip); const opl = /opleiding|doorgroeien/i.test(a.ambitie || '');
+    if (!k.ingevuld && !dip) return { niveau: 'kort', waarom: 'Nog geen kennismaking: kies zelf. Kort is een goed begin.' };
+    if (heeftDip || opl) return { niveau: 'uitgebreid', waarom: `Voorstel uit de kennismaking: uitgebreid (${heeftDip ? `KNVB: ${dip}` : 'wil een opleiding volgen of doorgroeien'}).` };
+    return { niveau: 'kort', waarom: 'Voorstel uit de kennismaking: kort (nog geen KNVB-diploma).' }; };
+  CC.komendeActs = (S, tr, plan) => { const ids = teamsVan(S, tr).map((x) => x.id); const tot = D.addDays(D.vandaag(), 28);
+    const l = S.acts.filter((a) => ids.includes(a.teamId) && !a.afgelast && a.datum >= D.vandaag() && a.datum <= tot && (M.isWed(a) || a.soort === 'training'))
+      .filter((a) => (M.isWed(a) ? (plan.wedstrijd || 0) > 0 : (plan.training || 0) > 0) || (!(plan.wedstrijd || 0) && !(plan.training || 0)))
+      .sort((a, b) => (a.datum + (a.tijd || '')).localeCompare(b.datum + (b.tijd || '')));
+    const w = l.filter((a) => M.isWed(a)); return [...w, ...l.filter((a) => !M.isWed(a))].slice(0, 8); };
+  CC.actLabel = (S, a) => `${D.kort(a.datum)}${a.tijd ? ` ${a.tijd}` : ''} · ${M.isWed(a) ? `wedstrijd${a.thuis === false ? ' · uit' : ' · thuis'}${a.tegen ? ` tegen ${a.tegen}` : ''}` : 'training'}`;
+  CC.kennisGevraagd = (S, pid) => { const k = ken(S)[pid] || (ken(S)[pid] = {}); if (!k.gevraagd) k.gevraagd = new Date().toISOString(); };
+  // Van start tot eerste moment: vier stappen, één knop voor de volgende. Weg zodra er een begeleidingsmoment is.
+  CC.trStappen = (S, tr) => { if (!CC.pakketTrainers || !CC.pakketTrainers(S)) return '';
+    if ((S.begeleidMomenten || []).some((m) => m.trainerId === tr.id && !m.vervallen)) return '';
+    const k = ken(S)[tr.id] || {}; const t = traject(S, tr.id); const a = k.a || {}; const voor = esc(tr.naam.split(' ')[0]);
+    const nr = (n, nu) => `<b class="st-nr ${nu ? 'nu' : ''}" aria-hidden="true">${n}</b>`;
+    const kennisSub = k.ingevuld ? `${D.kort(k.ingevuld.slice(0, 10))}${a.ambitie ? ` · "${esc(a.ambitie)}"` : ''}${a.diploma ? ` · KNVB: ${esc(a.diploma)}` : ''}` : k.gevraagd ? `gevraagd ${D.kort(k.gevraagd.slice(0, 10))} · wacht op ${voor}` : 'nog niet gestuurd';
+    const volgende = t ? 'moment' : !k.gevraagd && !k.ingevuld ? 'kennis' : 'traject'; // loopt het traject al, dan is het eerste moment de volgende stap
+    const rij = (n, klaar, titel, sub, nu) => h.rij({ ic: klaar ? 'circle-check' : nr(n, nu), titel, sub, kleur: nu ? 'blauw' : '', chevron: false }).replace('class="rij-ic"', `class="rij-ic${klaar ? ' st-ok' : ''}"`);
+    const knop = volgende === 'kennis' ? `<button class="knop vol" data-act="kennisUitnodigen" data-id="${esc(tr.id)}">${icon('send')}Kennismaking sturen</button>`
+      : volgende === 'traject' ? `<button class="knop vol ${plezier(S, tr.id) ? 'licht' : ''}" data-act="trajectSheet" data-id="${esc(tr.id)}">${icon('play')}Traject starten</button>`
+      : `<button class="knop vol" data-act="begelNieuw" data-id="${esc(tr.id)}">${icon('plus')}Eerste moment plannen</button>`;
+    return `${h.sectie('Van start tot eerste moment')}<div class="lijst compact st-stappen">
+      ${rij(1, true, 'Toegevoegd', esc(teamsVan(S, tr).map((x) => x.naam).join(', ')))}
+      ${rij(2, !!k.ingevuld, k.ingevuld ? 'Kennismaking ingevuld' : 'Kennismaking', kennisSub, volgende === 'kennis')}
+      ${rij(3, !!t, 'Traject starten', t ? `${planTekst(t)}${t.leerdoel ? ` · ${esc(t.leerdoel)}` : ''}` : plezier(S, tr.id) ? 'traint vooral voor het plezier: een traject is niet nodig' : 'plan, leerdoel en vragen vooraf', volgende === 'traject')}
+      ${rij(4, false, 'Eerste begeleidingsmoment', t ? 'kies een wedstrijd of training' : 'kies je bij het traject', volgende === 'moment')}</div>${knop}`; };
   CC.on('trajectOk', (f) => {
     const S = CC.S(); const d = dos(S)[f.dataset.id] || (dos(S)[f.dataset.id] = {}); const oud = d.traject && d.traject.actief ? d.traject : null;
     d.traject = { actief: true, sinds: oud ? oud.sinds : D.vandaag(), door: CC.me().id, plan: { wedstrijd: Number(f.w.value), training: Number(f.t.value) }, leerdoel: f.l.value.trim(), niveau: f.n.value, ontwikkelpunt: f.o ? f.o.value.trim() : (oud ? oud.ontwikkelpunt || '' : '') };
-    CC.save(); CC.closeSheet(); CC.render(); CC.toast(oud ? 'Traject opgeslagen' : 'Traject gestart');
+    CC.save(); CC.closeSheet(); CC.render();
+    // Besluit 177: meteen het eerste moment; de trainer krijgt de vragen vooraf (zoals Begeleiden in de week)
+    if (!oud && f.m && f.m.value && CC.begelPlanOpAct) return CC.begelPlanOpAct(S, f.dataset.id, f.m.value);
+    CC.toast(oud ? 'Traject opgeslagen' : 'Traject gestart');
   });
   CC.on('trajectStop', (el) => { if (!confirm('Traject afronden? Het dossier blijft bewaard.')) return; const S = CC.S(); const d = dos(S)[el.dataset.id]; if (d && d.traject) { d.traject.actief = false; d.traject.afgerond = D.vandaag(); (d.oud || (d.oud = [])).push(d.traject); d.traject = null; } CC.save(); CC.render(); CC.toast('Traject afgerond'); });
 
