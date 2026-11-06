@@ -80,8 +80,12 @@
       const zoek = (h.segVal('trZoek', '') || '').toLowerCase(); const nGevraagd = alle.filter((p) => !kennisStatus(S, p.id)).length; const nIn = alle.filter((p) => kennisStatus(S, p.id) === 'ingevuld').length;
       const l = alle.filter((p) => !zoek || p.naam.toLowerCase().includes(zoek) || teamsVan(S, p).some((t) => t.naam.toLowerCase().includes(zoek))).sort((a, b) => a.naam.localeCompare(b.naam));
       return `${kop}<div class="zoek">${icon('search')}<input type="search" placeholder="Zoek trainer of team" value="${esc(h.segVal('trZoek', ''))}" data-input="zoekTrainer" aria-label="Zoek trainer of team"></div>
-        ${CC.hoTrajectRegel(S, alle)}${l.length ? `<div class="lijst compact">${l.map((p) => CC.hoTrainerRij(S, p)).join('')}</div>` : h.leeg('Geen trainer gevonden', 'user-check')}
-        <p class="zacht klein">Kennismaking: ${nIn} van ${alle.length} ingevuld.${nGevraagd ? ` <button class="linkknop" data-act="kennisUitnodigen">Uitnodigen (${nGevraagd})</button>` : ''} · <button class="linkknop" data-act="kennisPrintLeeg">Lege vragenlijst printen</button></p>`;
+        ${(() => { // Besluit NNN: bovenaan de kennismaking voor iedereen in één regel, en hoeveel trainers op een stap van jou wachten (③ of ④)
+          const wacht = alle.filter((p) => ['traject', 'moment'].includes(CC.trVolgende(S, p))).length;
+          return `${nGevraagd ? `<div class="lijst compact">${h.rij({ ic: 'send', titel: `${nGevraagd} ${nGevraagd === 1 ? 'trainer' : 'trainers'} zonder kennismaking`, sub: 'Nodig ze in één keer uit', act: 'hoKennisVraag' })}</div>` : ''}
+            ${wacht ? `<p class="klein"><b>${wacht} ${wacht === 1 ? 'trainer wacht' : 'trainers wachten'}</b> op een stap van jou (③ of ④)</p>` : ''}`; })()}
+        ${l.length ? `<div class="lijst compact">${l.map((p) => CC.hoTrainerRij(S, p)).join('')}</div>` : h.leeg('Geen trainer gevonden', 'user-check')}
+        <p class="zacht klein">Kennismaking: ${nIn} van ${alle.length} ingevuld · <button class="linkknop" data-act="kennisPrintLeeg">Lege vragenlijst printen</button></p>`;
     }
     if (deel === 'alle') {
       const zoek = (h.segVal('trZoek', '') || '').toLowerCase();
@@ -217,6 +221,11 @@
     const w = l.filter((a) => M.isWed(a)); return [...w, ...l.filter((a) => !M.isWed(a))].slice(0, 8); };
   CC.actLabel = (S, a) => `${D.kort(a.datum)}${a.tijd ? ` ${a.tijd}` : ''} · ${M.isWed(a) ? `wedstrijd${a.thuis === false ? ' · uit' : ' · thuis'}${a.tegen ? ` tegen ${a.tegen}` : ''}` : 'training'}`;
   CC.kennisGevraagd = (S, pid) => { const k = ken(S)[pid] || (ken(S)[pid] = {}); if (!k.gevraagd) k.gevraagd = new Date().toISOString(); };
+  // Besluit NNN: de volgende stap voor de lijst (null = er is al een begeleidingsmoment, of niet het pakket)
+  CC.trVolgende = (S, tr) => { if (!CC.pakketTrainers || !CC.pakketTrainers(S)) return null;
+    const t = traject(S, tr.id); const k = ken(S)[tr.id] || {};
+    if (t) return (S.begeleidMomenten || []).some((m) => m.trainerId === tr.id && !m.vervallen) ? null : 'moment';
+    if (!k.gevraagd && !k.ingevuld) return 'kennis'; if (!k.ingevuld) return 'wacht'; return plezier(S, tr.id) ? 'plezier' : 'traject'; };
   // Van start tot eerste moment: vier stappen, één knop voor de volgende. Weg zodra er een begeleidingsmoment is.
   CC.trStappen = (S, tr) => { if (!CC.pakketTrainers || !CC.pakketTrainers(S)) return '';
     if ((S.begeleidMomenten || []).some((m) => m.trainerId === tr.id && !m.vervallen)) return '';
