@@ -1069,7 +1069,9 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 /* Besluit NNN-a: opstelling met namen in de tekening */
 .tr-wieveld { margin: 8px 0 6px; }
 .tr-wieveld svg circle[data-act] { cursor: pointer; }
-.tr-wielijst { margin-top: 8px; }
+.tr-wieteam { margin: 4px 0; font-size: 16px; line-height: 1.5; }
+.tr-wie > summary { font-weight: 600; }
+.tr-wiep { white-space: nowrap; }
 .tr-namenknop { margin-top: 8px; }
 
 /* Besluit NNN-b: de vier tabbladen van Training passen op één regel (Op het veld · Voorbereiden · Vormen · Seizoen) */
