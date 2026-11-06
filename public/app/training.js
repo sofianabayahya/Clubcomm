@@ -114,8 +114,12 @@
   const bereik = (a, b, woord) => (a == null && b == null ? '' : `${a != null ? a : '?'}${b != null && b !== a ? `–${b}` : ''} ${woord}`);
   const verwacht = (S, a) => (a.teamId ? M.spelers(S, a.teamId) : []).filter((pl) => M.status(S, pl, a).code === 'verwacht').length;
   // Past de vorm bij dit aantal? En wat schreef de trainer voor precies dit aantal?
-  const past = (v, n, k) => (v.spelersMin == null || n >= v.spelersMin) && (v.spelersMax == null || n <= v.spelersMax) && (k == null || v.keepersMax == null || k <= v.keepersMax);
-  const voorAantal = (v, n, k) => (v.aantallen || []).find((x) => Number(x.spelers) === n && (x.keepers == null || k == null || Number(x.keepers) === k));
+  // Besluit 172: n = iedereen die er is, keepers meegeteld. Een vorm voor 14 spelers + 1 keeper past bij 15. Een keeper die niet
+  // op doel hoeft, speelt mee in het veld; daarom telt alleen het totaal (k blijft voor de aanroepers, maar bepaalt niets meer).
+  const vormMin = (v) => (v.spelersMin == null ? null : Number(v.spelersMin) + (Number(v.keepersMin) || 0));
+  const vormMax = (v) => (v.spelersMax == null ? null : Number(v.spelersMax) + (Number(v.keepersMax) || 0));
+  const past = (v, n) => (vormMin(v) == null || n >= vormMin(v)) && (vormMax(v) == null || n <= vormMax(v));
+  const voorAantal = (v, n, k) => (v.aantallen || []).find((x) => (Number(x.spelers) + (Number(x.keepers) || 0) === n || Number(x.spelers) === n) && (x.keepers == null || k == null || Number(x.keepers) <= k));
   const vormSub = (S, v) => [typeNaam(typeVan(v)), (CC.weerstand(S, v) || {}).kort, bereik(v.spelersMin, v.spelersMax, 'sp'), v.duur ? `${v.duur} min` : ''].filter(Boolean).join(' · ');
 
   // ---------- Blok bij een training (Planning → training) ----------
@@ -186,14 +190,28 @@
   const opTijd = (datum, tijd) => { const d = D.parse(datum); const [u, m] = String(tijd).split(':').map(Number); d.setHours(u || 0, m || 0, 0, 0); return d; };
   const afgelopen = (a) => { if (!a || !a.datum) return false; if (a.datum < D.vandaag()) return true; if (a.datum > D.vandaag()) return false; return a.eind ? new Date() >= opTijd(a.datum, a.eind) : true; };
   // Aantal spelers: zelf ingevuld, anders uit de aanwezigheid (opgenomen of verwacht)
-  const aantalSp = (S, p, a) => { if (p.spelers != null && p.spelers !== '') return Number(p.spelers); const pr = S.pres[a.id]; if (pr) return Object.values(pr.s || {}).filter((x) => x === 'a' || x === 'l').length; return a.teamId && M.act(S, a.id) ? verwacht(S, a) : 0; };
+  // Besluit 172: wie er is (aanwezigheid, anders verwacht = niet afgemeld), veldspelers en keepers apart. Keepers tellen mee als speler.
+  // Zelf ingevuld (Thema en aantallen): spelers + keepers.
+  const leeg = (x) => x == null || x === '';
+  const telling = (S, p, a) => {
+    if (!leeg(p.spelers)) { const v = Number(p.spelers), kp = leeg(p.keepers) ? 0 : Number(p.keepers); return { totaal: v + kp, veld: v, keepers: kp, bron: 'gepland' }; }
+    const pr = a && S.pres[a.id];
+    const l = pr ? Object.entries(pr.s || {}).filter(([, x]) => x === 'a' || x === 'l').map(([id]) => M.speler(S, id)).filter(Boolean)
+      : a && a.teamId && M.act(S, a.id) ? M.spelers(S, a.teamId).filter((pl) => M.status(S, pl, a).code === 'verwacht') : [];
+    const n = pr ? Object.values(pr.s || {}).filter((x) => x === 'a' || x === 'l').length : l.length;
+    const kp = l.filter((pl) => pl.positie === 'keeper').length;
+    return { totaal: n, veld: n - kp, keepers: kp, bron: pr ? 'aanwezig' : 'verwacht' }; };
+  const tellingTekst = (t) => (t.keepers ? `${t.veld} ${t.veld === 1 ? 'speler' : 'spelers'} + ${t.keepers} ${t.keepers === 1 ? 'keeper' : 'keepers'}` : `${t.totaal} ${t.totaal === 1 ? 'speler' : 'spelers'}`);
+  const aantalSp = (S, p, a) => telling(S, p, a).totaal;
+  const vormAantalTekst = (v) => `${bereik(v.spelersMin, v.spelersMax, 'spelers')}${Number(v.keepersMax) || Number(v.keepersMin) ? ` + ${bereik(Number(v.keepersMin) || null, Number(v.keepersMax) || null, Number(v.keepersMax) === 1 ? 'keeper' : 'keepers')}` : ''}`;
   const dagNaam = (a) => { const d = D.parse(a.datum); return `${D.DAG_KORT[d.getDay()]} ${d.getDate()} ${D.MAAND[d.getMonth()]}`; };
   // Opbouw in groepen: Start · A · B · Partij (spacing hoort bij het blok ervoor); zonder blokken één groep
   const groepen = (p) => { const g = []; (p.onderdelen || []).forEach((o, i) => { let k = blokSoort(o.blok); if (k === 'S') k = g.length ? g[g.length - 1].k : ''; if (!g.length || g[g.length - 1].k !== k) g.push({ k, items: [] }); g[g.length - 1].items.push(i); }); return g; };
   const rijHtml = (S, p, a, o, i, n, k, metCode) => {
     const v = o.vormId && vorm(S, o.vormId);
     const naam = v ? v.naam : o.spacing ? o.naam || 'Spacing' : o.naam || 'Kies een vorm';
-    const extra = v && n && voorAantal(v, n, k) ? esc(voorAantal(v, n, k).tekst) : ''; // Besluit 167: 'gemaakt voor …' staat één keer bovenaan (pastNiet)
+    const mee = v && n && k && v.keepersMax != null && v.keepersMax !== '' && k > Number(v.keepersMax) && past(v, n) ? `${k - Number(v.keepersMax)} ${k - Number(v.keepersMax) === 1 ? 'keeper speelt' : 'keepers spelen'} mee in het veld` : ''; // Besluit 172
+    const extra = v && n && voorAantal(v, n, k) ? esc(voorAantal(v, n, k).tekst) : mee; // Besluit 167: 'gemaakt voor …' staat één keer bovenaan (pastNiet)
     const variant = v && o.variant != null && (v.varianten || [])[o.variant] ? `variant ${esc(v.varianten[o.variant].naam || String.fromCharCode(65 + Number(o.variant)))}` : '';
     const sub = [o.spacing ? (o.naam ? 'spacing' : 'vrij in te vullen') : v ? [typeNaam(typeVan(v)), (CC.weerstand(S, v) || {}).kort].filter(Boolean).join(' · ') : o.blok === 'start' ? 'niet verplicht · kies een vorm of haal weg' : 'kies een vorm', variant, o.notitie ? esc(o.notitie) : '', extra].filter(Boolean).join(' · ');
     return `<button type="button" class="tr-rij" data-act="${leegSlot(o) ? 'tpVormKiezen' : 'tpOnderdeel'}" data-id="${a.id}" data-i="${i}" data-drop-i="${i}">${metCode ? `<span class="tr-code">${esc(code(o))}</span>` : ''}${leegSlot(o) ? `<span class="tr-mini leeg">${icon('plus')}</span>` : mini(v, o.spacing)}<span class="tr-t"><b>${esc(naam)}</b><small>${sub}${o.spacing || leegSlot(o) && o.blok === 'start' ? '' : blokChip(S, o)}</small></span><span class="tr-min">${Number(o.min) || 0} min${v && n && !past(v, n, k) && !voorAantal(v, n, k) ? '<span class="st o">past niet</span>' : ''}</span></button>`;
@@ -217,17 +235,17 @@
     return `<details class="uitklap tr-waarom" data-onthoud="waaromPlan" ${onthoud('waaromPlan', false) ? 'open' : ''}><summary>Waarom deze training${wat ? ` · ${esc(wat)}` : ''}</summary>${m}</details>`; };
   const pastNiet = (S, p, a, n, k) => { if (!n) return ''; const ids = [...new Set((p.onderdelen || []).filter((o) => o.vormId).map((o) => o.vormId))];
     const vs = ids.map((id) => vorm(S, id)).filter((v) => v && !past(v, n, k) && !voorAantal(v, n, k)); if (!vs.length) return '';
-    const br = [...new Set(vs.map((v) => bereik(v.spelersMin, v.spelersMax, 'spelers')))];
-    return `<div class="tr-twaarsch tr-pastniet" role="status">⚠ <b>${vs.length} ${vs.length === 1 ? 'vorm is' : 'vormen zijn'} gemaakt voor ${br.length === 1 && br[0] ? esc(br[0]) : 'een ander aantal spelers'}</b>; er ${n === 1 ? 'wordt' : 'worden'} er ${n} ${p.spelers == null || p.spelers === '' ? (S.pres[a.id] ? 'aanwezig' : 'verwacht') : 'gepland'}. Tik op een vorm voor een variant of een andere vorm.</div>`; };
+    const br = [...new Set(vs.map(vormAantalTekst))]; const t = telling(S, p, a);
+    return `<div class="tr-twaarsch tr-pastniet" role="status">⚠ <b>${vs.length} ${vs.length === 1 ? 'vorm is' : 'vormen zijn'} gemaakt voor ${br.length === 1 && br[0] ? esc(br[0]) : 'een ander aantal spelers'}</b>; er ${t.totaal === 1 ? 'is' : 'zijn'} ${esc(tellingTekst(t))} ${t.bron === 'gepland' ? 'gepland' : t.bron}. Tik op een vorm voor een variant of een andere vorm.</div>`; };
   const planMidden = (S, p, a, zij) => { // zij = op de laptop staan afspraak, onderbouwing en tijd in de rechterkolom (Besluit 169)
-    const n = aantalSp(S, p, a), k = p.keepers == null || p.keepers === '' ? null : Number(p.keepers); const metCode = (p.onderdelen || []).some((o) => o.blok); const sj = sjablonen(S);
+    const t = telling(S, p, a), n = t.totaal, k = t.keepers; const metCode = (p.onderdelen || []).some((o) => o.blok); const sj = sjablonen(S);
     const gezien = {};
     const gr = groepen(p).map((g) => { const min = g.items.reduce((t, i) => t + (Number(p.onderdelen[i].min) || 0), 0); const terug = gezien[g.k]; gezien[g.k] = true;
       const kop = g.k === 'A' || g.k === 'B' ? `<button type="button" class="tr-gkop tr-${g.k}" data-act="tpBlokDoel" data-id="${a.id}" data-b="${g.k}">${g.k}${terug ? ' · terugkeer' : ` · ${blokKopTekst(S, p, g.k)} ▾`}</button>` : `<b class="tr-gkop tr-${g.k || 'x'}">${GROEPNAAM[g.k] || 'Opbouw'}</b>${g.k === 'P' && blokDoel(S, p, 'A') ? '<small class="zacht tr-toephint">kijk of A en B terugkomen</small>' : ''}`;
       return `<div class="tr-groep"><div class="tr-kop">${kop}<small class="zacht">${min} min</small></div><div class="tr-lijst">${g.items.map((i) => rijHtml(S, p, a, p.onderdelen[i], i, n, k, metCode)).join('')}</div></div>`; }).join('');
     return `<div class="kaartje tr-midden" data-drop-plan="${a.id}">
       <div class="tr-plankop"><div><h2>${esc(dagNaam(a))} · ${esc(p.thema || 'Training')} <button class="icoonknop" data-act="tpKopBewerk" data-id="${a.id}" aria-label="Thema en aantallen aanpassen">${icon('pencil')}</button>${CC.trStatus ? CC.trStatus(S, p) : ''}</h2>
-        ${CC.trStap ? CC.trStap(S, p, a) : ''}<small class="zacht">${[a.tijd ? `${a.tijd}${a.eind ? `–${a.eind}` : ''}` : '', n ? `${n} spelers${p.spelers == null || p.spelers === '' ? (S.pres[a.id] ? ' aanwezig' : ' verwacht') : ''}` : '', k ? `${k} keeper${k === 1 ? '' : 's'}` : '', p.sjabloon ? `sjabloon ${esc((sj.find((x) => x.id === p.sjabloon) || { naam: '' }).naam)}` : ''].filter(Boolean).join(' · ')}</small></div>
+        ${CC.trStap ? CC.trStap(S, p, a) : ''}<small class="zacht">${[a.tijd ? `${a.tijd}${a.eind ? `–${a.eind}` : ''}` : '', n ? `${tellingTekst(t)}${t.bron === 'gepland' ? '' : ` ${t.bron}`}` : '', p.sjabloon ? `sjabloon ${esc((sj.find((x) => x.id === p.sjabloon) || { naam: '' }).naam)}` : ''].filter(Boolean).join(' · ')}</small></div>
         ${(p.onderdelen || []).length ? `<div class="knoppen"><button class="knop licht" data-act="tpKopieNaar" data-id="${a.id}">${icon('repeat')}Kopiëren naar…</button><button class="knop licht" data-act="tpPrint" data-id="${a.id}">${icon('printer')}Printen</button><button class="knop licht" data-act="tpMeer" data-id="${a.id}" aria-label="Meer">⋯</button></div>` : ''}</div>
       ${zij ? '' : CC.trMee ? CC.trMee(S, p, a) : ''}
       ${zij ? '' : waaromPlan(S, p, a)}
@@ -459,8 +477,8 @@
   const vorigeWeek = (S, p, v) => { const d = actVan(S, p).datum; if (!d) return false; const van = D.addDays(d, -13);
     return plannen(S).some((x) => x !== p && !x.week && x.eigenaar === ik() && (x.onderdelen || []).some((o) => o.vormId === v.id) && (() => { const e = actVan(S, x).datum; return e && e >= van && e < d; })()); };
   const vk = () => CC.ui.vk || (CC.ui.vk = {});
-  const advies = (S, p, i) => { const f = vk(); const a = actVan(S, p); const o = i != null && i !== '' ? p.onderdelen[Number(i)] : null; const n = aantalSp(S, p, a);
-    const k = p.keepers == null || p.keepers === '' ? null : Number(p.keepers); const soort = o ? blokSoort(o.blok) : '';
+  const advies = (S, p, i) => { const f = vk(); const a = actVan(S, p); const o = i != null && i !== '' ? p.onderdelen[Number(i)] : null; const t = telling(S, p, a), n = t.totaal;
+    const k = t.keepers; const soort = o ? blokSoort(o.blok) : '';
     const metGs = leerdoelen(S).length > 0; // het profiel heeft gereedschappen (leerlijnen)
     const gs = !metGs ? null : f.gs !== undefined ? f.gs : soort === 'A' || soort === 'B' ? blokDoel(S, p, soort) : null;
     const vhs = gs ? vaardigheden(S, gs) : []; const vh = vhs.some((x) => x.id === f.vh) ? f.vh : null;
@@ -473,7 +491,7 @@
       if (!rel) r.push([gs ? (kp.primair ? `ander gereedschap: ${ldNaam(S, kp.primair)}` : 'geen gereedschap') : typeNaam(typeVan(v)) || 'ander vormtype', true]);
       if (vh) r.push(vhOk ? [`${vhNaam(S, vh)} ✓`] : ['andere vaardigheid', true]); else if (gs && vv.length) r.push([vv.map((x) => vhNaam(S, x)).filter(Boolean).slice(0, 2).join(', ')]);
       if (types && rel) r.push([`${typeNaam(typeVan(v))} ✓`]);
-      if (n) r.push(aantalOk ? [va ? `bij ${n}: eigen opzet ✓` : `${n} sp ✓`] : [`voor ${bereik(v.spelersMin, v.spelersMax, 'sp')}`, true]);
+      if (n) r.push(aantalOk ? [va ? `bij ${n}: eigen opzet ✓` : `${n} sp ✓`] : [`voor ${vormAantalTekst(v)}`, true]);
       // Het leerniveau hoort bij de opdracht van de plek, niet bij de vorm: alleen ter informatie, nooit oranje of lager
       const niv = nv && v.niveauAdvies && niveauNaam(S, v.niveauAdvies); if (niv) r.push([`meestal ${niv}`]);
       const fa = fs && v.faseAdvies && faseNaam(S, v.faseAdvies); if (fa) r.push(v.faseAdvies === fs.id ? [`${fa} ✓`] : [fa, true]);
@@ -743,7 +761,7 @@
   CC.on('tpPrint', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); if (!p) return; const a = actVan(S, p);
     // Materiaal: per soort het meeste dat tegelijk nodig is (spullen gaan mee van vorm naar vorm)
     const max = {}; (p.onderdelen || []).forEach((o) => { const v = o.vormId && vorm(S, o.vormId); if (v) CC.materiaal(v.tekening).forEach(([e, mv, n]) => { max[e] = Math.max(max[e] ? max[e][2] : 0, n) === n ? [e, mv, n] : max[e]; }); });
-    CC.printDoc(`Training ${dagNaam(a)}${p.thema ? ` · ${p.thema}` : ''}`, `<p>${[a.tijd ? `${a.tijd}${a.eind ? `–${a.eind}` : ''}` : '', CC.tn(a.teamId), aantalSp(S, p, a) ? `${aantalSp(S, p, a)} spelers` : '', `${totaal(p)} min`, blokDoelen(S, p).replace(/<[^>]+>/g, '')].filter(Boolean).map(esc).join(' · ')}</p>
+    CC.printDoc(`Training ${dagNaam(a)}${p.thema ? ` · ${p.thema}` : ''}`, `<p>${[a.tijd ? `${a.tijd}${a.eind ? `–${a.eind}` : ''}` : '', CC.tn(a.teamId), aantalSp(S, p, a) ? tellingTekst(telling(S, p, a)) : '', `${totaal(p)} min`, blokDoelen(S, p).replace(/<[^>]+>/g, '')].filter(Boolean).map(esc).join(' · ')}</p>
       ${Object.keys(max).length ? `<p><b>Materiaal (het meeste tegelijk):</b> ${matTekst(Object.values(max))}</p>` : ''}
       ${(p.onderdelen || []).map((o) => { const v = o.vormId && vorm(S, o.vormId); return v ? vormPrint(S, v, o) : `<p class="pv-sp"><b>${esc(code(o) || '')}</b> ${esc(o.spacing ? o.naam || 'Spacing' : o.naam || 'Nog leeg')} · ${Number(o.min) || 0} min${o.notitie ? ` · ${esc(o.notitie)}` : ''}</p>`; }).join('')}
       ${p.overig ? `<p class="pv-sp">${esc(p.overig.naam || 'Ombouw')} · ${Number(p.overig.min) || 0} min</p>` : ''}`); });

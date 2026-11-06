@@ -662,7 +662,11 @@
       if (evt.button === 2) return; // rechtermuisknop = stoppen (zie contextmenu)
       if (!st) return;
       var p = svgPt(evt), target = evt.target.closest("[data-i]");
-      sluitMenus(); st.viaBalk = null; // op het veld gekozen = het getikte nummer gaat naar deze speler
+      // Besluit 172: staat het paneel Spelers open en tik je een speler, dan blijft het paneel open en kies je die speler,
+      // zodat het volgende nummer meteen naar hem gaat. Een leeg stuk veld (of ×) sluit het paneel zoals in Besluit 152.
+      var t0 = target || (st.tool == null && !evt.target.closest("[data-h]") ? dichtbij(p) : null), it0 = t0 && st.items[Number(t0.getAttribute("data-i"))];
+      if (!(railOpen === "spelers" && it0 && it0.t === "p")) sluitMenus();
+      st.viaBalk = null; // op het veld gekozen = het getikte nummer gaat naar deze speler
       var greep = evt.target.closest("[data-h]");
       // Besluit 160: met Kies (geen gereedschap aan) heeft elk object een onzichtbaar tikvlak van 44 px. Tik je net naast een
       // object, dan kies je het dichtstbijzijnde binnen 22 schermpunten. Met een gereedschap aan blijft het zoals het was.
