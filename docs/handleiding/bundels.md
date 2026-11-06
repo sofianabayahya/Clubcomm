@@ -31,7 +31,7 @@ node docs/handleiding/pdf.js docs/presentaties/pdf/ClubComm-snelstart-trainer.pd
 
 | | |
 |---|---|
-| **Status van de uitgave** | Gepubliceerd (6-11-2026, app `7a44e84`; opnieuw met de tabnamen van Besluit 176) |
+| **Status van de uitgave** | Gepubliceerd (6-11-2026, app `7a44e84`; opnieuw met de tabnamen van Besluit 176 en de tekentool-beelden met hoedjes van 70%, Besluit 162) |
 | **Lezer** | trainer op de bijeenkomst: inloggen en zelf een oefenvorm tekenen |
 | **Vorm** | PDF, 2 A4 |
 | **Kaarten, in deze volgorde** | [inloggen.md](inloggen.md): Kort + Let op (eerste 3) · [tekentool.md](tekentool.md): Kort (alleen de telefoonbeelden) + Let op (eerste 4) |
@@ -42,11 +42,10 @@ node docs/handleiding/pdf.js docs/presentaties/pdf/ClubComm-snelstart-trainer.pd
 
 | | |
 |---|---|
-| **Status van de uitgave** | Gepubliceerd (6-11-2026, app `7a44e84`; opnieuw met de tabnamen van Besluit 176) |
+| **Status van de uitgave** | Gepubliceerd (6-11-2026, app `7a44e84`; opnieuw met de tabnamen van Besluit 176 en de tekentool-beelden met hoedjes van 70%, Besluit 162) |
 | **Kaarten** | [tekentool.md](tekentool.md): blok Kort + Let op |
 | **Bestand** | `docs/presentaties/pdf/ClubComm-snelstart-tekenen.pdf`, gemaakt met `docs/handleiding/pdf.js` (`node docs/handleiding/pdf.js docs/presentaties/pdf/ClubComm-snelstart-tekenen.pdf "Snelstart: een oefenvorm tekenen" Gepubliceerd "tekentool.md#Kort" "tekentool.md#Let op"`) |
 
 ## Nog te maken
 - Handleiding trainer (Kort + Meer van alle trainerskaarten), handleiding HJO, handleiding clubbeheerder, ouders, teamleider, bestuursdemo: zie `docs/onderzoek/documentatie-borging/README.md` § 4.1.
 - *Gepubliceerd* maken van de Snelstart vrijwillige trainer: na akkoord van de initiatiefnemer (`pdf.js` weigert *Gepubliceerd* als een kaart niet *In productie* is).
-- De beelden van de tekentool (`tekentool-*.jpg`) tonen nog de grote hoedjes van vóór Besluit 162; daarna de twee tekenen-PDF's opnieuw (apart akkoord).
