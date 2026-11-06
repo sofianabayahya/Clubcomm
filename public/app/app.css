@@ -1050,6 +1050,13 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .tr-zijwaarom .tr-kr { display: block; }
 .tr-zijwaarom .tr-kn { display: block; margin: 6px 0 2px; }
 .tr-zijwaarom .tr-tijd { box-shadow: none; padding: 0; margin: 0; }
+/* Besluit 173: wie speelt waar */
+.tr-wie { margin: 0 0 12px; }
+.tr-wteam { display: block; margin: 10px 0 4px; font-size: 15px; }
+.tr-wbol { width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; flex: none; }
+.tr-wrij2 { gap: 10px; }
+.tr-wal { opacity: .6; }
+.tr-wielink { display: block; margin: 8px 0 0; text-align: left; }
 /* Besluit 171: lijst en detail naast elkaar op de laptop (vanaf 1100 px) */
 @media (min-width: 1100px) {
   .ld { display: grid; grid-template-columns: minmax(300px, 400px) 1fr; gap: 20px; align-items: start; }

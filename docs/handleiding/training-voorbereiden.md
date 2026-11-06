@@ -27,6 +27,10 @@
 - Plan je meer minuten dan de oefentijd, dan staat die regel vanzelf open met een waarschuwing en welke vorm erbuiten valt. Je kunt gewoon doorgaan: de app blokkeert nooit.
 - In **Week** staat de tijd niet; alleen als je te veel hebt ingepland, zie je daar dezelfde waarschuwing (Besluit 165).
 
+**Wie speelt waar** (Besluit 173)
+- Heeft de tekening van een vorm (meestal de partij) genummerde spelers, dan zie je in het venster van die plek **Wie speelt waar**. Tik een nummer en kies wie die rol vandaag speelt; je ziet wie er is, hoe vaak hij trainde en wat hij vorige keer speelde. Elke training opnieuw: ClubComm stelt niemand voor.
+- Je ziet het terug in Plannen, als link in Week en op de print onder de tekening.
+
 **Een vorm in de training aanpassen**
 - Tik een vorm in de lijst aan voor **Minuten**, een **Notitie**, **Gebruiken als spacing**, **Omlaag**, **Vorm bekijken**, **Dupliceren** of **Weghalen**.
 - Na het neerzetten van een vorm verschijnt even **Ongedaan maken** (Besluit 139).
