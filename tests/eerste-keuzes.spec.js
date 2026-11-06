@@ -41,6 +41,8 @@ test('eerste keuzes: beginner zonder eerdere training en zonder vormen (390 px)'
   // Oefenvormkiezer met lege bank: één kaart met uitleg, geen lege groepen
   await mid.locator('.tr-startkaart [data-act="tpVormKiezen"]').click(); // tik 2
   await expect(page.locator('#sheet .kv-groep')).toHaveCount(0);
+  await expect(page.locator('#sheet')).toContainText(/\d+ spelers/);
+  await expect(page.locator('#sheet')).not.toContainText('0 keepers'); // zonder keepers alleen het aantal spelers
   await expect(page.locator('#sheet .kv-nieuw')).toContainText('Je hebt nog geen oefenvormen');
   await expect(page.locator('#sheet .kv-nieuw')).toContainText('Wat gebeurt er?');
   await expect(page.locator('#sheet .kv-nieuw')).not.toContainText('Alles wordt vanzelf bewaard');
