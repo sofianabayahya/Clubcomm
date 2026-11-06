@@ -903,7 +903,14 @@
       <button class="chipknop" data-act="vfOpen">${icon('plus')}Filter</button>${actief(S).length ? '<button class="chipknop tr-wis" data-act="vfWis">Wis</button>' : ''}</div>
     <button class="knop vol" data-act="vormNieuw">${icon('plus')}Nieuwe oefenvorm</button>
     <div id="vormResultaat">${resultaat(S)}</div>`;
-  document.addEventListener('input', (e) => { if (e.target.id !== 'vormZoek') return; vf().q = e.target.value; const r = document.getElementById('vormResultaat'); if (r) r.innerHTML = resultaat(CC.S()); });
+  // Besluit 174: op de laptop (vanaf 1100 px) een compacte lijst links en de gekozen vorm rechts, zoals Trainers en Berichten (Besluit 171)
+  const vbNaast = () => !!(CC.ldAan && CC.ldAan()) && !CC.ui.view && CC.ui.tab === 'aanwezigheid' && h.segVal('trSeg', groot() ? 'plannen' : 'week') === 'vormen';
+  const vbGekozen = (S, html) => { const id = CC.ui.seg.vbKies; if (id && vorm(S, id) && html.includes(`data-id="${id}"`)) return id; const m = html.match(/data-act="vormOpen" data-id="([^"]+)"/); return m ? m[1] : null; };
+  const vbMarkeer = (html, id) => (id ? html.replace(`class="tr-kaart" data-act="vormOpen" data-id="${id}"`, `class="tr-kaart gekozen" aria-current="true" data-act="vormOpen" data-id="${id}"`) : html);
+  const lijstAlleen = CC.vormenLijst;
+  CC.vormenLijst = (S) => { const l = lijstAlleen(S); if (!vbNaast()) return l; const id = vbGekozen(S, l); const v = id && vorm(S, id);
+    return `<div class="ld vb-naast"><div class="ld-l">${vbMarkeer(l, id)}</div><section class="ld-r" aria-label="${esc(v ? v.naam : 'Oefenvorm')}">${v ? `<h2 class="ld-kop">${esc(v.naam)}</h2>${kijkHtml(S, v)}` : '<p class="zacht ld-leeg">Nog geen oefenvorm. Maak je eerste vorm met <b>Nieuwe oefenvorm</b>.</p>'}</section></div>`; };
+  document.addEventListener('input', (e) => { if (e.target.id !== 'vormZoek') return; vf().q = e.target.value; const r = document.getElementById('vormResultaat'); if (r) r.innerHTML = vbNaast() ? vbMarkeer(resultaat(CC.S()), CC.ui.seg.vbKies) : resultaat(CC.S()); });
   // Filtervenster: chips werken meteen; de knop onderaan toont hoeveel vormen er overblijven
   const chipsVoor = (k, opties) => { const f = vf(); return opties.map(([w, n]) => { const aan = ['past', 'kort', 'keepers'].includes(w) ? !!f[w] : String(f[k]) === String(w);
     return `<button class="chipknop ${aan ? 'aan' : ''}" aria-pressed="${aan}" data-act="vfZet" data-k="${['past', 'kort', 'keepers'].includes(w) ? w : k}" data-w="${esc(w)}">${esc(n)}</button>`; }).join(''); };
@@ -957,7 +964,8 @@
       ${v.anders ? `<p class="zacht klein"><b>Volgende keer anders:</b> ${esc(v.anders)}</p>` : ''}
       ${ook.length ? `${h.sectie(`Ook voor ${esc(ldNaam(S, k.primair))}`)}<div class="tr-ook">${ook.map((x) => `<button type="button" class="tr-kaart" data-act="vormOpen" data-id="${x.id}"><span class="tr-teken">${x.tekening ? tekening(x.tekening) : icon('pencil')}</span><span class="tr-t"><b>${esc(x.naam)}</b></span></button>`).join('')}</div>` : ''}
       </div></div>`; };
-  CC.on('vormOpen', (el) => { const S = CC.S(); const v = vorm(S, el.dataset.id); if (!v) return; const ctx = el.dataset.a ? { a: el.dataset.a, o: el.dataset.o } : null; CC.closeSheet(); CC.sheet(v.naam, kijkHtml(S, v, ctx), { groot: true });
+  CC.on('vormOpen', (el) => { const S = CC.S(); const v = vorm(S, el.dataset.id); if (!v) return; const ctx = el.dataset.a ? { a: el.dataset.a, o: el.dataset.o } : null; CC.closeSheet();
+    if (!ctx && vbNaast()) { CC.ui.seg.vbKies = v.id; CC.render(); return; } /* Besluit 174: laptop, de vorm staat rechts */ CC.sheet(v.naam, kijkHtml(S, v, ctx), { groot: true });
     const sh = document.querySelector('#sheet .sheet'); if (sh) sh.classList.add('xl'); });
   CC.on('vormBewerk', (el) => { CC.closeSheet(); CC.open('vorm', el.dataset.a ? { id: el.dataset.id, a: el.dataset.a, o: el.dataset.o } : { id: el.dataset.id }); });
   CC.on('vormNamen', (el) => { CC.ui.zonderNamen = !CC.ui.zonderNamen; vormOpenMet(el); });
