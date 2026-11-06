@@ -76,3 +76,22 @@ test('zonder het pakket: geen stappenblok', TAG, async ({ page }) => {
   expect(html).toBe('');
   await controleer(page, fouten, 'zonder pakket');
 });
+
+test('lijst Trainers: de volgende stap achter elke naam; alleen ③ en ④ in kleur; kennismaking bovenaan in één regel', TAG, async ({ page }) => {
+  const fouten = volgFouten(page);
+  await ho(page, "const p = (n) => S.people.find((x) => x.naam === n); S.trainerKennis[p('Mark Jansen').id] = { gevraagd: '2026-11-01T10:00:00.000Z', ingevuld: '2026-11-03T10:00:00.000Z', a: {} }; S.trainerKennis[p('Hasan van Dijk').id] = { gevraagd: '2026-11-02T10:00:00.000Z' }; S.trainerDossier[p('Iris Peters').id] = { traject: { actief: true, sinds: '2026-11-01', plan: { wedstrijd: 1, training: 1 }, niveau: 'kort' } };");
+  const rij = (n) => page.locator('#app [data-act="hoTrainerSnel"]', { hasText: n });
+  await expect(rij('Mark Jansen').locator('.st-volg')).toHaveText('③ traject starten');
+  await expect(rij('Iris Peters').locator('.st-volg')).toHaveText('④ eerste moment plannen');
+  await expect(rij('Hasan van Dijk')).toContainText('wacht op kennismaking'); await expect(rij('Hasan van Dijk').locator('.st-volg')).toHaveCount(0);
+  await expect(rij('Linda Peters')).toContainText('kennismaking nog niet gestuurd');
+  await expect(rij('Dennis Peters')).toContainText('traject 1/2'); // heeft al een moment: zoals eerder
+  await expect(page.locator('#app')).toContainText('2 trainers wachten op een stap van jou (③ of ④)');
+  // Niet gesorteerd: de lijst blijft op naam
+  const ids = await page.locator('#app [data-act="hoTrainerSnel"]').evaluateAll((r) => r.map((x) => x.dataset.id));
+  expect(await page.evaluate((l) => { const S = CC.S(); const n = l.map((i) => S.people.find((p) => p.id === i).naam); return n.join() === [...n].sort((a, b) => a.localeCompare(b)).join(); }, ids)).toBe(true);
+  // De kennismaking voor iedereen in één regel bovenaan
+  await page.locator('#app [data-act="hoKennisVraag"]').click();
+  await expect(page.locator('#sheet [data-act="kennisUitnodigen"]')).toBeVisible();
+  await controleer(page, fouten, 'volgende stap');
+});

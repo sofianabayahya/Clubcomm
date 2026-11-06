@@ -63,7 +63,10 @@
   const plan = (t) => (t.plan.wedstrijd || 0) + (t.plan.training || 0);
   const volgende = (S, pid) => mom(S).filter((m) => m.trainerId === pid && !m.klaar && m.datum >= D.vandaag()).sort((a, b) => a.datum.localeCompare(b.datum))[0];
   const kennis = (S, pid) => { const k = (S.trainerKennis || {})[pid] || {}; return k.ingevuld ? 'kennismaking ingevuld' : k.gevraagd ? 'kennismaking gevraagd' : 'kennismaking nog niet gevraagd'; };
-  const status = (S, p) => { const t = traject(S, p.id); if (!t) return esc(kennis(S, p.id)); const v = volgende(S, p.id);
+  // Besluit 178: bij het pakket de volgende stap; blauw alleen wat jij per trainer doet (③ traject, ④ eerste moment)
+  const STAP = { traject: '<b class="st-volg">③ traject starten</b>', moment: '<b class="st-volg">④ eerste moment plannen</b>', kennis: 'kennismaking nog niet gestuurd', wacht: 'wacht op kennismaking', plezier: 'traint vooral voor het plezier' };
+  const status = (S, p) => { const st = CC.trVolgende ? CC.trVolgende(S, p) : null; if (st) return STAP[st];
+    const t = traject(S, p.id); if (!t) return esc(kennis(S, p.id)); const v = volgende(S, p.id);
     return `<b>traject ${gedaan(S, p.id)}/${plan(t)}</b> · ${v ? `volgend: ${D.kort(v.datum)}` : gedaan(S, p.id) >= plan(t) ? 'plan gehaald' : 'nog plannen'}`; };
   const bouwVan = (S, p) => (CC.bouwVan ? [...new Set(teamsVan(S, p).map((t) => CC.bouwVan(S, t).naam))].join(', ') : '');
   CC.hoTrainerRij = (S, p) => h.rij({ ic: h.avatar(p.naam), titel: `${esc(p.naam)} <span class="zacht">· ${esc(teamsVan(S, p).map((t) => t.naam).join(', '))}</span>`, sub: [esc(bouwVan(S, p)), status(S, p)].filter(Boolean).join(' · '), act: 'hoTrainerSnel', attrs: `data-id="${esc(p.id)}"` });

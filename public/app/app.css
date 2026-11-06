@@ -1092,3 +1092,5 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 
 /* Besluit 176: de vier tabbladen van Training passen op één regel (Op het veld · Voorbereiden · Vormen · Seizoen) */
 .seg:has([data-key="trSeg"]) button { flex: auto; padding: 8px 4px; white-space: nowrap; }
+/* Besluit 178: de volgende stap in de lijst Trainers (alleen ③ en ④ in kleur) */
+.st-volg { color: var(--blauw); font-weight: 600; }
