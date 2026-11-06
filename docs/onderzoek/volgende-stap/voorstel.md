@@ -1,6 +1,6 @@
 # Voorstel: de volgende stap achter elke trainer in de lijst Trainers (6 november 2026)
 
-**Gekozen (6-11): variant B, niet sorteren; vastgelegd als Besluit NNN.** Gebouwd: `gebouwd-trainers.jpg`.
+**Gekozen (6-11): variant B, niet sorteren; vastgelegd als Besluit 178.** Gebouwd: `gebouwd-trainers.jpg`.
 
 *Spoor 3 — ClubComm, maat M. Vervolg op Besluit 177 (de stappen per trainer). Alleen voorbeelden op 390 px in de echte opmaak, met verzonnen namen. Er is nog niets gebouwd.*
 

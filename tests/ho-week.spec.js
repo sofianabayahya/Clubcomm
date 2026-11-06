@@ -65,7 +65,7 @@ test('HO: de week van zijn trainers, filters en begeleiden in 2 tikken', { tag: 
   await page.locator('nav.nav button[data-tab="trainers"]').click();
   await expect(page.locator('[data-key="trDeel"]')).toHaveText(['Alle (4)', 'Traject (1)']);
   await expect(page.locator('#app [data-act="hoTrainerSnel"]')).toHaveCount(4);
-  await expect(page.locator('#app [data-act="hoTrainerSnel"]', { hasText: 'Bea Boom' })).toContainText('④ eerste moment plannen'); // Besluit NNN: de volgende stap (traject zonder moment)
+  await expect(page.locator('#app [data-act="hoTrainerSnel"]', { hasText: 'Bea Boom' })).toContainText('④ eerste moment plannen'); // Besluit 178: de volgende stap (traject zonder moment)
   await expect(page.locator('#app .clubregel')).toHaveCount(0); // de grote trajectkaart is weg
   await page.locator('#app [data-act="hoTrainerSnel"]', { hasText: 'Bea Boom' }).click();
   await expect(page.locator('#sheet [data-act="begelNieuw"]')).toBeVisible(); await expect(page.locator('#sheet [data-view="trainerDetail"]')).toBeVisible();

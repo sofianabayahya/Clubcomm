@@ -63,7 +63,7 @@
   const plan = (t) => (t.plan.wedstrijd || 0) + (t.plan.training || 0);
   const volgende = (S, pid) => mom(S).filter((m) => m.trainerId === pid && !m.klaar && m.datum >= D.vandaag()).sort((a, b) => a.datum.localeCompare(b.datum))[0];
   const kennis = (S, pid) => { const k = (S.trainerKennis || {})[pid] || {}; return k.ingevuld ? 'kennismaking ingevuld' : k.gevraagd ? 'kennismaking gevraagd' : 'kennismaking nog niet gevraagd'; };
-  // Besluit NNN: bij het pakket de volgende stap; blauw alleen wat jij per trainer doet (③ traject, ④ eerste moment)
+  // Besluit 178: bij het pakket de volgende stap; blauw alleen wat jij per trainer doet (③ traject, ④ eerste moment)
   const STAP = { traject: '<b class="st-volg">③ traject starten</b>', moment: '<b class="st-volg">④ eerste moment plannen</b>', kennis: 'kennismaking nog niet gestuurd', wacht: 'wacht op kennismaking', plezier: 'traint vooral voor het plezier' };
   const status = (S, p) => { const st = CC.trVolgende ? CC.trVolgende(S, p) : null; if (st) return STAP[st];
     const t = traject(S, p.id); if (!t) return esc(kennis(S, p.id)); const v = volgende(S, p.id);
