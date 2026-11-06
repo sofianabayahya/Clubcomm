@@ -21,7 +21,7 @@
 | **Schermen, tabbladen, vensters** | `core.js` (`CC.sheet`, `CC.toast`, `CC.on`), `index.html`, `app.css` | 30, 34, 102–104, 111, 113, 118, 122, 149, 150 | `tabbladen\|venster\|tikvlakken\|dubbel tikken\|rol wisselen\|automatisch bewaren` |
 | **Inloggen, opslag, rechten** ⚠️ altijd maat L | `live.js`, `opslag.js` (scopes), `core.js` (inloggen, privacy); `supabase/migrations/` · functiekaart `docs/handleiding/inloggen.md` | 1, 14, 24, 45, 52, 72, 119, 143 | alle tests + rechtentest (zie onder) |
 | **Inrichten en clubbeheer** | `hjo.js` (Regels, Rollen, Seizoen), `beheerlijsten.js` (Rollen en teams ingeklapt, zoeken), `onderhoud.js` | 6, 12, 96, 103, 112, 120, 170 | `schermgebruik\|kop:` + `tests/beheerlijsten.spec.js` |
-| **Presentaties en handleidingen** | `docs/presentaties/` (`maak.js`, `shots*.js`); functiekaarten in `docs/handleiding/` (Besluit 151; overzicht in `README.md`, uitgaven in `bundels.md`); voorstel `docs/onderzoek/documentatie-borging/README.md` | 89, 114, 151 | geen (handmatig) |
+| **Presentaties en handleidingen** | `docs/presentaties/` (`maak.js`, `shots*.js`); functiekaarten in `docs/handleiding/` (Besluit 151; overzicht in `README.md`, uitgaven in `bundels.md`; beelden en snelstart-pdf's opnieuw met `npm run beelden`, script in `scripts/beelden/`); voorstel `docs/onderzoek/documentatie-borging/README.md` | 89, 114, 151 | geen (handmatig) |
 
 ## Wie leest wat
 - **Spoor 1 (persoonlijke methodiek):** `docs/methodiek/persoonlijk/overdracht.md` en het kerndocument; code via Spoor 3.
@@ -71,4 +71,5 @@
 - `npm test` = node-tests (`tests/automaat.test.mjs`: servermotor, `tests/verwijzingen.test.mjs`: paden, `tests/besluitnummers.test.mjs`: elk besluitnummer één keer, als kop en in het Register) + Playwright (`tests/*.spec.js`: elke rol doorklikken in de demo én in de kleine nagebootste club, `supabase/tests/fake-supabase.js`, code 123456). Draait ook op GitHub (Actions *Tests*); **rood = niet samenvoegen**.
 - **Altijd ook de echte, bijna lege club testen** (teamnaam ≠ teamcode, weinig spelers, geen telefoonnummers), niet alleen de demo. Nieuwe functie of gevonden fout → test erbij.
 - Rechten per rol: `select * from priv.rechtentest() where not ok;` (Besluit 119, migratie 030; elke nacht, alarm via `rpc/gezondheid`). Nieuwe rechten of een nieuwe soort gegevens: controle erbij. (Het oude `rls_test.sql` is vervangen.)
+- Beelden van de functiekaarten en de snelstart-pdf's opnieuw maken: `npm run beelden` (demo met verzonnen gegevens; `scripts/beelden/beelden.spec.js` maakt de beelden, `scripts/beelden/pdfs.mjs` de pdf's). Daarna nakijken en vastleggen.
 - Presentaties opnieuw maken: `shots*.js`, dan `node docs/presentaties/maak.js product`; voor een andere club `CONTACT_NAAM=… CONTACT_MAIL=… node docs/presentaties/maak.js clubs "Clubnaam"` → `uit/` (niet in git); PDF met `soffice --headless --convert-to pdf` (lettertype Carlito).
