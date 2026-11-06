@@ -28,9 +28,10 @@
 - Bij **Op het veld** staat de tijd niet; alleen als je te veel hebt ingepland, zie je daar dezelfde waarschuwing (Besluit 165).
 
 **Wie speelt waar** (Besluit 173 en NNN-a)
-- Heeft de vorm een tekening met spelers (meestal de partij), dan zie je in het venster van die plek **Wie speelt waar** met de tekening zelf. Tik een speler in de tekening en tik een naam. Staat die naam al ergens, dan **wisselen** ze. Je ziet wie er is, hoe vaak hij trainde en wat hij vorige keer speelde. ClubComm stelt niemand voor.
-- Een nummer in de tekening is het overzichtelijkst, maar een speler zonder nummer kan ook een naam krijgen. Liever een lijst? Klap **Als lijst** open.
-- Bij **Op het veld** tik je de vorm: je ziet de tekening met namen (**Namen aanpassen**, **Zonder namen**). Op de print staan de namen in de tekening. De tekening in **Vormen** verandert niet.
+- Heeft de vorm een tekening met spelers, dan staat in het venster van die plek **Wie speelt waar · namen erbij** (ingeklapt). Tik erop als je wilt indelen, meestal bij een grote partijvorm. Zodra er namen zijn, staat het open.
+- Tik een speler in de tekening en tik een naam. Staat die naam al ergens, dan **wisselen** ze. Je ziet wie er is, hoe vaak hij trainde en wat hij vorige keer speelde. ClubComm stelt niemand voor.
+- Onder de tekening staat de **lijst per team**: *Rood: K Bram · 2 Daan · 4 Finn …* Een nummer in de tekening is het overzichtelijkst (nummer = positie), maar een speler zonder nummer kan ook een naam krijgen (*– Yassin*).
+- Bij **Op het veld** tik je de vorm: je ziet de tekening met namen en de lijst (**Namen aanpassen**, **Zonder namen**). Op de print staan ze ook. De tekening in **Vormen** verandert niet.
 
 **Een vorm in de training aanpassen**
 - Tik een vorm in de lijst aan voor **Minuten**, een **Notitie**, **Gebruiken als spacing**, **Omlaag**, **Vorm bekijken**, **Dupliceren** of **Weghalen**.

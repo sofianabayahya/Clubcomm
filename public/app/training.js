@@ -409,7 +409,6 @@
   const wieRol = (x) => (x.los ? 'speler zonder nummer' : x.n == null ? 'keeper' : ROL[x.n] || '');
   const wieTitel = (x) => `${TEAMNAAM[x.team] || x.team}${wieLabel(x) ? ` ${wieLabel(x)}` : ''} · ${wieRol(x)}`;
   const wieKort = (k) => { const [t2, n2] = k.split('|'); return t2 === 'keeper' ? 'op doel' : n2 && n2[0] === '#' ? (TEAMNAAM[t2] || t2).toLowerCase() : `${(TEAMNAAM[t2] || t2).toLowerCase()} ${n2}`; };
-  const wieBol = (x) => `<span class="tr-wbol" style="background:${TEAMKLEUR[x.team] || '#0f1b2d'};color:${['geel', 'oranje', 'lichtblauw'].includes(x.team) ? '#1a1000' : '#fff'}">${esc(wieLabel(x) || '·')}</span>`;
   const ingedeeld = (o, nrs) => nrs.filter((x) => (o.indeling || {})[x.k]).length;
   // De tekening met namen (en, om in te delen, een tikvlak per speler)
   const wieTekening = (S, a, o, v, tik) => { if (!v || !v.tekening || !window.DrawTool) return ''; const nrs = wieNummers(v); const ind = (o && o.indeling) || {}; const team = a && a.teamId ? M.spelers(S, a.teamId) : [];

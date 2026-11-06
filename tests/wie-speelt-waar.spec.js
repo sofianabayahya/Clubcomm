@@ -79,8 +79,10 @@ for (const breed of [false, true]) {
     await page.evaluate(() => { const g = (CC.ui.seg = CC.ui.seg || {}); g.trSeg = 'plannen'; g.aanwAct = 't-vr'; CC.render(); });
     await page.locator('.tr-midden .tr-rij', { hasText: 'Partij acht tegen acht' }).click();
     const sh = page.locator('#sheet');
-    // Alle 5 spelers in de tekening tellen mee, ook de gele zonder nummer
-    await expect(sh.locator('.tr-wie')).toContainText('Wie speelt waar · 0 van 5 ingedeeld');
+    // Zonder namen ingeklapt (vaardigheidsvormen mix je); één tik opent het. Alle 5 spelers tellen mee, ook de gele zonder nummer
+    await expect(sh.locator('.tr-wie > summary')).toHaveText('Wie speelt waar · namen erbij');
+    await expect(sh.locator('.tr-wie')).not.toHaveAttribute('open', '');
+    await sh.locator('.tr-wie > summary').click();
     await expect(sh.locator('.tr-wieveld svg [data-act="tpWieKies"]')).toHaveCount(5);
     await expect(sh.locator('.tr-wieveld svg')).toContainText('+ naam');
     // Rood 7 en de gele speler zonder nummer indelen (twee tikken per speler)
@@ -93,7 +95,11 @@ for (const breed of [false, true]) {
     await kies(page, sp[1].id);
     expect((await plek(page)).indeling).toEqual({ 'rood|7': sp[0].id, 'geel|#1': sp[1].id });
     await expect(sh.locator('.tr-wieveld svg')).toContainText(sp[0].naam);
-    await expect(sh.locator('.tr-wie')).toContainText('2 van 5 ingedeeld');
+    await expect(sh.locator('.tr-wie > summary')).toHaveText('Wie speelt waar · 2 van 5 ingedeeld');
+    await expect(sh.locator('.tr-wie')).toHaveAttribute('open', '');
+    // De lijst per team: keeper eerst, dan op nummer, zonder nummer achteraan
+    await expect(sh.locator('.tr-wieteam').nth(0)).toHaveText(`Rood: K … · 2 … · 7 ${sp[0].naam}`);
+    await expect(sh.locator('.tr-wieteam').nth(1)).toHaveText(`Geel: 2 … · – ${sp[1].naam}`);
     // Verkeerd: wisselen in twee tikken (rood 7 krijgt de gele speler, en andersom)
     await tik(page, 'rood|7');
     await expect(sh.locator(`[data-sp="${sp[1].id}"]`)).toContainText('nu geel · wisselt');
@@ -105,29 +111,30 @@ for (const breed of [false, true]) {
     // Leeg laten
     await tik(page, 'rood|2'); await page.locator('#sheet [data-act="tpWieZet"][data-sp=""]').click();
     expect((await plek(page)).indeling).toEqual({ 'rood|7': sp[1].id });
-    // Als lijst kan ook (toegankelijk, grotere tikvlakken)
-    await sh.locator('.tr-wielijst > summary').click();
-    await expect(sh.locator('.tr-wielijst .tr-wrij2')).toHaveCount(5);
+    // Geen tweede manier van indelen: alleen via de tekening
+    await expect(sh.locator('.tr-wielijst')).toHaveCount(0);
     await page.evaluate(() => CC.closeSheet());
     // Op het veld (Week): tik de vorm = de tekening mét namen; Zonder namen en terug
     await page.evaluate(() => { CC.ui.seg.trSeg = 'week'; CC.render(); });
     await page.locator('.tr-weekkaart .tr-wrij', { hasText: 'Partij acht tegen acht' }).click();
     await expect.poll(() => kijkTekst(page)).toContain(sp[1].naam);
+    await expect(sh.locator('.tr-wieteam').first()).toHaveText(`Rood: K … · 2 … · 7 ${sp[1].naam}`);
     await sh.locator('[data-act="vormNamen"]', { hasText: 'Zonder namen' }).click();
     await expect.poll(() => kijkTekst(page)).not.toContain(sp[1].naam);
+    await expect(sh.locator('.tr-wieteam').first()).toContainText(sp[1].naam); // de lijst blijft staan
     await page.waitForTimeout(1600); // de app negeert een tweede tik op dezelfde knop binnen korte tijd (dubbel tikken)
     await sh.locator('[data-act="vormNamen"]', { hasText: 'Met namen' }).click();
     await expect.poll(() => kijkTekst(page)).toContain(sp[1].naam);
     // Namen aanpassen opent het venster van de plek
     await sh.locator('.tr-namenknop [data-act="tpOnderdeel"]').click();
-    await expect(sh.locator('.tr-wie')).toContainText('1 van 5 ingedeeld');
+    await expect(sh.locator('.tr-wie > summary')).toHaveText('Wie speelt waar · 1 van 5 ingedeeld');
     await page.evaluate(() => CC.closeSheet());
     // De tekening van de vorm zelf is niet veranderd (namen horen bij de training)
     expect(await page.evaluate(() => JSON.stringify(CC.S().vormen.find((v) => v.id === 'v-3').tekening))).not.toContain(sp[1].naam);
     // Print: de namen staan in de tekening
     const html = await page.evaluate(() => { let uit = ''; const o = CC.printDoc; CC.printDoc = (t, h) => { uit = h; }; const b = document.createElement('button'); b.dataset.act = 'tpPrint'; b.dataset.id = 't-vr'; document.body.append(b); b.click(); b.remove(); CC.printDoc = o; return uit; });
     expect(html).toContain(`>${sp[1].naam}</text>`);
-    expect(html).toContain(`<b>Rood:</b> 7 ${sp[1].naam}`);
+    expect(html).toContain(`<b>Rood:</b> `); expect(html).toContain(`7 ${sp[1].naam}</span>`);
     await controleer(page, fouten);
   });
 }
