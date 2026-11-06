@@ -37,6 +37,7 @@
 **Werken met wat er staat**
 - **Kies** en tik iets aan om het te verslepen. Je hoeft niet precies te raken: een tik net naast een speler of hoedje kiest het dichtstbijzijnde (Besluit 160).
 - **Meerdere tegelijk:** sleep een vak over een lege plek.
+- Staat het paneel **Spelers** open, tik dan gewoon een andere speler op het veld: het paneel blijft open en het volgende nummer gaat naar die speler. Een leeg stuk veld sluit het paneel (Besluit NNN).
 - Onder het veld staan **Dupliceren**, de **kleuren** en **Verwijderen**. Op de telefoon (staand) met het paneel Spelers open staan *Kopie* en *Weg* bovenin het paneel (Besluit 158).
 - **↶ / Ongedaan maken** zet de laatste stap terug, ook na verwijderen.
 - **Pijlen:** *Loopactie*, *Pass*, *Dribbel* en *Schot*, ook met een boog. Sleep de witte bolletjes om een pijl langer of schuiner te maken, en het blauwe bolletje voor een boog (Besluit 126, 127).
