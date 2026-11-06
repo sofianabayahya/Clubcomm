@@ -144,3 +144,13 @@ Schaal 1–5 (5 = best; bij risico en omvang: 5 = laagste risico / kleinste klus
 4. Elke stap een eigen pull request met voorbeeld op 390 px en de volledige test.
 
 *Spoor 3 · onderzoek · geen besluit.*
+
+## 8. Uitwerking C2 · Krijtbord in ClubComm-blauw (6 november, op verzoek)
+
+Richting C in de kleuren die ClubComm nu al heeft (`public/app/app.css`): blauw #0869C2 (menu, hoofdknop), lichtblauw #0D88F9 (logo, lijnen, rondjes, "vandaag"), navy #0B2545 (tekst, weekband), oranje #F97316 (pion: wacht op jou). Groen alleen nog ín tekeningen. Gewone woorden (*Actie nodig*, *Mijn trajecten*), haltes ① tot ④ uit B, clubregel uit D.
+
+Prototype: `prototypes/c2-krijtbord-blauw.html` met Moodboard, Home HJO, Home trainer, Trainers (lijst + detail), Teams, Training, Tekentool en Componenten. Beelden: `beelden/c2-*-lap.jpg` (1366 px) en `c2-*-tel.jpg` (390 px).
+
+De tekentool laat ook de losse functionele verbeteringen zien (gereedschap in twee rijen, uitleg zonder Shift/Ctrl op de telefoon). Die horen niet bij het merk en vragen een eigen besluit.
+
+Frontend Design-skill: op verzoek geïnstalleerd in `.claude/skills/frontend-design/` (met licentie), op deze branch.
