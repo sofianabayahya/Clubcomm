@@ -114,7 +114,7 @@
   const bereik = (a, b, woord) => (a == null && b == null ? '' : `${a != null ? a : '?'}${b != null && b !== a ? `–${b}` : ''} ${woord}`);
   const verwacht = (S, a) => (a.teamId ? M.spelers(S, a.teamId) : []).filter((pl) => M.status(S, pl, a).code === 'verwacht').length;
   // Past de vorm bij dit aantal? En wat schreef de trainer voor precies dit aantal?
-  // Besluit NNN: n = iedereen die er is, keepers meegeteld. Een vorm voor 14 spelers + 1 keeper past bij 15. Een keeper die niet
+  // Besluit 172: n = iedereen die er is, keepers meegeteld. Een vorm voor 14 spelers + 1 keeper past bij 15. Een keeper die niet
   // op doel hoeft, speelt mee in het veld; daarom telt alleen het totaal (k blijft voor de aanroepers, maar bepaalt niets meer).
   const vormMin = (v) => (v.spelersMin == null ? null : Number(v.spelersMin) + (Number(v.keepersMin) || 0));
   const vormMax = (v) => (v.spelersMax == null ? null : Number(v.spelersMax) + (Number(v.keepersMax) || 0));
@@ -190,7 +190,7 @@
   const opTijd = (datum, tijd) => { const d = D.parse(datum); const [u, m] = String(tijd).split(':').map(Number); d.setHours(u || 0, m || 0, 0, 0); return d; };
   const afgelopen = (a) => { if (!a || !a.datum) return false; if (a.datum < D.vandaag()) return true; if (a.datum > D.vandaag()) return false; return a.eind ? new Date() >= opTijd(a.datum, a.eind) : true; };
   // Aantal spelers: zelf ingevuld, anders uit de aanwezigheid (opgenomen of verwacht)
-  // Besluit NNN: wie er is (aanwezigheid, anders verwacht = niet afgemeld), veldspelers en keepers apart. Keepers tellen mee als speler.
+  // Besluit 172: wie er is (aanwezigheid, anders verwacht = niet afgemeld), veldspelers en keepers apart. Keepers tellen mee als speler.
   // Zelf ingevuld (Thema en aantallen): spelers + keepers.
   const leeg = (x) => x == null || x === '';
   const telling = (S, p, a) => {
@@ -210,7 +210,7 @@
   const rijHtml = (S, p, a, o, i, n, k, metCode) => {
     const v = o.vormId && vorm(S, o.vormId);
     const naam = v ? v.naam : o.spacing ? o.naam || 'Spacing' : o.naam || 'Kies een vorm';
-    const mee = v && n && k && v.keepersMax != null && v.keepersMax !== '' && k > Number(v.keepersMax) && past(v, n) ? `${k - Number(v.keepersMax)} ${k - Number(v.keepersMax) === 1 ? 'keeper speelt' : 'keepers spelen'} mee in het veld` : ''; // Besluit NNN
+    const mee = v && n && k && v.keepersMax != null && v.keepersMax !== '' && k > Number(v.keepersMax) && past(v, n) ? `${k - Number(v.keepersMax)} ${k - Number(v.keepersMax) === 1 ? 'keeper speelt' : 'keepers spelen'} mee in het veld` : ''; // Besluit 172
     const extra = v && n && voorAantal(v, n, k) ? esc(voorAantal(v, n, k).tekst) : mee; // Besluit 167: 'gemaakt voor …' staat één keer bovenaan (pastNiet)
     const variant = v && o.variant != null && (v.varianten || [])[o.variant] ? `variant ${esc(v.varianten[o.variant].naam || String.fromCharCode(65 + Number(o.variant)))}` : '';
     const sub = [o.spacing ? (o.naam ? 'spacing' : 'vrij in te vullen') : v ? [typeNaam(typeVan(v)), (CC.weerstand(S, v) || {}).kort].filter(Boolean).join(' · ') : o.blok === 'start' ? 'niet verplicht · kies een vorm of haal weg' : 'kies een vorm', variant, o.notitie ? esc(o.notitie) : '', extra].filter(Boolean).join(' · ');

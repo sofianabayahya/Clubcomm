@@ -1,4 +1,4 @@
-// ClubComm — Besluit NNN: keepers tellen mee. Uit de aanwezigheid (anders: niet afgemeld) telt ClubComm veldspelers en keepers apart;
+// ClubComm — Besluit 172: keepers tellen mee. Uit de aanwezigheid (anders: niet afgemeld) telt ClubComm veldspelers en keepers apart;
 // een vorm past als het totaal klopt, een extra keeper speelt mee in het veld. Verzonnen namen, nep-database.
 const { test, expect } = require('@playwright/test');
 const fs = require('fs');
