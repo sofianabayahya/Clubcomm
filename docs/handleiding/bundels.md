@@ -2,6 +2,8 @@
 
 *Een bundel zegt welke functiekaarten in welke uitgave komen, en welk blok (Kort, Meer, HJO, Beheerder). De tekst staat alleen op de kaarten: pas je een instructie aan, dan doe je dat op de kaart en maak je de uitgaven opnieuw. Een gepubliceerde uitgave bevat alleen kaarten met de status In productie.*
 
+**Alles in één keer opnieuw:** `npm run beelden` maakt de beelden van de kaarten (Training voorbereiden, Vormen, Tekentool) opnieuw uit de demo en daarna de drie snelstart-pdf's. Doe dit als een scherm verandert; kijk de beelden na voordat je ze vastlegt. Een nieuw beeld? Voeg het toe aan `scripts/beelden/beelden.spec.js`.
+
 ## Snelstart vrijwillige trainer
 
 | | |
