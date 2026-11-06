@@ -1,4 +1,4 @@
-// ClubComm — Besluit 173 en 175: wie speelt waar, nu in de tekening zelf (ook spelers zonder nummer), wisselen in twee tikken. Per training, bij de vorm waar je het wilt (meestal de partij): de nummers uit de tekening,
+// ClubComm — Besluit 173, 175 en NNN: opstelling per training. Indelen via de tekening of de lijst per kleur (ook spelers zonder nummer), wisselen in twee tikken; geen namen in de tekening. Per training, bij de vorm waar je het wilt (meestal de partij): de nummers uit de tekening,
 // per nummer de speler die die rol vandaag speelt, uit wie er is. Ook in Week en op de print. Verzonnen namen, nep-database.
 const { test, expect } = require('@playwright/test');
 const fs = require('fs');
@@ -67,8 +67,11 @@ const kijkTekst = (page) => page.evaluate(() => (document.querySelector('#sheet 
 const tik = (page, k) => page.evaluate((k) => { const c = document.querySelector(`#sheet .tr-wieveld [data-k="${k}"]`); c.dispatchEvent(new MouseEvent('click', { bubbles: true })); }, k);
 const kies = (page, id) => page.locator(`#sheet [data-act="tpWieZet"][data-sp="${id}"]`).click();
 
+const rijen = (page) => page.locator('#sheet .tr-wierijen .tr-rij');
+const kleur = async (page, k) => { await page.waitForTimeout(1600); await page.locator(`#sheet [data-act="tpWieKleur"][data-kleur="${k}"]`).click(); }; // de app negeert een tweede tik binnen korte tijd
+
 for (const breed of [false, true]) {
-  test(`wie speelt waar: in de tekening indelen en wisselen, bekijken met namen, print (${breed ? 'laptop' : 'telefoon'})`, { tag: ['@training', '@profiel'] }, async ({ page }) => {
+  test(`opstelling: per kleur indelen en wisselen, Op het veld lezen, print (${breed ? 'laptop' : 'telefoon'})`, { tag: ['@training', '@profiel'] }, async ({ page }) => {
     const fouten = volgFouten(page);
     const d = await metProfiel(page, breed);
     await laden(page, d);
@@ -79,62 +82,65 @@ for (const breed of [false, true]) {
     await page.evaluate(() => { const g = (CC.ui.seg = CC.ui.seg || {}); g.trSeg = 'plannen'; g.aanwAct = 't-vr'; CC.render(); });
     await page.locator('.tr-midden .tr-rij', { hasText: 'Partij acht tegen acht' }).click();
     const sh = page.locator('#sheet');
-    // Zonder namen ingeklapt (vaardigheidsvormen mix je); één tik opent het. Alle 5 spelers tellen mee, ook de gele zonder nummer
-    await expect(sh.locator('.tr-wie > summary')).toHaveText('Wie speelt waar · namen erbij');
+    // Zonder namen ingeklapt (vaardigheidsvormen mix je); één tik opent het
+    await expect(sh.locator('.tr-wie > summary')).toHaveText('Opstelling · namen erbij');
     await expect(sh.locator('.tr-wie')).not.toHaveAttribute('open', '');
     await sh.locator('.tr-wie > summary').click();
+    // Geen namen in de tekening; wel een tikvlak per speler (5, ook de gele zonder nummer)
     await expect(sh.locator('.tr-wieveld svg [data-act="tpWieKies"]')).toHaveCount(5);
-    await expect(sh.locator('.tr-wieveld svg')).toContainText('+ naam');
-    // Rood 7 en de gele speler zonder nummer indelen (twee tikken per speler)
-    await tik(page, 'rood|7');
+    await expect(sh.locator('.tr-wieveld svg text')).not.toContainText(['+ naam']);
+    // Kleuren met de telling; rood eerst: keeper eerst, dan op nummer
+    await expect(sh.locator('[data-act="tpWieKleur"]')).toHaveText(['Rood 0/3', 'Geel 0/2']);
+    await expect(rijen(page)).toHaveCount(3);
+    await expect(rijen(page).locator('.tr-wbol')).toHaveText(['K', '2', '7']);
+    // Rood 7 via de lijst
+    await rijen(page).nth(2).click();
     await expect(sh).toContainText('Rood 7 · rechtsbuiten');
     await expect(sh.locator(`[data-act="tpWieZet"][data-sp="${sp[3].id}"]`)).toHaveCount(0); // afgemeld
     await kies(page, sp[0].id);
+    await expect(rijen(page).nth(2)).toContainText(sp[0].naam);
+    await expect(sh.locator('.tr-wieveld svg')).not.toContainText(sp[0].naam); // niet in de tekening
+    // Geel: de speler zonder nummer via de tekening
+    await kleur(page, 'geel');
+    await expect(rijen(page).locator('.tr-wbol')).toHaveText(['2', '–']);
     await tik(page, 'geel|#1');
     await expect(sh).toContainText('Geel · speler zonder nummer');
     await kies(page, sp[1].id);
     expect((await plek(page)).indeling).toEqual({ 'rood|7': sp[0].id, 'geel|#1': sp[1].id });
-    await expect(sh.locator('.tr-wieveld svg')).toContainText(sp[0].naam);
-    await expect(sh.locator('.tr-wie > summary')).toHaveText('Wie speelt waar · 2 van 5 ingedeeld');
-    await expect(sh.locator('.tr-wie')).toHaveAttribute('open', '');
-    // De lijst per team: keeper eerst, dan op nummer, zonder nummer achteraan
-    await expect(sh.locator('.tr-wieteam').nth(0)).toHaveText(`Rood: K … · 2 … · 7 ${sp[0].naam}`);
-    await expect(sh.locator('.tr-wieteam').nth(1)).toHaveText(`Geel: 2 … · – ${sp[1].naam}`);
-    // Verkeerd: wisselen in twee tikken (rood 7 krijgt de gele speler, en andersom)
+    await expect(sh.locator('.tr-wie > summary')).toHaveText('Opstelling · 2 van 5 ingedeeld');
+    await expect(sh.locator('[data-act="tpWieKleur"]')).toHaveText(['Rood 1/3', 'Geel 1/2']);
+    // Wisselen in twee tikken: rood 7 krijgt de gele speler, en andersom
     await tik(page, 'rood|7');
     await expect(sh.locator(`[data-sp="${sp[1].id}"]`)).toContainText('nu geel · wisselt');
     await kies(page, sp[1].id);
+    await expect(sh.locator('[data-act="tpWieKleur"][aria-selected="true"]')).toContainText('Rood'); // de lijst springt naar de kleur van de getikte speler
     expect((await plek(page)).indeling).toEqual({ 'rood|7': sp[1].id, 'geel|#1': sp[0].id });
-    // Naar een lege plek: de speler verhuist, de oude plek wordt leeg
+    // Naar een lege plek: de speler verhuist
     await tik(page, 'rood|2'); await kies(page, sp[0].id);
     expect((await plek(page)).indeling).toEqual({ 'rood|7': sp[1].id, 'rood|2': sp[0].id });
     // Leeg laten
     await tik(page, 'rood|2'); await page.locator('#sheet [data-act="tpWieZet"][data-sp=""]').click();
     expect((await plek(page)).indeling).toEqual({ 'rood|7': sp[1].id });
-    // Geen tweede manier van indelen: alleen via de tekening
-    await expect(sh.locator('.tr-wielijst')).toHaveCount(0);
-    await page.evaluate(() => CC.closeSheet());
-    // Op het veld (Week): tik de vorm = de tekening mét namen; Zonder namen en terug
+    await page.evaluate(() => { CC.closeSheet(); CC.ui.wieKleur = null; });
+    // Op het veld: tekening zonder namen, de lijst per kleur alleen om te lezen
     await page.evaluate(() => { CC.ui.seg.trSeg = 'week'; CC.render(); });
     await page.locator('.tr-weekkaart .tr-wrij', { hasText: 'Partij acht tegen acht' }).click();
-    await expect.poll(() => kijkTekst(page)).toContain(sp[1].naam);
-    await expect(sh.locator('.tr-wieteam').first()).toHaveText(`Rood: K … · 2 … · 7 ${sp[1].naam}`);
-    await sh.locator('[data-act="vormNamen"]', { hasText: 'Zonder namen' }).click();
+    await expect(sh.locator('.tr-wierijen')).toContainText(sp[1].naam);
     await expect.poll(() => kijkTekst(page)).not.toContain(sp[1].naam);
-    await expect(sh.locator('.tr-wieteam').first()).toContainText(sp[1].naam); // de lijst blijft staan
-    await page.waitForTimeout(1600); // de app negeert een tweede tik op dezelfde knop binnen korte tijd (dubbel tikken)
-    await sh.locator('[data-act="vormNamen"]', { hasText: 'Met namen' }).click();
-    await expect.poll(() => kijkTekst(page)).toContain(sp[1].naam);
-    // Namen aanpassen opent het venster van de plek
+    await expect(sh.locator('.tr-wierijen button')).toHaveCount(0);
+    await kleur(page, 'geel');
+    await expect(sh.locator('.tr-wierijen .tr-rij')).toHaveCount(2);
+    await expect(sh.locator('.tr-wierijen')).not.toContainText(sp[1].naam);
+    // Opstelling aanpassen opent het venster van de plek
     await sh.locator('.tr-namenknop [data-act="tpOnderdeel"]').click();
-    await expect(sh.locator('.tr-wie > summary')).toHaveText('Wie speelt waar · 1 van 5 ingedeeld');
+    await expect(sh.locator('.tr-wie > summary')).toHaveText('Opstelling · 1 van 5 ingedeeld');
     await page.evaluate(() => CC.closeSheet());
-    // De tekening van de vorm zelf is niet veranderd (namen horen bij de training)
+    // De tekening van de vorm zelf is niet veranderd
     expect(await page.evaluate(() => JSON.stringify(CC.S().vormen.find((v) => v.id === 'v-3').tekening))).not.toContain(sp[1].naam);
-    // Print: de namen staan in de tekening
+    // Print: tekening zonder namen, lijst met alleen de ingevulde namen
     const html = await page.evaluate(() => { let uit = ''; const o = CC.printDoc; CC.printDoc = (t, h) => { uit = h; }; const b = document.createElement('button'); b.dataset.act = 'tpPrint'; b.dataset.id = 't-vr'; document.body.append(b); b.click(); b.remove(); CC.printDoc = o; return uit; });
-    expect(html).toContain(`>${sp[1].naam}</text>`);
-    expect(html).toContain(`<b>Rood:</b> <span class="tr-wiep">7 ${sp[1].naam}</span></p>`); // alleen ingevulde namen
+    expect(html).not.toContain(`>${sp[1].naam}</text>`);
+    expect(html).toContain(`<b>Rood:</b> <span class="tr-wiep">7 ${sp[1].naam}</span></p>`);
     expect(html).not.toContain('…</span>');
     await controleer(page, fouten);
   });
