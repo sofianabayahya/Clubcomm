@@ -71,7 +71,7 @@
     const me = CC.me(); const tr = M.persoon(S, x.eigenaar) || { naam: '' }; const d = datumVan(S, x); const nu = new Date().toISOString();
     feedback(S).push({ id: 'fb' + Date.now(), trainerId: x.eigenaar, planId: x.id, actId: x.actId || null, door: me.id, op: nu, tekst });
     S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'persoonlijk', bereik: x.teamId || null, onderwerp: `Feedback op je training${d ? ` van ${D.kort(d)}` : ''}`,
-      tekst: `Hoi ${tr.naam.split(' ')[0]},\n\n${tekst}\n\nJe vindt dit ook bij de training in Plannen.`, tijd: nu, ontvangers: [x.eigenaar], gelezen: [], antw: [], urgent: false, gepland: null });
+      tekst: `Hoi ${tr.naam.split(' ')[0]},\n\n${tekst}\n\nJe vindt dit ook bij de training in Voorbereiden.`, tijd: nu, ontvangers: [x.eigenaar], gelezen: [], antw: [], urgent: false, gepland: null });
     CC.save(); CC.closeSheet(); CC.render(); CC.toast(`Feedback gestuurd aan ${tr.naam.split(' ')[0]}`); });
 
   // ---------- Trainer: feedback bij zijn training, en eerlijk zeggen dat de begeleider meekijkt ----------

@@ -1566,7 +1566,7 @@ test('trainingsmodule: training op datum zonder planning (pakket Trainers begele
   await page.locator('form[data-autosave="tpTerug"] label.schakel').click();
   await expect(page.locator('.tr-minuten')).toContainText('Werkelijke trainingsduurnog niet gecontroleerd');
   await expect(page.locator('.tr-toep, .tr-diep')).toHaveCount(0);
-  await expect(page.locator('#app .seg button, #app [data-key="trSeg"]')).toContainText(['Vormenbank']);
+  await expect(page.locator('#app .seg button, #app [data-key="trSeg"]')).toContainText(['Vormen']);
   await controleer(page, fouten, 'training op datum');
 });
 
@@ -1792,7 +1792,7 @@ test('trainingsmodule: volgorde, je zit in en weekthema (KNVB-profiel)', { tag: 
   const datum = await page.evaluate(() => { const S = CC.S(); const D = CC.date; CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer'));
     S.acts.push({ id: 'tW', teamId: 'O12-1', soort: 'training', datum: D.addDays(D.vandaag(), 1), tijd: '18:30', eind: '19:45' }); CC.save(); CC.render(); return D.addDays(D.vandaag(), 1); });
   await page.locator('nav.nav button[data-tab="aanwezigheid"]').click();
-  await expect(page.locator('#app .seg button, #app [data-key="trSeg"]')).toHaveText(['Lijn', 'Plannen', 'Week', 'Vormenbank']);
+  await expect(page.locator('#app .seg button, #app [data-key="trSeg"]')).toHaveText(['Seizoen', 'Voorbereiden', 'Op het veld', 'Vormen']);
   await page.locator('.weekstrook [data-val="tW"]').click();
   await expect(page.locator('.tr-zitin')).toContainText('nog geen weekthema');
   await expect(page.locator('.tr-pzij .tr-maand')).toHaveCount(0);
@@ -2167,7 +2167,7 @@ test('trainingsmodule: DCG-periodisering O13 met hoofdthema, teamfunctie, contra
   if (process.env.SHOTS) await page.screenshot({ path: `${process.env.SHOTS}/6-vorm-kiezen.png`, fullPage: false });
   // Besluit 139: geen aparte knop 'past bij'. Besluit 150: bij een lege Vormenbank geen lege groepen, wel één kaart Nieuwe oefenvorm maken
   await expect(page.locator('#sheet .kv-groep')).toHaveCount(0);
-  await expect(page.locator('#sheet .kv-nieuw')).toContainText('Je Vormenbank is nog leeg');
+  await expect(page.locator('#sheet .kv-nieuw')).toContainText('Je hebt nog geen oefenvormen');
   await page.locator('#sheet summary', { hasText: 'Ander gereedschap' }).click();
   await page.locator('#sheet [data-act="vkZet"][data-k="gs"][data-w="ll-1v1-aanvallend"]').click();
   await expect(page.locator('#sheet .tr-vh')).toContainText('Passeren');

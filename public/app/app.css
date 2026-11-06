@@ -1066,3 +1066,11 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
   .ld-leeg { margin: 24px 0; text-align: center; }
   .ld .gekozen { background: var(--blauw-l); box-shadow: inset 3px 0 0 var(--blauw); }
 }
+/* Besluit NNN-a: opstelling met namen in de tekening */
+.tr-wieveld { margin: 8px 0 6px; }
+.tr-wieveld svg circle[data-act] { cursor: pointer; }
+.tr-wielijst { margin-top: 8px; }
+.tr-namenknop { margin-top: 8px; }
+
+/* Besluit NNN-b: de vier tabbladen van Training passen op één regel (Op het veld · Voorbereiden · Vormen · Seizoen) */
+.seg:has([data-key="trSeg"]) button { flex: auto; padding: 8px 4px; white-space: nowrap; }

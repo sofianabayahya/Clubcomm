@@ -97,7 +97,7 @@ for (const breed of [false, true]) {
     await expect(m).not.toContainText('plekken ingevuld');
     // Vormenbank: telefoon ingeklapt, laptop kolom
     if (breed) { await expect(page.locator('.tr-bankklap')).toHaveCount(0); await expect(page.locator('#planZoek')).toBeVisible(); }
-    else { await expect(page.locator('.tr-bankklap > summary')).toContainText('Vormenbank · '); await expect(page.locator('#planZoek')).toBeHidden();
+    else { await expect(page.locator('.tr-bankklap > summary')).toContainText('Vormen · '); await expect(page.locator('#planZoek')).toBeHidden();
       await page.locator('.tr-bankklap > summary').click(); await page.fill('#planZoek', 'rondo'); await expect(page.locator('.tr-bankklap')).toHaveAttribute('open', ''); }
     // Open blijft open; de organisatie is aan te passen
     await t.locator('> summary').click();
