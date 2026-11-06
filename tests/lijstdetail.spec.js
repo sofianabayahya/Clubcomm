@@ -1,4 +1,4 @@
-// ClubComm — Besluit NNN: lijst en detail naast elkaar op de laptop (vanaf 1100 px): Trainers (HO bij het pakket) en Berichten.
+// ClubComm — Besluit 171: lijst en detail naast elkaar op de laptop (vanaf 1100 px): Trainers (HO bij het pakket) en Berichten.
 const { test, expect } = require('@playwright/test');
 const { volgFouten, controleer } = require('./hulp');
 const TAG = { tag: ['@begeleiden', '@berichten', '@schermen'] };

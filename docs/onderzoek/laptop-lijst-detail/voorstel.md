@@ -1,6 +1,6 @@
 # Voorstel: lijst en detail naast elkaar op de laptop (6 november 2026)
 
-**Gekozen (6-11): akkoord op 1, 2 en 3; vastgelegd als Besluit NNN.** Gebouwd: `gebouwd-trainers.jpg`, `gebouwd-berichten.jpg`.
+**Gekozen (6-11): akkoord op 1, 2 en 3; vastgelegd als Besluit 171.** Gebouwd: `gebouwd-trainers.jpg`, `gebouwd-berichten.jpg`.
 
 *Spoor 3 — ClubComm, maat M. Voorstel 3 uit `docs/onderzoek/kliks/README.md` (cijfer 7–8). Alleen voorbeelden op 1366 px in de echte opmaak van de app, met verzonnen namen. Er is nog niets gebouwd. Sluit aan op Besluit 169 (Plannen op de laptop als gesplitst scherm).*
 

@@ -1,4 +1,4 @@
-// ClubComm — Besluit NNN: lijst en detail naast elkaar op de laptop (vanaf 1100 px), zoals Plannen (Besluit 169).
+// ClubComm — Besluit 171: lijst en detail naast elkaar op de laptop (vanaf 1100 px), zoals Plannen (Besluit 169).
 // Trainers (HO en TC bij het pakket): links de lijst, rechts het dossier van de gekozen trainer.
 // Berichten (elke rol): links de lijst, rechts het gesprek; het eerste gesprek dat op je wacht staat meteen open.
 // Smaller dan 1100 px verandert niets (lijst → venster → pagina, Besluit 113). Geen nieuwe gegevens of rechten.
