@@ -422,10 +422,28 @@
     const weg = Object.keys(ind).filter((k) => !nrs.some((x) => x.k === k));
     // Besluit 175: ingeklapt tot je namen invult (bij vaardigheidsvormen mix je); met namen staat het open
     return `<details class="uitklap tr-wie"${o.indeling ? ' open' : ''}><summary>Wie speelt waar · ${o.indeling ? `${ingedeeld(o, nrs)} van ${nrs.length} ingedeeld` : 'namen erbij'}</summary><small class="zacht">Tik een speler in de tekening en kies wie het vandaag is. Staat iemand al ergens, dan wisselen ze.</small>
-      <div class="tr-groot tr-wieveld">${wieTekening(S, a, o, v, { aid, i })}</div>
+      ${vorigeKnop(S, p, i, aid, a, v, er)}<div class="tr-groot tr-wieveld">${wieTekening(S, a, o, v, { aid, i })}</div>
       ${wieLijst(S, a, o, v)}
       ${vrij.length || af.length ? `<small class="zacht">${vrij.length ? `Nog vrij: ${esc(vrij.map((pl) => spNaam(S, pl, team)).join(', '))}` : ''}${vrij.length && af.length ? ' · ' : ''}${af.length ? `Afgemeld: ${esc(af.map((pl) => spNaam(S, pl, team)).join(', '))}` : ''}</small>` : ''}
       ${weg.length ? `<small class="zacht">${weg.length} ${weg.length === 1 ? 'naam past' : 'namen passen'} niet meer bij de tekening (de tekening is veranderd). Deel opnieuw in.</small>` : ''}</details>`; };
+  // Voorbeeld: Zoals vorige training. De laatste eerdere training van dit team met een indeling waarvan de plekken in deze tekening voorkomen. Alleen op jouw tik; wie er nu niet is, laat zijn plek leeg
+  const vorigeIndeling = (S, a, p, v) => { if (!a || !a.teamId) return null; const nrs = wieNummers(v); const ks = new Set(nrs.map((x) => x.k));
+    const l = plannen(S).filter((q) => q.id !== p.id && q.teamId === a.teamId && q.datum && q.datum < (p.datum || a.datum)).sort((x, y) => y.datum.localeCompare(x.datum));
+    for (const q of l) for (const o of q.onderdelen || []) { const ind = o.indeling || {}; const hit = Object.keys(ind).filter((k) => ks.has(k)); if (hit.length) return { q, ind, hit }; }
+    return null; };
+  const vorigeKnop = (S, p, i, aid, a, v, er) => { const o = p.onderdelen[i]; if (o.indeling) return ''; const vg = vorigeIndeling(S, a, p, v); if (!vg) return '';
+    const erIds = new Set(er.map((pl) => pl.id)); const mee = vg.hit.filter((k) => erIds.has(vg.ind[k])).length; const dag = actVan(S, vg.q);
+    return `<button type="button" class="knop licht tr-vorige" data-act="tpWieVorige" data-id="${esc(aid)}" data-i="${i}">${icon('repeat')}Zoals vorige training</button><small class="zacht">${esc(dag ? dagNaam(dag) : vg.q.datum)} · ${mee} van ${nrs0(v)} namen${mee < vg.hit.length ? ` (${vg.hit.length - mee} ${vg.hit.length - mee === 1 ? 'is' : 'zijn'} er nu niet)` : ''}</small>`; };
+  const nrs0 = (v) => wieNummers(v).length;
+  CC.on('tpWieVorige', (el) => { const S = CC.S(); const p = plan(S, el.dataset.id); const i = Number(el.dataset.i); const o = p && p.onderdelen[i]; if (!o) return;
+    const a = actVan(S, p); const v = o.vormId && vorm(S, o.vormId); const vg = vorigeIndeling(S, a, p, v); if (!vg) return;
+    const erIds = new Set(aanwezigen(S, a).map((pl) => pl.id)); const ind = {}; const niet = [];
+    vg.hit.forEach((k) => { if (erIds.has(vg.ind[k])) ind[k] = vg.ind[k]; else niet.push(k); });
+    if (!Object.keys(ind).length) return CC.toast('Niemand van vorige keer is er nu');
+    o.indeling = ind; CC.ui.wieTerug = { plan: p.id, o: o.id }; CC.save(); CC.closeSheet(); CC.render(); openOnderdeel({ dataset: { id: el.dataset.id, i: String(i) } });
+    CC.toast(`Overgenomen van ${actVan(S, vg.q) ? dagNaam(actVan(S, vg.q)) : 'vorige keer'}`, '', { knop: 'Ongedaan maken', act: 'tpWieVorigeTerug' }); });
+  CC.on('tpWieVorigeTerug', () => { const u = CC.ui.wieTerug; CC.ui.wieTerug = null; const S = CC.S(); const p = u && plannen(S).find((x) => x.id === u.plan); const o = p && p.onderdelen.find((x) => x.id === u.o); if (!o) return;
+    delete o.indeling; CC.save(); CC.closeSheet(); CC.render(); });
   // Ter informatie bij het kiezen: hoe vaak getraind (laatste 6 trainingen met aanwezigheid) en de rol van vorige keer
   const vaakGetraind = (S, a, pl) => { const l = S.acts.filter((x) => x.teamId === a.teamId && x.soort === 'training' && !x.afgelast && x.datum < a.datum && S.pres[x.id]).sort((x, y) => y.datum.localeCompare(x.datum)).slice(0, 6);
     return l.length ? `${l.filter((x) => ['a', 'l'].includes((S.pres[x.id].s || {})[pl.id])).length} van ${l.length} getraind` : ''; };
