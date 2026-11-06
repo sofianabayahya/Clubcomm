@@ -1,6 +1,6 @@
 # Voorstel: Vormenbank op de laptop, lijst links en de vorm rechts (6 november 2026)
 
-**Gekozen (6-11): akkoord op 1 en 2; vastgelegd als Besluit NNN.** Gebouwd: `gebouwd-vormenbank.jpg`.
+**Gekozen (6-11): akkoord op 1 en 2; vastgelegd als Besluit 174.** Gebouwd: `gebouwd-vormenbank.jpg`.
 
 *Spoor 3 — ClubComm, maat M. Zelfde patroon als Besluit 171 (Trainers en Berichten) en 169 (Plannen). Alleen voorbeelden op 1366 px in de echte opmaak van de app, met verzonnen oefenvormen. Er is nog niets gebouwd.*
 

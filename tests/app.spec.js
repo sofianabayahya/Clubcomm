@@ -1932,7 +1932,7 @@ test('trainingsmodule: classificatie, sjabloon, fase, minuten per leerdoel en fi
   await expect(page.locator('.tr-kaart')).toHaveCount(1);
   await page.locator('.tr-kaart').click();
   await expect(page.locator(':is(#sheet, .vb-naast .ld-r) .tr-soort')).toContainText('Positiespel · functioneel / linietactisch');
-  await expect(page.locator(':is(#sheet, .vb-naast .ld-r) .tr-meta')).toContainText('V→A'); // Besluit NNN: op de laptop staat de vorm rechts
+  await expect(page.locator(':is(#sheet, .vb-naast .ld-r) .tr-meta')).toContainText('V→A'); // Besluit 174: op de laptop staat de vorm rechts
   await controleer(page, fouten, 'classificatie en sjabloon');
   // Besluit 132: vorm in een training zetten (morgen: lege training krijgt het sjabloon, de vorm komt in het blok met hetzelfde leerdoel of de eerste lege plek)
   await page.locator(':is(#sheet, .vb-naast .ld-r) [data-act="vormNaarTraining"]').click();

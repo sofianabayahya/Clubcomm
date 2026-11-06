@@ -886,7 +886,7 @@
       <button class="chipknop" data-act="vfOpen">${icon('plus')}Filter</button>${actief(S).length ? '<button class="chipknop tr-wis" data-act="vfWis">Wis</button>' : ''}</div>
     <button class="knop vol" data-act="vormNieuw">${icon('plus')}Nieuwe oefenvorm</button>
     <div id="vormResultaat">${resultaat(S)}</div>`;
-  // Besluit NNN: op de laptop (vanaf 1100 px) een compacte lijst links en de gekozen vorm rechts, zoals Trainers en Berichten (Besluit 171)
+  // Besluit 174: op de laptop (vanaf 1100 px) een compacte lijst links en de gekozen vorm rechts, zoals Trainers en Berichten (Besluit 171)
   const vbNaast = () => !!(CC.ldAan && CC.ldAan()) && !CC.ui.view && CC.ui.tab === 'aanwezigheid' && h.segVal('trSeg', groot() ? 'plannen' : 'week') === 'vormen';
   const vbGekozen = (S, html) => { const id = CC.ui.seg.vbKies; if (id && vorm(S, id) && html.includes(`data-id="${id}"`)) return id; const m = html.match(/data-act="vormOpen" data-id="([^"]+)"/); return m ? m[1] : null; };
   const vbMarkeer = (html, id) => (id ? html.replace(`class="tr-kaart" data-act="vormOpen" data-id="${id}"`, `class="tr-kaart gekozen" aria-current="true" data-act="vormOpen" data-id="${id}"`) : html);
@@ -943,7 +943,7 @@
       ${ook.length ? `${h.sectie(`Ook voor ${esc(ldNaam(S, k.primair))}`)}<div class="tr-ook">${ook.map((x) => `<button type="button" class="tr-kaart" data-act="vormOpen" data-id="${x.id}"><span class="tr-teken">${x.tekening ? tekening(x.tekening) : icon('pencil')}</span><span class="tr-t"><b>${esc(x.naam)}</b></span></button>`).join('')}</div>` : ''}
       </div></div>`; };
   CC.on('vormOpen', (el) => { const S = CC.S(); const v = vorm(S, el.dataset.id); if (!v) return; CC.closeSheet();
-    if (vbNaast()) { CC.ui.seg.vbKies = v.id; CC.render(); return; } /* Besluit NNN: laptop, de vorm staat rechts */ CC.sheet(v.naam, kijkHtml(S, v), { groot: true });
+    if (vbNaast()) { CC.ui.seg.vbKies = v.id; CC.render(); return; } /* Besluit 174: laptop, de vorm staat rechts */ CC.sheet(v.naam, kijkHtml(S, v), { groot: true });
     const sh = document.querySelector('#sheet .sheet'); if (sh) sh.classList.add('xl'); });
   CC.on('vormBewerk', (el) => { CC.closeSheet(); CC.open('vorm', { id: el.dataset.id }); });
 

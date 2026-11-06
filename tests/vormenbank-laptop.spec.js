@@ -1,4 +1,4 @@
-// ClubComm — Besluit NNN: de Vormenbank op de laptop (vanaf 1100 px) als compacte lijst links en de gekozen vorm rechts.
+// ClubComm — Besluit 174: de Vormenbank op de laptop (vanaf 1100 px) als compacte lijst links en de gekozen vorm rechts.
 const { test, expect } = require('@playwright/test');
 const { volgFouten, controleer } = require('./hulp');
 const TAG = { tag: ['@training', '@schermen'] };

@@ -1066,7 +1066,7 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
   .ld-leeg { margin: 24px 0; text-align: center; }
   .ld .gekozen { background: var(--blauw-l); box-shadow: inset 3px 0 0 var(--blauw); }
 }
-/* Besluit NNN: Vormenbank op de laptop, compacte lijst links en de vorm rechts */
+/* Besluit 174: Vormenbank op de laptop, compacte lijst links en de vorm rechts */
 @media (min-width: 1100px) {
   .vb-naast { margin-top: 4px; }
   .vb-naast .ld-l .tr-raster { display: flex; flex-direction: column; gap: 6px; }
