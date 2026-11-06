@@ -97,3 +97,39 @@
 1. Akkoord om eerst het tellen van de keepers te herstellen (maat M, geen gegevens).
 2. Voorstel 1 of 2 (mijn advies: 1).
 3. Moet *Eerlijk verdelen* rekening houden met iets? Bijvoorbeeld keepers verdelen, of niet steeds dezelfde spelers bij elkaar.
+
+---
+
+## Aanvulling 06-11: elke training een andere indeling (gekozen richting)
+
+**Wat de initiatiefnemer zei:**
+- Elke training ziet er in de grote partijvorm anders uit. Spelers spelen en trainen verschillende posities.
+- Wie welke rol krijgt, hangt af van de aanwezigheid en van de posities die iemand kan spelen.
+- Een nummer hoort dus niet vast bij een speler: elke speler vult **die week** een rol in. Het gaat vooral om de partijvorm.
+
+Daarom vervalt voorstel 1 (*één vaste indeling per training voor alle vormen*). In de plaats komt:
+
+**Wie speelt waar — per training, bij de vorm waar je het wilt (meestal de partij)**
+
+![Wie speelt waar](nieuw-1-wie-speelt-waar.png)
+
+1. **Week of Plannen:** onder de plek P staat *Wie speelt waar · 15 van 15 ingedeeld ›*. Een vorm zonder indeling toont niets extra.
+2. **Venster van de plek:**
+   - de nummers **uit de tekening** van die vorm, per teamkleur (*Rood · 8*, *Geel · 7*);
+   - bij elk nummer de rol uit de 1-4-3-3 (*2 rechtsachter, 7 rechtsbuiten …*) en de gekozen speler;
+   - onderaan *Nog niet ingedeeld* en de afgemelde spelers.
+3. **Tik een nummer:** je ziet de aanwezige, nog vrije spelers. Per speler staat ter informatie hoe vaak hij de laatste 6 keer trainde en welke rol hij vorige keer had. Een keeper staat er ook bij (*speelt mee*). **ClubComm stelt niemand voor; jij kiest.** *Niemand* laat het nummer leeg.
+4. **Print:** onder de tekening van die vorm staat de lijst *Rood: 1 Jesse · 2 Daan …*. Vormen zonder indeling blijven zoals nu.
+
+**Posities die een speler kan spelen:** daarvoor staat nu niets in ClubComm, alleen *keeper*. Dat voegen we niet toe: de trainer weet het, en de rol van vorige keer en de aanwezigheid staan erbij. Een nieuw gegeven per speler kan later, met een eigen besluit.
+
+**Het nummerbalkje in de tekentool**
+
+![Print en tekentool](nieuw-2-print-en-tekentool.png)
+
+- **Nu:** kies je met het paneel *Spelers* open een andere speler op het veld, dan gaat het paneel dicht. Elke tik op het veld sluit eerst het menu (Besluit 152). Je moet dan opnieuw *Spelers* tikken.
+- **Voorstel:** een **speler** tikken houdt het paneel *Spelers* open en kiest die speler. Het volgende nummer gaat dan direct naar hem. Op de telefoon ligt het veld al boven het paneel (Besluit 156). Een tik op een **leeg** stuk veld of op × sluit het paneel, zoals nu, en zet niets neer (Besluit 152 blijft).
+
+**Bouwen (akkoord van de initiatiefnemer, 06-11)**, in twee pull requests:
+1. **Keepers meetellen** (deel 1 hierboven) en **het nummerbalkje blijft open**. Maat M, geen gegevens.
+2. **Wie speelt waar** per plek, met de print. Maat L: de rechtentest wordt vooraf gedraaid. De gegevens staan in de bestaande training, er komt geen migratie en de rechten veranderen niet.
