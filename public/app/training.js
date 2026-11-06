@@ -386,7 +386,7 @@
     CC.save(); CC.closeSheet(); CC.render(); });
 
   // Onderdeel: minuten, fase, variant, spacing, volgorde, dupliceren, verwijderen
-  // ---------- Besluit NNN: wie speelt waar (per training, bij de vorm waar je het wilt; meestal de partij) ----------
+  // ---------- Besluit 173: wie speelt waar (per training, bij de vorm waar je het wilt; meestal de partij) ----------
   // De nummers komen uit de tekening van de vorm (rugnummers per teamkleur, keepers als K). Per nummer kiest de trainer wie die rol
   // vandaag speelt, uit wie er is. ClubComm stelt niemand voor; het toont alleen hoe vaak iemand trainde en wat hij vorige keer speelde.
   // Bewaard in de training zelf (onderdeel.indeling = { 'rood|7': spelerId }); dezelfde rechten als de training (scope eigen).
@@ -461,7 +461,7 @@
   CC.on('tpOnderdeel', openOnderdeel);
   // Besluit 145: een geplaatste vorm naar een andere plek (Start, A1, A2, B1, B2, Partij). Lege plek = erheen, bezette plek = wisselen.
   // De vorm neemt mee: minuten (gepland en echt), variant, notitie, vastgezet leerniveau en fase. Bij de plek blijven: code, naam, voorstellen.
-  const MEE = ['vormId', 'min', 'minUit', 'variant', 'notitie', 'niveau', 'fase', 'spacing', 'vast', 'indeling']; // indeling: Besluit NNN, wie speelt waar hoort bij de vorm // vast: Besluit 147, het vastgelegde gereedschap gaat mee met de vorm
+  const MEE = ['vormId', 'min', 'minUit', 'variant', 'notitie', 'niveau', 'fase', 'spacing', 'vast', 'indeling']; // indeling: Besluit 173, wie speelt waar hoort bij de vorm // vast: Besluit 147, het vastgelegde gereedschap gaat mee met de vorm
   const plekVoorVerplaatsen = (o) => o.blok && o.blok !== 'S';
   // Besluit 163: een vorm zonder plek (bijv. na het weghalen van een plek) krijgt in één tik weer een plek: een lege plek, of een plek die volgens het sjabloon ontbreekt
   const opPlek = (o) => !!(o && o.blok && o.blok !== 'S');
