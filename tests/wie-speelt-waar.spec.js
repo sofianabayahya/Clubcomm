@@ -134,7 +134,8 @@ for (const breed of [false, true]) {
     // Print: de namen staan in de tekening
     const html = await page.evaluate(() => { let uit = ''; const o = CC.printDoc; CC.printDoc = (t, h) => { uit = h; }; const b = document.createElement('button'); b.dataset.act = 'tpPrint'; b.dataset.id = 't-vr'; document.body.append(b); b.click(); b.remove(); CC.printDoc = o; return uit; });
     expect(html).toContain(`>${sp[1].naam}</text>`);
-    expect(html).toContain(`<b>Rood:</b> `); expect(html).toContain(`7 ${sp[1].naam}</span>`);
+    expect(html).toContain(`<b>Rood:</b> <span class="tr-wiep">7 ${sp[1].naam}</span></p>`); // alleen ingevulde namen
+    expect(html).not.toContain('…</span>');
     await controleer(page, fouten);
   });
 }

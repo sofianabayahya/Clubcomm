@@ -451,12 +451,12 @@
     CC.save(); CC.closeSheet(); CC.render(); openOnderdeel({ dataset: { id: el.dataset.id, i: String(i) } }); });
   const wieRegel = (S, o, v) => { const nrs = wieNummers(v); const n = o && o.indeling ? ingedeeld(o, nrs) : 0; return nrs.length && n ? `wie speelt waar ${n}/${nrs.length}` : ''; };
   // Besluit 175: de lijst per team (nummer = positie), om te lezen en de teams tegen elkaar af te wegen. Keeper eerst, dan op nummer, zonder nummer achteraan
-  const wieLijst = (S, a, o, v) => { if (!o || !o.indeling) return ''; const nrs = wieNummers(v); if (!nrs.length) return ''; const team = a && a.teamId ? M.spelers(S, a.teamId) : [];
+  const wieLijst = (S, a, o, v, alleenIngevuld) => { if (!o || !o.indeling) return ''; const nrs = wieNummers(v).filter((x) => !alleenIngevuld || o.indeling[x.k]); if (!nrs.length) return ''; const team = a && a.teamId ? M.spelers(S, a.teamId) : [];
     const volg = (x) => (x.n == null ? (x.los ? 1000 + (x.idx || 0) : -1) : x.n);
     return [...new Set(nrs.map((x) => x.team))].map((tm) => { const l = nrs.filter((x) => x.team === tm).sort((x, y) => volg(x) - volg(y));
       return `<p class="tr-wieteam"><b>${esc(TEAMNAAM[tm] || tm)}:</b> ${l.map((x) => { const pl = o.indeling[x.k] && M.speler(S, o.indeling[x.k]); const lb = wieLabel(x) || '–';
         return pl ? `<span class="tr-wiep">${esc(lb)} ${esc(spNaam(S, pl, team))}</span>` : `<span class="tr-wiep zacht">${esc(lb)} …</span>`; }).join(' · ')}</p>`; }).join(''); };
-  const wiePrint = wieLijst;
+  const wiePrint = (S, a, o, v) => wieLijst(S, a, o, v, true); // op papier alleen de ingevulde namen, geen lege plekken
   const openOnderdeel = (el) => {
     const S = CC.S(); const p = plan(S, el.dataset.id); const i = Number(el.dataset.i); const o = p && p.onderdelen[i]; if (!o) return;
     const v = o.vormId && vorm(S, o.vormId); const fs = fasen(S); const f = faseVan(S, o);
