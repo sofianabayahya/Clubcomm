@@ -69,7 +69,8 @@
   CC.hoTrainerRij = (S, p) => h.rij({ ic: h.avatar(p.naam), titel: `${esc(p.naam)} <span class="zacht">· ${esc(teamsVan(S, p).map((t) => t.naam).join(', '))}</span>`, sub: [esc(bouwVan(S, p)), status(S, p)].filter(Boolean).join(' · '), act: 'hoTrainerSnel', attrs: `data-id="${esc(p.id)}"` });
   CC.hoTrajectRegel = (S, lijst) => { const inT = lijst.filter((p) => traject(S, p.id)); if (!inT.length) return '';
     return `<p class="zacht klein">Traject: ${inT.reduce((n, p) => n + gedaan(S, p.id), 0)} van ${inT.reduce((n, p) => n + plan(traject(S, p.id)), 0)} momenten gedaan dit seizoen.</p>`; };
-  CC.on('hoTrainerSnel', (el) => { const S = CC.S(); const p = M.persoon(S, el.dataset.id); if (!p) return; const t = traject(S, p.id);
+  CC.on('hoTrainerSnel', (el) => { if (CC.ldAan && CC.ldAan() && !CC.ui.view) return CC.ldKies('trKies', el.dataset.id); // Besluit 171: laptop, dossier rechts
+    const S = CC.S(); const p = M.persoon(S, el.dataset.id); if (!p) return; const t = traject(S, p.id);
     const lijst = mom(S).filter((m) => m.trainerId === p.id).sort((a, b) => b.datum.localeCompare(a.datum)); const kom = lijst.filter((m) => !m.klaar).reverse(); const laatst = lijst.filter((m) => m.klaar).slice(0, 1);
     const mRij = (m) => h.rij({ ic: m.klaar ? 'circle-check' : 'calendar-days', titel: `${D.kort(m.datum)} · ${m.soort === 'wedstrijd' ? 'wedstrijd' : 'training'}`, sub: m.klaar ? 'Afgerond' : 'Gepland', act: 'open', attrs: `data-view="begelMoment" data-id="${esc(m.id)}"` });
     CC.sheet(`${esc(p.naam)}`, `<p class="zacht klein">${esc(teamsVan(S, p).map((x) => x.naam).join(', '))}${bouwVan(S, p) ? ` · ${esc(bouwVan(S, p))}` : ''} · ${t ? `traject sinds ${D.kort(t.sinds)}${t.leerdoel ? ` · leerdoel: ${esc(t.leerdoel)}` : ''}` : esc(kennis(S, p.id))}</p>
