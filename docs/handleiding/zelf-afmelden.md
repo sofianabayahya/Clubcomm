@@ -11,7 +11,7 @@
 ## Kort
 *Voor elke trainer. Meld het zo vroeg mogelijk, dan kan de club iets regelen.*
 
-1. Ga naar **Planning** (of **Training → Week**) en zoek de training.
+1. Ga naar **Planning** (of **Training → Op het veld**) en zoek de training.
 2. Tik **Kun je zelf echt niet?** en daarna **Afmelden als trainer**.
 3. Kies **Vervanger zoeken** of **Training afgelasten**.
 4. Vul een korte **reden** in (bijvoorbeeld werk of ziek).

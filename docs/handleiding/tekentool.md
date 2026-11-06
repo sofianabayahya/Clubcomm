@@ -9,9 +9,9 @@
 | **Doelgroepen** | beginner trainer · ervaren trainer |
 
 ## Kort
-*Voor elke trainer. Je tekent een oefenvorm bij een vorm in de Vormenbank.*
+*Voor elke trainer. Je tekent een oefenvorm bij een vorm in **Vormen**.*
 
-1. Ga naar **Training → Vormenbank** en tik **Nieuwe oefenvorm**. Bij een vorm die al bestaat: open hem en tik **Bewerken**.
+1. Ga naar **Training → Vormen** en tik **Nieuwe oefenvorm**. Bij een vorm die al bestaat: open hem en tik **Bewerken**.
 2. Tik **Tekening maken** (of **Tekening aanpassen**).
 3. Kies bovenaan het **Veld** (bijvoorbeeld *Vak* of *Half veld*); bij een kleine oefening zijn de spelers dan groter. Tik op **Spelers**, kies een teamkleur en tik nummers aan: elke speler staat meteen op zijn plek. Klaar? Tik op **×**.
 4. Tik op **Hoedjes**, **Bal**, **Doelen** of **Pijlen**. **Op de telefoon:** kies eerst de kleur of soort (het menu gaat dicht) en tik dan op het veld; elke tik is er één. Bij *Hoedjes* is de eerste knop *Vak met hoedjes* (slepen); voor losse hoedjes kies je een kleur.

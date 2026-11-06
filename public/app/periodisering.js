@@ -217,14 +217,14 @@
   CC.trJeZitIn = (S, a) => { if (!a || !a.datum) return ''; const m = weekVoorstel(S, a.teamId || (CC.teamId && CC.teamId()), a.datum);
     const pr = probleem(S, m.probleem); const thema = pr ? pr.naam : m.probleemTekst || m.thema || '';
     const ab = [m.hg1 && `A ${T().ldNaam(S, m.hg1) || ''}`, m.hg2 && `B ${T().ldNaam(S, m.hg2) || ''}`].filter(Boolean).join(' · ');
-    return `<button type="button" class="tr-zitin" data-act="trNaarLijn">${icon('flag')}<span><b>Week ${D.weeknr(a.datum)}${m.fase ? ` · ${esc(m.fase)}` : ''}</b> · ${thema || ab ? `${esc(thema)}${thema && ab ? ' · ' : ''}${esc(ab)}` : '<i>nog geen weekthema</i>'}</span><small>Lijn ›</small></button>`; };
+    return `<button type="button" class="tr-zitin" data-act="trNaarLijn">${icon('flag')}<span><b>Week ${D.weeknr(a.datum)}${m.fase ? ` · ${esc(m.fase)}` : ''}</b> · ${thema || ab ? `${esc(thema)}${thema && ab ? ' · ' : ''}${esc(ab)}` : '<i>nog geen weekthema</i>'}</span><small>Seizoen ›</small></button>`; };
   CC.on('trNaarLijn', () => { (CC.ui.seg = CC.ui.seg || {}).trSeg = 'lijn'; CC.render(); window.scrollTo(0, 0); });
   // Weekthema met A en B (clubs zonder periodisering): niet verplicht; komt als voorstel bij de trainingen van die week
   CC.trWeekthema = (S) => { if (actief(S)) return ''; const tid = CC.teamId && CC.teamId(); const nu = maandag(D.vandaag());
     const weken = Array.from({ length: 7 }, (_, i) => D.addDays(nu, (i - 1) * 7));
     const rijen = weken.map((w) => { const m = weekVoorstel(S, tid, w); const d = D.parse(w); const ab = [m.hg1, m.hg2].filter(Boolean).map((x) => esc(T().ldNaam(S, x) || '')).join(' · ');
       return `<button type="button" class="tr-rij ${w === nu ? 'aan' : ''}" data-act="trWeekBewerk" data-w="${w}"><span class="tr-code">wk ${D.weeknr(w)}</span><span class="tr-t"><b>${esc(m.thema || (ab ? 'Geen thema' : 'Nog leeg'))}</b><small>${d.getDate()} ${D.MAAND[d.getMonth()]}${ab ? ` · ${ab}` : ''}</small></span>${icon('pencil')}</button>`; }).join('');
-    return `<div class="kaartje tr-weken"><b>Weekthema</b><small class="zacht">Niet verplicht. Wat je hier per week kiest, staat bovenaan bij Plannen en Week${T().leerdoelen(S).length ? '; A en B komen als voorstel bij de trainingen van die week' : ''}.</small><div class="tr-lijst">${rijen}</div></div>`; };
+    return `<div class="kaartje tr-weken"><b>Weekthema</b><small class="zacht">Niet verplicht. Wat je hier per week kiest, staat bovenaan bij Voorbereiden en Op het veld${T().leerdoelen(S).length ? '; A en B komen als voorstel bij de trainingen van die week' : ''}.</small><div class="tr-lijst">${rijen}</div></div>`; };
   CC.on('trWeekBewerk', (el) => { const S = CC.S(); const w = el.dataset.w; const tid = CC.teamId && CC.teamId(); const m = weekVoorstel(S, tid, w); const lds = T().leerdoelen(S).map((l) => [l.id, l.naam]);
     CC.sheet(`Week ${D.weeknr(w)}`, `<form class="codeform" data-autosave="trWeek" data-w="${w}">
       <label for="tw-t">Thema van de week</label><input id="tw-t" name="thema" value="${esc(m.thema || '')}" placeholder="Bijv. opbouwen onder druk">
