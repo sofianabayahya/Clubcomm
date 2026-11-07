@@ -54,7 +54,19 @@ a { color: var(--blauw); }
 html[data-nav="blauw"] { --nav-bg: #0869C2; --nav-tekst: #fff; --nav-zacht: #E1EEFC; --nav-actief-bg: #07589F; --nav-actief: #fff; --nav-streep: #fff; --logo-vlak: #fff; --logo-pad: .1875rem; --tab-bg: #0869C2; --tab-rand: #0869C2; --tab-tekst: #E1EEFC; --tab-actief: #fff; --tab-actief-bg: #07589F; --tab-streep: #fff; }
 html[data-nav="blauw"][data-vlak="nee"] { --logo-vlak: transparent; --logo-pad: 0; }
 html[data-nav="licht"] { --nav-bg: #E7F2FE; --nav-tekst: #0B2545; --nav-zacht: #24456E; --nav-actief-bg: #FFFFFF; --nav-actief: #07589F; --nav-streep: #0D88F9; --nav-rand: 1px solid #C6DDF6; --tab-bg: #E7F2FE; --tab-rand: #C6DDF6; --tab-tekst: #24456E; --tab-actief: #07589F; --tab-actief-bg: #fff; }
-html[data-nav="wit"] { --nav-bg: #FFFFFF; --nav-tekst: #0B2545; --nav-zacht: #4A5B70; --nav-actief-bg: #E7F2FE; --nav-actief: #07589F; --nav-streep: #0869C2; --nav-rand: 1px solid #D3DEEB; }
+/* C · wit (gekozen 7-11): volledig wit, gekozen = blauwe tekst + blauwe streep, geen vlak */
+html[data-nav="wit"], html[data-nav="witaccent"] { --nav-bg: #FFFFFF; --nav-tekst: #0B2545; --nav-zacht: #4A5B70; --nav-actief-bg: transparent; --nav-actief: #07589F; --nav-streep: #0869C2; --nav-rand: 1px solid #D3DEEB;
+  --tab-bg: #fff; --tab-rand: #D3DEEB; --tab-tekst: #4A5B70; --tab-actief: #07589F; --tab-actief-bg: transparent; --tab-streep: #0869C2;
+  --pion: #EA580C; /* donkerder pion: 3,6:1 op wit, 3,3 op krijt, 3,1 op ijs */ }
+/* C · wit met subtiel lichtblauw accent: gekozen item en rand in lichtblauw, verder wit */
+html[data-nav="witaccent"] { --nav-actief-bg: #E7F2FE; --nav-streep: #0D88F9; --nav-rand: 1px solid #C6DDF6; --tab-rand: #C6DDF6; --tab-actief-bg: #E7F2FE; --tab-streep: #0D88F9; }
+/* scheiding navigatie en werkgebied bij wit: rand + zachte schaduw, werkgebied in krijt */
+html[data-nav^="wit"] .rail { box-shadow: 1px 0 0 rgba(11,37,69,.04), 4px 0 12px rgba(11,37,69,.05); position: relative; z-index: 1; }
+html[data-nav^="wit"] .mobielkop, html[data-nav^="wit"] .kopbalk { box-shadow: 0 1px 3px rgba(11,37,69,.06); position: relative; z-index: 1; }
+html[data-nav^="wit"] .tabs { box-shadow: 0 -1px 3px rgba(11,37,69,.06); }
+html[data-nav="witaccent"] .tabs a[aria-current] { background: none; }
+html[data-nav="witaccent"] .tabs a[aria-current] svg { background: #E7F2FE; border-radius: 999px; padding: .2rem .9rem; box-sizing: content-box; margin: -.2rem 0; }
+html[data-nav^="wit"] .mail-kop { background: #fff; color: var(--navy); border-bottom: 1px solid var(--lijn); }
 .pion { display: inline-block; width: 0; height: 0; border-left: .5625rem solid transparent; border-right: .5625rem solid transparent; border-bottom: 1rem solid var(--pion); flex: none; }
 .pion.ander { border-bottom-color: var(--grijs); }
 .vink { width: 1.125rem; height: 1.125rem; border-radius: 50%; background: var(--goed); flex: none; position: relative; }
@@ -224,6 +236,7 @@ body.los .app { border-radius: 0; box-shadow: none; min-height: 100vh; }
   .tellers { padding: .625rem 1rem; gap: .25rem 1rem; }
   .tabs { display: grid; grid-template-columns: repeat(5, 1fr); background: var(--tab-bg); border-top: 1px solid var(--tab-rand); padding-bottom: env(safe-area-inset-bottom); position: sticky; bottom: 0; }
   body:not(.los) .tabs { position: relative; }
+  body.los .tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; }
   .tabs a { min-height: 3.625rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .2rem; color: var(--tab-tekst); text-decoration: none; font-size: .8125rem; font-weight: 700; position: relative; }
   .tabs a[aria-current] { color: var(--tab-actief); background: var(--tab-actief-bg); box-shadow: inset 0 3px 0 var(--tab-streep); }
   .tabs .wacht { right: calc(50% - 1.3rem); top: .35rem; }

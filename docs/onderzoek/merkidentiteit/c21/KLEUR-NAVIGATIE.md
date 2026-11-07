@@ -66,3 +66,42 @@ Toelichting per variant:
 **Niet doen:** A. Het logo heeft dan een extra vlak nodig om zichtbaar te blijven, en clubembleem en status verdwijnen tegen het blauw.
 
 *Spoor 3 · visueel onderzoek · geen besluit.*
+
+---
+
+## Vervolg 7 november: C · wit gekozen (voorkeur, nog geen besluit)
+
+Uitgewerkt in `c21.html?nav=wit` (volledig wit) en `c21.html?nav=witaccent` (wit met een subtiel lichtblauw accent).
+
+**Scheiding tussen navigatie en werkgebied**, zonder zware vlakken:
+- de navigatie is wit, het werkgebied krijtgrijs (#F5F7FA);
+- er staat een dunne rand tussen, met een zachte schaduw naar het werkgebied (laptop) of onder de kop en boven de menubalk (telefoon).
+
+**Navy** staat alleen nog in tekst en kleine informatievlakken, zoals de melding *Opgeslagen*. Niet meer als menu of kop, ook niet in de e-mailkop.
+
+**Het verschil tussen de twee:**
+
+| | Volledig wit | Wit met lichtblauw accent |
+|---|---|---|
+| Gekozen menu-item (laptop) | blauwe tekst + blauwe streep | lichtblauw vlak + lichtblauwe streep |
+| Gekozen tab (telefoon) | blauwe tekst + blauwe streep | lichtblauw pilletje achter het icoon |
+| Randen | grijs (#D3DEEB) | lichtblauw (#C6DDF6) |
+
+Vergelijking als twee schermafbeeldingen: `beelden/wit-vs-accent-desktop.jpg` en `beelden/wit-vs-accent-mobiel.jpg`.
+
+**Oranje pion #EA580C, contrast op de gebruikte achtergronden** (norm voor vormen: 3:1; de pion staat altijd naast een woord):
+
+| Achtergrond | Oud #F97316 | Nieuw #EA580C |
+|---|---|---|
+| Wit (vlakken, navigatie) | 2,80 | **3,56** |
+| Krijt (werkgebied) | 2,61 | **3,32** |
+| IJs (gekozen rij, accent) | 2,47 | **3,14** |
+| Grijs label | 2,49 | **3,16** |
+| Waarschuwing (#FFF4E5) | 2,58 | **3,28** |
+
+Overal boven 3:1. Op ijs is de marge klein (3,14). Daarom staat de pion bij voorkeur niet op een gekozen (ijs)vlak, of altijd met het woord ernaast, zoals nu. De oranje tekst (#A84D08) verandert niet. De oranje hoedjes in tekeningen zijn tekenkleuren en blijven zoals ze zijn.
+
+**Advies: volledig wit, met het lichtblauwe accent alleen voor het gekozen menu-item.**
+- Het lichtblauwe vlak achter het gekozen item laat beter zien waar je bent dan alleen een streep, vooral op de telefoon en voor ouders.
+- Het pakt geen aandacht weg van het logo.
+- Lichtblauwe randen voegen weinig toe; die kunnen grijs blijven.
