@@ -83,8 +83,8 @@ Uitgewerkt in `c21.html?nav=wit` (volledig wit) en `c21.html?nav=witaccent` (wit
 
 | | Volledig wit | Wit met lichtblauw accent |
 |---|---|---|
-| Gekozen menu-item (laptop) | blauwe tekst + blauwe streep | lichtblauw vlak + lichtblauwe streep |
-| Gekozen tab (telefoon) | blauwe tekst + blauwe streep | lichtblauw pilletje achter het icoon |
+| Gekozen menu-item (laptop) | blauwe tekst + blauwe streep | één afgeronde rechthoek in lichtblauw om icoon en woord (aangepast 7-11, geen losse streep meer) |
+| Gekozen tab (telefoon) | blauwe tekst + blauwe streep | één afgeronde rechthoek in lichtblauw om icoon en woord (was een pilletje alleen achter het icoon) |
 | Randen | grijs (#D3DEEB) | lichtblauw (#C6DDF6) |
 
 Vergelijking als twee schermafbeeldingen: `beelden/wit-vs-accent-desktop.jpg` en `beelden/wit-vs-accent-mobiel.jpg`.

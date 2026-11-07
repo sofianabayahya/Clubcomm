@@ -64,8 +64,12 @@ html[data-nav="witaccent"] { --nav-actief-bg: #E7F2FE; --nav-streep: #0D88F9; --
 html[data-nav^="wit"] .rail { box-shadow: 1px 0 0 rgba(11,37,69,.04), 4px 0 12px rgba(11,37,69,.05); position: relative; z-index: 1; }
 html[data-nav^="wit"] .mobielkop, html[data-nav^="wit"] .kopbalk { box-shadow: 0 1px 3px rgba(11,37,69,.06); position: relative; z-index: 1; }
 html[data-nav^="wit"] .tabs { box-shadow: 0 -1px 3px rgba(11,37,69,.06); }
-html[data-nav="witaccent"] .tabs a[aria-current] { background: none; }
-html[data-nav="witaccent"] .tabs a[aria-current] svg { background: #E7F2FE; border-radius: 999px; padding: .2rem .9rem; box-sizing: content-box; margin: -.2rem 0; }
+/* accent = één afgeronde rechthoek om icoon én woord; geen losse streep ernaast */
+html[data-nav="witaccent"] .rail a[aria-current] { border-radius: .625rem; }
+html[data-nav="witaccent"] .rail a[aria-current]::before { display: none; }
+html[data-nav="witaccent"] .tabs a { isolation: isolate; }
+html[data-nav="witaccent"] .tabs a[aria-current] { background: none; box-shadow: none; }
+html[data-nav="witaccent"] .tabs a[aria-current]::after { content: ''; position: absolute; inset: .3125rem .25rem; border-radius: .625rem; background: #E7F2FE; z-index: -1; }
 html[data-nav^="wit"] .mail-kop { background: #fff; color: var(--navy); border-bottom: 1px solid var(--lijn); }
 .pion { display: inline-block; width: 0; height: 0; border-left: .5625rem solid transparent; border-right: .5625rem solid transparent; border-bottom: 1rem solid var(--pion); flex: none; }
 .pion.ander { border-bottom-color: var(--grijs); }
