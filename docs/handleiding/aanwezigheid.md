@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status in de app** | In productie · commit `9eff3ce` (5-11-2026) |
-| **Status van deze kaart** | Concept (Besluit 151) |
+| **Status van deze kaart** | Gepubliceerd in de bundel *Snelstart vrijwillige trainer* (6-11-2026; Kort) · Besluit 151 |
 | **Besluiten** | 5 · 10 · 32 · 91 · 105 · 130 |
 | **Schermafbeeldingen** | `docs/presentaties/beelden/aanwezigheid-home.jpg` · `aanwezigheid-opnemen.jpg` |
 | **Doelgroepen** | beginner trainer · ervaren trainer |

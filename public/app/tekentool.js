@@ -944,8 +944,8 @@
     /* Tekening als losse SVG uit de tekengegevens (tekening_json), zonder de tekentool te openen. Voor vormen zonder
        opgeslagen plaatje (bv. ingevoerd door de beheerder); zelfde inzoomen als bij opslaan. Eigen id's per tekening. */
     var svgSeq = 0;
-    // Besluit 175: extra (optioneel) = { labels: { index: { t: 'Naam', leeg: true|false } }, tik: { index: 'data-…="…"' } }.
-    // Namen komen als laag over de tekening (de tekening van de vorm zelf verandert niet); tik = een onzichtbaar tikvlak per speler.
+    // Besluit 175 en 179: extra (optioneel) = { tik: { index: 'data-…="…"' } }: een onzichtbaar tikvlak per speler (opstelling indelen).
+    // De tekening van de vorm zelf verandert niet; namen staan niet in de tekening (Besluit 179: te druk).
     function staticSvg(json, extra){
       if (!json || !FIELDS[json.field]) return "";
       var saved = st;
@@ -956,23 +956,15 @@
           '<marker id="drawHead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#111"/></marker></defs>' +
           '<g>' + fieldSvg() + '</g><g>' +
           st.items.map(function(it, i){ return it.t === "zone" ? itemSvg(it, i) : ""; }).join("") +
-          st.items.map(function(it, i){ return it.t === "zone" ? "" : itemSvg(it, i); }).join("") + '</g>' + laag(extra, b);
-        if (extra && extra.labels){ b = { x: b.x, y: b.y, w: b.w, h: b.h + 24 }; }
+          st.items.map(function(it, i){ return it.t === "zone" ? "" : itemSvg(it, i); }).join("") + '</g>' + laag(extra);
         return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="' + b.x + ' ' + b.y + ' ' + b.w + ' ' + b.h + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Tekening">' + inner + '</svg>')
           .replace(/drawNet/g, "drawNet" + u).replace(/drawHead/g, "drawHead" + u);
       } finally { st = saved; }
     }
-    function laag(extra, b){
-      if (!extra) return "";
-      var l = extra.labels || {}, t = extra.tik || {}, uit = "";
-      st.items.forEach(function(it, i){
-        if (!("x" in it)) return;
-        var lb = l[i];
-        // de naam blijft binnen de tekening (een speler aan de rand)
-        var hw = String(lb && lb.t || "").length * 4 + 4, lx = Math.min(Math.max(it.x, b.x + hw), b.x + b.w - hw);
-        if (lb && lb.t) uit += '<text x="' + lx + '" y="' + (it.y + 28) + '" text-anchor="middle" font-family="Arial" font-weight="700" font-size="13" fill="' + (lb.leeg ? '#0a63c9' : '#fff') + '" stroke="' + (lb.leeg ? '#fff' : '#0b1a10') + '" stroke-width="4" stroke-linejoin="round" paint-order="stroke" pointer-events="none">' + esc(lb.t) + '</text>';
-        if (t[i]) uit += '<circle cx="' + it.x + '" cy="' + it.y + '" r="22" fill="transparent" ' + t[i] + ' style="cursor:pointer"/>';
-      });
+    function laag(extra){
+      if (!extra || !extra.tik) return "";
+      var t = extra.tik, uit = "";
+      st.items.forEach(function(it, i){ if ("x" in it && t[i]) uit += '<circle cx="' + it.x + '" cy="' + it.y + '" r="22" fill="transparent" ' + t[i] + ' style="cursor:pointer"/>'; });
       return uit ? '<g class="draw-laag">' + uit + '</g>' : "";
     }
     return { open: open, staticSvg: staticSvg };

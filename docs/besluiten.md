@@ -21,9 +21,10 @@ Laatst bijgewerkt: 5 november 2026 (t/m Besluit 178)
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
+| 179 | 3 | Opstelling per kleur, geen namen in de tekening: de tekening toont alleen de nummers (namen erin werd te druk). Onder de tekening **Rood · Geel** (met *ingedeeld / plekken*); tik een kleur en zie die lijst: nummer, positie en naam, keeper eerst. Indelen door een regel of een speler in de tekening te tikken; wisselen zoals Besluit 175; tik je een speler van de andere kleur, dan toont de lijst die kleur. Blok heet *Opstelling*, ingeklapt tot er namen zijn. Op het veld: tekening zonder namen en dezelfde lijst per kleur om te lezen (*Opstelling aanpassen*; *Zonder namen* vervalt). Print: tekening zonder namen, lijst per team met alleen de ingevulde namen. Geen migratie, rechten ongewijzigd | ✅ geldt | |
 | 178 | 3 | De volgende stap achter elke trainer in de lijst Trainers (pakket): **③ traject starten** en **④ eerste moment plannen** in blauw (wat de HO per trainer doet); grijs *kennismaking nog niet gestuurd*, *wacht op kennismaking*, *traint vooral voor het plezier*; met een moment zoals eerder (*traject 1/2 · volgend …*). Bovenaan één regel *n trainers zonder kennismaking · Nodig ze in één keer uit* en *n trainers wachten op een stap van jou (③ of ④)*. Niet gesorteerd: de lijst blijft op naam. Geen nieuwe gegevens of rechten | ✅ geldt |  |
 | 177 | 3 | De stappen van de HO per trainer op één plek (pakket *Trainers begeleiden*): in het snelvenster en het dossier *Van start tot eerste moment* (① Toegevoegd ② Kennismaking ③ Traject starten ④ Eerste begeleidingsmoment) met één knop voor de volgende stap, weg zodra er een moment is. *Trainer toevoegen*: kennismaking meteen in de welkomstmail (standaard aan). *Traject starten* in eenvoudige taal volgens de HO-A (voorbereiding → planningsgesprek → praktijk → reflectiegesprek → nazorg); *Vragen vooraf (de voorbereiding)*: kort 4 of uitgebreid 8 (training) / 9 (wedstrijd), voorstel uit de kennismaking (uitgebreid bij KNVB-diploma of opleiding); meteen het eerste moment kiezen (of later). Geen nieuwe gegevens of rechten | ✅ geldt | aangevuld door 178 (de volgende stap ook in de lijst) |
-| 175 | 3 | Opstelling met namen in de tekening: *Wie speelt waar* staat bij elke vorm met spelers in de tekening **ingeklapt** (*namen erbij*) en staat open zodra er namen zijn. Indelen alleen via de tekening (rood en geel samen, ook spelers **zonder nummer**): tik een speler, tik een naam; staat die naam al ergens, dan wisselen ze. Onder de tekening de **lijst per team** (nummer = positie: *Rood: K Bram · 2 Daan …*), ook Op het veld en op de print. Op het veld: een tik op de vorm toont tekening en lijst (*Namen aanpassen*, *Zonder namen*); geopend vanuit een training *Namen erbij*. Namen horen bij de training, niet bij de vorm. Geen migratie, rechten ongewijzigd | ✅ geldt | |
+| 175 | 3 | Opstelling met namen in de tekening: *Wie speelt waar* staat bij elke vorm met spelers in de tekening **ingeklapt** (*namen erbij*) en staat open zodra er namen zijn. Indelen alleen via de tekening (rood en geel samen, ook spelers **zonder nummer**): tik een speler, tik een naam; staat die naam al ergens, dan wisselen ze. Onder de tekening de **lijst per team** (nummer = positie: *Rood: K Bram · 2 Daan …*), ook Op het veld en op de print. Op het veld: een tik op de vorm toont tekening en lijst (*Namen aanpassen*, *Zonder namen*); geopend vanuit een training *Namen erbij*. Namen horen bij de training, niet bij de vorm. Geen migratie, rechten ongewijzigd | ◐ deels herzien | door 179 (geen namen in de tekening; lijst per kleur, Rood of Geel; blok heet Opstelling) |
 | 176 | 3 | Tabbladen van Training heten naar wat je doet: **Op het veld · Voorbereiden · Vormen · Seizoen** (was Week · Plannen · Vormenbank · Lijn). Zelfde schermen en volgorde; op de telefoon staat Op het veld eerst, op de laptop Seizoen · Voorbereiden · Op het veld · Vormen | ✅ geldt | |
 | 174 | 3 | Vormenbank op de laptop (vanaf 1100 px): compacte lijst links (kleine tekening, naam, spelers, minuten; zoeken, filter en *Nieuwe oefenvorm* erboven), de gekozen vorm rechts met dezelfde inhoud als het venster (tekening, *Zet in een training…*, *Dupliceren*, *Printen*, *Bewerken*, organisatie, coachpunten, materiaal); zonder keuze de eerste vorm open; 1 tik per vorm. Smaller dan 1100 px en op de telefoon ongewijzigd (kaarten en het venster). Geen nieuwe gegevens of rechten | ◐ deels herzien | door 176 (het tabblad Vormenbank heet Vormen) |
 | 173 | 3 | Wie speelt waar: per training, bij de vorm waar je het wilt (meestal de partij), per nummer uit de tekening (teamkleur + rugnummer, keeper = K) de speler die die rol vandaag speelt, uit wie er is. ClubComm stelt niemand voor; het toont hoe vaak iemand trainde (laatste 6) en wat hij vorige keer speelde. Zichtbaar in het venster van de plek, op de regel in Plannen, als link in Week en op de print onder de tekening. Bewaard in de training (scope eigen); geen migratie, rechten ongewijzigd | ◐ deels herzien | door 175 (de indeling staat in de tekening zelf, ook spelers zonder nummer; wisselen in twee tikken; Week toont de tekening met namen in plaats van een link) |
@@ -716,6 +717,27 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 
 ---
 
+## Besluit 179 — Opstelling per kleur, geen namen in de tekening (Spoor 3, maat M)
+> Voorbeeld op 390 px (06-11, branch `voorbeeld/opstelling-kleur`). Akkoord van de initiatiefnemer 06-11 (*"akkoord, bouw het voorbeeld"*). Herziet Besluit 175 deels.
+
+**Waarom.** *"Ik wil geen namen op de tekening, dat wordt te druk. Ik wil dat als ik opstelling druk, kleur rood met daaronder de namen en de nummers. En als ik kleur geel doe, verschijnen de namen van het gele team."* De nummers zijn gekoppeld aan posities; de opstelling is alleen voor grote partijvormen, om de teams tegen elkaar weg te zetten.
+
+**Wat.**
+1. Het blok heet **Opstelling** (was *Wie speelt waar*). Het staat bij elke vorm met spelers in de tekening, ingeklapt (*Opstelling · namen erbij*) tot er namen zijn (Besluit 175).
+2. **De tekening toont alleen de nummers**, zonder namen. Tikvlakken op de spelers blijven (indelen kan via de tekening).
+3. Onder de tekening twee (of meer) knoppen per kleur: **● Rood 6/6 · ● Geel 5/6** (ingedeeld van het aantal plekken). Tik een kleur en daaronder staat de lijst van dat team: nummer (in de kleur), positie en naam, de keeper eerst, dan op nummer, een speler zonder nummer achteraan (*–*). Een lege plek toont *+ naam*.
+4. **Indelen:** tik een regel in de lijst of een speler in de tekening, kies een naam; staat die al ergens, dan wisselen ze (Besluit 175). Na het kiezen toont de lijst de kleur van die speler.
+5. **Op het veld:** de tekening zonder namen en dezelfde knoppen per kleur met de lijst, alleen om te lezen; daaronder *Opstelling aanpassen* (of *Opstelling maken*). *Zonder namen / Met namen* vervalt.
+6. **Print:** de tekening zonder namen, daaronder per team de ingevulde namen (zoals #158).
+
+**Niet gedaan.** *Zoals vorige training* (zie *Afgewezen ideeën*).
+
+**Privacy.** Geen nieuwe gegevens; dezelfde indeling in `trainingsplannen` als Besluit 173 en 175. Geen migratie, rechten ongewijzigd.
+
+**Tests:** `tests/wie-speelt-waar.spec.js` (telefoon en laptop: ingeklapt, geen namen in de tekening, kleuren met telling, volgorde keeper eerst, indelen via lijst en tekening, wisselen, verhuizen, leeg laten, Op het veld alleen lezen, print).
+
+---
+
 ## Besluit 178 — De volgende stap achter elke trainer in de lijst Trainers (Spoor 3, maat M)
 > Voorstel en voorbeelden op 390 px: `docs/onderzoek/volgende-stap/voorstel.md` (akkoord op variant B, niet sorteren, 6 november 2026). Vult Besluit 177 aan (de stappen per trainer) en Besluit 146 (de compacte lijst).
 
@@ -764,6 +786,7 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 ---
 
 ## Besluit 175 — Opstelling met namen in de tekening (Spoor 3, maat L)
+> **◐ Deels herzien door Besluit 179** (geen namen in de tekening; de lijst per kleur, Rood of Geel; het blok heet *Opstelling*; *Zonder namen* vervalt).
 > Onderzoek en tekeningen: `docs/onderzoek/opstelling-namen/voorstel.md`. Akkoord van de initiatiefnemer 06-11 (*"akkoord, bouw het voorstel en kies tabbladen A"*). Herziet Besluit 173 deels.
 
 **Waarom.** Na de eerste echte training met *Wie speelt waar* (Besluit 173): de trainer kon niet schakelen tussen het rode en het gele team, en wilde sneller kunnen wisselen. In zijn tekening hadden de gele spelers geen nummer, dus die stonden er niet bij. Hij wil de namen in de tekening zelf zien, ook bij het voorbereiden en op het veld.
@@ -3067,6 +3090,7 @@ Bewust niet gedaan, met de reden. Komt een van deze toch terug, zeg dan dat het 
 
 | Idee | Waarom niet | Besluit |
 |---|---|---|
+| *Zoals vorige training*: de opstelling van de vorige training met één tik overnemen | Bij de O13 is er geen vaste basis (zieke kinderen, afwezigheid); de opstelling is elke training anders (initiatiefnemer 06-11) | 179 |
 | Een automatische samenvatting van de vorige evaluatie in *Mee uit vorige*, of standaard de hele evaluatie tonen | Een samenvatting legt woorden in de mond van de trainer; alleen een letterlijke *Afspraak:*-zin en bestaande gegevens, de rest via de link | 144 |
 | Het weekvoorstel vanzelf invullen in de training | De trainer beslist; het voorstel staat apart met *Weekvoorstel overnemen* | 144 |
 | Versiebeheer of een wijzigingsgeschiedenis van trainingen | Eén momentopname van de oorspronkelijke planning is genoeg (Principe 10) | 144 |

@@ -10,7 +10,8 @@
     "test:snel": "node --test tests/verwijzingen.test.mjs tests/besluitnummers.test.mjs && playwright test --grep",
     "test:server": "node --test tests/automaat.test.mjs",
     "test:veilig": "bash supabase/tests/rechtentest-lokaal.sh",
-    "check": "node scripts/check.mjs"
+    "check": "node scripts/check.mjs",
+    "beelden": "playwright test -c scripts/beelden/beelden.config.js && node scripts/beelden/pdfs.mjs"
   },
   "dependencies": {
     "express": "^4.18.2"
