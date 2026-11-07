@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>C2.1 · Krijtbord-blauw verbeterd</title>
+<link rel="stylesheet" href="../prototypes/kader.css">
+<style>
+/* ===== C2.1 — Krijtbord-blauw, verbeterd na review =====
+   - Lettertype lokaal (geen Google): Archivo variabel, alleen Latijn, 90 kB.
+   - Alle maten in rem: tekstgrootte van de telefoon/browser werkt door (200 %-proef).
+   - Eén betekenis per kleur en per vorm (zie Componenten → Betekenis). */
+@font-face { font-family: 'Archivo'; src: url(fonts/archivo-latin.woff2) format('woff2'); font-weight: 400 900; font-stretch: 62% 125%; font-display: swap; }
+:root {
+  /* merk ClubComm (bestaande waarden uit app.css) */
+  --navy: #0B2545;      /* het bord: menu, kop. Wit 15,6:1; logo-blauw erop 4,9:1 */
+  --blauw: #0869C2;     /* alleen doen en kiezen: hoofdknop, gekozen, link. Wit 5,3:1 */
+  --blauw-d: #07589F;
+  --logo: #0D88F9;      /* logo en "nu / volgende" (vorm, geen kleine tekst) */
+  --ijs: #E7F2FE;       /* gekozen achtergrond, rondjes */
+  --krijt: #F5F7FA; --papier: #FFFFFF; --lijn: #D3DEEB; --zacht: #4A5B70; /* zacht op wit 6,9:1 */
+  /* status */
+  --pion: #F97316; --pion-tekst: #A84D08; /* wacht op jou */
+  --grijs: #8A99AB;                        /* wacht op een ander (vorm) */
+  --goed: #137333; --fout: #C81E1E;
+  /* bloksoorten training (bestaand, training.js BLOKKLEUR) */
+  --b-start: #94A3B8; --b-a: #0869C2; --b-b: #137333; --b-s: #F5B041; --b-p: #0B4F7A;
+  --club: #B3122E; --club-op: #fff;
+  --font: 'Archivo', system-ui, sans-serif;
+  --r: .625rem;
+}
+* { box-sizing: border-box; }
+html { font-size: 100%; }
+body { margin: 0; background: var(--krijt); color: var(--navy); font: 400 1rem/1.5 var(--font); }
+h1, h2, h3 { margin: 0; line-height: 1.1; font-weight: 800; font-stretch: 110%; letter-spacing: -.01em; overflow-wrap: anywhere; hyphens: auto; }
+.app, .vlak, .blok, .rij > span { min-width: 0; }
+section[data-deel] { padding: 2rem 1.5rem 3.5rem; max-width: 85.375rem; margin: 0 auto; }
+body.los section[data-deel] { padding: 0; max-width: none; }
+.notitie { color: var(--zacht); max-width: 72ch; }
+.hint { color: var(--zacht); max-width: 72ch; }
+.kopbalk { display: flex; align-items: center; gap: .625rem; padding: .5rem 1rem; background: var(--nav-bg); color: var(--nav-tekst); min-height: 3.5rem; border-bottom: var(--nav-rand); }
+.kopbalk .logo { width: 2.125rem; height: 2.125rem; } .kopbalk .rol { color: var(--nav-zacht); font-weight: 600; }
+.tlink { display: inline-flex; align-items: center; min-height: 2.75rem; min-width: 2.75rem; font-weight: 700; text-underline-offset: 3px; }
+.app > div, .trgrid > *, .lijstdetail > * { min-width: 0; }
+.deelkop { font-size: 2.25rem; margin-bottom: .5rem; }
+a { color: var(--blauw); }
+:focus-visible { outline: 3px solid var(--logo); outline-offset: 2px; }
+
+/* ---------- Herkenningstekens ---------- */
+.logo { width: 2.5rem; height: 2.5rem; border-radius: 22%; display: block; flex: none; }
+.logo-vlak { display: inline-flex; flex: none; padding: var(--logo-pad); background: var(--logo-vlak); border-radius: 28%; }
+.rail .wacht { filter: drop-shadow(0 0 1.5px #fff) drop-shadow(0 0 1px #fff); }
+/* ---------- Kleur van menu en kop: vier varianten (?nav=navy|blauw|licht|wit) ---------- */
+:root { --tab-bg: #fff; --tab-rand: #D3DEEB; --tab-tekst: #4A5B70; --tab-actief: #07589F; --tab-actief-bg: transparent; --tab-streep: #0D88F9; --nav-bg: var(--navy); --nav-tekst: #fff; --nav-zacht: #C9D6E6; --nav-actief-bg: #17375F; --nav-actief: #fff; --nav-streep: var(--logo); --nav-rand: 0 none; --logo-vlak: transparent; --logo-pad: 0; }
+html[data-nav="blauw"] { --nav-bg: #0869C2; --nav-tekst: #fff; --nav-zacht: #E1EEFC; --nav-actief-bg: #07589F; --nav-actief: #fff; --nav-streep: #fff; --logo-vlak: #fff; --logo-pad: .1875rem; --tab-bg: #0869C2; --tab-rand: #0869C2; --tab-tekst: #E1EEFC; --tab-actief: #fff; --tab-actief-bg: #07589F; --tab-streep: #fff; }
+html[data-nav="blauw"][data-vlak="nee"] { --logo-vlak: transparent; --logo-pad: 0; }
+html[data-nav="licht"] { --nav-bg: #E7F2FE; --nav-tekst: #0B2545; --nav-zacht: #24456E; --nav-actief-bg: #FFFFFF; --nav-actief: #07589F; --nav-streep: #0D88F9; --nav-rand: 1px solid #C6DDF6; --tab-bg: #E7F2FE; --tab-rand: #C6DDF6; --tab-tekst: #24456E; --tab-actief: #07589F; --tab-actief-bg: #fff; }
+/* C · wit (gekozen 7-11): volledig wit, gekozen = blauwe tekst + blauwe streep, geen vlak */
+html[data-nav="wit"], html[data-nav="witaccent"] { --nav-bg: #FFFFFF; --nav-tekst: #0B2545; --nav-zacht: #4A5B70; --nav-actief-bg: transparent; --nav-actief: #07589F; --nav-streep: #0869C2; --nav-rand: 1px solid #D3DEEB;
+  --tab-bg: #fff; --tab-rand: #D3DEEB; --tab-tekst: #4A5B70; --tab-actief: #07589F; --tab-actief-bg: transparent; --tab-streep: #0869C2;
+  --pion: #EA580C; /* donkerder pion: 3,6:1 op wit, 3,3 op krijt, 3,1 op ijs */ }
+/* C · wit met subtiel lichtblauw accent: gekozen item en rand in lichtblauw, verder wit */
+html[data-nav="witaccent"] { --nav-actief-bg: #E7F2FE; --nav-streep: #0D88F9; --nav-rand: 1px solid #C6DDF6; --tab-rand: #C6DDF6; --tab-actief-bg: #E7F2FE; --tab-streep: #0D88F9; }
+/* scheiding navigatie en werkgebied bij wit: rand + zachte schaduw, werkgebied in krijt */
+html[data-nav^="wit"] .rail { box-shadow: 1px 0 0 rgba(11,37,69,.04), 4px 0 12px rgba(11,37,69,.05); position: relative; z-index: 1; }
+html[data-nav^="wit"] .mobielkop, html[data-nav^="wit"] .kopbalk { box-shadow: 0 1px 3px rgba(11,37,69,.06); position: relative; z-index: 1; }
+html[data-nav^="wit"] .tabs { box-shadow: 0 -1px 3px rgba(11,37,69,.06); }
+/* accent = één afgeronde rechthoek om icoon én woord; geen losse streep ernaast */
+html[data-nav="witaccent"] .rail a[aria-current] { border-radius: .625rem; }
+html[data-nav="witaccent"] .rail a[aria-current]::before { display: none; }
+html[data-nav="witaccent"] .tabs a { isolation: isolate; }
+html[data-nav="witaccent"] .tabs a[aria-current] { background: none; box-shadow: none; }
+html[data-nav="witaccent"] .tabs a[aria-current]::after { content: ''; position: absolute; inset: .3125rem .25rem; border-radius: .625rem; background: #E7F2FE; z-index: -1; }
+html[data-nav^="wit"] .mail-kop { background: #fff; color: var(--navy); border-bottom: 1px solid var(--lijn); }
+.pion { display: inline-block; width: 0; height: 0; border-left: .5625rem solid transparent; border-right: .5625rem solid transparent; border-bottom: 1rem solid var(--pion); flex: none; }
+.pion.ander { border-bottom-color: var(--grijs); }
+.vink { width: 1.125rem; height: 1.125rem; border-radius: 50%; background: var(--goed); flex: none; position: relative; }
+.vink::after { content: ''; position: absolute; left: .34rem; top: .2rem; width: .3rem; height: .55rem; border: solid #fff; border-width: 0 .14rem .14rem 0; transform: rotate(45deg); }
+.persoon { display: inline-grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--ijs); color: var(--navy); font-weight: 800; font-size: .875rem; font-stretch: 90%; flex: none; box-shadow: inset 0 0 0 2px #C6DDF6; }
+.clubbadge { display: inline-grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: .375rem .375rem 50% 50%; background: var(--club); color: var(--club-op); font: 800 .75rem/1 var(--font); flex: none; box-shadow: 0 0 0 2px #fff; }
+.haltes { display: flex; align-items: center; max-width: 100%; }
+.halte { width: 1.75rem; height: 1.75rem; border-radius: 50%; border: 2px solid var(--lijn); display: grid; place-items: center; font-weight: 800; font-size: .875rem; color: var(--zacht); background: #fff; flex: none; }
+/* Besluit 100: groen vinkje = klaar, blauw = nu/gepland, grijs = open */
+.halte.af { background: var(--goed); border-color: var(--goed); color: #fff; font-size: 0; }
+.halte.af::after { content: '✓'; font-size: .875rem; }
+.halte.volgend { border: 3px solid var(--blauw); color: var(--blauw); }
+.spoor { flex: 1; height: 3px; min-width: .5rem; background: repeating-linear-gradient(90deg, #B9C8DA 0 6px, transparent 6px 11px); }
+.spoor.af { background: var(--goed); }
+
+/* ---------- Schil ---------- */
+.app { display: grid; grid-template-columns: 5.25rem 1fr; min-height: 51rem; background: var(--krijt); border-radius: .75rem; overflow: hidden; box-shadow: 0 0 0 1px var(--lijn); }
+body.los .app { border-radius: 0; box-shadow: none; min-height: 100vh; }
+.rail { background: var(--nav-bg); color: var(--nav-tekst); border-right: var(--nav-rand); display: flex; flex-direction: column; align-items: center; padding: .875rem 0; gap: .25rem; }
+.rail .logo-vlak { margin-bottom: .875rem; }
+.rail a { width: 4.5rem; min-height: 3.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .2rem; color: var(--nav-zacht); text-decoration: none; font-size: .8125rem; font-weight: 700; border-radius: .5rem; position: relative; }
+.rail a svg, .tabs a svg { width: 1.375rem; height: 1.375rem; }
+.rail a[aria-current] { background: var(--nav-actief-bg); color: var(--nav-actief); }
+.rail a[aria-current]::before { content: ''; position: absolute; left: -.375rem; top: .75rem; bottom: .75rem; width: 3px; border-radius: 2px; background: var(--nav-streep); }
+.rail .wacht, .tabs .wacht { position: absolute; top: .4rem; right: 1rem; border-bottom-width: .75rem; border-left-width: .4rem; border-right-width: .4rem; }
+.rail .clubbadge { margin-top: auto; }
+.hoofd { padding: 1.625rem 2rem 2.5rem; min-width: 0; }
+.kop { display: flex; align-items: flex-end; gap: 1rem; justify-content: space-between; flex-wrap: wrap; margin-bottom: 1.25rem; }
+.kop h1 { font-size: 2.25rem; font-stretch: 115%; } .kop p { margin: .25rem 0 0; color: var(--zacht); }
+.tabs, .mobielkop { display: none; }
+
+/* ---------- Bouwstenen ---------- */
+.vlak { background: var(--papier); border-radius: var(--r); box-shadow: 0 0 0 1px var(--lijn); }
+.blok { padding: 1.125rem 1.375rem; }
+.blok + .blok { border-top: 2px solid var(--lijn); }
+.blokkop { font-size: 1.375rem; margin-bottom: .5rem; display: flex; align-items: baseline; gap: .5rem; flex-wrap: wrap; }
+.blokkop small { font: 600 1rem/1 var(--font); font-stretch: 100%; color: var(--zacht); }
+.rij { display: grid; grid-template-columns: 1.25rem 1fr auto; gap: .75rem; align-items: start; padding: .75rem 0; border-top: 1px dashed var(--lijn); text-decoration: none; color: inherit; min-height: 3.5rem; }
+.rij:first-child, .blokkop + .rij { border-top: 0; }
+.rij > .pion, .rij > .vink { margin-top: .2rem; }
+.rij b { display: block; font-weight: 700; overflow-wrap: anywhere; }
+.rij .sub { display: block; color: var(--zacht); }
+.rij .pijl { color: var(--blauw); font-weight: 800; align-self: center; font-size: 1.25rem; }
+.rij.p { grid-template-columns: 2.5rem 1fr auto; align-items: center; }
+.knoppen { display: flex; gap: .5rem; margin-top: .625rem; flex-wrap: wrap; }
+.knop { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 3rem; padding: 0 1.25rem; border-radius: .5rem; border: 0; font: 700 1rem/1.1 var(--font); cursor: pointer; text-decoration: none; text-align: center; transition: transform .08s, background .15s; }
+.knop:active { transform: translateY(1px); }
+.knop.hoofd-k { background: var(--blauw); color: #fff; } .knop.hoofd-k:hover { background: var(--blauw-d); }
+.knop.tweede { background: #fff; color: var(--blauw); box-shadow: inset 0 0 0 2px var(--blauw); }
+.knop.gevaar { background: #fff; color: var(--fout); box-shadow: inset 0 0 0 2px #EBB4B4; }
+.knop.klein { min-height: 2.75rem; padding: 0 .875rem; }
+.knop.stil { background: none; color: var(--blauw); text-decoration: underline; text-underline-offset: 3px; padding: 0 .25rem; min-height: 2.75rem; }
+.chips { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.chip { min-height: 2.75rem; padding: 0 1rem; display: inline-flex; align-items: center; border-radius: 999px; text-decoration: none; color: var(--navy); font-weight: 700; box-shadow: inset 0 0 0 1px var(--lijn); background: #fff; }
+.chip[aria-pressed="true"] { background: var(--ijs); color: var(--blauw-d); box-shadow: inset 0 0 0 2px var(--blauw); }
+.label { display: inline-flex; align-items: center; gap: .375rem; font-size: .875rem; font-weight: 700; padding: .125rem .5rem; border-radius: .375rem; background: #EEF2F6; color: var(--zacht); white-space: nowrap; }
+.label.thuis::before { content: ''; width: .5rem; height: .5rem; border-radius: 2px 2px 50% 50%; background: var(--club); }
+.label.af { background: #FDE8E8; color: var(--fout); text-decoration: line-through; }
+.stap { font-weight: 700; color: var(--pion-tekst); }
+.tweekol { display: grid; grid-template-columns: 1.15fr 1fr; }
+.tweekol > .blok { border-right: 2px solid var(--lijn); }
+.tellers { display: flex; gap: 1.5rem; flex-wrap: wrap; padding: .75rem 1.375rem; color: var(--zacht); border-bottom: 2px solid var(--lijn); }
+.tellers b { color: var(--navy); font-size: 1.375rem; font-stretch: 90%; margin-right: .25rem; }
+.zoek { display: flex; align-items: center; min-height: 3rem; padding: 0 .875rem; background: #fff; border-radius: .5rem; box-shadow: inset 0 0 0 1px var(--lijn); color: var(--zacht); margin-bottom: .75rem; }
+.seg { display: flex; gap: .375rem; margin-bottom: 1rem; overflow-x: auto; }
+.seg a { min-height: 2.75rem; padding: 0 1rem; display: flex; align-items: center; border-radius: 999px; text-decoration: none; color: var(--navy); font-weight: 700; box-shadow: inset 0 0 0 1px var(--lijn); background: #fff; white-space: nowrap; }
+.seg a[aria-current] { background: var(--ijs); color: var(--blauw-d); box-shadow: inset 0 0 0 2px var(--blauw); }
+
+/* Trainers */
+.lijstdetail { display: grid; grid-template-columns: minmax(20rem, 26rem) 1fr; gap: 1.25rem; align-items: start; }
+.trlijst .rij { padding: .625rem .875rem; }
+.trlijst .rij[aria-current] { background: var(--ijs); }
+.detail { padding: 1.375rem 1.5rem; }
+.wie { display: flex; gap: .875rem; align-items: center; margin-bottom: 1.125rem; }
+.wie .persoon { width: 3.5rem; height: 3.5rem; font-size: 1.125rem; }
+.wie h2 { font-size: 1.75rem; overflow-wrap: anywhere; }
+.vier { list-style: none; margin: .5rem 0 1.25rem; padding: 0; display: grid; gap: .25rem; }
+.vier li { display: grid; grid-template-columns: 1.75rem 1fr auto; gap: .75rem; align-items: center; min-height: 2.75rem; }
+.vier .wanneer { color: var(--zacht); }
+.tijdlijn { border-left: 3px solid var(--ijs); margin-left: .75rem; padding-left: 1.25rem; }
+.tijdlijn .m { position: relative; padding: .375rem 0 .875rem; }
+.tijdlijn .m::before { content: ''; position: absolute; left: -1.8rem; top: .55rem; width: .875rem; height: .875rem; border-radius: 50%; background: #fff; border: 3px solid var(--blauw); }
+.tijdlijn .m.af::before { background: var(--blauw); }
+
+/* Training: de bestaande balk (veldtijd − organisatie = oefentijd), in C2.1-vorm */
+.tijd { padding: .875rem 1rem; }
+.tijd-r { display: flex; gap: .5rem 1rem; flex-wrap: wrap; align-items: baseline; margin-bottom: .5rem; }
+.tijd-r b { font-size: 1.25rem; font-stretch: 90%; }
+.balk { position: relative; display: flex; height: 2.25rem; border-radius: .375rem; overflow: hidden; background: #fff; box-shadow: inset 0 0 0 1px var(--lijn); }
+.balk i { display: flex; align-items: center; justify-content: center; height: 100%; min-width: 2px; border-right: 2px solid #fff; font: 800 .8125rem/1 var(--font); font-stretch: 85%; font-style: normal; color: #fff; overflow: hidden; white-space: nowrap; }
+.balk i:last-of-type { border-right: 0; }
+.balk i.licht { color: var(--navy); }
+.balk .vrij { background: repeating-linear-gradient(90deg, transparent 0 6px, #EEF2F6 6px 8px); color: var(--zacht); }
+.balk .org { background: repeating-linear-gradient(135deg, #CBD5E1 0 4px, #E2E8F0 4px 8px); color: var(--navy); }
+.balk .over { background: repeating-linear-gradient(135deg, #B45309 0 4px, #F59E0B 4px 8px); }
+.balk .grens { position: absolute; top: -2px; bottom: -2px; width: 3px; background: var(--navy); }
+.tijd-ok { color: var(--goed); font-weight: 700; display: block; margin-top: .375rem; }
+.tijd-waarsch { margin-top: .5rem; padding: .625rem .75rem; border-radius: .5rem; background: #FFF4E5; color: #7A3B06; }
+.oef { display: grid; grid-template-columns: minmax(2.5rem, auto) minmax(0, 1fr) auto; gap: .75rem; align-items: center; padding: .625rem 1rem; border-top: 1px dashed var(--lijn); min-height: 3.5rem; }
+.oef:first-child { border-top: 0; }
+.oef .code { font-weight: 800; font-stretch: 85%; font-size: 1.125rem; display: flex; align-items: center; gap: .375rem; }
+.oef .code::before { content: ''; width: .5rem; height: 1.5rem; border-radius: 2px; background: var(--k, var(--b-a)); }
+.oef b { font-weight: 700; overflow-wrap: anywhere; } .oef .sub { display: block; color: var(--zacht); }
+.oef .min { font-weight: 800; font-stretch: 85%; font-size: 1.25rem; white-space: nowrap; }
+.oef.leeg b { color: var(--zacht); font-weight: 400; font-style: italic; }
+.tekening { padding: .75rem; } .tekening svg { width: 100%; display: block; height: auto; }
+.toast { display: flex; gap: .75rem; align-items: center; justify-content: space-between; background: var(--navy); color: #fff; border-radius: .5rem; padding: .375rem .375rem .375rem 1rem; margin-top: .75rem; }
+.toast .knop { background: transparent; color: #fff; box-shadow: inset 0 0 0 2px #5B7BA3; min-height: 2.75rem; }
+
+/* Tekentool (bestaande indeling, nieuwe stijl) */
+.tt { background: #fff; border-radius: var(--r); box-shadow: 0 0 0 1px var(--lijn); overflow: hidden; }
+.tt-balk { display: flex; gap: .5rem; padding: .625rem; align-items: center; flex-wrap: wrap; border-bottom: 1px solid var(--lijn); }
+.tt-balk .rechts { margin-left: auto; display: flex; gap: .5rem; }
+.tt-ik { min-width: 2.75rem; }
+.tt-gereed { display: flex; gap: .375rem; padding: .625rem; overflow-x: auto; border-bottom: 1px solid var(--lijn); mask-image: linear-gradient(90deg, #000 85%, transparent); -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent); }
+.tt-gereed button { flex: none; min-width: 4.5rem; min-height: 4rem; border: 0; border-radius: .5rem; background: var(--krijt); font: 700 .875rem/1.1 var(--font); color: var(--navy); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .375rem; }
+.tt-gereed button[aria-pressed="true"] { background: var(--ijs); box-shadow: inset 0 0 0 2px var(--blauw); color: var(--blauw-d); }
+.tt-gereed svg { width: 1.5rem; height: 1.5rem; }
+.tt-hulp { padding: .625rem .875rem; color: var(--zacht); }
+.tt-veld { background: #2E7D4F; padding: .75rem; } .tt-veld svg { width: 100%; display: block; height: auto; }
+
+/* Ouder */
+.act-kop { display: flex; justify-content: space-between; align-items: baseline; gap: .5rem; flex-wrap: wrap; }
+.act-kop b { font-size: 1.25rem; font-stretch: 105%; }
+.act-tijden { display: grid; grid-template-columns: repeat(auto-fit, minmax(6.5rem, max-content)); gap: .25rem 1.25rem; justify-content: start; margin: .5rem 0; }
+.act-tijden span { color: var(--zacht); } .act-tijden b { display: block; color: var(--navy); font-size: 1.25rem; font-stretch: 90%; }
+.keuze { display: grid; grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); gap: .5rem; margin-top: .5rem; }
+.keuze .knop[aria-pressed="true"] { background: var(--ijs); color: var(--blauw-d); box-shadow: inset 0 0 0 2px var(--blauw); }
+
+/* Staten */
+.staten { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+.leeg-staat { text-align: center; padding: 1.5rem 1rem; color: var(--zacht); }
+.laden { height: .875rem; border-radius: .25rem; background: linear-gradient(90deg, #EEF2F6 25%, #F7F9FB 50%, #EEF2F6 75%); background-size: 200% 100%; animation: glans 1.4s linear infinite; margin: .5rem 0; }
+@keyframes glans { to { background-position: -200% 0; } }
+.fout-staat { padding: 1rem; border-radius: .5rem; background: #FDECEC; color: #7E1414; }
+
+/* Kit */
+.kit { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+.kitvak { padding: 1.125rem; } .kitvak h3 { font-size: 1.25rem; margin-bottom: .75rem; }
+.betekenis { width: 100%; border-collapse: collapse; }
+.betekenis th, .betekenis td { text-align: left; padding: .5rem .5rem; border-top: 1px solid var(--lijn); vertical-align: middle; }
+.betekenis th { font-size: .875rem; color: var(--zacht); }
+.vb { display: inline-flex; align-items: center; gap: .5rem; }
+
+/* Mail en print */
+.mail { max-width: 37.5rem; margin: 0 auto; background: #fff; border-radius: var(--r); box-shadow: 0 0 0 1px var(--lijn); overflow: hidden; }
+.mail-kop { display: flex; align-items: center; gap: .75rem; padding: 1rem 1.5rem; background: var(--navy); color: #fff; }
+.mail-kop .clubbadge { margin-left: auto; }
+.mail-tekst { padding: 1.5rem; } .mail-tekst h2 { font-size: 1.5rem; margin-bottom: .75rem; }
+.mail-voet { padding: 1rem 1.5rem; color: var(--zacht); font-size: .875rem; border-top: 1px solid var(--lijn); }
+.print { background: #fff; width: 49.6rem; max-width: 100%; padding: 2rem; box-shadow: 0 0 0 1px var(--lijn); filter: grayscale(1); }
+.print h2 { font-size: 1.5rem; } .print .oef { padding: .5rem 0; }
+
+/* beweging: één moment — de haltes van het traject lopen één keer vol */
+@keyframes vul { from { transform: scaleX(0); } }
+.spoor.af { transform-origin: left; animation: vul .6s ease-out both; }
+
+/* ---------- Telefoon ---------- */
+@media (max-width: 56.25em) {
+  section[data-deel] { padding: 1.25rem 1rem 2.5rem; }
+  .app { grid-template-columns: 1fr; min-height: 0; }
+  .rail { display: none; }
+  .mobielkop { display: flex; align-items: center; gap: .625rem; padding: calc(.5rem + env(safe-area-inset-top)) 1rem .5rem; background: var(--nav-bg); color: var(--nav-tekst); min-height: 3.5rem; border-bottom: var(--nav-rand); }
+  .mobielkop .logo { width: 2.125rem; height: 2.125rem; } .mobielkop .clubbadge { margin-left: auto; width: 2rem; height: 2rem; font-size: .6875rem; }
+  .mobielkop .rol { color: var(--nav-zacht); font-weight: 600; }
+  .hoofd { padding: 1rem 1rem 6rem; }
+  .kop h1 { font-size: 1.75rem; }
+  .blok { padding: 1rem; }
+  .tellers { padding: .625rem 1rem; gap: .25rem 1rem; }
+  .tabs { display: grid; grid-template-columns: repeat(5, 1fr); background: var(--tab-bg); border-top: 1px solid var(--tab-rand); padding-bottom: env(safe-area-inset-bottom); position: sticky; bottom: 0; }
+  body:not(.los) .tabs { position: relative; }
+  body.los .tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; }
+  .tabs a { min-height: 3.625rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .2rem; color: var(--tab-tekst); text-decoration: none; font-size: .8125rem; font-weight: 700; position: relative; }
+  .tabs a[aria-current] { color: var(--tab-actief); background: var(--tab-actief-bg); box-shadow: inset 0 3px 0 var(--tab-streep); }
+  .tabs .wacht { right: calc(50% - 1.3rem); top: .35rem; }
+  .lijstdetail { grid-template-columns: 1fr; } .detail-paneel { display: none; }
+  .rij.p .halte { width: 1.5rem; height: 1.5rem; font-size: .75rem; }
+  .oef { gap: .5rem; padding: .625rem .75rem; }
+  .tweekol { grid-template-columns: 1fr; } .tweekol > .blok { border-right: 0; border-bottom: 2px solid var(--lijn); }
+  .rij.p { grid-template-columns: 2.5rem 1fr; } .rij.p .haltes { grid-column: 2; width: min(10rem, 100%); } .rij.p .pijl { display: none; }
+  .trgrid { grid-template-columns: 1fr !important; }
+  .kit, .staten { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-tr" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-team" viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4 3 7 7 9 4-2 7-5 7-9V6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-training" viewBox="0 0 24 24"><path d="M12 3 20 20H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-bericht" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-kies" viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-3 6z" fill="currentColor"/></symbol>
+  <symbol id="i-bal" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="#fff" stroke="currentColor" stroke-width="2"/><path d="M12 8l3 2-1 4h-4l-1-4z" fill="currentColor"/></symbol>
+  <symbol id="i-hoed" viewBox="0 0 24 24"><path d="M12 4 20 19H4z" fill="#F97316"/></symbol>
+  <symbol id="i-schijf" viewBox="0 0 24 24"><ellipse cx="12" cy="13" rx="9" ry="4" fill="#FACC15" stroke="#A88A00"/></symbol>
+  <symbol id="i-doel" viewBox="0 0 24 24"><path d="M3 18V7h18v11" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M3 14h18M8 7v11M12 7v11M16 7v11" stroke="currentColor" stroke-width=".8"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M8 16v-5M12 16V8M16 16v-3" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2 20c.8-3.5 3.5-5 7-5s6.2 1.5 7 5M16 4.5a3.5 3.5 0 0 1 0 7M18 15c2 .6 3.4 2.2 4 5" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-car" viewBox="0 0 24 24"><path d="M3 16v-4l2-5h14l2 5v4zM3 16v3h3v-3M18 16v3h3v-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="7.5" cy="13" r="1.3" fill="currentColor"/><circle cx="16.5" cy="13" r="1.3" fill="currentColor"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M3 6l1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M7 4h10v5a5 5 0 0 1-10 0zM7 6H4c0 3 1.5 4.5 3 5M17 6h3c0 3-1.5 4.5-3 5M12 14v4M8 21h8" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2"/></symbol>
+</svg>
+
+<section id="home" data-deel="home" data-naam="Home HO"></section>
+<section id="trainerhome" data-deel="trainerhome" data-naam="Home trainer"></section>
+<section id="trainers" data-deel="trainers" data-naam="Trainers"></section>
+<section id="training" data-deel="training" data-naam="Training"></section>
+<section id="balk" data-deel="balk" data-naam="Trainingsbalk: randgevallen"></section>
+<section id="tekentool" data-deel="tekentool" data-naam="Tekentool"></section>
+<section id="ouder" data-deel="ouder" data-naam="Ouder"></section>
+<section id="veld" data-deel="veld" data-naam="Op het veld"></section>
+<section id="staten" data-deel="staten" data-naam="Staten en uitzonderingen"></section>
+<section id="clubs" data-deel="clubs" data-naam="Clubkleuren"></section>
+<section id="mail" data-deel="mail" data-naam="E-mail en print"></section>
+<section id="merk" data-deel="merk" data-naam="Logo en clubembleem"></section>
+<section id="kit" data-deel="kit" data-naam="Componenten"></section>
+
+<script src="../prototypes/inhoud.js"></script>
+<script>
+{ const q = new URLSearchParams(location.search); document.documentElement.dataset.nav = q.get('nav') || 'witaccent'; /* gekozen 7-11 */ if (q.get('vlak')) document.documentElement.dataset.vlak = q.get('vlak'); }
+const LOGO = '<span class="logo-vlak"><img class="logo" src="logo-icoon.png" alt="ClubComm"></span>';
+// Menu per rol zoals in de app (hjo.js, trainers.js r. 45, trainer.js r. 338, ouder.js r. 20)
+const MENU = [['home', 'i-home', 'Home'], ['trainers', 'i-tr', 'Trainers'], ['teams', 'i-team', 'Teams'], ['inzicht', 'i-chart', 'Inzicht'], ['berichten', 'i-bericht', 'Berichten']];
+const TRAINER = [['home', 'i-home', 'Home'], ['training', 'i-check', 'Training'], ['wedstrijd', 'i-trophy', 'Wedstrijd'], ['spelers', 'i-users', 'Spelers'], ['berichten', 'i-bericht', 'Berichten']];
+const OUDER = [['home', 'i-home', 'Home'], ['planning', 'i-cal', 'Planning'], ['vervoer', 'i-car', 'Vervoer'], ['taken', 'i-check', 'Taken'], ['berichten', 'i-bericht', 'Berichten']];
+const schil = (actief, inhoud, opt = {}) => `<div class="app">
+  <nav class="rail" aria-label="Menu">${LOGO}
+    ${(opt.menu || MENU).map(([k, i, t]) => `<a href="#" ${k === actief ? 'aria-current="page"' : ''}><svg aria-hidden="true"><use href="#${i}"/></svg>${t}${k === 'home' && opt.wacht ? '<span class="pion wacht" aria-label="iets wacht op jou"></span>' : ''}</a>`).join('')}
+    <span class="clubbadge" data-clubkort title="Club">VDV</span></nav>
+  <div><div class="mobielkop">${LOGO}<span class="rol">${opt.rol || ''}</span><span class="clubbadge" data-clubkort>VDV</span></div>
+    <main class="hoofd">${inhoud}</main>
+    <nav class="tabs" aria-label="Menu">${(opt.menu || MENU).map(([k, i, t]) => `<a href="#" ${k === actief ? 'aria-current="page"' : ''}><svg aria-hidden="true"><use href="#${i}"/></svg>${t}${k === 'home' && opt.wacht ? '<span class="pion wacht"></span>' : ''}</a>`).join('')}</nav></div></div>`;
+const haltes = (af, tot, volgend = true) => `<span class="haltes" role="img" aria-label="${af} van ${tot} momenten gedaan">${Array.from({ length: tot }, (_, i) => `${i ? `<span class="spoor ${i <= af - 1 ? 'af' : ''}"></span>` : ''}<span class="halte ${i < af ? 'af' : i === af && volgend ? 'volgend' : ''}">${i + 1}</span>`).join('')}</span>`;
+
+// ---------- Home HO/HJO (pakket Trainers begeleiden), zelfde blokken als CC.hoHome ----------
+document.getElementById('home').innerHTML = schil('home', `
+  <div class="kop"><div><h1>Goedemorgen, Peter</h1><p>Vrijdag 6 november · Hoofd jeugdopleiding</p></div></div>
+  <div class="chips" role="group" aria-label="Welke bouwen"><a class="chip" href="#" aria-pressed="true">Alles</a><a class="chip" href="#" aria-pressed="false">Mini's</a><a class="chip" href="#" aria-pressed="false">Onderbouw</a></div>
+  <div class="vlak tweekol">
+    <div class="blok">
+      <h2 class="blokkop">Actie nodig <small>4</small></h2>
+      <div class="rij"><span class="pion" aria-label="wacht op jou"></span><span><b>Trainer kan niet: O9-1 wo 11 nov 17:00</b><span class="sub">Dennis Peters · werk · nog geen vervanger</span><span class="knoppen"><a class="knop hoofd-k klein" href="#">Ik neem over</a><a class="knop gevaar klein" href="#">Afgelasten</a></span></span><span></span></div>
+      <a class="rij" href="#"><span class="pion" aria-label="wacht op jou"></span><span><b>2 trainers wachten op een stap van jou</b><span class="sub">③ traject starten of ④ eerste moment plannen</span></span><span class="pijl">›</span></a>
+      <a class="rij" href="#"><span class="pion" aria-label="wacht op jou"></span><span><b>Training van Dennis Peters bekijken</b><span class="sub">O9-1 · di 10 nov · Opbouwen onder druk</span></span><span class="pijl">›</span></a>
+      <a class="rij" href="#"><span class="pion" aria-label="wacht op jou"></span><span><b>2 trainers zonder kennismaking</b><span class="sub">Nodig ze uit voor de korte vragenlijst</span></span><span class="pijl">›</span></a>
+    </div>
+    <div>
+      <div class="blok"><h2 class="blokkop">Mijn trajecten <small>3</small></h2>
+        <a class="rij p" href="#"><span class="persoon">DP</span><span><b>Dennis Peters</b><span class="sub">O9-1 · volgend za 14 nov</span></span>${haltes(1, 2)}</a>
+        <a class="rij p" href="#"><span class="persoon">SB</span><span><b>Samira Brouwer</b><span class="sub">O8-1 · volgend za 21 nov</span></span>${haltes(2, 3)}</a>
+        <a class="rij p" href="#"><span class="persoon">AV</span><span><b>Anouk van Vliet</b><span class="sub"><span class="stap">④ eerste moment plannen</span></span></span>${haltes(0, 2, false)}</a>
+      </div>
+      <div class="blok"><h2 class="blokkop">Deze week</h2>
+        <a class="rij" href="#" style="grid-template-columns:1fr auto"><span><b>15 wedstrijden · 27 trainingen</b><span class="sub">8 thuis · za 14 nov 1 begeleidingsmoment</span></span><span class="pijl">›</span></a></div>
+    </div>
+  </div>`, { wacht: true, rol: 'HJO' });
+
+// ---------- Home trainer (zelfde blokken als CC.trainerStart) ----------
+document.getElementById('trainerhome').innerHTML = schil('home', `
+  <div class="kop"><div><h1>Hoi Dennis</h1><p>Vrijdag 6 november · O9-1</p></div></div>
+  <div class="vlak">
+    <div class="blok"><h2 class="blokkop">Mijn volgende training</h2>
+      <a class="rij" href="#" style="grid-template-columns:1fr auto"><span><b>Dinsdag 10 nov · 17:00–18:15</b><span class="sub">Opbouwen onder druk · 2 van 5 plekken ingevuld</span></span><span class="pijl">›</span></a>
+      <div class="balk" role="img" aria-label="22 van 70 minuten ingepland" style="height:1.75rem"><i style="flex:10;background:var(--b-start)" class="licht">Start</i><i style="flex:12;background:var(--b-a)">A1</i><i class="vrij" style="flex:48">nog 48 min vrij</i></div>
+    </div>
+    <div class="blok"><h2 class="blokkop">Van je begeleider <small>gisteren</small></h2>
+      <div class="rij p" style="border:0"><span class="persoon">PV</span><span>"Mooi dat je bij de rondo eerst liet kijken. Zaterdag let ik op wanneer je stilzet."<span class="sub">Peter de Vries</span></span><span></span></div></div>
+    <div class="blok"><h2 class="blokkop">Mijn traject</h2>
+      <p style="margin:0 0 .625rem" class="hint">Leerdoel: spelers vaker zelf laten oplossen</p>
+      ${haltes(1, 2)}
+      <a class="rij" href="#" style="grid-template-columns:1fr auto;margin-top:.5rem"><span><b>Moment 2: wedstrijd za 14 nov 09:00</b><span class="sub">Thuis, veld 3 · voorbereiding ingevuld</span></span><span class="pijl">›</span></a></div>
+  </div>`, { rol: 'Trainer O9-1', menu: TRAINER });
+
+// ---------- Trainers: lijst + dossier (Besluit 171, 177, 178) ----------
+const TR = [['AV', 'Anouk van Vliet', 'O10-2', '<span class="stap">④ eerste moment plannen</span>', 1, 1], ['AH', 'Anne-Marie van den Heuvel-Bakker', 'MO15-1 en MO17-1', 'wacht op kennismaking', 0, 0],
+  ['DP', 'Dennis Peters', 'O9-1', 'traject 1/2 · volgend za 14 nov', 0, 0], ['HD', 'Hasan van Dijk', 'O11-1', '<span class="stap">③ traject starten</span>', 0, 1],
+  ['LJ', 'Lotte Jansen', 'O7-1', 'traint vooral voor het plezier', 0, 0], ['MK', 'Mehmet Kaya', 'O12-2', 'kennismaking nog niet gestuurd', 0, 0], ['SB', 'Samira Brouwer', 'O8-1', 'traject 2/3 · volgend za 21 nov', 0, 0]];
+document.getElementById('trainers').innerHTML = schil('trainers', `
+  <div class="kop"><div><h1>Trainers</h1><p>15 trainers · 2 wachten op een stap van jou</p></div></div>
+  <div class="seg"><a href="#" aria-current="page">Alle (15)</a><a href="#">Traject (3)</a></div>
+  <div class="lijstdetail">
+    <div>
+      <div class="zoek">Zoek trainer of team</div>
+      <div class="vlak" style="margin-bottom:.75rem"><a class="rij" href="#" style="padding:.75rem .875rem"><span class="pion"></span><span><b>2 trainers zonder kennismaking</b><span class="sub">Nodig ze in één keer uit</span></span><span class="pijl">›</span></a></div>
+      <div class="vlak trlijst">${TR.map(([i, n, t, s, nu, w]) => `<a class="rij p" href="#" ${nu ? 'aria-current="true"' : ''}><span class="persoon">${i}</span><span><b>${n}</b><span class="sub">${t} · ${s}</span></span><span class="pijl">›</span></a>`).join('')}</div>
+      <p class="hint" style="margin-top:.5rem">Kennismaking: 9 van 15 ingevuld · <a class="knop stil" href="#">Lege vragenlijst printen</a></p>
+    </div>
+    <div class="vlak detail detail-paneel">
+      <div class="wie"><span class="persoon">AV</span><div><h2>Anouk van Vliet</h2><span class="hint">O10-2 · 06-12345678</span></div></div>
+      <h3 style="font-size:1.125rem">Van start tot eerste moment</h3>
+      <ol class="vier">
+        <li><span class="halte af">1</span><span>Toegevoegd</span><span class="wanneer">12 aug</span></li>
+        <li><span class="halte af">2</span><span>Kennismaking ingevuld</span><span class="wanneer">3 sep</span></li>
+        <li><span class="halte af">3</span><span>Traject gestart</span><span class="wanneer">1 nov</span></li>
+        <li><span class="halte volgend">4</span><span style="display:flex;gap:.5rem;align-items:center"><span class="pion"></span><b>Eerste moment plannen</b></span><a class="knop hoofd-k klein" href="#">Plannen</a></li>
+      </ol>
+      <h3 style="font-size:1.125rem;margin-bottom:.375rem">Leerdoel</h3><p style="margin:0 0 1.25rem">Rust bij de uitleg</p>
+      <h3 style="font-size:1.125rem;margin-bottom:.5rem">Tijdlijn</h3>
+      <div class="tijdlijn">
+        <div class="m"><b>za 14 nov · 10:00 · thuis, veld 1</b><br><span class="hint">O10-2 – SV De Kraanvogels O10-1</span></div>
+        <div class="m"><b>di 17 nov · 17:30</b><br><span class="hint">Training O10-2</span></div>
+        <div class="m af"><b>1 nov · traject gestart</b><br><span class="hint">2 momenten afgesproken</span></div>
+      </div>
+    </div>
+  </div>`);
+
+// ---------- Trainingsbalk volgens de bestaande rekenregel (training.js r. 161–176) ----------
+const KL = { Start: 'var(--b-start)', A: 'var(--b-a)', B: 'var(--b-b)', S: 'var(--b-s)', P: 'var(--b-p)' };
+const LICHT = { Start: 1, S: 1 };
+const balk = ({ veld = null, org = null, blokken }) => {
+  const oefen = veld == null ? null : veld - (org || 0); const inp = blokken.reduce((s, b) => s + b.min, 0);
+  const schaal = Math.max(veld || 0, inp + (org || 0), 1); let tel = 0; const delen = [];
+  const label = (txt, n) => (n / schaal >= 0.075 ? txt : '');
+  blokken.forEach((b) => { const binnen = oefen == null ? b.min : Math.max(0, Math.min(b.min, oefen - tel));
+    if (binnen) delen.push(`<i class="${LICHT[b.soort] ? 'licht' : ''}" style="flex:${binnen};background:${KL[b.soort]}">${label(b.code, binnen)}</i>`);
+    if (b.min > binnen) delen.push(`<i class="over" style="flex:${b.min - binnen}"></i>`); tel += b.min; });
+  if (oefen != null && tel < oefen) delen.push(`<i class="vrij" style="flex:${oefen - tel}">${label(`${oefen - tel} vrij`, oefen - tel)}</i>`);
+  if (veld != null && org) { const rest = Math.max(0, veld - Math.max(tel, oefen)); if (rest) delen.push(`<i class="org" style="flex:${rest}">${label('org.', rest)}</i>`); }
+  const grens = oefen != null && veld ? `<span class="grens" style="left:calc(${((oefen / schaal) * 100).toFixed(2)}% - 1px)"></span>` : '';
+  const over = oefen == null ? 0 : inp - oefen;
+  const kop = veld != null ? `<span><b>${veld}</b> veldtijd</span><span>− <a class="tlink" href="#">${org ? `${org} organisatie` : '+ organisatie'}</a></span><span>= <b>${oefen}</b> oefentijd</span>` : `<span><b>${inp}</b> min ingepland</span>`;
+  const regel = oefen == null ? (blokken.length ? '<span class="hint" style="display:block;margin-top:.375rem">Geen begin- en eindtijd in de kalender: ClubComm telt alleen de minuten op.</span>' : '')
+    : over > 0 ? `<div class="tijd-waarsch" role="status"><b>${inp} van ${oefen} min ingepland: ${over} te veel.</b> ${org ? 'In de organisatietijd' : 'Buiten de veldtijd'} valt: de laatste ${over} min van de partij. Je kunt zo doorgaan.</div>`
+    : blokken.length ? `<span class="tijd-ok">✓ ${inp} van ${oefen} min ingepland${over < 0 ? ` · nog ${-over} min vrij` : ' · past precies'}</span>` : '';
+  return `<div class="tijd"><div class="tijd-r">${kop}</div>${blokken.length ? `<div class="balk" role="img" aria-label="${inp} minuten ingepland${oefen != null ? `, ${oefen} oefentijd` : ''}${org ? `, ${org} organisatie` : ''}">${delen.join('')}${grens}</div>` : '<p class="hint" style="margin:.25rem 0 0">Nog geen vormen gekozen.</p>'}${regel}</div>`; };
+const B = (code, soort, naam, min, sp = '') => ({ code, soort, naam, min, sp });
+const STD = [B('Start', 'Start', 'Rondo 5 tegen 2', 10, '7 spelers'), B('A1', 'A', 'Passen in driehoeken', 12, '9 spelers'), B('A2', 'A', 'Positiespel 5 tegen 3 met doelen', 14, '8 spelers'), B('B1', 'B', 'Afwerken na kaats', 12, '10 spelers'), B('P', 'P', 'Partij 6 tegen 6', 20, '12 spelers')];
+const lijst = (bl, vrij) => `${bl.map((b) => `<div class="oef" style="--k:${KL[b.soort]}"><span class="code">${b.code}</span><span><b>${b.naam}</b><span class="sub">${b.sp}</span></span><span class="min">${b.min}′</span></div>`).join('')}${vrij ? `<div class="oef leeg" style="--k:#CBD5E1"><span class="code">+</span><span><b>Lege plek</b><span class="sub"><a class="tlink" href="#">Vorm kiezen</a></span></span><span></span></div>` : ''}`;
+
+document.getElementById('training').innerHTML = schil('training', `
+  <div class="seg" role="tablist"><a href="#" class="tel-eerst">Op het veld</a><a href="#" aria-current="page">Voorbereiden</a><a href="#">Vormen</a><a href="#">Seizoen</a></div>
+  <div class="kop"><div><h1>O10-1 · vrijdag 6 nov</h1><p>17:00–18:15 · thema <b>Opbouwen onder druk</b></p></div></div>
+  <div class="trgrid" style="display:grid;grid-template-columns:1.3fr 1fr;gap:1rem;align-items:start">
+    <div class="vlak">${balk({ veld: 75, org: 5, blokken: STD })}<div style="border-top:2px solid var(--lijn)">${lijst(STD, true)}</div></div>
+    <div><div class="vlak tekening" id="tek21"></div>
+      <div class="vlak" style="margin-top:.75rem;padding:.875rem 1rem"><b>Afspraak</b><br>Bij elke vorm eerst 2 minuten alleen kijken.</div></div>
+  </div>`, { rol: 'Trainer O10-1', menu: TRAINER });
+document.getElementById('tek21').innerHTML = VELDJE('#2E7D4F', 'rgba(255,255,255,.85)', '#0869C2', '#F97316');
+
+// ---------- Randgevallen trainingsbalk ----------
+const GEVAL = [
+  ['75 minuten, 5 organisatie, 2 min vrij', { veld: 75, org: 5, blokken: STD.slice(0, 4).concat([B('P', 'P', 'Partij 6 tegen 6', 20)]) }],
+  ['60 minuten, 9 vormen, geen organisatie', { veld: 60, org: 0, blokken: [B('Start', 'Start', 'Tikkertje', 5), B('A1', 'A', 'Dribbel', 5), B('A2', 'A', 'Passen', 6), B('A3', 'A', '1 tegen 1', 6), B('S', 'S', 'Drinken', 3), B('B1', 'B', 'Kaatsen', 7), B('B2', 'B', 'Afwerken', 6), B('B3', 'B', '2 tegen 1', 7), B('P', 'P', 'Partij', 15)] }],
+  ['75 minuten, 10 organisatie, 9 min te veel', { veld: 75, org: 10, blokken: STD.concat([B('B2', 'B', 'Kopduel', 3)]).map((b) => (b.code === 'P' ? { ...b, min: 26 } : b)).slice(0, 5) }],
+  ['Leeg: nog niets gekozen', { veld: 75, org: 5, blokken: [] }],
+  ['Geen tijd in de kalender', { blokken: STD.slice(0, 3) }],
+  ['Na verplaatsen: A2 en B1 gewisseld', { veld: 75, org: 5, blokken: [STD[0], STD[1], STD[3], STD[2], STD[4]] }]];
+document.getElementById('balk').innerHTML = `<h1 class="deelkop">Trainingsbalk: randgevallen</h1>
+  <p class="hint">Dezelfde rekenregel als de app nu (veldtijd − organisatie = oefentijd; bloksoortkleuren; gestreept oranje = te veel; grijs gestreept = organisatie; zwarte streep = einde oefentijd). Codes staan alleen in een vak als het vak breed genoeg is; de lijst eronder blijft de volledige waarheid en voorleessoftware leest de totale minuten.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,26rem),1fr));gap:1rem">${GEVAL.map(([t, g], i) => `<div class="vlak"><div style="padding:.75rem 1rem 0"><b>${i + 1}. ${t}</b></div>${balk(g)}${i === 5 ? '<div style="padding:0 1rem 1rem"><div class="toast" role="status"><span>Gewisseld met A2</span><a class="knop" href="#">Ongedaan maken</a></div></div>' : ''}</div>`).join('')}</div>`;
+
+// ---------- Tekentool (bestaande indeling en tekst; alleen de stijl is nieuw) ----------
+const veld = `<svg viewBox="0 0 600 380" role="img" aria-label="Veld met 14 spelers, hoedjes, bal en een looplijn">
+  <rect width="600" height="380" fill="#2E7D4F"/>${Array.from({ length: 6 }, (_, i) => `<rect x="${20 + i * 93.3}" y="20" width="46.6" height="340" fill="rgba(255,255,255,.05)"/>`).join('')}
+  <g fill="none" stroke="rgba(255,255,255,.85)" stroke-width="2"><rect x="20" y="20" width="560" height="340"/><path d="M300 20v340"/><circle cx="300" cy="190" r="48"/><rect x="20" y="100" width="84" height="180"/><rect x="496" y="100" width="84" height="180"/></g>
+  ${[[60, 190, 1], [140, 90, 2], [140, 290, 3], [190, 190, 4], [250, 120, 5], [250, 260, 6], [330, 190, 7]].map(([x, y, n]) => `<circle cx="${x}" cy="${y}" r="15" fill="#0869C2" stroke="#fff" stroke-width="2"/><text x="${x}" y="${y + 5}" font-size="14" font-weight="800" text-anchor="middle" fill="#fff" font-family="Archivo,sans-serif">${n}</text>`).join('')}
+  ${[[400, 120, 1], [400, 260, 2], [460, 190, 3], [520, 140, 4], [520, 240, 5], [370, 190, 6], [560, 190, 7]].map(([x, y, n]) => `<circle cx="${x}" cy="${y}" r="15" fill="#F97316" stroke="#fff" stroke-width="2"/><text x="${x}" y="${y + 5}" font-size="14" font-weight="800" text-anchor="middle" fill="#0B2545" font-family="Archivo,sans-serif">${n}</text>`).join('')}
+  ${[[220, 50], [380, 50], [220, 330], [380, 330]].map(([x, y]) => `<path d="M${x} ${y - 10} L${x + 9} ${y + 6} L${x - 9} ${y + 6}Z" fill="#FACC15"/>`).join('')}
+  <circle cx="212" cy="196" r="7" fill="#fff" stroke="#0B2545" stroke-width="1.5"/>
+  <path d="M150 92 Q 210 52 245 112" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="8 6"/><path d="M238 103 l10 12 l-15 1z" fill="#fff"/></svg>`;
+const G = [['i-kies', 'Kies', 1], ['i-tr', 'Spelers'], ['i-bal', 'Bal'], ['i-hoed', 'Hoedjes'], ['i-schijf', 'Schijfjes'], ['i-doel', 'Doelen']];
+document.getElementById('tekentool').innerHTML = schil('training', `
+  <div class="tt">
+    <div class="tt-balk"><a class="knop tweede klein" href="#">Annuleren</a><a class="knop tweede klein tt-ik" href="#" aria-label="Ongedaan maken">↶</a><a class="knop tweede klein tt-ik" href="#" aria-label="Opnieuw">↷</a>
+      <span class="rechts"><a class="knop hoofd-k klein" href="#">Opslaan</a></span></div>
+    <div class="tt-balk"><a class="knop tweede klein" href="#">Veld: 11×11 liggend ▾</a><a class="knop tweede klein" href="#">Opstelling ▾</a><a class="knop tweede klein tt-ik" href="#" aria-label="Instellingen">⚙</a></div>
+    <div class="tt-gereed" role="toolbar" aria-label="Gereedschap">${G.map(([i, t, a]) => `<button aria-pressed="${a ? 'true' : 'false'}"><svg aria-hidden="true"><use href="#${i}"/></svg>${t}</button>`).join('')}</div>
+    <div class="tt-veld">${veld}</div>
+    <p class="tt-hulp">Klik iets aan om het te verplaatsen of te verwijderen. Sleep over een lege plek om meerdere tegelijk te selecteren (Shift+klik = toevoegen, Cmd/Ctrl+A = alles).</p>
+  </div>`, { menu: TRAINER });
+
+// ---------- Ouder (zelfde onderdelen als ouder.js: afmelden, verzamelen/aftrap, rijden) ----------
+document.getElementById('ouder').innerHTML = schil('home', `
+  <div class="kop"><div><h1>Liam de Jong</h1><p>O9-1 · <span data-clubnaam>VV De Voorbeeldclub</span></p></div></div>
+  <div class="vlak">
+    <div class="blok"><div class="act-kop"><b>Zaterdag 14 nov · wedstrijd</b><span class="label thuis">thuis</span></div>
+      <div class="hint" style="color:var(--navy)">O9-1 – SV Duinzicht-Oost O9-1 · veld 3</div>
+      <div class="act-tijden"><span>Verzamelen<b>08:30</b></span><span>Aftrap<b>09:00</b></span><span>Afmelden tot<b>vr 20:00</b></span></div>
+      <div class="keuze"><a class="knop tweede" href="#" aria-pressed="true">✓ Ja, komt</a><a class="knop tweede" href="#" aria-pressed="false">Afmelden</a></div></div>
+    <div class="blok"><h2 class="blokkop">Rijden <small>uit, za 21 nov</small></h2>
+      <div class="rij" style="border:0"><span class="pion"></span><span><b>Nog 1 chauffeur nodig</b><span class="sub">FC Waterkant · vertrek 08:15</span><span class="knoppen"><a class="knop hoofd-k klein" href="#">Ik doe het</a><a class="knop tweede klein" href="#">Kan niet</a></span></span><span></span></div></div>
+    <div class="blok"><div class="act-kop"><b>Dinsdag 10 nov · training</b></div>
+      <div class="act-tijden"><span>Begint om<b>17:00</b></span><span>Tot<b>18:15</b></span><span>Afmelden tot<b>di 12:00</b></span></div>
+      <div class="keuze"><a class="knop tweede" href="#" aria-pressed="true">✓ Ja, komt</a><a class="knop tweede" href="#" aria-pressed="false">Afmelden</a></div></div>
+  </div>`, { rol: 'Ouder', menu: OUDER });
+
+// ---------- Op het veld (buiten, in de zon): hoog contrast, grote tekening ----------
+document.getElementById('veld').innerHTML = schil('training', `
+  <div class="seg"><a href="#" aria-current="page">Op het veld</a><a href="#">Voorbereiden</a><a href="#">Vormen</a><a href="#">Seizoen</a></div>
+  <div class="kop"><div><h1>Vandaag 17:00 · O10-1</h1><p style="color:var(--navy)">13 van 14 aanwezig · Opbouwen onder druk</p></div></div>
+  <div class="vlak">
+    <div class="oef" style="--k:var(--b-start)"><span class="code">Start</span><span><b>Rondo 5 tegen 2</b></span><span class="min">10′</span></div>
+    <div class="oef" style="--k:var(--b-a);background:var(--ijs)"><span class="code">A1</span><span><b>Passen in driehoeken</b><span class="sub" style="color:var(--navy)">Tik voor de tekening</span></span><span class="min">12′</span></div>
+    <div class="tekening" id="tekVeld" style="padding:.5rem 1rem 1rem"></div>
+    <div class="oef" style="--k:var(--b-a)"><span class="code">A2</span><span><b>Positiespel 5 tegen 3 met doelen</b></span><span class="min">14′</span></div>
+    <div class="oef" style="--k:var(--b-b)"><span class="code">B1</span><span><b>Afwerken na kaats</b></span><span class="min">12′</span></div>
+    <div class="oef" style="--k:var(--b-p)"><span class="code">P</span><span><b>Partij 6 tegen 6</b></span><span class="min">20′</span></div>
+  </div>`, { rol: 'Trainer O10-1', menu: TRAINER });
+document.getElementById('tekVeld').innerHTML = VELDJE('#2E7D4F', '#fff', '#0869C2', '#F97316');
+
+// ---------- Staten, lange namen ----------
+document.getElementById('staten').innerHTML = `<h1 class="deelkop">Staten en uitzonderingen</h1>
+  <div class="staten">
+    <div class="vlak"><div class="blok"><h2 class="blokkop">Mijn trajecten <small>0</small></h2><div class="leeg-staat"><b style="color:var(--navy)">Nog niemand in een traject</b><br>Start er een bij Trainers.<div class="knoppen" style="justify-content:center"><a class="knop tweede klein" href="#">Naar Trainers</a></div></div></div></div>
+    <div class="vlak" aria-busy="true"><div class="blok"><h2 class="blokkop">Actie nodig</h2><span class="hint">Bezig met laden…</span><div class="laden" style="width:80%"></div><div class="laden" style="width:60%"></div><div class="laden" style="width:70%"></div></div></div>
+    <div class="vlak"><div class="blok"><h2 class="blokkop">Trainers</h2><div class="fout-staat" role="alert"><b>Kon de trainers niet laden.</b><br>Controleer je internet en probeer het opnieuw.<div class="knoppen"><a class="knop hoofd-k klein" href="#">Opnieuw</a></div></div></div></div>
+    <div class="vlak"><div class="blok"><h2 class="blokkop">Traject</h2><div class="rij" style="border:0"><span class="vink" aria-label="klaar"></span><span><b>Traject afgerond</b><span class="sub">2 van 2 momenten · 21 nov</span></span><span></span></div>${haltes(2, 2, false)}<div class="toast" role="status"><span>Opgeslagen</span><a class="knop" href="#">Ongedaan maken</a></div></div></div>
+  </div>
+  <h2 class="blokkop" style="margin-top:1.5rem">Lange namen en veel trainers</h2>
+  <div class="vlak" style="max-width:24.375rem">${[['AH', 'Anne-Marie van den Heuvel-Bakker', 'MO15-1 en MO17-1 · wacht op kennismaking'], ['MA', 'Mohammed Amrani-El Khattabi', 'O13-2 (zaterdag) · <span class="stap">③ traject starten</span>'], ['JV', 'Jan-Willem van der Velde', 'O19-1 · traject 3/4 · volgend za 28 nov']].map(([i, n, s]) => `<a class="rij p" href="#" style="padding:.625rem .875rem"><span class="persoon">${i}</span><span><b>${n}</b><span class="sub">${s}</span></span><span class="pijl">›</span></a>`).join('')}
+    </div>`;
+
+// ---------- Clubkleuren ----------
+document.getElementById('clubs').innerHTML = `<h1 class="deelkop">Clubkleuren</h1>
+  <p class="hint">De club krijgt het schildje (menu en kop) en het "thuis"-teken. Knoppen, status en het menu blijven ClubComm. Ook een blauwe club of een geel-zwarte club botst daardoor niet met de betekenissen.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,20rem),1fr));gap:1rem">${[['#B3122E', '#fff', 'VDV', 'VV De Voorbeeldclub'], ['#0B4EA2', '#fff', 'SVB', 'SV Blauwvoet'], ['#1A1A1A', '#F2C200', 'FCZ', 'FC Zonnedorp'], ['#F2C200', '#1A1A1A', 'ZWA', 'VV De Zwaluwen']].map(([c, o, k, n]) => `<div class="vlak" style="--club:${c};--club-op:${o};overflow:hidden">
+    <div class="kopbalk">${LOGO}<span class="rol">${n}</span><span class="clubbadge" style="margin-left:auto">${k}</span></div>
+    <div class="blok"><div class="act-kop"><b>Za 14 nov · 09:00</b><span class="label thuis">thuis</span></div>
+      <div class="knoppen"><a class="knop hoofd-k klein" href="#">Ik neem over</a><span class="label" style="display:inline-flex;gap:.375rem"><span class="pion" style="transform:scale(.8)"></span>wacht op jou</span></div></div></div>`).join('')}</div>`;
+
+// ---------- E-mail en print ----------
+document.getElementById('mail').innerHTML = `<h1 class="deelkop">E-mail en print</h1>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,30rem),1fr));gap:1.5rem;align-items:start">
+  <div><h2 class="blokkop">Uitnodiging kennismaking (Brevo)</h2>
+    <div class="mail"><div class="mail-kop">${LOGO}<b>ClubComm</b><span class="clubbadge" data-clubkort>VDV</span></div>
+      <div class="mail-tekst"><h2>Welkom bij de trainers van <span data-clubnaam>VV De Voorbeeldclub</span></h2>
+        <p>Hoi Mehmet, fijn dat je O12-2 traint. Wil je de korte vragenlijst invullen? Dan weet Peter wat je zoekt en hoe hij je kan helpen. Het kost ongeveer 5 minuten.</p>
+        <p><a class="knop hoofd-k" href="#">Vragenlijst invullen</a></p><p class="hint">Werkt de knop niet? Open ClubComm en kies Trainers → Kennismaking.</p></div>
+      <div class="mail-voet">Je krijgt dit bericht omdat je trainer bent bij <span data-clubnaam>VV De Voorbeeldclub</span>. Verstuurd met ClubComm.</div></div>
+    <p class="hint">Voorbeeldtekst; de bestaande mailteksten blijven. Alleen de vormgeving: logo, clubschildje en één blauwe knop; geen eigen lettertype (mailprogramma's tonen dat niet betrouwbaar), dus de systeemletter.</p></div>
+  <div><h2 class="blokkop">Training printen (zwart-wit-proef)</h2>
+    <div class="print"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">${LOGO}<h2>O10-1 · vr 6 nov · 17:00–18:15</h2></div>
+      ${balk({ veld: 75, org: 5, blokken: STD })}${lijst(STD, false)}</div>
+    <p class="hint">In grijs blijft alles leesbaar: de codes en minuten staan als tekst, de bloksoort zit ook in de code (A, B, P), te veel is gestreept.</p></div></div>`;
+
+// ---------- Logo en clubembleem in de navigatie ----------
+const IMG = (px) => `<span class="logo-vlak"><img src="logo-icoon.png" alt="ClubComm" style="width:${px}px;height:${px}px;border-radius:22%;display:block"></span>`;
+document.getElementById('merk').innerHTML = `<h1 class="deelkop">Logo en clubembleem</h1>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,24rem),1fr));gap:1rem">
+    <div class="vlak" style="overflow:hidden"><div class="blok"><h2 class="blokkop">Origineel logo op de navigatie</h2></div>
+      <div class="kopbalk" style="gap:1.25rem;min-height:5rem">${IMG(24)}${IMG(32)}${IMG(48)}<span class="rol">24 · 32 · 48 px</span></div>
+      <div class="blok"><span class="hint">Het icoon is ongewijzigd (uit <code>public/assets/clubcomm-logo.jpg</code>).</span></div></div>
+    <div class="vlak" style="overflow:hidden"><div class="blok"><h2 class="blokkop">ClubComm links, de club rechts</h2></div>
+      <div class="kopbalk">${LOGO}<span class="rol">Trainer O9-1</span><span class="clubbadge" style="margin-left:auto">VDV</span></div>
+      <div class="kopbalk" style="--club:#0B4EA2">${LOGO}<span class="rol">Blauwe club</span><span class="clubbadge" style="margin-left:auto;--club:#0B4EA2">SVB</span></div>
+      <div class="blok"><ul class="hint" style="margin:0;padding-left:1.1rem"><li><b style="color:var(--navy)">ClubComm-logo</b>: altijd links, afgerond vierkant met de bal, altijd ClubComm-blauw.</li><li><b style="color:var(--navy)">Clubembleem</b>: altijd rechts, schildvorm met witte rand, in de kleur van de club.</li></ul></div></div>
+  </div>`;
+
+// ---------- Componenten en betekenis ----------
+document.getElementById('kit').innerHTML = `<h1 class="deelkop">Componenten en betekenis</h1>
+  <div class="kit">
+    <div class="vlak kitvak" style="grid-column:1/-1"><h3>Eén betekenis per kleur en vorm</h3>
+      <table class="betekenis"><thead><tr><th>Teken</th><th>Betekent</th><th>Nooit gebruiken voor</th></tr></thead><tbody>
+        <tr><td><span class="vb"><span class="knop hoofd-k klein" style="pointer-events:none">Opslaan</span></span></td><td><b>Blauw = doen of kiezen</b>: hoofdknop, gekozen tab of filter, link.</td><td>status, personen, versiering</td></tr>
+        <tr><td><span class="vb" style="background:var(--navy);padding:.5rem;border-radius:.5rem">${LOGO}</span></td><td><b>Navy = ClubComm zelf</b>: menu en kop, waarop het logo staat.</td><td>knoppen</td></tr>
+        <tr><td><span class="vb"><span class="halte volgend">2</span></span></td><td><b>Logo-blauw = nu of volgende</b>: gekozen menu-item, volgende halte.</td><td>kleine tekst (te weinig contrast)</td></tr>
+        <tr><td><span class="vb"><span class="pion"></span><span class="stap">④ plannen</span></span></td><td><b>Oranje pion = wacht op jou</b>, altijd met een woord.</td><td>knoppen, de hoofdactie, "nu"</td></tr>
+        <tr><td><span class="vb"><span class="pion ander"></span></span></td><td><b>Grijze pion = wacht op een ander</b></td><td>teksten zoals een afspraak</td></tr>
+        <tr><td><span class="vb"><span class="vink"></span></span></td><td><b>Groen vinkje = klaar</b>. Groen in de trainingsbalk = B-blok, in een tekening = het veld (bestaand).</td><td>knoppen</td></tr>
+        <tr><td><span class="vb"><span class="label af">Afgelast</span></span></td><td><b>Rood = fout, afgelast of verwijderen</b> (altijd met bevestiging).</td><td>"wacht op jou"</td></tr>
+        <tr><td><span class="vb"><span class="persoon">DP</span></span></td><td><b>Rondje = een persoon</b>. Altijd dezelfde kleur; de status staat ernaast, niet in het rondje.</td><td>status, spelers in een tekening</td></tr>
+        <tr><td><span class="vb">${haltes(1, 3)}</span></td><td><b>Haltes = stappen of momenten</b>: ① tot ④, traject 1/2.</td><td>minuten</td></tr>
+        <tr><td><span class="vb" style="width:9rem"><span class="balk" style="width:100%;height:1.25rem"><i style="flex:2;background:var(--b-a)"></i><i style="flex:1;background:var(--b-b)"></i><i class="vrij" style="flex:1"></i></span></span></td><td><b>Balk = minuten</b>, met de bestaande bloksoortkleuren.</td><td>stappen</td></tr>
+        <tr><td><span class="vb"><span class="clubbadge">VDV</span><span class="label thuis">thuis</span></span></td><td><b>Clubkleur = de club</b>: schildje en thuis-teken.</td><td>knoppen, status, menu</td></tr>
+      </tbody></table></div>
+    <div class="vlak kitvak"><h3>Knoppen</h3><div class="knoppen"><a class="knop hoofd-k" href="#">Opslaan</a><a class="knop tweede" href="#">Plannen</a><a class="knop gevaar" href="#">Afgelasten</a><a class="knop stil" href="#">Later</a></div>
+      <p class="hint">Eén blauwe hoofdknop per scherm. Geen oranje knoppen meer. Alles minstens 44 px hoog.</p></div>
+    <div class="vlak kitvak"><h3>Rij in een blok</h3>
+      <a class="rij" href="#"><span class="pion"></span><span><b>Training van Dennis bekijken</b><span class="sub">O9-1 · di 10 nov</span></span><span class="pijl">›</span></a>
+      <a class="rij p" href="#"><span class="persoon">SB</span><span><b>Samira Brouwer</b><span class="sub">O8-1</span></span>${haltes(2, 3)}</a>
+      <p class="hint">Eén vlak per blok, gestippelde krijtlijn tussen rijen. Rij met knoppen: geen pijl.</p></div>
+    <div class="vlak kitvak"><h3>Logo in gebruik (ongewijzigd)</h3>
+      <div style="display:flex;gap:1rem;align-items:end;flex-wrap:wrap">${[16, 24, 32, 48, 64].map((s) => `<img src="logo-icoon.png" alt="" style="width:${s}px;height:${s}px;border-radius:22%">`).join('')}
+        <span style="background:var(--navy);padding:.5rem;border-radius:.5rem">${LOGO}</span><span style="background:#fff;padding:.5rem;border-radius:.5rem;box-shadow:0 0 0 1px var(--lijn)">${LOGO}</span></div>
+      <p class="hint">Het bestaande icoon, uitgeknipt uit <code>public/assets/clubcomm-logo.jpg</code>. Op navy goed zichtbaar; op het blauwe menu van C2 viel het weg.</p></div>
+    <div class="vlak kitvak"><h3>Beweging</h3><p class="hint" style="margin:0">Eén moment: bij openen lopen de gevulde haltes van het traject één keer vol (600 ms). Knop zakt 1 px bij tikken. Laden: zachte glans. Bij <i>Beperk beweging</i> staat alles meteen stil.</p></div>
+  </div>`;
+</script>
+<script>addEventListener('load', () => { const k = document.querySelector('.kader'); if (!k) return; const q = new URLSearchParams(location.search);
+  const s = document.createElement('span'); s.innerHTML = 'Navigatie: ' + [['navy', 'Navy'], ['blauw', 'A blauw'], ['licht', 'B lichtblauw'], ['wit', 'C wit']].map(([v, t]) => { q.set('nav', v); return `<a href="?${q}" style="margin-left:6px${document.documentElement.dataset.nav === v ? ';font-weight:800' : ''}">${t}</a>`; }).join('');
+  k.insertBefore(s, k.children[1]); });</script>
+<script src="../prototypes/kader.js"></script>
+</body>
+</html>
