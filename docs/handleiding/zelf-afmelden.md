@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Status in de app** | In productie · met #136 (5-11-2026) |
-| **Status van deze kaart** | Concept (Besluit 151) |
+| **Status van deze kaart** | Gepubliceerd in de bundel *Snelstart vrijwillige trainer* (6-11-2026; Kort) · Besluit 151 |
 | **Besluiten** | 20 · 95 · 115 |
 | **Schermafbeeldingen** | `docs/presentaties/beelden/zelf-afmelden.jpg` |
 | **Doelgroepen** | beginner trainer · ervaren trainer |
