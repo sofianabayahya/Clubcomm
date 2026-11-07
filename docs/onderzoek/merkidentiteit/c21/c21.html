@@ -78,11 +78,13 @@ html[data-nav^="wit"] .mail-kop { background: #fff; color: var(--navy); border-b
 .persoon { display: inline-grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--ijs); color: var(--navy); font-weight: 800; font-size: .875rem; font-stretch: 90%; flex: none; box-shadow: inset 0 0 0 2px #C6DDF6; }
 .clubbadge { display: inline-grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: .375rem .375rem 50% 50%; background: var(--club); color: var(--club-op); font: 800 .75rem/1 var(--font); flex: none; box-shadow: 0 0 0 2px #fff; }
 .haltes { display: flex; align-items: center; max-width: 100%; }
-.halte { width: 1.75rem; height: 1.75rem; border-radius: 50%; border: 2px solid var(--blauw); display: grid; place-items: center; font-weight: 800; font-size: .875rem; color: var(--blauw); background: #fff; flex: none; }
-.halte.af { background: var(--blauw); color: #fff; }
-.halte.volgend { border: 3px solid var(--logo); color: var(--navy); }
+.halte { width: 1.75rem; height: 1.75rem; border-radius: 50%; border: 2px solid var(--lijn); display: grid; place-items: center; font-weight: 800; font-size: .875rem; color: var(--zacht); background: #fff; flex: none; }
+/* Besluit 100: groen vinkje = klaar, blauw = nu/gepland, grijs = open */
+.halte.af { background: var(--goed); border-color: var(--goed); color: #fff; font-size: 0; }
+.halte.af::after { content: '✓'; font-size: .875rem; }
+.halte.volgend { border: 3px solid var(--blauw); color: var(--blauw); }
 .spoor { flex: 1; height: 3px; min-width: .5rem; background: repeating-linear-gradient(90deg, #B9C8DA 0 6px, transparent 6px 11px); }
-.spoor.af { background: var(--blauw); }
+.spoor.af { background: var(--goed); }
 
 /* ---------- Schil ---------- */
 .app { display: grid; grid-template-columns: 5.25rem 1fr; min-height: 51rem; background: var(--krijt); border-radius: .75rem; overflow: hidden; box-shadow: 0 0 0 1px var(--lijn); }
@@ -290,7 +292,7 @@ body.los .app { border-radius: 0; box-shadow: none; min-height: 100vh; }
 
 <script src="../prototypes/inhoud.js"></script>
 <script>
-{ const q = new URLSearchParams(location.search); document.documentElement.dataset.nav = q.get('nav') || 'navy'; if (q.get('vlak')) document.documentElement.dataset.vlak = q.get('vlak'); }
+{ const q = new URLSearchParams(location.search); document.documentElement.dataset.nav = q.get('nav') || 'witaccent'; /* gekozen 7-11 */ if (q.get('vlak')) document.documentElement.dataset.vlak = q.get('vlak'); }
 const LOGO = '<span class="logo-vlak"><img class="logo" src="logo-icoon.png" alt="ClubComm"></span>';
 // Menu per rol zoals in de app (hjo.js, trainers.js r. 45, trainer.js r. 338, ouder.js r. 20)
 const MENU = [['home', 'i-home', 'Home'], ['trainers', 'i-tr', 'Trainers'], ['teams', 'i-team', 'Teams'], ['inzicht', 'i-chart', 'Inzicht'], ['berichten', 'i-bericht', 'Berichten']];

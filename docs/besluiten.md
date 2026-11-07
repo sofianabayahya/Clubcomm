@@ -21,6 +21,7 @@ Laatst bijgewerkt: 5 november 2026 (t/m Besluit 178)
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
+| NNN | 3 | Huisstijl ClubComm (*Krijtbord*, variant C2.1-wit): het bestaande logo ongewijzigd en het sterkste kleuraccent; **witte navigatie** met het gekozen item als lichtblauwe afgeronde rechthoek; werkgebied lichtgrijs; navy alleen voor tekst en kleine vlakken; eigen letter **Archivo** (lokaal, rem-maten); één betekenis per kleur en vorm (pion = wacht op jou, haltes, krijtlijnen, trainingsbalk); pion **#EA580C**; clubkleur alleen in embleem en thuis-teken. Uitgewerkt in `docs/DESIGN.md`; invoeren in vijf stappen, elk een eigen pull request met voorbeeld. Geen functie, gegevens of rechten | ✅ geldt |  |
 | 179 | 3 | Opstelling per kleur, geen namen in de tekening: de tekening toont alleen de nummers (namen erin werd te druk). Onder de tekening **Rood · Geel** (met *ingedeeld / plekken*); tik een kleur en zie die lijst: nummer, positie en naam, keeper eerst. Indelen door een regel of een speler in de tekening te tikken; wisselen zoals Besluit 175; tik je een speler van de andere kleur, dan toont de lijst die kleur. Blok heet *Opstelling*, ingeklapt tot er namen zijn. Op het veld: tekening zonder namen en dezelfde lijst per kleur om te lezen (*Opstelling aanpassen*; *Zonder namen* vervalt). Print: tekening zonder namen, lijst per team met alleen de ingevulde namen. Geen migratie, rechten ongewijzigd | ✅ geldt | |
 | 178 | 3 | De volgende stap achter elke trainer in de lijst Trainers (pakket): **③ traject starten** en **④ eerste moment plannen** in blauw (wat de HO per trainer doet); grijs *kennismaking nog niet gestuurd*, *wacht op kennismaking*, *traint vooral voor het plezier*; met een moment zoals eerder (*traject 1/2 · volgend …*). Bovenaan één regel *n trainers zonder kennismaking · Nodig ze in één keer uit* en *n trainers wachten op een stap van jou (③ of ④)*. Niet gesorteerd: de lijst blijft op naam. Geen nieuwe gegevens of rechten | ✅ geldt |  |
 | 177 | 3 | De stappen van de HO per trainer op één plek (pakket *Trainers begeleiden*): in het snelvenster en het dossier *Van start tot eerste moment* (① Toegevoegd ② Kennismaking ③ Traject starten ④ Eerste begeleidingsmoment) met één knop voor de volgende stap, weg zodra er een moment is. *Trainer toevoegen*: kennismaking meteen in de welkomstmail (standaard aan). *Traject starten* in eenvoudige taal volgens de HO-A (voorbereiding → planningsgesprek → praktijk → reflectiegesprek → nazorg); *Vragen vooraf (de voorbereiding)*: kort 4 of uitgebreid 8 (training) / 9 (wedstrijd), voorstel uit de kennismaking (uitgebreid bij KNVB-diploma of opleiding); meteen het eerste moment kiezen (of later). Geen nieuwe gegevens of rechten | ✅ geldt | aangevuld door 178 (de volgende stap ook in de lijst) |
@@ -714,6 +715,41 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
 ### Vuistregel voor nieuwe ideeën
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
+
+---
+
+## Besluit NNN — Huisstijl ClubComm: witte navigatie, het bestaande logo voorop, één betekenis per kleur en vorm (Spoor 3, maat M)
+> Akkoord 7 november 2026 na onderzoek in vier rondes: vier richtingen, keuze *Krijtbord*, een kritische review (C2 → C2.1), een kleuronderzoek van de navigatie (navy, blauw, lichtblauw, wit) en de keuze *wit met lichtblauw accent*. Stukken: `docs/onderzoek/merkidentiteit/` (README, `c21/REVIEW.md`, `c21/KLEUR-NAVIGATIE.md`, prototype `c21/c21.html`). Uitwerking: **`docs/DESIGN.md`**. Werkt de regel *Huisstijl* bij *Nog te bespreken* uit; past bij Besluit 63 (contrast) en Besluit 100 (groen vinkje = klaar, blauw = bezig, grijs = open).
+
+**Waarom.** ClubComm werkte goed, maar zag eruit als een standaarddashboard: systeemletter, overal dezelfde witte kaarten met schaduw, blauw voor alles en labels in hoofdletters. ClubComm moet herkenbaar, vriendelijk, toegankelijk en jarenlang uit te breiden zijn, voor trainers, HJO's én ouders. De herkenning zit volgens de gebruiker in het huidige blauw en het bestaande logo.
+
+**Wat.**
+1. **Logo:** het bestaande logo blijft **ongewijzigd** en is in de navigatie het sterkste kleuraccent. Geen nieuwe logo's, geen andere logokleuren.
+2. **Navigatie wit** (laptop: menu links; telefoon: kop en menubalk). Het gekozen item is **één afgeronde rechthoek in lichtblauw** (`--blauw-l`) om icoon en woord. Het werkgebied is lichtgrijs, gescheiden door een rand en een zachte schaduw. **Navy** alleen voor tekst en kleine informatievlakken, niet voor grote navigatievlakken.
+3. **Eigen letter:** Archivo, lokaal gehost (niet via Google); alle maten in `rem`, zodat grotere tekst op de telefoon werkt.
+4. **Eén betekenis per kleur en vorm** (`docs/DESIGN.md` §5):
+   - blauw = doen en kiezen;
+   - **oranje pion = wacht op jou**, nieuwe kleur **#EA580C** (haalt 3:1 op alle gebruikte achtergronden);
+   - grijze pion = wacht op een ander;
+   - groen vinkje = klaar, blauwe ring = nu of gepland, grijs = open (Besluit 100);
+   - rood = fout of afgelast;
+   - rondje = een persoon, zonder status erin.
+5. **Voetbalbeeldtaal, alleen functioneel:** pion, haltes, gestippelde krijtlijnen tussen regels, de trainingsbalk met de bestaande rekenregel en bloksoortkleuren. Het groene veld alleen in tekeningen. Geen decoratie.
+6. **Clublaag:** de club krijgt het embleem (rechts) en het thuis-teken; nooit knoppen, status of menu.
+7. **Invoeren in vijf stappen**, elk een eigen pull request met voor- en na-schermen op 390 px en de volledige test:
+   1. fundament (tokens, letter, `rem`);
+   2. bouwstenen (kop en menu, rij, knoppen, haltes, trainingsbalk);
+   3. Home-schermen;
+   4. Trainers, Teams, Training en de tekentool;
+   5. de rest, print, e-mails en een 200 %-controle.
+
+**Wat niet verandert.** Geen functie, menu-indeling, woorden, gegevens of rechten. De menu's per rol, de blokken op Home en de trainingsbalk blijven zoals ze zijn; alleen het uiterlijk verandert. De Lucide-iconen blijven. De app blijft altijd licht.
+
+**Niet gedaan** (zie *Afgewezen ideeën*): navy navigatie, blauwe navigatie, een nieuw logo, het lettertype via Google Fonts. Functionele ideeën uit het onderzoek (weekband, gereedschap in twee rijen, begintijden per blok, uitleg in de tekentool zonder Shift/Ctrl, tegels op de HJO-Home) zijn **geen** onderdeel van dit besluit; elk vraagt een eigen besluit.
+
+**Gegevens en rechten.** Niets. Het lettertype staat op de eigen server, dus er gaat geen IP-adres naar Google.
+
+**Tests:** nu niets gebouwd. Bij elke stap: de volledige test, schermen op 390 px en laptop, contrast en tikvlakken, en 200 % tekst op 360, 390 en 430 px.
 
 ---
 
@@ -3081,7 +3117,7 @@ PowerPoints per rol (bestuur, trainer, teamleider, ouders) en een kennismaking v
 
 - ~~**Presentatie** voor het bestuur van RKSV DCG~~ *gedaan: `docs/presentaties/ClubComm-bestuur.pptx`; de rollenbeschrijving staat in Besluit 95.*
 - ~~**Weekbericht voor ouders**~~ *besloten 10-10: afgewezen (principe 10), zie Afgewezen ideeën.*
-- **Huisstijl:** één set icoontjes in één stijl (Lucide, in het prototype); kleur alleen met betekenis (groen = goed, oranje = aandacht, rood = probleem); verder rustig met het logo-blauw `#0D88F9` als hoofdkleur. **Besloten:** de app is altijd licht (witte achtergrond), ook als de telefoon op donkere modus staat.
+- ~~**Huisstijl:**~~ *besloten 7-11 in Besluit NNN en `docs/DESIGN.md`.* één set icoontjes in één stijl (Lucide, in het prototype); kleur alleen met betekenis (groen = goed, oranje = aandacht, rood = probleem); verder rustig met het logo-blauw `#0D88F9` als hoofdkleur. **Besloten:** de app is altijd licht (witte achtergrond), ook als de telefoon op donkere modus staat.
 
 ---
 
@@ -3090,6 +3126,10 @@ Bewust niet gedaan, met de reden. Komt een van deze toch terug, zeg dan dat het 
 
 | Idee | Waarom niet | Besluit |
 |---|---|---|
+| Navy (donkerblauwe) navigatie in de huisstijl | Te hard en zakelijk; het logo komt minder tot zijn recht (onderzoek 7-11) | NNN |
+| Navigatie in ClubComm-blauw | Het blauwe logo valt weg tegen blauw (1,6:1), clubembleem en pion ook; blauw wordt versiering | NNN |
+| Een nieuw of aangepast ClubComm-logo | Het bestaande logo is sterk herkenbaar en blijft ongewijzigd | NNN |
+| Lettertype via Google Fonts | Stuurt het IP-adres van de gebruiker naar Google; zelf hosten | NNN |
 | *Zoals vorige training*: de opstelling van de vorige training met één tik overnemen | Bij de O13 is er geen vaste basis (zieke kinderen, afwezigheid); de opstelling is elke training anders (initiatiefnemer 06-11) | 179 |
 | Een automatische samenvatting van de vorige evaluatie in *Mee uit vorige*, of standaard de hele evaluatie tonen | Een samenvatting legt woorden in de mond van de trainer; alleen een letterlijke *Afspraak:*-zin en bestaande gegevens, de rest via de link | 144 |
 | Het weekvoorstel vanzelf invullen in de training | De trainer beslist; het voorstel staat apart met *Weekvoorstel overnemen* | 144 |
