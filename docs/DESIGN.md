@@ -1,6 +1,6 @@
 # ClubComm — Design system (DESIGN.md)
 
-> De vaste huisstijl van ClubComm voor alle clubs. Vastgelegd in **Besluit NNN** (`docs/besluiten.md`). Bij twijfel geldt het besluit; dit document werkt het uit.
+> De vaste huisstijl van ClubComm voor alle clubs. Vastgelegd in **Besluit 180** (`docs/besluiten.md`). Bij twijfel geldt het besluit; dit document werkt het uit.
 > Voorbeeld om naast te leggen: `docs/onderzoek/merkidentiteit/c21/c21.html` (standaard de gekozen variant: witte navigatie met lichtblauw accent). Beelden: `docs/onderzoek/merkidentiteit/c21/beelden/definitief/`.
 > Onderzoek en afwegingen: `docs/onderzoek/merkidentiteit/` (README, `c21/REVIEW.md`, `c21/KLEUR-NAVIGATIE.md`).
 
