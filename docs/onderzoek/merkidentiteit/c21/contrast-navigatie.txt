@@ -1,0 +1,6 @@
+variant | menutekst | actief item | menulabel telefoon | actief telefoon | logo tegen menu (≥3) | clubrood | blauwe club | pion
+navy | 10.4 | 12.0 | 7.0 | 7.2 | 4.4 | 2.2 | 1.9 | 5.5
+A blauw | 4.7 | 7.2 | 4.7 | 7.2 | 1.6 | 1.3 | 1.5 | 2.0
+B licht | 8.6 | 7.2 | 8.6 | 7.2 | 3.1 | 6.1 | 7.1 | 2.5
+C wit | 7.0 | 6.4 | 7.0 | 7.2 | 3.5 | 6.9 | 8.0 | 2.8
+logo op wit vlak (A met vlak): 3.5 | wit vlak tegen blauw: 5.5

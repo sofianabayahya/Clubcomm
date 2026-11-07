@@ -162,3 +162,7 @@ Frontend Design-skill: op verzoek geïnstalleerd in `.claude/skills/frontend-des
 ## 10. Review en C2.1
 
 Kritische review van C2 en de verbeterde versie C2.1: `c21/REVIEW.md` (één document, met aanbeveling), prototype `c21/c21.html`, beelden `c21/beelden/` (`vgl-*` = C2 naast C2.1), metingen `c21/meting.txt`. Het bestaande logo blijft ongewijzigd. Lettertype lokaal in `c21/fonts/` (OFL-licentie).
+
+## 11. Kleur van de navigatie (C2.1)
+
+Vier varianten van menu en kop (navy, ClubComm-blauw, lichtblauw, wit) in één prototype (`c21/c21.html?nav=…`), met metingen en advies: `c21/KLEUR-NAVIGATIE.md`. Beelden: `c21/beelden/navvgl-*`.
