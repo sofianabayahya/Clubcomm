@@ -150,7 +150,11 @@
     const einde = a.uitslagKlaar ? `<p class="klein zacht">${icon('circle-check')} Uitslag opgeslagen${a.uitslagVerstuurd ? ' en naar de ouders gestuurd' : ''}. <button class="linkknop" data-act="uitslagHeropen" data-a="${a.id}">Aanpassen</button></p>`
       : `<button class="knop licht vol" data-act="uitslagKlaar" data-a="${a.id}">${icon('flag')}Einde wedstrijd: uitslag opslaan</button>`;
     const door = doorMij ? `<div class="info groen">${icon('circle-check')}<span><b>Doorgestuurd naar ${esc(CC.trainerNaam(S, a.teamId))}.</b> De uitslag, de doelpunten en de wissels staan klaar voor de trainer. Je hoeft niets meer te doen. Bedankt!</span></div>` : '';
-    return `<div class="kaartje scorebord"><div class="sb-rij">${kant('thuis', thuisNaam, st.thuis)}<span class="sb-streep">–</span>${kant('uit', uitNaam, st.uit)}</div>${lijst}${doorMij ? '' : einde}${door}</div>`;
+    // Besluit NNN: zichtbaar of het echt is opgeslagen; het scherm blijft aan zolang je bijhoudt (wedvangnet.js)
+    const rs = !doorMij && !a.uitslagKlaar && CC.rijStatus && (g.length || a.uitslag) ? CC.rijStatus('acts', a.id) : null;
+    const status = rs === 'ok' ? `<p class="sb-opslag goed">${icon('circle-check')}Opgeslagen</p>` : rs ? `<p class="sb-opslag">${icon('smartphone')}Nog niet opgeslagen · staat veilig op deze telefoon</p>` : '';
+    const live = a.datum === D.vandaag() && !a.uitslagKlaar && !doorMij ? ' data-live-scorebord' : '';
+    return `<div class="kaartje scorebord"${live}><div class="sb-rij">${kant('thuis', thuisNaam, st.thuis)}<span class="sb-streep">–</span>${kant('uit', uitNaam, st.uit)}</div>${lijst}${status}${doorMij ? '' : einde}${door}</div>`;
   };
   CC.on('goal', (el) => {
     const S = CC.S(); const a = M.act(S, el.dataset.a); const wij = (el.dataset.kant === 'thuis') === !!a.thuis;
@@ -190,8 +194,13 @@
     const mog = S.speeltijd.mogelijk || (S.speeltijd.mogelijk = {}); (sch.spelers || [...new Set(sch.blokken.flat())]).filter((id) => komtNog(S, a, id)).forEach((id) => { mog[id] = (mog[id] || 0) + (sch.wedMin || len.reduce((x, y) => x + y, 0)); });
     sch.bevestigd = true; };
   CC.wedstrijdVastleggen = wedstrijdVastleggen;
+  // Besluit NNN: wie de uitslag direct mag opslaan (staf, timekeeper of trainer-coach van deze wedstrijd)
+  const magUitslag = (S, a, pid) => M.stafVan(S, a.teamId).includes(pid) || (S.taken || []).some((t) => t.actId === a.id && t.personId === pid && ['Timekeeper', 'Trainer-coach'].includes(t.soort));
+  CC.magUitslag = magUitslag;
   const uitslagOpslaan = (S, a, stuur, metMakers, van) => { const t = M.team(S, a.teamId); const st = M.stand(a);
     a.uitslag = `${st.thuis}-${st.uit}`; a.uitslagKlaar = true; wedstrijdVastleggen(S, a, van);
+    // Besluit NNN: mag je het niet opslaan, dan gaat het bericht pas als de trainer de uitslag overneemt (nooit een verkeerde uitslag naar de ouders)
+    if (stuur && !magUitslag(S, a, van)) { a.uitslagStuur = { makers: !!metMakers }; return; }
     if (stuur) {
       const ons = `${S.club.naam} ${t.naam}`; const thuisNaam = a.thuis ? ons : (a.tegen || 'Tegenstander'); const uitNaam = a.thuis ? (a.tegen || 'Tegenstander') : ons;
       const tel = {}; (a.goals || []).filter((x) => x.wij && x.spelerId).forEach((x) => { tel[x.spelerId] = (tel[x.spelerId] || 0) + 1; });
@@ -202,7 +211,7 @@
     }
   };
   CC.on('uitslagOk', (f) => { const S = CC.S(); const a = M.act(S, f.dataset.a); uitslagOpslaan(S, a, f.stuur.checked, f.makers.checked, CC.me().id);
-    CC.save(); CC.closeSheet(); CC.render(); CC.toast(f.stuur.checked ? 'Uitslag opgeslagen en naar de ouders gestuurd' : 'Uitslag opgeslagen'); });
+    CC.save(); CC.closeSheet(); CC.render(); CC.toast(!f.stuur.checked ? 'Uitslag opgeslagen' : a.uitslagStuur ? 'Uitslag opgeslagen. Het bericht aan de ouders stuurt de trainer.' : 'Uitslag opgeslagen en naar de ouders gestuurd'); });
   // Besluit 76/77: 2 uur na afloop van de wedstrijd slaat de app de uitslag zelf op (en stuurt hem, volgens de clubinstelling),
   // als er doelpunten zijn bijgehouden. Zonder doelpunten blijft "Uitslag nog opslaan" op Home staan (0-0 of niet bijgehouden?).
   CC.uitslagAuto = (S) => { const me = CC.me(); if (!me) return false; let n = 0;
@@ -213,7 +222,7 @@
       && (!S.pres[a.id] || (S.speeltijd.schema[a.id] && !S.speeltijd.schema[a.id].bevestigd))).forEach((a) => { wedstrijdVastleggen(S, a, me.id); n++; });
     return n > 0; };
   // ---------- Besluit 117: voorstel van de timekeeper (vangnet als opslaan niet mocht) ----------
-  const VS_VELDEN = ['goals', 'uitslag', 'uitslagKlaar', 'uitslagVerstuurd', 'uitslagAuto'];
+  const VS_VELDEN = ['goals', 'uitslag', 'uitslagKlaar', 'uitslagVerstuurd', 'uitslagAuto', 'uitslagStuur'];
   CC.trainerNaam = (S, tid) => { const t = M.team(S, tid); const p = t && M.persoon(S, t.trainerId); return p ? `${p.naam.split(' ')[0]} (trainer)` : 'de trainer'; };
   // Geweigerde rijen (uit live.js) → voorstel per wedstrijd. Alleen wedstrijdgegevens; aantal verwerkte rijen terug.
   CC.wedVoorstel = (S, rijen, pid) => { let n = 0; S.wedVoorstel = S.wedVoorstel || {};
@@ -244,6 +253,8 @@
     const mog = S.speeltijd.mogelijk || {}; (sch.spelers || [...new Set(sch.blokken.flat())]).filter((id) => komtNog(S, a, id)).forEach((id) => { mog[id] = Math.max(0, (mog[id] || 0) - (sch.wedMin || len.reduce((x, y) => x + y, 0))); }); };
   CC.on('voorstelOver', (el) => { const S = CC.S(); const v = (S.wedVoorstel || {})[el.dataset.id]; const a = M.act(S, el.dataset.id); if (!v || !a) return;
     if (v.act) Object.assign(a, v.act);
+    // Besluit NNN: het uitslagbericht dat de timekeeper wilde sturen, gaat nu (met de uitslag die de trainer overneemt)
+    if (a.uitslagStuur) { const m = a.uitslagStuur.makers; delete a.uitslagStuur; if (!a.uitslagVerstuurd) uitslagOpslaan(S, a, true, m, CC.me().id); }
     if (v.schema) { speeltijdTerug(S, a, S.speeltijd.schema[a.id]); S.speeltijd.schema[a.id] = Object.assign({}, v.schema, { bevestigd: false }); }
     const voorbij = new Date(`${a.datum}T${a.eind || a.tijd}`).getTime() < Date.now();
     if (a.uitslagKlaar || voorbij) wedstrijdVastleggen(S, a, CC.me().id);

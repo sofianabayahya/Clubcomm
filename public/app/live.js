@@ -118,6 +118,9 @@
     return ok && [...L.snap.keys()].every((k) => nu.has(k));
   };
   CC.allesOpgeslagen = () => allesOpgeslagen();
+  // Besluit NNN: is deze ene rij opgeslagen? (voor het scorebord: 'ok', 'bezig', 'geweigerd' of 'wacht')
+  CC.rijStatus = (soort, id) => { const k = `${soort}|${id}`; const r = CC.naarRijen(CC.S(), club).get(k); if (!r) return null; const j = JSON.stringify(r);
+    if (L.snap.get(k) === j) return 'ok'; if (L.geweigerd.get(k) === j) return 'geweigerd'; return L.bezig || L.timer ? 'bezig' : 'wacht'; };
   // Voor onderzoek: welke regels verschillen van wat er opgeslagen is?
   CC.opslagVerschil = () => { const nu = CC.naarRijen(CC.S(), club); const uit = [];
     nu.forEach((r, k) => { const j = JSON.stringify(r); if (L.snap.get(k) !== j && L.geweigerd.get(k) !== j) uit.push(['anders', k, L.snap.get(k), j]); });

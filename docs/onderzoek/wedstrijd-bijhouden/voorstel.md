@@ -95,3 +95,19 @@ Stap 1 eerst: zonder betrouwbaar opslaan heeft een overzicht geen zin.
 7. **De wedstrijd van vandaag invullen:**
    - Zelf, zodra *achteraf invullen* er is (stap 2).
    - Of eerder met een eenmalig script, na jouw akkoord. Dat is een schrijfactie in productie; daar is je uitdrukkelijke ja voor nodig.
+
+---
+
+## 7. Vervolg 10–11 november
+
+**Oorzaak bevestigd.** De app slaat op met *upsert*. Bij een upsert draait de databasebewaker eerst als *invoegen*, en die weigerde iedereen buiten de staf (*"Alleen staf kan activiteiten toevoegen"*), ook als de wedstrijd al bestond. Nagebootst in de lokale testdatabase: een gewone update door de timekeeper mag, een upsert niet. Besluit 116 werkte in de app daardoor nooit. Een "verouderde wedstrijd op de telefoon" was dus **niet** de oorzaak; de rondgang door de app gaf geen enkel verschil.
+
+**Stap A gebouwd** (Besluit NNN): migratie 035 (voorstel, toepassen na akkoord), reservekopie en terugzetten, *Opgeslagen* op het scorebord, scherm aan, en geen uitslagbericht zonder recht.
+
+**Sportlink.** ClubComm heeft **geen koppeling met Sportlink**. De wedstrijden van de O13 zijn op 17-10 één keer ingeladen uit de Sportlink-agenda (iCal), met het script `supabase/scripts/2026-10-17_dcg_wedstrijden_fase2.sql`. Een wijziging in Sportlink komt daarom nooit vanzelf in ClubComm. Nu kan het zo:
+- **Teams → het team → de wedstrijd → Aanpassen** (Besluit 168): het begeleidingsmoment schuift mee en de trainer krijgt bericht;
+- **of opnieuw plakken** (Besluit 136/168): ClubComm toont per wedstrijd *gelijk*, *gewijzigd* of *nieuw*.
+
+**Voorstel D (later, eigen besluit, maat L):** ClubComm haalt elke nacht de Sportlink-agenda (iCal) van het team op. Het vergelijkt op het Sportlink-kenmerk dat al bij elke wedstrijd staat, en past datum, tijd en adres aan via dezelfde weg als *Aanpassen*: het moment schuift mee en de trainer krijgt één bericht. Nodig: de iCal-link per team. Die bevat vaak een geheime code, dus die zet de clubbeheerder zelf in de instellingen, nooit in de chat. Het alternatief is Sportlink Club.Dataservice (`docs/productie-en-groei.md`, *Koppelingen*).
+
+**Wissels van 7-11.** Uit de doelpunten volgt dat bij "A > B" **A eruit gaat en B erin komt**. Bijvoorbeeld: een speler die in de eerste helft scoorde, gaat in de rust *eruit*, en scoort in de tweede helft weer nadat hij *erin* kwam. Dat klopt voor alle wissels. In de app staat straks altijd *erin ▲ / eruit ▼*, zodat dit niet meer uitgelegd hoeft te worden.

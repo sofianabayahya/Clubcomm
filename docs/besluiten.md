@@ -21,6 +21,7 @@ Laatst bijgewerkt: 7 november 2026 (t/m Besluit 180)
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
+| NNN | 3 | Wedstrijd bijhouden zonder iets kwijt te raken: (1) de timekeeper kan via de app echt opslaan (migratie 035: de bewaker weigerde elke upsert van een niet-stafslid, ook als de wedstrijd al bestond); (2) doelpunten en uitslag ook als reservekopie op de telefoon, teruggezet als verversen ze wegneemt; (3) op het scorebord *Opgeslagen* of *Nog niet opgeslagen · staat veilig op deze telefoon*; (4) het scherm blijft aan zolang het scorebord van een lopende wedstrijd open staat; (5) wie de uitslag niet mag opslaan, stuurt geen uitslagbericht: dat gaat bij *Overnemen* door de trainer | ✅ geldt |  |
 | 180 | 3 | Huisstijl ClubComm (*Krijtbord*, variant C2.1-wit): het bestaande logo ongewijzigd en het sterkste kleuraccent; **witte navigatie** met het gekozen item als lichtblauwe afgeronde rechthoek; werkgebied lichtgrijs; navy alleen voor tekst en kleine vlakken; eigen letter **Archivo** (lokaal, rem-maten); één betekenis per kleur en vorm (pion = wacht op jou, haltes, krijtlijnen, trainingsbalk); pion **#EA580C**; clubkleur alleen in embleem en thuis-teken. Uitgewerkt in `docs/DESIGN.md`; invoeren in vijf stappen, elk een eigen pull request met voorbeeld. Geen functie, gegevens of rechten | ✅ geldt |  |
 | 179 | 3 | Opstelling per kleur, geen namen in de tekening: de tekening toont alleen de nummers (namen erin werd te druk). Onder de tekening **Rood · Geel** (met *ingedeeld / plekken*); tik een kleur en zie die lijst: nummer, positie en naam, keeper eerst. Indelen door een regel of een speler in de tekening te tikken; wisselen zoals Besluit 175; tik je een speler van de andere kleur, dan toont de lijst die kleur. Blok heet *Opstelling*, ingeklapt tot er namen zijn. Op het veld: tekening zonder namen en dezelfde lijst per kleur om te lezen (*Opstelling aanpassen*; *Zonder namen* vervalt). Print: tekening zonder namen, lijst per team met alleen de ingevulde namen. Geen migratie, rechten ongewijzigd | ✅ geldt | |
 | 178 | 3 | De volgende stap achter elke trainer in de lijst Trainers (pakket): **③ traject starten** en **④ eerste moment plannen** in blauw (wat de HO per trainer doet); grijs *kennismaking nog niet gestuurd*, *wacht op kennismaking*, *traint vooral voor het plezier*; met een moment zoals eerder (*traject 1/2 · volgend …*). Bovenaan één regel *n trainers zonder kennismaking · Nodig ze in één keer uit* en *n trainers wachten op een stap van jou (③ of ④)*. Niet gesorteerd: de lijst blijft op naam. Geen nieuwe gegevens of rechten | ✅ geldt |  |
@@ -84,8 +85,8 @@ Laatst bijgewerkt: 7 november 2026 (t/m Besluit 180)
 | 120 | 3 | Inrichten: clubbeheerder op de laptop met startlijst; ClubComm-adviseur met overzicht van alle clubs | ✅ geldt |  |
 | 119 | 3 | Rechtentest per rol tegen de echte database, elke nacht, met alarm via de bewaking | ✅ geldt |  |
 | 118 | 3 | Tikvlakken minimaal 44 pt: keuze- en filterknoppen, balkjes, rolwissel, profielknop | ✅ geldt |  |
-| 117 | 3 | Vangnet: mag de timekeeper iets niet opslaan, dan gaat het als voorstel naar de trainer (één tik overnemen) | ✅ geldt |  |
-| 116 | 3 | De timekeeper slaat de wedstrijd echt op; minuten en speeltijd ziet alleen de trainer | ✅ geldt |  |
+| 117 | 3 | Vangnet: mag de timekeeper iets niet opslaan, dan gaat het als voorstel naar de trainer (één tik overnemen) | ◐ deels herzien | ◐ deels herzien door NNN (het uitslagbericht gaat pas bij Overnemen, niet meteen) |
+| 116 | 3 | De timekeeper slaat de wedstrijd echt op; minuten en speeltijd ziet alleen de trainer | ✅ geldt | aangevuld door NNN (opslaan werkte in de app niet: upsert; migratie 035) |
 | 115 | 3 | "Vervanger nodig" naar teamleider en coördinator (HO alleen als terugval); coördinator in de rondleiding | ✅ geldt |  |
 | 114 | 3 | De demo is één verhaal (een week bij de democlub); het bestuur kiest de hoofdstukken; afmelden gebeurt echt | ✅ geldt |  |
 | 113 | 3 | Drie lagen: tabblad → venster → pagina; spelerskaart, trainerkaart en "Aangekomen bij" als venster, vegen om te sluiten | ◐ deels herzien | door 131 (venster in het midden vanaf 900 px); aangevuld door 171 (laptop: lijst en detail naast elkaar) |
@@ -715,6 +716,39 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
 ### Vuistregel voor nieuwe ideeën
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
+
+---
+
+## Besluit NNN — Wedstrijd bijhouden zonder iets kwijt te raken (Spoor 3, maat L)
+> Akkoord 10 november 2026 op stap A van het voorstel `docs/onderzoek/wedstrijd-bijhouden/voorstel.md`. Aanleiding: wedstrijd O13 talententeam op 7 november; de timekeeper hield alles bij, maar er werd niets opgeslagen en de ouders kregen *0-0* (het werd 7-2). Herziet Besluit 117 (uitslagbericht) en vult Besluit 116 aan.
+
+**Wat er misging (onderzocht, alleen gelezen in productie, nagebootst in de lokale testdatabase).**
+- De ouder stond in de app goed als **Timekeeper** bij de wedstrijd. De database herkende haar ook goed.
+- Toch werd elke wijziging van de wedstrijd geweigerd. De app slaat op met **upsert** (invoegen, of bijwerken als hij al bestaat). Bij een upsert draait de bewaker eerst als *invoegen*, en die zei voor iedereen buiten de staf *"Alleen staf kan activiteiten toevoegen"*, ook als de wedstrijd al bestond.
+- Besluit 116 werkte in de app daardoor nooit. De rechtentest probeerde alleen een gewone update en zag het niet. Migratie 033 had hetzelfde probleem al opgelost voor de trainerteksten.
+- Daarna ververste de app elke 30 seconden met de stand van de server, en verdwenen de ingevoerde doelpunten steeds weer. Bij het afsluiten was de stand 0-0, en het uitslagbericht ging meteen naar de ouders.
+
+**Wat.**
+1. **Migratie 035** (`supabase/migrations/035_timekeeper_upsert.sql.voorstel`; wordt `.sql` zodra hij na akkoord in productie is toegepast): bestaat de wedstrijd al, dan beslist alleen de controle bij bijwerken. Die controle blijft streng: een niet-stafslid mag alleen vervanger en begeleider wijzigen, en de timekeeper of trainer-coach ook doelpunten en uitslag. Extra: wie geen staf is, mag het team van een activiteit niet wijzigen. Test: `supabase/tests/lokaal/timekeeper-upsert.sql` (8 van 8 met 035, 2 fout zonder).
+2. **Reservekopie op de telefoon** (`wedvangnet.js`): doelpunten en uitslag van een wedstrijd van gisteren, vandaag of morgen staan ook op het toestel.
+   - Haalt het verversen ze weg, terwijl de kopie er meer heeft en niets wat de kopie niet kent, dan zet de app ze terug en probeert opnieuw op te slaan. Lukt dat niet, dan gaat het als voorstel naar de trainer (Besluit 117), nu met alle doelpunten.
+   - De kopie wordt na 2 dagen gewist.
+3. **Op het scorebord:** *Opgeslagen ✓* of *Nog niet opgeslagen · staat veilig op deze telefoon*.
+4. **Scherm aan:** zolang het scorebord van een lopende wedstrijd (vandaag, uitslag nog niet opgeslagen) open staat, gaat het scherm niet op slot (Wake Lock; waar dat niet kan, gebeurt er niets).
+5. **Uitslagbericht (herziet Besluit 117):** wie de uitslag niet mag opslaan (geen staf, geen timekeeper of trainer-coach van deze wedstrijd), stuurt het bericht niet meteen. Het gaat mee in het voorstel, en de trainer stuurt het bij **Overnemen**, met de stand die hij overneemt.
+
+**Gegevens en rechten.**
+- Niemand mag meer dan in Besluit 116; alleen de manier van controleren verandert.
+- De reservekopie bevat alleen doelpunten (wie scoorde) en de uitslag van een wedstrijd van het eigen team, op de eigen telefoon, hooguit 2 dagen.
+
+**Tests:** `tests/wedstrijd-vangnet.spec.js`:
+- geweigerd en ververst: de doelpunten blijven en gaan met het voorstel mee; zonder terugzetten faalt de test;
+- geen uitslagbericht zonder recht, wel na overnemen;
+- het scorebord toont *Opgeslagen*.
+
+Daarnaast de lokale rechtentest met 035.
+
+**Nog niet (volgende stappen in het voorstel):** achteraf invullen en verbeteren, en een minuut bij een doelpunt (B3/B4); het overzicht basis en wissels (B1/B2); een reden bij minder speeltijd (C).
 
 ---
 
@@ -1876,6 +1910,7 @@ Een uitklapper die je opent of sluit, blijft zo zolang de app open is (zoals Bes
 - Bewust zo gelaten: losse tekstlinks in een zin (bijv. *Dank je!*, een adres).
 
 ## Besluit 117 — Vangnet: wat de timekeeper niet mag opslaan, gaat als voorstel naar de trainer
+> **◐ Deels herzien door Besluit NNN:** mag de timekeeper de uitslag niet opslaan, dan gaat het uitslagbericht niet meteen, maar pas als de trainer het voorstel overneemt (zie Register).
 *Besloten 24 oktober 2026, na een voorbeeld. Wens van de trainer: de timekeeper hoeft na de wedstrijd niets meer te regelen, en de trainer is ook met andere dingen bezig.*
 - **Wanneer:** alleen als de database iets weigert (na Besluit 116 een uitzondering, bijv. een ouder die invalt zonder de taak in de app, of te laat opslaat), en alleen voor **wedstrijdgegevens**: uitslag, doelpunten en het wisselschema (wissels, posities).
 - **De timekeeper** ziet bij de score: *"Doorgestuurd naar [trainer]. … Je hoeft niets meer te doen. Bedankt!"* Het uitslagbericht aan de ouders gaat zoals altijd meteen.
