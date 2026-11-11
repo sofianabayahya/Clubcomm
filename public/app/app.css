@@ -518,6 +518,7 @@ details.uitklap.stil summary { font-size: 13px; color: var(--zacht); }
 .sb-kant small { color: var(--zacht); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; } .sb-kant b { font-size: 13px; line-height: 1.2; min-height: 32px; overflow-wrap: anywhere; }
 .sb-stand { font-size: 44px; font-weight: 800; line-height: 1; color: var(--inkt); }
 .sb-streep { align-self: center; font-size: 32px; font-weight: 800; color: var(--zacht); }
+.sb-opslag { display: flex; align-items: center; gap: 6px; margin: 8px 0 4px; font-size: 15px; color: var(--oranje); } .sb-opslag.goed { color: var(--groen); } .sb-opslag svg { width: 16px; height: 16px; }
 .sb-goals { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 4px; } .sb-goals .chip { display: inline-flex; align-items: center; gap: 4px; }
 .chip-x { border: 0; background: none; padding: 0 0 0 2px; color: inherit; display: inline-flex; } .chip-x .ic { width: 14px; height: 14px; }
 .scoorders { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
