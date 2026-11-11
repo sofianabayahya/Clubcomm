@@ -828,10 +828,14 @@ test.describe('Demo', () => {
     await page.locator('[data-act="magischeLink"]').click();
     await page.evaluate(() => { CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'teamleider')); CC.open('speeltijd', { team: CC.teamId() }); });
     await expect(page.locator('#app')).not.toContainText('Speeltijd dit seizoen');
+    // Besluit NNN: ook niet onder Seizoen
+    await page.evaluate(() => { CC.ui.seg.wedDeel = 'seizoen'; CC.render(); });
+    await expect(page.locator('#app')).not.toContainText('Speeltijd dit seizoen');
     await page.evaluate(() => CC.go('team'));
     await page.locator('#app [data-act="spelerKaart"]').first().click();
     await expect(page.locator('#sheet')).not.toContainText('% speeltijd');
     await page.evaluate(() => { CC.closeSheet(); CC.zetSessie(CC.S().demo.mark); CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'trainer')); CC.go('speeltijd'); });
+    await page.locator('#app [data-act="seg"][data-key="wedDeel"][data-val="seizoen"]').click();
     await expect(page.locator('#app')).toContainText('Speeltijd dit seizoen');
     await controleer(page, fouten, 'speeltijd alleen trainer');
   });

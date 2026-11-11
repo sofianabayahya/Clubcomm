@@ -1104,3 +1104,18 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .tr-wbol { width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; flex: none; }
 .tr-wrij2 { gap: 12px; min-height: 52px; }
 .tr-wierijen .tr-t b { font-size: 16px; }
+
+/* Besluit NNN: wedstrijdarchief (Gespeeld) en achteraf aanpassen */
+.arch-uitslag { font-size: 18px; font-weight: 800; color: var(--tekst, inherit); }
+.arch-stand .groot-cijfer { margin-bottom: 2px; }
+.arch-nr { width: 28px; height: 28px; border-radius: 50%; background: var(--blauw-l, #e7f2fe); color: var(--blauw, #0869c2); display: inline-grid; place-items: center; font-weight: 700; font-size: 14px; }
+.arch-min { min-width: 44px; font-weight: 700; color: var(--zacht); font-size: 15px; }
+.arch-in { color: var(--groen, #137333); font-weight: 600; } .arch-uit { color: var(--rood, #b42318); font-weight: 600; }
+.arch-rij { display: grid; grid-template-columns: 76px minmax(0, 1fr) minmax(0, 1fr) 44px; gap: 8px; align-items: center; padding: 6px 0; border-top: 1px solid var(--lijn); }
+.arch-rij:first-child { border-top: 0; } .arch-rij .kies { min-height: 44px; margin: 0; min-width: 0; width: 100%; }
+.arch-rij .icoonknop { width: 44px; height: 44px; }
+.arch-kop { font-size: 13px; color: var(--zacht); border-top: 0; padding-bottom: 0; }
+.arch-velden { display: grid; gap: 6px; margin: 8px 0; }
+.arch-veld { display: grid; grid-template-columns: 32px minmax(0, 1fr) minmax(0, 1.3fr); gap: 8px; align-items: center; }
+.arch-veld .kies { min-height: 44px; margin: 0; min-width: 0; width: 100%; }
+.arch-lab { font-size: 15px; color: var(--zacht); overflow-wrap: anywhere; }

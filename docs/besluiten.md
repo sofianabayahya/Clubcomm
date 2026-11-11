@@ -3,7 +3,7 @@
 Hier leggen we vast wat we samen besluiten over hoe ClubComm (versie 2) moet werken.
 Dit is de bouwlijst: wat hier staat, bouwen we.
 
-Laatst bijgewerkt: 11 november 2026 (t/m Besluit 181)
+Laatst bijgewerkt: 11 november 2026 (t/m Besluit NNN)
 
 ## Hoe dit bestand werkt (borging)
 - **Het nieuwste besluit geldt.** Verandert een nieuw besluit iets aan een ouder besluit, dan krijgt het oude besluit bovenaan de regel *"◐ Deels herzien door Besluit X"* (of *"✖ Vervangen door …"*), en passen we het **register** hieronder aan. Zo wordt een oude afspraak nooit meer los gebruikt.
@@ -22,6 +22,7 @@ Laatst bijgewerkt: 11 november 2026 (t/m Besluit 181)
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
 | 181 | 3 | Wedstrijd bijhouden zonder iets kwijt te raken: (1) de timekeeper kan via de app echt opslaan (migratie 035: de bewaker weigerde elke upsert van een niet-stafslid, ook als de wedstrijd al bestond); (2) doelpunten en uitslag ook als reservekopie op de telefoon, teruggezet als verversen ze wegneemt; (3) op het scorebord *Opgeslagen* of *Nog niet opgeslagen · staat veilig op deze telefoon*; (4) het scherm blijft aan zolang het scorebord van een lopende wedstrijd open staat; (5) wie de uitslag niet mag opslaan, stuurt geen uitslagbericht: dat gaat bij *Overnemen* door de trainer | ✅ geldt |  |
+| NNN | 3 | Wedstrijdarchief: het tabblad Wedstrijd heeft *Vandaag · Gespeeld · Seizoen*; onder *Gespeeld* per wedstrijd de uitslag (doelpunten met minuut), de basis op positie, de wissels (▲ erin, ▼ eruit) en voor de trainer de minuten; staf past basis, wissels en doelpunten achteraf aan en de seizoensminuten worden opnieuw uitgerekend zonder dubbel tellen | ✅ geldt |  |
 | 180 | 3 | Huisstijl ClubComm (*Krijtbord*, variant C2.1-wit): het bestaande logo ongewijzigd en het sterkste kleuraccent; **witte navigatie** met het gekozen item als lichtblauwe afgeronde rechthoek; werkgebied lichtgrijs; navy alleen voor tekst en kleine vlakken; eigen letter **Archivo** (lokaal, rem-maten); één betekenis per kleur en vorm (pion = wacht op jou, haltes, krijtlijnen, trainingsbalk); pion **#EA580C**; clubkleur alleen in embleem en thuis-teken. Uitgewerkt in `docs/DESIGN.md`; invoeren in vijf stappen, elk een eigen pull request met voorbeeld. Geen functie, gegevens of rechten | ✅ geldt |  |
 | 179 | 3 | Opstelling per kleur, geen namen in de tekening: de tekening toont alleen de nummers (namen erin werd te druk). Onder de tekening **Rood · Geel** (met *ingedeeld / plekken*); tik een kleur en zie die lijst: nummer, positie en naam, keeper eerst. Indelen door een regel of een speler in de tekening te tikken; wisselen zoals Besluit 175; tik je een speler van de andere kleur, dan toont de lijst die kleur. Blok heet *Opstelling*, ingeklapt tot er namen zijn. Op het veld: tekening zonder namen en dezelfde lijst per kleur om te lezen (*Opstelling aanpassen*; *Zonder namen* vervalt). Print: tekening zonder namen, lijst per team met alleen de ingevulde namen. Geen migratie, rechten ongewijzigd | ✅ geldt | |
 | 178 | 3 | De volgende stap achter elke trainer in de lijst Trainers (pakket): **③ traject starten** en **④ eerste moment plannen** in blauw (wat de HO per trainer doet); grijs *kennismaking nog niet gestuurd*, *wacht op kennismaking*, *traint vooral voor het plezier*; met een moment zoals eerder (*traject 1/2 · volgend …*). Bovenaan één regel *n trainers zonder kennismaking · Nodig ze in één keer uit* en *n trainers wachten op een stap van jou (③ of ④)*. Niet gesorteerd: de lijst blijft op naam. Geen nieuwe gegevens of rechten | ✅ geldt |  |
@@ -716,6 +717,25 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
 ### Vuistregel voor nieuwe ideeën
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
+
+---
+
+## Besluit NNN — Wedstrijdarchief: wie begon, wie wisselde, achteraf aanpassen (Spoor 3, maat M)
+> Akkoord 11 november 2026 op het voorbeeld `docs/onderzoek/wedstrijd-bijhouden/archief-voorbeeld.html` (390 px). Aanleiding: na de wedstrijd van 7 november wilde de trainer kunnen terugvinden met wie hij begon en wie hij wisselde, en dat ook na de wedstrijd nog kunnen aanpassen. Vult Besluit 106 (eigen wisselschema) en 116 (minuten alleen voor de trainer) aan.
+
+**Wat.**
+1. **Tabblad Wedstrijd: Vandaag · Gespeeld · Seizoen.** *Vandaag* is het scherm van altijd (scorebord, wisselschema), zonder de seizoenscijfers. *Seizoen* toont de speeltijd en posities dit seizoen (alleen de trainer, Besluit 116). *Gespeeld* is nieuw. Ook de teamleider ziet deze drie, zonder minuten.
+2. **Gespeeld:** alle gespeelde (oefen)wedstrijden van het team, nieuwste bovenaan, per maand. Per regel: datum · thuis/uit/oefen, tegenstander, *n in de basis · m wissels*, rechts de uitslag. Onderaan *Komend*: de volgende wedstrijd, tik = naar Vandaag.
+3. **Eén wedstrijd:** de uitslag met de doelpunten (minuut, stand, maker) en of het bericht naar de ouders ging; de **basis** op positie (1 = keeper); de **wissels** op volgorde (*rust* bij de rust) met **▲ erin** en **▼ eruit**. De minuten per speler ziet alleen de trainer. Een wisselschema dat de app eerlijk verdeelde (zonder posities), toont de basis en wissels afgeleid uit de blokken.
+4. **Aanpassen (alleen staf van het team), ook dagen later:** venster met *Basis* (per positie een speler; kies je iemand die al op een andere plek staat, dan ruilen ze), *Wissels* (minuut, erin, eruit, kruisje om weg te halen, *+ Wissel toevoegen*) en *Doelpunten* (minuut, maker, tegen of eigen doelpunt tegenstander).
+   - Vóór opslaan controleert de app de wissels in volgorde: wie eruit gaat moet op dat moment in het veld staan, wie erin komt niet.
+   - **Niet dubbel tellen:** was de speeltijd al vastgelegd, dan gaan eerst de oude minuten, keeperbeurt en mogelijke minuten van het seizoen af, daarna komen de nieuwe erbij (zelfde rekenwerk als *Overnemen*, Besluit 117). De uitslag volgt uit de doelpunten.
+   - Was er geen opstelling, dan legt *Aanpassen* die alsnog vast. Een eerlijk schema wordt bij aanpassen een eigen schema (basis + wissels).
+5. **Weghalen met een kruisje**, niet met vegen (het voorbeeld noemde vegen): een kruisje van 44 pt is vindbaar en werkt ook met toetsenbord en schermlezer.
+
+**Niet.** Geen nieuwe tabel of rechten: het archief leest de wedstrijden en wisselschema's die er al zijn. Ouders zien het archief niet (het zit in het staftabblad).
+
+**Code en tests.** `public/app/wedarchief.js` (nieuw), `trainer.js` (`CC.speeltijdHtml` met `deel`, `CC.speeltijdTerug`), `app.css`. Test: `tests/wedstrijdarchief.spec.js` (archief, aanpassen zonder dubbel tellen, controle van de wissels, geen minuten en geen Aanpassen voor een ouder).
 
 ---
 

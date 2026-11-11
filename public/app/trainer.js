@@ -79,7 +79,10 @@
     const tabel = `${h.sectie('Speeltijd dit seizoen')}<div class="balkjes">${seizoen.map(({ pl, x }) => `<div class="balkje"><span>${esc(pl.voornaam)}</span><i style="--w:${x.pct ?? 0}%"></i><b>${zelf ? `${Math.round(x.min)}'` : x.pct == null ? '–' : x.pct + '%'}</b></div>`).join('')}</div>
       <p class="zacht klein">Percentage van de mogelijke speeltijd in de wedstrijden waarbij het kind er was. Gemiste wedstrijden tellen niet mee${seizoen.some(({ x }) => Object.keys(x.gemist).length) ? `: ${seizoen.filter(({ x }) => Object.keys(x.gemist).length).map(({ pl, x }) => `${esc(pl.voornaam)} (${gemistTekst(x.gemist)})`).join(', ')}` : ''}.</p>`;
     // Besluit 106: bij een eigen schema ook de posities dit seizoen
-    const seizoenBlok = !CC.zietMinuten() ? '' : zelf ? tabel + CC.posTabel(S, teamId) : tabel; // Besluit 116: alleen de trainer
+    const seizoenVol = !CC.zietMinuten() ? '' : zelf ? tabel + CC.posTabel(S, teamId) : tabel; // Besluit 116: alleen de trainer
+    // Besluit NNN: het tabblad Wedstrijd heeft Vandaag · Gespeeld · Seizoen; Vandaag zonder seizoen, Seizoen alleen het seizoen
+    if (opties.deel === 'seizoen') return seizoenVol || h.leeg('Nog geen speeltijd dit seizoen', 'timer');
+    const seizoenBlok = opties.deel === 'wed' ? '' : seizoenVol;
     // Nog geen wedstrijd: uitleggen wat hier komt, met de KNVB-speelduur van dit team (Besluit 60)
     if (!a) { const c0 = CC.categorie(M.wedCat(S, teamId));
       return `${h.leeg('Nog geen wedstrijd gepland', 'timer')}<p class="zacht klein midden">Zodra er een (oefen)wedstrijd in de planning staat, maak je hier het wisselschema. ${esc(c0.leeftijd)}: ${esc(c0.vorm)}, ${esc(c0.speelduur)}${c0.timeout ? ', met een time-out halverwege elke helft' : ''} (KNVB).</p>` + (opties.alleenSchema ? '' : seizoenBlok); }
@@ -247,7 +250,7 @@
       <p class="zacht klein">Aanwezigheid en speeltijd rekent de app hieruit, zoals altijd.</p>
       <button class="knop vol" data-act="voorstelOver" data-id="${a.id}">${icon('circle-check')}Overnemen</button><button class="linkknop" data-act="voorstelWeg" data-id="${a.id}">Niet overnemen</button>`); });
   // Speeltijd van een al vastgelegd schema terugdraaien (zodat overnemen niet dubbel telt)
-  const speeltijdTerug = (S, a, sch) => { if (!sch || !sch.bevestigd) return; if (sch.zelf) M.zelfAfleiden(sch);
+  const speeltijdTerug = CC.speeltijdTerug = (S, a, sch) => { if (!sch || !sch.bevestigd) return; if (sch.zelf) M.zelfAfleiden(sch);
     const kb = S.speeltijd.keeper || {}; if (sch.keepers && sch.keepers[0] && komtNog(S, a, sch.keepers[0]) && kb[sch.keepers[0]]) kb[sch.keepers[0]] -= 1;
     const len = M.schemaLengtes(sch); sch.blokken.forEach((b, i) => b.forEach((id) => { if (komtNog(S, a, id)) S.speeltijd.min[id] = Math.max(0, (S.speeltijd.min[id] || 0) - len[i]); }));
     const mog = S.speeltijd.mogelijk || {}; (sch.spelers || [...new Set(sch.blokken.flat())]).filter((id) => komtNog(S, a, id)).forEach((id) => { mog[id] = Math.max(0, (mog[id] || 0) - (sch.wedMin || len.reduce((x, y) => x + y, 0))); }); };
