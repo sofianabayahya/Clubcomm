@@ -1,4 +1,4 @@
-// ClubComm — Besluit NNN: wedstrijd bijhouden zonder iets kwijt te raken.
+// ClubComm — Besluit 181: wedstrijd bijhouden zonder iets kwijt te raken.
 // Gevonden 07-11: de database weigerde de timekeeper (upsert, zie migratie 035) en de app ververste daarna elke 30 seconden
 // met de stand van de server, waardoor ingevoerde doelpunten steeds weer verdwenen.
 // 1. Reservekopie: doelpunten en uitslag van een wedstrijd van vandaag (of gisteren/morgen) staan ook op deze telefoon.

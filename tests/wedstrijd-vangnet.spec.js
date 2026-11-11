@@ -1,4 +1,4 @@
-// Besluit NNN: wedstrijd bijhouden zonder iets kwijt te raken (gevonden 07-11: doelpunten verdwenen na elke verversing,
+// Besluit 181: wedstrijd bijhouden zonder iets kwijt te raken (gevonden 07-11: doelpunten verdwenen na elke verversing,
 // en de ouders kregen 0-0). Met de nep-database die opslaan kan weigeren, zoals de echte database deed.
 const { test, expect } = require('@playwright/test');
 const { volgFouten, controleer, nepDatabase, inloggen, nepDb } = require('./hulp');

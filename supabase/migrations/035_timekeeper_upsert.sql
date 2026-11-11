@@ -1,11 +1,11 @@
--- ClubComm — Besluit NNN: de timekeeper (en trainer-coach, vervanger, begeleider) kan via de app echt opslaan.
+-- ClubComm — Besluit 181: de timekeeper (en trainer-coach, vervanger, begeleider) kan via de app echt opslaan.
 -- Gevonden 07-11 (wedstrijd O13 talententeam): de app slaat op met upsert (insert ... on conflict do update). Bij een upsert
 -- draait de bewaker eerst als INSERT, en die weigerde iedereen buiten de staf ("Alleen staf kan activiteiten toevoegen"),
 -- ook als de wedstrijd al bestond. Daardoor werkte Besluit 116 in de app nooit; de rechtentest probeerde alleen een update.
 -- Oplossing (zelfde aanpak als 033 voor de trainerteksten): bestaat de wedstrijd al, dan geen INSERT-controle; de
 -- UPDATE-controle (alleen vervanger/begeleider, en voor de timekeeper doelpunten en uitslag) beslist. Extra: wie geen staf is,
 -- mag het team van een activiteit niet wijzigen. Test: supabase/tests/lokaal/timekeeper-upsert.sql.
--- Voorstel: pas toepassen na akkoord van de gebruiker (maat L).
+-- Toegepast in productie op 11-11-2026 na akkoord van de gebruiker (maat L).
 
 create or replace function priv.cc_bewaak() returns trigger
 language plpgsql security definer set search_path = public as $$

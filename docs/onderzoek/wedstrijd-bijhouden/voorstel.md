@@ -102,7 +102,7 @@ Stap 1 eerst: zonder betrouwbaar opslaan heeft een overzicht geen zin.
 
 **Oorzaak bevestigd.** De app slaat op met *upsert*. Bij een upsert draait de databasebewaker eerst als *invoegen*, en die weigerde iedereen buiten de staf (*"Alleen staf kan activiteiten toevoegen"*), ook als de wedstrijd al bestond. Nagebootst in de lokale testdatabase: een gewone update door de timekeeper mag, een upsert niet. Besluit 116 werkte in de app daardoor nooit. Een "verouderde wedstrijd op de telefoon" was dus **niet** de oorzaak; de rondgang door de app gaf geen enkel verschil.
 
-**Stap A gebouwd** (Besluit NNN): migratie 035 (voorstel, toepassen na akkoord), reservekopie en terugzetten, *Opgeslagen* op het scorebord, scherm aan, en geen uitslagbericht zonder recht.
+**Stap A gebouwd** (Besluit 181): migratie 035 (voorstel, toepassen na akkoord), reservekopie en terugzetten, *Opgeslagen* op het scorebord, scherm aan, en geen uitslagbericht zonder recht.
 
 **Sportlink.** ClubComm heeft **geen koppeling met Sportlink**. De wedstrijden van de O13 zijn op 17-10 één keer ingeladen uit de Sportlink-agenda (iCal), met het script `supabase/scripts/2026-10-17_dcg_wedstrijden_fase2.sql`. Een wijziging in Sportlink komt daarom nooit vanzelf in ClubComm. Nu kan het zo:
 - **Teams → het team → de wedstrijd → Aanpassen** (Besluit 168): het begeleidingsmoment schuift mee en de trainer krijgt bericht;
