@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voorbeeld: wedstrijdarchief</title>
+<style>
+/* Voorbeeld in de huidige stijl van de app (niet de nieuwe huisstijl); verzonnen namen */
+:root { --blauw: #0869c2; --blauw-l: #e7f2fe; --inkt: #0b2545; --zacht: #5b6b7f; --lijn: #e3e9f1; --grond: #f5f7fa; --groen: #137333; --groen-l: #e7f6ec; --rood: #dc2626; --oranje: #a84d08; }
+* { box-sizing: border-box; } body { margin: 0; font: 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color: var(--inkt); background: #d9dee5; }
+.telefoons { display: flex; gap: 24px; padding: 24px; flex-wrap: wrap; align-items: flex-start; }
+.tel { width: 390px; min-height: 844px; background: var(--grond); border-radius: 28px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,.15); position: relative; }
+.kop { background: #fff; border-bottom: 1px solid var(--lijn); padding: 14px 16px; display: flex; align-items: center; gap: 10px; }
+.kop img { width: 32px; height: 32px; border-radius: 8px; } .kop b { font-size: 17px; } .kop small { display: block; color: var(--zacht); font-size: 13px; }
+.terug { color: var(--blauw); font-weight: 600; }
+.inhoud { padding: 14px 16px 90px; }
+h2 { font-size: 13px; letter-spacing: .02em; color: var(--zacht); margin: 18px 4px 8px; font-weight: 700; }
+.kaart { background: #fff; border-radius: 14px; box-shadow: 0 1px 2px rgba(11,37,69,.06), 0 2px 8px rgba(11,37,69,.05); overflow: hidden; }
+.rij { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-top: 1px solid var(--lijn); min-height: 56px; }
+.rij:first-child { border-top: 0; }
+.rij .t { flex: 1; } .rij b { display: block; } .rij small { color: var(--zacht); font-size: 15px; }
+.uitslag { font-weight: 800; font-size: 18px; } .pijl { color: var(--zacht); font-size: 20px; }
+.seg { display: flex; background: #e9edf3; border-radius: 10px; padding: 3px; margin-bottom: 4px; }
+.seg span { flex: 1; text-align: center; padding: 9px 0; border-radius: 8px; font-weight: 600; font-size: 15px; color: var(--zacht); }
+.seg span.aan { background: #fff; color: var(--inkt); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+.stand { text-align: center; padding: 14px; } .stand .groot { font-size: 34px; font-weight: 800; } .stand small { color: var(--zacht); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 14px 14px; }
+.chip { font-size: 14px; padding: 5px 9px; border-radius: 999px; background: #eef2f6; } .chip.wij { background: var(--groen-l); color: var(--groen); }
+.basis { display: grid; grid-template-columns: 28px 1fr auto; gap: 4px 10px; padding: 12px 14px; align-items: center; }
+.nr { width: 26px; height: 26px; border-radius: 50%; background: var(--blauw-l); color: var(--blauw); display: grid; place-items: center; font-weight: 700; font-size: 13px; }
+.min { color: var(--zacht); font-size: 15px; text-align: right; }
+.wissel { display: grid; grid-template-columns: 54px 1fr; gap: 2px 10px; padding: 10px 14px; border-top: 1px solid var(--lijn); }
+.wissel:first-child { border-top: 0; } .wissel .m { font-weight: 700; color: var(--zacht); }
+.in { color: var(--groen); font-weight: 600; } .uit { color: var(--rood); font-weight: 600; }
+.knop { display: flex; align-items: center; justify-content: center; min-height: 48px; border-radius: 12px; background: var(--blauw); color: #fff; font-weight: 700; margin-top: 14px; }
+.knop.licht { background: #fff; color: var(--blauw); border: 1.5px solid var(--blauw); }
+.sheet { position: absolute; inset: auto 0 0 0; background: #fff; border-radius: 18px 18px 0 0; padding: 10px 16px 24px; box-shadow: 0 -6px 30px rgba(0,0,0,.18); }
+.greep { width: 40px; height: 5px; border-radius: 3px; background: #cfd6df; margin: 0 auto 10px; }
+.sheet h3 { margin: 0 0 10px; font-size: 19px; }
+.veld { display: grid; grid-template-columns: 74px 1fr 1fr; gap: 8px; align-items: center; padding: 8px 0; border-top: 1px solid var(--lijn); }
+.veld input, .veld select, .veld .sel { min-height: 44px; border: 1.5px solid var(--lijn); border-radius: 10px; padding: 0 10px; font: inherit; display: flex; align-items: center; background: #fff; }
+.lab { font-size: 13px; color: var(--zacht); }
+.uitleg { color: var(--zacht); font-size: 15px; margin: 8px 4px; }
+.nav { position: absolute; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid var(--lijn); display: grid; grid-template-columns: repeat(5,1fr); }
+.nav span { text-align: center; font-size: 12px; padding: 10px 0 14px; color: var(--zacht); } .nav span.aan { color: var(--blauw); font-weight: 700; }
+.bijschrift { width: 390px; font-size: 15px; color: #333; margin-top: 8px; }
+</style></head><body>
+<div class="telefoons">
+
+<div><div class="tel">
+  <div class="kop"><div><b>Wedstrijd</b><small>O13 · 1-4-3-3</small></div></div>
+  <div class="inhoud">
+    <div class="seg"><span>Vandaag</span><span class="aan">Gespeeld</span><span>Seizoen</span></div>
+    <p class="uitleg">Tik een wedstrijd: wie begon, wie wisselde en de minuten. Na de wedstrijd kun je alles nog aanpassen.</p>
+    <h2>NOVEMBER</h2>
+    <div class="kaart">
+      <div class="rij"><div class="t"><b>za 7 nov · thuis</b><small>FC Voorbeeld O13-1 · 11 in de basis · 8 wissels</small></div><span class="uitslag">7-2</span><span class="pijl">›</span></div>
+    </div>
+    <h2>OKTOBER</h2>
+    <div class="kaart">
+      <div class="rij"><div class="t"><b>za 31 okt · uit</b><small>SV Testdorp O13-5 · 11 in de basis · 3 wissels</small></div><span class="uitslag">2-4</span><span class="pijl">›</span></div>
+      <div class="rij"><div class="t"><b>za 24 okt · oefen</b><small>VV Proef O13-3 · 11 in de basis · 5 wissels</small></div><span class="uitslag">6-2</span><span class="pijl">›</span></div>
+    </div>
+    <h2>KOMEND</h2>
+    <div class="kaart"><div class="rij"><div class="t"><b>za 14 nov · uit</b><small>Opstelling nog niet gemaakt</small></div><span class="pijl">›</span></div></div>
+  </div>
+  <div class="nav"><span>Home</span><span>Training</span><span class="aan">Wedstrijd</span><span>Spelers</span><span>Berichten</span></div>
+</div><p class="bijschrift"><b>1. Gespeeld</b>: het archief per wedstrijd, nieuwste bovenaan. Vandaag en Seizoen blijven zoals nu.</p></div>
+
+<div><div class="tel">
+  <div class="kop"><span class="terug">‹ Gespeeld</span><div style="margin-left:6px"><b>za 7 nov · thuis</b><small>tegen FC Voorbeeld O13-1</small></div></div>
+  <div class="inhoud">
+    <div class="kaart"><div class="stand"><div class="groot">7 – 2</div><small>uitslag opgeslagen · niet naar de ouders gestuurd</small></div>
+      <div class="chips"><span class="chip">1' 0-1</span><span class="chip wij">2' 1-1 Tim</span><span class="chip wij">6' 2-1 Youri</span><span class="chip wij">13' 3-1 Jens</span><span class="chip">21' 3-2</span><span class="chip wij">25' 4-2 Tim</span><span class="chip wij">41' 5-2 Mo</span><span class="chip wij">53' 6-2 Zeno</span><span class="chip wij">57' 7-2 Jens</span></div></div>
+    <h2>BASIS</h2>
+    <div class="kaart"><div class="basis">
+      <span class="nr">1</span><span>Xander (keeper)</span><span class="min">50'</span>
+      <span class="nr">2</span><span>Adam</span><span class="min">47'</span>
+      <span class="nr">3</span><span>Joas</span><span class="min">60'</span>
+      <span class="nr">4</span><span>Noah</span><span class="min">44'</span>
+      <span class="nr">5</span><span>Sem</span><span class="min">46'</span>
+      <span class="nr">6</span><span>Sami</span><span class="min">48'</span>
+      <span class="nr">7</span><span>Jens</span><span class="min">41'</span>
+      <span class="nr">8</span><span>Mo</span><span class="min">60'</span>
+      <span class="nr">9</span><span>Tim</span><span class="min">49'</span>
+      <span class="nr">10</span><span>Youri</span><span class="min">42'</span>
+      <span class="nr">11</span><span>Zeno</span><span class="min">60'</span>
+    </div></div>
+    <h2>WISSELS</h2>
+    <div class="kaart">
+      <div class="wissel"><span class="m">rust</span><span><span class="in">▲ Nina</span> erin · <span class="uit">▼ Noah</span> eruit</span></div>
+      <div class="wissel"><span class="m">rust</span><span><span class="in">▲ Ilyas</span> · <span class="uit">▼ Jens</span></span></div>
+      <div class="wissel"><span class="m">rust</span><span><span class="in">▲ Elias</span> · <span class="uit">▼ Youri</span></span></div>
+      <div class="wissel"><span class="m">46'</span><span><span class="in">▲ Noah</span> · <span class="uit">▼ Sem</span></span></div>
+      <div class="wissel"><span class="m">47'</span><span><span class="in">▲ Jiska</span> · <span class="uit">▼ Adam</span></span></div>
+      <div class="wissel"><span class="m">…</span><span class="lab">nog 3 wissels</span></div>
+    </div>
+    <div class="knop">Aanpassen</div>
+  </div>
+</div><p class="bijschrift"><b>2. Eén wedstrijd</b>: uitslag met de minuut per doelpunt, de basis op positie met de minuten (alleen de trainer ziet minuten, Besluit 116) en de wissels met <b>▲ erin</b> en <b>▼ eruit</b>.</p></div>
+
+<div><div class="tel">
+  <div class="kop"><span class="terug">‹ Gespeeld</span><div style="margin-left:6px"><b>za 7 nov · thuis</b><small>tegen FC Voorbeeld O13-1</small></div></div>
+  <div class="inhoud" style="opacity:.35"><div class="kaart"><div class="stand"><div class="groot">7 – 2</div></div></div></div>
+  <div class="sheet"><div class="greep"></div><h3>Wedstrijd aanpassen</h3>
+    <div class="seg" style="margin-bottom:8px"><span>Basis</span><span class="aan">Wissels</span><span>Doelpunten</span></div>
+    <div class="veld"><span class="lab">Minuut</span><span class="lab">▲ Erin</span><span class="lab">▼ Eruit</span></div>
+    <div class="veld"><span class="sel">rust</span><span class="sel">Nina ▾</span><span class="sel">Noah ▾</span></div>
+    <div class="veld"><span class="sel">rust</span><span class="sel">Ilyas ▾</span><span class="sel">Jens ▾</span></div>
+    <div class="veld"><span class="sel">46</span><span class="sel">Noah ▾</span><span class="sel">Sem ▾</span></div>
+    <div class="veld"><span class="sel">47</span><span class="sel">Jiska ▾</span><span class="sel">Adam ▾</span></div>
+    <div class="knop licht">+ Wissel toevoegen</div>
+    <p class="uitleg">Na opslaan rekent ClubComm de minuten van deze wedstrijd en van het seizoen opnieuw uit. Een wissel weghalen: veeg naar links.</p>
+    <div class="knop">Opslaan</div>
+  </div>
+</div><p class="bijschrift"><b>3. Aanpassen</b>, ook dagen later: basis (tik een positie), wissels (minuut, erin, eruit) en doelpunten (maker en minuut). De seizoensminuten tellen niet dubbel.</p></div>
+
+</div></body></html>
