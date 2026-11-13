@@ -57,6 +57,9 @@ Er staat geen afgewezen idee over Sportlink of de wedstrijdagenda. Wel bekeken:
 3. **D3 — toepassen:** migratie en functie in productie na akkoord. Jij zet de link van het O13 talententeam (zelf, in de app). Daarna draait het één week mee en kijken we elke ochtend of het klopt.
 4. **Later — B:** de Club.Dataservice-sleutel, zodra DCG die heeft. Dan werkt het voor alle teams zonder een link per team.
 
+## Voorbeeld (D1, 13-11)
+`voorbeeld.html` / `voorbeeld.jpg` (390 px, verzonnen club): 1. instellen, 2. *Actie nodig* met gewijzigd / nieuw / verdwenen, 3. bericht naar de ouders, 4. ophalen lukt niet. Nog geen akkoord.
+
 ## 8. Wat ik van jou nodig heb
 - **Akkoord op het advies** (A nu, B later) en op het principe in punt 5: tijden worden vanzelf bijgewerkt, ouders krijgen pas een bericht als de staf op de knop tikt.
 - Weet je nog waar je op 17-10 de agenda-export vandaan haalde (voetbal.nl of de Sportlink-app)? Dan schrijf ik dat precies in het instelscherm. **Plak de link zelf niet in de chat.**
