@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Voorbeeld: aftrap aanpassen door de teamleider</title>
+<title>Voorbeeld: wedstrijd verplaatsen en afgelasten (stap 1)</title>
 <style>
 /* Voorstel D: voorbeeld in de huidige stijl van de app; verzonnen club en namen */
 :root { --blauw: #0869c2; --blauw-l: #e7f2fe; --inkt: #0b2545; --zacht: #5b6b7f; --lijn: #e3e9f1; --grond: #f5f7fa; --groen: #137333; --groen-l: #e7f6ec; --rood: #dc2626; --oranje: #a84d08; }
@@ -65,43 +65,51 @@ h2 { font-size: 13px; letter-spacing: .02em; color: var(--zacht); margin: 18px 4
 .slot .tijd { text-align:center; font-size:64px; font-weight:300; } .slot .dag { text-align:center; opacity:.8; margin-bottom:30px; }
 .slot .melding { color:var(--inkt); }
 .linkje { color:var(--blauw); font-weight:600; font-size:15px; }
+.knop.rood { background:#fff; color:var(--rood); border:1.5px solid var(--rood); } .knoprij { display:grid; grid-template-columns:1fr 1fr; gap:8px; } .knoprij .knop { margin-top:8px; font-size:15px; }
+.info { background:#fdf1e1; border-radius:10px; padding:10px 12px; font-size:15px; margin-top:10px; } .doorstreep { text-decoration:line-through; color:var(--zacht); }
+.label2 { display:inline-block; margin-top:6px; font-size:14px; font-weight:700; color:var(--inkt); background:#eef2f6; border-radius:8px; padding:3px 8px; }
 </style></head><body>
 <div class="telefoons">
 <div><div class="tel">
   <div class="kop"><div><b>Wedstrijd</b><small>Teamleider · O13-1</small></div></div>
-  <div class="inhoud">
-    <div class="kaart form">
-      <div style="display:flex;gap:10px;align-items:center"><div><b>za 14 nov · uit bij FC Voorbeeld O13-4</b><small style="display:block;color:var(--zacht)">over 2 dagen</small></div></div>
-      <div class="twee"><div><label>Datum</label><div class="inp">za 14-11-2026</div></div><div><label>Aftrap</label><div class="inp aan">11:35</div></div></div>
-      <p class="hint">Was <b>12:45</b>. Verzamelen schuift mee: <b>10:30</b> (was 11:45).</p>
-      <label>Verzamelen</label><div class="inp">10:30</div>
-      <label>Verzamelpunt (mag leeg)</label><div class="inp" style="color:var(--zacht)">Bijv. de parkeerplaats bij de kantine</div>
-      <label>Adres</label><div class="inp">Sportpark Overburg, Amstelveen</div>
-      <div class="knop">Opslaan en ouders inlichten</div>
-      <div class="knop licht">Alleen opslaan</div>
-      <p class="hint" style="margin-top:10px">De wedstrijd is binnen 7 dagen: de ouders hebben de tijd misschien al gezien.</p>
-    </div>
-  </div><div class="nav"><span class="">Home</span><span class="">Planning</span><span class="aan">Wedstrijd</span><span class="">Spelers</span><span class="">Berichten</span></div>
-</div><p class="bijschrift"><b>1. Teamleider past de aftrap aan</b> (Wedstrijd, het scherm dat hij al heeft). Nieuw: <b>datum en aftrap</b>; verzamelen schuift mee met hetzelfde aantal minuten.</p></div><div><div class="tel">
+  <div class="inhoud"><div class="kaart form">
+    <b>za 14 nov · uit bij FC Voorbeeld O13-4</b>
+    <div class="twee"><div><label>Datum</label><div class="inp">za 14-11-2026</div></div><div><label>Aftrap</label><div class="inp aan">11:35</div></div></div>
+    <p class="hint">Was <b>12:45</b>. Verzamelen schuift mee: <b>10:30</b> (was 11:45). Zelfde dag: afmeldingen en taken blijven staan.</p>
+    <label>Verzamelen</label><div class="inp">10:30</div>
+    <label>Adres</label><div class="inp">Sportpark Overburg, Amstelveen</div>
+    <div class="knop">Opslaan en ouders inlichten</div>
+    <div class="knop licht">Verplaatst, datum volgt</div><div class="knop rood">Afgelast</div>
+  </div></div><div class="nav"><span class="">Home</span><span class="">Planning</span><span class="aan">Wedstrijd</span><span class="">Spelers</span><span class="">Berichten</span></div>
+</div><p class="bijschrift"><b>1. Zelfde dag, andere tijd.</b> Eén wedstrijd blijft; afmeldingen en taken blijven (zelfde dag). Binnen 7 dagen: <i>Opslaan en ouders inlichten</i>. Onderaan de twee andere standen.</p></div><div><div class="tel">
   <div class="kop"><div><b>Wedstrijd</b><small>Teamleider · O13-1</small></div></div>
-  <div class="inhoud" style="opacity:.35"><div class="kaart form"><b>za 14 nov</b></div></div>
-  <div class="sheet"><div class="greep"></div><h3>Ouders inlichten</h3>
-    <p class="uitleg" style="margin:0 0 8px">16 ouders van O13-1 · pushmelding, mail voor wie geen meldingen heeft</p>
-    <textarea>Gewijzigd: de wedstrijd van zaterdag 14 november (uit bij FC Voorbeeld O13-4).
-Verzamelen 10:30 (was 11:45), aftrap 11:35 (was 12:45).</textarea>
-    <div class="knop">Opslaan en versturen</div>
-    <p class="uitleg">Je kunt de tekst eerst aanpassen. Na 21:00 gaat het bericht om 07:30.</p>
-  </div>
-</div><p class="bijschrift"><b>2. Het bericht</b> staat klaar, met oud en nieuw. Gaat zoals elk ClubComm-bericht (push, anders mail).</p></div><div><div class="tel">
+  <div class="inhoud"><div class="kaart form">
+    <b>za 14 nov · uit bij FC Voorbeeld O13-4</b>
+    <div class="twee"><div><label>Datum</label><div class="inp aan">wo 25-11-2026</div></div><div><label>Aftrap</label><div class="inp">18:30</div></div></div>
+    <div class="info"><b>Andere dag.</b> Wat bij za 14 nov hoorde, vervalt: 2 afmeldingen, 3 taken (vlaggen, wassen, rijden). De ouders krijgen een bericht en geven het opnieuw door.</div>
+    <label>Verzamelen</label><div class="inp">17:30</div>
+    <div class="knop">Opslaan en ouders inlichten</div>
+  </div></div><div class="nav"><span class="">Home</span><span class="">Planning</span><span class="aan">Wedstrijd</span><span class="">Spelers</span><span class="">Berichten</span></div>
+</div><p class="bijschrift"><b>2. Andere dag.</b> Dezelfde wedstrijd krijgt de nieuwe datum; afmeldingen, taken en vervoer van de oude dag <b>vervallen</b> (bewaard als <i>vervallen</i>, niet gewist). Altijd met bericht.</p></div><div><div class="tel">
   <div class="kop"><div><b>Home</b><small>Ouder · Sam (O13-1)</small></div></div>
   <div class="inhoud">
     <h2>VOLGENDE</h2>
-    <div class="kaart" style="padding:14px"><small style="color:var(--zacht)">Zaterdag 14 november · uit</small>
+    <div class="kaart" style="padding:14px"><small style="color:var(--zacht)">Zaterdag 21 november · uit</small><div class="groot2">VV Proef O13-1</div><div>Verzamelen <b>11:30</b> · aftrap <b>12:30</b></div></div><div class="kaart" style="padding:14px;margin-top:10px"><small style="color:var(--zacht)"><span class="doorstreep">Zaterdag 14 november</span> · uit</small>
       <div class="groot2">FC Voorbeeld O13-4</div>
-      <div>Verzamelen <b>10:30</b> · aftrap <b>11:35</b></div>
-      <span class="gewijzigd">Gewijzigd op 12 nov · was 12:45</span>
-      <div class="knop licht">Ik kan niet</div>
+      <span class="label2">Verplaatst · nieuwe datum volgt</span>
+      <p class="uitleg" style="margin:8px 0 0">Je hoeft nu niets te doen. Zodra de datum bekend is, krijg je een bericht.</p>
     </div>
   </div><div class="nav"><span class="aan">Home</span><span class="">Planning</span><span class="">Wedstrijd</span><span class="">Spelers</span><span class="">Berichten</span></div>
-</div><p class="bijschrift"><b>3. Wat de ouder ziet</b>: de nieuwe tijden, met <i>Gewijzigd · was 12:45</i> tot na de wedstrijd. Zo valt het op, ook zonder het bericht te lezen.</p></div>
+</div><p class="bijschrift"><b>3. Verplaatst, datum volgt.</b> De ouder ziet wat er is; geen afmelden of taak nodig. Komt de datum (met de hand of uit Sportlink), dan wordt het stap 2.</p></div><div><div class="tel">
+  <div class="kop"><div><b>Home</b><small>Ouder · Sam (O13-1)</small></div></div>
+  <div class="inhoud">
+    <h2>VOLGENDE</h2>
+    <div class="kaart" style="padding:14px"><small style="color:var(--zacht)">Woensdag 25 november · uit</small>
+      <div class="groot2">FC Voorbeeld O13-4</div><div>Verzamelen <b>17:30</b> · aftrap <b>18:30</b></div>
+      <span class="gewijzigd">Verplaatst · was za 14 nov</span>
+      <div class="knop licht">Ik kan niet</div>
+    </div>
+    <div class="kaart" style="padding:14px;margin-top:10px"><small style="color:var(--zacht)">Taak bij deze wedstrijd</small><div><b>Vlaggen</b> · nog niemand</div><div class="knop licht">Ik doe het</div></div>
+  </div><div class="nav"><span class="aan">Home</span><span class="">Planning</span><span class="">Wedstrijd</span><span class="">Spelers</span><span class="">Berichten</span></div>
+</div><p class="bijschrift"><b>4. Nieuwe datum.</b> Label <i>Verplaatst · was za 14 nov</i>; afmelden en taken opnieuw, zoals bij elke nieuwe wedstrijd. Niemand wordt ongevraagd meegenomen naar de nieuwe dag.</p></div>
 </div></body></html>

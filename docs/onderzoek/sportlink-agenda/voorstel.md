@@ -10,7 +10,17 @@ Hoort bij `docs/onderzoek/wedstrijd-bijhouden/voorstel.md` (stap D).
 > - **De teamleider waakt.** Bij *Actie nodig* ziet hij alleen *nieuw*, *verdwenen* en *ophalen lukt niet*.
 > - **Eerst stap 1:** de teamleider kan zelf datum en aftrap aanpassen (verzamelen schuift mee), met *Opslaan en ouders inlichten* binnen 7 dagen. Voorbeeld `voorbeeld-stap1.html`. Dit is maat M, apart van D.
 >
-> Waar hieronder iets anders staat, geldt versie 2.
+> **Versie 3 (13-11): één wedstrijd met drie standen**, getoetst aan de vertrekpunten.
+> - **Zelfde dag, andere tijd:** de wedstrijd blijft, met afmeldingen en taken (het is dezelfde dag). Binnen 7 dagen gaat er een bericht naar de ouders.
+> - **Andere dag:** dezelfde wedstrijd krijgt de nieuwe datum. Afmeldingen, taken en vervoer van de oude dag **vervallen**: ze worden bewaard als *vervallen*, niet gewist (gegevensintegriteit, Besluit 149). Er gaat **altijd** een bericht naar de ouders, en ze geven het opnieuw door. Er wordt dus niemand ongevraagd meegenomen naar een andere dag.
+> - **Verplaatst, datum volgt:** dezelfde regel als bij een andere dag. Bij de ouder staat de oude datum doorgestreept met *Verplaatst · nieuwe datum volgt*. Dat is informatie, geen taak (Besluit 34): afmelden of een taak is dan niet nodig. Komt de datum, dan geldt *andere dag*.
+> - **Afgelast:** zoals nu, maar via Teams en via de teamleider hetzelfde: een bericht aan de ouders, en taken en vervoer vervallen.
+> - Geen tweede, dubbele wedstrijd (Principe 10). Het label *Verplaatst · was za 14 nov* vertelt wat er gebeurde.
+> - **Uit Sportlink:** een andere tijd of datum en een uitdrukkelijk *afgelast* gaan vanzelf. Alleen een wedstrijd die zonder reden verdwijnt, wordt een vraag aan de teamleider: *Verplaatst, datum volgt* · *Afgelast* · *Gaat door*. De teamleider is vrijwilliger, dus hij krijgt alleen die echte beslissingen (Besluit 149, *Draaien* = 0 min extra).
+> - **Gat dat nu al bestaat (gevonden 13-11):** *Aanpassen* via Teams (Besluit 168) neemt bij een andere dag afmeldingen, taken en vervoer mee, zonder bericht aan de ouders. Afgelast via Teams stuurt geen bericht, afgelast via de teamleider wel. Stap 1 lost beide op.
+> - **Maat van stap 1 = L**, niet M. Het raakt afmeldingen van ouders (persoonsgegevens laten vervallen) en het recht van de teamleider om de datum te wijzigen. Daarom gelden de rechtentest en de controle op clubscheiding. Een migratie is naar verwachting niet nodig, maar dat controleer ik eerst lokaal.
+>
+> Waar hieronder iets anders staat, geldt versie 3.
 
 ## 1. Aanleiding
 - De wedstrijd van za 14-11 (O13 talententeam, uit bij Sporting Martinus O13-4) is op voetbal.nl verplaatst: aftrap 12:45 → **11:35**. ClubComm wist dat niet. Op 13-11 met een eenmalig script aangepast (`supabase/scripts/2026-11-13_dcg_wedstrijd_1411_tijd.sql`, na akkoord). De ouders hebben daarvan nog geen bericht van ClubComm gekregen.
@@ -67,11 +77,12 @@ Er staat geen afgewezen idee over Sportlink of de wedstrijdagenda. Wel bekeken:
 4. **Later — B:** de Club.Dataservice-sleutel, zodra DCG die heeft. Dan werkt het voor alle teams zonder een link per team.
 
 ## Voorbeelden (13-11, versie 2)
-- `voorbeeld-stap1.html` / `.jpg` (stap 1, maat M):
-  1. de teamleider past datum en aftrap aan, verzamelen schuift mee;
-  2. *Ouders inlichten* met de tekst klaar;
-  3. de ouder ziet *Gewijzigd · was 12:45*.
-- `voorbeeld.html` / `.jpg` (voorstel D, versie 2):
+- `voorbeeld-stap1.html` / `.jpg` (stap 1, versie 3):
+  1. zelfde dag, andere tijd;
+  2. andere dag (afmeldingen en taken vervallen);
+  3. de ouder ziet *Verplaatst · nieuwe datum volgt*;
+  4. de nieuwe datum, met afmelden en taken opnieuw.
+- `voorbeeld.html` / `.jpg` (voorstel D, versie 3: de vraag bij een verdwenen wedstrijd heeft drie knoppen):
   1. één keer per seizoen instellen;
   2. binnen 7 dagen: vanzelf een bericht om 07:30;
   3. meer dan 7 dagen: stil bijgewerkt, met label;
