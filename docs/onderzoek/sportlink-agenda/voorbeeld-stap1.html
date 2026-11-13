@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voorbeeld: aftrap aanpassen door de teamleider</title>
+<style>
+/* Voorstel D: voorbeeld in de huidige stijl van de app; verzonnen club en namen */
+:root { --blauw: #0869c2; --blauw-l: #e7f2fe; --inkt: #0b2545; --zacht: #5b6b7f; --lijn: #e3e9f1; --grond: #f5f7fa; --groen: #137333; --groen-l: #e7f6ec; --rood: #dc2626; --oranje: #a84d08; }
+* { box-sizing: border-box; } body { margin: 0; font: 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color: var(--inkt); background: #d9dee5; }
+.telefoons { display: flex; gap: 24px; padding: 24px; flex-wrap: wrap; align-items: flex-start; }
+.tel { width: 390px; min-height: 844px; background: var(--grond); border-radius: 28px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,.15); position: relative; }
+.kop { background: #fff; border-bottom: 1px solid var(--lijn); padding: 14px 16px; display: flex; align-items: center; gap: 10px; }
+.kop img { width: 32px; height: 32px; border-radius: 8px; } .kop b { font-size: 17px; } .kop small { display: block; color: var(--zacht); font-size: 13px; }
+.terug { color: var(--blauw); font-weight: 600; }
+.inhoud { padding: 14px 16px 90px; }
+h2 { font-size: 13px; letter-spacing: .02em; color: var(--zacht); margin: 18px 4px 8px; font-weight: 700; }
+.kaart { background: #fff; border-radius: 14px; box-shadow: 0 1px 2px rgba(11,37,69,.06), 0 2px 8px rgba(11,37,69,.05); overflow: hidden; }
+.rij { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-top: 1px solid var(--lijn); min-height: 56px; }
+.rij:first-child { border-top: 0; }
+.rij .t { flex: 1; } .rij b { display: block; } .rij small { color: var(--zacht); font-size: 15px; }
+.uitslag { font-weight: 800; font-size: 18px; } .pijl { color: var(--zacht); font-size: 20px; }
+.seg { display: flex; background: #e9edf3; border-radius: 10px; padding: 3px; margin-bottom: 4px; }
+.seg span { flex: 1; text-align: center; padding: 9px 0; border-radius: 8px; font-weight: 600; font-size: 15px; color: var(--zacht); }
+.seg span.aan { background: #fff; color: var(--inkt); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+.stand { text-align: center; padding: 14px; } .stand .groot { font-size: 34px; font-weight: 800; } .stand small { color: var(--zacht); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 14px 14px; }
+.chip { font-size: 14px; padding: 5px 9px; border-radius: 999px; background: #eef2f6; } .chip.wij { background: var(--groen-l); color: var(--groen); }
+.basis { display: grid; grid-template-columns: 28px 1fr auto; gap: 4px 10px; padding: 12px 14px; align-items: center; }
+.nr { width: 26px; height: 26px; border-radius: 50%; background: var(--blauw-l); color: var(--blauw); display: grid; place-items: center; font-weight: 700; font-size: 13px; }
+.min { color: var(--zacht); font-size: 15px; text-align: right; }
+.wissel { display: grid; grid-template-columns: 54px 1fr; gap: 2px 10px; padding: 10px 14px; border-top: 1px solid var(--lijn); }
+.wissel:first-child { border-top: 0; } .wissel .m { font-weight: 700; color: var(--zacht); }
+.in { color: var(--groen); font-weight: 600; } .uit { color: var(--rood); font-weight: 600; }
+.knop { display: flex; align-items: center; justify-content: center; min-height: 48px; border-radius: 12px; background: var(--blauw); color: #fff; font-weight: 700; margin-top: 14px; }
+.knop.licht { background: #fff; color: var(--blauw); border: 1.5px solid var(--blauw); }
+.sheet { position: absolute; inset: auto 0 0 0; background: #fff; border-radius: 18px 18px 0 0; padding: 10px 16px 24px; box-shadow: 0 -6px 30px rgba(0,0,0,.18); }
+.greep { width: 40px; height: 5px; border-radius: 3px; background: #cfd6df; margin: 0 auto 10px; }
+.sheet h3 { margin: 0 0 10px; font-size: 19px; }
+.veld { display: grid; grid-template-columns: 74px 1fr 1fr; gap: 8px; align-items: center; padding: 8px 0; border-top: 1px solid var(--lijn); }
+.veld input, .veld select, .veld .sel { min-height: 44px; border: 1.5px solid var(--lijn); border-radius: 10px; padding: 0 10px; font: inherit; display: flex; align-items: center; background: #fff; }
+.lab { font-size: 13px; color: var(--zacht); }
+.uitleg { color: var(--zacht); font-size: 15px; margin: 8px 4px; }
+.nav { position: absolute; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid var(--lijn); display: grid; grid-template-columns: repeat(5,1fr); }
+.nav span { text-align: center; font-size: 12px; padding: 10px 0 14px; color: var(--zacht); } .nav span.aan { color: var(--blauw); font-weight: 700; }
+.bijschrift { width: 390px; font-size: 15px; color: #333; margin-top: 8px; }
+</style><style>
+.oranje-r { background:#fdf1e1; } .tag { font-size:13px; font-weight:700; color:var(--oranje); }
+.was { color:var(--zacht); text-decoration:line-through; } .nu { font-weight:800; }
+.knopje { display:inline-flex; align-items:center; min-height:44px; padding:0 14px; border-radius:10px; background:var(--blauw); color:#fff; font-weight:700; font-size:15px; white-space:nowrap; }
+.knopje.licht { background:#fff; color:var(--blauw); border:1.5px solid var(--blauw); }
+.rij.kol { flex-direction:column; align-items:stretch; gap:8px; } .rij.kol .acties { display:flex; gap:8px; flex-wrap:wrap; }
+.veldin { min-height:48px; border:1.5px solid var(--lijn); border-radius:10px; padding:12px; color:var(--zacht); background:#fff; font-size:15px; }
+.stap { display:grid; grid-template-columns:26px 1fr; gap:10px; padding:8px 0; } .stap .nr { margin-top:1px; }
+.ok { color:var(--groen); font-weight:700; } textarea { width:100%; min-height:150px; font:inherit; border:1.5px solid var(--lijn); border-radius:10px; padding:10px; }
+.vink { display:flex; gap:10px; align-items:flex-start; padding:10px 0; } .vink i { width:22px; height:22px; border-radius:6px; background:var(--blauw); color:#fff; display:grid; place-items:center; font-style:normal; font-size:14px; flex:none; }
+</style><style>
+.form { padding:14px; } .form label { display:block; font-size:14px; color:var(--zacht); margin:10px 0 4px; font-weight:600; }
+.inp { min-height:44px; border:1.5px solid var(--lijn); border-radius:10px; padding:10px 12px; background:#fff; } .inp.aan { border-color:var(--blauw); box-shadow:0 0 0 3px var(--blauw-l); }
+.twee { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.hint { font-size:14px; color:var(--zacht); margin-top:4px; } .hint b { color:var(--inkt); }
+.melding { background:#fff; border-radius:16px; padding:12px 14px; box-shadow:0 2px 10px rgba(0,0,0,.12); display:grid; grid-template-columns:36px 1fr; gap:10px; margin:10px 0; }
+.melding img, .melding .ic { width:36px; height:36px; border-radius:9px; background:var(--blauw); }
+.melding small { color:var(--zacht); } .vergr { background:#1b2733; }
+.gewijzigd { display:inline-block; margin-top:6px; font-size:14px; font-weight:700; color:var(--oranje); background:#fdf1e1; border-radius:8px; padding:3px 8px; }
+.groot2 { font-size:22px; font-weight:800; margin:2px 0; }
+.slot { position:absolute; inset:0; background:linear-gradient(#24364a,#0e1a26); color:#fff; padding:60px 14px; }
+.slot .tijd { text-align:center; font-size:64px; font-weight:300; } .slot .dag { text-align:center; opacity:.8; margin-bottom:30px; }
+.slot .melding { color:var(--inkt); }
+.linkje { color:var(--blauw); font-weight:600; font-size:15px; }
+</style></head><body>
+<div class="telefoons">
+<div><div class="tel">
+  <div class="kop"><div><b>Wedstrijd</b><small>Teamleider · O13-1</small></div></div>
+  <div class="inhoud">
+    <div class="kaart form">
+      <div style="display:flex;gap:10px;align-items:center"><div><b>za 14 nov · uit bij FC Voorbeeld O13-4</b><small style="display:block;color:var(--zacht)">over 2 dagen</small></div></div>
+      <div class="twee"><div><label>Datum</label><div class="inp">za 14-11-2026</div></div><div><label>Aftrap</label><div class="inp aan">11:35</div></div></div>
+      <p class="hint">Was <b>12:45</b>. Verzamelen schuift mee: <b>10:30</b> (was 11:45).</p>
+      <label>Verzamelen</label><div class="inp">10:30</div>
+      <label>Verzamelpunt (mag leeg)</label><div class="inp" style="color:var(--zacht)">Bijv. de parkeerplaats bij de kantine</div>
+      <label>Adres</label><div class="inp">Sportpark Overburg, Amstelveen</div>
+      <div class="knop">Opslaan en ouders inlichten</div>
+      <div class="knop licht">Alleen opslaan</div>
+      <p class="hint" style="margin-top:10px">De wedstrijd is binnen 7 dagen: de ouders hebben de tijd misschien al gezien.</p>
+    </div>
+  </div><div class="nav"><span class="">Home</span><span class="">Planning</span><span class="aan">Wedstrijd</span><span class="">Spelers</span><span class="">Berichten</span></div>
+</div><p class="bijschrift"><b>1. Teamleider past de aftrap aan</b> (Wedstrijd, het scherm dat hij al heeft). Nieuw: <b>datum en aftrap</b>; verzamelen schuift mee met hetzelfde aantal minuten.</p></div><div><div class="tel">
+  <div class="kop"><div><b>Wedstrijd</b><small>Teamleider · O13-1</small></div></div>
+  <div class="inhoud" style="opacity:.35"><div class="kaart form"><b>za 14 nov</b></div></div>
+  <div class="sheet"><div class="greep"></div><h3>Ouders inlichten</h3>
+    <p class="uitleg" style="margin:0 0 8px">16 ouders van O13-1 · pushmelding, mail voor wie geen meldingen heeft</p>
+    <textarea>Gewijzigd: de wedstrijd van zaterdag 14 november (uit bij FC Voorbeeld O13-4).
+Verzamelen 10:30 (was 11:45), aftrap 11:35 (was 12:45).</textarea>
+    <div class="knop">Opslaan en versturen</div>
+    <p class="uitleg">Je kunt de tekst eerst aanpassen. Na 21:00 gaat het bericht om 07:30.</p>
+  </div>
+</div><p class="bijschrift"><b>2. Het bericht</b> staat klaar, met oud en nieuw. Gaat zoals elk ClubComm-bericht (push, anders mail).</p></div><div><div class="tel">
+  <div class="kop"><div><b>Home</b><small>Ouder · Sam (O13-1)</small></div></div>
+  <div class="inhoud">
+    <h2>VOLGENDE</h2>
+    <div class="kaart" style="padding:14px"><small style="color:var(--zacht)">Zaterdag 14 november · uit</small>
+      <div class="groot2">FC Voorbeeld O13-4</div>
+      <div>Verzamelen <b>10:30</b> · aftrap <b>11:35</b></div>
+      <span class="gewijzigd">Gewijzigd op 12 nov · was 12:45</span>
+      <div class="knop licht">Ik kan niet</div>
+    </div>
+  </div><div class="nav"><span class="aan">Home</span><span class="">Planning</span><span class="">Wedstrijd</span><span class="">Spelers</span><span class="">Berichten</span></div>
+</div><p class="bijschrift"><b>3. Wat de ouder ziet</b>: de nieuwe tijden, met <i>Gewijzigd · was 12:45</i> tot na de wedstrijd. Zo valt het op, ook zonder het bericht te lezen.</p></div>
+</div></body></html>

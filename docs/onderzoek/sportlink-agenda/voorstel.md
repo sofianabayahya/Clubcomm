@@ -3,6 +3,15 @@
 *Spoor 3 · maat **L** (server haalt gegevens op en past wedstrijden aan; nieuwe opslag van een geheime link) · 13 november 2026 · nog geen besluit.*
 Hoort bij `docs/onderzoek/wedstrijd-bijhouden/voorstel.md` (stap D).
 
+> **Versie 2 (13-11, na vragen van de gebruiker):**
+> - De link blijft het hele seizoen geldig. Er is geen knop *Vervangen*, alleen een klein linkje voor een nieuw seizoen of een ander team.
+> - **Meer dan 7 dagen** voor de wedstrijd gewijzigd: stil bijwerken, met het label *Gewijzigd · was …* bij de wedstrijd.
+> - **7 dagen of minder:** bijwerken **en vanzelf een bericht aan de ouders**, om 07:30 (nachtrust). Dat gaat als push, en per mail voor wie geen meldingen heeft. De teamleider krijgt een kopie.
+> - **De teamleider waakt.** Bij *Actie nodig* ziet hij alleen *nieuw*, *verdwenen* en *ophalen lukt niet*.
+> - **Eerst stap 1:** de teamleider kan zelf datum en aftrap aanpassen (verzamelen schuift mee), met *Opslaan en ouders inlichten* binnen 7 dagen. Voorbeeld `voorbeeld-stap1.html`. Dit is maat M, apart van D.
+>
+> Waar hieronder iets anders staat, geldt versie 2.
+
 ## 1. Aanleiding
 - De wedstrijd van za 14-11 (O13 talententeam, uit bij Sporting Martinus O13-4) is op voetbal.nl verplaatst: aftrap 12:45 → **11:35**. ClubComm wist dat niet. Op 13-11 met een eenmalig script aangepast (`supabase/scripts/2026-11-13_dcg_wedstrijd_1411_tijd.sql`, na akkoord). De ouders hebben daarvan nog geen bericht van ClubComm gekregen.
 - De oorzaak is dat ClubComm geen koppeling heeft. De wedstrijden zijn op 17-10 **één keer** ingeladen uit de Sportlink-agenda (iCal) (`supabase/scripts/2026-10-17_dcg_wedstrijden_fase2.sql`). Elke wedstrijd bewaart wel het kenmerk uit die agenda (veld `sportlink`, bijv. `20261017T213937Z-1@sportlink.com`). Daarmee kunnen we later precies dezelfde wedstrijd terugvinden.
@@ -57,8 +66,17 @@ Er staat geen afgewezen idee over Sportlink of de wedstrijdagenda. Wel bekeken:
 3. **D3 — toepassen:** migratie en functie in productie na akkoord. Jij zet de link van het O13 talententeam (zelf, in de app). Daarna draait het één week mee en kijken we elke ochtend of het klopt.
 4. **Later — B:** de Club.Dataservice-sleutel, zodra DCG die heeft. Dan werkt het voor alle teams zonder een link per team.
 
-## Voorbeeld (D1, 13-11)
-`voorbeeld.html` / `voorbeeld.jpg` (390 px, verzonnen club): 1. instellen, 2. *Actie nodig* met gewijzigd / nieuw / verdwenen, 3. bericht naar de ouders, 4. ophalen lukt niet. Nog geen akkoord.
+## Voorbeelden (13-11, versie 2)
+- `voorbeeld-stap1.html` / `.jpg` (stap 1, maat M):
+  1. de teamleider past datum en aftrap aan, verzamelen schuift mee;
+  2. *Ouders inlichten* met de tekst klaar;
+  3. de ouder ziet *Gewijzigd · was 12:45*.
+- `voorbeeld.html` / `.jpg` (voorstel D, versie 2):
+  1. één keer per seizoen instellen;
+  2. binnen 7 dagen: vanzelf een bericht om 07:30;
+  3. meer dan 7 dagen: stil bijgewerkt, met label;
+  4. de teamleider waakt (nieuw, verdwenen, ophalen lukt niet).
+- Beide zijn nog niet akkoord. Verzonnen club en namen.
 
 ## 8. Wat ik van jou nodig heb
 - **Akkoord op het advies** (A nu, B later) en op het principe in punt 5: tijden worden vanzelf bijgewerkt, ouders krijgen pas een bericht als de staf op de knop tikt.
