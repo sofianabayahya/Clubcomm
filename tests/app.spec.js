@@ -828,7 +828,7 @@ test.describe('Demo', () => {
     await page.locator('[data-act="magischeLink"]').click();
     await page.evaluate(() => { CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'teamleider')); CC.open('speeltijd', { team: CC.teamId() }); });
     await expect(page.locator('#app')).not.toContainText('Speeltijd dit seizoen');
-    // Besluit NNN: ook niet onder Seizoen
+    // Besluit 182: ook niet onder Seizoen
     await page.evaluate(() => { CC.ui.seg.wedDeel = 'seizoen'; CC.render(); });
     await expect(page.locator('#app')).not.toContainText('Speeltijd dit seizoen');
     await page.evaluate(() => CC.go('team'));

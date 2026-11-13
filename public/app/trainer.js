@@ -80,7 +80,7 @@
       <p class="zacht klein">Percentage van de mogelijke speeltijd in de wedstrijden waarbij het kind er was. Gemiste wedstrijden tellen niet mee${seizoen.some(({ x }) => Object.keys(x.gemist).length) ? `: ${seizoen.filter(({ x }) => Object.keys(x.gemist).length).map(({ pl, x }) => `${esc(pl.voornaam)} (${gemistTekst(x.gemist)})`).join(', ')}` : ''}.</p>`;
     // Besluit 106: bij een eigen schema ook de posities dit seizoen
     const seizoenVol = !CC.zietMinuten() ? '' : zelf ? tabel + CC.posTabel(S, teamId) : tabel; // Besluit 116: alleen de trainer
-    // Besluit NNN: het tabblad Wedstrijd heeft Vandaag · Gespeeld · Seizoen; Vandaag zonder seizoen, Seizoen alleen het seizoen
+    // Besluit 182: het tabblad Wedstrijd heeft Vandaag · Gespeeld · Seizoen; Vandaag zonder seizoen, Seizoen alleen het seizoen
     if (opties.deel === 'seizoen') return seizoenVol || h.leeg('Nog geen speeltijd dit seizoen', 'timer');
     const seizoenBlok = opties.deel === 'wed' ? '' : seizoenVol;
     // Nog geen wedstrijd: uitleggen wat hier komt, met de KNVB-speelduur van dit team (Besluit 60)

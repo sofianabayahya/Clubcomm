@@ -1,4 +1,4 @@
-// ClubComm — Besluit NNN: wedstrijdarchief. Het tabblad Wedstrijd heeft Vandaag · Gespeeld · Seizoen.
+// ClubComm — Besluit 182: wedstrijdarchief. Het tabblad Wedstrijd heeft Vandaag · Gespeeld · Seizoen.
 // Gespeeld: per gespeelde wedstrijd de uitslag (doelpunten met minuut), de basis op positie, de wissels (▲ erin, ▼ eruit)
 // en, alleen voor de trainer, de minuten (Besluit 116). Staf kan alles achteraf aanpassen; de seizoensminuten worden dan
 // opnieuw uitgerekend zonder dubbel tellen (eerst de oude minuten eraf, dan de nieuwe erbij, zoals bij overnemen).
@@ -142,7 +142,7 @@
   CC.on('wedEdOpslaan', () => { const S = CC.S(); const e = CC.ui.wedEdit; if (!e) return; const a = M.act(S, e.actId); if (!a || !magAanpassen(S, a)) return;
     const fout = controle(S, e.sch); if (fout) return CC.toast(fout, 'fout');
     const oud = S.speeltijd.schema[a.id];
-    // Besluit NNN: eerst de oude minuten van het seizoen af, dan de nieuwe erbij (niet dubbel tellen)
+    // Besluit 182: eerst de oude minuten van het seizoen af, dan de nieuwe erbij (niet dubbel tellen)
     if (oud && oud.bevestigd) CC.speeltijdTerug(S, a, oud);
     const nw = kopie(e.sch); nw.wissels = nw.wissels.slice().sort((x, y) => x.min - y.min); nw.bevestigd = false; nw.aangepastNa = new Date().toISOString();
     nw.spelers = [...new Set([...((oud && oud.spelers) || []), ...Object.values(nw.opstelling).filter(Boolean), ...nw.wissels.map((w) => w.in)])];

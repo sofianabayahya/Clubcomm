@@ -1105,7 +1105,7 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .tr-wrij2 { gap: 12px; min-height: 52px; }
 .tr-wierijen .tr-t b { font-size: 16px; }
 
-/* Besluit NNN: wedstrijdarchief (Gespeeld) en achteraf aanpassen */
+/* Besluit 182: wedstrijdarchief (Gespeeld) en achteraf aanpassen */
 .arch-uitslag { font-size: 18px; font-weight: 800; color: var(--tekst, inherit); }
 .arch-stand .groot-cijfer { margin-bottom: 2px; }
 .arch-nr { width: 28px; height: 28px; border-radius: 50%; background: var(--blauw-l, #e7f2fe); color: var(--blauw, #0869c2); display: inline-grid; place-items: center; font-weight: 700; font-size: 14px; }

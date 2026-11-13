@@ -1,4 +1,4 @@
-// Besluit NNN: wedstrijdarchief. Onder Wedstrijd → Gespeeld per wedstrijd de uitslag, de basis, de wissels (▲ erin, ▼ eruit)
+// Besluit 182: wedstrijdarchief. Onder Wedstrijd → Gespeeld per wedstrijd de uitslag, de basis, de wissels (▲ erin, ▼ eruit)
 // en (alleen de trainer) de minuten. Achteraf aanpassen rekent de seizoensminuten opnieuw uit, zonder dubbel tellen.
 // Verzonnen namen, nep-database.
 const { test, expect } = require('@playwright/test');
