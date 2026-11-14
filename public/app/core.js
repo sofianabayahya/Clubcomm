@@ -189,7 +189,7 @@
       return `${a.thuis ? 'Thuis' : 'Uit'} · ${esc(a.tegen)}`;
     },
     actSub(S, a) {
-      if (a.afgelast) return 'Afgelast';
+      if (a.afgelast) return a.verplaatst ? 'Verplaatst · nieuwe datum volgt' : 'Afgelast'; // Besluit NNN
       if (a.soort === 'training') return `${a.tijd}–${a.eind} · ${esc(a.veld)}`;
       if (a.soort === 'activiteit') return `${h.verzamelTekst(a) ? `${h.verzamelTekst(a)} · ` : ''}${a.tijd}–${a.eind}${a.plaats ? ' · ' + esc(a.plaats) : ''}`;
       return `${h.verzamelTekst(a) ? `${h.verzamelTekst(a)} · ` : ''}aftrap ${a.tijd}${a.thuis ? ' · ' + esc(a.veld || '') : ''}`;
@@ -203,7 +203,7 @@
         case 'afgemeld': return `<span class="chip grijs">${icon('x')}Afgemeld · ${esc(st.afm.reden)}</span>`;
         case 'langdurig': return `<span class="chip grijs">${icon('hospital')}Langdurig afwezig</span>`;
         case 'nietafgemeld': return `<span class="chip rood">${icon('circle-alert')}Niet afgemeld</span>`;
-        case 'afgelast': return `<span class="chip grijs">${icon('ban')}Afgelast</span>`;
+        case 'afgelast': return st.verplaatst ? `<span class="chip grijs">${icon('clock')}Verplaatst</span>` : `<span class="chip grijs">${icon('ban')}Afgelast</span>`;
         case 'open': return `<span class="chip oranje">${icon('circle-help')}Nog niet opgegeven</span>`;
         default: return `<span class="chip blauw">${icon('circle-check')}Komt</span>`;
       }

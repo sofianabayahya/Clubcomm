@@ -52,20 +52,23 @@
         const t = takenInfo(S, a);
         const taakIc = (soort) => ({ 'Trainer-coach': 'clipboard-check', Timekeeper: 'timer', Spelbegeleider: 'flag', Vlagger: 'flag', Scheidsrechter: 'megaphone', Fotograaf: 'eye', Wastas: 'shirt' }[soort] || 'hand-helping');
         return `<select class="kies" data-change="kiesTlWed" aria-label="Wedstrijd">${lijst.map((w) => `<option value="${w.id}" ${w.id === a.id ? 'selected' : ''}>${D.kort(w.datum)} · ${h.actTitel(S, w)}${w.afgelast ? ' · afgelast' : w.uitslag ? ' · ' + w.uitslag : ''}</option>`).join('')}</select>
-          ${a.afgelast ? `<div class="info rood">${icon('ban')}<span>Deze wedstrijd is afgelast.</span></div>` : ''}
+          ${a.verplaatst ? `<div class="info oranje">${icon('clock')}<span><b>Verplaatst, nieuwe datum volgt.</b> Vul hieronder de nieuwe datum en aftrap in zodra die bekend is; de ouders krijgen dan een bericht.</span></div>` : a.afgelast ? `<div class="info rood">${icon('ban')}<span>Deze wedstrijd is afgelast.</span></div>` : ''}
           <form class="kaartje codeform" data-submit="wedstrijdInfo" data-id="${a.id}">
-            <div class="kaart-kop">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${D.relatief(a.datum)} · aftrap ${a.tijd}</small></div></div>
-            <div class="twee"><div><label for="wi-v">Verzamelen</label><input id="wi-v" name="verzamel" type="time" value="${esc(a.verzamel || '')}"></div>${gespeeld ? `<div><label for="wi-u">Uitslag</label><input id="wi-u" name="uitslag" placeholder="bijv. 3-2" value="${esc(a.uitslag || '')}"></div>` : ''}</div>
+            <div class="kaart-kop">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${D.relatief(a.datum)} · aftrap ${a.tijd}</small>${CC.wedLabel ? CC.wedLabel(a) : ''}</div></div>
+            ${gespeeld ? '' : `<div class="twee"><div><label for="wi-d">Datum</label><input id="wi-d" name="datum" type="date" required value="${esc(a.datum)}" data-input="wiWijzig"></div><div><label for="wi-t">Aftrap</label><input id="wi-t" name="tijd" type="time" required value="${esc(a.tijd || '')}" data-input="wiWijzig"></div></div>
+            <div data-wi-hint class="zacht klein" aria-live="polite"></div>`}
+            <div class="twee"><div><label for="wi-v">Verzamelen</label><input id="wi-v" name="verzamel" type="time" value="${esc(a.verzamel || '')}" data-oud="${esc(a.verzamel || '')}"></div>${gespeeld ? `<div><label for="wi-u">Uitslag</label><input id="wi-u" name="uitslag" placeholder="bijv. 3-2" value="${esc(a.uitslag || '')}"></div>` : ''}</div>
             <label for="wi-vp">Verzamelpunt (mag leeg)</label><input id="wi-vp" name="verzamelpunt" value="${esc(a.verzamelpunt || '')}" placeholder="${a.thuis ? 'Bijv. kleedkamer 3' : 'Bijv. de parkeerplaats bij de kantine'}">
             ${a.thuis ? `<p class="klein zacht">Thuis · ${esc(a.veld || '')}</p>` : `<label for="wi-a">Adres</label><input id="wi-a" name="adres" value="${esc(a.adres || '')}" data-adres autocomplete="off" placeholder="Begin te typen: straat of plaats">`}
-            <div class="knoppen"><button class="knop licht">Opslaan</button>${a.thuis ? '' : h.route(a.adres)}<button type="button" class="knop licht" data-act="deelWedstrijd" data-id="${a.id}">${icon('share-2')}Delen</button></div></form>
+            ${gespeeld ? `<div class="knoppen"><button class="knop licht">Opslaan</button></div>` : `<button class="knop vol" data-wi-knop>${a.verplaatst || CC.wedBinnen(a.datum) ? 'Opslaan en ouders inlichten' : 'Opslaan'}</button>${CC.wedBinnen(a.datum) && !a.verplaatst ? `<button type="button" class="knop licht vol" data-act="wedstrijdInfoStil" data-id="${a.id}" data-wi-stil>Alleen opslaan</button>` : ''}`}
+            <div class="knoppen">${a.thuis ? '' : h.route(a.adres)}<button type="button" class="knop licht" data-act="deelWedstrijd" data-id="${a.id}">${icon('share-2')}Delen</button></div></form>
           ${h.sectie(`Komen: ${sp.length - af.length} van ${sp.length}`)}
           <div class="lijst compact">${af.map((x) => h.rij({ ic: h.avatar(x.pl.voornaam), titel: esc(M.naam(S, x.pl)), rechts: h.chip(x.st) })).join('') || '<p class="zacht klein">Iedereen komt.</p>'}</div>
           ${S.club.modules.taken ? `${h.sectie(`Taken · ${t.bezet} van ${t.t.length} bezet`)}<div class="lijst">${t.t.map((x) => h.rij({ ic: taakIc(x.soort), titel: esc(x.soort), sub: x.personId ? esc(M.persoon(S, x.personId).naam) : '<b class="oranje-tekst">nog open</b>', rechts: gespeeld ? '' : `<button class="icoonknop" data-act="taakVerwijderen" data-id="${x.id}" aria-label="${esc(x.soort)} verwijderen">${icon('x')}</button>` })).join('') || '<p class="zacht klein">Geen taken.</p>'}</div>
             <div class="knoppen"><button class="knop klein licht" data-act="taakToevoegen" data-a="${a.id}">${icon('plus')}Taak</button>${t.t.length - t.bezet ? `<button class="knop klein licht" data-act="deelTaken" data-a="${a.id}">${icon('share-2')}Oproep delen</button>` : ''}</div>
             <p class="zacht klein">Staat een taak ${S.club.inst.oproepDagen} dagen van tevoren nog open, dan krijgen de ouders automatisch een oproep.</p>` : ''}
           ${!a.afgelast && (vandaag || gespeeld) ? `${h.sectie('Op de dag zelf')}<div class="knoppen"><button class="knop licht" data-act="open" data-view="opnemen" data-id="${a.id}">${icon('clipboard-check')}Aanwezigheid</button>${S.club.modules.speeltijd ? `<button class="knop licht" data-act="open" data-view="speeltijd" data-team="${tid}">${icon('timer')}Wisselschema</button>` : ''}</div><p class="zacht klein">De trainer-coach vult de aanwezigheid in, de timekeeper doet de wissels.</p>` : ''}
-          <div class="knoppen">${!a.afgelast && !gespeeld ? `<button class="knop licht rood-tekst" data-act="wedstrijdAfgelast" data-id="${a.id}">${icon('ban')}Afgelast</button>` : ''}<button class="knop licht" data-act="tlOefen">${icon('plus')}Oefenwedstrijd toevoegen</button></div>`;
+          <div class="knoppen">${!a.afgelast && !gespeeld ? `<button class="knop licht" data-act="wedDatumVolgt" data-id="${a.id}">${icon('clock')}Verplaatst, datum volgt</button><button class="knop licht rood-tekst" data-act="wedstrijdAfgelast" data-id="${a.id}">${icon('ban')}Afgelast</button>` : ''}<button class="knop licht" data-act="tlOefen">${icon('plus')}Oefenwedstrijd toevoegen</button></div>`;
       },
       berichten: (S) => CC.berichtenScherm(S, { nieuw: true }),
       team(S) {
@@ -87,12 +90,27 @@
   CC.views.speeltijd = (S, p) => ({ titel: 'Speeltijd', html: CC.speeltijdHtml(S, p.team) });
 
   CC.on('kiesTlWed', (el) => { CC.ui.seg.tlWed = el.value; CC.render(); });
-  CC.on('wedstrijdInfo', (f) => { const S = CC.S(); const a = M.act(S, f.dataset.id); a.verzamel = f.verzamel.value; if (f.verzamelpunt) a.verzamelpunt = f.verzamelpunt.value.trim(); if (f.adres) a.adres = f.adres.value; if (f.uitslag) a.uitslag = f.uitslag.value; CC.save(); CC.render(); CC.toast('Opgeslagen; ouders zien het direct'); });
+  // Besluit NNN: datum en aftrap via CC.wedOpslaan (verzamelen schuift mee, andere dag = wat bij de oude dag hoorde vervalt, bericht)
+  const wedInfoOpslaan = (f, berichtJa) => { const S = CC.S(); const a = M.act(S, f.dataset.id); if (!a) return;
+    if (f.uitslag) a.uitslag = f.uitslag.value;
+    const nieuw = { verzamel: f.verzamel.value }; if (f.verzamelpunt) nieuw.verzamelpunt = f.verzamelpunt.value.trim(); if (f.adres) nieuw.adres = f.adres.value;
+    if (f.datum && f.tijd) { if (!f.datum.value || !f.tijd.value) return CC.toast('Vul een datum en aftrap in', 'fout'); nieuw.datum = f.datum.value; nieuw.tijd = f.tijd.value; }
+    const r = CC.wedOpslaan(S, a, nieuw, { bericht: berichtJa });
+    S.acts.sort((x, y) => (x.datum + x.tijd).localeCompare(y.datum + y.tijd)); CC.ui.seg.tlWed = a.id; CC.save(); CC.render();
+    const wat = CC.wedVervallenTekst(r.vervallen);
+    CC.toast(r.andereDag ? `Verplaatst naar ${D.kort(a.datum)}; ouders zijn ingelicht${wat ? ` · vervallen: ${wat}` : ''}` : r.bericht ? 'Opgeslagen; ouders zijn ingelicht' : 'Opgeslagen; ouders zien het direct'); };
+  CC.on('wedstrijdInfo', (f) => wedInfoOpslaan(f, true));
+  CC.on('wedstrijdInfoStil', (el) => { const f = el.closest('form'); if (f && f.reportValidity()) wedInfoOpslaan(f, false); });
+  CC.on('wedDatumVolgt', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.id); if (!a) return; const wat = CC.wedVervallenTekst(CC.wedTelVervallen(S, a));
+    CC.sheet('Verplaatst, datum volgt', `<p>De wedstrijd van <b>${esc(D.lang(a.datum))}</b> gaat die dag niet door; de nieuwe datum is nog niet bekend.</p>
+      <p class="zacht klein">${wat ? `Wat bij die dag hoorde, vervalt: ${esc(wat)}. ` : ''}De ouders krijgen nu een bericht en hoeven niets te doen. Zodra je de nieuwe datum invult, krijgen ze opnieuw een bericht.</p>
+      <button class="knop vol" data-act="wedDatumVolgtOk" data-id="${a.id}">${icon('clock')}Verplaatst, ouders inlichten</button>`); });
+  CC.on('wedDatumVolgtOk', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.id); if (!a) return; CC.wedDatumVolgt(S, a); CC.save(); CC.closeSheet(); CC.render(); CC.toast('Verplaatst; ouders zijn ingelicht'); });
   CC.on('wedstrijdAfgelast', (el) => CC.sheet('Wedstrijd afgelast', `<form data-submit="wedstrijdAfgelastOk" data-id="${el.dataset.id}" class="codeform"><label for="wa-r">Waarom?</label><select id="wa-r" name="r"><option>De tegenstander heeft afgezegd</option><option>Het veld is afgekeurd</option><option>Te weinig spelers</option><option>Anders</option></select><button class="knop rood vol">${icon('ban')}Afgelasten en ouders inlichten</button><p class="zacht klein">Alle ouders van het team krijgen direct een melding. Trainer en ${esc(CC.S().club.labels.hjo)} krijgen een melding ter informatie.</p></form>`));
   CC.on('wedstrijdAfgelastOk', (f) => {
     const S = CC.S(); const a = M.act(S, f.dataset.id); const t = M.team(S, a.teamId); const me = CC.me(); const now = new Date().toISOString();
     a.afgelast = true; CC.ui.seg.tlWed = a.id; const tekst = `De wedstrijd van ${D.lang(a.datum)} tegen ${a.tegen} gaat niet door. Reden: ${f.r.value.toLowerCase()}.`;
-    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'nieuws', verloopt: a.datum, bereik: a.teamId, onderwerp: 'Wedstrijd afgelast', tekst, tijd: now, ontvangers: M.oudersVan(S, a.teamId), gelezen: [], antw: [], urgent: true, gepland: null });
+    S.msgs.push({ id: 'b' + Date.now(), van: me.id, soort: 'nieuws', verloopt: a.datum, bereik: a.teamId, onderwerp: 'Wedstrijd afgelast', tekst, tijd: now, ontvangers: M.oudersVan(S, a.teamId), gelezen: [], antw: [], urgent: true, gepland: null, actId: a.id });
     const hjo = S.people.filter((p) => p.rollen.some((r) => r.rol === 'hjo')).map((p) => p.id);
     S.msgs.push({ id: 'b' + Date.now() + 1, van: 'systeem', soort: 'melding', bereik: 'Ter informatie', onderwerp: `${CC.tn(a.teamId)}: wedstrijd afgelast`, tekst: `${me.naam}: ${tekst} Je hoeft niets te doen.`, tijd: now, ontvangers: [...hjo, t.trainerId].filter((x) => x && x !== me.id), gelezen: [], antw: [], urgent: false, gepland: null });
     S.wijzigingen.push({ id: 'w' + Date.now(), teamId: a.teamId, door: me.id, tekst, tijd: now });
