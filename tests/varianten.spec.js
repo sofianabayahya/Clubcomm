@@ -1,4 +1,4 @@
-// ClubComm — Besluit NNN (H3 en H4): een variant heeft een vaste code; weghalen verschuift geen trainingen; Op het veld en de print
+// ClubComm — Besluit 183 (H3 en H4): een variant heeft een vaste code; weghalen verschuift geen trainingen; Op het veld en de print
 // tonen de gekozen variant (tekening en wat anders is), de basis ingeklapt. Demo met verzonnen gegevens.
 const { test, expect } = require('@playwright/test');
 const { volgFouten, controleer } = require('./hulp');

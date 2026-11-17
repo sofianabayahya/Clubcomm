@@ -15,7 +15,7 @@
   const vorm = (S, id) => vormen(S).find((v) => v.id === id);
   const plan = (S, actId) => plannen(S).find((p) => p.actId === actId && p.eigenaar === ik());
   const nieuwId = (p) => `${p}${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`;
-  // Besluit NNN (H3): een variant heeft een vaste code (x.id); een plek bewaart die code, niet de plaats in de lijst. Een plek met een
+  // Besluit 183 (H3): een variant heeft een vaste code (x.id); een plek bewaart die code, niet de plaats in de lijst. Een plek met een
   // volgnummer (van vóór dit besluit) blijft leesbaar. Weghalen = verbergen (x.weg): trainingen die de variant gebruikten, houden hem.
   const varianten = (v) => ((v && v.varianten) || []).filter((x) => !x.weg);
   const varVan = (v, o) => { if (!v || !o || o.variant == null || o.variant === '') return null; const l = v.varianten || [];

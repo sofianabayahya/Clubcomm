@@ -97,7 +97,7 @@ Op 390 px past het blok *Vandaag* en de tekening samen in het eerste scherm. Er 
 
 ## 5. Gevolgen voor besluiten
 
-- **Nieuw besluit** (bij het bouwen een `Besluit NNN`): *Een variant heeft een vaste code; een plek bewaart die code; weghalen = verbergen; vanuit een training tonen de vorm, de regel en de print de gekozen variant (tekening en wat anders is), de basis ingeklapt.*
+- **Nieuw besluit** (bij het bouwen een `Besluit 183`): *Een variant heeft een vaste code; een plek bewaart die code; weghalen = verbergen; vanuit een training tonen de vorm, de regel en de print de gekozen variant (tekening en wat anders is), de basis ingeklapt.*
 - **Vult aan:**
   - Besluit 147 (momentopname bij een gegeven training);
   - Besluit 165 (Op het veld);

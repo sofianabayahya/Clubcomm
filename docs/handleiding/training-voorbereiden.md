@@ -4,7 +4,7 @@
 |---|---|
 | **Status in de app** | In productie · commit `dcb59d7` (5-11-2026) |
 | **Status van deze kaart** | Gepubliceerd in de bundel *Snelstart vrijwillige trainer* (6-11-2026; Kort) · Besluit 151 |
-| **Besluiten** | 128 · 130 · 132 · 135 · 139 · 141 · 142 · 144 · 145 · 150 · 155 · 173 · 175 · 176 · 179 · NNN |
+| **Besluiten** | 128 · 130 · 132 · 135 · 139 · 141 · 142 · 144 · 145 · 150 · 155 · 173 · 175 · 176 · 179 · 183 |
 | **Schermafbeeldingen** | `docs/presentaties/beelden/training-plannen.jpg` · `training-kies-oefenvorm.jpg` |
 | **Doelgroepen** | beginner trainer · ervaren trainer |
 
@@ -34,7 +34,7 @@
 - Bij **Op het veld** tik je de vorm: de tekening en dezelfde lijst per kleur, om te lezen (**Opstelling aanpassen**). Op de print staan per team de ingevulde namen. De tekening in **Vormen** verandert niet.
 
 **Een vorm in de training aanpassen**
-- Heeft de vorm varianten, kies dan in het venster van de plek **Welke uitvoering vandaag?**. Op het veld en op de print staat die variant dan bovenaan, met zijn eigen tekening als hij die heeft (Besluit NNN).
+- Heeft de vorm varianten, kies dan in het venster van de plek **Welke uitvoering vandaag?**. Op het veld en op de print staat die variant dan bovenaan, met zijn eigen tekening als hij die heeft (Besluit 183).
 - Tik een vorm in de lijst aan voor **Minuten**, een **Notitie**, **Gebruiken als spacing**, **Omlaag**, **Vorm bekijken**, **Dupliceren** of **Weghalen**.
 - Na het neerzetten van een vorm verschijnt even **Ongedaan maken** (Besluit 139).
 - *Spacing* is een kort ander oefeningetje tussen twee vormen, bijvoorbeeld 2 minuten hooghouden.

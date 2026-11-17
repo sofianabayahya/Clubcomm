@@ -28,7 +28,7 @@
 - Knoppen: **Zet in een training…**, **Dupliceren**, **Printen** (een A4 per vorm) en **Bewerken**.
 
 **Een vorm bewerken**
-- **Varianten:** een makkelijkere of moeilijkere versie van dezelfde vorm, met een eigen tekst of tekening. Zo hoef je geen nieuwe vorm te maken. Per training kies je bij de plek **Welke uitvoering vandaag?**; op het veld en op de print zie je dan die variant bovenaan (Besluit NNN).
+- **Varianten:** een makkelijkere of moeilijkere versie van dezelfde vorm, met een eigen tekst of tekening. Zo hoef je geen nieuwe vorm te maken. Per training kies je bij de plek **Welke uitvoering vandaag?**; op het veld en op de print zie je dan die variant bovenaan (Besluit 183).
 - **Een variant weghalen** verbergt hem: je kunt hem niet meer kiezen, maar trainingen waarin hij al stond, tonen hem nog (*niet meer in gebruik*).
 - **Bij andere groepsgroottes:** schrijf per aantal spelers hoe je de vorm opzet (bijvoorbeeld *14 spelers + 2 keepers: 6 tegen 6 met keepers*).
 - **Classificatie** (Besluit 131): vormtype (rondo, positiespel, partijvorm …), aantallen per groepje, speelrichting (geen, één, twee, meer) en schakelen. Elke keuze bij schakelen (ook *wisselende rollen of richtingen*) maakt de vorm een **schakelvorm**; zoek daarop met het woord *schakelvorm*. Daarmee vind je vormen terug met **Filter**. Alles is optioneel; nog een tik maakt een keuze weer leeg.
