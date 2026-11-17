@@ -38,7 +38,7 @@
 - Branch `analyse/methodiek-aansluiting`: ontwikkelvoorstel, begrippenlijst v2.1 (Spoor 1 akkoord als uitgangspunt), technische punten T1–T9 (T1 gebouwd), oplevering 2 (KNVB-basisprofiel: opt-in, ClubComm-startset, nog toetsen aan KNVB-bronnen; `www.knvb.nl` is niet bereikbaar vanuit deze omgeving), oplevering 3 (praktijktoets week 46).
 
 ## Wacht op akkoord van de gebruiker (in deze volgorde)
-0. **Functionele audit Vormen** (16-11, branch `onderzoek/vormenbank-audit`, `docs/onderzoek/vormenbank-audit/README.md`): ter beoordeling. Advies eerst H3 (variant weghalen verschuift oude trainingen) en H4 (Op het veld toont de basistekening, niet de gekozen variant), daarna I3 (uitleg uit het profiel). Spoor 1-vragen in § 10. Niets gebouwd.
+0. **H3/H4 varianten** (17-11, branch `voorbeeld/varianten-h3-h4`, `docs/onderzoek/varianten-h3-h4/voorstel.md`): voorstel en werkend prototype ter beoordeling (vaste variantcode, weghalen = verbergen, gekozen variant bovenaan Op het veld en op de print; productie: 0 plekken met een variant, dus niets om te zetten). Daarna I3. Audit `docs/onderzoek/vormenbank-audit/README.md` § 11: Spoor 1-keuzes en risico H5. Niets gepubliceerd.
 1. Correctie van de acht DCG-weekplannen, `supabase/scripts/2026-10-30_dcg_weekplannen_correctie.sql.voorstel` (gecontroleerd tegen de CSV, **niet uitgevoerd**).
 2. Tijdsjabloon *zonder en met weerstand* (voorstel B van #145): de minuten per plek en of A1/B1 altijd zonder en A2/B2 altijd met weerstand zijn (Spoor 1-inhoud, daarna bouwen in Spoor 3).
 3. Voorstel *Lijn en vaktaal* (branch `onderzoek/lijn-vaktaal`): akkoord op punt 1–3 en keuze a of b voor *Mee uit vorige*; punt 4 is gebouwd met #144.

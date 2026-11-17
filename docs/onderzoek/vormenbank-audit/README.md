@@ -388,3 +388,17 @@ Dat is **niet** voor nu. Ik noteer het alleen als mogelijke koppeling, met een e
 - `public/app/periodisering.js`: `CC.trMethodiek` (trainingskaart), `meeUitVorige`, `vorigeTraining`, `inVormen`.
 - `public/app/vormtypes.js`: types, *meer precies*, synoniemen, weerstandExtra, omschakeling.
 - `supabase/profielen/dcg.json`: `leerniveaus`, `leerlijnen`, `voetbalproblemen`, `leeromgevingen`, `mengpaneel`, `evaluatie`, `termen`.
+
+## 11. Uitkomst beoordeling (16-11-2026, initiatiefnemer)
+
+**Eerste ontwikkelopdracht:** H3 en H4 (voorstel en prototype: `docs/onderzoek/varianten-h3-h4/voorstel.md`), daarna onderzoek I3 (ⓘ-knoppen, zonder nieuwe invoervelden of dubbele teksten).
+
+**Inhoudelijke keuzes uit Spoor 1** (antwoorden op § 10, nog geen Spoor 3-besluit):
+1. Het voetbalprobleem hoort **primair bij de uitvoering** in de training. Een vorm kan voor meerdere problemen bruikbaar zijn. Z3: dus geen vast probleem per vorm; hoogstens de afgeleide regel *gebruikt bij*.
+2. De **acht vormtypes blijven** voorlopig. De vijf leeromgevingen worden niet automatisch samengevoegd met die indeling. K1: *Soort vorm* blijft dus de 8 types.
+3. Het **trainingsaccent** bestaat uit **relevante informatie, gewenst gedrag en observatiepunten**, in de bestaande velden (I2).
+4. **Geen C1–C5-schaal.** Complexiteit wordt beschreven als een bewuste verandering van ontwerpvariabelen (C3).
+
+**Nog niet bouwen:** nieuwe zoekfilters, nieuwe complexiteitsschalen of grote wijzigingen in de Vormenbank.
+
+**Risico H5 (apart geregistreerd).** De historische uitvoering van een oefening moet **uiteindelijk betrouwbaar terug te vinden** zijn. Nu volgen de naam, de tekening, de organisatie, de coachpunten en de print van een gegeven training de vorm van nu. Een waarschuwing bij Bewerken is alleen een **tijdelijke maatregel**. De echte oplossing (vastleggen bij *Training is gegeven*, maat L) krijgt een eigen voorstel, met opslag, privacy en terugzetten. Ook genoteerd in *Openstaand* (`docs/productie-en-groei.md`).
