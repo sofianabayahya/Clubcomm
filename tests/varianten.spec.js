@@ -97,3 +97,89 @@ test('H3: oude gegevens (varianten zonder code, plek met volgnummer) blijven lee
   expect(typeof r.variant).toBe('string'); expect(r.variant).toBe(r.code);
   await controleer(page, fouten);
 });
+
+// Controle 3 (17-11): de juiste variant in de regel, het venster en de print, met én zonder eigen varianttekening
+const zetVariant = (page, plan, code) => page.evaluate(({ plan, code }) => { const S = CC.S(); S.trainingsplannen.find((x) => x.id === plan).onderdelen[0].variant = code; CC.save(); CC.render(); }, { plan, code });
+const tel = (loc) => loc.locator('[data-i]').count();
+
+test('H4: variant met en zonder eigen tekening in de regel, het venster en de print', { tag: ['@training'] }, async ({ page }) => {
+  const fouten = volgFouten(page);
+  const id = await demo(page);
+  await page.locator('nav.nav button[data-tab="aanwezigheid"]').click(); await page.waitForTimeout(3500);
+  const sh = page.locator('#sheet');
+  // B heeft een eigen tekening (7 items), de basis 6
+  await expect(regel(page)).toContainText('Rondo 4 tegen 1 · B: twee verdedigers');
+  expect(await tel(regel(page).locator('.tr-mini svg'))).toBe(7);
+  // A heeft geen eigen tekening: regel, venster en print tonen de basistekening met de tekst van A
+  await zetVariant(page, 'tp-nu', 'var-a');
+  await expect(regel(page)).toContainText('Rondo 4 tegen 1 · A: twee keer raken');
+  expect(await tel(regel(page).locator('.tr-mini svg'))).toBe(6);
+  await regel(page).click();
+  await expect(sh.locator('.tr-vandaag')).toContainText('Vandaag: A: twee keer raken');
+  await expect(sh.locator('.tr-vandaag')).toContainText('Maximaal twee keer raken');
+  await expect(sh.locator('.tr-vandaag')).toContainText('Deze variant heeft geen eigen tekening');
+  expect(await tel(sh.locator('.tr-rv-l > .tr-groot svg'))).toBe(6);
+  await expect(sh.locator('.tr-basis')).toHaveCount(0); // de basis staat al groot in beeld
+  const html = await printHtml(page, id.nu);
+  expect(html).toContain('vandaag variant A: twee keer raken'); expect(html).toContain('Anders bij deze variant:</b> Maximaal twee keer raken');
+  expect((html.match(/data-i=/g) || []).length).toBe(6);
+  // Zonder variant: geen Vandaag-blok, de basis
+  await page.evaluate(() => CC.closeSheet()); await zetVariant(page, 'tp-nu', null);
+  await expect(regel(page)).not.toContainText(' · ');
+  await page.waitForTimeout(1600); await regel(page).click();
+  await expect(sh.locator('.tr-vandaag')).toHaveCount(0);
+  expect(await printHtml(page, id.nu)).not.toContain('vandaag variant');
+  await controleer(page, fouten);
+});
+
+// Controle 2 (17-11): een verborgen variant is niet meer te kiezen voor een nieuwe training, maar blijft zichtbaar in bestaande trainingen
+test('H3: een verborgen variant blijft zichtbaar waar hij gebruikt is en is niet meer te kiezen voor nieuwe trainingen', { tag: ['@training'] }, async ({ page }) => {
+  const fouten = volgFouten(page);
+  const id = await demo(page);
+  // Een derde training met dezelfde vorm, zonder variant
+  await page.evaluate(() => { const S = CC.S(); const tid = CC.teamId(); const ik = CC.me().id; const vr = S.trainingsplannen.map((x) => x.actId);
+    const a = S.acts.filter((x) => x.teamId === tid && x.soort === 'training' && x.datum >= CC.date.vandaag() && !vr.includes(x.id)).sort((x, y) => x.datum.localeCompare(y.datum))[0];
+    S.trainingsplannen.push({ id: 'tp-later', actId: a.id, teamId: tid, datum: a.datum, eigenaar: ik, thema: 'Rondo later', leerdoelen: [], onderdelen: [{ id: 'o1', vormId: 'v1', min: 10 }] });
+    CC.save(); CC.ui.seg = CC.ui.seg || {}; CC.ui.seg.laterId = a.id; });
+  // B (in gebruik) weghalen
+  await page.evaluate(() => CC.open('vorm', { id: 'v1' }));
+  await page.locator('.tr-varianten > summary').click();
+  await page.locator('[data-act="vormVariant"][data-i="1"]').click();
+  await page.locator('#sheet [data-act="vormVariantWeg"]').click();
+  await expect(page.locator('.tr-varianten > summary')).toContainText('· 1');
+  await expect(page.locator('.tr-varianten .tr-var')).toHaveCount(1);
+  // Bestaande trainingen (gepland en gegeven): B blijft, met '(niet meer in gebruik)', ook met zijn eigen tekening op de print
+  for (const t of [id.nu, id.toen]) { await page.waitForTimeout(1600); const html = await printHtml(page, t); expect(html).toContain('vandaag variant B: twee verdedigers (niet meer in gebruik)'); expect((html.match(/data-i=/g) || []).length).toBe(7); }
+  await page.evaluate(() => { CC.ui.view = null; CC.ui.stack = []; CC.ui.tab = 'aanwezigheid'; CC.ui.seg.trSeg = 'week'; CC.render(); });
+  await expect(regel(page)).toContainText('B: twee verdedigers (niet meer in gebruik)');
+  await regel(page).click();
+  await expect(page.locator('#sheet .tr-vandaag')).toContainText('Vandaag: B: twee verdedigers (niet meer in gebruik)');
+  expect(await tel(page.locator('#sheet .tr-rv-l > .tr-groot svg'))).toBe(7);
+  await page.evaluate(() => CC.closeSheet());
+  // In de bestaande training staat B nog als gekozen uitvoering (je kunt hem zien en wegklikken, niet opnieuw kiezen elders)
+  await page.evaluate(() => { CC.ui.seg.trSeg = 'plannen'; CC.render(); });
+  await page.locator('.tr-rij', { hasText: 'Rondo' }).first().click();
+  const keuze = (p) => p.locator('#sheet fieldset', { hasText: 'Welke uitvoering vandaag?' }).locator('label');
+  await expect(keuze(page)).toHaveText(['Basis', 'A: twee keer raken', 'B: twee verdedigers (niet meer in gebruik)']);
+  await expect(page.locator('#sheet input[name="variant"]:checked')).toHaveValue('var-b');
+  await page.evaluate(() => CC.closeSheet());
+  // Een nieuwe training (zonder variant): B staat niet meer tussen de keuzes
+  await page.evaluate(() => { CC.ui.seg.aanwAct = CC.ui.seg.laterId; CC.render(); });
+  await page.waitForTimeout(1600);
+  await page.locator('.tr-rij', { hasText: 'Rondo' }).first().click();
+  await expect(keuze(page)).toHaveText(['Basis', 'A: twee keer raken']);
+  await controleer(page, fouten);
+});
+
+// Controle 1 (17-11), bekend risico H5: de inhoud of tekening van een variant (en van de vorm) aanpassen, verandert ook wat een al
+// gegeven training toont. Dit lossen H3/H4 niet op; zie docs/onderzoek/vormenbank-audit/README.md § H5 en § 11. Wordt H5 opgelost,
+// dan moet deze test mee veranderen (de gegeven training toont dan de stand van toen).
+test('H5 (bekend risico): een variant aanpassen verandert ook de weergave van een gegeven training', { tag: ['@training'] }, async ({ page }) => {
+  const id = await demo(page);
+  expect(await printHtml(page, id.toen)).toContain('Anders bij deze variant:</b> 4 tegen 2');
+  await page.evaluate(() => { const v = CC.S().vormen[0]; const b = v.varianten.find((x) => x.id === 'var-b'); b.tekst = 'Nieuwe uitleg'; b.tekening = { field: 'vak', items: [{ t: 'ball', x: 100, y: 100 }] }; CC.save(); });
+  await page.waitForTimeout(1600); // de app negeert dezelfde tik binnen korte tijd
+  const html = await printHtml(page, id.toen);
+  expect(html).toContain('Anders bij deze variant:</b> Nieuwe uitleg'); // de gegeven training volgt de variant van nu
+  expect((html.match(/data-i=/g) || []).length).toBe(1);
+});

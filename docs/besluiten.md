@@ -21,6 +21,7 @@ Laatst bijgewerkt: 11 november 2026 (t/m Besluit 182)
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
+| NNN | 3 | Varianten zonder verschuiven, en de variant van vandaag op het veld: een variant heeft een **vaste code** en een plek in een training bewaart die code (niet meer de plaats in de lijst); een plek met een volgnummer van vóór dit besluit blijft leesbaar en krijgt bij opslaan de code. **Weghalen = verbergen**: niet meer te kiezen voor nieuwe trainingen, wel zichtbaar waar hij al gekozen was (*niet meer in gebruik*). Geopend vanuit een training met een variant: bovenaan *Vandaag: …* met wat anders is en de tekening van de variant (of de basis als de variant geen eigen tekening heeft), de basisvorm ingeklapt; ook in het tekeningetje van de regel en op de print. Keuze in het venster van de plek: *Welke uitvoering vandaag?*. Geen migratie, geen omzetscript (productie 17-11: 0 plekken met een variant), rechten ongewijzigd. Bekend risico H5 blijft: de inhoud en tekening van een vorm of variant aanpassen verandert ook wat een gegeven training toont | ✅ geldt | |
 | 181 | 3 | Wedstrijd bijhouden zonder iets kwijt te raken: (1) de timekeeper kan via de app echt opslaan (migratie 035: de bewaker weigerde elke upsert van een niet-stafslid, ook als de wedstrijd al bestond); (2) doelpunten en uitslag ook als reservekopie op de telefoon, teruggezet als verversen ze wegneemt; (3) op het scorebord *Opgeslagen* of *Nog niet opgeslagen · staat veilig op deze telefoon*; (4) het scherm blijft aan zolang het scorebord van een lopende wedstrijd open staat; (5) wie de uitslag niet mag opslaan, stuurt geen uitslagbericht: dat gaat bij *Overnemen* door de trainer | ✅ geldt |  |
 | 182 | 3 | Wedstrijdarchief: het tabblad Wedstrijd heeft *Vandaag · Gespeeld · Seizoen*; onder *Gespeeld* per wedstrijd de uitslag (doelpunten met minuut), de basis op positie, de wissels (▲ erin, ▼ eruit) en voor de trainer de minuten; staf past basis, wissels en doelpunten achteraf aan en de seizoensminuten worden opnieuw uitgerekend zonder dubbel tellen | ✅ geldt |  |
 | 180 | 3 | Huisstijl ClubComm (*Krijtbord*, variant C2.1-wit): het bestaande logo ongewijzigd en het sterkste kleuraccent; **witte navigatie** met het gekozen item als lichtblauwe afgeronde rechthoek; werkgebied lichtgrijs; navy alleen voor tekst en kleine vlakken; eigen letter **Archivo** (lokaal, rem-maten); één betekenis per kleur en vorm (pion = wacht op jou, haltes, krijtlijnen, trainingsbalk); pion **#EA580C**; clubkleur alleen in embleem en thuis-teken. Uitgewerkt in `docs/DESIGN.md`; invoeren in vijf stappen, elk een eigen pull request met voorbeeld. Geen functie, gegevens of rechten | ✅ geldt |  |
@@ -717,6 +718,27 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
 ### Vuistregel voor nieuwe ideeën
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
+
+---
+
+## Besluit NNN — Varianten zonder verschuiven, en de variant van vandaag op het veld (Spoor 3, maat M met de controles van L)
+> Audit `docs/onderzoek/vormenbank-audit/README.md` (H3, H4, H5; § 11 uitkomst van de beoordeling). Voorstel en prototype: `docs/onderzoek/varianten-h3-h4/voorstel.md`. Akkoord van de initiatiefnemer 17-11 (*"Akkoord om H3 en H4 uit te werken tot een pull request"*), met drie controles (zie Getest). Vult Besluit 147, 165, 175 en 179 aan.
+
+**Waarom.** Twee fouten bij varianten. (1) Een plek bewaarde de variant als plaats in de lijst (0 = A, 1 = B). Haalde je variant A weg, dan wees een training met *B* stil naar een andere variant of naar geen, ook bij al gegeven trainingen. (2) Op het veld stond in de regel *B*, maar het venster van de vorm toonde de basistekening en de print ook.
+
+**Wat.**
+1. **Vaste code.** Elke variant krijgt een vaste code. Een plek bewaart die code. Een code ontstaat pas als hij nodig is (nieuwe variant, kiezen voor een plek, weghalen); bestaande vormen veranderen niet bij het openen van de app.
+2. **Oude gegevens.** Een plek met een volgnummer (van vóór dit besluit) wordt gelezen als de variant op die plaats. Omdat weghalen niet meer schuift, blijft dat kloppen. Bij het opslaan van de plek komt er de code. Er is **geen omzetscript**: productie had op 17-11 nul plekken met een variant (alleen gelezen).
+3. **Weghalen = verbergen.** Een weggehaalde variant verdwijnt uit Bewerken en uit *Welke uitvoering vandaag?* bij elke plek die hem niet al gekozen had. Waar hij al gekozen was, blijft hij zichtbaar met *(niet meer in gebruik)*: in de regel, in het venster van de vorm, op de print en als gekozen uitvoering in het venster van de plek.
+4. **Vandaag op het veld.** Geopend vanuit een training met een gekozen variant staat bovenaan *Vandaag: B: …* met *makkelijker* of *moeilijker* en *wat is anders*. De grote tekening is die van de variant; heeft de variant geen eigen tekening, dan de basis met de zin *Deze variant heeft geen eigen tekening*. Heeft hij er wel een, dan staat de basis ingeklapt onder *Basisvorm (zonder variant)*. Organisatie, regels en coachpunten blijven die van de vorm. Vanuit Vormen (zonder training) verandert niets.
+5. **Regel en print.** Het tekeningetje in de regel (Op het veld, Voorbereiden) en de tekening op de print zijn die van de gekozen variant; de print noemt *vandaag variant …* en *Anders bij deze variant: …*.
+6. **Woord.** *Variant (context vorm)* heet *Welke uitvoering vandaag?*.
+
+**Niet gedaan (bekend risico H5).** De inhoud en tekening van een vorm of variant aanpassen verandert nog steeds wat een al gegeven training toont; alleen het gereedschap ligt vast (Besluit 147). De historische uitvoering moet uiteindelijk betrouwbaar terug te vinden zijn; dat krijgt een eigen voorstel (maat L). Geregistreerd in *Openstaand* (`docs/productie-en-groei.md`).
+
+**Privacy en gegevens.** Geen nieuwe persoonsgegevens; de code staat in de bestaande vorm en plek (rijen `vormen` en `trainingsplannen`). Geen migratie, rechten ongewijzigd. Een verborgen variant blijft bewaard (net als een verwijderde vorm).
+
+**Getest:** `tests/varianten.spec.js` (6 tests): weghalen verschuift geen geplande of gegeven training; oude gegevens met volgnummer; een verborgen variant zichtbaar waar hij gebruikt is en niet te kiezen bij een nieuwe training (controle 2); regel, venster en print met en zonder eigen varianttekening en zonder variant (controle 3); en het bekende risico H5 vastgelegd als test (controle 1).
 
 ---
 
