@@ -74,6 +74,46 @@ test('Opnieuw plakken: gelijk, gewijzigd en nieuw; een wijziging neemt het momen
   await controleer(page, fouten, 'opnieuw plakken');
 });
 
+test('Verzamelen schuift mee met de aftrap; een nieuwe wedstrijd krijgt de verzameltijd van de club', { tag: ['@kleineclub', '@rooster'] }, async ({ page }) => {
+  const fouten = volgFouten(page);
+  await club(page);
+  // w2 heeft een verzameltijd (zoals een geïmporteerde wedstrijd); w1 niet
+  await page.evaluate(() => { const db = JSON.parse(sessionStorage.getItem('fake-sb-db')); const r = Object.values(db.rows).find((x) => x.id === 'w2'); r.data.verzamel = '09:30'; sessionStorage.setItem('fake-sb-db', JSON.stringify(db)); });
+  await inloggen(page, 'ho@test.nl');
+  await page.evaluate(() => CC.wisselRol(CC.me().rollen.findIndex((r) => r.rol === 'hjo')));
+  await teamVenster(page);
+  const wed = (id) => page.evaluate((i) => { const a = CC.S().acts.find((x) => x.id === i); return `${a.tijd}|${a.verzamel || ''}`; }, id);
+  // Aftrap 10:30 → 12:30: verzamelen schuift even ver mee (09:30 → 11:30), en terug
+  await page.locator('#sheet [data-act="wedBewerk"][data-id="w2"]').click(); await page.fill('#wb-a', '12:30');
+  await page.locator('#sheet form[data-submit="wedBewerkOk"] button.knop').click();
+  expect(await wed('w2')).toBe('12:30|11:30');
+  await page.waitForTimeout(1600);
+  await page.locator('#sheet [data-act="wedBewerk"][data-id="w2"]').click(); await page.fill('#wb-a', '10:30');
+  await page.locator('#sheet form[data-submit="wedBewerkOk"] button.knop').click();
+  expect(await wed('w2')).toBe('10:30|09:30');
+  await expect.poll(async () => { const r = Object.values((await nepDb(page)).rows).find((x) => x.id === 'w2'); return r && `${r.data.tijd}|${r.data.verzamel}`; }, { message: 'opgeslagen in de database' }).toBe('10:30|09:30');
+  // Alleen het veld: verzamelen blijft gelijk
+  await page.waitForTimeout(1600);
+  await page.locator('#sheet [data-act="wedBewerk"][data-id="w2"]').click(); await page.fill('#wb-v', 'Veld 5');
+  await page.locator('#sheet form[data-submit="wedBewerkOk"] button.knop').click();
+  expect(await wed('w2')).toBe('10:30|09:30');
+  // Geen verzameltijd en de aftrap verandert: de clubregel (JO14 thuis = 60 minuten)
+  await page.locator('#sheet [data-act="wedBewerk"][data-id="w1"]').click(); await page.fill('#wb-a', '09:15');
+  await page.locator('#sheet form[data-submit="wedBewerkOk"] button.knop').click();
+  expect(await wed('w1')).toBe('09:15|08:15');
+  // Nieuw via plakken en via de knop Wedstrijd: verzameltijd volgens de club, thuis met het eigen sportpark
+  await page.locator('#sheet [data-act="wedPlak"]').click();
+  await page.fill('#wedPlakTekst', ['Zaterdag 21 november 2026', 'JO14-1', '11:00', 'Nieuwclub JO14-2'].join('\n'));
+  await page.locator('[data-act="wedPlakOk"]').click();
+  const nw = await page.evaluate(() => { const S = CC.S(); const a = S.acts.find((x) => x.datum === '2026-11-21'); return { vz: a.verzamel, adres: a.adres === (S.club.sportpark || '') }; });
+  expect(nw).toEqual({ vz: '10:00', adres: true });
+  await page.locator('#sheet [data-act="wedNieuw"]').click();
+  await page.fill('#wn-t', 'Uitclub JO14-4'); await page.fill('#wn-d', '2026-11-28'); await page.fill('#wn-a', '14:30'); await page.locator('#sheet input[name="thuis"]').uncheck();
+  await page.locator('#sheet form[data-submit="wedNieuwOk"] button.knop').click();
+  expect(await page.evaluate(() => { const a = CC.S().acts.find((x) => x.datum === '2026-11-28'); return `${a.thuis}|${a.verzamel}|${a.adres}`; })).toBe('false|13:30|');
+  await controleer(page, fouten, 'verzameltijd');
+});
+
 test('Trainer: Mijn traject als tijdlijn van oud naar nieuw', { tag: ['@begeleiden', '@schermen'] }, async ({ page }) => {
   const fouten = volgFouten(page);
   await page.setViewportSize({ width: 390, height: 844 });
