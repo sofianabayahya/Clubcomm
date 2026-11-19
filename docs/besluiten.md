@@ -1076,6 +1076,8 @@ Daarnaast de lokale rechtentest met 035.
 
 **Niet gedaan.** Wedstrijden vanzelf weghalen die niet meer in het programma staan. Een bericht bij elke wijziging (alleen bij een verplaatst begeleidingsmoment). Een regel *Moment verplaatsen* bij een afgelaste wedstrijd (voorgesteld, nog niet besloten).
 
+**Herstel (19-11).** Bij een andere aftrap (venster of opnieuw plakken) schuift **Verzamelen** even ver mee; is er nog geen verzameltijd of wisselt thuis/uit, dan geldt de clubregel (Besluit 110). Een nieuwe wedstrijd (knop *Wedstrijd* of plakken) krijgt de verzameltijd van de club, en thuis het eigen sportpark als adres. Aanleiding: AGB 21-11, aftrap naar 10:30, verzamelen bleef 11:30. Test in `tests/wedstrijden-tijdlijn.spec.js`.
+
 **Gegevens en rechten.** Bestaande velden van de wedstrijd (`datum`, `tijd`, `eind`, `tegen`, `thuis`, `veld`, `afgelast`) en de datum van een gekoppeld moment; een bericht aan de trainer zoals bij de kennismaking. Wie wedstrijden mag toevoegen, mag ze aanpassen. De tijdlijn toont alleen wat de trainer al zag. Geen migratie.
 
 **Tests:** `tests/wedstrijden-tijdlijn.spec.js` (aanpassen met moment en bericht, opgeslagen in de nep-database, alleen veld = geen bericht, verwijderen geweigerd met moment, afgelast heen en terug, verwijderen na bevestigen; opnieuw plakken gelijk/gewijzigd/nieuw; tijdlijn met 5 stappen in volgorde).

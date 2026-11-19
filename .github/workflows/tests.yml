@@ -6,7 +6,7 @@ on:
   pull_request: # werkbranches: alleen via de pull request (één run, één mail bij een fout)
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # vast: Playwright 1.56 ondersteunt ubuntu-latest (26.04) niet
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
