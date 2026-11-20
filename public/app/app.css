@@ -1127,3 +1127,9 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .tr-vandaag { background: var(--blauw-l); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; }
 .tr-vandaag p { margin: 4px 0 0; }
 .tr-basis { margin-top: 8px; }
+
+/* Besluit 185 (I3): ⓘ naast een begrip uit het profiel (tikvlak 44 px, klein icoon); in een venster klapt de uitleg ter plekke open */
+.tr-uitleg { width: 44px; height: 44px; min-height: 44px; margin: -10px -6px -10px 0; vertical-align: middle; color: var(--blauw); }
+.tr-uitleg svg { width: 18px; height: 18px; }
+.tr-uitleg-hier { width: 100%; background: var(--blauw-l); border-radius: 12px; padding: 4px 12px 10px; margin: 0 0 8px; }
+.tr-uitleg-hier p { margin: 4px 0 0; }

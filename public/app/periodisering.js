@@ -97,11 +97,34 @@
     const r = (n, x) => (x ? `<dt>${n}</dt><dd>${esc(x)}</dd>` : '');
     CC.sheet('Oorspronkelijke planning', `<p class="zacht klein">Zoals geladen uit ${esc(o.bron || 'de periodisering')}. Bewaard op ${esc(D.kort(o.bewaard))}, toen je deze training voor het eerst aanpaste. Alleen ter informatie.</p>
       <dl class="antwoorden">${r('Titel', o.thema)}${r('Voetbalprobleem', pr ? `${pr.id.slice(3)} · ${pr.naam}` : m.probleemTekst)}${r('Dagthema', m.hoofdthema)}${r('Gereedschap A', T().ldNaam(S, (o.blokDoel || {}).A))}${r('Gereedschap B', T().ldNaam(S, (o.blokDoel || {}).B))}${r('Leerniveau', nv(S, m.niveaus))}${r('Leerroute', m.route)}${r('Gewenst gedrag', m.gedrag)}</dl>`); });
+  // Besluit 185 (I3): ⓘ = de uitleg die al in het opleidingsprofiel staat (geen nieuwe invoer, geen kopie). Zonder tekst geen knop.
+  // Op een pagina opent de ⓘ een venster; in een venster (de plek) klapt de uitleg ter plekke open, zodat niets verloren gaat.
+  const leerlijn = (S, id) => ((T().ond(S, 'leerlijnen') || {}).items || []).find((x) => x.id === id) || null;
+  const heeftUitleg = (S, soort, id) => (soort === 'niveaus' ? T().niveaus(S).some((x) => x.omschrijving) : soort === 'gs' ? !!(leerlijn(S, id) || {}).omschrijving : !!(probleem(S, id) || {}).definitie);
+  const lijst = (l) => ((l || []).length ? `<ul>${l.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : '');
+  const uitleg = (S, soort, id) => {
+    if (soort === 'niveaus') return { titel: 'Leerniveaus', html: `<p class="zacht klein">Uit het opleidingsprofiel. Het leerniveau hoort bij de opdracht van de plek, niet bij de vorm.</p>${T().niveaus(S).filter((x) => x.omschrijving).map((x) => `${h.sectie(esc(x.naam))}<p>${esc(x.omschrijving)}</p>`).join('')}` };
+    if (soort === 'gs') { const g = leerlijn(S, id); if (!g) return null;
+      return { titel: g.naam, html: `<p class="zacht klein">Gereedschap uit het opleidingsprofiel</p><p>${esc(g.omschrijving || '')}</p>
+      ${g.spelersvraag ? `${h.sectie('Vraag voor de speler')}<p><b>${esc(g.spelersvraag)}</b></p>` : ''}${g.principe ? `${h.sectie('Principe')}<p>${esc(g.principe)}</p>` : ''}
+      ${(g.vaardigheden || []).length ? `${h.sectie('Vaardigheden')}<p>${esc(g.vaardigheden.map((v) => v.naam).join(' · '))}</p>` : ''}${g.technischeOnderbouw ? `<details class="uitklap"><summary>Technische onderbouwing</summary><p>${esc(g.technischeOnderbouw)}</p></details>` : ''}` }; }
+    const pr = probleem(S, id); if (!pr) return null;
+    const meer = (pr.keuzeWat || []).length || (pr.keuzeHoe || []).length || (pr.oplossingen || []).length || pr.complexiteit;
+    return { titel: pr.naam, html: `<p class="zacht klein">Voetbalprobleem ${esc(pr.id.slice(3))} uit het opleidingsprofiel</p><p>${esc(pr.definitie || '')}</p>
+      ${pr.centraleVraag ? `${h.sectie('Centrale vraag')}<p><b>${esc(pr.centraleVraag)}</b></p>` : ''}${(pr.waarnemen || []).length ? `${h.sectie('Wat de speler waarneemt')}${lijst(pr.waarnemen)}` : ''}
+      ${meer ? `<details class="uitklap"><summary>Keuzes, oplossingen en opbouw</summary>${(pr.keuzeWat || []).length ? `${h.sectie('Wat kan de speler kiezen?')}${lijst(pr.keuzeWat)}` : ''}${(pr.keuzeHoe || []).length ? `${h.sectie('Hoe voert hij het uit?')}${lijst(pr.keuzeHoe)}` : ''}${(pr.oplossingen || []).length ? `${h.sectie('Oplossingen')}${lijst(pr.oplossingen)}` : ''}${pr.complexiteit ? `${h.sectie('Opbouw')}<p>${esc(pr.complexiteit)}</p>` : ''}</details>` : ''}` }; };
+  const uitlegKnop = (S, soort, id, naam, hier) => (heeftUitleg(S, soort, id)
+    ? `<button type="button" class="icoonknop tr-uitleg" data-act="${hier ? 'trUitlegHier' : 'trUitleg'}" data-s="${soort}" data-id="${esc(id || '')}" aria-label="Uitleg: ${esc(naam)}"${hier ? ' aria-expanded="false"' : ''}>${icon('info')}</button>` : '');
+  CC.trUitlegKnop = uitlegKnop;
+  // Ter plekke: het blok staat direct na de knop (in de legend) als eerste element na de legend
+  CC.trUitlegHierBlok = (S, soort, id) => (heeftUitleg(S, soort, id) ? `<div class="tr-uitleg-hier" hidden>${(uitleg(S, soort, id) || {}).html || ''}</div>` : '');
+  CC.on('trUitleg', (el) => { const u = uitleg(CC.S(), el.dataset.s, el.dataset.id); if (u) CC.sheet(u.titel, u.html); });
+  CC.on('trUitlegHier', (el) => { const f = el.closest('fieldset'); const b = f && f.querySelector('.tr-uitleg-hier'); if (!b) return; b.hidden = !b.hidden; el.setAttribute('aria-expanded', String(!b.hidden)); });
   CC.trMethodiek = (S, p, a, tel, zonderMee) => { if (!p || p.week) return ''; const pa = actief(S); if (pa) CC.trBorgOrigineel(S);
     const m = eigenM(p), wv = weekVoorstelVan(S, p, a), w = a.datum ? weekPlan(S, p.teamId || a.teamId, a.datum) : null; const iv = inVormen(S, p);
     const wbox = (x) => (x ? `<div class="tr-wv">${lab('week')}<span class="tr-wvt">${x}</span></div>` : '');
     const AB = (x, b) => [x[b === 'A' ? 'A' : 'hg1'], x[b === 'A' ? 'B' : 'hg2']];
-    const abTekst = (A, B) => [A ? `<b>A</b> ${esc(T().ldNaam(S, A))}` : '', B ? `<b>B</b> ${esc(T().ldNaam(S, B))}` : ''].filter(Boolean).join(' · ');
+    const abTekst = (A, B, ik) => [A ? `<b>A</b> ${esc(T().ldNaam(S, A))}${ik ? uitlegKnop(S, 'gs', A, T().ldNaam(S, A)) : ''}` : '', B ? `<b>B</b> ${esc(T().ldNaam(S, B))}${ik ? uitlegKnop(S, 'gs', B, T().ldNaam(S, B)) : ''}` : ''].filter(Boolean).join(' · ');
     const eA = (p.blokDoel || {}).A || null, eB = (p.blokDoel || {}).B || null;
     const stand = isConcept(p) ? (onveranderd(p) ? 'Concept uit de periodisering · nog niet aangepast' : 'Concept uit de periodisering · door jou aangepast')
       : heeftEigen(p) || !pa ? 'Eigen voorbereiding' : w && w.bron ? 'Eigen voorbereiding – periodisering niet toegepast' : 'Eigen voorbereiding';
@@ -109,7 +132,7 @@
     if (pa) {
       const pr = probleem(S, m.probleem); const wpr = probleem(S, wv.probleem);
       const contra = m.contra || m.contraTekst ? `<small class="tr-contra">Contrathema (andere partij): ${esc(contraLabel(S, m))}${m.contraGekozen ? '' : ' · <i>voorstel</i>'}</small>` : '';
-      rijen.push(['Wat', pr || m.probleemTekst ? `${pr ? `Voetbalprobleem ${esc(pr.id.slice(3))} · <b>${esc(pr.naam)}</b>` : `<b>${esc(m.probleemTekst)}</b>`}${lab(bronVan(p, (x) => (x.methodiek || {}).probleem))}${tfNaam(S, m) ? `<small>Teamfunctie ${esc(tfNaam(S, m))}</small>` : ''}${contra}`
+      rijen.push(['Wat', pr || m.probleemTekst ? `${pr ? `Voetbalprobleem ${esc(pr.id.slice(3))} · <b>${esc(pr.naam)}</b>${uitlegKnop(S, 'pr', pr.id, pr.naam)}` : `<b>${esc(m.probleemTekst)}</b>`}${lab(bronVan(p, (x) => (x.methodiek || {}).probleem))}${tfNaam(S, m) ? `<small>Teamfunctie ${esc(tfNaam(S, m))}</small>` : ''}${contra}`
         : `<span class="zacht">Niet vastgelegd</span>${wbox([wpr ? `Voetbalprobleem ${esc(wpr.id.slice(3))} · ${esc(wpr.naam)}` : esc(wv.probleemTekst || ''), esc(tfNaam(S, wv))].filter(Boolean).join(' · '))}`]);
       const dag = m.hoofdthema ? `Dagthema: <b>${esc(m.hoofdthema)}</b>${lab(bronVan(p, (x) => (x.methodiek || {}).hoofdthema))}` : !isConcept(p) && p.thema ? `Dagthema: <b>${esc(p.thema)}</b>${lab('eigen')}` : '<span class="zacht">Geen dagthema</span>';
       const dg = w && w.dagen && a.datum && w.dagen[a.datum];
@@ -117,11 +140,11 @@
       const wed = wa ? `<small>Wedstrijdsituatie ${esc(T().dagNaam(wa))}: ${wd.context ? `${esc(wd.context)}${lab('periodisering')}` : 'nog niet uit de periodisering geladen'}${(wd.punten || []).length ? ` · ${wd.punten.length} observatiepunten` : ''}</small>` : '';
       rijen.push(['Waar', `${dag}${m.informatie ? `<small>Relevante informatie: ${esc(m.informatie)}</small>` : ''}${wed}${!heeftEigen(p) && dg ? `<small class="zacht">Periodisering voor deze dag (niet toegepast): ${esc([dg.hoofdthema, nv(S, dg.niveaus)].filter(Boolean).join(' · '))}</small>` : ''}`]);
       const [wA, wB] = AB(wv, 'w');
-      rijen.push(['Welke', `${eA || eB ? `${abTekst(eA, eB)}${lab(bronVan(p, (x) => x.blokDoel || {}))}` : ''}${ondersteunendVan(S, m) ? `<small>Ondersteunend: ${esc(ondersteunendVan(S, m))}</small>` : ''}`
+      rijen.push(['Welke', `${eA || eB ? `${abTekst(eA, eB, true)}${lab(bronVan(p, (x) => x.blokDoel || {}))}` : ''}${ondersteunendVan(S, m) ? `<small>Ondersteunend: ${esc(ondersteunendVan(S, m))}</small>` : ''}`
         + `${m.gedrag ? `<small class="tr-gedrag">Gewenst gedrag: ${esc(m.gedrag)}${lab(bronVan(p, (x) => (x.methodiek || {}).gedrag))}</small>` : ''}`
         + `<small>Handelingen in gekozen vormen: ${iv.vh.length ? `<b>${esc(iv.vh.join(' · '))}</b>${lab('eigen')}` : (p.onderdelen || []).some((o) => o.vormId) ? 'geen vastgelegd' : 'nog geen vormen gekozen'}</small>`
         + `${!eA && !eB && iv.gs.length ? `<small>Gereedschap in gekozen vormen: ${esc(iv.gs.join(' · '))}${lab('eigen')}</small>` : ''}${!eA && !eB ? wbox(abTekst(wA, wB) + (wv.gedrag && !m.gedrag ? `<small>Gewenst gedrag: ${esc(wv.gedrag)}</small>` : '')) : !m.gedrag && wv.gedrag ? wbox(`Gewenst gedrag: ${esc(wv.gedrag)}`) : ''}`]);
-      rijen.push(['Niveau', (m.niveaus || []).length ? `<span class="tr-niv">${esc(nv(S, m.niveaus))}</span>${lab(bronVan(p, (x) => (x.methodiek || {}).niveaus || []))}${m.route ? `<small>Leerroute: ${esc(m.route)}</small>` : ''}`
+      rijen.push(['Niveau', (m.niveaus || []).length ? `<span class="tr-niv">${esc(nv(S, m.niveaus))}</span>${uitlegKnop(S, 'niveaus', '', 'leerniveaus')}${lab(bronVan(p, (x) => (x.methodiek || {}).niveaus || []))}${m.route ? `<small>Leerroute: ${esc(m.route)}</small>` : ''}`
         : `<span class="zacht">Niet gekozen voor de training</span>${iv.niv.length ? `<small>In gekozen vormen: ${esc(iv.niv.join(' · '))}${lab('eigen')}</small>` : ''}`]);
     } else {
       // Club zonder opleidingsprofiel: alleen wat er is (thema en A/B, eventueel uit het weekthema van Besluit 135)

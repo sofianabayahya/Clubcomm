@@ -154,7 +154,7 @@ test('trainingskaart: oorspronkelijke planning bij de eerste aanpassing van een 
   expect(vr.methodiek.gedrag).toBe('Eerste contact weg van de druk');
   await expect(kaart(page).locator('.tr-stand')).toHaveText('Concept uit de periodisering · door jou aangepast');
   await expect(kaart(page).locator('.tr-gedrag .tr-her')).toHaveText('Eigen'); // aangepast
-  await expect(kaart(page).locator('.tr-niv + .tr-her')).toHaveText('Periodisering'); // niet aangepast
+  await expect(kaart(page).locator('.tr-niv ~ .tr-her')).toHaveText('Periodisering'); // niet aangepast
   await page.locator('.tr-tkaart [data-act="trOrigineel"]').click();
   await expect(page.locator('#sheet')).toContainText('Kijkt vóór ontvangst');
   await page.evaluate(() => CC.closeSheet());
