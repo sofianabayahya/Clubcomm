@@ -753,7 +753,8 @@ Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen,
 3. **Verplaatst, datum volgt** (knop naast *Afgelast*): telt als niet gespeeld, net als afgelast. Wat bij die dag hoorde, vervalt. De ouders krijgen een bericht (*Je hoeft nu niets te doen*) en zien *Verplaatst · nieuwe datum volgt*. Vult de teamleider de nieuwe datum in, dan is het weer een gewone wedstrijd en krijgen de ouders opnieuw een bericht.
 4. **Afgelast:** via Teams nu hetzelfde venster als bij de teamleider (reden, bericht aan de ouders). *Gaat toch door* (via Teams) stuurt ook een bericht. Taken en vervoer blijven bij afgelasten bewaard, zodat ze terug zijn bij *Gaat toch door* (wijkt af van het voorstel, dat ze liet vervallen; een afgelaste wedstrijd vraagt niemand iets).
 5. **De ouder ziet** bij de wedstrijd, tot na de wedstrijd: *Gewijzigd op 12 nov · was 12:45* of *Verplaatst · was za 14 nov*.
-6. De trainer krijgt ter informatie een melding. Wie al een bericht kreeg over een begeleidingsmoment dat meeschuift (Besluit 168), krijgt geen tweede.
+6. **Aanvulling 20-11:** bij een andere dag noemt het bericht aan de ouders de **open taken**: *Open taken: vlagger, wastas. Kun jij? Tik in ClubComm op Ik doe het.* Zo regelen ouders het meteen. Er komt geen extra regel bij de teamleider; Home toont de open taken van de eerstvolgende wedstrijd al, en er gaat al een automatische oproep.
+7. De trainer krijgt ter informatie een melding. Wie al een bericht kreeg over een begeleidingsmoment dat meeschuift (Besluit 168), krijgt geen tweede.
 
 **Niet.** Geen tweede, dubbele wedstrijd. Niets wordt gewist. Geen automatisch bericht zonder dat iemand opslaat; dat volgt pas met de Sportlink-agenda (voorstel D, eigen akkoord).
 
