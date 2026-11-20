@@ -58,7 +58,12 @@
     if (stuur) {
       const regels = [`Verzamelen ${a.verzamel || '–'}${oud.verzamel && oud.verzamel !== a.verzamel ? ` (was ${oud.verzamel})` : ''}, aftrap ${a.tijd}${oud.tijd !== a.tijd ? ` (was ${oud.tijd})` : ''}.`];
       if (plekAnders && a.adres) regels.push(`Adres: ${a.adres}.`);
-      if (andereDag) regels.push('Kan je kind niet op de nieuwe dag? Meld het opnieuw af in ClubComm. Taken en vervoer worden opnieuw gevraagd.');
+      if (andereDag) {
+        regels.push('Kan je kind niet op de nieuwe dag? Meld het opnieuw af in ClubComm.');
+        // Besluit 184 (aanvulling 20-11): noem de open taken, zodat ouders het meteen regelen
+        const open = [...new Set((S.taken || []).filter((t) => t.actId === a.id && !t.personId && t.soort !== CC.VERVANGER).map((t) => t.soort.toLowerCase()))];
+        regels.push(open.length ? `Open taken: ${open.join(', ')}. Kun jij? Tik in ClubComm op Ik doe het.` : 'Vervoer wordt opnieuw gevraagd.');
+      }
       bericht(S, a, andereDag ? `Wedstrijd verplaatst naar ${D.kort(a.datum)}` : `Wedstrijd ${D.kort(a.datum)}: andere tijd`,
         `${andereDag ? `De wedstrijd ${wieTegen(a)} is verplaatst${oud.verplaatst ? '' : ` van ${D.lang(oud.datum)}`} naar ${D.lang(a.datum)}.` : `Gewijzigd: de wedstrijd van ${D.lang(a.datum)} (${wieTegen(a)}).`}\n${regels.join('\n')}`, S.msgs.slice(voor).flatMap((m) => m.ontvangers || []));
     }

@@ -58,6 +58,8 @@ test('andere dag: afmeldingen, taken en vervoer vervallen (bewaard) en de ouders
   expect(r).toMatchObject({ datum: nieuw, afmAct: null, afmWas: datum, taak: null, taakWas: true, vervoer: false, bewaard: 1 });
   expect(r.label).toContain('Verplaatst · was');
   expect((await berichten(page))[0]).toContain('Meld het opnieuw af');
+  expect((await berichten(page))[0]).toContain('Open taken: vlagger');
+  expect((await berichten(page))[0]).toContain('Ik doe het');
   // In de database: de afmelding is niet gewist, maar hoort niet meer bij de wedstrijd
   await expect.poll(async () => { const row = (await nepDb(page)).rows['dcg|afm|f-verpl']; return row ? `${row.act_id}|${!!row.data.vervallen}` : 'weg'; }, { message: 'afmelding bewaard als vervallen' }).toBe('null|true');
   await controleer(page, fouten, 'andere dag');
