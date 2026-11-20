@@ -1,4 +1,4 @@
-// ClubComm — Besluit NNN: wedstrijd verplaatsen of afgelasten, met één wedstrijd en drie standen.
+// ClubComm — Besluit 184: wedstrijd verplaatsen of afgelasten, met één wedstrijd en drie standen.
 // 1. Zelfde dag, andere tijd: de wedstrijd blijft met afmeldingen en taken; verzamelen schuift mee; binnen 7 dagen een bericht aan de ouders.
 // 2. Andere dag (of "verplaatst, datum volgt"): afmeldingen, taken en vervoer van de oude dag vervallen (bewaard als vervallen,
 //    niet gewist, Besluit 149) en de ouders krijgen altijd een bericht. Niemand wordt ongevraagd meegenomen naar een andere dag.

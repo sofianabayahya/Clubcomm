@@ -20,7 +20,7 @@ Hoort bij `docs/onderzoek/wedstrijd-bijhouden/voorstel.md` (stap D).
 > - **Gat dat nu al bestaat (gevonden 13-11):** *Aanpassen* via Teams (Besluit 168) neemt bij een andere dag afmeldingen, taken en vervoer mee, zonder bericht aan de ouders. Afgelast via Teams stuurt geen bericht, afgelast via de teamleider wel. Stap 1 lost beide op.
 > - **Maat van stap 1 = L**, niet M. Het raakt afmeldingen van ouders (persoonsgegevens laten vervallen) en het recht van de teamleider om de datum te wijzigen. Daarom gelden de rechtentest en de controle op clubscheiding. Een migratie is naar verwachting niet nodig, maar dat controleer ik eerst lokaal.
 >
-> **Stap 1 gebouwd (14-11, Besluit NNN):** zie `docs/besluiten.md`. Afwijking: bij *afgelast* blijven taken en vervoer bewaard, zodat ze terug zijn bij *Gaat toch door*.
+> **Stap 1 gebouwd (14-11, Besluit 184):** zie `docs/besluiten.md`. Afwijking: bij *afgelast* blijven taken en vervoer bewaard, zodat ze terug zijn bij *Gaat toch door*.
 >
 > Waar hieronder iets anders staat, geldt versie 3.
 

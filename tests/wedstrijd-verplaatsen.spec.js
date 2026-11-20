@@ -1,4 +1,4 @@
-// Besluit NNN: wedstrijd verplaatsen of afgelasten, één wedstrijd met drie standen. Zelfde dag: afmeldingen en taken blijven;
+// Besluit 184: wedstrijd verplaatsen of afgelasten, één wedstrijd met drie standen. Zelfde dag: afmeldingen en taken blijven;
 // andere dag of "verplaatst, datum volgt": ze vervallen (bewaard, niet gewist) en de ouders krijgen een bericht.
 // Verzonnen namen, nep-database (die net als de echte database de rijen van het team bewaart).
 const { test, expect } = require('@playwright/test');

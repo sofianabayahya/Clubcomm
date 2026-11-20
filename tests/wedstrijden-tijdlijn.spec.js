@@ -38,13 +38,13 @@ test('HO past een wedstrijd aan: het moment schuift mee en de trainer krijgt Ã©Ã
   // Alleen de veldnaam wijzigen: geen nieuw bericht
   await page.locator('#sheet [data-act="wedBewerk"][data-id="w1"]').click(); await page.fill('#wb-v', 'Veld 4');
   await page.locator('#sheet form[data-submit="wedBewerkOk"] button.knop').click();
-  // Besluit NNN: de ouders krijgen bij een andere dag ook een bericht; hier gaat het om de trainer
+  // Besluit 184: de ouders krijgen bij een andere dag ook een bericht; hier gaat het om de trainer
   expect(await page.evaluate(() => CC.S().msgs.filter((x) => (x.ontvangers || []).includes('p-a') && /verplaatst/.test(x.onderwerp || '')).length)).toBe(1);
   // Verwijderen kan niet zolang er een moment op staat; afgelast wel (en terug)
   await page.locator('#sheet [data-act="wedBewerk"][data-id="w1"]').click();
   await page.locator('#sheet [data-act="wedWeg"]').click();
   expect(await page.evaluate(() => CC.S().acts.some((x) => x.id === 'w1'))).toBe(true);
-  // Besluit NNN: afgelasten via Teams gaat via het venster met reden en bericht aan de ouders (zoals bij de teamleider)
+  // Besluit 184: afgelasten via Teams gaat via het venster met reden en bericht aan de ouders (zoals bij de teamleider)
   await page.locator('#sheet [data-act="wedstrijdAfgelast"]').click();
   await page.locator('#sheet form[data-submit="wedstrijdAfgelastOk"] button').click();
   expect(await page.evaluate(() => CC.S().msgs.some((m) => m.onderwerp === 'Wedstrijd afgelast' && m.actId === 'w1'))).toBe(true);

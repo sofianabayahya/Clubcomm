@@ -189,7 +189,7 @@
       return `${a.thuis ? 'Thuis' : 'Uit'} · ${esc(a.tegen)}`;
     },
     actSub(S, a) {
-      if (a.afgelast) return a.verplaatst ? 'Verplaatst · nieuwe datum volgt' : 'Afgelast'; // Besluit NNN
+      if (a.afgelast) return a.verplaatst ? 'Verplaatst · nieuwe datum volgt' : 'Afgelast'; // Besluit 184
       if (a.soort === 'training') return `${a.tijd}–${a.eind} · ${esc(a.veld)}`;
       if (a.soort === 'activiteit') return `${h.verzamelTekst(a) ? `${h.verzamelTekst(a)} · ` : ''}${a.tijd}–${a.eind}${a.plaats ? ' · ' + esc(a.plaats) : ''}`;
       return `${h.verzamelTekst(a) ? `${h.verzamelTekst(a)} · ` : ''}aftrap ${a.tijd}${a.thuis ? ' · ' + esc(a.veld || '') : ''}`;

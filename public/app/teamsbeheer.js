@@ -105,19 +105,19 @@
       <label class="vink"><input type="checkbox" name="thuis" ${a.thuis === false ? '' : 'checked'}><span>Thuis</span></label>
       <label for="wb-v">Veld (mag leeg)</label><input id="wb-v" name="veld" value="${esc(a.veld || '')}">
       ${mo.length ? `<p class="zacht klein">${icon('user-check')} Er staat een begeleidingsmoment op deze wedstrijd. Verandert de datum of de aftrap, dan schuift het moment mee en krijgt ${tr.join(' en ')} een bericht.</p>` : ''}
-      ${a.datum >= D.vandaag() ? `<label class="vink"><input type="checkbox" name="bericht" ${CC.wedBinnen(a.datum) ? 'checked' : ''}><span><b>Stuur de ouders een bericht</b><br><small class="zacht">Bij een andere dag altijd: afmeldingen, taken en vervoer van de oude dag vervallen (Besluit NNN).</small></span></label>` : ''}
+      ${a.datum >= D.vandaag() ? `<label class="vink"><input type="checkbox" name="bericht" ${CC.wedBinnen(a.datum) ? 'checked' : ''}><span><b>Stuur de ouders een bericht</b><br><small class="zacht">Bij een andere dag altijd: afmeldingen, taken en vervoer van de oude dag vervallen (Besluit 184).</small></span></label>` : ''}
       <button class="knop vol">Opslaan</button></form>
       <div class="knoppen">${a.afgelast ? `<button class="knop licht" data-act="wedAfgelast" data-id="${esc(a.id)}">${icon('undo-2')}Gaat toch door</button>` : `<button class="knop licht" data-act="wedDatumVolgt" data-id="${esc(a.id)}">${icon('clock')}Verplaatst, datum volgt</button><button class="knop licht rood-tekst" data-act="wedstrijdAfgelast" data-id="${esc(a.id)}">${icon('ban')}Afgelast</button>`}
       <button class="knop licht" data-act="wedWeg" data-id="${esc(a.id)}">${icon('trash-2')}Verwijderen</button></div>`); });
   CC.on('wedBewerkOk', (f) => { const S = CC.S(); const a = M.act(S, f.dataset.id); if (!a) return;
-    // Besluit NNN: via dezelfde weg als de teamleider (verzamelen schuift mee; andere dag: oude afmeldingen en taken vervallen, bericht aan de ouders)
+    // Besluit 184: via dezelfde weg als de teamleider (verzamelen schuift mee; andere dag: oude afmeldingen en taken vervallen, bericht aan de ouders)
     const voor = S.msgs.length;
     const r = CC.wedOpslaan(S, a, { tegen: f.tegen.value.trim(), datum: f.datum.value, tijd: f.tijd.value, thuis: f.thuis.checked, veld: f.veld.value.trim() }, { bericht: !!(f.bericht && f.bericht.checked) });
     const n = S.msgs.slice(voor).filter((m) => m.soort === 'persoonlijk').length;
     S.acts.sort((x, y) => (x.datum + x.tijd).localeCompare(y.datum + y.tijd)); CC.save(); CC.render(); openTeam(a.teamId);
     const wat = CC.wedVervallenTekst(r.vervallen);
     CC.toast([r.bericht ? 'Opgeslagen; ouders zijn ingelicht' : 'Wedstrijd opgeslagen', n ? `${n === 1 ? 'de trainer krijgt' : `${n} trainers krijgen`} een bericht` : '', wat ? `vervallen: ${wat}` : ''].filter(Boolean).join(' · ')); });
-  // Besluit NNN: afgelasten gaat via het venster met bericht aan de ouders (wedstrijdAfgelast); hier alleen nog "gaat toch door", ook met bericht
+  // Besluit 184: afgelasten gaat via het venster met bericht aan de ouders (wedstrijdAfgelast); hier alleen nog "gaat toch door", ook met bericht
   CC.on('wedAfgelast', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.id); if (!a || !a.afgelast) return; CC.wedGaatDoor(S, a);
     CC.save(); CC.render(); openTeam(a.teamId); CC.toast('Wedstrijd gaat toch door; ouders zijn ingelicht'); });
   CC.on('wedWeg', (el) => { const S = CC.S(); const a = M.act(S, el.dataset.id); if (!a) return;

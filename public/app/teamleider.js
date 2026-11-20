@@ -90,7 +90,7 @@
   CC.views.speeltijd = (S, p) => ({ titel: 'Speeltijd', html: CC.speeltijdHtml(S, p.team) });
 
   CC.on('kiesTlWed', (el) => { CC.ui.seg.tlWed = el.value; CC.render(); });
-  // Besluit NNN: datum en aftrap via CC.wedOpslaan (verzamelen schuift mee, andere dag = wat bij de oude dag hoorde vervalt, bericht)
+  // Besluit 184: datum en aftrap via CC.wedOpslaan (verzamelen schuift mee, andere dag = wat bij de oude dag hoorde vervalt, bericht)
   const wedInfoOpslaan = (f, berichtJa) => { const S = CC.S(); const a = M.act(S, f.dataset.id); if (!a) return;
     if (f.uitslag) a.uitslag = f.uitslag.value;
     const nieuw = { verzamel: f.verzamel.value }; if (f.verzamelpunt) nieuw.verzamelpunt = f.verzamelpunt.value.trim(); if (f.adres) nieuw.adres = f.adres.value;

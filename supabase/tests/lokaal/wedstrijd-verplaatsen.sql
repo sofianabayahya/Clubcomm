@@ -1,4 +1,4 @@
--- ClubComm — Besluit NNN: wedstrijd naar een andere dag. De app laat afmeldingen, taken en vervoer van de oude dag vervallen,
+-- ClubComm — Besluit 184: wedstrijd naar een andere dag. De app laat afmeldingen, taken en vervoer van de oude dag vervallen,
 -- precies zoals de app opslaat (upsert; vervoer: rij weghalen). Mag de teamleider dat voor zijn eigen team, en niet voor een ander team?
 -- Mag een ouder het niet voor een ander gezin? Alleen lokaal (rechtentest-lokaal.sh); alles in één transactie die wordt teruggedraaid.
 begin;

@@ -1120,7 +1120,7 @@ button.tr-gkop { cursor: pointer; } .tr-gkop.tr-A { color: #0869c2; } .tr-gkop.t
 .arch-veld .kies { min-height: 44px; margin: 0; min-width: 0; width: 100%; }
 .arch-lab { font-size: 15px; color: var(--zacht); overflow-wrap: anywhere; }
 
-/* Besluit NNN: wedstrijd gewijzigd of verplaatst (label tot na de wedstrijd) */
+/* Besluit 184: wedstrijd gewijzigd of verplaatst (label tot na de wedstrijd) */
 .wed-label { display: inline-block; margin-top: 4px; font-size: 14px; font-weight: 700; color: var(--oranje); background: var(--oranje-l); border-radius: 8px; padding: 2px 8px; }
 .wed-label.grijs { color: var(--inkt); background: #eef2f6; }
 /* Besluit 183 (H4): de variant van vandaag bovenaan de vorm */
