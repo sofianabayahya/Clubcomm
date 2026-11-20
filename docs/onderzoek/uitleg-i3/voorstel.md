@@ -1,6 +1,6 @@
 # Voorstel I3 — uitleg via ⓘ (Spoor 3, 18-11-2026)
 
-*Onderzoek met een werkend voorbeeld. Er is **niets gepubliceerd**, de database en de opleidingsprofielen zijn niet gewijzigd. Het voorbeeld staat op de branch `voorbeeld/i3-uitleg` (niet in `main`). De schermen komen uit dat voorbeeld, op 390 px, in de demo met verzonnen gegevens en het DCG-profiel als voorbeeldprofiel.*
+*Onderzoek met een werkend voorbeeld. Akkoord op B (20-11); gebouwd als Besluit NNN. De database en de opleidingsprofielen zijn niet gewijzigd. De schermen komen uit dat voorbeeld, op 390 px, in de demo met verzonnen gegevens en het DCG-profiel als voorbeeldprofiel.*
 
 **Opdracht (16-11).** *"Onderzoek hoe we de bestaande uitleg van leerniveaus, gereedschappen en voetbalproblemen kunnen openen via ⓘ, zonder nieuwe invoervelden of dubbele teksten."* Achtergrond: `docs/onderzoek/vormenbank-audit/README.md`, bevinding I3.
 
@@ -48,6 +48,7 @@ Alleen tekst die al in het profiel staat. Bovenaan kort waar de tekst vandaan ko
 - **Voetbalprobleem:** de definitie, de centrale vraag en *Wat de speler waarneemt*. Ingeklapt: *Keuzes, oplossingen en opbouw*.
 - **Gereedschap:** de omschrijving, de vraag voor de speler, het principe en de vaardigheden. Ingeklapt: *Technische onderbouwing*.
 - **Leerniveaus:** alle vijf onder elkaar, met de zin *Het leerniveau hoort bij de opdracht van de plek, niet bij de vorm.* Zo zie je ze in hun volgorde en hoef je niet vijf keer te tikken.
+- **In het venster van een plek** opent de ⓘ geen nieuw venster (dan zou wat je invulde verdwijnen), maar klapt de uitleg ter plekke open onder *Leerniveau*. Nog een tik klapt hem dicht.
 
 ![Uitleg van een voetbalprobleem](2-uitleg-voetbalprobleem.jpg) ![Uitleg van een gereedschap](3-uitleg-gereedschap.jpg)
 

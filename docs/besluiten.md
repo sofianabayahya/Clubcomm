@@ -21,6 +21,7 @@ Laatst bijgewerkt: 11 november 2026 (t/m Besluit 182)
 
 | Nr | Spoor | Onderwerp | Status | Herzien |
 |---|---|---|---|---|
+| NNN | 3 | Uitleg via ⓘ uit het opleidingsprofiel: in de trainingskaart naast het voetbalprobleem, gereedschap A en B en de leerniveaus, en naast *Leerniveau* in het venster van een plek (daar klapt de uitleg ter plekke open). De tekst komt alleen uit het profiel: geen invoer, geen kopie; zonder tekst geen ⓘ. Niet bij filters en keuzes | ✅ geldt | |
 | 183 | 3 | Varianten zonder verschuiven, en de variant van vandaag op het veld: een variant heeft een **vaste code** en een plek in een training bewaart die code (niet meer de plaats in de lijst); een plek met een volgnummer van vóór dit besluit blijft leesbaar en krijgt bij opslaan de code. **Weghalen = verbergen**: niet meer te kiezen voor nieuwe trainingen, wel zichtbaar waar hij al gekozen was (*niet meer in gebruik*). Geopend vanuit een training met een variant: bovenaan *Vandaag: …* met wat anders is en de tekening van de variant (of de basis als de variant geen eigen tekening heeft), de basisvorm ingeklapt; ook in het tekeningetje van de regel en op de print. Keuze in het venster van de plek: *Welke uitvoering vandaag?*. Geen migratie, geen omzetscript (productie 17-11: 0 plekken met een variant), rechten ongewijzigd. Bekend risico H5 blijft: de inhoud en tekening van een vorm of variant aanpassen verandert ook wat een gegeven training toont | ✅ geldt | |
 | 181 | 3 | Wedstrijd bijhouden zonder iets kwijt te raken: (1) de timekeeper kan via de app echt opslaan (migratie 035: de bewaker weigerde elke upsert van een niet-stafslid, ook als de wedstrijd al bestond); (2) doelpunten en uitslag ook als reservekopie op de telefoon, teruggezet als verversen ze wegneemt; (3) op het scorebord *Opgeslagen* of *Nog niet opgeslagen · staat veilig op deze telefoon*; (4) het scherm blijft aan zolang het scorebord van een lopende wedstrijd open staat; (5) wie de uitslag niet mag opslaan, stuurt geen uitslagbericht: dat gaat bij *Overnemen* door de trainer | ✅ geldt |  |
 | 182 | 3 | Wedstrijdarchief: het tabblad Wedstrijd heeft *Vandaag · Gespeeld · Seizoen*; onder *Gespeeld* per wedstrijd de uitslag (doelpunten met minuut), de basis op positie, de wissels (▲ erin, ▼ eruit) en voor de trainer de minuten; staf past basis, wissels en doelpunten achteraf aan en de seizoensminuten worden opnieuw uitgerekend zonder dubbel tellen | ✅ geldt |  |
@@ -718,6 +719,25 @@ Doel: de HJO voert niet elke training in; het werk ligt waar het hoort.
 
 ### Vuistregel voor nieuwe ideeën
 Een idee komt in de app als het (1) helpt bij monitoren, signaleren of oplossen, (2) duidelijk maakt wie het doet, (3) de ouder geen extra werk kost en (4) klein is of als module aan/uit kan. Anders gaat het naar "Later / ideeën".
+
+---
+
+## Besluit NNN — Uitleg via ⓘ uit het opleidingsprofiel (Spoor 3, maat M)
+> Audit `docs/onderzoek/vormenbank-audit/README.md` (I3). Onderzoek en voorbeelden op 390 px: `docs/onderzoek/uitleg-i3/voorstel.md`. Akkoord van de initiatiefnemer 20-11 (*"akkoord, bouw I3 zoals B"*). Vult Besluit 144 (trainingskaart) aan.
+
+**Waarom.** Het opleidingsprofiel beschrijft wat een leerniveau, een gereedschap en een voetbalprobleem betekenen, maar de app liet alleen de namen zien. De trainer las *Kiezen* of *Aannemen en meenemen* zonder te kunnen nalezen wat ermee bedoeld wordt.
+
+**Wat.**
+1. **Vier plekken, alleen waar je leest:** in de trainingskaart (*Waarom deze training*) naast het voetbalprobleem (Wat), naast gereedschap A en B (Welke) en één ⓘ voor de leerniveaus samen (Niveau); en naast de kop *Leerniveau* in het venster van een plek. Niet bij filters en keuzes (Principe 10).
+2. **Inhoud uit het profiel:** voetbalprobleem = definitie, centrale vraag, *wat de speler waarneemt*, ingeklapt keuzes, oplossingen en opbouw; gereedschap = omschrijving, vraag voor de speler, principe, vaardigheden, ingeklapt de technische onderbouwing; leerniveaus = alle niveaus met hun omschrijving.
+3. **Op een pagina** opent de ⓘ een venster. **In een venster** (de plek) klapt de uitleg ter plekke open en weer dicht, zodat wat je invulde blijft staan.
+4. **Geen tekst, geen ⓘ.** Zonder profiel of zonder omschrijving bij dat begrip staat er geen knop.
+
+**Niet gedaan.** Geen nieuwe velden of invoer, geen kopie van de tekst (verandert het profiel, dan verandert de uitleg mee). Geen ⓘ bij filters, chips of de termen (*jagen*, *lokken*): de termen pas als Spoor 1 ze afmaakt; dat is een profielwijziging met eigen akkoord.
+
+**Privacy en gegevens.** Geen persoonsgegevens; het profiel wordt alleen gelezen. Geen migratie, rechten ongewijzigd.
+
+**Getest:** `tests/uitleg.spec.js` (3 tests): de vier ⓘ openen de juiste tekst, tikvlak 44 × 44 en 390 px breed; in het venster van een plek klapt de uitleg open zonder dat ingevulde minuten verdwijnen; geen ⓘ zonder omschrijving en geen enkele zonder profiel.
 
 ---
 

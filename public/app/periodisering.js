@@ -97,22 +97,29 @@
     const r = (n, x) => (x ? `<dt>${n}</dt><dd>${esc(x)}</dd>` : '');
     CC.sheet('Oorspronkelijke planning', `<p class="zacht klein">Zoals geladen uit ${esc(o.bron || 'de periodisering')}. Bewaard op ${esc(D.kort(o.bewaard))}, toen je deze training voor het eerst aanpaste. Alleen ter informatie.</p>
       <dl class="antwoorden">${r('Titel', o.thema)}${r('Voetbalprobleem', pr ? `${pr.id.slice(3)} · ${pr.naam}` : m.probleemTekst)}${r('Dagthema', m.hoofdthema)}${r('Gereedschap A', T().ldNaam(S, (o.blokDoel || {}).A))}${r('Gereedschap B', T().ldNaam(S, (o.blokDoel || {}).B))}${r('Leerniveau', nv(S, m.niveaus))}${r('Leerroute', m.route)}${r('Gewenst gedrag', m.gedrag)}</dl>`); });
-  // Voorbeeld I3: ⓘ = de uitleg die al in het opleidingsprofiel staat (geen nieuwe invoer, geen tekst die al in beeld staat).
-  // Alleen als het profiel die uitleg heeft; anders geen knop.
+  // Besluit NNN (I3): ⓘ = de uitleg die al in het opleidingsprofiel staat (geen nieuwe invoer, geen kopie). Zonder tekst geen knop.
+  // Op een pagina opent de ⓘ een venster; in een venster (de plek) klapt de uitleg ter plekke open, zodat niets verloren gaat.
   const leerlijn = (S, id) => ((T().ond(S, 'leerlijnen') || {}).items || []).find((x) => x.id === id) || null;
-  const uitlegKnop = (S, soort, id, naam) => { const heeft = soort === 'niveaus' ? T().niveaus(S).some((x) => x.omschrijving) : soort === 'gs' ? !!(leerlijn(S, id) || {}).omschrijving : !!(probleem(S, id) || {}).definitie;
-    return heeft ? `<button type="button" class="icoonknop tr-uitleg" data-act="trUitleg" data-s="${soort}" data-id="${esc(id || '')}" aria-label="Uitleg: ${esc(naam)}">${icon('info')}</button>` : ''; };
-  CC.trUitlegKnop = uitlegKnop;
-  const lijst = (l) => (l || []).length ? `<ul>${l.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : '';
-  CC.on('trUitleg', (el) => { const S = CC.S(); const s0 = el.dataset.s, id = el.dataset.id;
-    if (s0 === 'niveaus') { const l = T().niveaus(S); return CC.sheet('Leerniveaus', `<p class="zacht klein">Uit het opleidingsprofiel. Het leerniveau hoort bij de opdracht van de plek, niet bij de vorm.</p>${l.map((x) => `${h.sectie(x.naam)}<p>${esc(x.omschrijving || '')}</p>`).join('')}`); }
-    if (s0 === 'gs') { const g = leerlijn(S, id); if (!g) return; return CC.sheet(g.naam, `<p class="zacht klein">Gereedschap uit het opleidingsprofiel</p><p>${esc(g.omschrijving || '')}</p>
+  const heeftUitleg = (S, soort, id) => (soort === 'niveaus' ? T().niveaus(S).some((x) => x.omschrijving) : soort === 'gs' ? !!(leerlijn(S, id) || {}).omschrijving : !!(probleem(S, id) || {}).definitie);
+  const lijst = (l) => ((l || []).length ? `<ul>${l.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : '');
+  const uitleg = (S, soort, id) => {
+    if (soort === 'niveaus') return { titel: 'Leerniveaus', html: `<p class="zacht klein">Uit het opleidingsprofiel. Het leerniveau hoort bij de opdracht van de plek, niet bij de vorm.</p>${T().niveaus(S).filter((x) => x.omschrijving).map((x) => `${h.sectie(esc(x.naam))}<p>${esc(x.omschrijving)}</p>`).join('')}` };
+    if (soort === 'gs') { const g = leerlijn(S, id); if (!g) return null;
+      return { titel: g.naam, html: `<p class="zacht klein">Gereedschap uit het opleidingsprofiel</p><p>${esc(g.omschrijving || '')}</p>
       ${g.spelersvraag ? `${h.sectie('Vraag voor de speler')}<p><b>${esc(g.spelersvraag)}</b></p>` : ''}${g.principe ? `${h.sectie('Principe')}<p>${esc(g.principe)}</p>` : ''}
-      ${(g.vaardigheden || []).length ? `${h.sectie('Vaardigheden')}<p>${esc(g.vaardigheden.map((v) => v.naam).join(' · '))}</p>` : ''}${g.technischeOnderbouw ? `<details class="uitklap"><summary>Technische onderbouwing</summary><p>${esc(g.technischeOnderbouw)}</p></details>` : ''}`); }
-    const pr = probleem(S, id); if (!pr) return;
-    CC.sheet(pr.naam, `<p class="zacht klein">Voetbalprobleem ${esc(pr.id.slice(3))} uit het opleidingsprofiel</p><p>${esc(pr.definitie || '')}</p>
+      ${(g.vaardigheden || []).length ? `${h.sectie('Vaardigheden')}<p>${esc(g.vaardigheden.map((v) => v.naam).join(' · '))}</p>` : ''}${g.technischeOnderbouw ? `<details class="uitklap"><summary>Technische onderbouwing</summary><p>${esc(g.technischeOnderbouw)}</p></details>` : ''}` }; }
+    const pr = probleem(S, id); if (!pr) return null;
+    const meer = (pr.keuzeWat || []).length || (pr.keuzeHoe || []).length || (pr.oplossingen || []).length || pr.complexiteit;
+    return { titel: pr.naam, html: `<p class="zacht klein">Voetbalprobleem ${esc(pr.id.slice(3))} uit het opleidingsprofiel</p><p>${esc(pr.definitie || '')}</p>
       ${pr.centraleVraag ? `${h.sectie('Centrale vraag')}<p><b>${esc(pr.centraleVraag)}</b></p>` : ''}${(pr.waarnemen || []).length ? `${h.sectie('Wat de speler waarneemt')}${lijst(pr.waarnemen)}` : ''}
-      ${(pr.keuzeWat || []).length || (pr.oplossingen || []).length || pr.complexiteit ? `<details class="uitklap"><summary>Keuzes, oplossingen en opbouw</summary>${(pr.keuzeWat || []).length ? `${h.sectie('Wat kan de speler kiezen?')}${lijst(pr.keuzeWat)}` : ''}${(pr.keuzeHoe || []).length ? `${h.sectie('Hoe voert hij het uit?')}${lijst(pr.keuzeHoe)}` : ''}${(pr.oplossingen || []).length ? `${h.sectie('Oplossingen')}${lijst(pr.oplossingen)}` : ''}${pr.complexiteit ? `${h.sectie('Opbouw')}<p>${esc(pr.complexiteit)}</p>` : ''}</details>` : ''}`); });
+      ${meer ? `<details class="uitklap"><summary>Keuzes, oplossingen en opbouw</summary>${(pr.keuzeWat || []).length ? `${h.sectie('Wat kan de speler kiezen?')}${lijst(pr.keuzeWat)}` : ''}${(pr.keuzeHoe || []).length ? `${h.sectie('Hoe voert hij het uit?')}${lijst(pr.keuzeHoe)}` : ''}${(pr.oplossingen || []).length ? `${h.sectie('Oplossingen')}${lijst(pr.oplossingen)}` : ''}${pr.complexiteit ? `${h.sectie('Opbouw')}<p>${esc(pr.complexiteit)}</p>` : ''}</details>` : ''}` }; };
+  const uitlegKnop = (S, soort, id, naam, hier) => (heeftUitleg(S, soort, id)
+    ? `<button type="button" class="icoonknop tr-uitleg" data-act="${hier ? 'trUitlegHier' : 'trUitleg'}" data-s="${soort}" data-id="${esc(id || '')}" aria-label="Uitleg: ${esc(naam)}"${hier ? ' aria-expanded="false"' : ''}>${icon('info')}</button>` : '');
+  CC.trUitlegKnop = uitlegKnop;
+  // Ter plekke: het blok staat direct na de knop (in de legend) als eerste element na de legend
+  CC.trUitlegHierBlok = (S, soort, id) => (heeftUitleg(S, soort, id) ? `<div class="tr-uitleg-hier" hidden>${(uitleg(S, soort, id) || {}).html || ''}</div>` : '');
+  CC.on('trUitleg', (el) => { const u = uitleg(CC.S(), el.dataset.s, el.dataset.id); if (u) CC.sheet(u.titel, u.html); });
+  CC.on('trUitlegHier', (el) => { const f = el.closest('fieldset'); const b = f && f.querySelector('.tr-uitleg-hier'); if (!b) return; b.hidden = !b.hidden; el.setAttribute('aria-expanded', String(!b.hidden)); });
   CC.trMethodiek = (S, p, a, tel, zonderMee) => { if (!p || p.week) return ''; const pa = actief(S); if (pa) CC.trBorgOrigineel(S);
     const m = eigenM(p), wv = weekVoorstelVan(S, p, a), w = a.datum ? weekPlan(S, p.teamId || a.teamId, a.datum) : null; const iv = inVormen(S, p);
     const wbox = (x) => (x ? `<div class="tr-wv">${lab('week')}<span class="tr-wvt">${x}</span></div>` : '');
