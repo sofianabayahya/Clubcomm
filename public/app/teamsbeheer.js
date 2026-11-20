@@ -86,8 +86,11 @@
   const wedRij = (S, a) => h.rij({ ic: a.afgelast ? 'ban' : 'trophy', titel: `${esc(D.kort(a.datum))} · ${esc(a.tijd)} · ${a.thuis === false ? 'uit' : 'thuis'}`,
     sub: `${esc(a.tegen || '')}${a.afgelast ? ' · <b>afgelast</b>' : ''}${momOp(S, a).length ? ' · <b>begeleidingsmoment</b>' : ''}`, act: 'wedBewerk', attrs: `data-id="${esc(a.id)}"` });
   // Eén plek voor elke wijziging (venster en opnieuw plakken): het moment schuift mee en de trainer krijgt één bericht
-  CC.wedWijzig = (S, a, nieuw) => { const oud = { datum: a.datum, tijd: a.tijd }; const t = M.team(S, a.teamId);
+  // Verzamelen schuift mee: zelfde verschil als de aftrap (een eigen verzameltijd blijft even ruim); bij thuis/uit gewisseld of leeg de clubregel.
+  CC.wedWijzig = (S, a, nieuw) => { const oud = { datum: a.datum, tijd: a.tijd, thuis: a.thuis !== false, verzamel: a.verzamel }; const t = M.team(S, a.teamId);
     Object.assign(a, nieuw); if (nieuw.tijd && t) a.eind = eindVan(S, t, a.tijd);
+    if (t && (a.tijd !== oud.tijd || (a.thuis !== false) !== oud.thuis)) { const min = (x) => { const [hh, mm] = x.split(':').map(Number); return hh * 60 + mm; };
+      a.verzamel = oud.verzamel && (a.thuis !== false) === oud.thuis ? CC.plusMin(oud.verzamel, min(a.tijd) - min(oud.tijd)) : vzVan(S, t, a.tijd, a.thuis !== false); }
     if (oud.datum === a.datum && oud.tijd === a.tijd) return 0;
     const me = CC.me(); const nu = new Date().toISOString(); let n = 0;
     momOp(S, a).forEach((m) => { m.datum = a.datum; const tr = M.persoon(S, m.trainerId); if (!tr) return; n++;
@@ -122,12 +125,16 @@
     if (!confirm(`Wedstrijd van ${D.kort(a.datum)} tegen ${a.tegen || ''} verwijderen?`)) return;
     S.acts = S.acts.filter((x) => x !== a); CC.save(); CC.render(); openTeam(a.teamId); CC.toast('Wedstrijd verwijderd'); });
   const eindVan = (S, t, tijd) => CC.plusMin ? CC.plusMin(tijd, CC.categorie(t.speelCat || t.cat).duur + 15) : tijd;
+  // Verzamelen volgt de clubregel (Besluit 110): thuis en uit, per leeftijd. Thuis staat het eigen sportpark als adres.
+  const vzVan = (S, t, tijd, thuis) => CC.plusMin(tijd, -M.verzamelMin(S, t.id, thuis));
+  const nieuweWed = (S, t, x) => ({ id: x.id, teamId: t.id, soort: 'wedstrijd', datum: x.datum, tijd: x.tijd, eind: eindVan(S, t, x.tijd), verzamel: vzVan(S, t, x.tijd, x.thuis),
+    tegen: x.tegen, thuis: x.thuis, veld: '', adres: x.thuis ? (S.club.sportpark || '') : '', afgelast: false, uitslag: null });
   CC.on('wedNieuw', (el) => { const S = CC.S(); const t = M.team(S, el.dataset.team);
     CC.sheet(`Wedstrijd · ${t.naam}`, `<form data-submit="wedNieuwOk" data-team="${esc(t.id)}" class="codeform"><label for="wn-t">Tegenstander</label><input id="wn-t" name="tegen" required placeholder="Bijv. AFC O16-2">
       <div class="twee"><div><label for="wn-d">Datum</label><input id="wn-d" name="datum" type="date" required></div><div><label for="wn-a">Aftrap</label><input id="wn-a" name="tijd" type="time" required value="11:00"></div></div>
       <label class="vink"><input type="checkbox" name="thuis" checked><span>Thuis</span></label><button class="knop vol">Toevoegen</button></form>`); });
   CC.on('wedNieuwOk', (f) => { const S = CC.S(); const t = M.team(S, f.dataset.team);
-    S.acts.push({ id: 'w' + Date.now(), teamId: t.id, soort: 'wedstrijd', datum: f.datum.value, tijd: f.tijd.value, eind: eindVan(S, t, f.tijd.value), tegen: f.tegen.value.trim(), thuis: f.thuis.checked, veld: '', afgelast: false, uitslag: null });
+    S.acts.push(nieuweWed(S, t, { id: 'w' + Date.now(), datum: f.datum.value, tijd: f.tijd.value, tegen: f.tegen.value.trim(), thuis: f.thuis.checked }));
     S.acts.sort((x, y) => (x.datum + x.tijd).localeCompare(y.datum + y.tijd)); CC.save(); CC.render(); openTeam(t.id); CC.toast('Wedstrijd toegevoegd'); });
 
   // ---------- Wedstrijden plakken (voetbal.nl) ----------
@@ -163,7 +170,7 @@
     r.lijst.forEach((x) => { const s0 = wedStand(S, t, x);
       if (s0.soort === 'gewijzigd') { b += CC.wedWijzig(S, s0.a, { tijd: x.tijd, tegen: x.tegen, thuis: x.thuis }); w++; return; }
       if (s0.soort !== 'nieuw') return;
-      S.acts.push({ id: `w${Date.now()}${n}`, teamId: t.id, soort: 'wedstrijd', datum: x.datum, tijd: x.tijd, eind: eindVan(S, t, x.tijd), tegen: x.tegen, thuis: x.thuis, veld: '', afgelast: false, uitslag: null }); n++; });
+      S.acts.push(nieuweWed(S, t, { id: `w${Date.now()}${n}`, datum: x.datum, tijd: x.tijd, tegen: x.tegen, thuis: x.thuis })); n++; });
     S.acts.sort((x, y) => (x.datum + x.tijd).localeCompare(y.datum + y.tijd)); PL().tekst = ''; CC.save(); CC.render(); openTeam(t.id);
     CC.toast([n ? `${n} toegevoegd` : '', w ? `${w} gewijzigd` : '', b ? `${b === 1 ? 'de trainer krijgt' : `${b} trainers krijgen`} een bericht` : ''].filter(Boolean).join(' · ') || 'Niets veranderd'); });
   // Per datum vergelijken met wat er al staat: gelijk, gewijzigd (tijd, tegenstander of thuis/uit) of nieuw

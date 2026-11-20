@@ -39,17 +39,16 @@
   CC.wedOpslaan = (S, a, nieuw, opties = {}) => {
     const oud = { datum: a.datum, tijd: a.tijd, verzamel: a.verzamel || '', adres: a.adres || '', verplaatst: !!a.verplaatst };
     const datum = nieuw.datum || a.datum, tijd = nieuw.tijd || a.tijd;
-    // Verzamelen schuift mee, tenzij de gebruiker het zelf veranderde
-    let verzamel = nieuw.verzamel !== undefined ? nieuw.verzamel : oud.verzamel;
-    if (tijd !== oud.tijd && verzamel === oud.verzamel) verzamel = CC.wedVerzamelMee(oud.tijd, oud.verzamel, tijd);
     const andereDag = datum !== oud.datum || oud.verplaatst;
-    const tijdAnders = tijd !== oud.tijd || verzamel !== oud.verzamel;
     // Datum, aftrap en een begeleidingsmoment via de bestaande weg (Besluit 168: moment schuift mee, bericht aan die trainer)
     const velden = { datum, tijd }; ['tegen', 'thuis', 'veld'].forEach((k) => { if (nieuw[k] !== undefined) velden[k] = nieuw[k]; });
     const voor = S.msgs.length; // wie al een bericht kreeg over het begeleidingsmoment, krijgt geen tweede (Principe 10)
-    if (CC.wedWijzig) CC.wedWijzig(S, a, velden); else { Object.assign(a, velden); a.eind = eindVan(S, a, tijd); }
+    // Verzamelen: CC.wedWijzig laat het meeschuiven (en bij thuis/uit gewisseld de clubregel, #172); een zelf ingevulde tijd gaat voor
+    if (CC.wedWijzig) CC.wedWijzig(S, a, velden); else { Object.assign(a, velden); a.verzamel = CC.wedVerzamelMee(oud.tijd, oud.verzamel, tijd); }
     if (!a.eind || tijd !== oud.tijd) a.eind = eindVan(S, a, tijd);
-    a.verzamel = verzamel; if (nieuw.adres !== undefined) a.adres = nieuw.adres; if (nieuw.verzamelpunt !== undefined) a.verzamelpunt = nieuw.verzamelpunt;
+    if (nieuw.verzamel !== undefined && nieuw.verzamel !== oud.verzamel) a.verzamel = nieuw.verzamel;
+    const tijdAnders = tijd !== oud.tijd || (a.verzamel || '') !== oud.verzamel;
+    if (nieuw.adres !== undefined) a.adres = nieuw.adres; if (nieuw.verzamelpunt !== undefined) a.verzamelpunt = nieuw.verzamelpunt;
     let n = { afm: 0, taken: 0, vervoer: 0 };
     if (andereDag) { if (!oud.verplaatst) n = vervallen(S, a, oud.datum); if (oud.verplaatst) { a.afgelast = false; delete a.verplaatst; } }
     if (andereDag || tijdAnders) a.wijziging = { op: new Date().toISOString(), datumWas: andereDag ? (oud.verplaatst ? (a.wijziging || {}).datumWas || oud.datum : oud.datum) : null, tijdWas: oud.tijd, verzamelWas: oud.verzamel };
