@@ -161,7 +161,7 @@
     const extra = '';
     const status = a.opgave && st.code === 'open' ? `<small class="oranje-tekst">Opgeven tot ${D.kort(a.opgaveTot || a.datum)}</small>` : a.opgave && st.code === 'verwacht' ? h.chip(st) : st.code === 'verwacht' ? (begonnen ? '' : `<small class="zacht">Afmelden tot ${M.deadlineTekst(S, a)}</small>`) : h.chip(st);
     return `<article class="act ${a.afgelast ? 'afgelast' : ''}">
-      <button class="act-body" data-act="open" data-view="activiteit" data-id="${a.id}">${h.datumBlok(a)}<span class="act-tekst"><small>${D.relatief(a.datum)}</small><b>${h.actTitel(S, a)}</b><small>${h.actSub(S, a)}</small>${extra}</span></button>
+      <button class="act-body" data-act="open" data-view="activiteit" data-id="${a.id}">${h.datumBlok(a)}<span class="act-tekst"><small>${D.relatief(a.datum)}</small><b>${h.actTitel(S, a)}</b><small>${h.actSub(S, a)}</small>${CC.wedLabel ? CC.wedLabel(a) : ''}${extra}</span></button>
       ${!a.afgelast && a.adres && (a.soort === 'activiteit' || (M.isWed(a) && !a.thuis)) ? h.adresRegel(a.adres) : ''}
       <div class="act-voet">${status}${knop}</div></article>`;
   };
@@ -186,7 +186,7 @@
       titel: a.soort === 'training' ? 'Training' : a.soort === 'activiteit' ? 'Activiteit' : a.soort === 'oefen' ? 'Oefenwedstrijd' : 'Wedstrijd',
       html: `<article class="kaartje"><div class="kaart-kop">${h.datumBlok(a)}<div><b>${h.actTitel(S, a)}</b><small>${D.lang(a.datum)} · ${esc(t.naam)}</small></div></div>
         ${a.soort === 'activiteit' && a.toelichting ? `<p>${esc(a.toelichting)}</p>` : ''}<dl class="gegevens">${a.soort === 'activiteit' ? `${a.verzamel || a.verzamelpunt ? `<dt>Verzamelen</dt><dd>${a.verzamel || ''}${CC.vpunt(a) ? `${a.verzamel ? ', ' : ''}bij ${esc(CC.vpunt(a))}` : ''}</dd>` : ''}<dt>Tijd</dt><dd>${a.tijd}–${a.eind}</dd>${a.plaats ? `<dt>Waar</dt><dd>${esc(a.plaats)}</dd>` : ''}` : a.soort === 'training' ? `<dt>Tijd</dt><dd>${a.tijd}–${a.eind}</dd><dt>Veld</dt><dd>${esc(a.veld)}</dd>` : `${a.verzamel || CC.vpunt(a) ? `<dt>Verzamelen</dt><dd>${a.verzamel || ''}${CC.vpunt(a) ? `${a.verzamel ? ', ' : ''}bij ${esc(CC.vpunt(a))}` : ''}</dd>` : ''}<dt>Aftrap</dt><dd>${a.tijd}</dd>${a.veld ? `<dt>Veld</dt><dd>${esc(a.veld)}</dd>` : ''}${a.uitslag && M.uitslagInst(S, a.teamId).naarOuders ? `<dt>Uitslag</dt><dd>${esc(a.uitslag)}</dd>` : ''}`}<dt>Afmelden</dt><dd>tot ${M.deadlineTekst(S, a)}</dd></dl>
-        ${a.afgelast ? `<div class="info rood">${icon('ban')}<span>Deze activiteit is afgelast.</span></div>` : ''}${kaart}</article>${meer}`,
+        ${a.verplaatst ? `<div class="info">${icon('clock')}<span>Verplaatst, de nieuwe datum volgt. Je hoeft nu niets te doen; je krijgt een bericht zodra de datum bekend is.</span></div>` : a.afgelast ? `<div class="info rood">${icon('ban')}<span>Deze activiteit is afgelast.</span></div>` : ''}${CC.wedLabel && CC.wedLabel(a) && !a.verplaatst ? `<p>${CC.wedLabel(a)}</p>` : ''}${kaart}</article>${meer}`,
     };
   };
   CC.on('wijzigDeze', (el) => CC.wijzigingSheet(el.dataset.id));

@@ -97,7 +97,7 @@
     const r = (n, x) => (x ? `<dt>${n}</dt><dd>${esc(x)}</dd>` : '');
     CC.sheet('Oorspronkelijke planning', `<p class="zacht klein">Zoals geladen uit ${esc(o.bron || 'de periodisering')}. Bewaard op ${esc(D.kort(o.bewaard))}, toen je deze training voor het eerst aanpaste. Alleen ter informatie.</p>
       <dl class="antwoorden">${r('Titel', o.thema)}${r('Voetbalprobleem', pr ? `${pr.id.slice(3)} · ${pr.naam}` : m.probleemTekst)}${r('Dagthema', m.hoofdthema)}${r('Gereedschap A', T().ldNaam(S, (o.blokDoel || {}).A))}${r('Gereedschap B', T().ldNaam(S, (o.blokDoel || {}).B))}${r('Leerniveau', nv(S, m.niveaus))}${r('Leerroute', m.route)}${r('Gewenst gedrag', m.gedrag)}</dl>`); });
-  // Besluit NNN (I3): ⓘ = de uitleg die al in het opleidingsprofiel staat (geen nieuwe invoer, geen kopie). Zonder tekst geen knop.
+  // Besluit 185 (I3): ⓘ = de uitleg die al in het opleidingsprofiel staat (geen nieuwe invoer, geen kopie). Zonder tekst geen knop.
   // Op een pagina opent de ⓘ een venster; in een venster (de plek) klapt de uitleg ter plekke open, zodat niets verloren gaat.
   const leerlijn = (S, id) => ((T().ond(S, 'leerlijnen') || {}).items || []).find((x) => x.id === id) || null;
   const heeftUitleg = (S, soort, id) => (soort === 'niveaus' ? T().niveaus(S).some((x) => x.omschrijving) : soort === 'gs' ? !!(leerlijn(S, id) || {}).omschrijving : !!(probleem(S, id) || {}).definitie);

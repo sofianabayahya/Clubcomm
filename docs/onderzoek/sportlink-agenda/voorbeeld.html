@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voorbeeld: wedstrijdagenda (voorstel D, versie 2)</title>
+<style>
+/* Voorstel D: voorbeeld in de huidige stijl van de app; verzonnen club en namen */
+:root { --blauw: #0869c2; --blauw-l: #e7f2fe; --inkt: #0b2545; --zacht: #5b6b7f; --lijn: #e3e9f1; --grond: #f5f7fa; --groen: #137333; --groen-l: #e7f6ec; --rood: #dc2626; --oranje: #a84d08; }
+* { box-sizing: border-box; } body { margin: 0; font: 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color: var(--inkt); background: #d9dee5; }
+.telefoons { display: flex; gap: 24px; padding: 24px; flex-wrap: wrap; align-items: flex-start; }
+.tel { width: 390px; min-height: 844px; background: var(--grond); border-radius: 28px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,.15); position: relative; }
+.kop { background: #fff; border-bottom: 1px solid var(--lijn); padding: 14px 16px; display: flex; align-items: center; gap: 10px; }
+.kop img { width: 32px; height: 32px; border-radius: 8px; } .kop b { font-size: 17px; } .kop small { display: block; color: var(--zacht); font-size: 13px; }
+.terug { color: var(--blauw); font-weight: 600; }
+.inhoud { padding: 14px 16px 90px; }
+h2 { font-size: 13px; letter-spacing: .02em; color: var(--zacht); margin: 18px 4px 8px; font-weight: 700; }
+.kaart { background: #fff; border-radius: 14px; box-shadow: 0 1px 2px rgba(11,37,69,.06), 0 2px 8px rgba(11,37,69,.05); overflow: hidden; }
+.rij { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-top: 1px solid var(--lijn); min-height: 56px; }
+.rij:first-child { border-top: 0; }
+.rij .t { flex: 1; } .rij b { display: block; } .rij small { color: var(--zacht); font-size: 15px; }
+.uitslag { font-weight: 800; font-size: 18px; } .pijl { color: var(--zacht); font-size: 20px; }
+.seg { display: flex; background: #e9edf3; border-radius: 10px; padding: 3px; margin-bottom: 4px; }
+.seg span { flex: 1; text-align: center; padding: 9px 0; border-radius: 8px; font-weight: 600; font-size: 15px; color: var(--zacht); }
+.seg span.aan { background: #fff; color: var(--inkt); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+.stand { text-align: center; padding: 14px; } .stand .groot { font-size: 34px; font-weight: 800; } .stand small { color: var(--zacht); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 14px 14px; }
+.chip { font-size: 14px; padding: 5px 9px; border-radius: 999px; background: #eef2f6; } .chip.wij { background: var(--groen-l); color: var(--groen); }
+.basis { display: grid; grid-template-columns: 28px 1fr auto; gap: 4px 10px; padding: 12px 14px; align-items: center; }
+.nr { width: 26px; height: 26px; border-radius: 50%; background: var(--blauw-l); color: var(--blauw); display: grid; place-items: center; font-weight: 700; font-size: 13px; }
+.min { color: var(--zacht); font-size: 15px; text-align: right; }
+.wissel { display: grid; grid-template-columns: 54px 1fr; gap: 2px 10px; padding: 10px 14px; border-top: 1px solid var(--lijn); }
+.wissel:first-child { border-top: 0; } .wissel .m { font-weight: 700; color: var(--zacht); }
+.in { color: var(--groen); font-weight: 600; } .uit { color: var(--rood); font-weight: 600; }
+.knop { display: flex; align-items: center; justify-content: center; min-height: 48px; border-radius: 12px; background: var(--blauw); color: #fff; font-weight: 700; margin-top: 14px; }
+.knop.licht { background: #fff; color: var(--blauw); border: 1.5px solid var(--blauw); }
+.sheet { position: absolute; inset: auto 0 0 0; background: #fff; border-radius: 18px 18px 0 0; padding: 10px 16px 24px; box-shadow: 0 -6px 30px rgba(0,0,0,.18); }
+.greep { width: 40px; height: 5px; border-radius: 3px; background: #cfd6df; margin: 0 auto 10px; }
+.sheet h3 { margin: 0 0 10px; font-size: 19px; }
+.veld { display: grid; grid-template-columns: 74px 1fr 1fr; gap: 8px; align-items: center; padding: 8px 0; border-top: 1px solid var(--lijn); }
+.veld input, .veld select, .veld .sel { min-height: 44px; border: 1.5px solid var(--lijn); border-radius: 10px; padding: 0 10px; font: inherit; display: flex; align-items: center; background: #fff; }
+.lab { font-size: 13px; color: var(--zacht); }
+.uitleg { color: var(--zacht); font-size: 15px; margin: 8px 4px; }
+.nav { position: absolute; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid var(--lijn); display: grid; grid-template-columns: repeat(5,1fr); }
+.nav span { text-align: center; font-size: 12px; padding: 10px 0 14px; color: var(--zacht); } .nav span.aan { color: var(--blauw); font-weight: 700; }
+.bijschrift { width: 390px; font-size: 15px; color: #333; margin-top: 8px; }
+</style><style>
+.oranje-r { background:#fdf1e1; } .tag { font-size:13px; font-weight:700; color:var(--oranje); }
+.was { color:var(--zacht); text-decoration:line-through; } .nu { font-weight:800; }
+.knopje { display:inline-flex; align-items:center; min-height:44px; padding:0 14px; border-radius:10px; background:var(--blauw); color:#fff; font-weight:700; font-size:15px; white-space:nowrap; }
+.knopje.licht { background:#fff; color:var(--blauw); border:1.5px solid var(--blauw); }
+.rij.kol { flex-direction:column; align-items:stretch; gap:8px; } .rij.kol .acties { display:flex; gap:8px; flex-wrap:wrap; }
+.veldin { min-height:48px; border:1.5px solid var(--lijn); border-radius:10px; padding:12px; color:var(--zacht); background:#fff; font-size:15px; }
+.stap { display:grid; grid-template-columns:26px 1fr; gap:10px; padding:8px 0; } .stap .nr { margin-top:1px; }
+.ok { color:var(--groen); font-weight:700; } textarea { width:100%; min-height:150px; font:inherit; border:1.5px solid var(--lijn); border-radius:10px; padding:10px; }
+.vink { display:flex; gap:10px; align-items:flex-start; padding:10px 0; } .vink i { width:22px; height:22px; border-radius:6px; background:var(--blauw); color:#fff; display:grid; place-items:center; font-style:normal; font-size:14px; flex:none; }
+</style><style>
+.form { padding:14px; } .form label { display:block; font-size:14px; color:var(--zacht); margin:10px 0 4px; font-weight:600; }
+.inp { min-height:44px; border:1.5px solid var(--lijn); border-radius:10px; padding:10px 12px; background:#fff; } .inp.aan { border-color:var(--blauw); box-shadow:0 0 0 3px var(--blauw-l); }
+.twee { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.hint { font-size:14px; color:var(--zacht); margin-top:4px; } .hint b { color:var(--inkt); }
+.melding { background:#fff; border-radius:16px; padding:12px 14px; box-shadow:0 2px 10px rgba(0,0,0,.12); display:grid; grid-template-columns:36px 1fr; gap:10px; margin:10px 0; }
+.melding img, .melding .ic { width:36px; height:36px; border-radius:9px; background:var(--blauw); }
+.melding small { color:var(--zacht); } .vergr { background:#1b2733; }
+.gewijzigd { display:inline-block; margin-top:6px; font-size:14px; font-weight:700; color:var(--oranje); background:#fdf1e1; border-radius:8px; padding:3px 8px; }
+.groot2 { font-size:22px; font-weight:800; margin:2px 0; }
+.slot { position:absolute; inset:0; background:linear-gradient(#24364a,#0e1a26); color:#fff; padding:60px 14px; }
+.slot .tijd { text-align:center; font-size:64px; font-weight:300; } .slot .dag { text-align:center; opacity:.8; margin-bottom:30px; }
+.slot .melding { color:var(--inkt); }
+.linkje { color:var(--blauw); font-weight:600; font-size:15px; }
+</style></head><body>
+<div class="telefoons">
+<div><div class="tel">
+  <div class="kop"><span class="terug">‹ Teams</span><div style="margin-left:6px"><b>O13-1</b><small>Instellingen van het team</small></div></div>
+  <div class="inhoud">
+    <h2>WEDSTRIJDAGENDA (SPORTLINK)</h2>
+    <div class="kaart" style="padding:14px">
+      <p style="margin:0 0 8px">Eén keer per seizoen. ClubComm haalt elke nacht het programma op en zet een andere datum, aftrap of ander adres vanzelf goed.</p>
+      <div class="stap"><span class="nr">1</span><span>Open het team op voetbal.nl, kies de agenda-export en kopieer de link.</span></div>
+      <div class="stap"><span class="nr">2</span><span>Plak hem hieronder.</span></div>
+      <div class="veldin">Plak de agenda-link (begint met https://)</div>
+      <div class="knop">Opslaan en nu proberen</div>
+    </div>
+    <h2>NA OPSLAAN</h2>
+    <div class="kaart"><div class="rij"><div class="t"><b>Ingesteld op 13 nov</b><small><span class="ok">✓ Bijgewerkt vannacht 04:00</span> · 6 wedstrijden</small></div></div></div>
+    <p class="uitleg">Ander team in Sportlink (nieuw seizoen)? <span class="linkje">Link aanpassen</span></p>
+  </div><div class="nav"><span class="">Home</span><span class="">Planning</span><span class="">Wedstrijd</span><span class="">Spelers</span><span class="">Berichten</span></div>
+</div><p class="bijschrift"><b>1. Eén keer per seizoen instellen</b> (clubbeheerder, Teams → team). Geen knop Vervangen meer; alleen een klein linkje.</p></div><div><div class="tel">
+  <div class="slot"><div class="tijd">07:30</div><div class="dag">donderdag 12 november</div>
+    <div class="melding"><span class="ic"></span><div><b>ClubComm · O13-1</b><br>Gewijzigd: wedstrijd za 14 nov. Verzamelen 10:30 (was 11:45), aftrap 11:35 (was 12:45).<br><small>nu</small></div></div>
+  </div>
+</div><p class="bijschrift"><b>2. Binnen 7 dagen gewijzigd</b> (bijv. woensdagnacht): ClubComm stuurt de ouders <b>vanzelf</b> een bericht, om 07:30 (nachtrust). Mail voor wie geen meldingen heeft. De teamleider krijgt een kopie.</p></div><div><div class="tel">
+  <div class="kop"><div><b>Home</b><small>Ouder · Sam (O13-1)</small></div></div>
+  <div class="inhoud">
+    <h2>VOLGENDE</h2>
+    <div class="kaart" style="padding:14px"><small style="color:var(--zacht)">Zaterdag 28 november · thuis</small>
+      <div class="groot2">Testclub O13-2</div>
+      <div>Verzamelen <b>10:00</b> · aftrap <b>10:30</b></div>
+      <span class="gewijzigd">Gewijzigd op 2 nov · was 14:30</span>
+    </div>
+    <p class="uitleg">Meer dan 7 dagen vooraf gewijzigd: geen bericht, wel dit labeltje tot na de wedstrijd.</p>
+  </div><div class="nav"><span class="aan">Home</span><span class="">Planning</span><span class="">Wedstrijd</span><span class="">Spelers</span><span class="">Berichten</span></div>
+</div><p class="bijschrift"><b>3. Meer dan 7 dagen vooraf gewijzigd</b>: stil bijgewerkt. Wie later kijkt, ziet meteen de juiste tijd (en dat hij veranderd is).</p></div><div><div class="tel">
+  <div class="kop"><div><b>Home</b><small>Teamleider · O13-1</small></div></div>
+  <div class="inhoud">
+    <h2>ACTIE NODIG</h2>
+    <div class="kaart">
+      <div class="rij kol"><div class="t"><span class="tag">NIEUW IN SPORTLINK</span><b>wo 25 nov · thuis tegen Testclub O13-2</b><small>Aftrap 18:30 · beker</small></div>
+        <div class="acties"><span class="knopje">Toevoegen</span><span class="knopje licht">Niet ons team</span></div></div>
+      <div class="rij kol"><div class="t"><span class="tag">STAAT NIET MEER IN SPORTLINK</span><b>za 21 nov · uit bij VV Proef O13-1</b><small>Zonder reden uit de agenda. Wat is er aan de hand?</small></div>
+        <div class="acties"><span class="knopje licht">Verplaatst, datum volgt</span><span class="knopje licht">Afgelast</span><span class="knopje licht">Gaat door</span></div></div>
+      <div class="rij kol oranje-r"><div class="t"><span class="tag">WEDSTRIJDAGENDA</span><b>Ophalen lukt al 2 nachten niet</b><small>De wedstrijden blijven zoals ze zijn. Vraag de clubbeheerder de link na te kijken.</small></div></div>
+    </div>
+    <p class="uitleg">Tijden en adressen staan al goed; hier staat alleen wat iemand moet beslissen. Meestal is dit leeg.</p>
+  </div><div class="nav"><span class="aan">Home</span><span class="">Planning</span><span class="">Wedstrijd</span><span class="">Spelers</span><span class="">Berichten</span></div>
+</div><p class="bijschrift"><b>4. De teamleider waakt</b>: alleen <i>nieuw</i>, <i>verdwenen</i> en (zelden) <i>ophalen lukt niet</i>. Tijdswijzigingen en een uitdrukkelijk <i>afgelast</i> in Sportlink gaan vanzelf (met bericht binnen 7 dagen).</p></div>
+</div></body></html>

@@ -1,6 +1,6 @@
 # Voorstel I3 — uitleg via ⓘ (Spoor 3, 18-11-2026)
 
-*Onderzoek met een werkend voorbeeld. Akkoord op B (20-11); gebouwd als Besluit NNN. De database en de opleidingsprofielen zijn niet gewijzigd. De schermen komen uit dat voorbeeld, op 390 px, in de demo met verzonnen gegevens en het DCG-profiel als voorbeeldprofiel.*
+*Onderzoek met een werkend voorbeeld. Akkoord op B (20-11); gebouwd als Besluit 185. De database en de opleidingsprofielen zijn niet gewijzigd. De schermen komen uit dat voorbeeld, op 390 px, in de demo met verzonnen gegevens en het DCG-profiel als voorbeeldprofiel.*
 
 **Opdracht (16-11).** *"Onderzoek hoe we de bestaande uitleg van leerniveaus, gereedschappen en voetbalproblemen kunnen openen via ⓘ, zonder nieuwe invoervelden of dubbele teksten."* Achtergrond: `docs/onderzoek/vormenbank-audit/README.md`, bevinding I3.
 
@@ -75,7 +75,7 @@ Alleen tekst die al in het profiel staat. Bovenaan kort waar de tekst vandaan ko
 
 ## 6. Gevolgen voor besluiten
 
-- **Nieuw besluit** (bij het bouwen een `Besluit NNN`): *Een ⓘ naast een voetbalprobleem, een gereedschap of de leerniveaus opent de uitleg uit het opleidingsprofiel. Alleen in de trainingskaart en bij de keuze Leerniveau van een plek. Geen invoer, geen kopie, geen ⓘ zonder tekst.*
+- **Nieuw besluit** (bij het bouwen een `Besluit 185`): *Een ⓘ naast een voetbalprobleem, een gereedschap of de leerniveaus opent de uitleg uit het opleidingsprofiel. Alleen in de trainingskaart en bij de keuze Leerniveau van een plek. Geen invoer, geen kopie, geen ⓘ zonder tekst.*
 - **Vult aan:** de trainingskaart (*Waarom deze training*) en het venster van een plek.
 - **Afgewezen ideeën:** gezocht op *uitleg*, *info*, *naslag* en *help*. Niets geraakt. Het afgewezen idee *"Gezien"-knoppen bij ter informatie* gaat over wegklikken. Dat speelt hier niet, want de ⓘ is geen melding.
 - **Spoor 1:** de inhoud van de uitleg is van Spoor 1. Wil je de teksten verbeteren of het naslagwerk toevoegen (bijv. de termen *jagen*, *lokken*), dan is dat een aanpassing van het profiel. Dat is een aparte stap en die gebeurt alleen met jouw akkoord.

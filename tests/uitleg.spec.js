@@ -1,4 +1,4 @@
-// ClubComm — Besluit NNN (I3): ⓘ opent de uitleg uit het opleidingsprofiel (voetbalprobleem, gereedschap, leerniveaus).
+// ClubComm — Besluit 185 (I3): ⓘ opent de uitleg uit het opleidingsprofiel (voetbalprobleem, gereedschap, leerniveaus).
 const { test, expect } = require('@playwright/test');
 const fs = require('fs');
 const { volgFouten, controleer } = require('./hulp');
