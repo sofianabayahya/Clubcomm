@@ -416,7 +416,7 @@
     const p = S.pres[act.id];
     const f = M.afm(S, pl.id, act.id);
     const l = M.lang(S, pl.id, act.datum);
-    if (act.afgelast) return { code: 'afgelast' };
+    if (act.afgelast) return { code: 'afgelast', verplaatst: !!act.verplaatst }; // Besluit 184: verplaatst, datum volgt telt als afgelast
     if (p && p.s[pl.id]) {
       const v = p.s[pl.id];
       if (v === 'a') return { code: 'aanwezig', afm: f };
